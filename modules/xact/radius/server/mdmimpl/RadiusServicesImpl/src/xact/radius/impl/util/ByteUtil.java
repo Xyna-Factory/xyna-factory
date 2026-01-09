@@ -1,17 +1,27 @@
-/*---------------------------------------------------
- * Copyright GIP AG 2015
- * (http://www.gip.com)
+/*
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
  *
- * Hechtsheimer Str. 35-37
- * 55131 Mainz
- *----------------------------------------------------
- * $Revision: 304749 $
- * $Date: 2021-12-08 12:58:05 +0100 (Mi, 08 Dez 2021) $
- *----------------------------------------------------
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 package xact.radius.impl.util;
 
+
+
 import java.util.regex.Pattern;
+
+
 
 public final class ByteUtil {
 
@@ -45,14 +55,15 @@ public final class ByteUtil {
 
   public static byte[] toByteArray(final long longValue, int nrOfBytes) {
     byte[] result = new byte[nrOfBytes];
-    for (int i=0; i<nrOfBytes; i++) {
-      result[i] = (byte) ((longValue >> 8*(nrOfBytes-1-i)) & 0x000000FF);
+    for (int i = 0; i < nrOfBytes; i++) {
+      result[i] = (byte) ((longValue >> 8 * (nrOfBytes - 1 - i)) & 0x000000FF);
     }
     return result;
   }
 
 
   private static final Pattern hexValuePattern = Pattern.compile("0x([0-9A-F]{2})+");
+
 
   public static byte[] toByteArray(final String hexValue) {
     if (hexValue == null) {

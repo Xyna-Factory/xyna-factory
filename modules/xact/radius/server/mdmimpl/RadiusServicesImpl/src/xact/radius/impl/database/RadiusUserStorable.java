@@ -1,18 +1,22 @@
+/*
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ */
 package xact.radius.impl.database;
 
-
-
-/*---------------------------------------------------
- * Copyright GIP AG <aktuelle Jahreszahl>
- * (http://www.gip.com)
- *
- * Hechtsheimer Str. 35-37
- * 55130 Mainz
- *----------------------------------------------------
- * $Revision: 304749 $
- * $Date: 2021-12-08 12:58:05 +0100 (Mi, 08 Dez 2021) $
- *----------------------------------------------------
- */
 
 
 import java.sql.ResultSet;
@@ -71,31 +75,29 @@ public class RadiusUserStorable extends Storable<RadiusUserStorable> {
 
   }
 
-  public RadiusUserStorable(final long id, final String username, final String userpassword, final String sharedsecret)
-  {
-    this(id, username,userpassword, sharedsecret, "",0,"","");
+
+  public RadiusUserStorable(final long id, final String username, final String userpassword, final String sharedsecret) {
+    this(id, username, userpassword, sharedsecret, "", 0, "", "");
   }
 
-  public RadiusUserStorable(final long id, final String username, final String userpassword, final String sharedsecret, final String servicetype, final long timestamp, final String role, final String ip)
-  {
+
+  public RadiusUserStorable(final long id, final String username, final String userpassword, final String sharedsecret,
+                            final String servicetype, final long timestamp, final String role, final String ip) {
     if (username == null) {
       throw new IllegalArgumentException("Username may not be null.");
-    }
-    else if ("".equals(username)) {
+    } else if ("".equals(username)) {
       throw new IllegalArgumentException("Username may not be empty string.");
     }
 
     if (userpassword == null) {
       throw new IllegalArgumentException("Userpassword may not be null.");
-    }
-    else if ("".equals(userpassword)) {
+    } else if ("".equals(userpassword)) {
       throw new IllegalArgumentException("Userpassword may not be empty string.");
     }
 
     if (sharedsecret == null) {
       throw new IllegalArgumentException("Sharedsecret may not be null.");
-    }
-    else if ("".equals(sharedsecret)) {
+    } else if ("".equals(sharedsecret)) {
       throw new IllegalArgumentException("Sharedsecret may not be empty string.");
     }
 
@@ -104,13 +106,11 @@ public class RadiusUserStorable extends Storable<RadiusUserStorable> {
     this.username = username;
     this.userpassword = userpassword;
     this.sharedsecret = sharedsecret;
-    this.servicetype=servicetype;
-    this.timestamp=timestamp;
-    this.role=role;
-    this.ip=ip;
+    this.servicetype = servicetype;
+    this.timestamp = timestamp;
+    this.role = role;
+    this.ip = ip;
   }
-
-
 
 
   public long getId() {
@@ -122,25 +122,31 @@ public class RadiusUserStorable extends Storable<RadiusUserStorable> {
     return this.username;
   }
 
+
   public String getUserPassword() {
     return this.userpassword;
   }
+
 
   public String getSharedSecret() {
     return this.sharedsecret;
   }
 
+
   public String getServiceType() {
     return this.servicetype;
   }
+
 
   public long getTimestamp() {
     return this.timestamp;
   }
 
+
   public String getRole() {
     return this.role;
   }
+
 
   public String getIp() {
     return this.ip;
@@ -204,7 +210,7 @@ public class RadiusUserStorable extends Storable<RadiusUserStorable> {
 
   @Override
   public <U extends RadiusUserStorable> void setAllFieldsFromData(U data) {
-    RadiusUserStorable data2 = (RadiusUserStorable)data;
+    RadiusUserStorable data2 = (RadiusUserStorable) data;
     id = data2.id;
     username = data2.username;
     userpassword = data2.userpassword;
