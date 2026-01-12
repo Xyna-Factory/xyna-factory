@@ -40,6 +40,7 @@ import xact.connection.DeviceType;
 import xact.connection.ManagedConnection;
 import xact.connection.ReadTimeout;
 import xact.connection.SendParameter;
+import xact.connection.netconf.NetConfDeviceType;
 import xact.ssh.SSHMessagePayload;
 import xact.ssh.SSHNETCONFConnection;
 import xact.ssh.SSHNETCONFConnectionInstanceOperation;
@@ -193,57 +194,8 @@ public class SSHNETCONFConnectionInstanceOperationImpl extends SSHNETCONFConnect
   private void lazyPrepare() {
     if (!prepared) {
       reconnectIfNecessary();
-      initChannelAndStreams(getInstanceVar().getConnectionParameter().getDefaultSendParameter(), new NETCONF(), new DeviceType() {
-
-        private static final long serialVersionUID = 1L;
-
-
-        @Override
-        public Boolean checkInteraction(CommandResponseTuple arg0, DocumentType arg1) {
-          return false;
-        }
-
-
-        @Override
-        public void cleanupAfterError(CommandResponseTuple arg0, DocumentType arg1, ManagedConnection arg2) {
-        }
-
-
-        @Override
-        public DeviceType clone() {
-          throw new RuntimeException();
-        }
-
-
-        @Override
-        public DeviceType clone(boolean arg0) {
-          throw new RuntimeException();
-        }
-
-
-        @Override
-        public void detectCriticalError(CommandResponseTuple arg0, DocumentType arg1) throws DetectedError {
-        }
-
-
-        @Override
-        public Command enrichCommand(Command c) {
-          return c;
-        }
-
-
-        @Override
-        public Boolean isResponseComplete(String response, DocumentType docType, ManagedConnection con, Command cmd) {
-          return docType.isResponseComplete(response);
-        }
-
-
-        @Override
-        public CommandResponseTuple removeDeviceSpecifics(CommandResponseTuple c) {
-          return c;
-        }
-
-      }, new Command(""));
+      initChannelAndStreams(getInstanceVar().getConnectionParameter().getDefaultSendParameter(), new NETCONF(),
+                            new NetConfDeviceType(), new Command(""));
       documentType = new NETCONF(capabilities.containsKey("urn:ietf:params:netconf:base:1.1") ? "1.1" : "1.0");
       prepared = true;
     }
