@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="buildTests" basedir="." >
+
+  <property name="root.dir" value="${basedir}/../.." />
+  <property name="ant.lib.dir" value="${user.home}/.ant/lib" />
+  <property name="ant.junit.version" value="1.10.15" />
+
+  <path id="classpath.junit">
+    <fileset dir="${root.dir}/server/lib">
+      <include name="junit*.jar" />
+    </fileset>
+  </path>
+
+
+  <!-- = = = = = = = = = = = = = = = = =
+            macrodef: runTests
+           = = = = = = = = = = = = = = = = =
+  -->
+  <!-- Important: needs ant-junit.jar on classpath to work -->
+  <macrodef name="runTests">
+    <attribute name="srcdir"
+               default="${basedir}"
+               description="Directory from which to test the files." />
+    <attribute name="destdir"
+               default="@{srcdir}"
+               description="Directory to write the reports to." />
+    <attribute name="cobertura"
+               default="false"
+               description="If true, run cobertura. Defaults to true." />
+    <attribute name="encoding" default="iso-8859-1" />
+    <sequential>
+      <echo message="Run junit tests from @{srcdir}" />
+      <if>
+        <available file="@{srcdir}/test" />
+        <then>
+          <compile-test basedir="@{srcdir}" encoding="@{encoding}" />
+          <mkdir dir="@{destdir}" />
+          <junit printsummary="yes">
+            <classpath>
+              <pathelement location="@{srcdir}/classes" />
+              <pathelement location="@{srcdir}/classes.test" />
+              <path refid="${classpath.test.@{srcdir}}" />
+              <fileset dir="@{srcdir}">
+                <include name="**/*.jar" />
+              </fileset>
+            </classpath>
+            <formatter type="xml" />
+            <batchtest todir="@{destdir}">
+              <fileset dir="@{srcdir}/test">
+                <include name="**/*Test.java" />
+                <exclude name="**/AllTests.java" />
+              </fileset>
+            </batchtest>
+          </junit>
+          <delete dir="@{srcdir}/classes.test" />
+        </then>
+        <else>
+          <echo message="No tests found in @{srcdir}" />
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+
+
+  <!-- = = = = = = = = = = = = = = = = =
+             macrodef: classpath-test
+            = = = = = = = = = = = = = = = = =
+-->
+  <macrodef name="classpath-test">
+    <attribute name="basedir" default="${basedir}" />
+    <attribute name="classes.test.dir" default="@{basedir}/classes.test" />
+    <attribute name="lib.test.dir" default="@{basedir}/lib.test" />
+    <sequential>
+      <classpath-run-test basedir="@{basedir}" />
+      <path id="classpath.test.libs">
+        <fileset dir="@{lib.test.dir}">
+          <include name="*.jar" />
+        </fileset>
+        <path refid="classpath.test.nolibs" />
+      </path>
+      <path id="classpath.test.nolibs">
+        <pathelement location="@{classes.test.dir}" />
+        <path refid="${classpath.run.@{basedir}}" />
+        <path refid="classpath.junit" />
+      </path>
+      <condition property="classpath.test.@{basedir}"
+                 value="classpath.test.libs"
+                 else="classpath.test.nolibs">
+        <available file="@{lib.test.dir}" />
+      </condition>
+    </sequential>
+  </macrodef>
+
+
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: compile-test
+         = = = = = = = = = = = = = = = = =
+-->
+  <macrodef name="compile-test">
+    <attribute name="basedir" default="${basedir}" />
+    <attribute name="src.dir" default="@{basedir}/src" />
+    <attribute name="classes.dir" default="@{basedir}/classes" />
+    <attribute name="lib.dir" default="@{basedir}/lib" />
+    <attribute name="src.test.dir" default="@{basedir}/test" />
+    <attribute name="classes.test.dir" default="@{basedir}/classes.test" />
+    <attribute name="lib.test.dir" default="@{basedir}/lib.test" />
+    <attribute name="encoding" default="iso-8859-1" />
+    <sequential>
+      <classpath-test basedir="@{basedir}"
+                      classes.test.dir="@{classes.test.dir}"
+                      lib.test.dir="@{lib.test.dir}" />
+      <condition property="testdir@{basedir}"
+                 value="@{src.test.dir}"
+                 else="@{basedir}">
+        <available file="@{src.test.dir}" />
+      </condition>
+      <if>
+        <not>
+          <available file="@{classes.dir}" />
+        </not>
+        <then>
+          <compile-impl basedir="@{basedir}"
+                   src.dir="@{src.dir}"
+                   classes.dir="@{classes.dir}"
+                   lib.dir="@{lib.dir}"
+                   encoding="@{encoding}" />
+        </then>
+      </if>
+      <delete dir="@{classes.test.dir}"
+              includeemptydirs="true"
+              failonerror="false" />
+      <mkdir dir="@{classes.test.dir}" />
+      <!-- copy meta data -->
+      <copy todir="@{classes.test.dir}">
+        <fileset dir="${testdir@{basedir}}">
+          <exclude name="**/*.java" />
+        </fileset>
+      </copy>
+      <javac encoding="@{encoding}"
+             fork="yes"
+             destdir="@{classes.test.dir}"
+             debug="on">
+        <src path="${testdir@{basedir}}" />
+        <classpath refid="${classpath.test.@{basedir}}" />
+      </javac>
+    </sequential>
+  </macrodef>
+
+
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: compile-impl
+         = = = = = = = = = = = = = = = = =
+-->
+  <macrodef name="compile-impl"
+              description="Compiles all source files (excluding test sources).">
+        <attribute name="basedir" default="${basedir}" />
+        <attribute name="src.dir" default="@{basedir}/src" />
+        <attribute name="classes.dir" default="@{basedir}/classes" />
+        <attribute name="lib.dir" default="@{basedir}/lib" />
+        <attribute name="encoding" default="iso-8859-1" />
+        <attribute name="memoryInitialSize" default="32m" /> <!-- wird nur benutzt, wenn auch max ungleich -1 ist. -->
+        <attribute name="memoryMaximumSize" default="-1" />
+	    <attribute name="target" default="-1" />
+        <element name="additionalSrcDirs" implicit="true" optional="true" />
+        <sequential>
+            <classpath-run-test basedir="@{basedir}"
+                           classes.dir="@{classes.dir}"
+                           lib.dir="@{lib.dir}" />
+            <delete dir="@{classes.dir}"
+                    includeemptydirs="true"
+                    failonerror="false" />
+            <mkdir dir="@{classes.dir}" />
+            <!-- copy meta data -->
+            <copy todir="@{classes.dir}">
+                <fileset dir="@{src.dir}">
+                    <exclude name="**/*.java" />
+                </fileset>
+            </copy>
+            <if>
+				<equals arg1="@{memoryMaximumSize}" arg2="-1" />
+          		<then>
+          		     <if>
+          		     	<equals arg1="@{target}" arg2="-1" />
+          		     	<then>
+          		     <!-- use defaults of jvm for min and max-memory and target -->
+                     		<javac destdir="@{classes.dir}"
+                     		       sourcepath=""
+                            		encoding="@{encoding}"
+                            		debug="on"
+                            		fork="yes"
+                            		includeJavaRuntime="true">
+                          		<src path="@{src.dir}" />
+                          		<additionalSrcDirs />
+                          		<classpath refid="${classpath.run.@{basedir}}" />
+                     		</javac>
+                     	</then>
+                     	<else>
+                      <!-- use defaults of jvm for min and max-memory -->
+                     		<javac destdir="@{classes.dir}"
+		                            sourcepath=""
+        		                    encoding="@{encoding}"
+                		            debug="on"
+                        		    fork="yes"
+                            		includeJavaRuntime="true"
+                            		target="@{target}">
+                          		<src path="@{src.dir}" />
+                          		<additionalSrcDirs />
+                          		<classpath refid="${classpath.run.@{basedir}}" />
+                     		</javac>
+                     	</else>
+                     </if>
+          		</then>
+          		<else>
+          		   <if>
+          		     	<equals arg1="@{target}" arg2="-1" />
+          		     	<then>
+          		     <!-- use defaults of jvm for target -->
+ 							<javac destdir="@{classes.dir}"
+                            		sourcepath=""
+                           			encoding="@{encoding}"
+                            		debug="on"
+                            		fork="yes"
+                            		includeJavaRuntime="true"
+                            		memoryInitialSize="@{memoryInitialSize}"
+                            		memoryMaximumSize="@{memoryMaximumSize}">
+                          		<src path="@{src.dir}" />
+                          		<additionalSrcDirs />
+                          		<classpath refid="${classpath.run.@{basedir}}" />
+                     		</javac>
+                     	</then>
+                     	<else>
+                      <!-- use no defaults of jvm -->
+ 							<javac destdir="@{classes.dir}"
+                            		sourcepath=""
+                           			encoding="@{encoding}"
+                            		debug="on"
+                            		fork="yes"
+                            		includeJavaRuntime="true"
+                            		memoryInitialSize="@{memoryInitialSize}"
+                            		memoryMaximumSize="@{memoryMaximumSize}"
+                            	    target="@{target}">
+                          		<src path="@{src.dir}" />
+                          		<additionalSrcDirs />
+                          		<classpath refid="${classpath.run.@{basedir}}" />
+                     		</javac>
+                     	</else>
+                     </if>
+          		</else>
+          	</if>
+        </sequential>
+    </macrodef>
+
+
+  <!-- = = = = = = = = = = = = = = = = =
+                macrodef: classpath-run-test
+               = = = = = = = = = = = = = = = = =
+-->
+  <macrodef name="classpath-run-test"
+            description="Set classpath properties for compile. Should only called from compile macro.">
+    <attribute name="basedir" default="${basedir}" />
+    <attribute name="classes.dir" default="@{basedir}/classes" />
+    <attribute name="lib.dir" default="@{basedir}/lib" />
+    <sequential>
+      <if>
+        <isreference refid="libraries" />
+        <then>
+          <echo message="Using Libraries" />
+          <path id="classpath.run.libs">
+            <fileset dir="@{lib.dir}">
+              <include name="**/*.jar" />
+            </fileset>
+            <path refid="libraries" />
+            <path refid="classpath.run.nolibs" />
+          </path>
+        </then>
+        <else>
+          <echo message="NOT using Libraries" />
+          <path id="classpath.run.libs">
+            <fileset dir="@{lib.dir}">
+              <include name="**/*.jar" />
+            </fileset>
+            <path refid="classpath.run.nolibs" />
+          </path>
+        </else>
+      </if>
+
+      <path id="classpath.run.nolibs">
+        <pathelement location="@{classes.dir}" />
+      </path>
+      <condition property="classpath.run.@{basedir}"
+                 value="classpath.run.libs"
+                 else="classpath.run.nolibs">
+        <or>
+			<available file="@{lib.dir}" />
+			<isreference refid="libraries" />
+		</or>
+      </condition>
+    </sequential>
+  </macrodef>
+
+
+  <target name="setup-ant-junit" description="Download jars needed by ant to directory .ant/lib">
+    <mkdir dir="${ant.lib.dir}" />
+    <property file="${basedir}/build.env" />
+    <mvn-get artifact="org.apache.ant:ant-junit:${ant.junit.version}:jar" outdir="${ant.lib.dir}" />
+  </target>
+
+
+  <macrodef name="mvn-get">
+    <attribute name="artifact" />
+    <attribute name="outdir" />
+    <sequential>
+      <exec executable="mvn">
+        <arg value="dependency:get"/>
+        <arg value="-Dartifact=@{artifact}"/>
+      </exec>
+      <exec executable="mvn">
+        <arg value="dependency:copy"/>
+        <arg value="-Dartifact=@{artifact}"/>
+        <arg value="-DoutputDirectory=@{outdir}"/>
+      </exec>
+    </sequential>
+  </macrodef>
+
+</project>
