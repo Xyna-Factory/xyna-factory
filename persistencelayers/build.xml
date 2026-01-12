@@ -224,10 +224,6 @@
       <property name="target.dir.test"
                 value="${basedir}/../common/lib/test" />
     </ant>
-    <ant dir="${source.persistence.dir}/${mySQLPersistenceLayerSimpleClassName}">
-      <property name="target.dir"
-                value="${target.persistence.dir}/${mySQLPersistenceLayerSimpleClassName}" />
-    </ant>
     <mkdir dir="${source.persistence.dir}/${xynaLocalMemoryPersistenceLayerSimpleClassName}/lib.test" />
     <ant dir="${source.persistence.dir}/XynaMemoryPersistenceLayer" target="buildTest">
       <property name="target.dir.test"
