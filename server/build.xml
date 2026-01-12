@@ -18,8 +18,10 @@
 -->
 <project name="build_server" default="build" basedir="." >
 
-  <import file="../installation/build/ant-xyna.xml" />
+  <property name="root.dir" value="${basedir}/.." />
+
   <import file="../installation/build/macros.xml" />
+  <import file="../installation/build/buildTests.xml" />
 
   <property name="project.name" value="xynafactory" />
   <property name="build.dir" value="${basedir}/deploy" />

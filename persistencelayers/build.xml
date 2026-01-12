@@ -18,7 +18,10 @@
 -->
 <project name="build_persistencelayers" default="build" basedir=".">
 
-  <import file="../installation/build/ant-xyna.xml" />
+  <property name="root.dir" value="${basedir}/../" />
+
+  <import file="../installation/build/macros.xml" />
+  <import file="../installation/build/buildTests.xml" />
 
   <property name="persistence.layers.token" value="&lt;!-- Persistence Layers (do not modify this line. it is used by the buildscripts to include persistence layers) -->" />
 
@@ -214,6 +217,22 @@
         <include name="**/*.jar"/>
       </fileset>
     </path>
+    <mkdir dir="${basedir}/../common/lib/test" />
+    <ant dir="${root.dir}/server" target="buildTest">
+      <property name="target.dir"
+                value="${basedir}/../common/lib/xyna" />
+      <property name="target.dir.test"
+                value="${basedir}/../common/lib/test" />
+    </ant>
+    <ant dir="${source.persistence.dir}/${mySQLPersistenceLayerSimpleClassName}">
+      <property name="target.dir"
+                value="${target.persistence.dir}/${mySQLPersistenceLayerSimpleClassName}" />
+    </ant>
+    <mkdir dir="${source.persistence.dir}/${xynaLocalMemoryPersistenceLayerSimpleClassName}/lib.test" />
+    <ant dir="${source.persistence.dir}/XynaMemoryPersistenceLayer" target="buildTest">
+      <property name="target.dir.test"
+                value="${source.persistence.dir}/${xynaLocalMemoryPersistenceLayerSimpleClassName}/lib.test" />
+    </ant>
   	<runTests srcdir="${source.persistence.dir}/${xynaXMLShellPersistenceLayerSimpleClassName}"
   	              destdir="${target.persistence.dir}/testresults"
   	              cobertura="${cobertura}" />
