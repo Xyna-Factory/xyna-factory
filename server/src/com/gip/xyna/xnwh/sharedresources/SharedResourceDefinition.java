@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+/*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<project name="prepareXmomCompile" default="resolve" basedir="." >
+ */
+package com.gip.xyna.xnwh.sharedresources;
 
-    <import file="../ant-xyna.xml" />
-    <import file="../macros.xml" />
 
-    <!-- ================================= 
-               target: resolve             
-          =================================  -->
-    <target name="resolve" description="resolve" >
-        <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/factory" />
-    </target>
 
-</project>
+public abstract class SharedResourceDefinition<T> {
+
+  private final String path;
+
+
+  public SharedResourceDefinition(String path) {
+    this.path = path;
+  }
+
+
+  public abstract byte[] serialize(T value);
+
+
+  public abstract SharedResourceInstance<T> deserialize(byte[] value, String id);
+
+
+  public String getPath() {
+    return path;
+  }
+}

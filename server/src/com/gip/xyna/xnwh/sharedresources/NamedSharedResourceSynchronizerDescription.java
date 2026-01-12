@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+/*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +14,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<project name="prepareXmomCompile" default="resolve" basedir="." >
+ */
+package com.gip.xyna.xnwh.sharedresources;
 
-    <import file="../ant-xyna.xml" />
-    <import file="../macros.xml" />
 
-    <!-- ================================= 
-               target: resolve             
-          =================================  -->
-    <target name="resolve" description="resolve" >
-        <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/factory" />
-    </target>
 
-</project>
+public class NamedSharedResourceSynchronizerDescription {
+
+  private String name;
+  private String description;
+
+
+  public NamedSharedResourceSynchronizerDescription(String name, String description) {
+    this.name = name;
+    this.description = description;
+  }
+
+
+  public String getName() {
+    return name;
+  }
+
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+
+  public String getDescription() {
+    return description;
+  }
+
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+}
