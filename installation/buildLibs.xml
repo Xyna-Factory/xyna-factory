@@ -19,7 +19,7 @@
 
   <property name="ant.lib.dir" value="${user.home}/.ant/lib" />
 
-  <target name="build-all" description="Download or build all libs, administered by Maven, needed for xyna development" depends="init-maven, build-factory, build-persistence, build-tests, refresh-libs-from-maven" />
+  <target name="build-all" description="Download or build all libs, administered by Maven, needed for xyna development" depends="init-maven, build-factory, build-persistence, build-tests, refresh-libs-from-maven, build-oracle-aq-tools" />
 
 
   <target name="refresh-libs-from-maven" description="Refresh libs from Maven repository without rebuilding anything">
@@ -46,6 +46,11 @@
 
   <target name="build-tests" description="build-tests">
     <ant antfile="build.xml" target="getLibsForTest" inheritAll="false" dir="${basedir}/../server" />
+  </target>
+
+
+  <target name="build-oracle-aq-tools" description="build-oracle-aq-tools">
+    <ant antfile="build.xml" target="installMavenArtifact" inheritAll="false" dir="${basedir}/../modules/xact/queue/oracleaq/sharedlib/OracleAQTools" />
   </target>
 
 

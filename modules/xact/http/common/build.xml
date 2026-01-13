@@ -23,17 +23,12 @@
         <path location="${basedir}/../../../../" />
     </pathconvert>
 
-    <import file="${root.dir}/installation/build/ant-xyna.xml" />
     <import file="${root.dir}/installation/build/macros.xml" />
 
     <property name="project.name" value="common" />
     <property name="src.dir" value="src" />
     <property name="classes.dir" value="classes" />
     <property name="build.dir" value="build" />
-    <property name="target.dir" value="${basedir}/build" />
-    <property name="workspacename" value="HTTP" />
-    <property name="revision.dir" value="../revisions/rev_25" />
-
     <property name="target.dir" value="${classes.dir}" />
         
     <property name="lib.dir" value="lib" />
@@ -42,6 +37,7 @@
 
     <property file="${basedir}/server.properties" />
     <property file="${root.dir}/server.properties" />
+    <property file="${basedir}/../workspace.properties" />
 
     <condition property="server.available">
         <and>
@@ -52,10 +48,13 @@
         </and>
     </condition>
 
-    <property name="server.mdm.xml.path" value="${server.path}/${revision.dir}/saved/XMOM" />
+    <condition property="workspacename.available">
+        <isset property="workspacename" />
+    </condition>
+
 
     <target name="build" description="Compiles" depends="resolve">
-        <delete dir="${classes.dir}" />
+        <delete dir="${target.dir}" />
         <mkdir dir="${target.dir}" />
         <javac debug="on" includeantruntime="false" encoding="ISO-8859-1" fork="true" srcdir="${src.dir}" destdir="${target.dir}">
             <classpath>
@@ -66,20 +65,9 @@
         </javac>
     </target>
 
-    <target name="resolve">
+    <target name="resolve" description="resolve" >
         <resolve pomFile="${basedir}/pom.xml" dir="${lib.dir}/xyna" />
         <loadLicenses targetDir="${lib.dir}" />
-    </target>
-
-    <target name="update-mdm" description="Receive new mdm.jar from Xyna Factory">
-        <fail message="No server properties specified. Unable to build-mdm-jar" unless="server.available" />
-        <!-- cp xml from XMOM -->
-        <scp file="${server.userid}:${server.password}@${server.host}:${server.mdm.xml.path}/xact/http/*" todir="${mdm.xml.path}/xact/http/" trust="true" verbose="true">
-        </scp>
-        <!-- build mdm.jar -->
-        <sshexec host="${server.host}" username="${server.userid}" password="${server.password}" command="cd ${server.path}; ./xynafactory.sh buildmdmjar -workspaceName '${workspacename}' -r" trust="true" failonerror="true" />
-        <!-- copy mdm.jar from xyna server -->
-        <scp file="${server.userid}:${server.password}@${server.host}:${server.path}/mdm.jar" todir="${lib.mdm.dir}" trust="true" verbose="true" />
     </target>
 
 </project>

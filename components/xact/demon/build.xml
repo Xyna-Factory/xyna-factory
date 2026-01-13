@@ -40,6 +40,6 @@
          <install-maven-artifact artifactFile="${target.dir}/demonlib.jar" pomFile="${basedir}/pom.xml" />
     </target>
 
-    <import file="${root.dir}/xynautils/install/xynautils/masterbuild.xml" />
+    <import file="${root.dir}/installation/build/macros.xml" />
 
 </project>

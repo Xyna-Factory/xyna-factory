@@ -18,8 +18,10 @@
 -->
 <project name="build_server" default="build" basedir="." >
 
-  <import file="../installation/build/ant-xyna.xml" />
+  <property name="root.dir" value="${basedir}/.." />
+
   <import file="../installation/build/macros.xml" />
+  <import file="../installation/build/buildTests.xml" />
 
   <property name="project.name" value="xynafactory" />
   <property name="build.dir" value="${basedir}/deploy" />
@@ -77,32 +79,19 @@
     </jar>
   </target>
 
-  <!--<target name="buildJavaDoc" depends="buildJar">
-    <javadoc destdir="${basedir}">
-      <classpath>
-        <fileset dir="${basedir}">
-          <include name="${lib.dir}/*.jar" />
-        </fileset>
-      </classpath>
-      <packageset dir="${basedir}/src">
-        <exclude name="**/test" />
-      </packageset>
-    </javadoc>
-  </target> -->
-
-  <target name="genJD">
+  <!-- - - - - - - - - - - - - - - - - -
+          target: genJD
+         - - - - - - - - - - - - - - - - - -->
+  <target name="genJD" description="generate JavaDoc" >
+    <property name="lib.dir" value="${basedir}/lib" />
     <javadoc destdir="${basedir}/javadoc"
              encoding="ISO-8859-1"
              version="true"
              author="true">
-      <link href="http://java.sun.com/j2se/1.5.0/docs/api" />
-      <link href="http://download-uk.oracle.com/docs/cd/B14117_01/appdev.101/b12024" />
-      <link href="http://www.dpml.net/api/ant/1.7.0" />
       <classpath>
         <fileset dir="${lib.dir}">
           <include name="**/*.jar" />
         </fileset>
-        <path refid="classpath.ant" />
       </classpath>
       <packageset dir="${basedir}/src">
         <exclude name="**/test" />
