@@ -45,7 +45,7 @@ public class KryoSerializedSharedResourceDefinition<T> extends SharedResourceDef
 
   @Override
   public byte[] serialize(T value) {
-    Output output = new ByteBufferOutput();
+    Output output = new ByteBufferOutput(1024); //TODO
     kryo.writeObject(output, value);
     return output.toBytes();
   }

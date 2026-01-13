@@ -19,7 +19,7 @@ package com.gip.xyna.xnwh.sharedresources;
 
 
 
-import java.util.Map;
+import java.util.List;
 
 import com.gip.xyna.xmcp.PluginDescription;
 
@@ -30,7 +30,7 @@ public interface SharedResourceSynchronizerFactory {
   public String getSynchronizerName();
 
 
-  public SharedResourceSynchronizer createSynchronizer(Map<String, String> param);
+  public SharedResourceSynchronizer createSynchronizer(List<String> params);
 
 
   public PluginDescription getDescription();
