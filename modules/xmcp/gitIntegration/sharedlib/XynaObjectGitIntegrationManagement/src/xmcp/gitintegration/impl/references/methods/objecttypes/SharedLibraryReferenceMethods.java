@@ -18,13 +18,13 @@
 package xmcp.gitintegration.impl.references.methods.objecttypes;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.FileUtils;
-import com.gip.xyna.exceptions.Ex_FileAccessException;
 import com.gip.xyna.xfmg.xfctrl.classloading.SharedLibDeploymentAlgorithm;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement.PathType;
@@ -45,25 +45,26 @@ public class SharedLibraryReferenceMethods implements ReferenceObjectTypeMethods
     }
 
 
-    for(File candidateFile : candidateFiles) {
-      if(candidateFile.getParentFile().getAbsolutePath().equals(targetDir.getAbsolutePath())) {
-        if(logger.isDebugEnabled()) {
-          logger.debug("Skipping copy of " + candidateFile.getName() + " for sharedlib " + objectName + " in revision " + revision + ", because it is already at the destination");
+    for (File candidateFile : candidateFiles) {
+      try {
+        if (Files.isSameFile(candidateFile.getParentFile().toPath(), targetDir.toPath())) {
+          if (logger.isDebugEnabled()) {
+            logger.debug("Skipping copy of " + candidateFile.getName() + " for sharedlib " + objectName + " in revision " + revision
+                + ", because it is already at the destination");
+          }
+        } else {
+          FileUtils.copyFileToDir(candidateFile, targetDir);
         }
-        continue;
-      }
-      try {
-        FileUtils.copyFileToDir(candidateFile, targetDir);
-      } catch (Ex_FileAccessException e) {
-        throw new RuntimeException(e);
-      }
 
-
-      try {
-        SharedLibDeploymentAlgorithm.deploySharedLib(objectName, revision);
       } catch (Exception e) {
         throw new RuntimeException(e);
       }
+    }
+    
+    try {
+      SharedLibDeploymentAlgorithm.deploySharedLib(objectName, revision);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
   }
 
