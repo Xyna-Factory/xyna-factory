@@ -18,7 +18,6 @@
 -->
 <project name="build" default="build" basedir="." >
 
-  <import file="../../installation/build/ant-xyna.xml" />
   <import file="../../installation/build/macros.xml" />
 
   <property name="project.name.local2" value="XynaMemoryPersistenceLayer" />
@@ -46,6 +45,7 @@
   <target name="buildTest" depends="build">
     <delete dir="${basedir}/classes" />
     <mkdir dir="${basedir}/classes" />
+    <mkdir dir="${basedir}/lib.test" />
     <javac debug="on"
            encoding="iso8859-1"
            fork="yes"
