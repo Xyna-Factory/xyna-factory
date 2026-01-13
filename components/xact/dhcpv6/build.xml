@@ -17,8 +17,6 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <project name="build" default="build" basedir=".">
-
-  <!--<import file="ant-xyna.xml" /> -->
 	
   <property name="target.dir" value="${basedir}" />
 
