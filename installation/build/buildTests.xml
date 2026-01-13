@@ -318,7 +318,6 @@
 
   <target name="setup-ant-junit" description="Download jars needed by ant to directory .ant/lib">
     <mkdir dir="${ant.lib.dir}" />
-    <property file="${basedir}/build.env" />
     <mvn-get artifact="org.apache.ant:ant-junit:${ant.junit.version}:jar" outdir="${ant.lib.dir}" />
   </target>
 
