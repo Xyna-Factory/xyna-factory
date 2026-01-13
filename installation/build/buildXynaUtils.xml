@@ -16,12 +16,14 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="xynautils_build" default="build">
+<project name="xynautils_build" default="build" basedir="." >
 
   <property name="project.name" value="xynautils-${utils.name}" />
   <property name="vendor.name" value="Xyna GmbH" />
 
-  <import file="${ant.file.xynautils_masterbuild}/../../../../installation/build/macros.xml" />
+  <property name="root.dir" value="${basedir}/../.." />
+
+  <import file="./macros.xml" />
 
   <property name="target.dir" value="${basedir}/deploy" />
 

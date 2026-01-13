@@ -24,7 +24,7 @@
 	<property name="utils.name" value="ldap"/>
 	
 	<!--Master build file-->
-	<property name="build.file" value="../install/xynautils/buildUtils.xml"/>
+	<property name="build.file" value="../../installation/build/buildXynaUtils.xml"/>
 			
 	<!--Import all targets from master build file-->
 	<import file="${build.file}"/>

@@ -24,6 +24,6 @@
 	<property name="utils.name" value="logging"/>
 
 	<!--Import all targets from master build file-->
-	<import file="${basedir}/../install/xynautils/buildUtils.xml"/>
+	<import file="${basedir}/../../installation/build/buildXynaUtils.xml"/>
 
 </project>
