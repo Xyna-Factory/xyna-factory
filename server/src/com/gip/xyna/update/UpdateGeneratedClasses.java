@@ -150,6 +150,7 @@ import com.gip.xyna.xnwh.persistence.xmom.XMOMPersistenceBase;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMPersistenceManagement;
 import com.gip.xyna.xnwh.pools.ConnectionPoolManagement;
 import com.gip.xyna.xnwh.securestorage.SecureStorage;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceManagement;
 import com.gip.xyna.xnwh.statistics.StatisticsStore;
 import com.gip.xyna.xnwh.xclusteringservices.XynaClusteringServices;
 import com.gip.xyna.xnwh.xwarehousejobs.XynaWarehouseJobManagement;
@@ -2509,6 +2510,12 @@ public class UpdateGeneratedClasses {
 
                   @Override
                   public StatisticsStore getStatisticsStore() {
+                    return null;
+                  }
+
+
+                  @Override
+                  public SharedResourceManagement getSharedResourceManagement() {
                     return null;
                   }
                 };

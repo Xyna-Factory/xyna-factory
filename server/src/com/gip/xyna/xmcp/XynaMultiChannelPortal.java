@@ -3117,6 +3117,9 @@ public class XynaMultiChannelPortal extends XynaMultiChannelPortalBase {
       case repositoryAccess : 
         return XynaFactory.getInstance().getXynaDevelopment()
             .getXynaLibraryDevelopment().getRepositoryAccessManagement().listRepositoryAccessImpls();
+      case sharedResourceSynchronizer :
+        return XynaFactory.getInstance().getXynaNetworkWarehouse().getSharedResourceManagement()
+            .listSharedResourceSynchronizerDescriptions();
       default :
         throw new UnsupportedOperationException("listPluginDescriptions for " + type + " is unsupported");
     }

@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="TMF_Mapping_Tools" factoryVersion="" versionName="1.0.2" xmlVersion="1.1">
+<Application applicationName="TMF_Mapping_Tools" factoryVersion="" versionName="1.0.3" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Tools zum Umgang mit TMF633 und TMF640 API Applicationen, die mit der OASBase-Applikation generiert wurden</Description>
     <Description Lang="EN">Tools to work with TMF633 and TMF640 API applications generated with the OASBase application</Description>
@@ -342,6 +342,10 @@
       <FqName>xfmg.tmf633.ParseKeyValueListIntoMap</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xfmg.tmf633.PartyRefNotFound</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
     <XMOMEntry implicitDependency="true">
       <FqName>xfmg.tmf633.ServiceUnknown</FqName>
       <Type>EXCEPTION</Type>
@@ -405,6 +409,10 @@
     <XMOMEntry implicitDependency="true">
       <FqName>xfmg.tmf640.ServiceIdentificationConfig</FqName>
       <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xfmg.tmf640.ServiceRelationshipNotFound</FqName>
+      <Type>EXCEPTION</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
       <FqName>xfmg.tmf640.SetObjectArrayCharacteristic</FqName>
@@ -481,6 +489,10 @@
     <XMOMEntry implicitDependency="true">
       <FqName>xfmg.tmf640.TransformStructureProxy</FqName>
       <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xfmg.tmf640.UnsupportedConversionType</FqName>
+      <Type>EXCEPTION</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
       <FqName>xfmg.tmf640.mapping.DuplicateCharacteristicFound</FqName>
