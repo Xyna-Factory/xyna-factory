@@ -172,25 +172,10 @@
                     </path>
                 </else>
             </if>
-            <if>
-                <or>
-                    <available file="${jdev.home}" />
-                    <isset property="env.ORACLE_HOME" />
-                </or>
-                <then>
-                    <echo message="oracle.home is set: ${oracle.home}" />
-                    <path id="classpath.run.nolibs">
-                        <pathelement location="@{classes.dir}" />
-                        <path refid="classpath.oc4j" />
-                    </path>
-                </then>
-                <else>
-                    <echo message="oracle.home is not set" />
-                    <path id="classpath.run.nolibs">
-                        <pathelement location="@{classes.dir}" />
-                    </path>
-                </else>
-            </if>
+            <path id="classpath.run.nolibs">
+                <pathelement location="@{classes.dir}" />
+            </path>
+
             <condition property="classpath.run.@{basedir}" value="classpath.run.libs" else="classpath.run.nolibs">
                 <or>
                     <available file="@{lib.dir}" />
@@ -687,5 +672,35 @@
             </resolver:resolve>
         </sequential>
     </macrodef>
-  
+
+    <!-- =================================
+        macro: loadLicenses
+        ================================= -->
+    <macrodef name="loadLicenses">
+        <attribute name="targetDir"/>
+        <attribute name="pom" default="${basedir}/pom.xml" />
+        <sequential>
+            <exec osfamily="windows" executable="cmd" outputproperty="exec.output">
+                <arg value="/c"/>
+                <arg value="mvn"/>
+                <arg value="-f" />
+                <arg value="@{pom}" />
+                <arg value="license:download-licenses" />
+                <arg value="-DlicensesOutputDirectory=@{targetDir}" />
+                <arg value="-DlicensesOutputFile=@{targetDir}\licenses.xml" />
+                <arg value="-Dorg.slf4j.simpleLogger.log.org.codehaus.mojo.license=debug" />
+                <!--arg value="-Dlicense.organizeLicensesByDependencies=true" /-->
+            </exec>
+            <exec osfamily="unix" executable="mvn" outputproperty="exec.output">
+                <arg value="-f" />
+                <arg value="@{pom}" />
+                <arg value="license:download-licenses" />
+                <arg value="-DlicensesOutputDirectory=@{targetDir}" />
+                <arg value="-DlicensesOutputFile=@{targetDir}/licenses.xml" />
+                <!--arg value="-Dlicense.organizeLicensesByDependencies=true" /-->
+            </exec>
+            <echo message="${exec.output}" />
+        </sequential>
+    </macrodef>
+
 </project>
