@@ -18,8 +18,12 @@
 <project name="xyna-installation-build-libs" basedir="." default="build-all" xmlns:resolver="antlib:org.apache.maven.resolver.ant">
 
   <property name="ant.lib.dir" value="${user.home}/.ant/lib" />
+  <property name="gitintegration.lib.dir" value="${basedir}/build/lib/gitintegration" />
+  <property name="gitintegration.module.dir" value="${basedir}/../modules/xmcp/gitIntegration" />
+  <property name="gitintegration.wsp.mgmt.dir" value="${gitintegration.module.dir}/mdmimpl/WorkspaceObjectManagementImpl" />
 
-  <target name="build-all" description="Download or build all libs, administered by Maven, needed for xyna development" depends="init-maven, build-factory, build-persistence, build-tests, refresh-libs-from-maven, build-oracle-aq-tools" />
+
+  <target name="build-all" description="Download or build all libs, administered by Maven, needed for xyna development" depends="init-maven, build-factory, build-persistence, build-tests, refresh-libs-from-maven, build-oracle-aq-tools, build-gitintegration-libs" />
 
 
   <target name="refresh-libs-from-maven" description="Refresh libs from Maven repository without rebuilding anything">
@@ -51,6 +55,18 @@
 
   <target name="build-oracle-aq-tools" description="build-oracle-aq-tools">
     <ant antfile="build.xml" target="installMavenArtifact" inheritAll="false" dir="${basedir}/../modules/xact/queue/oracleaq/sharedlib/OracleAQTools" />
+  </target>
+
+
+  <target name="build-gitintegration-libs" description="build-gitintegration-libs">
+    <mkdir dir="${gitintegration.lib.dir}" />
+    <ant antfile="build.xml" target="cleanup-lib" inheritAll="false" dir="${gitintegration.wsp.mgmt.dir}" />
+    <ant antfile="build.xml" target="build" inheritAll="false" dir="${gitintegration.wsp.mgmt.dir}" >
+      <property name="target.dir" value="${gitintegration.lib.dir}" />
+    </ant>
+    <copy todir="${gitintegration.lib.dir}">
+      <fileset dir="${gitintegration.wsp.mgmt.dir}/lib/xyna" includes="*.jar" />
+    </copy>
   </target>
 
 

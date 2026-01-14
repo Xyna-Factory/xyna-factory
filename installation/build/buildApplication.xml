@@ -357,6 +357,9 @@
 
     </target>
 
+    <!-- =================================
+         target: get-xyna-modules
+         ================================= -->
 	<target name="get-xyna-modules" >
 		<if>
 			<not>
@@ -440,12 +443,18 @@
 
     </target>
 
+    <!-- =================================
+         target: cleanup-lib
+         ================================= -->
     <target name="cleanup-lib">
         <delete>
              <fileset dir="${basedir}" includes="**/*.jar"/>
         </delete>
     </target>
 
+    <!-- =================================
+         target: generate-application-xml
+         ================================= -->
 	<target name="generate-application-xml" description="generate application.xml from workspace-xml">
 			<!-- directory or file of workspace-xml config, or its parent directory -->
 			<property name="workspacexml.dir" value="${basedir}/.." />
