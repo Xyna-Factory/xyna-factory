@@ -95,11 +95,11 @@ public class XynaRadiusStartParameter implements StartParameter {
     try {
       ip = getIP();
     } catch (XACT_InterfaceNoIPv6ConfiguredException e) {
-      throw new RuntimeException("Problems building startparameters: ", e);
+      throw new RuntimeException("Problems building startparameters: no IPv6 configured", e);
     } catch (XACT_NetworkInterfaceNotFoundException e) {
-      throw new RuntimeException("Problems building startparameters: ", e);
+      throw new RuntimeException("Problems building startparameters: network interface not found", e);
     } catch (XACT_InterfaceNoIPConfiguredException e) {
-      throw new RuntimeException("Problems building startparameters: ", e);
+      throw new RuntimeException("Problems building startparameters: no IP configured", e);
     }
 
     int port = 1812; //RADIUS Port
@@ -120,8 +120,8 @@ public class XynaRadiusStartParameter implements StartParameter {
    *         "descriptionC", "descriptionD"}}
    */
   public String[][] getParameterDescriptions() {
-    return new String[][] {{"The local ip address to listen on or the name of one definied in NetworkConfigurationManagement.",
-        "The port to listen on for radius messages."}};
+    return new String[][] {{"The local ip address to listen on, or the name of one definied in NetworkConfigurationManagement.",
+        "The port to listen on for radius messages (optional, default: 1812)."}};
   }
 
 

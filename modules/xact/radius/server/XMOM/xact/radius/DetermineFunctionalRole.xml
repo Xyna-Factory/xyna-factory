@@ -15,55 +15,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="3" Label="Determine Functional Role" TypeName="DetermineFunctionalRole" TypePath="xact.radius" Version="1.8">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Determine Functional Role" TypeName="DetermineFunctionalRole" TypePath="xact.radius" Version="1.8">
   <Meta>
     <FixedDetailOptions>highDetailsMode,showDetailAreas,useWidth,vScroll(440)</FixedDetailOptions>
     <IsXynaComponent>true</IsXynaComponent>
   </Meta>
-  <Operation ID="2" Label="Determine Functional Role" Name="DetermineFunctionalRole">
+  <Operation ID="2" IsStatic="false" Label="Determine Functional Role" Name="DetermineFunctionalRole">
+    <Input>
+      <Data ID="97" Label="User Role" ReferenceName="UserRole" ReferencePath="xact.radius" VariableName="userRole97"/>
+    </Input>
+    <Output>
+      <Data ID="99" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole99"/>
+    </Output>
+    <ServiceReference ID="119" Label="XynaRadiusServices" ReferenceName="XynaRadiusServices.XynaRadiusServices" ReferencePath="xact.radius">
+      <Source RefID="120"/>
+      <Target RefID="120"/>
+    </ServiceReference>
     <Meta>
       <Abstract.UID>D0FF5DC1-12F8-8039-3925-9494467DA117</Abstract.UID>
     </Meta>
-    <Input>
-      <Data ID="97" Label="User Role" ReferenceName="UserRole" ReferencePath="xact.radius" VariableName="userRole97">
-        <Target RefID="12"/>
-      </Data>
-    </Input>
-    <Output>
-      <Data ID="99" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole99">
-        <Source RefID="4"/>
-      </Data>
-    </Output>
     <Mappings ID="12" Label="Create Xyna property key">
-      <Source RefID="97"/>
-      <Target RefID="131"/>
       <Input>
         <Data ID="98" Label="User Role" ReferenceName="UserRole" ReferencePath="xact.radius" VariableName="userRole98"/>
         <Source RefID="97"/>
       </Input>
-      <Local>
-        <Data ID="33" Label="value" VariableName="value">
-          <Meta>
-            <Type>String</Type>
-          </Meta>
-          <Value>xact.radius.rightmanagment.</Value>
-        </Data>
-      </Local>
       <Output>
         <Data ID="130" Label="Xyna property key" ReferenceName="XynaPropertyKey" ReferencePath="xact.radius" VariableName="xynaPropertyKey130"/>
         <Target RefID="131"/>
       </Output>
-      <Mapping>%2%.xynaPropertyKey~=concat(%1%, %0%.role)</Mapping>
+      <Mapping>%1%.xynaPropertyKey~=concat("xact.radius.rightmanagment.", %0%.role)</Mapping>
     </Mappings>
     <Function ID="120" Label="Get Xyna Property">
       <Source RefID="119"/>
       <Source RefID="131"/>
       <Target RefID="119"/>
-      <Target RefID="122"/>
       <Target RefID="129"/>
-      <Meta>
-        <FixedDetailOptions>openCatches</FixedDetailOptions>
-      </Meta>
       <Invoke Operation="getXynaProperty" ServiceID="119">
         <Source RefID="131"/>
       </Invoke>
@@ -72,20 +58,11 @@
       </Receive>
       <Catch ExceptionID="122" ID="124">
         <Mappings ID="128" Label="Set Value to UNKNOWN">
-          <Target RefID="133"/>
-          <Local>
-            <Data ID="125" Label="value" VariableName="value125">
-              <Meta>
-                <Type>String</Type>
-              </Meta>
-              <Value>UNKNOWN</Value>
-            </Data>
-          </Local>
           <Output>
             <Data ID="134" Label="Xyna property string value" ReferenceName="XynaPropertyStringValue" ReferencePath="xact.radius" VariableName="xynaPropertyStringValue"/>
             <Target RefID="133"/>
           </Output>
-          <Mapping>%1%.xynaPropertyStringValue~=%0%</Mapping>
+          <Mapping>%0%.xynaPropertyStringValue~="UNKNOWN"</Mapping>
         </Mappings>
         <Assign ID="123">
           <Source RefID="133"/>
@@ -110,8 +87,6 @@
       </Input>
       <Case ID="36" Label="true" Premise="tolowercase(%0%.xynaPropertyStringValue)==&quot;super-user&quot;">
         <Mappings ID="23" Label="Mapping">
-          <Source RefID="103"/>
-          <Target RefID="101"/>
           <Input>
             <Data ID="102" Label="Super User" ReferenceName="SuperUser" ReferencePath="xact.radius" VariableName="superUser102"/>
             <Source RefID="103">
@@ -124,7 +99,7 @@
             <Data ID="100" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole100"/>
             <Target RefID="101"/>
           </Output>
-          <Mapping>%1%~=%0%</Mapping>
+          <Mapping>%1%#cast("xact.radius.SuperUser")~=%0%</Mapping>
         </Mappings>
         <Assign ID="35">
           <Source RefID="101"/>
@@ -145,8 +120,6 @@
           </Input>
           <Case ID="39" Label="true" Premise="tolowercase(%0%.xynaPropertyStringValue)==&quot;read-write&quot;">
             <Mappings ID="26" Label="Mapping">
-              <Source RefID="106"/>
-              <Target RefID="105"/>
               <Input>
                 <Data ID="104" Label="Read Write User" ReferenceName="ReadWriteUser" ReferencePath="xact.radius" VariableName="readWriteUser104"/>
                 <Source RefID="106">
@@ -159,7 +132,7 @@
                 <Data ID="118" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole"/>
                 <Target RefID="105"/>
               </Output>
-              <Mapping>%1%~=%0%</Mapping>
+              <Mapping>%1%#cast("xact.radius.ReadWriteUser")~=%0%</Mapping>
             </Mappings>
             <Assign ID="38">
               <Source RefID="105"/>
@@ -180,8 +153,6 @@
               </Input>
               <Case ID="42" Label="true" Premise="tolowercase(%0%.xynaPropertyStringValue)==&quot;read-only&quot;">
                 <Mappings ID="30" Label="Mapping">
-                  <Source RefID="110"/>
-                  <Target RefID="109"/>
                   <Input>
                     <Data ID="107" Label="Read Only User" ReferenceName="ReadOnlyUser" ReferencePath="xact.radius" VariableName="readOnlyUser107"/>
                     <Source RefID="110">
@@ -194,7 +165,7 @@
                     <Data ID="108" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole108"/>
                     <Target RefID="109"/>
                   </Output>
-                  <Mapping>%1%~=%0%</Mapping>
+                  <Mapping>%1%#cast("xact.radius.ReadOnlyUser")~=%0%</Mapping>
                 </Mappings>
                 <Assign ID="41">
                   <Source RefID="109"/>
@@ -207,8 +178,6 @@
               </Case>
               <Case ID="44" Label="false">
                 <Mappings ID="51" Label="Mapping">
-                  <Source RefID="117"/>
-                  <Target RefID="112"/>
                   <Input>
                     <Data ID="116" Label="Unknown Role" ReferenceName="UnknownRole" ReferencePath="xact.radius" VariableName="unknownRole116"/>
                     <Source RefID="117">
@@ -221,7 +190,7 @@
                     <Data ID="111" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole111"/>
                     <Target RefID="112"/>
                   </Output>
-                  <Mapping>%1%~=%0%</Mapping>
+                  <Mapping>%1%#cast("xact.radius.UnknownRole")~=%0%</Mapping>
                 </Mappings>
                 <Assign ID="43">
                   <Source RefID="112"/>
@@ -280,38 +249,29 @@
     </Data>
     <Data ID="113" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole113">
       <Source RefID="16"/>
-      <Source RefID="43"/>
       <Source RefID="41"/>
+      <Source RefID="43"/>
       <Target RefID="45"/>
     </Data>
     <Data ID="114" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole114">
-      <Source RefID="18"/>
       <Source RefID="45"/>
       <Source RefID="38"/>
+      <Source RefID="18"/>
       <Target RefID="47"/>
     </Data>
     <Data ID="115" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole115">
-      <Source RefID="14"/>
       <Source RefID="35"/>
+      <Source RefID="14"/>
       <Source RefID="47"/>
       <Target RefID="4"/>
     </Data>
     <Data ID="117" Label="Unknown Role" ReferenceName="UnknownRole" ReferencePath="xact.radius" VariableName="unknownRole">
       <Target RefID="51"/>
     </Data>
-    <ServiceReference ID="119" Label="XynaRadiusServices" ReferenceName="XynaRadiusServices.XynaRadiusServices" ReferencePath="xact.radius">
-      <Source RefID="120"/>
-      <Target RefID="120"/>
-    </ServiceReference>
-    <Exception ID="122" Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception122">
-      <Source RefID="120"/>
-    </Exception>
     <Data ID="129" Label="Xyna property string value" ReferenceName="XynaPropertyStringValue" ReferencePath="xact.radius" VariableName="xynaPropertyStringValue32">
-      <Source RefID="120"/>
       <Source RefID="123"/>
+      <Source RefID="120"/>
       <Target RefID="14"/>
-      <Target RefID="16"/>
-      <Target RefID="18"/>
     </Data>
     <Data ID="131" Label="Xyna property key" ReferenceName="XynaPropertyKey" ReferencePath="xact.radius" VariableName="xynaPropertyKey131">
       <Source RefID="12"/>
@@ -321,6 +281,9 @@
       <Source RefID="128"/>
       <Target RefID="123"/>
     </Data>
+    <Exception ID="122" Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception122">
+      <Source RefID="120"/>
+    </Exception>
     <Assign ID="4">
       <Source RefID="115"/>
       <Target RefID="99"/>

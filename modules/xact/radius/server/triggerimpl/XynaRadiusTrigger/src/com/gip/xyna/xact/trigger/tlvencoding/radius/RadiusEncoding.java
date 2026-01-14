@@ -36,7 +36,6 @@ import com.gip.xyna.xnwh.persistence.Storable;
 @Persistable(primaryKey = RadiusEncoding.COL_ID, tableName = RadiusEncoding.TABLENAME)
 public class RadiusEncoding extends Storable<RadiusEncoding> {
 
-
   private static final long serialVersionUID = -3363326642316655775L;
   public final static String TABLENAME = "radiustlv";
   public final static String COL_ID = "id";
@@ -253,7 +252,7 @@ public class RadiusEncoding extends Storable<RadiusEncoding> {
     typeEncoding = data2.typeEncoding;
     enterpriseNr = data2.enterpriseNr;
     valueDataTypeName = data2.valueDataTypeName;
-    // valueDataTypeArguments = data2.valueDataTypeArguments;
+    valueDataTypeArguments = data2.valueDataTypeArguments;
     valueDataTypeArgumentsString = data2.valueDataTypeArgumentsString;
   }
 }
