@@ -22,7 +22,6 @@ package com.gip.xyna.xact.trigger.tlvencoding.radius;
 /**
  * Node.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public abstract class Node {
 

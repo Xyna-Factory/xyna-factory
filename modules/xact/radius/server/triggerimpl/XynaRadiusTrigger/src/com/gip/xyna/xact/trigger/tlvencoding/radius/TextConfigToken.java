@@ -22,7 +22,6 @@ package com.gip.xyna.xact.trigger.tlvencoding.radius;
 /**
  * Text config token.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class TextConfigToken {
 

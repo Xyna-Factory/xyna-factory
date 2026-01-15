@@ -342,19 +342,6 @@ public class RadiusMessageSender {
     this.nodes.add(new TypeWithValueNode("NAS-IP", "192.168.1.16"));
     this.nodes.add(new TypeWithValueNode("NAS-Port", "3"));
 
-    //    this.subnodes.add(new TypeWithValueNode("MSCHAP-Response", "Hallo"));
-    //    this.nodes.add(new TypeOnlyNode("Vendor-Specific311", subnodes));
-    //
-    //    subnodes.clear();
-    //
-    //    this.subnodes.add(new TypeWithValueNode("ciscooption", "Test"));
-    //    this.subnodes.add(new TypeWithValueNode("ciscooption", "Test2"));
-    //    this.subnodes.add(new TypeWithValueNode("Fax-Connect-Speed", "14400"));
-    //    this.nodes.add(new TypeOnlyNode("Vendor-Specific9", subnodes));
-    //
-    //    this.nodes.add(new TypeWithValueNode("EAP-Message","0x0201000A01636973636F"));
-
-
   }
 
 
@@ -377,14 +364,11 @@ public class RadiusMessageSender {
     this.nodes.add(new TypeWithValueNode("Identifier", identifier));
     this.nodes.add(new TypeWithValueNode("Authenticator", authenticator));
 
-    this.nodes.add(new TypeWithValueNode("User-Name", "cisco"));
     this.nodes.add(new TypeWithValueNode("Calling-Station-Id", "0x" + "30303a31383a64653a36343a62333a3433".toUpperCase()));
     this.nodes
         .add(new TypeWithValueNode("Called-Station-Id", "0x" + "38383a37353a35363a34643a39323a66303a536d617274416363657373".toUpperCase()));
     this.nodes.add(new TypeWithValueNode("NAS-Port", "2"));
 
-    this.subnodes.add(new TypeWithValueNode("ciscooption", "0x"
-        + "61756469742d73657373696f6e2d69643d616331313165313430303030303165643531653761323166".toUpperCase()));
     this.nodes.add(new TypeOnlyNode("Vendor-Specific9", subnodes));
 
     this.nodes.add(new TypeWithValueNode("NAS-IP", "172.17.30.20"));

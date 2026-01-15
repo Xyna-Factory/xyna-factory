@@ -29,7 +29,6 @@ import com.gip.xyna.xact.trigger.tlvdecoding.radius.RadiusTlvDecoderFactory;
 /**
  * Abstract DOCSIS TLV decoder for decoders that do not have sub TLV decoders.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public abstract class AbstractRadiusTlvDecoderFactory implements RadiusTlvDecoderFactory {
 

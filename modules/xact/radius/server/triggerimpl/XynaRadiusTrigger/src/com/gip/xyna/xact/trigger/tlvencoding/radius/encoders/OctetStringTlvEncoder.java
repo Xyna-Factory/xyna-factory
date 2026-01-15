@@ -31,7 +31,6 @@ import com.gip.xyna.xact.trigger.tlvencoding.util.ByteUtil;
 /**
  * Octet string TLV encoder.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class OctetStringTlvEncoder extends AbstractTypeWithValueTlvEncoder {
 

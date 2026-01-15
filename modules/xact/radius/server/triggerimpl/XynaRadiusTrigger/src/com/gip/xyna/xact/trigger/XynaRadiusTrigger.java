@@ -97,19 +97,6 @@ public class XynaRadiusTrigger extends EventListener<XynaRadiusTriggerConnection
   }
 
 
-  public static void main(String[] args) throws XACT_TriggerCouldNotBeStartedException, IOException {
-
-    //    XynaRadiusTrigger trigger = new XynaRadiusTrigger();
-    //    // trigger.start(new DHCPStartParameter("localhost", new int[] {1547, 1547}));
-    //    trigger.start(new XynaRadiusStartParameter(InetAddress.getLocalHost(), 1812));
-    //    // trigger.currentDhcpOptionConfiguration = new DhcpOptionDefinition[0];
-    //
-    //    XynaRadiusTriggerConnection con = trigger.receive();
-    //    System.out.println("done");
-
-  }
-
-
   private InetAddress localAddress;
 
 
@@ -118,11 +105,12 @@ public class XynaRadiusTrigger extends EventListener<XynaRadiusTriggerConnection
     try {
       DatagramPacket datagramPacket = new DatagramPacket(new byte[receiveBufferLength], receiveBufferLength);
       datagramSocket.receive(datagramPacket);
-      logger.debug("RadiusTrigger received Packet from " + datagramPacket.getAddress().toString());
+      if(logger.isDebugEnabled()) {
+        logger.debug("RadiusTrigger received Packet from " + datagramPacket.getAddress().toString());
+      }
       if (localAddress == null) {
         localAddress = datagramSocket.getLocalAddress();
       }
-      // return new DHCPTriggerConnection(datagramPacket, currentDhcpOptionConfiguration.clone());
       return new XynaRadiusTriggerConnection(datagramPacket, this.dec, this.enc, datagramSocket, localAddress);
     } catch (IOException e) {
       if (!isStopping) {

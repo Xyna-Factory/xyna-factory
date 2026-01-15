@@ -29,7 +29,6 @@ import com.gip.xyna.xact.trigger.tlvencoding.radius.encoders.DoNothingTlvEncoder
 /**
  * Do nothing TLV encoder factory.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class DoNothingTlvEncoderFactory extends AbstractTypeOnlyTlvEncoderFactory {
 

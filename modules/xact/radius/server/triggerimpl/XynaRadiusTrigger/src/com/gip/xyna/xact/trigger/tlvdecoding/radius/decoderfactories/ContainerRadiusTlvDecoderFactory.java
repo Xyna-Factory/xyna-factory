@@ -30,7 +30,6 @@ import com.gip.xyna.xact.trigger.tlvdecoding.radius.decoders.ContainerRadiusTlvD
 /**
  * DOCSIS Container TLV decoder factory.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class ContainerRadiusTlvDecoderFactory implements RadiusTlvDecoderFactory {
 

@@ -30,7 +30,6 @@ import com.gip.xyna.xact.trigger.tlvencoding.util.IpV4AddressValidator;
 /**
  * IPv4 address tlv encoder.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class IpV4AddressTlvEncoder extends AbstractTypeWithValueTlvEncoder {
 

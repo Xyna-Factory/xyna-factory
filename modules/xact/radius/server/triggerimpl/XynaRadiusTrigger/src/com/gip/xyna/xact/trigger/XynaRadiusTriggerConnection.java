@@ -81,15 +81,12 @@ public class XynaRadiusTriggerConnection extends TriggerConnection {
     try {
       InetAddress ia;
       ia = InetAddress.getByName(targetaddress);
-      //int port = 1547;
 
       DatagramPacket packet = new DatagramPacket(payload, payload.length, ia, rawPacket.getPort());
-      //DatagramSocket toSocket = new DatagramSocket(replyport);
-      if (logger.isDebugEnabled())
+      if (logger.isDebugEnabled()) {
         logger.debug("Sending Message to " + targetaddress + " Port " + rawPacket.getPort() + " ...");
-
+      }
       toSocket.send(packet);
-      //toSocket.close();
     } catch (Exception e) {
       logger.warn("", e);
     }
@@ -105,7 +102,9 @@ public class XynaRadiusTriggerConnection extends TriggerConnection {
 
 
   protected void handleInvalidPacket() throws IOException {
-    // TODO do something? counter? logging?
+    if (logger.isDebugEnabled()) {
+      logger.debug("invalid packet received");
+    }
   }
 
 

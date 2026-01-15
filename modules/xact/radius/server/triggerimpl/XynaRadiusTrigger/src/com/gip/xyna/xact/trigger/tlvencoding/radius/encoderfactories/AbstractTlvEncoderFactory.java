@@ -31,7 +31,6 @@ import com.gip.xyna.xact.trigger.tlvencoding.radius.TlvEncoderFactory;
 /**
  * Abstract TLV encoder factory.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public abstract class AbstractTlvEncoderFactory implements TlvEncoderFactory {
 

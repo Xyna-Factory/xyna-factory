@@ -74,9 +74,6 @@ public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymen
 
   private final static XynaPropertyString sharedSecretXynaProp = new XynaPropertyString(sharedSecretProp, "sharedSecret", false);
 
-  private final static XynaPropertyInt ciscoROprivlvl = new XynaPropertyInt("xact.radius.shell-privilege-level.cisco.read-only", 1);
-  private final static XynaPropertyInt ciscoRWprivlvl = new XynaPropertyInt("xact.radius.shell-privilege-level.cisco.read-write", 7);
-  private final static XynaPropertyInt ciscoSUprivlvl = new XynaPropertyInt("xact.radius.shell-privilege-level.cisco.super-user", 15);
 
   public XynaRadiusServicesServiceOperationImpl() {
   }
@@ -140,25 +137,7 @@ public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymen
     if (vendorName == null)
       return new xact.radius.PrivilegeLevel("0");
 
-    if ("cisco".equals(vendorName.toLowerCase()))
-      return new xact.radius.PrivilegeLevel(String.valueOf(getPrivilegeLevelForCisco(role)));
-
     return new xact.radius.PrivilegeLevel("0");
-  }
-
-
-  private static int getPrivilegeLevelForCisco(xact.radius.FunctionalRole role) {
-
-    if (role instanceof xact.radius.SuperUser)
-      return ciscoSUprivlvl.get();
-
-    if (role instanceof xact.radius.ReadOnlyUser)
-      return ciscoROprivlvl.get();
-
-    if (role instanceof xact.radius.ReadWriteUser)
-      return ciscoRWprivlvl.get();
-
-    return 0;
   }
 
 
@@ -256,8 +235,8 @@ public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymen
           new RadiusUserStorable(founduser != null ? founduser.getId() : com.gip.xyna.idgeneration.IDGenerator.getInstance().getUniqueId(),
                                  username, password, sharedsecret, servicetype, timestamp, role, ip);
       if (logger.isDebugEnabled())
-        logger.debug("Creating User with: id: " + newuser.getId() + " username: " + username + " sharedsecret: " + sharedsecret
-            + " servicetype: " + servicetype + " timestamp: " + timestamp + " role: " + role + " ip: " + ip);
+        logger.debug("Creating User with: id: " + newuser.getId() + " username: " + username + " servicetype: " + servicetype
+            + " timestamp: " + timestamp + " role: " + role + " ip: " + ip);
 
       storeRadiusUserEntry(newuser);
     } catch (PersistenceLayerException e) {
@@ -291,29 +270,6 @@ public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymen
         if (logger.isDebugEnabled())
           logger.debug("NAS Identifier found: " + vendor);
       }
-    }
-
-    if (vendor.contains("Cisco") || vendor.contains("CISCO") || vendor.contains("cisco")) {
-      if (logger.isDebugEnabled())
-        logger.debug("Found Cisco Device, adding priviledge Level ...");
-      resultlist.add(new TypeWithValueNode("Service-Type", "7"));
-
-      TypeWithValueNode ciscooption = new TypeWithValueNode("ciscooption", "shell:priv-lvl=" + prvlvlstring);
-      List<Node> subnodes = new ArrayList<Node>();
-      subnodes.add(ciscooption);
-      TypeOnlyNode vendorspecific = new TypeOnlyNode("Vendor-Specific9", subnodes);
-      resultlist.add(vendorspecific);
-    } else {
-      if (logger.isDebugEnabled())
-        logger.debug("Could not determine Devicevendor, adding Cisco priviledge Level ...");
-
-      resultlist.add(new TypeWithValueNode("Service-Type", "7"));
-
-      TypeWithValueNode ciscooption = new TypeWithValueNode("ciscooption", "shell:priv-lvl=" + prvlvlstring);
-      List<Node> subnodes = new ArrayList<Node>();
-      subnodes.add(ciscooption);
-      TypeOnlyNode vendorspecific = new TypeOnlyNode("Vendor-Specific9", subnodes);
-      resultlist.add(vendorspecific);
     }
 
     return resultlist;
@@ -361,12 +317,6 @@ public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymen
     }
 
     String passwordindatabase = encode(founduser.getSharedSecret(), requestauthenticator, founduser.getUserPassword());
-    if (logger.isTraceEnabled()) {
-      logger.trace("### Userpassword in database: " + founduser.getUserPassword());
-      logger.trace("### Encoded Userpassword in database: " + passwordindatabase);
-      logger.trace("### Encoded Userpassword in message: " + radiusUserpassword);
-    }
-
     if (!passwordindatabase.equals(radiusUserpassword)) {
       if (logger.isDebugEnabled())
         logger.debug("RADIUS Authentication failed, because password does not match. Sending Reject!");
@@ -464,7 +414,7 @@ public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymen
       if (logger.isDebugEnabled())
         logger.debug("Trying to determine priviledge level ...");
       if (founduser.getRole() != null && founduser.getRole().length() > 0) {
-        String getLevelFromProperty = "NetFactoryRD.radius.rightmanagment." + founduser.getRole();
+        String getLevelFromProperty = "xact.radius.rightmanagment." + founduser.getRole();
         try {
           String fachlStufe = XynaFactory.getPortalInstance().getFactoryManagementPortal().getProperty(getLevelFromProperty);
           if (fachlStufe != null && fachlStufe.length() > 0) {
@@ -475,7 +425,7 @@ public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymen
             if (fachlStufe.equals("super-user"))
               privlvl.setLevel("15");
           } else {
-            logger.warn("NetFactoryRD.radius.rightmanagment." + founduser.getRole()
+            logger.warn("xact.radius.rightmanagment." + founduser.getRole()
                 + " not set correctly. Should be read-only, read-write or super-user!");
           }
 

@@ -28,7 +28,6 @@ import java.io.OutputStream;
 /**
  * DOCSIS TLV encoder interface.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 
 public interface TlvEncoder {

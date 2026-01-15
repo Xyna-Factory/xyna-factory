@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<Application applicationName="RadiusServer" factoryVersion="10.5.0.1" versionName="1.0.2" xmlVersion="1.1">
+--><Application applicationName="RadiusServer" factoryVersion="" versionName="1.0.2" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
@@ -47,8 +46,8 @@
       <DestinationKey>xact.radius.CleanExpiredUsers</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
-    <Ordertype implicitDependency="true">
-      <DestinationKey>xact.radius.CreateRadiusNodesCisco</DestinationKey>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xact.radius.CreateVendorSpecificRadiusNodes</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -86,7 +85,7 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xact.radius.CreateRadiusNodesCisco</FqName>
+      <FqName>xact.radius.CreateVendorSpecificRadiusNodes</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">

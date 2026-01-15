@@ -83,14 +83,6 @@
     <valuedatatypeargumentsstring/>
   </radiustlv>
   <radiustlv>
-    <id>9</id>
-    <parentid>7</parentid>
-    <typename>ciscooption</typename>
-    <typeencoding>1</typeencoding>
-    <valuedatatypename>OctetString</valuedatatypename>
-    <valuedatatypeargumentsstring/>
-  </radiustlv>
-  <radiustlv>
     <id>10</id>
     <typename>EAP-Message</typename>
     <typeencoding>79</typeencoding>

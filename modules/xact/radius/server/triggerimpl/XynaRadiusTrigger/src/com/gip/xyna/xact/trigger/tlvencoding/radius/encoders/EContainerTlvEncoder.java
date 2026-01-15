@@ -38,7 +38,6 @@ import com.gip.xyna.xact.trigger.tlvencoding.util.ByteUtil;
 /**
  * Container TLV encoder.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class EContainerTlvEncoder extends AbstractTypeOnlyTlvEncoder {
 

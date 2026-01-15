@@ -35,7 +35,6 @@ import com.gip.xyna.xact.trigger.tlvencoding.radius.encoderfactories.UnsignedInt
 /**
  * Provides encoder factory for given value data type.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class TlvEncoderFactoryProvider {
 

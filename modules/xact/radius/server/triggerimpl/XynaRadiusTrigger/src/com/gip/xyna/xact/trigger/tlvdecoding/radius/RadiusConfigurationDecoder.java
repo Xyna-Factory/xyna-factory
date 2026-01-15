@@ -34,7 +34,6 @@ import com.gip.xyna.xact.trigger.tlvencoding.radius.RadiusEncoding;
 /**
  * DOCSIS configuration decoder.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class RadiusConfigurationDecoder implements Decoder {
 
@@ -166,10 +165,6 @@ public final class RadiusConfigurationDecoder implements Decoder {
             throw new IllegalArgumentException("Config file data may not be null.");
         }
 
-        //      if (endMarkerSize < 1) {
-        //          throw new DecoderException("Config file does not have a DOCSIS file ending.");
-        //      }
-
         StringBuilder sb = new StringBuilder();
         RadiusTlvReader reader = new RadiusTlvReader(new ByteArrayInputStream(configFileData, 0, configFileData.length));
 
@@ -180,11 +175,7 @@ public final class RadiusConfigurationDecoder implements Decoder {
                 countReadTlvs++;
 
                 RadiusTlvDecoder decoder = null;
-                //decoder = this.decoders.get(tlv.getTypeEncoding());
-
                 decoder = this.decoders.get(tlv.getTypeEncoding());
-
-
                 if (decoder == null) {
                     decoder = new UnknownRadiusTlvDecoder(tlv.getTypeEncoding());
                 }
@@ -207,10 +198,6 @@ public final class RadiusConfigurationDecoder implements Decoder {
             throw new IllegalArgumentException("Config file data may not be null.");
         }
 
-        //        if (endMarkerSize < 1) {
-        //            throw new DecoderException("Config file does not have a DOCSIS file ending.");
-        //        }
-
         StringBuilder sb = new StringBuilder();
         RadiusTlvReader reader = new RadiusTlvReader(new ByteArrayInputStream(configFileData, 0, configFileData.length));
 
@@ -221,10 +208,6 @@ public final class RadiusConfigurationDecoder implements Decoder {
                 countReadTlvs++;
 
                 RadiusTlvDecoder decoder = null;
-                //decoder = this.decoders.get(tlv.getTypeEncoding());
-
-                //Versuch
-
                 if (tlv.getTypeEncoding() == 26) {
                     List<Byte> value = tlv.getValue();
                     int vendor = value.get(0) * 256 * 256 * 256 + value.get(1) * 256 * 256 + value.get(2) * 256 + value.get(3);
@@ -245,7 +228,6 @@ public final class RadiusConfigurationDecoder implements Decoder {
                     sb.append(decoder.decode(tlv));
                     sb.append("\n");
                 } catch (RuntimeException e) {
-                    //                  if(tlv.getTypeEncoding()!=60)throw e;
                     throw e;
                 }
             }
@@ -258,6 +240,4 @@ public final class RadiusConfigurationDecoder implements Decoder {
         }
         return sb.toString();
     }
-
-
 }

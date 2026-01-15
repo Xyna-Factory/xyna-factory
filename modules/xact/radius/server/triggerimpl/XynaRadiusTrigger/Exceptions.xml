@@ -88,17 +88,6 @@
       <MessageText Language="DE">Fehler beim Stoppen des DHCP-Triggers an Port %0%: %1%</MessageText>
       <MessageText Language="EN">Error stopping DHCP Trigger on port %0%: %1%</MessageText>
    </ExceptionType>
-
-<!--   <ExceptionType Code="XYNA-09610" TypeName="HTTPTRIGGER_HTTP_STREAM_ERROR" TypePath="com.gip.xyna.xact.trigger.http">
-      <Data Label="errorMsg" VariableName="errorMsg">
-         <Meta>
-            <Type>String</Type>
-         </Meta>
-      </Data>
-      <MessageText Language="DE">Beim Lesen aus Socket ist ein Fehler aufgetreten: %0%</MessageText>
-      <MessageText Language="EN">Error reading from socket: %0%</MessageText>
-   </ExceptionType> -->
-
    <ExceptionType Code="XYNA-09620" TypeName="RADIUSTRIGGER_DHCP_INVALID_STARTPARAMETERS" TypePath="com.gip.xyna.xact.trigger.dhcp">
       <Data Label="parameterDescriptions" VariableName="parameterDescriptions">
          <Meta>

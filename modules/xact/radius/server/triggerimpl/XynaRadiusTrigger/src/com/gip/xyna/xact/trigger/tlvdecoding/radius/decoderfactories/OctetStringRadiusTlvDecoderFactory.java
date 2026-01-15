@@ -27,7 +27,6 @@ import com.gip.xyna.xact.trigger.tlvdecoding.radius.decoders.OctetStringRadiusTl
 /**
  * Octet string DOCSIS TLV decoder factory.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class OctetStringRadiusTlvDecoderFactory extends AbstractRadiusTlvDecoderFactory {
 

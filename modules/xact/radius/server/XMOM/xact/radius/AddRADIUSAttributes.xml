@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Add RADIUS Attributes" TypeName="AddRADIUSAttributes" TypePath="xact.radius" Version="1.8">
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Add RADIUS Attributes" TypeName="AddRADIUSAttributes" TypePath="xact.radius" Version="1.8">
   <Meta>
     <FixedDetailOptions>highDetailsMode,showDetailAreas,hScroll(228)</FixedDetailOptions>
   </Meta>
@@ -11,17 +27,13 @@
     <Output>
       <Data ID="48" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node48"/>
     </Output>
-    <ServiceReference ID="4" Label="Create Radius Nodes Cisco" ReferenceName="CreateRadiusNodesCisco" ReferencePath="xact.radius">
-      <Source RefID="5"/>
-      <Target RefID="5"/>
-    </ServiceReference>
-    <ServiceReference ID="187" Label="Create Radius Nodes Cisco" ReferenceName="CreateRadiusNodesCisco" ReferencePath="xact.radius">
-      <Source RefID="186"/>
-      <Target RefID="186"/>
+    <ServiceReference ID="479" Label="Create Vendor Specific Radius Nodes" ReferenceName="CreateVendorSpecificRadiusNodes" ReferencePath="xact.radius">
+      <Source RefID="478"/>
+      <Target RefID="478"/>
     </ServiceReference>
     <Choice ID="2" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="3"/>
-      <Target RefID="315"/>
+      <Target RefID="535"/>
       <Input>
         <Data ID="36" Label="NAS-Identifier" ReferenceName="NASIdentifier" ReferencePath="xact.radius" VariableName="nASIdentifier222"/>
         <Source RefID="3"/>
@@ -31,115 +43,80 @@
         <Source RefID="3"/>
       </Input>
       <Case ID="45" Label="true" Premise="%0%!=null&amp;&amp;length(%1%.nASIdentifier)&gt;&quot;0&quot;">
-        <Choice ID="8" TypeName="BaseChoiceTypeFormula" TypePath="server">
-          <Source RefID="3"/>
-          <Target RefID="314"/>
+        <Mappings ID="449" Label="Set Vendor">
           <Input>
-            <Data ID="38" Label="NAS-Identifier" ReferenceName="NASIdentifier" ReferencePath="xact.radius" VariableName="nASIdentifier224"/>
+            <Data ID="632" Label="NAS-Identifier" ReferenceName="NASIdentifier" ReferencePath="xact.radius" VariableName="nASIdentifier632">
+              <Source RefID="449"/>
+            </Data>
             <Source RefID="3"/>
           </Input>
-          <Case ID="39" Label="true" Premise="contains(tolowercase(%0%.nASIdentifier),&quot;cisco&quot;)">
-            <Function ID="5" Label="Create Radius Nodes Cisco">
-              <Source RefID="4"/>
-              <Source RefID="7"/>
-              <Target RefID="4"/>
-              <Target RefID="6"/>
-              <Meta>
-                <FixedWidth>173</FixedWidth>
-                <FixedHeight>32</FixedHeight>
-              </Meta>
-              <Invoke Operation="CreateRadiusNodesCisco" ServiceID="4">
-                <Source RefID="7"/>
-              </Invoke>
-              <Receive ServiceID="4">
-                <Target RefID="6"/>
-              </Receive>
-            </Function>
-            <Assign ID="31">
-              <Source RefID="6"/>
-              <Target RefID="314"/>
-              <Copy>
-                <Source RefID="6"/>
-                <Target RefID="314"/>
-              </Copy>
-            </Assign>
-          </Case>
-          <Case ID="44" Label="false">
-            <Mappings ID="287" Label="Unsupported Vendor">
-              <Output>
-                <Data ID="312" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node312">
-                  <Source RefID="287"/>
-                </Data>
-                <Target RefID="313"/>
-              </Output>
-            </Mappings>
-            <Assign ID="32">
-              <Source RefID="313"/>
-              <Target RefID="314"/>
-              <Copy>
-                <Source RefID="313"/>
-                <Target RefID="314"/>
-              </Copy>
-            </Assign>
-          </Case>
-        </Choice>
-        <Assign ID="34">
-          <Source RefID="314"/>
-          <Target RefID="315"/>
-          <Copy>
-            <Source RefID="314"/>
-            <Target RefID="315"/>
-          </Copy>
-        </Assign>
-      </Case>
-      <Case ID="46" Label="false">
-        <Function ID="186" Label="Create Radius Nodes Cisco">
-          <Source RefID="187"/>
+          <Output>
+            <Data ID="517" Label="Vendor" ReferenceName="Vendor" ReferencePath="xact.radius" VariableName="vendor517">
+              <Source RefID="449"/>
+            </Data>
+            <Target RefID="518"/>
+          </Output>
+          <Mapping>%1%.name=tolowercase(%0%.nASIdentifier)</Mapping>
+        </Mappings>
+        <Function ID="478" Label="Create Vendor Specific Radius Nodes">
+          <Source RefID="479"/>
           <Source RefID="7"/>
-          <Target RefID="187"/>
-          <Target RefID="189"/>
-          <Meta>
-            <FixedWidth>173</FixedWidth>
-            <FixedHeight>32</FixedHeight>
-          </Meta>
-          <Invoke Operation="CreateRadiusNodesCisco" ServiceID="187">
+          <Source RefID="518"/>
+          <Target RefID="479"/>
+          <Target RefID="481"/>
+          <Invoke Operation="CreateVendorSpecificRadiusNodes" ServiceID="479">
             <Source RefID="7"/>
+            <Source RefID="518"/>
           </Invoke>
-          <Receive ServiceID="187">
-            <Target RefID="189"/>
+          <Receive ServiceID="479">
+            <Target RefID="481"/>
           </Receive>
         </Function>
-        <Assign ID="35">
-          <Source RefID="189"/>
-          <Target RefID="315"/>
+        <Assign ID="34">
+          <Source RefID="481"/>
+          <Target RefID="535"/>
           <Copy>
-            <Source RefID="189"/>
-            <Target RefID="315"/>
+            <Source RefID="481"/>
+            <Target RefID="535"/>
           </Copy>
         </Assign>
-        <Data ID="189" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node189">
-          <Source RefID="186"/>
+        <Data ID="481" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node481">
+          <Source RefID="478"/>
+        </Data>
+      </Case>
+      <Case ID="46" Label="false">
+        <Mappings ID="287" Label="Empty">
+          <Output>
+            <Data ID="312" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node312">
+              <Source RefID="287"/>
+            </Data>
+            <Target RefID="368"/>
+          </Output>
+        </Mappings>
+        <Assign ID="35">
+          <Source RefID="368"/>
+          <Target RefID="535"/>
+          <Copy>
+            <Source RefID="368"/>
+            <Target RefID="535"/>
+          </Copy>
+        </Assign>
+        <Data ID="368" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node368">
+          <Source RefID="287"/>
         </Data>
       </Case>
     </Choice>
-    <Data ID="6" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node">
-      <Source RefID="5"/>
-      <Target RefID="31"/>
+    <Data ID="518" Label="Vendor" ReferenceName="Vendor" ReferencePath="xact.radius" VariableName="vendor518">
+      <Source RefID="449"/>
     </Data>
-    <Data ID="313" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node313">
-      <Source RefID="287"/>
-    </Data>
-    <Data ID="314" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node314">
-      <Source RefID="8"/>
-    </Data>
-    <Data ID="315" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node315">
+    <Data ID="535" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node535">
       <Source RefID="2"/>
     </Data>
     <Assign ID="47">
-      <Source RefID="315"/>
+      <Source RefID="535"/>
       <Target RefID="48"/>
       <Copy>
-        <Source RefID="315"/>
+        <Source RefID="535"/>
         <Target RefID="48"/>
       </Copy>
     </Assign>

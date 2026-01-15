@@ -27,7 +27,6 @@ import com.gip.xyna.xact.trigger.tlvdecoding.radius.decoders.IgnoreValueRadiusTl
 /**
  * Factory for DOCSIS TLV decoder that ignores value.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class IgnoreValueRadiusTlvDecoderFactory extends AbstractRadiusTlvDecoderFactory {
 

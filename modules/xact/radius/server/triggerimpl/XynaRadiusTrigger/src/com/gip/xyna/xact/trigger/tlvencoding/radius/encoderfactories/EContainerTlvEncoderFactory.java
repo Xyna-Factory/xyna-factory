@@ -30,7 +30,6 @@ import com.gip.xyna.xact.trigger.tlvencoding.radius.encoders.EContainerTlvEncode
 /**
  * Container TLV encoder factory.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class EContainerTlvEncoderFactory extends AbstractTypeOnlyTlvEncoderFactory {
 

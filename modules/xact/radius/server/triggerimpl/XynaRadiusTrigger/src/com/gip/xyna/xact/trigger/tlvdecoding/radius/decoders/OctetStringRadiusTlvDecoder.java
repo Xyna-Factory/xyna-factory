@@ -26,7 +26,6 @@ import com.gip.xyna.xact.trigger.tlvdecoding.util.OctetStringUtil;
 /**
  * OctetString DOCSIS TLV decoder.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class OctetStringRadiusTlvDecoder extends AbstractRadiusTlvDecoder {
 

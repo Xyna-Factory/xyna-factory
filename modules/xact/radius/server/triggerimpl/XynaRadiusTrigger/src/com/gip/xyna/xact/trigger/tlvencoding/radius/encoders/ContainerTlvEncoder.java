@@ -36,7 +36,6 @@ import com.gip.xyna.xact.trigger.tlvencoding.radius.TypeOnlyNode;
 /**
  * Container TLV encoder.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class ContainerTlvEncoder extends AbstractTypeOnlyTlvEncoder {
 

@@ -182,14 +182,6 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
 
       List<Node> nodes = new ArrayList<Node>();
 
-      // Node codenode = new TypeWithValueNode("Code", code);
-      // Node idnode = new TypeWithValueNode("Identifier", id);
-      // Node authenticatornode = new TypeWithValueNode("Authenticator",authenticatorstring);
-      //
-      // nodes.add(codenode);
-      // nodes.add(idnode);
-      // nodes.add(authenticatornode);
-
       for (Node n : tree.getNodes()) {
         nodes.add(n);
       }
@@ -324,7 +316,6 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
       xact.radius.Code xmomcode = (xact.radius.Code) respcontainer.get(0);
       xact.radius.Identifier xmomidentifier = (xact.radius.Identifier) respcontainer.get(1);
       xact.radius.RequestAuthenticator xmomauthenticator = (xact.radius.RequestAuthenticator) respcontainer.get(2);
-      //xact.radius.SharedSecret xmomsharedsecret = (xact.radius.SharedSecret) respcontainer.get(3);
 
       XynaObjectList<?> xynalist = (XynaObjectList<?>) respcontainer.get(3);
 
@@ -484,9 +475,7 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
    * @return description of this filter
    */
   public String getClassDescription() {
-    // TODO implementation
-    // TODO update dependency xml file
-    return null;
+    return "Filter for Radius access requests, calls the workflow specified in the property: " + wfAccessRequest.getPropertyName();
   }
 
 
@@ -606,8 +595,10 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
 
   public static byte[] createMessageAuthenticator(byte[] message, String sharedSecret) {
 
-    logger.debug("CreateMessageAuthenticator: Inputmessage: " + ByteUtil.toHexValue(message));
-    logger.debug("CreateMessageAuthenticator: SharedSecret: " + sharedSecret);
+    if (logger.isDebugEnabled()) {
+      logger.debug("CreateMessageAuthenticator: Inputmessage: " + ByteUtil.toHexValue(message));
+      logger.debug("CreateMessageAuthenticator: SharedSecret: " + sharedSecret);
+    }
 
     byte[] eapend = ByteUtil.toByteArray("0x501200000000000000000000000000000000");
 
@@ -616,14 +607,17 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
     System.arraycopy(eapend, 0, finalmessage, message.length, eapend.length);
 
     int len = (finalmessage[2] & 0xFF) * 256 + (finalmessage[3] & 0xFF) + 18;
-    logger.debug("CreateMessageAuthenticator: Old length: " + ((finalmessage[2] & 0xFF) * 256 + (finalmessage[3] & 0xFF)) + " new length: "
-        + len);
+    if (logger.isDebugEnabled()) {
+      logger.debug("CreateMessageAuthenticator: Old length: " + ((finalmessage[2] & 0xFF) * 256 + (finalmessage[3] & 0xFF))
+          + " new length: " + len);
+    }
 
     byte[] lenbytes = ByteUtil.toByteArray(len, 2);
     System.arraycopy(lenbytes, 0, finalmessage, 2, lenbytes.length);
     System.arraycopy(lenbytes, 0, message, 2, lenbytes.length);
-
-    logger.debug("CreateMessageAuthenticator: Message with Authenticator and new length: " + ByteUtil.toHexValue(finalmessage));
+    if (logger.isDebugEnabled()) {
+      logger.debug("CreateMessageAuthenticator: Message with Authenticator and new length: " + ByteUtil.toHexValue(finalmessage));
+    }
 
     // Makes the hash
 

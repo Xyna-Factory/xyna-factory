@@ -34,7 +34,6 @@ import org.apache.log4j.Logger;
 /**
  * Reader for TLV:s with DOCSIS-length encoding.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class VendorSpecificInformationTlvReader implements TlvReader {
 
@@ -63,7 +62,6 @@ public final class VendorSpecificInformationTlvReader implements TlvReader {
         streamempty = true;
       }
     } catch (TlvReaderException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
 

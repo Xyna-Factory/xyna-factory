@@ -22,7 +22,6 @@ package com.gip.xyna.xact.trigger.tlvencoding.radius;
 /**
  * Node with type and value.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public class TypeWithValueNode extends Node {
 

@@ -22,7 +22,6 @@ package com.gip.xyna.xact.trigger.tlvdecoding.radius;
 /**
  * Decoder interface.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public interface Decoder {
 

@@ -28,7 +28,6 @@ import com.gip.xyna.xact.trigger.tlvencoding.radius.TlvEncoder;
 /**
  * Abstract type with value tlv encoder factory.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public abstract class AbstractTypeWithValueTlvEncoderFactory extends AbstractTlvEncoderFactory {
 

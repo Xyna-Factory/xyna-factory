@@ -37,7 +37,6 @@ import com.gip.xyna.xact.trigger.tlvdecoding.radius.TlvReaderException;
 /**
  * Container DOCSIS TLV decoder.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class ContainerRadiusTlvDecoder extends AbstractRadiusTlvDecoder {
 

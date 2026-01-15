@@ -22,7 +22,6 @@ package com.gip.xyna.xact.trigger.tlvdecoding.radius.decoders;
 /**
  * Unsigned integer DOCSIS TLV decoder.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class UnsignedIntegerRadiusTlvDecoder extends AbstractRadiusTlvDecoder {
 

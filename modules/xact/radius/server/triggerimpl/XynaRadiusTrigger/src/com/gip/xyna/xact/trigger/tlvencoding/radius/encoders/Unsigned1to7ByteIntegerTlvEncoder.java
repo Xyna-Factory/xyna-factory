@@ -30,7 +30,6 @@ import com.gip.xyna.xact.trigger.tlvencoding.util.ByteUtil;
 /**
  * Unsigned 1 to 7 byte integer TLV encoder.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class Unsigned1to7ByteIntegerTlvEncoder extends AbstractTypeWithValueTlvEncoder {
 

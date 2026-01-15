@@ -22,7 +22,6 @@ package com.gip.xyna.xact.trigger.tlvdecoding.radius.decoders;
 /**
  * DOCSIS TLV decoder that only outputs type name.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class IgnoreValueRadiusTlvDecoder extends AbstractRadiusTlvDecoder {
 

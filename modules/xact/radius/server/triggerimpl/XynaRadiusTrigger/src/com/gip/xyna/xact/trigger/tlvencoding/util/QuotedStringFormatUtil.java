@@ -22,7 +22,6 @@ package com.gip.xyna.xact.trigger.tlvencoding.util;
 /**
  * Quoted string format util.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class QuotedStringFormatUtil {
 

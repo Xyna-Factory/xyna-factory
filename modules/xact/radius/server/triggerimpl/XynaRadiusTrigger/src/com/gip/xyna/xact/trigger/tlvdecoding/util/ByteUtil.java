@@ -22,7 +22,6 @@ package com.gip.xyna.xact.trigger.tlvdecoding.util;
 /**
  * Byte util.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class ByteUtil {
 

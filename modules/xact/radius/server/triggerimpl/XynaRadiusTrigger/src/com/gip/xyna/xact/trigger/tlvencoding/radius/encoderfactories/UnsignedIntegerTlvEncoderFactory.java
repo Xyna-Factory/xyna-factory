@@ -29,7 +29,6 @@ import com.gip.xyna.xact.trigger.tlvencoding.radius.encoders.Unsigned1to7ByteInt
 /**
  * Unsigned integer tlv encoder factory.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public class UnsignedIntegerTlvEncoderFactory extends AbstractTypeWithValueTlvEncoderFactory {
 

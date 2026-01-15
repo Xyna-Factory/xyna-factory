@@ -29,7 +29,6 @@ import com.gip.xyna.xact.trigger.tlvencoding.radius.TypeOnlyNode;
 /**
  * Disallowed TLV encoder. Throws exception if user tries to use it.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class DisallowedTlvEncoder extends AbstractTypeOnlyTlvEncoder {
 

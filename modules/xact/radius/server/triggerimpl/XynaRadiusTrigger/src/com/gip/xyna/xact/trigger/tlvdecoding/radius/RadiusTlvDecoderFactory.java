@@ -26,7 +26,6 @@ import java.util.List;
 /**
  * Factory interface for producing instances of DocsisTlvDecoder.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public interface RadiusTlvDecoderFactory {
 

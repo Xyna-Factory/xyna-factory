@@ -27,7 +27,6 @@ import com.gip.xyna.xact.trigger.tlvdecoding.radius.decoders.UnsignedIntegerRadi
 /**
  * Factory for DOCSIS unsigned integer TLV decoder.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class UnsignedIntegerRadiusTlvDecoderFactory extends AbstractRadiusTlvDecoderFactory {
 

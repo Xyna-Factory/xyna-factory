@@ -27,7 +27,6 @@ import com.gip.xyna.xact.trigger.tlvdecoding.radius.decoders.IpV4AddressRadiusTl
 /**
  * IPv4 address DOCSIS TLV decoder factory.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class IpV4AddressRadiusTlvDecoderFactory extends AbstractRadiusTlvDecoderFactory {
 

@@ -29,7 +29,6 @@ import com.gip.xyna.xact.trigger.tlvencoding.radius.TypeOnlyNode;
 /**
  * TLV encoder that does nothing. Intended mainly for special types encoded through some other mecanism.
  *
- * @author Fredrik Lindberg / GIP Exyr GmbH
  */
 public final class DoNothingTlvEncoder extends AbstractTypeOnlyTlvEncoder {
 
