@@ -47,12 +47,12 @@ public class Constants {
   // name of the attribute in the manifest of a jar file that contains the FQN of a SharedResourceSynchronizerFactory implementation class
   public static final String SHAREDRESOURCESYNCHRONIZER_FACTORY_FQN_MANIFEST_ATTRIBUTE = "Xyna-SharedResourceSynchronizer-Factory-FQN"; 
   
-  //TODO sch�ner f�r tests w�re, wenn man wie im memory-PL nicht den lib ordner hardcoded, sondern statt dessen aus dem appclassloader die jars ermittelt.
+  //TODO sch?ner f?r tests w?re, wenn man wie im memory-PL nicht den lib ordner hardcoded, sondern statt dessen aus dem appclassloader die jars ermittelt.
   public static String LIB_DIR = "lib"; //nicht final, weil tests das verbiegen
   public static final String USERLIB_DIR = "userlib";
   public static String SERVER_CLASS_DIR = "bin"; //nicht final, weil tests das verbiegen
   /**
-   * basisverzeichnis des servers - enth�lt zb MDM verzeichnis(se), server-verzeichnis, usw
+   * basisverzeichnis des servers - enth?lt zb MDM verzeichnis(se), server-verzeichnis, usw
    */
   public static final String BASEDIR = "..";
   public static final String ROOT_DIR_FOR_REPOSITORY = BASEDIR + fileSeparator + "xmomrepository";
@@ -102,14 +102,14 @@ public class Constants {
   public static final String PERSISTENCE_CONFIGURATION_DIR_WITHIN_STORAGE = "persistence";
   
   public static final String GENERATION_DIR = "." + fileSeparator + "gen";
-  public static final boolean GENERATE_CLASSLOADER_PHANTOM_REFERENCES = false; //nur f�r entwicklungszwecke auf true zu stellen!!
+  public static final boolean GENERATE_CLASSLOADER_PHANTOM_REFERENCES = false; //nur f?r entwicklungszwecke auf true zu stellen!!
   
-  //public static boolean REMOVE_GENERATED_FILES = false; //nur f�r entwicklungszwecke auf false zu stellen!!
+  //public static boolean REMOVE_GENERATED_FILES = false; //nur f?r entwicklungszwecke auf false zu stellen!!
   //ist nun XynaProperty.REMOVE_GENERATED_FILES
   /**
    * @see Persistable.StorableProperty#PROTECTED
    */
-  public static final boolean PROTECTED_STORABLE_ENABLE = true; //nur f�r entwicklungszwecke auf false stellen!!
+  public static final boolean PROTECTED_STORABLE_ENABLE = true; //nur f?r entwicklungszwecke auf false stellen!!
 
   public static boolean SHOW_SESSION_ID_IN_DEBUG = false;
 
@@ -162,7 +162,7 @@ public class Constants {
   
   public static final int DEFAULT_CONNECTION_TO_CLUSTER_BROKEN_RETRIES = 3;
   
-  public static final boolean RECORD_THREAD_INFO_CONNECTION_CACHE = false; // ist teuer, nur f�r Entwicklungszwecke auf true?
+  public static final boolean RECORD_THREAD_INFO_CONNECTION_CACHE = false; // ist teuer, nur f?r Entwicklungszwecke auf true?
   
   /**
    * Path separator character used in java.class.path
