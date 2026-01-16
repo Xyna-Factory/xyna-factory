@@ -30,11 +30,16 @@ public class KryoSerializedSharedResourceDefinition<T> extends SharedResourceDef
 
   private final Kryo kryo;
   private final Class<T> clazz;
-
+  private final int bufferSize;
 
   public KryoSerializedSharedResourceDefinition(String path, Class<T> clazz, Class<?>... additionalClasses) {
+    this(path, clazz, 4096, additionalClasses);
+  }
+  
+  public KryoSerializedSharedResourceDefinition(String path, Class<T> clazz, int bufferSize, Class<?>... additionalClasses) {
     super(path);
     this.clazz = clazz;
+    this.bufferSize = bufferSize;
     kryo = new Kryo();
     kryo.register(clazz);
     for (Class<?> additioClass : additionalClasses) {
@@ -45,8 +50,9 @@ public class KryoSerializedSharedResourceDefinition<T> extends SharedResourceDef
 
   @Override
   public byte[] serialize(T value) {
-    Output output = new ByteBufferOutput(1024); //TODO
+    Output output = new ByteBufferOutput(bufferSize);
     kryo.writeObject(output, value);
+    output.close();
     return output.toBytes();
   }
 
@@ -55,6 +61,7 @@ public class KryoSerializedSharedResourceDefinition<T> extends SharedResourceDef
   public SharedResourceInstance<T> deserialize(byte[] value, String id) {
     Input input = new Input(value);
     T val = kryo.readObjectOrNull(input, clazz);
+    input.close();
     return new SharedResourceInstance<T>(id, val);
   }
 

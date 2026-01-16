@@ -74,7 +74,6 @@ public class SqlSharedResourceSynchronizerFactory implements SharedResourceSynch
           .de("Name der Umgebungsvariable mit den JDBC Verbindungsdaten.").build())
       .optional().build();
 
-
   private static final StringParameter<StringEnvironmentVariable> USER_ENV =
       StringParameter.typeEnvironmentVariable(StringEnvironmentVariable.class, "usernameEnv").label("User environment variable.")
           .documentation(Documentation.en("Name of the environment variable containing the db username.")
@@ -93,8 +92,9 @@ public class SqlSharedResourceSynchronizerFactory implements SharedResourceSynch
               .de("Name der Umgebungsvariable mit der Anzahl an Datenbankverbindungen, die gleichzeitig verwendet werden.").build())
           .optional().build();
 
-  private static final List<StringParameter<?>> importParameters = StringParameter
-      .asList(TABLENAME, URL, USER, PASSWORD, CONNECTIONS, CONNECTION_TIMEOUT, SOCKET_TIMEOUT, URL_ENV, USER_ENV, PASSWORD_ENV, CONNECTIONS_ENV);
+  private static final List<StringParameter<?>> importParameters =
+      StringParameter.asList(TABLENAME, URL, USER, PASSWORD, CONNECTIONS, CONNECTION_TIMEOUT, SOCKET_TIMEOUT, URL_ENV, USER_ENV,
+                             PASSWORD_ENV, CONNECTIONS_ENV);
 
 
   @Override

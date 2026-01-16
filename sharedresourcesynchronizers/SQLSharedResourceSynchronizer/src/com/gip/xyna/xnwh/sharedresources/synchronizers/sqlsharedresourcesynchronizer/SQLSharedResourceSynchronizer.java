@@ -24,10 +24,18 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 import org.apache.log4j.Logger;
@@ -50,11 +58,23 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
   private static final Logger logger = CentralFactoryLogging.getLogger(SQLSharedResourceSynchronizer.class);
 
   private static final Exception NO_CONNECTION_AVAILABLE_EXCEPTION = new RuntimeException("No connection available");
+  private static final Exception MISSING_ENTRIES_EXCEPTION = new RuntimeException("Some entries to update are missing");
+  private static final Exception UPDATE_INTERRUPTED_EXCEPTION = new RuntimeException("Update method returned null");
+  private static final Exception UPDATE_MODIFIED_ID_EXCEPTION = new RuntimeException("Update modified instance id");
   private static final String INSERT_VALUE_PLACEHOLDER = "(?, ?, ?),\n";
+  private static final String DESC_FORMAT = "SQLSharedResourceSynchronizer - %s - %s - Connections[idle/configured/missing]: %d/%d/%d";
+
+  static {
+    NO_CONNECTION_AVAILABLE_EXCEPTION.setStackTrace(new StackTraceElement[0]);
+  }
+
 
   private String INSERT_TEMPLATE;
   private String DELETE_TEMPLATE;
   private String SELECT_TEMPLATE;
+  private String SELECT_ALL_TEMPLATE;
+  private String UPDATE_STATEMENT;
+
   private String tableName;
   private String url;
   private String username;
@@ -64,14 +84,30 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
   private Duration socketTimeout;
   private int queryTimeoutSeconds;
 
-  private final ConcurrentLinkedQueue<Connection> connections;
+  private DBConnectionData connectionData;
+  private Set<Connection> allConnections;
+  private final ConcurrentLinkedQueue<Connection> idleConnections;
+
+  /**
+   * number of connections that cannot be used due to some exception.
+   * If a connection is requested and there are no idle connections
+   * available, a missing connection is recreated.
+   */
+  private final AtomicInteger missingConnections;
+
+  private final AtomicBoolean running;
+
+  private final ExecutorService cleanupExecutor;
 
 
   public SQLSharedResourceSynchronizer(String tableName, String url, String username, String password, int numConnections,
                                        Duration connectionTimeout, Duration socketTimeout) {
-    INSERT_TEMPLATE = String.format("INSERT INTO \"%s\" (sr_path, sr_id, sr_data) VALUES\n", tableName);
-    DELETE_TEMPLATE = String.format("DELETE FROM \"%s\" WHERE sr_id in (", tableName);
-    SELECT_TEMPLATE = String.format("SELECT * FROM \"%s\"", tableName);
+    DELETE_TEMPLATE = String.format("DELETE FROM %s WHERE sr_id IN (", tableName);
+    INSERT_TEMPLATE = String.format("INSERT INTO %s (sr_path, sr_id, sr_data) VALUES\n", tableName);
+    SELECT_TEMPLATE = String.format("SELECT * FROM %s WHERE sr_path = ? AND sr_id IN (", tableName);
+    SELECT_ALL_TEMPLATE = String.format("SELECT * FROM %s", tableName);
+    UPDATE_STATEMENT = String.format("UPDATE %s SET sr_data = ? WHERE sr_path = ? AND sr_id = ?", tableName);
+
     this.tableName = tableName;
     this.url = url;
     this.username = username;
@@ -80,9 +116,12 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     this.connectionTimeout = connectionTimeout;
     this.socketTimeout = socketTimeout;
     this.queryTimeoutSeconds = (int) connectionTimeout.getDuration(TimeUnit.SECONDS);
-    connections = new ConcurrentLinkedQueue<>();
 
-    NO_CONNECTION_AVAILABLE_EXCEPTION.setStackTrace(new StackTraceElement[0]);
+    allConnections = new HashSet<>();
+    idleConnections = new ConcurrentLinkedQueue<>();
+    missingConnections = new AtomicInteger();
+    running = new AtomicBoolean();
+    cleanupExecutor = Executors.newSingleThreadExecutor();
   }
 
 
@@ -95,14 +134,25 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     cdb.socketTimeoutInSeconds((int) socketTimeout.getDuration(TimeUnit.SECONDS));
     cdb.connectTimeoutInSeconds((int) connectionTimeout.getDuration(TimeUnit.SECONDS));
     cdb.autoCommit(true);
-    DBConnectionData cb = cdb.build();
+    connectionData = cdb.build();
 
-    try {
-      for (int i = 0; i < numConnections; i++) {
-        connections.add(cb.createConnection());
+    Set<Connection> createdConnections = new HashSet<>();
+    for (int i = 0; i < numConnections; i++) {
+      try {
+        Connection con = connectionData.createConnection();
+        createdConnections.add(con);
+        idleConnections.add(con);
+      } catch (Exception e) {
+        missingConnections.incrementAndGet();
+        if (logger.isWarnEnabled()) {
+          logger.warn("Could not create connection to " + url, e);
+        }
       }
-    } catch (Exception e) {
-      logger.warn("Could not create connection to" + url + ".", e);
+      running.set(true);
+    }
+
+    synchronized (allConnections) {
+      allConnections.addAll(createdConnections);
     }
 
   }
@@ -110,32 +160,116 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
 
   @Override
   public void stop() {
-    // TODO Auto-generated method stub
+    running.set(false);
+    List<Connection> capturedConnections = new ArrayList<Connection>();
+    Connection idleConnection = null;
+    do {
+      idleConnection = idleConnections.poll();
+      if (idleConnection != null) {
+        capturedConnections.add(idleConnection);
+      }
+    } while (idleConnection != null);
 
+    int missingConnectionCount = missingConnections.addAndGet(-numConnections);
+    missingConnectionCount = numConnections + missingConnectionCount;
+    if (logger.isDebugEnabled()) {
+      String format = "Stopping %d connections. Initially captured %d idle connections. %d connections were missing";
+      logger.debug(String.format(format, numConnections, capturedConnections.size(), missingConnectionCount));
+    }
+    for (Connection con : capturedConnections) {
+      try {
+        con.close();
+      } catch (Exception e) {
+        if (logger.isWarnEnabled()) {
+          logger.warn("Could not close connection " + con, e);
+        }
+      }
+    }
+
+
+    synchronized (allConnections) {
+      allConnections.removeAll(capturedConnections);
+      for (Connection c : allConnections) {
+        try {
+          c.abort(cleanupExecutor);
+        } catch (Exception e) {
+          if (logger.isErrorEnabled()) {
+            logger.error("Could not abort Connection " + c, e);
+          }
+        }
+      }
+      allConnections.clear();
+    }
+
+    missingConnections.set(0);
+
+    if (logger.isDebugEnabled()) {
+      logger.debug("Stopped " + getInstanceDescription());
+    }
   }
 
 
   @Override
   public String getInstanceDescription() {
-    return String.format("SQLSharedResourceSynchronizer - %s - %s", url, tableName);
+    return String.format(DESC_FORMAT, url, tableName, idleConnections.size(), numConnections, missingConnections.get());
   }
 
 
   private Connection getConnection() {
-    return connections.poll();
+    if (running.get() == false) {
+      return null;
+    }
+
+    Connection result = idleConnections.poll();
+    if (result != null) {
+      return result; // there was a free connection
+    }
+    if (missingConnections.get() <= 0) {
+      return null; // there was no free connection and there are no missing connections to replace
+    }
+    int actualMissingConnections = missingConnections.decrementAndGet();
+    if (actualMissingConnections < 0) {
+      missingConnections.incrementAndGet();
+      return null; // we thought there were missing connections, but some other thread was faster
+    }
+    try {
+      synchronized (allConnections) {
+        if (running.get() == false) {
+          return null;
+        }
+        result = connectionData.createConnection();
+        allConnections.add(result);
+      }
+      if (logger.isInfoEnabled()) {
+        logger.info("Recreated missing connection");
+      }
+    } catch (Exception e) {
+      if (logger.isWarnEnabled()) {
+        logger.warn("Could not recreate missing connection", e);
+      }
+      missingConnections.incrementAndGet();
+    }
+    return result;
   }
 
 
-  private <T> Parameter createFullParameter(SharedResourceDefinition<T> resource, List<SharedResourceInstance<T>> data) throws IOException {
+  private <T> Parameter createFullParameter(SharedResourceDefinition<T> resource, List<SharedResourceInstance<T>> data, boolean blobFirst)
+      throws IOException {
     Parameter result = new Parameter();
     for (int i = 0; i < data.size(); i++) {
       SharedResourceInstance<T> instance = data.get(i);
       byte[] serializedData = resource.serialize(instance.getValue());
       ByteArrayOutputStream stream = new ByteArrayOutputStream(serializedData.length);
       stream.write(serializedData);
+      stream.flush();
+      if (blobFirst) {
+        result.addParameter(new BLOB(stream));
+      }
       result.addParameter(resource.getPath());
       result.addParameter(instance.getId());
-      result.addParameter(new BLOB(stream));
+      if (!blobFirst) {
+        result.addParameter(new BLOB(stream));
+      }
     }
     return result;
   }
@@ -150,16 +284,16 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     try {
       String sql = INSERT_TEMPLATE + INSERT_VALUE_PLACEHOLDER.repeat(data.size());
       sql = sql.substring(0, sql.length() - 2); // remove final ,\n
-      PreparedStatement ps = con.prepareStatement(sql);
-      Parameter params = createFullParameter(resource, data);
-      params.addParameterTo(ps);
-      ps.setQueryTimeout(queryTimeoutSeconds);
-      ps.executeUpdate();
-
+      try (PreparedStatement ps = con.prepareStatement(sql)) {
+        Parameter params = createFullParameter(resource, data, false);
+        params.addParameterTo(ps);
+        ps.setQueryTimeout(queryTimeoutSeconds);
+        ps.executeUpdate();
+      }
     } catch (Exception e) {
       return new SharedResourceRequestResult<T>(false, e, null);
     } finally {
-      connections.add(con);
+      idleConnections.add(con);
     }
 
     return new SharedResourceRequestResult<T>(true, null, null);
@@ -173,16 +307,21 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
       return new SharedResourceRequestResult<T>(false, NO_CONNECTION_AVAILABLE_EXCEPTION, null);
     }
     try {
-      String sql = DELETE_TEMPLATE + "? ".repeat(ids.size()) + ")";
-      PreparedStatement ps = con.prepareStatement(sql);
-      Parameter params = new Parameter(ids);
-      params.addParameterTo(ps);
-      ps.setQueryTimeout(queryTimeoutSeconds);
-      ps.executeUpdate();
-    } catch(Exception e) {
+      String parameterString = "?, ".repeat(ids.size());
+      parameterString = parameterString.substring(0, parameterString.length() - 2);
+      String sql = String.format("%s%s)", DELETE_TEMPLATE, parameterString);
+      try (PreparedStatement ps = con.prepareStatement(sql)) {
+        Parameter params = new Parameter(ids.toArray(new Object[0]));
+        params.addParameterTo(ps);
+        ps.setQueryTimeout(queryTimeoutSeconds);
+        ps.executeUpdate();
+      }
+    } catch (Exception e) {
       return new SharedResourceRequestResult<T>(false, e, null);
+    } finally {
+      idleConnections.add(con);
     }
-    
+
     return new SharedResourceRequestResult<T>(true, null, null);
   }
 
@@ -195,18 +334,34 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     }
     List<SharedResourceInstance<T>> resources = new ArrayList<SharedResourceInstance<T>>();
     try {
-      PreparedStatement ps = con.prepareStatement("");
-      ResultSet rs = ps.executeQuery();
-      while (rs.next()) {
-        String id = rs.getString(1);
-        byte[] data = rs.getBytes(2);
-        SharedResourceInstance<T> instance = resource.deserialize(data, id);
-        resources.add(instance);
-      }
+      resources = executeRead(con, resource, ids, false);
     } catch (Exception e) {
       return new SharedResourceRequestResult<T>(false, e, null);
+    } finally {
+      idleConnections.add(con);
     }
     return new SharedResourceRequestResult<T>(true, null, resources);
+  }
+
+
+  private <T> List<SharedResourceInstance<T>> executeRead(Connection con, SharedResourceDefinition<T> resource, List<String> ids,
+                                                          boolean forUpdate)
+      throws Exception {
+    List<SharedResourceInstance<T>> resources = new ArrayList<>();
+    String sql = String.format("%s%s) %s", SELECT_TEMPLATE, "? ".repeat(ids.size()), forUpdate ? "FOR UPDATE" : "");
+    PreparedStatement ps = con.prepareStatement(sql);
+    Parameter params = new Parameter(resource.getPath());
+    for (String id : ids) {
+      params.addParameter(id);
+    }
+    params.addParameterTo(ps);
+    ps.setQueryTimeout(queryTimeoutSeconds);
+    try (ResultSet rs = ps.executeQuery()) {
+      while (rs.next()) {
+        resources.add(readFromResultSet(resource, rs));
+      }
+    }
+    return resources;
   }
 
 
@@ -216,28 +371,105 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     if (con == null) {
       return new SharedResourceRequestResult<T>(false, NO_CONNECTION_AVAILABLE_EXCEPTION, null);
     }
-    List<SharedResourceInstance<T>> resources = new ArrayList<SharedResourceInstance<T>>();
+    List<SharedResourceInstance<T>> resources = new ArrayList<>();
     try {
-      PreparedStatement ps = con.prepareStatement(SELECT_TEMPLATE);
-      ResultSet rs = ps.executeQuery();
-      while (rs.next()) {
-        String id = rs.getString(1);
-        byte[] data = rs.getBytes(2);
-        SharedResourceInstance<T> instance = resource.deserialize(data, id);
-        resources.add(instance);
+      try (PreparedStatement ps = con.prepareStatement(SELECT_ALL_TEMPLATE)) {
+        ps.setString(1, resource.getPath());
+        try (ResultSet rs = ps.executeQuery()) {
+          while (rs.next()) {
+            resources.add(readFromResultSet(resource, rs));
+          }
+        }
       }
     } catch (Exception e) {
       return new SharedResourceRequestResult<T>(false, e, null);
+    } finally {
+      idleConnections.add(con);
     }
     return new SharedResourceRequestResult<T>(true, null, resources);
+  }
+
+
+  private <T> SharedResourceInstance<T> readFromResultSet(SharedResourceDefinition<T> resource, ResultSet rs) throws SQLException {
+    String id = rs.getString(2);
+    byte[] data = rs.getBytes(3);
+    SharedResourceInstance<T> instance = resource.deserialize(data, id);
+    return instance;
   }
 
 
   @Override
   public <T> SharedResourceRequestResult<T> update(SharedResourceDefinition<T> resource, List<String> ids,
                                                    Function<SharedResourceInstance<T>, SharedResourceInstance<T>> update) {
-    // TODO Auto-generated method stub
-    return null;
+    Connection con = getConnection();
+    if (con == null) {
+      return new SharedResourceRequestResult<T>(false, NO_CONNECTION_AVAILABLE_EXCEPTION, null);
+    }
+    List<SharedResourceInstance<T>> resources = new ArrayList<>();
+    List<SharedResourceInstance<T>> newInstances = new ArrayList<>();
+    try {
+      con.setAutoCommit(false);
+      resources = executeRead(con, resource, ids, true);
+      if (resources.size() != ids.size()) {
+        con.setAutoCommit(true);
+        return new SharedResourceRequestResult<T>(false, MISSING_ENTRIES_EXCEPTION, null);
+      }
+      for (SharedResourceInstance<T> oldInstance : resources) {
+        SharedResourceInstance<T> newInstance = update.apply(oldInstance);
+        if (newInstance == null) {
+          con.setAutoCommit(true);
+          return new SharedResourceRequestResult<T>(false, UPDATE_INTERRUPTED_EXCEPTION, null);
+        }
+        if (!Objects.equals(newInstance.getId(), oldInstance.getId())) {
+          con.setAutoCommit(true);
+          return new SharedResourceRequestResult<T>(false, UPDATE_MODIFIED_ID_EXCEPTION, null);
+        }
+        newInstances.add(newInstance);
+      }
+
+      try (PreparedStatement ps = con.prepareStatement(UPDATE_STATEMENT)) {
+        for (SharedResourceInstance<T> newInstance : newInstances) {
+          Parameter params = createFullParameter(resource, List.of(newInstance), true);
+          params.addParameterTo(ps);
+          ps.addBatch();
+        }
+        ps.setQueryTimeout(queryTimeoutSeconds);
+        ps.executeBatch();
+        con.commit();
+        con.setAutoCommit(true);
+      }
+    } catch (Exception e) {
+      con = rollbackOrCloseConnection(con);
+      return new SharedResourceRequestResult<T>(false, e, null);
+    } finally {
+      if (con != null) {
+        idleConnections.add(con);
+      }
+    }
+
+    return new SharedResourceRequestResult<T>(true, null, null);
   }
 
+
+  private Connection rollbackOrCloseConnection(Connection con) {
+    Connection result = con;
+    try {
+      con.rollback();
+      if (logger.isDebugEnabled()) {
+        logger.debug("Successfully rolled back connection " + con);
+      }
+      return result;
+    } catch (Exception e) {
+      try {
+        con.close();
+      } catch (Exception e1) {
+        int totalMissingConnections = missingConnections.incrementAndGet();
+        if (logger.isWarnEnabled()) {
+          logger.warn("Could not close connection " + e + " - new total of missing connections: " + totalMissingConnections, e1);
+        }
+      }
+    }
+
+    return result;
+  }
 }
