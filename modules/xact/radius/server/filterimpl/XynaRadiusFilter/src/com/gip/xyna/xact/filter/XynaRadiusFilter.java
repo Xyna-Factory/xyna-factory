@@ -32,47 +32,40 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
-import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.trigger.XynaRadiusTriggerConnection;
 import com.gip.xyna.xact.trigger.tlvdecoding.radius.RadiusConfigurationDecoder;
-import com.gip.xyna.xact.trigger.tlvencoding.util.ByteUtil;
-import com.gip.xyna.xact.trigger.tlvencoding.util.Md5HMAC;
 import com.gip.xyna.xact.trigger.tlvencoding.radius.Node;
 import com.gip.xyna.xact.trigger.tlvencoding.radius.RadiusConfigurationEncoder;
 import com.gip.xyna.xact.trigger.tlvencoding.radius.TextConfigTree;
 import com.gip.xyna.xact.trigger.tlvencoding.radius.TextConfigTreeReader;
 import com.gip.xyna.xact.trigger.tlvencoding.radius.TypeOnlyNode;
 import com.gip.xyna.xact.trigger.tlvencoding.radius.TypeWithValueNode;
+import com.gip.xyna.xact.trigger.tlvencoding.util.ByteUtil;
+import com.gip.xyna.xact.trigger.tlvencoding.util.Md5HMAC;
 import com.gip.xyna.xdev.xfractmod.xmdm.ConnectionFilter;
 import com.gip.xyna.xdev.xfractmod.xmdm.Container;
 import com.gip.xyna.xdev.xfractmod.xmdm.EventListener;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObjectList;
-import com.gip.xyna.xfmg.xods.configuration.IPropertyChangeListener;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyString;
 import com.gip.xyna.xprc.XynaOrder;
 import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
 
 
 
-public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnection> implements IPropertyChangeListener {
+public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnection> {
 
   private static final long serialVersionUID = 1L;
   private static Logger logger = CentralFactoryLogging.getLogger(XynaRadiusFilter.class);
 
   private static XynaPropertyString wfAccessRequest;
 
-  private static XynaRadiusFilter filterInstance;
-
   private static String sharedSecretProp = "xact.radius.sharedSecret";
   private final static XynaPropertyString sharedSecretXynaProp = new XynaPropertyString(sharedSecretProp, "sharedSecret", false);
 
 
   public void onDeployment(EventListener trigger) {
-    // Registrieren als PropertyChange-Listener
-    XynaFactory.getInstance().getFactoryManagement().getXynaFactoryManagementODS().getConfiguration().addPropertyChangeListener(this);
-    filterInstance = this;
     super.onDeployment(trigger);
 
     wfAccessRequest = new XynaPropertyString("xyna.radius.wf.AccessRequest", "xact.radius.RADIUSAccessRequest");
@@ -80,9 +73,6 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
 
 
   public void onUndeployment(EventListener trigger) {
-    // Deregistrieren als PropertyChange-Listener
-    XynaFactory.getInstance().getFactoryManagement().getXynaFactoryManagementODS().getConfiguration()
-        .removePropertyChangeListener(filterInstance);
   }
 
 
@@ -206,7 +196,9 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
 
     for (xact.radius.Node n : momlist) {
       if (n == null) {
-        System.out.println("RADIUSFILTER: Nullnode");
+        if (logger.isDebugEnabled()) {
+          logger.debug("RADIUSFILTER: Nullnode");
+        }
       }
       if (n != null) {
         if (logger.isDebugEnabled()) {
@@ -484,18 +476,6 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
   }
 
 
-  public ArrayList<String> getWatchedProperties() {
-    ArrayList<String> list = new ArrayList<String>();
-    // list.add(XYNA_PROPERTY_RESET);
-    return list;
-  }
-
-
-  public void propertyChanged() {
-
-  }
-
-
   public byte[] createRadiusMessage(int code, int id, byte[] options, byte[] authenticator) throws Exception {
 
     // DHCPv4 Nachricht generieren ohne Optionen generieren
@@ -586,7 +566,9 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
       digest.update(input, 0, input.length);
       md5 = digest.digest();
     } catch (Exception e) {
-      System.out.println("Problems building md5sum: " + e);
+      if (logger.isDebugEnabled()) {
+        logger.debug("Problems building md5sum: " + e);
+      }
     }
 
     return md5;

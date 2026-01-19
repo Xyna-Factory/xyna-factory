@@ -171,7 +171,6 @@ public class XynaRadiusTrigger extends EventListener<XynaRadiusTriggerConnection
 
   public ArrayList<String> getWatchedProperties() {
     ArrayList<String> list = new ArrayList<String>();
-    // list.add(XYNA_PROPERTY_RESET);
     list.add(XYNA_PROPERTY_DHCP_RECEIVE_BUFFER_SIZE);
     return list;
   }

@@ -78,9 +78,7 @@ public final class VendorTlvReader implements TlvReader {
 
         if (a == 58) {
           header = false;
-          if ((head.size() == 9) && head.get(6) == 51 && head.get(7) == 46 && head.get(8) == 48) // TODO noch etwas
-                                                                                                 // ungenau
-          {
+          if ((head.size() == 9) && head.get(6) == 51 && head.get(7) == 46 && head.get(8) == 48) {
             docsis3 = true;
           }
         }
@@ -89,9 +87,9 @@ public final class VendorTlvReader implements TlvReader {
         }
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.warn("Error while converting input stream", e);
     } catch (TlvReaderException e) {
-      e.printStackTrace();
+      logger.warn("Error while converting input stream", e);
     }
 
 

@@ -50,17 +50,10 @@ public class LoadConfigStatic {
       ods.registerPersistenceLayer(3, XMLPersistenceLayer.class);
       long iniId = ods.instantiatePersistenceLayerInstance(3l, "aghfksajgf", ODSConnectionType.HISTORY, new String[] {"defaultHISTORY"});
       ods.setDefaultPersistenceLayer(ODSConnectionType.HISTORY, iniId);
-      //ods.setPersistenceLayerForTable()
       ods.registerStorable(RadiusEncoding.class);
     } catch (Exception e) {
       logger.warn("Failed to register " + RadiusEncoding.class.getSimpleName() + " storable: " + e.getMessage(), e);
     }
-    /*
-     * try { ods.registerStorable(DHCPEncoding.class); ods.registerPersistenceLayer(123, XMLPersistenceLayer.class);
-     * long id = ods.instantiatePersistenceLayerInstance(ods.getXmlPersistenceLayerID(), "test",
-     * ODSConnectionType.HISTORY, new String[]{"test"}); ods.setDefaultPersistenceLayer(ODSConnectionType.DEFAULT, id);
-     * } catch (XynaException e) { logger.error("", e); //fail(e.getMessage()); }
-     */
   }
 
 

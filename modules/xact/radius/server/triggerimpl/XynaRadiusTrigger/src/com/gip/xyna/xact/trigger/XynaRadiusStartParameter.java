@@ -21,7 +21,6 @@ package com.gip.xyna.xact.trigger;
 
 import java.net.InetAddress;
 
-
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
@@ -140,7 +139,7 @@ public class XynaRadiusStartParameter implements StartParameter {
       logger.info("address " + address + " unknown in network configuration management.");
     }
 
-    // else: abwaertskompatibel:
+    // else: downward compatible
     boolean ipv6 = getProtocolPreference().equals(InterfaceProtocolPreference.IPV6);
     boolean useLocalAddresses = false;
     return NetworkInterfaceUtils.getFirstIpAddressByInterfaceName(address, ipv6, useLocalAddresses);

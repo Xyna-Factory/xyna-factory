@@ -218,11 +218,6 @@ public class RadiusEncoding extends Storable<RadiusEncoding> {
 
       e.valueDataTypeName = rs.getString(COL_VALUEDATATYPENAME);
 
-      /*
-       * e.valueDataTypeArguments = (Map<String, String>) e .readBlobbedJavaObjectFromResultSet(rs,
-       * COL_VALUEDATATYPEARGUMENTS);
-       */
-
       e.valueDataTypeArgumentsString = rs.getString(COL_VALUEDATATYPEARGUMENTSSTRING);
 
       String tmp = e.valueDataTypeArgumentsString;

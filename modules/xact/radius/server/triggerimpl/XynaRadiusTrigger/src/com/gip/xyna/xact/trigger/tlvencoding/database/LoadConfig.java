@@ -48,34 +48,7 @@ public class LoadConfig {
     } catch (Exception e) {
       logger.debug("getInstance fehlgeschlagen");
     }
-    /*
-     * try { ods.registerStorable(DHCPEncoding.class); ods.registerPersistenceLayer(123, XMLPersistenceLayer.class);
-     * long id = ods.instantiatePersistenceLayerInstance(ods.getXmlPersistenceLayerID(), "test",
-     * ODSConnectionType.HISTORY, new String[]{"test"}); ods.setDefaultPersistenceLayer(ODSConnectionType.DEFAULT, id);
-     * } catch (XynaException e) { logger.error("", e); //fail(e.getMessage()); }
-     */
   }
-
-
-  //  public void createSingleRadiusEncodingEntry() throws PersistenceLayerException {
-  //
-  //    Map<String, String> valuearguments = new HashMap<String, String>();
-  //
-  //    // Anfang
-  //    RadiusEncoding encoding = new RadiusEncoding(0, null, "Pad", 0, null, "Padding", valuearguments);
-  //
-  //    ODSConnection connection = ods.openConnection(ODSConnectionType.HISTORY);
-  //    try {
-  //      connection.persistObject(encoding);
-  //      connection.commit();
-  //
-  //
-  //    }
-  //    finally {
-  //      connection.closeConnection();
-  //    }
-  //
-  //  }
 
 
   public void createListOfDHCPEncodingEntry(List<RadiusEncoding> liste) throws PersistenceLayerException {

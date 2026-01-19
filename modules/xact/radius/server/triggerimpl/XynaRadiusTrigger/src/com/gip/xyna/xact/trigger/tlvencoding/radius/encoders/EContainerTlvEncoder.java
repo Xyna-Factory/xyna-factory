@@ -26,7 +26,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import com.gip.xyna.xact.trigger.tlvencoding.radius.Node;
 import com.gip.xyna.xact.trigger.tlvencoding.radius.RadiusConfigurationEncoder;
 import com.gip.xyna.xact.trigger.tlvencoding.radius.TlvEncoder;
@@ -93,23 +92,6 @@ public final class EContainerTlvEncoder extends AbstractTypeOnlyTlvEncoder {
     target.write(typeEncoding);
     target.write(subNodesData.size() + ByteUtil.toByteArray(Integer.parseInt(subencoding, 16)).length + 2);
     target.write(ByteUtil.toByteArray(Integer.parseInt(subencoding, 16)));
-    //target.write(subNodesData.size()+1);
     subNodesData.writeTo(target);
-
-    /*
-    byte[] subtlvs = subNodesData.toByteArray();
-    String tmp;
-    byte[] tmpb = new byte[1];
-
-    for(byte b:subtlvs)
-    {
-      tmpb[0]=b;
-
-      tmp = ByteUtil.toHexValue(tmpb); // Byte Werte in Hexwerte umwandeln
-      tmp = tmp.substring(2, tmp.length()); // 0x wegschneiden
-      target.write(tmp.getBytes()); // String in Bytes umgewandelt in Paket schreiben
-
-    }
-    */
   }
 }

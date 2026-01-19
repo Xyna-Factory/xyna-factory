@@ -70,8 +70,6 @@ public final class OctetStringTlvEncoder extends AbstractTypeWithValueTlvEncoder
     byte[] content;
     if (value.matches("0x([0-9A-F]{2})+")) {
       content = ByteUtil.toByteArray(node.getValue());
-      //        } else if (QuotedStringFormatUtil.isQuoteFormat(value)) {
-      //            content = QuotedStringFormatUtil.unquote(value).getBytes("UTF-8");
     } else {
       try {
         content = value.getBytes("UTF-8");

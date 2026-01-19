@@ -20,7 +20,6 @@ package xact.radius.impl;
 
 
 import java.security.MessageDigest;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -33,7 +32,6 @@ import com.gip.xyna.xdev.xfractmod.xmdm.Container;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyDuration;
-import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyInt;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyString;
 import com.gip.xyna.xnwh.persistence.Command;
 import com.gip.xyna.xnwh.persistence.ODS;
@@ -47,7 +45,6 @@ import com.gip.xyna.xnwh.persistence.Query;
 
 import xact.radius.Code;
 import xact.radius.Node;
-import xact.radius.TypeOnlyNode;
 import xact.radius.TypeWithValueNode;
 import xact.radius.impl.database.RadiusUserStorable;
 import xact.radius.impl.util.ByteUtil;
@@ -71,7 +68,6 @@ public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymen
       + RadiusUserStorable.COL_TIMESTAMP + " > 0 and " + RadiusUserStorable.COL_TIMESTAMP + "  < ?";
 
   private final static XynaPropertyDuration timeoutXynaProp = new XynaPropertyDuration(timeoutProp, "900 s");
-
   private final static XynaPropertyString sharedSecretXynaProp = new XynaPropertyString(sharedSecretProp, "sharedSecret", false);
 
 
@@ -232,7 +228,7 @@ public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymen
 
     try {
       RadiusUserStorable newuser =
-          new RadiusUserStorable(founduser != null ? founduser.getId() : com.gip.xyna.idgeneration.IDGenerator.getInstance().getUniqueId(),
+          new RadiusUserStorable(founduser != null ? founduser.getId() : com.gip.xyna.idgeneration.IDGenerator.getInstance().getUniqueId("radius"),
                                  username, password, sharedsecret, servicetype, timestamp, role, ip);
       if (logger.isDebugEnabled())
         logger.debug("Creating User with: id: " + newuser.getId() + " username: " + username + " servicetype: " + servicetype
@@ -248,31 +244,6 @@ public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymen
     }
 
     return new xact.radius.RadiusAddUserResult("Successful");
-  }
-
-
-  @Deprecated
-  public List<? extends Node> addPrivilegeLevel(xact.radius.PrivilegeLevel prvlvl, List<? extends Node> inputnodes) {
-    if (logger.isDebugEnabled())
-      logger.debug("addPriviledgeLevel called ...");
-    List<Node> resultlist = new ArrayList<Node>();
-
-    String prvlvlstring = prvlvl.getLevel();
-    if (prvlvlstring == null || prvlvlstring.length() == 0) {
-      logger.error("No Priviledge Level given, can not add it to reply. Aborting ...");
-      return resultlist;
-    }
-
-    String vendor = "";
-    for (Node n : inputnodes) {
-      if (n.getTypeName().equalsIgnoreCase("NAS-Identifier")) {
-        vendor = ((TypeWithValueNode) n).getValue();
-        if (logger.isDebugEnabled())
-          logger.debug("NAS Identifier found: " + vendor);
-      }
-    }
-
-    return resultlist;
   }
 
 
@@ -375,71 +346,6 @@ public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymen
 
     return new Container(resCode, userrolenode, nasidentifiernode);
 
-  }
-
-
-  @Deprecated
-  public Container processAccessRequest(List<? extends Node> inputnodes, xact.radius.Code xmomcode, xact.radius.Identifier xmomidentifier,
-                                        xact.radius.RequestAuthenticator xmomauthenticator, xact.radius.SourceIP sourceip) {
-    if (logger.isDebugEnabled())
-      logger.debug("Processing received RequestAccess Message ...");
-
-    String code = xmomcode.getValue();
-    String identifier = xmomidentifier.getValue();
-    String requestauthenticator = xmomauthenticator.getValue();
-    String radiusUsername = "";
-    String radiusUserpassword = "";
-
-    for (Node n : inputnodes) {
-      if (n.getTypeName().equalsIgnoreCase("USER-NAME"))
-        radiusUsername = ((TypeWithValueNode) n).getValue().replaceAll("\"", "");
-      if (n.getTypeName().equalsIgnoreCase("USER-PASSWORD"))
-        radiusUserpassword = ((TypeWithValueNode) n).getValue();
-    }
-
-    if (logger.isDebugEnabled())
-      logger.debug("got Code: " + code + " Identifier: " + identifier + " Authenticator: " + requestauthenticator + " Username: "
-          + radiusUsername);
-
-    RadiusUserStorable founduser = queryUserByName(radiusUsername);
-    Code resCode = authenticateRadiusUserAndRemoveExpired(founduser, radiusUserpassword, sourceip, requestauthenticator);
-
-    xact.radius.SharedSecret xmomsharedsecret = new xact.radius.SharedSecret(founduser != null ? founduser.getSharedSecret() : "");
-
-    xact.radius.PrivilegeLevel privlvl = new xact.radius.PrivilegeLevel();
-
-    privlvl.setLevel("0"); // default 0
-
-    if (founduser != null) {
-      if (logger.isDebugEnabled())
-        logger.debug("Trying to determine priviledge level ...");
-      if (founduser.getRole() != null && founduser.getRole().length() > 0) {
-        String getLevelFromProperty = "xact.radius.rightmanagment." + founduser.getRole();
-        try {
-          String fachlStufe = XynaFactory.getPortalInstance().getFactoryManagementPortal().getProperty(getLevelFromProperty);
-          if (fachlStufe != null && fachlStufe.length() > 0) {
-            if (fachlStufe.equals("read-only"))
-              privlvl.setLevel("1");
-            if (fachlStufe.equals("read-write"))
-              privlvl.setLevel("7");
-            if (fachlStufe.equals("super-user"))
-              privlvl.setLevel("15");
-          } else {
-            logger.warn("xact.radius.rightmanagment." + founduser.getRole()
-                + " not set correctly. Should be read-only, read-write or super-user!");
-          }
-
-        } catch (Exception e) {
-          logger.warn("Problem reading Property " + getLevelFromProperty);
-        }
-      } else {
-        logger.warn("No Role for radius user given. Can not determine priviledge level!");
-      }
-    }
-    if (logger.isDebugEnabled())
-      logger.debug("Privilege Level found as: " + privlvl.getLevel());
-
-    return new Container(resCode, xmomsharedsecret, privlvl);
   }
 
 

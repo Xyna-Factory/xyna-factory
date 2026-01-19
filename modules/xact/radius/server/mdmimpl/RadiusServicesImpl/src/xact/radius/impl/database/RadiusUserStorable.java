@@ -19,15 +19,19 @@ package xact.radius.impl.database;
 
 
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.gip.xyna.utils.misc.Base64;
+import com.gip.xyna.xnwh.exceptions.XNWH_EncryptionException;
 import com.gip.xyna.xnwh.persistence.Column;
+import com.gip.xyna.xnwh.persistence.IndexType;
 import com.gip.xyna.xnwh.persistence.Persistable;
 import com.gip.xyna.xnwh.persistence.ResultSetReader;
 import com.gip.xyna.xnwh.persistence.Storable;
-import com.gip.xyna.xnwh.persistence.IndexType;
-
+import com.gip.xyna.xnwh.securestorage.SecureStorage;
 
 
 @Persistable(primaryKey = RadiusUserStorable.COL_ID, tableName = RadiusUserStorable.TABLENAME)
@@ -104,8 +108,8 @@ public class RadiusUserStorable extends Storable<RadiusUserStorable> {
 
     this.id = id;
     this.username = username;
-    this.userpassword = userpassword;
-    this.sharedsecret = sharedsecret;
+    this.userpassword = this.EncryptMemberData(userpassword);
+    this.sharedsecret = this.EncryptMemberData(sharedsecret);
     this.servicetype = servicetype;
     this.timestamp = timestamp;
     this.role = role;
@@ -124,12 +128,12 @@ public class RadiusUserStorable extends Storable<RadiusUserStorable> {
 
 
   public String getUserPassword() {
-    return this.userpassword;
+    return this.DecryptMemberData(this.userpassword);
   }
 
 
   public String getSharedSecret() {
-    return this.sharedsecret;
+    return this.DecryptMemberData(this.sharedsecret);
   }
 
 
@@ -160,10 +164,6 @@ public class RadiusUserStorable extends Storable<RadiusUserStorable> {
     sb.append(this.id);
     sb.append(">,userName:<");
     sb.append(this.username);
-    sb.append(">,userPassword:<");
-    sb.append(this.userpassword);
-    sb.append(">,sharedSecret:<");
-    sb.append(this.sharedsecret);
     sb.append(">,serviceType:<");
     sb.append(this.servicetype);
     sb.append(">,timestamp:<");
@@ -220,5 +220,33 @@ public class RadiusUserStorable extends Storable<RadiusUserStorable> {
     role = data2.role;
     ip = data2.ip;
 
+  }
+
+
+  private String EncryptMemberData(String memberData) {
+    if (memberData == null) {
+      return null;
+    }
+    try {
+      String encryptedString = SecureStorage.staticEncrypt(String.valueOf(this.id) + username, memberData);
+      return Base64.encode(encryptedString.getBytes("UTF-8"));
+    } catch (XNWH_EncryptionException | UnsupportedEncodingException e) {
+      logger.warn("Failed to encrypt data", e);
+      return null;
+    }
+  }
+
+
+  private String DecryptMemberData(String memberData) {
+    if (memberData == null) {
+      return null;
+    }
+    try {
+      String encryptedString = new String(Base64.decode(memberData), "UTF-8");
+      return SecureStorage.staticDecrypt(String.valueOf(this.id) + username, encryptedString);
+    } catch (XNWH_EncryptionException | IOException e) {
+      logger.warn("Failed to decrypt data", e);
+      return memberData;
+    }
   }
 }

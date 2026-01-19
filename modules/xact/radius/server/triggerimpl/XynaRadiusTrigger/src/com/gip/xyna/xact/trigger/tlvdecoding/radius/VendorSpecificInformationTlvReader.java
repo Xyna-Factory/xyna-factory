@@ -62,7 +62,7 @@ public final class VendorSpecificInformationTlvReader implements TlvReader {
         streamempty = true;
       }
     } catch (TlvReaderException e) {
-      e.printStackTrace();
+      logger.warn("Failed to read enterprise number", e);
     }
 
     this.paddingTypeEncodings = validateAndMakeUnmodifiable(paddingTypeEncodings);

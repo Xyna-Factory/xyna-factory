@@ -44,7 +44,7 @@ public class RadiusOptionList {
 
 
   public static void fillListe() {
-    // Optionen anlegen
+    // create options
     Map<String, String> valuearguments = new HashMap<String, String>();
 
     RadiusOptionList.liste.add(new RadiusEncoding(0, null, "User-Name", 1, null, "OctetString", valuearguments));

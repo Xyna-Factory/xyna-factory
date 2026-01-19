@@ -21,18 +21,6 @@
   </Meta>
   <Libraries>XynaRadiusServicesImpl.jar</Libraries>
   <Service Label="XynaRadiusServices" TypeName="XynaRadiusServices">
-    <Operation IsStatic="true" Label="Add Privilege Level" Name="addPrivilegeLevel">
-      <Input>
-        <Data Label="Privilege Level" ReferenceName="PrivilegeLevel" ReferencePath="xact.radius" VariableName="privilegeLevel"/>
-        <Data IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node"/>
-      </Input>
-      <Output>
-        <Data IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node0"/>
-      </Output>
-      <SourceCode>
-        <CodeSnippet Type="Java">return xact.radius.XynaRadiusServicesImpl.addPrivilegeLevel(privilegeLevel, node);</CodeSnippet>
-      </SourceCode>
-    </Operation>
     <Operation IsStatic="true" Label="Add temporary radius user" Name="addTemporaryRadiusUser">
       <Input>
         <Data Label="IPv 4" ReferenceName="IPv4" ReferencePath="base" VariableName="iPv4"/>
@@ -77,23 +65,6 @@
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return xact.radius.XynaRadiusServicesImpl.getXynaProperty(xynaPropertyKey31);</CodeSnippet>
-      </SourceCode>
-    </Operation>
-    <Operation IsStatic="true" Label="processAccessRequest" Name="processAccessRequest">
-      <Input>
-        <Data IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node"/>
-        <Data Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code"/>
-        <Data Label="Identifier" ReferenceName="Identifier" ReferencePath="xact.radius" VariableName="identifier"/>
-        <Data Label="Request Authenticator" ReferenceName="RequestAuthenticator" ReferencePath="xact.radius" VariableName="requestAuthenticator"/>
-        <Data Label="Source IP" ReferenceName="SourceIP" ReferencePath="xact.radius" VariableName="sourceIP"/>
-      </Input>
-      <Output>
-        <Data Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code7"/>
-        <Data Label="Shared Secret" ReferenceName="SharedSecret" ReferencePath="xact.radius" VariableName="sharedSecret"/>
-        <Data Label="Privilege Level" ReferenceName="PrivilegeLevel" ReferencePath="xact.radius" VariableName="privilegeLevel"/>
-      </Output>
-      <SourceCode>
-        <CodeSnippet Type="Java">return xact.radius.XynaRadiusServicesImpl.processAccessRequest(node, code, identifier, requestAuthenticator, sourceIP);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Get Privilege Level" Name="getPrivilegeLevel">

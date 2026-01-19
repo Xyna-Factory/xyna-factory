@@ -147,15 +147,6 @@ public final class RadiusConfigurationEncoder {
   }
 
 
-  /*
-   * public void encode(final TextConfigTree configuration, final OutputStream target) throws IOException { if
-   * (configuration == null) { throw new IllegalArgumentException("Configuration may not be null."); } else if (target
-   * == null) { throw new IllegalArgumentException("Output stream may not be null."); } ByteArrayOutputStream
-   * mainDataOutputStream = new ByteArrayOutputStream(); for (Node node : configuration.getNodes()) { encodeNode(node,
-   * mainDataOutputStream); } byte[] mainData = mainDataOutputStream.toByteArray(); int amountPadding = 4; //
-   * modifiziert, Vorsicht target.write(mainData); target.write(endOfDataTypeEncoding); for (int i = 0; i <
-   * amountPadding; ++i) { target.write(paddingTypeEncoding); } }
-   */
   public void encode(final List<Node> nodes, final OutputStream target) throws IOException {
 
     if (nodes == null) {
@@ -171,9 +162,6 @@ public final class RadiusConfigurationEncoder {
     }
     byte[] mainData = mainDataOutputStream.toByteArray();
     target.write(mainData);
-    //    for (int i = 0; i < amountPadding; ++i) { //Padding probehalber entfernt
-    //      target.write(paddingTypeEncoding);
-    //    }
   }
 
 

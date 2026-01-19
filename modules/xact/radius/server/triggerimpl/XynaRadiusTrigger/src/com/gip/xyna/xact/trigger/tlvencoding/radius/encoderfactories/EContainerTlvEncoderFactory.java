@@ -41,12 +41,7 @@ public final class EContainerTlvEncoderFactory extends AbstractTypeOnlyTlvEncode
   @Override
   protected TlvEncoder createTypeOnlyTlvEncoder(final int typeEncoding, final Map<String, String> arguments,
                                                 final Map<String, TlvEncoder> subNodeEncodings) {
-    /*
-    if (arguments.size() > 0) {
-          throw new IllegalArgumentException("Expected no arguments when creating <Container> encoder, but got: <"
-                  + arguments + ">.");
-      }
-      */
+
     if (!arguments.containsKey("enterprisenr")) {
       throw new IllegalArgumentException("Mandatory argument <enterprisenr> missing from provided arguments: <" + arguments + ">.");
     }
