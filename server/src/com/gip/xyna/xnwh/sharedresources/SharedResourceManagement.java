@@ -94,6 +94,7 @@ public class SharedResourceManagement extends Section {
         .execAsync(this::configureSRTypes);
   }
 
+
   /**
    * Loads all SharedResourceSynchronizerFactories from the configured directory.
    * The directory is expected to contain subdirectories and each subdirectory
@@ -104,11 +105,12 @@ public class SharedResourceManagement extends Section {
   private void loadSynchronizers() {
     Path rootDir = Paths.get(Constants.SHAREDRESOURCESYNCHRONIZERS_BASEDIR);
     if (!Files.isDirectory(rootDir)) {
-      throw new IllegalStateException("Root path is not a directory: " + rootDir);
+      this.logger.info(String.format("Directory %s not found. No SharedResourceSynchronizers will be loaded.", rootDir));
+      return;
     }
 
-    // maps synchronizer factory FQNs to their JAR paths in which they are defined
-    Map<String, List<Path>> synchronizerFactoryPlugins = new HashMap<>();
+    // maps synchronizer names to their JAR paths in which the corresponding factory is defined
+    Map<String, List<Path>> synchronizerJarPaths = new HashMap<>();
 
     try (DirectoryStream<Path> folders = Files.newDirectoryStream(rootDir)) {
       for (Path folder : folders) {
@@ -121,16 +123,32 @@ public class SharedResourceManagement extends Section {
             if (iterator.hasNext()) {
               do {
                 Path jarPath = iterator.next();
-                String fqn = FileUtils.readAttributeFromJar(jarPath, Constants.SHAREDRESOURCESYNCHRONIZER_FACTORY_FQN_MANIFEST_ATTRIBUTE);
+                String factoryFQN =
+                    FileUtils.readAttributeFromJar(jarPath, Constants.SHAREDRESOURCESYNCHRONIZER_FACTORY_FQN_MANIFEST_ATTRIBUTE);
 
-                if (fqn != null) {
-                  synchronizerFactoryPlugins.computeIfAbsent(fqn, k -> new ArrayList<>()).add(jarPath);
+                if (factoryFQN != null) {
+                  try (SharedResourceSynchronizerFactoryClassLoader classLoader =
+                      new SharedResourceSynchronizerFactoryClassLoader(folderName)) {
+                    Class<?> clazz = classLoader.loadClass(factoryFQN);
+                    if (!SharedResourceSynchronizerFactory.class.isAssignableFrom(clazz)) {
+                      throw new IllegalArgumentException(String.format("Class %s in %s does not implement %s", factoryFQN, jarPath,
+                                                                       SharedResourceSynchronizerFactory.class.getName()));
+                    }
+                    // Register the factory
+                    SharedResourceSynchronizerFactory factory = (SharedResourceSynchronizerFactory) clazz.getConstructor().newInstance();
+                    String synchronizerName = factory.getSynchronizerName();
+                    synchronizerFactories.putIfAbsent(synchronizerName, factory);
+                    synchronizerJarPaths.computeIfAbsent(synchronizerName, k -> new ArrayList<>()).add(jarPath);
+                  } catch (Exception e) {
+                    throw new RuntimeException(String.format("Could not instantiate SharedResourceSynchronizerFactory \"%s\" from %s: %s",
+                                                             factoryFQN, jarPath, e.getMessage()),
+                                               e);
+                  }
                 } else {
                   // Case: JAR found but attribute or manifest is missing
                   this.logger
                       .warn(String.format("Cannot read Information from MANIFEST in SharedResourceSynchronizer-jar \"%s\"", jarPath));
                 }
-                // process jarPath
               } while (iterator.hasNext());
             } else {
               // Case: No matching JARs found in folder
@@ -145,34 +163,20 @@ public class SharedResourceManagement extends Section {
                                  e);
     }
 
-    for (Map.Entry<String, List<Path>> entry : synchronizerFactoryPlugins.entrySet()) {
-      String fqn = entry.getKey();
+    for (Map.Entry<String, List<Path>> entry : synchronizerJarPaths.entrySet()) {
+      String synchronizerName = entry.getKey();
       List<Path> jarPaths = entry.getValue();
 
-      // Case: Multiple JARs found for the same SharedResourceSynchronizer-Factory-FQN
+      // Case: Multiple JARs found for the same SharedResourceSynchronizer name
       if (jarPaths.size() > 1) {
-        this.logger.warn(String.format("SharedResourceSynchronizerFactory \"%s\" defined multiple times:\n\t%s", fqn,
+        this.logger.warn(String.format("SharedResourceSynchronizer \"%s\" defined multiple times:\n\t%s", synchronizerName,
                                        String.join("\n\t", jarPaths.stream().map(Path::toString).toArray(String[]::new))));
       }
 
-      Path jarPath = jarPaths.get(0);
-      String folderName = jarPath.getParent().getFileName().toString();
-      try (SharedResourceSynchronizerFactoryClassLoader classLoader = new SharedResourceSynchronizerFactoryClassLoader(folderName)) {
-        Class<?> clazz = classLoader.loadClass(fqn);
-        if (!SharedResourceSynchronizerFactory.class.isAssignableFrom(clazz)) {
-          throw new IllegalArgumentException(String.format("Class %s must implement %s", fqn,
-                                                           SharedResourceSynchronizerFactory.class.getName()));
-        }
-        // Create an instance of the factory class
-        SharedResourceSynchronizerFactory factory = (SharedResourceSynchronizerFactory) clazz.getConstructor().newInstance();
-        synchronizerFactories.put(fqn, factory);
-      } catch (Exception e) {
-        throw new RuntimeException(String.format("Could not instantiate SharedResourceSynchronizerFactory \"%s\" from %s: %s", fqn, jarPath,
-                                                 e.getMessage()),
-                                   e);
-      }
-
-      this.logger.info(String.format("Loaded SharedResourceSynchronizerFactory \"%s\" from %s", fqn, jarPath));
+      String jarPath = jarPaths.get(0).toString();
+      SharedResourceSynchronizerFactory factory = synchronizerFactories.get(synchronizerName);
+      String factoryFQN = factory.getClass().getName();
+      this.logger.info(String.format("Loaded SharedResourceSynchronizerFactory \"%s\" from %s", factoryFQN, jarPath));
     }
   }
 
