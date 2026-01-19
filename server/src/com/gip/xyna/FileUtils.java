@@ -127,7 +127,7 @@ public class FileUtils {
 
   
   /**
-  * Lï¿½scht das angegebene Verzeichnis, falls es leer ist und rekursiv alle ï¿½bergeordneten Verzeichnisse,
+  * Löscht das angegebene Verzeichnis, falls es leer ist und rekursiv alle übergeordneten Verzeichnisse,
   * solange diese leer sind und nicht dem Verzeichnis 'except' entsprechen.
   * @param basedir
   * @param except
@@ -139,11 +139,11 @@ public class FileUtils {
    }
    
    if (except != null && basedir.getAbsolutePath().equals(except.getAbsolutePath())) {
-     //Verzeichnis soll nicht gelï¿½scht werden
+     //Verzeichnis soll nicht gelöscht werden
      return;
    }
    
-   if (basedir.delete()) { //Verzeichnis lï¿½schen, falls es leer ist
+   if (basedir.delete()) { //Verzeichnis löschen, falls es leer ist
      if (logger.isTraceEnabled()) {
        logger.trace("Empty directory " + basedir.getPath() + " deleted");
      }
@@ -213,9 +213,9 @@ public class FileUtils {
    * @param dirToZip welches verzeichnis gezipped wird
    * @param zos wohin gezipped wird
    * @param basedir prefix von dirToZip, welches "abgeschnitten" werden soll, d.h. nur seine unterverzeichnisse sollen ins zip
-   * @param ff welche dateien werden berï¿½cksichtigt
+   * @param ff welche dateien werden berücksichtigt
    * @param zipPrefixDirectory entries im zipfile bekommen dieses prefix-dir
-   * @param fileCreator mï¿½glichkeit, file content zu ï¿½berschreiben mit anderem content
+   * @param fileCreator möglichkeit, file content zu überschreiben mit anderem content
    * @throws Ex_FileAccessException
    */
   public static void zipDir(File dirToZip, ZipOutputStream zos, File basedir, FilenameFilter ff,
@@ -306,7 +306,7 @@ public class FileUtils {
 
 
   /**
-   * Base und path beginnen mit gleichem substring, zurï¿½ckgegeben wird der anteil von path, der nach base beginnt.
+   * Base und path beginnen mit gleichem substring, zurückgegeben wird der anteil von path, der nach base beginnt.
    */
   public static String getRelativePath(String base, String path) {
     if (!path.startsWith(base)) {
@@ -326,7 +326,7 @@ public class FileUtils {
 
 
   /**
-   * Erstellt ein ZipFile, welches den Inhalt des angegebenen Verzeichnisses enthï¿½lt (ohne das Verzeichnis selbst).
+   * Erstellt ein ZipFile, welches den Inhalt des angegebenen Verzeichnisses enthält (ohne das Verzeichnis selbst).
    * @param zipFile
    * @param dirToZip
    * @param zipPrefixDirectory
@@ -443,7 +443,7 @@ public class FileUtils {
   
   private static void executeWriteStringToFile(String content, File f, String charsetName, boolean append) throws Ex_FileWriteException {
     String p = f.getAbsolutePath();
-    //bei append vor concurrency beim write schï¿½tzen. bei !append nur vor concurrency beim file.create
+    //bei append vor concurrency beim write schätzen. bei !append nur vor concurrency beim file.create
     if (append) {
       fileLock.lock(p);
     }
@@ -604,7 +604,7 @@ public class FileUtils {
   }
   
   /**
-   * fï¿½llt die liste mit gefundenen files
+   * füllt die liste mit gefundenen files
    */
   public static void findFilesRecursively(File basedir, List<File> list, FilenameFilter ff) {
     File[] files = basedir.listFiles(ff);
@@ -889,14 +889,14 @@ public class FileUtils {
   
   
   /**
-   * Lï¿½scht alle Files und Directories unterhalb von startFolder, die nicht 
+   * Löscht alle Files und Directories unterhalb von startFolder, die nicht 
    * durch notToDelete ausgeschlossen werden. Wenn in notToDelete ein Verzeichnis
    * angegeben ist, bleibt der gesamte Inhalt bestehen.
    * @param startFolder
    * @param notToDelete
    */
   public static void deleteAllBut(File startFolder, FileFilter notToDelete) {
-    //zu lï¿½schende Files/Directories bestimmen
+    //zu löschende Files/Directories bestimmen
     FileFilter toDelete = new InverseFilter(notToDelete);
     File[] deleteFiles = startFolder.listFiles(toDelete);
     if (deleteFiles == null || deleteFiles.length == 0) {
@@ -905,11 +905,11 @@ public class FileUtils {
     
     for (File childfile : deleteFiles) {
       if (childfile.isDirectory()) {
-        //Directories rekursiv lï¿½schen
+        //Directories rekursiv löschen
         deleteAllBut(childfile, notToDelete);
       }
       
-      //File bzw. leeres Directory lï¿½schen
+      //File bzw. leeres Directory löschen
       childfile.delete();
     }
   }
@@ -985,7 +985,7 @@ public class FileUtils {
             }
 
             try {
-              //neuen entry erstellen, falls sich compression-art ï¿½ndert
+              //neuen entry erstellen, falls sich compression-art ändert
               ZipEntry newEntry = new ZipEntry(entry.getName());
               newEntry.setComment(entry.getComment());
               newEntry.setTime(entry.getTime());
@@ -1012,7 +1012,7 @@ public class FileUtils {
             }
           }
 
-          //neue files anhï¿½ngen
+          //neue files anhängen
           for (int i = 0; i<newFiles.size(); i++) {
             File f = newFiles.get(i);
             String fName = fileNames.get(i);
@@ -1114,7 +1114,7 @@ public class FileUtils {
             }
 
             try {
-              //neuen entry erstellen, falls sich compression-art ï¿½ndert
+              //neuen entry erstellen, falls sich compression-art ändert
               ZipEntry newEntry = new ZipEntry(entry.getName());
               newEntry.setComment(entry.getComment());
               newEntry.setTime(entry.getTime());
@@ -1169,7 +1169,7 @@ public class FileUtils {
 
 
   /**
-   * entzippt alle auf den filter passenden files des zips ins targetdir. ï¿½berschreibt ggfs vorhandene dateien.
+   * entzippt alle auf den filter passenden files des zips ins targetdir. überschreibt ggfs vorhandene dateien.
    */
   public static void unzip(String zipFile, String targetDir, FileFilter fileFilter) throws Ex_FileAccessException {
     ZipFile oldZip;
@@ -1265,7 +1265,7 @@ public class FileUtils {
       while (urls.hasMoreElements()) {
         url = urls.nextElement();
       }
-      //die letzte ressource zurï¿½ckgeben, weil die reihenfolge ist: erst parent-classloader, dann lokaler.
+      //die letzte ressource zurückgeben, weil die reihenfolge ist: erst parent-classloader, dann lokaler.
       if (url != null) {
         URLConnection urlcon = (URLConnection) url.openConnection();
         //deactivate cache to not get an old version
