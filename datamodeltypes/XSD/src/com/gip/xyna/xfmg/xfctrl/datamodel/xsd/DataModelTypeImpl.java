@@ -128,7 +128,6 @@ public class DataModelTypeImpl implements DataModelType {
         checkForUpdate(name);
         registerEventHandling();
       }});
-    
     return pluginDescription;
   }
   
@@ -662,6 +661,7 @@ public class DataModelTypeImpl implements DataModelType {
           DataModelResult dmr = new DataModelResult();
           try {
             dmm.importDataModelArchive(dmr, file.getFile().getCanonicalPath(), true);
+            file.getFile().delete();
           } catch (IOException e) {
             throw new RuntimeException(e);
           }
