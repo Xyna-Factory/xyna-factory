@@ -43,7 +43,7 @@ public class SqlSharedResourceSynchronizerFactory implements SharedResourceSynch
 
   private static final StringParameter<String> TABLENAME = StringParameter
       .typeString("tablename").label("Tablename").defaultValue("sharedresources").documentation(Documentation
-          .en("Table to start shared resource instances in").de("Tabelle in der shared resource instanzen gespeichert werden").build())
+          .en("Table to store shared resource instances in").de("Tabelle in der shared resource instanzen gespeichert werden").build())
       .build();
 
   private static final StringParameter<String> URL = StringParameter.typeString("url").label("Url")

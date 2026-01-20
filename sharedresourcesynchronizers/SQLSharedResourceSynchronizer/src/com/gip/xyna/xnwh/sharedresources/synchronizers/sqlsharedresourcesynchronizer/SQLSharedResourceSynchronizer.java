@@ -69,6 +69,7 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
   }
 
 
+  private String CREATE_TABLE_STATEMENT;
   private String INSERT_TEMPLATE;
   private String DELETE_TEMPLATE;
   private String SELECT_TEMPLATE;
@@ -102,6 +103,9 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
 
   public SQLSharedResourceSynchronizer(String tableName, String url, String username, String password, int numConnections,
                                        Duration connectionTimeout, Duration socketTimeout) {
+    CREATE_TABLE_STATEMENT = String
+        .format("CREATE TABLE IF NOT EXISTS %s (sr_path VARCHAR(128) NOT NULL,sr_id VARCHAR(128) NOT NULL, sr_data MEDIUMBLOB NULL DEFAULT NULL, PRIMARY KEY (sr_path, sr_id) USING BTREE)",
+                tableName);
     DELETE_TEMPLATE = String.format("DELETE FROM %s WHERE sr_id IN (", tableName);
     INSERT_TEMPLATE = String.format("INSERT INTO %s (sr_path, sr_id, sr_data) VALUES\n", tableName);
     SELECT_TEMPLATE = String.format("SELECT * FROM %s WHERE sr_path = ? AND sr_id IN (", tableName);
@@ -136,6 +140,8 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     cdb.autoCommit(true);
     connectionData = cdb.build();
 
+    createTableIfMissing();
+
     Set<Connection> createdConnections = new HashSet<>();
     for (int i = 0; i < numConnections; i++) {
       try {
@@ -155,6 +161,17 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
       allConnections.addAll(createdConnections);
     }
 
+  }
+
+
+  private void createTableIfMissing() {
+    try (Connection c = connectionData.createConnection()) {
+      try (PreparedStatement stmt = c.prepareStatement(CREATE_TABLE_STATEMENT)) {
+        stmt.execute();
+      }
+    } catch (Exception e) {
+      logger.error("Error during table check", e);
+    }
   }
 
 
@@ -306,6 +323,12 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     if (con == null) {
       return new SharedResourceRequestResult<T>(false, NO_CONNECTION_AVAILABLE_EXCEPTION, null);
     }
+    if(ids.size() == 0) {
+      if(logger.isDebugEnabled()) {
+        logger.debug("No ids passed to delete request. resource: " + resource.getPath());
+      }
+      return new SharedResourceRequestResult<T>(true, null, null);
+    }
     try {
       String parameterString = "?, ".repeat(ids.size());
       parameterString = parameterString.substring(0, parameterString.length() - 2);
@@ -347,8 +370,13 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
   private <T> List<SharedResourceInstance<T>> executeRead(Connection con, SharedResourceDefinition<T> resource, List<String> ids,
                                                           boolean forUpdate)
       throws Exception {
+    if (ids.size() == 0) {
+      return new ArrayList<>();
+    }
     List<SharedResourceInstance<T>> resources = new ArrayList<>();
-    String sql = String.format("%s%s) %s", SELECT_TEMPLATE, "? ".repeat(ids.size()), forUpdate ? "FOR UPDATE" : "");
+    String parameter = "?, ".repeat(ids.size());
+    parameter = parameter.substring(0, parameter.length() - 2); //remove final ", "
+    String sql = String.format("%s%s) %s", SELECT_TEMPLATE, parameter, forUpdate ? "FOR UPDATE" : "");
     PreparedStatement ps = con.prepareStatement(sql);
     Parameter params = new Parameter(resource.getPath());
     for (String id : ids) {

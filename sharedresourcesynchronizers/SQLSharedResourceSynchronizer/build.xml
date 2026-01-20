@@ -66,5 +66,11 @@
     <loadLicenses targetDir="${basedir}/lib" />
   </target>
 
+  <target name="installMavenArtifact" depends="build" description="install maven artifact">
+    <echo message="artifactFile: ${target.dir}/${project.name.local}-${release.number}.jar" /> 
+    <echo message="pomFile: ${basedir}/pom.xml" /> 
+    <install-maven-artifact artifactFile="${target.dir}/${project.name.local}-${release.number}.jar" pomFile="${basedir}/pom.xml" />
+  </target>
+
 
 </project>

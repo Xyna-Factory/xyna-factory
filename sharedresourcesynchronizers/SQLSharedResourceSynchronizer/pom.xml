@@ -26,8 +26,8 @@
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.gip.xyna</groupId>
-  <artifactId>SQLSharedResourceSynchronizer</artifactId>
+  <groupId>com.gip.xyna.sharedresources</groupId>
+  <artifactId>sqlsharedresourcesynchronizer</artifactId>
   <version>1.0.0</version>
   <packaging>jar</packaging>
   <properties>
