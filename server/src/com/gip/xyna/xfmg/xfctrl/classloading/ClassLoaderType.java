@@ -36,5 +36,6 @@ public enum ClassLoaderType {
   RemoteAccess, 
   DataModelType,
   OrderInputSourceType,
-  RemoteDestinationType
+  RemoteDestinationType,
+  SharedResourceSynchronizerFactory
 }

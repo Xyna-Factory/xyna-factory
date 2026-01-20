@@ -195,7 +195,7 @@ public class VetoCachePersistenceImpl implements VetoCachePersistence {
     protected abstract boolean execute(VetoInformation vi);
 
     protected boolean checkValid(VetoInformation vi) {
-      return rootOrderIdsInBackup.contains( vi.getUsingRootOrderId() ); 
+      return vi.isAdministrative() || rootOrderIdsInBackup.contains( vi.getUsingRootOrderId() ); 
     }
   }
   
