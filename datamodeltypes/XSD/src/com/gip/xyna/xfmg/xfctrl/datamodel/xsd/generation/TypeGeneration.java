@@ -100,7 +100,7 @@ public class TypeGeneration {
   //public final static String XSD_DATAMODEL_BASE_APP_VERSION_NEWEST = "1.1.4";  //Bugfix 23393 XSD:AnyType wird nun besser umgesetzt
   //public final static String XSD_DATAMODEL_BASE_APP_VERSION_REPAIR_REV = "1.1.5";  //Bugfix 23691: Revision Fallback auf Rootrevision
   //public final static String XSD_DATAMODEL_BASE_APP_VERSION_FOUNDDM_NOT_NULL = "1.1.6";  //Bugfix 23293: ValidateXML hat Datamodel nicht ermittelt
-  public final static String XSD_DATAMODEL_BASE_APP_VERSION_CDATA = "1.1.18";
+  public final static String XSD_DATAMODEL_BASE_APP_VERSION_CDATA = "1.1.19";
   
   private XSModel schema;
   private TypeInfoGenerator typeInfoGenerator;

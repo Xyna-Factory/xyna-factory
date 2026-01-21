@@ -120,14 +120,19 @@ public class DataModelTypeImpl implements DataModelType {
 
     storeTypeMappingsProperty.registerDependency(UserType.Plugin, "DataModelType: " + name);
     
-    FutureExecution fExec = XynaFactory.getInstance().getFutureExecution();
-    fExec.addTask("DataModelType XSD", "DataModelType XSD.checkForUpdate").
-      after(DataModelManagement.class, ApplicationManagementImpl.class, RuntimeContextDependencyManagement.class).
-      before(XynaProcessing.FUTUREEXECUTIONID_ORDER_EXECUTION).
-      execAsync(new Runnable(){ public void run(){ 
-        checkForUpdate(name);
-        registerEventHandling();
-      }});
+    if (XynaFactory.getInstance().isStartingUp()) {
+      FutureExecution fExec = XynaFactory.getInstance().getFutureExecution();
+      fExec.addTask("DataModelType XSD", "DataModelType XSD.checkForUpdate").
+        after(DataModelManagement.class, ApplicationManagementImpl.class, RuntimeContextDependencyManagement.class).
+        before(XynaProcessing.FUTUREEXECUTIONID_ORDER_EXECUTION).
+        execAsync(new Runnable(){ public void run(){ 
+          checkForUpdate(name);
+          registerEventHandling();
+        }});
+    } else {
+      checkForUpdate(name);
+      registerEventHandling();
+    }
     return pluginDescription;
   }
   
