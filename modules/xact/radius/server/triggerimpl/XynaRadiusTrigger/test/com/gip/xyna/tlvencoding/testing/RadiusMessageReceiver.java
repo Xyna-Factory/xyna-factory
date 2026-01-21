@@ -60,16 +60,6 @@ public class RadiusMessageReceiver {
   int buffer = 1024;
 
 
-  public static void main(String argh[]) throws DecoderException, ConfigFileReadException, IOException {
-
-    //String accessrequest = "0x"+"010000380f403f9473978057bd83d5cb98f4227a01066e656d6f02120dbe708d93d413ce3196e43f782a0aee0406c0a80110050600000003".toUpperCase();
-    //byte data[] = ByteUtil.toByteArray(accessrequest);
-
-    //new RadiusMessageReceiver(data);
-    new RadiusMessageReceiver();
-  }
-
-
   public RadiusMessageReceiver(byte[] d) throws DecoderException, IOException {
 
     FutureExecution fexec = EasyMock.createMock(FutureExecution.class);
@@ -93,7 +83,6 @@ public class RadiusMessageReceiver {
     EasyMock.expect(xf.getFutureExecutionForInit()).andReturn(fexec).anyTimes();
     EasyMock.replay(xf);
 
-
     this.data = d;
     // Zeitmessung
     LoadConfigStatic anbindung = new LoadConfigStatic();
@@ -110,14 +99,7 @@ public class RadiusMessageReceiver {
       throw new IllegalArgumentException();
     }
 
-
     RadiusConfigurationDecoder dec = new RadiusConfigurationDecoder(new ArrayList<RadiusEncoding>(liste));
-
-    //    long zeit = System.currentTimeMillis();
-
-    //    for (int i = 0; i < 1000000; i++) {
-
-    //ByteArrayInputStream inp = new ByteArrayInputStream(data);
 
     String code = String.valueOf(data[0] & 0xFF);
     String id = String.valueOf(data[1] & 0xFF);
@@ -150,7 +132,6 @@ public class RadiusMessageReceiver {
     try {
       String decodedData = dec.decode2(optarg);
 
-
       StringBuilder builder = new StringBuilder();
       builder.append(decodedData);
       TextConfigTree tree = new TextConfigTreeReader(new StringReader(builder.toString())).read();
@@ -162,18 +143,10 @@ public class RadiusMessageReceiver {
       System.out.println("Unbekanntes UDP Paket empfangen.");
       System.out.println(e);
     }
-    //    }
-
-    //    long verstrichen = System.currentTimeMillis() - zeit;
-    //
-    //    System.out.println("Zeit fuer 1000 Durchlaeufe : " + verstrichen);
-
-
   }
 
 
   public RadiusMessageReceiver() throws DecoderException, ConfigFileReadException, IOException {
-
 
     // UDP Server aufmachen
     int port = 1812;
@@ -186,7 +159,6 @@ public class RadiusMessageReceiver {
     byte[] buffer = new byte[1024];
 
     DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-
 
     while (true) {
       try {
@@ -245,7 +217,6 @@ public class RadiusMessageReceiver {
         }
 
       }
-
 
       System.out.println("");
 

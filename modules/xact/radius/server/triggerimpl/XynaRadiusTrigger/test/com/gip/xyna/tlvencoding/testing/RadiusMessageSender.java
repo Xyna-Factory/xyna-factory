@@ -63,19 +63,10 @@ public class RadiusMessageSender {
 
   RadiusConfigurationEncoder enc;
 
-
   String target = "localhost";
 
 
-  public static void main(String argh[]) throws Exception {
-
-    new RadiusMessageSender(4);
-
-  }
-
-
   RadiusMessageSender(int type) throws Exception {
-
 
     FutureExecution fexec = EasyMock.createMock(FutureExecution.class);
     EasyMock.expect(fexec.nextId()).andReturn(1).anyTimes();
@@ -98,7 +89,6 @@ public class RadiusMessageSender {
     EasyMock.expect(xf.getFutureExecutionForInit()).andReturn(fexec).anyTimes();
     EasyMock.replay(xf);
 
-
     // Datenbankanbindung aufbauen und Eintraege holen
     LoadConfigStatic anbindung = new LoadConfigStatic();
     anbindung.setUp();
@@ -114,13 +104,11 @@ public class RadiusMessageSender {
       throw new IllegalArgumentException();
     }
 
-
     try {
       toSocket = new DatagramSocket();
     } catch (Exception e) {
       System.out.println(e);
     }
-
 
     if (type == 1)
       this.createAccessRequest();
@@ -129,19 +117,16 @@ public class RadiusMessageSender {
     if (type == 3)
       this.createAccessReject();
 
-
     // Datenbankliste einlesen
     enc = new RadiusConfigurationEncoder(new ArrayList<RadiusEncoding>(radiustlvs));
 
     if (!(type == 4))
       sendPacket();
 
-
     if (type == 4) //Radius Testsequenz verschicken (Windows XP Client))
     {
       sendTestForWindowsXpClient();
     }
-
 
   }
 
@@ -166,7 +151,6 @@ public class RadiusMessageSender {
     sendPacket();
 
     id = "38";
-    //state = transformToByteString("e498e1911812df0c1fbdda0b0a84c1a1");
     eapmessage =
         transformToByteString("0204005719800000004d160301004801000044030151e7a6849890030d74088318094054c274d6bbb4ae07612dfe047c0a85e142b000001600040005000a0009006400620003000600130012006301000005ff01000100");
     messageauthenticator = transformToByteString("0cfcea6e1646bf4cc9d389fceb86712e");
@@ -175,7 +159,6 @@ public class RadiusMessageSender {
     sendPacket();
 
     id = "39";
-    //state = transformToByteString("e498e1911812df0c1fbdda0b0a84c1a1");
     eapmessage = transformToByteString("020500061900");
     messageauthenticator = transformToByteString("39bff17ed9098352d229163f4436ac53");
     authenticator = transformToByteString("50d16eade5cc2ba920aaabb86c2b523b");
@@ -183,7 +166,6 @@ public class RadiusMessageSender {
     sendPacket();
 
     id = "40";
-    //state = transformToByteString("e498e1911812df0c1fbdda0b0a84c1a1");
     eapmessage =
         transformToByteString("02060140198000000136160301010610000102010048bd23d52ebe3b15fd07ca4a6880af7f4177f3f048e58172990fc05c5a2189b0d9014ef8ae2cd59db01eb9b80da6e3ac1ba2fed9b2880e1f8905da570b77c90bf1a75a32bf44cde500cf50f7ba7f4e672d34007a8ca7dd27472ab4d9f4b9f971b410219dcbadfb903dfcdebfc89517818ebbc2da63bc251f764f8ce5b47663fd30d0471f408c755b7b461be5ff36b89f06386f81c89ecdf26ac6e599ba21cb49213664beac6f994eba2add991c3deb4d5ae426876c5534e68292608884f689deea36470b4c4f2f2816093abf3901547d5edf123dd243ad450b3873389e7fc7d892f1919b693e8a728e8b22979e202d257d07f89e574697acd42c4200a49987b514030100010116030100200526e91e700ab177ece9be0a9675f5b6258b5df359c18e1823857a2dc9dc9e59");
     messageauthenticator = transformToByteString("173c66333b155c49d1b25d054bcb4ef2");
@@ -192,7 +174,6 @@ public class RadiusMessageSender {
     sendPacket();
 
     id = "41";
-    //state = transformToByteString("e498e1911812df0c1fbdda0b0a84c1a1");
     eapmessage = transformToByteString("020700061900");
     messageauthenticator = transformToByteString("778c02b3eb66db03a9c849dfaf54c1ef");
     authenticator = transformToByteString("94cdc906e7e831f5e0026381eb4852ac");
@@ -200,7 +181,6 @@ public class RadiusMessageSender {
     sendPacket();
 
     id = "42";
-    //state = transformToByteString("e498e1911812df0c1fbdda0b0a84c1a1");
     eapmessage = transformToByteString("0208002119001703010016af794eb5fc44ac0166260afa65339fdf87ed6436958f");
     messageauthenticator = transformToByteString("021e0502ba79adc44c9a43390ab608b6");
     authenticator = transformToByteString("2051585ae612fdefe15b7ae8f3cc6231");
@@ -208,7 +188,6 @@ public class RadiusMessageSender {
     sendPacket();
 
     id = "43";
-    //state = transformToByteString("e498e1911812df0c1fbdda0b0a84c1a1");
     eapmessage =
         transformToByteString("020900571900170301004cbf16baadb12664329f3c0a5729c6bfeb709f70940f27d058f2726dbc9f0b0757291923d97b91c2b86289332e015fe413df09ee51403e0e0318c3b2a33302a820603a0d078f8b66a4983b9221");
     messageauthenticator = transformToByteString("6382499b93710f41ac576f180f97f866");
@@ -217,7 +196,6 @@ public class RadiusMessageSender {
     sendPacket();
 
     id = "44";
-    //state = transformToByteString("e498e1911812df0c1fbdda0b0a84c1a1");
     eapmessage = transformToByteString("020a001d190017030100128151b10f3d9492f32ca5e0ec6944d99be0bf");
     messageauthenticator = transformToByteString("30e751eaac78a4a48fd04836232c32b6");
     authenticator = transformToByteString("8a839029d8b280725abd4962d0446638");
@@ -225,7 +203,6 @@ public class RadiusMessageSender {
     sendPacket();
 
     id = "45";
-    //state = transformToByteString("e498e1911812df0c1fbdda0b0a84c1a1");
     eapmessage = transformToByteString("020b00261900170301001b63fe0591ea09674cf233e6429ee0edab1f72266e90ba7e6d3df7e0");
     messageauthenticator = transformToByteString("c6b3c9bfc1ac71bb5f2f84b7ee28a7cf");
     authenticator = transformToByteString("fdc4680dd8025b2c6af00a3dd61b24c1");
@@ -250,7 +227,6 @@ public class RadiusMessageSender {
     byte[] authenticator = null;
     byte[] optionen;
     byte data[];
-
 
     TypeWithValueNode codenode = null;
     TypeWithValueNode identifiernode = null;
@@ -282,7 +258,6 @@ public class RadiusMessageSender {
       throw new RuntimeException("Missing parameters code and identifier!");
     }
 
-
     output = new ByteArrayOutputStream();
     enc.encode(nodes, output);
     optionen = output.toByteArray();
@@ -308,7 +283,6 @@ public class RadiusMessageSender {
       int port = 1812;
 
       DatagramPacket packet = new DatagramPacket(payload, payload.length, ia, port);
-      // DatagramSocket toSocket = new DatagramSocket();
       System.out.println("[Paket " + packetcounter + "] Sende Nachricht an " + targetaddress + " ...");
 
       toSocket.send(packet);
@@ -371,13 +345,12 @@ public class RadiusMessageSender {
 
     this.nodes.add(new TypeOnlyNode("Vendor-Specific9", subnodes));
 
-    this.nodes.add(new TypeWithValueNode("NAS-IP", "172.17.30.20"));
+    this.nodes.add(new TypeWithValueNode("NAS-IP", "127.0.0.1"));
     this.nodes.add(new TypeWithValueNode("NAS-Identifier", "0x" + "436973636f5f64623a31643a3634".toUpperCase()));
 
     subnodes.clear();
     this.subnodes.add(new TypeWithValueNode("blackstormnetworksoption", "0x00000006"));
     this.nodes.add(new TypeOnlyNode("Vendor-Specific14179", subnodes));
-
 
     this.nodes.add(new TypeWithValueNode("Service-Type", "2"));
 
@@ -429,28 +402,6 @@ public class RadiusMessageSender {
     byte[] data = message.toByteArray();
     return data;
 
-
   }
-
-
-  /*
-  public static byte[] getMacAddress() throws Exception {
-
-    try {
-      for (NetworkInterface ni : Collections.list(NetworkInterface.getNetworkInterfaces())) {
-        byte[] hardwareAddress = ni.getHardwareAddress();
-
-        if (hardwareAddress != null && !ni.isLoopback()) {
-          return hardwareAddress;
-        }
-      }
-
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
-    return null;
-  }
-  */
 
 }
