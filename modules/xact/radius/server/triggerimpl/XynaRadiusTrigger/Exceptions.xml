@@ -23,7 +23,7 @@
 	</Description>
 	<!-- BLACK_SERVER_HOME muss sowohl beim build als auch zur laufzeit korrekt gesetzt sein. -->
 	<Import File="${BLACK_SERVER_HOME}/Exceptions.xml" />
-	<ExceptionType Code="XYNA-09700"
+	<ExceptionType Code="XYNA-XACT-RADIUS-09700"
 		TypeName="RADIUSTRIGGER_DatagramSocketCreationException" TypePath="com.gip.xyna.xact.trigger.dhcp"
 		BaseTypeName="XACT_TriggerCouldNotBeStartedException" BaseTypePath="com.gip.xyna.xact.exceptions">
 		<Data Label="connectionParameters" VariableName="connectionParameters">
@@ -34,7 +34,7 @@
 		<MessageText Language="DE">Der DHCP-Trigger konnte nicht gestartet werden, weil das DatagramSocket nicht erfolgreich erstellt werden konnte. Verbindungsparameter waren: %0%</MessageText>
       <MessageText Language="EN">DHCP Trigger could not create datagram socket with connection parameters %0%.</MessageText>
    </ExceptionType>
-   	<ExceptionType Code="XYNA-09701"
+   	<ExceptionType Code="XYNA-XACT-RADIUS-09701"
 		TypeName="RADIUSTRIGGER_InitializationException" TypePath="com.gip.xyna.xact.trigger.dhcp"
 		BaseTypeName="XACT_TriggerCouldNotBeStartedException" BaseTypePath="com.gip.xyna.xact.exceptions">
 		<Data Label="connectionParameters" VariableName="connectionParameters">
@@ -45,7 +45,7 @@
 		<MessageText Language="DE">Der DHCP-Trigger konnte nicht gestartet werden, weil das DatagramSocket nicht erfolgreich erstellt werden konnte. Verbindungsparameter waren: %0%</MessageText>
       <MessageText Language="EN">DHCP Trigger could not create datagram socket with connection parameters %0%.</MessageText>
    </ExceptionType>
-   <ExceptionType Code="XYNA-09702"
+   <ExceptionType Code="XYNA-XACT-RADIUS-09702"
 		TypeName="RADIUSTRIGGER_ReceiveException" TypePath="com.gip.xyna.xact.trigger.dhcp">
 		<Data Label="connectionParameters" VariableName="connectionParameters">
 			<Meta>
@@ -55,7 +55,7 @@
 		<MessageText Language="DE">Der DHCP-Trigger wurde durch einen unerwarteten Fehler beim Daten-Empfang unterbrochen: %0%</MessageText>
       <MessageText Language="EN">The DHCP Trigger was interrupted unexpectedly while receiving data: %0%.</MessageText>
    </ExceptionType>
-   <ExceptionType Code="XYNA-09703" TypeName="RADIUSTRIGGER_PORT_ALREADY_IN_USE" TypePath="com.gip.xyna.xact.trigger.dhcp"
+   <ExceptionType Code="XYNA-XACT-RADIUS-09703" TypeName="RADIUSTRIGGER_PORT_ALREADY_IN_USE" TypePath="com.gip.xyna.xact.trigger.dhcp"
                    BaseTypeName="XACT_TriggerCouldNotBeStartedException" BaseTypePath="com.gip.xyna.xact.exceptions">
       <Data Label="port" VariableName="port">
          <Meta>
@@ -65,7 +65,7 @@
       <MessageText Language="DE">Der Port %0% wird bereits benutzt.</MessageText>
       <MessageText Language="EN">Port %0% is already in use.</MessageText>
    </ExceptionType>
-   <ExceptionType Code="XYNA-09604" TypeName="RADIUSTRIGGER_SocketCloseException" TypePath="com.gip.xyna.xact.trigger.dhcp" BaseTypeName="XACT_TriggerCouldNotBeStoppedException" BaseTypePath="com.gip.xyna.xact.exceptions">
+   <ExceptionType Code="XYNA-XACT-RADIUS-09604" TypeName="RADIUSTRIGGER_SocketCloseException" TypePath="com.gip.xyna.xact.trigger.dhcp" BaseTypeName="XACT_TriggerCouldNotBeStoppedException" BaseTypePath="com.gip.xyna.xact.exceptions">
       <Data Label="port" VariableName="port">
          <Meta>
             <Type>int</Type>
@@ -74,7 +74,7 @@
       <MessageText Language="DE">Das Socket an Port %0% konnte nicht erfolgreich geschlossen werden.</MessageText>
       <MessageText Language="EN">Socket on port %0% could not be closed successfully.</MessageText>
    </ExceptionType>
-   <ExceptionType Code="XYNA-09605" TypeName="RADIUSTRIGGER_ERROR_STOPPING_TRIGGER" TypePath="com.gip.xyna.xact.trigger.dhcp">
+   <ExceptionType Code="XYNA-XACT-RADIUS-09605" TypeName="RADIUSTRIGGER_ERROR_STOPPING_TRIGGER" TypePath="com.gip.xyna.xact.trigger.dhcp">
       <Data Label="port" VariableName="port">
          <Meta>
             <Type>int</Type>
@@ -88,7 +88,7 @@
       <MessageText Language="DE">Fehler beim Stoppen des DHCP-Triggers an Port %0%: %1%</MessageText>
       <MessageText Language="EN">Error stopping DHCP Trigger on port %0%: %1%</MessageText>
    </ExceptionType>
-   <ExceptionType Code="XYNA-09620" TypeName="RADIUSTRIGGER_DHCP_INVALID_STARTPARAMETERS" TypePath="com.gip.xyna.xact.trigger.dhcp">
+   <ExceptionType Code="XYNA-XACT-RADIUS-09620" TypeName="RADIUSTRIGGER_DHCP_INVALID_STARTPARAMETERS" TypePath="com.gip.xyna.xact.trigger.dhcp">
       <Data Label="parameterDescriptions" VariableName="parameterDescriptions">
          <Meta>
             <Type>String</Type>
