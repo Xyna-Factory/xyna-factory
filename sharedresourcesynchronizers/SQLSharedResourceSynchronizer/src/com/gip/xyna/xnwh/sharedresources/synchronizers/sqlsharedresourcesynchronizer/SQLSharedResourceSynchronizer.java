@@ -104,7 +104,7 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
   public SQLSharedResourceSynchronizer(String tableName, String url, String username, String password, int numConnections,
                                        Duration connectionTimeout, Duration socketTimeout) {
     CREATE_TABLE_STATEMENT = String
-        .format("CREATE TABLE IF NOT EXISTS %s (sr_path VARCHAR(128) NOT NULL,sr_id VARCHAR(128) NOT NULL, sr_data MEDIUMBLOB NULL DEFAULT NULL, PRIMARY KEY (sr_path, sr_id) USING BTREE)",
+        .format("CREATE TABLE IF NOT EXISTS %s (sr_path VARCHAR(128) NOT NULL, sr_id VARCHAR(128) NOT NULL, sr_data MEDIUMBLOB NULL DEFAULT NULL, PRIMARY KEY (sr_path, sr_id) USING BTREE)",
                 tableName);
     DELETE_TEMPLATE = String.format("DELETE FROM %s WHERE sr_id IN (", tableName);
     INSERT_TEMPLATE = String.format("INSERT INTO %s (sr_path, sr_id, sr_data) VALUES\n", tableName);
@@ -140,7 +140,13 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     cdb.autoCommit(true);
     connectionData = cdb.build();
 
-    createTableIfMissing();
+    try (Connection c = connectionData.createConnection()) {
+      try (PreparedStatement stmt = c.prepareStatement(CREATE_TABLE_STATEMENT)) {
+        stmt.execute();
+      }
+    } catch (Exception e) {
+      logger.error("Error during table check", e);
+    }
 
     Set<Connection> createdConnections = new HashSet<>();
     for (int i = 0; i < numConnections; i++) {
@@ -159,18 +165,6 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
 
     synchronized (allConnections) {
       allConnections.addAll(createdConnections);
-    }
-
-  }
-
-
-  private void createTableIfMissing() {
-    try (Connection c = connectionData.createConnection()) {
-      try (PreparedStatement stmt = c.prepareStatement(CREATE_TABLE_STATEMENT)) {
-        stmt.execute();
-      }
-    } catch (Exception e) {
-      logger.error("Error during table check", e);
     }
   }
 
@@ -217,6 +211,10 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
       }
       allConnections.clear();
     }
+
+    do {
+      idleConnection = idleConnections.poll();
+    } while (idleConnection != null);
 
     missingConnections.set(0);
 
@@ -298,6 +296,9 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     if (con == null) {
       return new SharedResourceRequestResult<T>(false, NO_CONNECTION_AVAILABLE_EXCEPTION, null);
     }
+    if (data == null || data.isEmpty()) {
+      return new SharedResourceRequestResult<T>(true, null, null);
+    }
     try {
       String sql = INSERT_TEMPLATE + INSERT_VALUE_PLACEHOLDER.repeat(data.size());
       sql = sql.substring(0, sql.length() - 2); // remove final ,\n
@@ -323,8 +324,8 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     if (con == null) {
       return new SharedResourceRequestResult<T>(false, NO_CONNECTION_AVAILABLE_EXCEPTION, null);
     }
-    if(ids.size() == 0) {
-      if(logger.isDebugEnabled()) {
+    if (ids == null || ids.size() == 0) {
+      if (logger.isDebugEnabled()) {
         logger.debug("No ids passed to delete request. resource: " + resource.getPath());
       }
       return new SharedResourceRequestResult<T>(true, null, null);
@@ -370,7 +371,7 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
   private <T> List<SharedResourceInstance<T>> executeRead(Connection con, SharedResourceDefinition<T> resource, List<String> ids,
                                                           boolean forUpdate)
       throws Exception {
-    if (ids.size() == 0) {
+    if (ids == null || ids.size() == 0) {
       return new ArrayList<>();
     }
     List<SharedResourceInstance<T>> resources = new ArrayList<>();
@@ -433,6 +434,11 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     if (con == null) {
       return new SharedResourceRequestResult<T>(false, NO_CONNECTION_AVAILABLE_EXCEPTION, null);
     }
+
+    if (ids == null || ids.isEmpty()) {
+      return new SharedResourceRequestResult<T>(true, null, null);
+    }
+
     List<SharedResourceInstance<T>> resources = new ArrayList<>();
     List<SharedResourceInstance<T>> newInstances = new ArrayList<>();
     try {
@@ -491,9 +497,15 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
       try {
         con.close();
       } catch (Exception e1) {
-        int totalMissingConnections = missingConnections.incrementAndGet();
-        if (logger.isWarnEnabled()) {
-          logger.warn("Could not close connection " + e + " - new total of missing connections: " + totalMissingConnections, e1);
+        if (running.get()) {
+          int totalMissingConnections = missingConnections.incrementAndGet();
+          if (logger.isWarnEnabled()) {
+            logger.warn("Could not close connection " + e + " - new total of missing connections: " + totalMissingConnections, e1);
+          }
+        } else {
+          if (logger.isDebugEnabled()) {
+            logger.debug("Could not close connection " + con + " but synchronizer is no longer running.", e);
+          }
         }
       }
     }
