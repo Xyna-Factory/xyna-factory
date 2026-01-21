@@ -577,7 +577,7 @@ public class DataModelTypeImpl implements DataModelType {
     final Set<Application> migrationSources = new HashSet<Application>();
     for (ApplicationInformation appInfo : appMgmt.listApplications(false, false)) {
       if (appInfo.getName().equals(TypeGeneration.XSD_DATAMODEL_BASE_APP_NAME)) {
-        if (appInfo.getVersion().equals(TypeGeneration.XSD_DATAMODEL_BASE_APP_VERSION_CDATA)) {
+        if (appInfo.getVersion().equals(TypeGeneration.XSD_DATAMODEL_BASE_APP_VERSION)) {
           newestVersionPresent = true;
         } else {
           migrationSources.add(new Application(TypeGeneration.XSD_DATAMODEL_BASE_APP_NAME, appInfo.getVersion()));
@@ -589,7 +589,7 @@ public class DataModelTypeImpl implements DataModelType {
           try {
             typeGen.createXsdBaseApp(appMgmt);
             if (migrationSources.size() > 0) {
-              Application newestVersion = new Application(TypeGeneration.XSD_DATAMODEL_BASE_APP_NAME, TypeGeneration.XSD_DATAMODEL_BASE_APP_VERSION_CDATA);
+              Application newestVersion = new Application(TypeGeneration.XSD_DATAMODEL_BASE_APP_NAME, TypeGeneration.XSD_DATAMODEL_BASE_APP_VERSION);
               for (Application migrationSource : migrationSources) {
                 try {
                   MigrateRuntimeContext.migrateRuntimeContext(migrationSource, newestVersion, Arrays.asList(MigrateRuntimeContext.MigrationTargets.values()), true);
