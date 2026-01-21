@@ -6959,11 +6959,11 @@ public abstract class GenerationBase {
         RuntimeContext rtc = revisions.getInverse(aRev);
         File rtcRootPath = rtcXMOMPaths.get(rtc);
         try {
-          if (Files.walk(java.nio.file.Path.of(rtcRootPath.getAbsolutePath()))
-                   .anyMatch(path -> path.endsWith(fqPath))) {
+          File file = java.nio.file.Path.of(rtcRootPath.getAbsolutePath(), fqPath).toFile();
+          if (file.exists()) {
             return aRev;
           }
-        } catch (IOException e) {
+        } catch (Exception e) {
           throw new RuntimeException(e);
         }
       }

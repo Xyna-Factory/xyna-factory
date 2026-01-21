@@ -29,4 +29,8 @@
 
     <import file="${root.dir}/installation/build/buildSharedLib.xml" />
 
+    <target name="installMavenArtifact" depends="build" description="install artifact to maven repository">
+        <install-maven-artifact artifactFile="${target.dir}/${sharedLib.name}.jar" pomFile="${basedir}/pom.xml" />
+    </target>
+
 </project>

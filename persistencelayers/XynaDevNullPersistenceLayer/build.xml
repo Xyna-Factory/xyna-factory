@@ -18,7 +18,6 @@
 -->
 <project name="build" default="build" basedir="." >
 
-  <import file="../../installation/build/ant-xyna.xml" />
   <import file="../../installation/build/macros.xml" />
 
   <property name="project.name.local" value="XynaDevNullPersistenceLayer" />

@@ -35,6 +35,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
 import xmcp.gitintegration.Reference;
 import xmcp.gitintegration.ReferenceData;
 import xmcp.gitintegration.ReferenceManagement;
+import xmcp.gitintegration.RepositoryManagement;
 import xmcp.gitintegration.SharedLibrary;
 import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.impl.ItemComparator;
@@ -48,6 +49,7 @@ import xmcp.gitintegration.impl.xml.ReferenceXmlConverter;
 import xmcp.gitintegration.storage.ReferenceStorable;
 import xmcp.gitintegration.storage.ReferenceStorage;
 import xmcp.gitintegration.tools.ItemDifferenceConverter;
+import xprc.xpce.Workspace;
 
 public class SharedLibraryProcessor implements WorkspaceContentProcessor<SharedLibrary> {
 
@@ -148,6 +150,8 @@ public class SharedLibraryProcessor implements WorkspaceContentProcessor<SharedL
   @Override
   public void create(SharedLibrary item, long revision) {
     String workspaceName = ReferenceUpdater.getWorkspaceName(revision);
+    Workspace workspace = new Workspace(ReferenceUpdater.getWorkspaceName(revision));
+    String pathToRepo = RepositoryManagement.getRepositoryConnection(workspace).getPath();
     ReferenceConverter converter = new ReferenceConverter();
     List<InternalReference> internalReferences = new ArrayList<>();
     for (Reference ref : item.getReferences()) {
@@ -155,7 +159,9 @@ public class SharedLibraryProcessor implements WorkspaceContentProcessor<SharedL
       builder.objectName(item.getName()).objectType(ReferenceObjectType.SHAREDLIB.toString()).path(ref.getPath())
           .referenceType(ref.getType()).workspaceName(workspaceName);
       ReferenceManagement.addReference(builder.instance());
-      internalReferences.add(converter.convert(ref));
+      InternalReference internalRef = converter.convert(ref);
+      internalReferences.add(internalRef);
+      internalRef.setPathToRepo(pathToRepo);
     }
     
     ReferenceSupport refSupport = new ReferenceSupport();
