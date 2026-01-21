@@ -15,27 +15,16 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-
 package com.gip.xyna.xfmg.xfctrl.classloading;
 
+import com.gip.xyna.xfmg.Constants;
+import com.gip.xyna.xfmg.exceptions.XFMG_JarFolderNotFoundException;
 
-public enum ClassLoaderType {
 
-  SharedLib, 
-  MDM, 
-  WF, 
-  Filter, 
-  Trigger, 
-  RMI, 
-  XYNA, 
-  Exception, 
-  PersistenceLayer, 
-  ClusterProvider, 
-  OutdatedFilter, 
-  RepositoryAccess, 
-  RemoteAccess, 
-  DataModelType,
-  OrderInputSourceType,
-  RemoteDestinationType,
-  SharedResourceSynchronizerFactory
+public class SharedResourceSynchronizerFactoryClassLoader extends DirectoryBasedClassLoader {
+
+  public SharedResourceSynchronizerFactoryClassLoader(String sharedResourceSynchronizerFactoryName)
+                  throws XFMG_JarFolderNotFoundException {
+    super(ClassLoaderType.SharedResourceSynchronizerFactory, sharedResourceSynchronizerFactoryName, Constants.SHAREDRESOURCESYNCHRONIZERS_BASEDIR);
+  }
 }
