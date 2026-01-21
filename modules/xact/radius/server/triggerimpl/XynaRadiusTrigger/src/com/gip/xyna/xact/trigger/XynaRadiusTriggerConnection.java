@@ -49,9 +49,6 @@ public class XynaRadiusTriggerConnection extends TriggerConnection {
   private InetAddress localAddress;
 
 
-  /*
-   * public DHCPTriggerConnection(DatagramPacket packet, DhcpOptionDefinition[] options) { this.rawPacket = packet; }
-   */
   public XynaRadiusTriggerConnection(DatagramPacket packet, RadiusConfigurationDecoder d, RadiusConfigurationEncoder e, DatagramSocket t,
                                      InetAddress localAddress) {
     this.rawPacket = packet;
