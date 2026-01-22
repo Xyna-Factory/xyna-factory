@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,13 +21,13 @@
         <groupId>com.gip.xyna</groupId>
         <artifactId>bom</artifactId>
         <version>1.0.0</version>
-        <relativePath>../../installation/build/pom.xml</relativePath>
+        <relativePath>../../../../../installation/build/pom.xml</relativePath>
     </parent>
-    
+
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gip.xyna</groupId>
-    <artifactId>XSD</artifactId>
-    <version>1.1.19</version>
+    <artifactId>RadiusServicesImpl</artifactId>
+    <version>1.0.2</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -40,17 +40,16 @@
             <artifactId>log4j-1.2-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xercesImpl</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
             <groupId>com.gip.xyna</groupId>
             <artifactId>xynafactory</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gip.xyna</groupId>
             <artifactId>xynautils-database</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gip.xyna</groupId>
+            <artifactId>xynautils-exceptions</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gip.xyna</groupId>
