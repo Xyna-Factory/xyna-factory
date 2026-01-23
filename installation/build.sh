@@ -46,6 +46,10 @@ checkout_factory() {
   # $1 where to check out
 }
 
+install_libs() {
+  echo "install_libs - ntbd"
+}
+
 build_xynautils_exceptions() {
   echo "building xynautils-exceptions..."
   cd $SCRIPT_DIR/../xynautils/exceptions
@@ -611,6 +615,9 @@ case $1 in
     ;;
   "conpooltypes")
     build_conpooltypes
+    ;;
+  "install_libs")
+    install_libs
     ;;
   *)
     print_help
