@@ -39,11 +39,11 @@ import com.gip.xyna.xnwh.sharedresources.SharedResourceSynchronizerFactory;
 
 
 
-public class SqlSharedResourceSynchronizerFactory implements SharedResourceSynchronizerFactory {
+public class SQLSharedResourceSynchronizerFactory implements SharedResourceSynchronizerFactory {
 
   private static final StringParameter<String> TABLENAME = StringParameter
       .typeString("tablename").label("Tablename").defaultValue("sharedresources").documentation(Documentation
-          .en("Table to store shared resource instances in").de("Tabelle in der shared resource instanzen gespeichert werden").build())
+          .en("Table to store shared resource instances in").de("Tabelle in der shared resource Instanzen gespeichert werden").build())
       .build();
 
   private static final StringParameter<String> URL = StringParameter.typeString("url").label("Url")

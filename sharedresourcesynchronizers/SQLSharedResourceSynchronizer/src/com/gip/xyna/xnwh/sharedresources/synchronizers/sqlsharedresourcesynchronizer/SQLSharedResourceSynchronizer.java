@@ -34,13 +34,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.utils.concurrent.AtomicEnum;
 import com.gip.xyna.utils.db.DBConnectionData;
 import com.gip.xyna.utils.db.DBConnectionData.DBConnectionDataBuilder;
 import com.gip.xyna.utils.db.Parameter;
@@ -96,9 +96,14 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
    */
   private final AtomicInteger missingConnections;
 
-  private final AtomicBoolean running;
+  private final AtomicEnum<State> state;
 
   private final ExecutorService cleanupExecutor;
+
+
+  private enum State {
+    starting, running, stopping, stopped
+  }
 
 
   public SQLSharedResourceSynchronizer(String tableName, String url, String username, String password, int numConnections,
@@ -124,100 +129,117 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     allConnections = new HashSet<>();
     idleConnections = new ConcurrentLinkedQueue<>();
     missingConnections = new AtomicInteger();
-    running = new AtomicBoolean();
+    state = new AtomicEnum<>(State.class, State.stopped);
     cleanupExecutor = Executors.newSingleThreadExecutor();
   }
 
 
   @Override
   public void start() {
-    DBConnectionDataBuilder cdb = DBConnectionData.newDBConnectionData();
-    cdb.user(username);
-    cdb.password(password);
-    cdb.url(url);
-    cdb.socketTimeoutInSeconds((int) socketTimeout.getDuration(TimeUnit.SECONDS));
-    cdb.connectTimeoutInSeconds((int) connectionTimeout.getDuration(TimeUnit.SECONDS));
-    cdb.autoCommit(true);
-    connectionData = cdb.build();
-
-    try (Connection c = connectionData.createConnection()) {
-      try (PreparedStatement stmt = c.prepareStatement(CREATE_TABLE_STATEMENT)) {
-        stmt.execute();
+    if (!state.compareAndSet(State.stopped, State.starting)) {
+      if (logger.isWarnEnabled()) {
+        logger.warn("rejecting start of " + this + ". Current state is " + state.get());
+        return;
       }
-    } catch (Exception e) {
-      logger.error("Error during table check", e);
     }
+    try {
+      DBConnectionDataBuilder cdb = DBConnectionData.newDBConnectionData();
+      cdb.user(username);
+      cdb.password(password);
+      cdb.url(url);
+      cdb.socketTimeoutInSeconds((int) socketTimeout.getDuration(TimeUnit.SECONDS));
+      cdb.connectTimeoutInSeconds((int) connectionTimeout.getDuration(TimeUnit.SECONDS));
+      cdb.autoCommit(true);
+      connectionData = cdb.build();
 
-    Set<Connection> createdConnections = new HashSet<>();
-    for (int i = 0; i < numConnections; i++) {
-      try {
-        Connection con = connectionData.createConnection();
-        createdConnections.add(con);
-        idleConnections.add(con);
+      try (Connection c = connectionData.createConnection()) {
+        try (PreparedStatement stmt = c.prepareStatement(CREATE_TABLE_STATEMENT)) {
+          stmt.execute();
+        }
       } catch (Exception e) {
-        missingConnections.incrementAndGet();
-        if (logger.isWarnEnabled()) {
-          logger.warn("Could not create connection to " + url, e);
+        logger.error("Error during table check", e);
+      }
+
+      Set<Connection> createdConnections = new HashSet<>();
+      for (int i = 0; i < numConnections; i++) {
+        try {
+          Connection con = connectionData.createConnection();
+          createdConnections.add(con);
+          idleConnections.add(con);
+        } catch (Exception e) {
+          missingConnections.incrementAndGet();
+          if (logger.isWarnEnabled()) {
+            logger.warn("Could not create connection to " + url, e);
+          }
         }
       }
-      running.set(true);
-    }
 
-    synchronized (allConnections) {
-      allConnections.addAll(createdConnections);
+      synchronized (allConnections) {
+        allConnections.addAll(createdConnections);
+      }
+    } finally {
+      state.set(State.running);
     }
   }
 
 
   @Override
   public void stop() {
-    running.set(false);
-    List<Connection> capturedConnections = new ArrayList<Connection>();
-    Connection idleConnection = null;
-    do {
-      idleConnection = idleConnections.poll();
-      if (idleConnection != null) {
-        capturedConnections.add(idleConnection);
+    if (!state.compareAndSet(State.running, State.stopping)) {
+      if (logger.isWarnEnabled()) {
+        logger.warn("rejecting stop of " + this + ". Current state is " + state.get());
       }
-    } while (idleConnection != null);
-
-    int missingConnectionCount = missingConnections.addAndGet(-numConnections);
-    missingConnectionCount = numConnections + missingConnectionCount;
-    if (logger.isDebugEnabled()) {
-      String format = "Stopping %d connections. Initially captured %d idle connections. %d connections were missing";
-      logger.debug(String.format(format, numConnections, capturedConnections.size(), missingConnectionCount));
+      return;
     }
-    for (Connection con : capturedConnections) {
-      try {
-        con.close();
-      } catch (Exception e) {
-        if (logger.isWarnEnabled()) {
-          logger.warn("Could not close connection " + con, e);
+    try {
+      List<Connection> capturedConnections = new ArrayList<Connection>();
+      Connection idleConnection = null;
+      do {
+        idleConnection = idleConnections.poll();
+        if (idleConnection != null) {
+          capturedConnections.add(idleConnection);
         }
+      } while (idleConnection != null);
+
+      int missingConnectionCount = missingConnections.addAndGet(-numConnections);
+      missingConnectionCount = numConnections + missingConnectionCount;
+      if (logger.isDebugEnabled()) {
+        String format = "Stopping %d connections. Initially captured %d idle connections. %d connections were missing";
+        logger.debug(String.format(format, numConnections, capturedConnections.size(), missingConnectionCount));
       }
-    }
-
-
-    synchronized (allConnections) {
-      allConnections.removeAll(capturedConnections);
-      for (Connection c : allConnections) {
+      for (Connection con : capturedConnections) {
         try {
-          c.abort(cleanupExecutor);
+          con.close();
         } catch (Exception e) {
-          if (logger.isErrorEnabled()) {
-            logger.error("Could not abort Connection " + c, e);
+          if (logger.isWarnEnabled()) {
+            logger.warn("Could not close connection " + con, e);
           }
         }
       }
-      allConnections.clear();
+
+
+      synchronized (allConnections) {
+        allConnections.removeAll(capturedConnections);
+        for (Connection c : allConnections) {
+          try {
+            c.abort(cleanupExecutor);
+          } catch (Exception e) {
+            if (logger.isErrorEnabled()) {
+              logger.error("Could not abort Connection " + c, e);
+            }
+          }
+        }
+        allConnections.clear();
+      }
+
+      do {
+        idleConnection = idleConnections.poll();
+      } while (idleConnection != null);
+
+      missingConnections.set(0);
+    } finally {
+      state.set(State.stopped);
     }
-
-    do {
-      idleConnection = idleConnections.poll();
-    } while (idleConnection != null);
-
-    missingConnections.set(0);
-
     if (logger.isDebugEnabled()) {
       logger.debug("Stopped " + getInstanceDescription());
     }
@@ -231,7 +253,7 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
 
 
   private Connection getConnection() {
-    if (running.get() == false) {
+    if (state.get() != State.running) {
       return null;
     }
 
@@ -249,7 +271,7 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     }
     try {
       synchronized (allConnections) {
-        if (running.get() == false) {
+        if (state.get() != State.running) {
           return null;
         }
         result = connectionData.createConnection();
@@ -497,7 +519,7 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
       try {
         con.close();
       } catch (Exception e1) {
-        if (running.get()) {
+        if (state.get() == State.running) {
           int totalMissingConnections = missingConnections.incrementAndGet();
           if (logger.isWarnEnabled()) {
             logger.warn("Could not close connection " + e + " - new total of missing connections: " + totalMissingConnections, e1);
