@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gip.xyna.xprc.xsched.xynaobjects.AbsoluteDate;
@@ -59,6 +61,7 @@ import xact.http.jwt.PrivateClaim;
 
 public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy implements JSONWebTokenInstanceOperation {
 
+  private static Logger _logger = Logger.getLogger(JSONWebTokenInstanceOperationImpl.class);
   private DateFormat _defaultDateFormat = new CustomDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
   
   private static final long serialVersionUID = 1L;
@@ -200,6 +203,10 @@ public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy im
       .notBefore(toDate(claims.getNotBefore()))
       .subject(claims.getSubject());
     if (claims.getAudienceArray() != null) {
+      if ((claims.getAudienceSingle() != null) && _logger.isWarnEnabled()) {
+        _logger.warn("Since attribute AudienceArray is set, value in AudienceSingle will be ignored: " + 
+                     claims.getAudienceSingle());
+      }
       for (String s : claims.getAudienceArray()) {
         if ((s != null) && (!s.isBlank())) {
           jwtBuilder.audience().add(s);
