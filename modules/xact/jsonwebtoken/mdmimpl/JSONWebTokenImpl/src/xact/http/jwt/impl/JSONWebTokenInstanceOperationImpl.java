@@ -208,7 +208,6 @@ public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy im
     } else if (claims.getAudienceSingle() != null) {
       jwtBuilder.audience().single(claims.getAudienceSingle());
     }
-    //jwtBuilder.audience().add(claims.getAudience());
     if( claims.getPrivateClaim() != null ) {
       for( PrivateClaim pc : claims.getPrivateClaim() ) {
         jwtBuilder.claim(pc.getName(), pc.getValueAsJSONString() );
