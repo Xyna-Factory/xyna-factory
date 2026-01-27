@@ -418,6 +418,8 @@ public class ApplicationXMLGenerator {
         }
       } else if (item instanceof RuntimeContextDependency) {
         // ignore, only needed for workspace, not for app def
+      } else if (item instanceof SharedLibrary) {
+        // ignore
       } else {
         throw new RuntimeException("unhandled type of workflow content: " + item.getClass().getName());
       }
