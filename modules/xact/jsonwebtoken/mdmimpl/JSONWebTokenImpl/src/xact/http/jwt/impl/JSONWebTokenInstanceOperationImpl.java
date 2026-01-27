@@ -202,7 +202,7 @@ public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy im
       .id(claims.getJWTID())
       .notBefore(toDate(claims.getNotBefore()))
       .subject(claims.getSubject());
-    if (claims.getAudienceArray() != null) {
+    if ((claims.getAudienceArray() != null) && (claims.getAudienceArray().size() > 0)) {
       if ((claims.getAudienceSingle() != null) && _logger.isWarnEnabled()) {
         _logger.warn("Since attribute AudienceArray is set, value in AudienceSingle will be ignored: " + 
                      claims.getAudienceSingle());
