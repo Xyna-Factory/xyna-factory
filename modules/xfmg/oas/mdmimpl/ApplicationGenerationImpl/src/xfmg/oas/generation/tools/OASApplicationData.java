@@ -29,10 +29,12 @@ import com.gip.xyna.FileUtils;
 public class OASApplicationData implements Closeable {
   private final String id;
   private final List<File> files;
+  private final String appName;
   
-  public OASApplicationData(String id, List<File> files) {
+  public OASApplicationData(String id, List<File> files, String appName) {
     this.id = id;
     this.files = files;
+    this.appName = appName;
   }
   
   public String getId() {
@@ -41,6 +43,10 @@ public class OASApplicationData implements Closeable {
   
   public List<File> getFiles() {
     return files;
+  }
+
+  public String getAppName() {
+    return appName;
   }
 
   @Override

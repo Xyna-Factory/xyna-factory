@@ -109,8 +109,9 @@ public class GenerateApplicationTool {
     }
     String workspace = applicationGenerationParameter1.getWorkspaceName();
     statusHandler.setAppType(AppType.DATA_MODEL);
-    createAndImportApplication(correlatedXynaOrder, "xmom-data-model", target + "_datatypes", specFile,
+    String targetRtc = createAndImportApplication(correlatedXynaOrder, "xmom-data-model", target + "_datatypes", specFile,
                                workspace, statusHandler);
+    statusHandler.storeTargetRtc(targetRtc);
     if (applicationGenerationParameter1.getGenerateProvider()) {
       statusHandler.setAppType(AppType.PROVIDER);
       createAndImportApplication(correlatedXynaOrder, "xmom-server", target + "_provider", specFile, workspace,
@@ -125,18 +126,26 @@ public class GenerateApplicationTool {
   }
 
   
-  private void createAndImportApplication(XynaOrderServerExtension correlatedXynaOrder, String generator,
+  private String createAndImportApplication(XynaOrderServerExtension correlatedXynaOrder, String generator,
                                           String target, String specFile, String workspace,
                                           OasImportStatusHandler statusHandler) {
     OasAppBuilder oasAppBuilder = new OasAppBuilder();
+    String result = null;
     try (OASApplicationData data = oasAppBuilder.createOasApp(generator, target, specFile, statusHandler)) {
       statusHandler.storeStatusAppImport();
-      importApplication(correlatedXynaOrder, data.getId(), workspace);
+      if(workspace == null || workspace.isBlank()) {
+        importApplicationAsApplication(correlatedXynaOrder, data.getId());
+        result = data.getAppName();
+      } else {
+        importApplicationAsWorkspace(correlatedXynaOrder, data.getId(), workspace);
+        result = workspace;
+      }
     } catch (IOException e) {
       if(logger.isWarnEnabled()) {
         logger.warn("Could not clean up temporary files for " + generator, e);
       }
     }
+    return result;
   }
   
   
@@ -197,14 +206,4 @@ public class GenerateApplicationTool {
         FileUtils.deleteDirectory(tmpPath.toFile());
     }
   }
-  
-
-  private void importApplication(XynaOrderServerExtension correlatedXynaOrder, String id, String workspace) {
-    if(workspace == null || workspace.isBlank()) {
-      importApplicationAsApplication(correlatedXynaOrder, id);
-    } else {
-      importApplicationAsWorkspace(correlatedXynaOrder, id, workspace);
-    }
-  }
-
 }

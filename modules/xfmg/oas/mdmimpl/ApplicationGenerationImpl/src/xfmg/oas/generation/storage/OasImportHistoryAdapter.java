@@ -26,13 +26,14 @@ public class OasImportHistoryAdapter {
 
   public OAS_ImportHistory adapt(OasImportHistoryStorable input) {
     OAS_ImportHistory ret = new OAS_ImportHistory();
-    ret.setUniqueIdentifier(input.getUniqueIdentifier());
-    ret.setType(input.getImportType());
-    ret.setDate0(input.getImportDate());
-    ret.setFileName(input.getFileName());
-    ret.setSpecificationFile(input.getSpecificationFile());
-    ret.setImportStatus(input.getImportStatus());
-    ret.setErrorMessage(input.getErrorMessage());
+    ret.unversionedSetUniqueIdentifier(input.getUniqueIdentifier());
+    ret.unversionedSetType(input.getImportType());
+    ret.unversionedSetDate0(input.getImportDate());
+    ret.unversionedSetFileName(input.getFileName());
+    ret.unversionedSetSpecificationFile(input.getSpecificationFile());
+    ret.unversionedSetImportStatus(input.getImportStatus());
+    ret.unversionedSetErrorMessage(input.getErrorMessage());
+    ret.unversionedSetImportRtc(input.getIMportRtc());
     return ret;
   }
   
@@ -46,6 +47,7 @@ public class OasImportHistoryAdapter {
     ret.setSpecificationFile(input.getSpecificationFile());
     ret.setImportStatus(input.getImportStatus());
     ret.setErrorMessage(input.getErrorMessage());
+    ret.setImportRtc(input.getImportRtc());
     return ret;
   }
   
