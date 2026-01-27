@@ -347,17 +347,6 @@ public class TestJwt {
     System.out.println(txt);
   }
   
-  private void testBuildApp() throws Exception {
-    String[] args = new String[6];
-    args[0] = "workspace.xml";
-    args[1] = "XMOM";
-    args[2] = "1.0";
-    args[3] = "";
-    args[4] = "";
-    args[5] = "application.xml";
-    xmcp.gitintegration.offline.ApplicationXMLGenerator.main(args);
-  }
-  
   
   public static void main(String[] args) {
     try {
