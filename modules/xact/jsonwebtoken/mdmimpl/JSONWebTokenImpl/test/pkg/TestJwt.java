@@ -220,15 +220,12 @@ public class TestJwt {
     try {
       JwtBuilder builder = Jwts.builder().subject("Subj-1").issuer("Iss-1");
       builder.audience().add("aud-1").add("aud-2");
-      //builder.audience().single("aud-1");
-      //builder.audience().add("aud-1");
       String token = builder.compact();
       Jwt<io.jsonwebtoken.Header, Claims> jwt = Jwts.parser().unsecured().build().parseUnsecuredClaims(token);
       log(jwt.getHeader().toString());
       log(jwt.getPayload().toString());
       assertEquals("{sub=Subj-1, iss=Iss-1, aud=[aud-1, aud-2]}", jwt.getPayload().toString());
       assertEquals("{alg=none}", jwt.getHeader().toString());
-      
     } catch (Exception e) {
       e.printStackTrace();
       throw new RuntimeException(e);
@@ -241,17 +238,8 @@ public class TestJwt {
     try {
       JwtBuilder builder = Jwts.builder();
       builder.audience().add("aud-1").add("aud-2");
-      //builder.claims().audience().single("aud-1234").and();
       builder.claims().audience().single("aud-1234");
       String jws = builder.compact();
-      /*
-      Jwt<io.jsonwebtoken.Header, Claims> jwt = Jwts.parser().unsecured().build().parseUnsecuredClaims(token);
-      log(jwt.getHeader().toString());
-      log(jwt.getPayload().toString());
-      assertEquals("{sub=Subj-1, iss=Iss-1, aud=[aud-1, aud-2]}", jwt.getPayload().toString());
-      assertEquals("{alg=none}", jwt.getHeader().toString());
-      */
-    
       int i = jws.indexOf('.');
       int j = jws.lastIndexOf('.');
       String b64 = jws.substring(i, j);
