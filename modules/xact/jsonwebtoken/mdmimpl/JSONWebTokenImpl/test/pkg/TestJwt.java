@@ -351,7 +351,6 @@ public class TestJwt {
   public static void main(String[] args) {
     try {
       new TestJwt().testExpired();
-      //new TestJwt().testAudience4();
     }
     catch (Throwable e) {
       e.printStackTrace();
