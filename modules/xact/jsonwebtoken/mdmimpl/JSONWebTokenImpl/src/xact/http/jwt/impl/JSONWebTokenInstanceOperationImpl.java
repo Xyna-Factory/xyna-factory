@@ -27,6 +27,7 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -198,7 +199,16 @@ public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy im
       .id(claims.getJWTID())
       .notBefore(toDate(claims.getNotBefore()))
       .subject(claims.getSubject());
-    jwtBuilder.audience().add(claims.getAudience());
+    if (claims.getAudienceArray() != null) {
+      for (String s : claims.getAudienceArray()) {
+        if ((s != null) && (!s.isBlank())) {
+          jwtBuilder.audience().add(s);
+        }
+      }
+    } else if (claims.getAudienceSingle() != null) {
+      jwtBuilder.audience().single(claims.getAudienceSingle());
+    }
+    //jwtBuilder.audience().add(claims.getAudience());
     if( claims.getPrivateClaim() != null ) {
       for( PrivateClaim pc : claims.getPrivateClaim() ) {
         jwtBuilder.claim(pc.getName(), pc.getValueAsJSONString() );
@@ -214,8 +224,12 @@ public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy im
       .jWTID(claims.getId())
       .notBefore(toAbsoluteDate(claims.getNotBefore()))
       .subject(claims.getSubject());
-    if( claims.getAudience() != null ) {
-      builder.audience(String.valueOf(claims.getAudience()));
+    if (claims.getAudience() != null) {
+      List<String> list = new ArrayList<>();
+      for (String s : claims.getAudience()) {
+        list.add(s);
+      }
+      builder.audienceArray(list);
     }
     ArrayList<PrivateClaim> pcs = new ArrayList<PrivateClaim>();
     ObjectMapper mapper = new ObjectMapper();

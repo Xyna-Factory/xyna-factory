@@ -36,6 +36,8 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.lang.Strings;
 import xact.http.Header;
 import xact.http.HeaderField;
 import xact.http.jwt.JSONWebToken;
@@ -214,6 +216,106 @@ public class TestJwt {
   
   
   @Test
+  public void testAudience() {
+    try {
+      JwtBuilder builder = Jwts.builder().subject("Subj-1").issuer("Iss-1");
+      builder.audience().add("aud-1").add("aud-2");
+      //builder.audience().single("aud-1");
+      //builder.audience().add("aud-1");
+      String token = builder.compact();
+      Jwt<io.jsonwebtoken.Header, Claims> jwt = Jwts.parser().unsecured().build().parseUnsecuredClaims(token);
+      log(jwt.getHeader().toString());
+      log(jwt.getPayload().toString());
+      assertEquals("{sub=Subj-1, iss=Iss-1, aud=[aud-1, aud-2]}", jwt.getPayload().toString());
+      assertEquals("{alg=none}", jwt.getHeader().toString());
+      
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+  }
+  
+  
+  @Test
+  public void testAudience2() {
+    try {
+      JwtBuilder builder = Jwts.builder();
+      builder.audience().add("aud-1").add("aud-2");
+      //builder.claims().audience().single("aud-1234").and();
+      builder.claims().audience().single("aud-1234");
+      String jws = builder.compact();
+      /*
+      Jwt<io.jsonwebtoken.Header, Claims> jwt = Jwts.parser().unsecured().build().parseUnsecuredClaims(token);
+      log(jwt.getHeader().toString());
+      log(jwt.getPayload().toString());
+      assertEquals("{sub=Subj-1, iss=Iss-1, aud=[aud-1, aud-2]}", jwt.getPayload().toString());
+      assertEquals("{alg=none}", jwt.getHeader().toString());
+      */
+    
+      int i = jws.indexOf('.');
+      int j = jws.lastIndexOf('.');
+      String b64 = jws.substring(i, j);
+      String json = Strings.utf8(Decoders.BASE64URL.decode(b64));
+      log(json);
+      assertEquals("{\"aud\":\"aud-1234\"}", json);
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+  }
+  
+  
+  @Test
+  public void testAudience3() {
+    try {
+      Container keys = new KeyGeneratorInstanceOperationImpl(new KeyGenerator()).generateKeyPair();
+      assertEquals(2, keys.size());
+      Key privateKey = (Key) keys.get(0);
+      JWTClaims claims = new JWTClaims();
+      claims.setAudienceSingle("aud-test-3");
+      JSONWebToken token = new JSONWebToken();
+      token.setJWTClaims(claims);
+      token = new JSONWebTokenInstanceOperationImpl(token).createAndSignJWSToken(privateKey);
+      String jws = token.getToken();
+      int i = jws.indexOf('.');
+      int j = jws.lastIndexOf('.');
+      String b64 = jws.substring(i, j);
+      String json = Strings.utf8(Decoders.BASE64URL.decode(b64));
+      log(json);
+      assertEquals("{\"aud\":\"aud-test-3\"}", json);
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+  }
+  
+  
+  @Test
+  public void testAudience4() {
+    try {
+      Container keys = new KeyGeneratorInstanceOperationImpl(new KeyGenerator()).generateKeyPair();
+      assertEquals(2, keys.size());
+      Key privateKey = (Key) keys.get(0);
+      JWTClaims claims = new JWTClaims();
+      claims.addToAudienceArray("aud-test-4a");
+      claims.addToAudienceArray("aud-test-4b");
+      JSONWebToken token = new JSONWebToken();
+      token.setJWTClaims(claims);
+      token = new JSONWebTokenInstanceOperationImpl(token).createAndSignJWSToken(privateKey);
+      String jws = token.getToken();
+      int i = jws.indexOf('.');
+      int j = jws.lastIndexOf('.');
+      String b64 = jws.substring(i, j);
+      String json = Strings.utf8(Decoders.BASE64URL.decode(b64));
+      log(json);
+      assertEquals("{\"aud\":[\"aud-test-4a\",\"aud-test-4b\"]}", json);
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+  }
+  
+  @Test
   public void testDate() {
     Now now = new Now();
     now.setFormat(new DateFormatImpl());
@@ -257,10 +359,22 @@ public class TestJwt {
     System.out.println(txt);
   }
   
+  private void testBuildApp() throws Exception {
+    String[] args = new String[6];
+    args[0] = "workspace.xml";
+    args[1] = "XMOM";
+    args[2] = "1.0";
+    args[3] = "";
+    args[4] = "";
+    args[5] = "application.xml";
+    xmcp.gitintegration.offline.ApplicationXMLGenerator.main(args);
+  }
+  
   
   public static void main(String[] args) {
     try {
-      new TestJwt().test2();
+      new TestJwt().testExpired();
+      //new TestJwt().testAudience4();
     }
     catch (Throwable e) {
       e.printStackTrace();
