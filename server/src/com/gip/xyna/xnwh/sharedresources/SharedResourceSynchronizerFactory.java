@@ -30,7 +30,7 @@ public interface SharedResourceSynchronizerFactory {
   public String getSynchronizerName();
 
 
-  public SharedResourceSynchronizer createSynchronizer(List<String> param);
+  public SharedResourceSynchronizer createSynchronizer(List<String> params);
 
 
   public PluginDescription getDescription();

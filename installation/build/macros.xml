@@ -673,6 +673,23 @@
         </sequential>
     </macrodef>
 
+
+ <!-- = = = = = = = = = = = = = = = = =
+              macrodef: update-manifest
+             = = = = = = = = = = = = = = = = = -->
+    <macrodef name="update-manifest">
+	      <attribute name="jar" />
+        <element name="attributes" />
+		    <sequential>
+		        <jar update="true" file="@{jar}">
+			          <manifest>
+				            <attributes />
+				    </manifest>
+			    </jar>
+        </sequential>
+    </macrodef>
+  
+
     <!-- =================================
         macro: loadLicenses
         ================================= -->
@@ -702,5 +719,4 @@
             <echo message="${exec.output}" />
         </sequential>
     </macrodef>
-
 </project>
