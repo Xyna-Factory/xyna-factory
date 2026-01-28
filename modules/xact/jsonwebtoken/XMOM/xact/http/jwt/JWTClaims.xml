@@ -32,6 +32,8 @@
   <Data Label="Audience" VariableName="audience">
     <Meta>
       <Type>String</Type>
+      <Documentation>Deprecated.
+Use audienceArray instead; or audienceSingle in case that the json should contain a single value instead of a list</Documentation>
     </Meta>
   </Data>
   <Data Label="Expiration" ReferenceName="AbsoluteDate" ReferencePath="base.date" VariableName="expiration"/>
@@ -43,6 +45,17 @@
     </Meta>
   </Data>
   <Data IsList="true" Label="Private Claim" ReferenceName="PrivateClaim" ReferencePath="xact.http.jwt" VariableName="privateClaim"/>
+  <Data Label="Audience Single" VariableName="audienceSingle">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Use only in case that the json should contain a single value instead of a list; otherwise, use audienceArray instead</Documentation>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="Audience Array" VariableName="audienceArray">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
   <Service Label="JWT Claims" TypeName="JWTClaims">
     <Operation IsStatic="false" Label="Get" Name="get">
       <Input>

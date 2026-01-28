@@ -27,8 +27,11 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -58,6 +61,7 @@ import xact.http.jwt.PrivateClaim;
 
 public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy implements JSONWebTokenInstanceOperation {
 
+  private static Logger _logger = Logger.getLogger(JSONWebTokenInstanceOperationImpl.class);
   private DateFormat _defaultDateFormat = new CustomDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
   
   private static final long serialVersionUID = 1L;
@@ -198,7 +202,19 @@ public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy im
       .id(claims.getJWTID())
       .notBefore(toDate(claims.getNotBefore()))
       .subject(claims.getSubject());
-    jwtBuilder.audience().add(claims.getAudience());
+    if ((claims.getAudienceArray() != null) && (claims.getAudienceArray().size() > 0)) {
+      if ((claims.getAudienceSingle() != null) && _logger.isWarnEnabled()) {
+        _logger.warn("Since attribute AudienceArray is set, value in AudienceSingle will be ignored: " + 
+                     claims.getAudienceSingle());
+      }
+      for (String s : claims.getAudienceArray()) {
+        if ((s != null) && (!s.isBlank())) {
+          jwtBuilder.audience().add(s);
+        }
+      }
+    } else if (claims.getAudienceSingle() != null) {
+      jwtBuilder.audience().single(claims.getAudienceSingle());
+    }
     if( claims.getPrivateClaim() != null ) {
       for( PrivateClaim pc : claims.getPrivateClaim() ) {
         jwtBuilder.claim(pc.getName(), pc.getValueAsJSONString() );
@@ -214,8 +230,12 @@ public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy im
       .jWTID(claims.getId())
       .notBefore(toAbsoluteDate(claims.getNotBefore()))
       .subject(claims.getSubject());
-    if( claims.getAudience() != null ) {
-      builder.audience(String.valueOf(claims.getAudience()));
+    if (claims.getAudience() != null) {
+      List<String> list = new ArrayList<>();
+      for (String s : claims.getAudience()) {
+        list.add(s);
+      }
+      builder.audienceArray(list);
     }
     ArrayList<PrivateClaim> pcs = new ArrayList<PrivateClaim>();
     ObjectMapper mapper = new ObjectMapper();
