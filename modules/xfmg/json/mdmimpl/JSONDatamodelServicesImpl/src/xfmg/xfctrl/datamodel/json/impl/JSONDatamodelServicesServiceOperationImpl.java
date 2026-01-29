@@ -431,6 +431,9 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
       }
     } else {
       if (o == null) {
+        if (List.class.equals(typeOfField)) {
+          throw new RuntimeException("Can not assign non-list object to list attribute for member '" + varNameInXyna + "'.");
+        }
         if (Modifier.isAbstract(typeOfField.getModifiers())) {
           throw new RuntimeException("Can not instantiate abstract member type " + typeOfField + " for member " + varNameInXyna + ".");
         }

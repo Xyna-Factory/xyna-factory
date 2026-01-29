@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="build" default="build" basedir="." >
+
+  <import file="../../installation/build/ant-xyna.xml" />
+  <import file="../../installation/build/macros.xml" />
+
+  <property name="project.name.local" value="sqlsharedresourcesynchronizer" />
+  <property name="sharedresourcesynchronizer.factory.fqn" 
+            value="com.gip.xyna.xnwh.sharedresources.synchronizers.sqlsharedresourcesynchronizer.SqlSharedResourceSynchronizerFactory" />
+
+  <!--Next release version for the archive file-->
+  <property name="release.number" value="1.0.0"/>
+
+  <property name="root.dir" value="./../../" />
+  <property name="common.lib.dir" value="${root.dir}/common/lib" />
+
+  <property name="target.dir" value="${basedir}/deploy" />
+
+  <path id="libraries">
+    <fileset dir="${basedir}/lib/xyna">
+    <include name="**/*.jar" />
+    </fileset>
+  </path>
+
+
+  <!-- ================================= 
+         target: build             
+        ================================= -->
+  <target name="build" depends="resolve">
+    <genCodeClass basedir="${basedir}" lookupjar="y" />
+    <local name="destfile" />
+    <property name="destfile" value="${target.dir}/${project.name.local}-${release.number}.jar"  />
+    <buildJar destfile="${destfile}" />
+    <update-manifest jar="${destfile}">
+        <attributes>
+            <attribute name="Xyna-SharedResourceSynchronizer-Factory-FQN" value="${sharedresourcesynchronizer.factory.fqn}" />
+        </attributes>
+    </update-manifest>
+    <copy todir="${target.dir}">
+        <fileset dir="${basedir}/lib">
+            <include name="*.jar" />
+            <exclude name="**/xyna/*" />
+        </fileset>
+    </copy>
+  </target>
+
+  <target name="resolve">
+    <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/lib/xyna" />
+    <loadLicenses targetDir="${basedir}/lib" />
+  </target>
+
+  <target name="installMavenArtifact" depends="build" description="install maven artifact">
+    <echo message="artifactFile: ${target.dir}/${project.name.local}-${release.number}.jar" /> 
+    <echo message="pomFile: ${basedir}/pom.xml" /> 
+    <install-maven-artifact artifactFile="${target.dir}/${project.name.local}-${release.number}.jar" pomFile="${basedir}/pom.xml" />
+  </target>
+
+
+</project>
