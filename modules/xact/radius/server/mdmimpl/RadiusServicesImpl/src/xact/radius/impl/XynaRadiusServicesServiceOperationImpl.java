@@ -20,6 +20,7 @@ package xact.radius.impl;
 
 
 import java.security.MessageDigest;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -33,8 +34,11 @@ import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyDurati
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyString;
 
 import base.Text;
+import xact.radius.Code;
+import xact.radius.Node;
 import xact.radius.RadiusUser;
 import xact.radius.RequestAuthenticator;
+import xact.radius.TypeWithValueNode;
 import xact.radius.impl.util.ByteUtil;
 
 
@@ -96,7 +100,8 @@ public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymen
     return new xact.radius.PrivilegeLevel("0");
   }
 
-  public static Text checkCredentialsExpired(RadiusUser radiusUser) {
+
+  public Text checkCredentialsExpired(RadiusUser radiusUser) {
     Long timeout = getTimeout();
 
     // permanent user or one-time password not expired
@@ -107,23 +112,39 @@ public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymen
   }
 
 
-  public static Text validateCredentials(RadiusUser radiusUser, RequestAuthenticator requestAuthenticator) {
+  public Code validateCredentials(RadiusUser radiusUser, RequestAuthenticator requestAuthenticator) {
     String radiusUserpassword = radiusUser.getPassword();
     String sharedsecret = radiusUser.getSharedSecret();
     if (sharedsecret == null || sharedsecret.length() == 0) {
       sharedsecret = sharedSecretXynaProp.get();
     }
 
-    String passwordindatabase = encode(radiusUser.getSharedSecret(), requestAuthenticator.getValue(), radiusUserpassword);
+    String passwordindatabase = encode(sharedsecret, requestAuthenticator.getValue(), radiusUserpassword);
 
     if (!passwordindatabase.equals(radiusUserpassword)) {
       if (logger.isDebugEnabled()) {
         logger.debug("RADIUS Authentication failed, because password does not match. Sending Reject!");
       }
-      return new Text(REJECT);
+      return new Code(REJECT);
     }
 
-    return new Text(ACCEPT);
+    return new Code(ACCEPT);
+  }
+
+
+  public RadiusUser getBasicUserInfoFromNodes(List<? extends Node> inputNodes) {
+    RadiusUser radUser = new RadiusUser();
+
+    for (Node n : inputNodes) {
+      if (n.getTypeName().equalsIgnoreCase("USER-NAME"))
+        radUser.setUsername(((TypeWithValueNode) n).getValue().replaceAll("\"", ""));
+      if (n.getTypeName().equalsIgnoreCase("USER-PASSWORD"))
+        radUser.setPassword(((TypeWithValueNode) n).getValue());
+      if (n.getTypeName().equalsIgnoreCase("NAS-Identifier"))
+        radUser.setIPAddress(((TypeWithValueNode) n).getValue());
+    }
+
+    return radUser;
   }
 
 
