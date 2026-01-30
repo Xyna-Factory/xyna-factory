@@ -77,13 +77,13 @@ public class SQLSharedResourceSynchronizerFactory implements SharedResourceSynch
   private static final StringParameter<StringEnvironmentVariable> USER_ENV =
       StringParameter.typeEnvironmentVariable(StringEnvironmentVariable.class, "usernameEnv").label("User environment variable.")
           .documentation(Documentation.en("Name of the environment variable containing the db username.")
-              .de("Name der Umgebungsvariable, die den DB Nutzernamen enth�lt.").build())
+              .de("Name der Umgebungsvariable, die den DB Nutzernamen enth?lt.").build())
           .optional().build();
 
   private static final StringParameter<StringEnvironmentVariable> PASSWORD_ENV =
       StringParameter.typeEnvironmentVariable(StringEnvironmentVariable.class, "passwordEnv").label("Connectstring environment variable.")
           .documentation(Documentation.en("Name of the environment variable containing the db password.")
-              .de("Name der Umgebungsvariable, die das DB Passwort enth�lt.").build())
+              .de("Name der Umgebungsvariable, die das DB Passwort enth?lt.").build())
           .optional().build();
 
   private static final StringParameter<IntegerEnvironmentVariable> CONNECTIONS_ENV =
