@@ -38,6 +38,21 @@ public class SharedResourceSynchronizerInstance {
     }
 
 
+    public static Status fromValue(String value) {
+      for (Status status : Status.values()) {
+        if (status.value.equals(value)) {
+          return status;
+        }
+      }
+      throw new IllegalArgumentException("Invalid value: " + value);
+    }
+
+
+    public String getValue() {
+      return value;
+    }
+
+
     public String toString() {
       return value;
     }

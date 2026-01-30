@@ -41,7 +41,7 @@ public class InstantiatesharedresourcesynchronizerImpl extends XynaCommandImplem
     String startOption = payload.getStartOption();
     if (startOption != null) {
       try {
-        status = SharedResourceSynchronizerInstance.Status.valueOf(startOption);
+        status = SharedResourceSynchronizerInstance.Status.fromValue(startOption);
       } catch (IllegalArgumentException e) {
         writeLineToCommandLine(statusOutputStream, "Invalid start option: " + startOption);
         return;
