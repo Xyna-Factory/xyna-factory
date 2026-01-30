@@ -15,24 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Clean Expired Users" TypeName="CleanExpiredUsers" TypePath="xact.radius" Version="1.8">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Clean Expired Users" TypeName="CleanExpiredUsers" TypePath="xact.radius" Version="1.8">
   <Meta>
     <FixedDetailOptions>lowDetailsMode,hideDetailAreas</FixedDetailOptions>
     <IsXynaComponent>true</IsXynaComponent>
   </Meta>
-  <Operation ID="0" Label="Clean Expired Users" Name="CleanExpiredUsers">
+  <Operation ID="0" IsStatic="false" Label="Clean Expired Users" Name="CleanExpiredUsers">
     <Input/>
     <Output/>
-    <ServiceReference ID="2" Label="XynaRadiusServices" ReferenceName="XynaRadiusServices.XynaRadiusServices" ReferencePath="xact.radius">
-      <Source RefID="3"/>
-      <Target RefID="3"/>
-    </ServiceReference>
-    <Function ID="3" Label="Clean Users">
-      <Source RefID="2"/>
-      <Target RefID="2"/>
-      <Invoke Operation="cleanUsers" ServiceID="2"/>
-      <Receive ServiceID="2"/>
-    </Function>
     <Assign/>
   </Operation>
 </Service>

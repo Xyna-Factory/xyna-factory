@@ -15,21 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="RadiusUserData" TypeName="RadiusUserData" TypePath="xact.radius" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Vendor Specific User Info" TypeName="VendorSpecificUserInfo" TypePath="xact.radius" Version="1.8">
   <Meta>
-    <IsXynaComponent>true</IsXynaComponent>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Username" VariableName="username">
+  <Data Label="Name" VariableName="name">
     <Meta>
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="Password" VariableName="password">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="Role" VariableName="role">
+  <Data Label="Value" VariableName="value">
     <Meta>
       <Type>String</Type>
     </Meta>

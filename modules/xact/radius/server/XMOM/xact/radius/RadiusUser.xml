@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Storable" BaseTypePath="xnwh.persistence" IsAbstract="false" Label="Radius User" TypeName="RadiusUser" TypePath="xact.radius" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="id" VariableName="id">
+    <Meta>
+      <Persistence>
+        <Type>UniqueIdentifier</Type>
+      </Persistence>
+      <Type>String</Type>
+      <Documentation>unique identifier</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Username" VariableName="username">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>name of the user</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Role" VariableName="role">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>The users functional role, e.g.: super user, read-write user, read-only user</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Password" VariableName="password">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>user password</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Shared Secret" VariableName="sharedSecret">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>user-specific shared secret, if not set, the shared secret from the property xact.radius.sharedSecret is used</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Service Type" VariableName="serviceType">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="IP Address" VariableName="iPAddress">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>the users ip address</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Timestamp" VariableName="timestamp">
+    <Meta>
+      <Type>long</Type>
+      <Documentation>The time at which the user was created.</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Temporary User" VariableName="temporaryUser">
+    <Meta>
+      <Type>boolean</Type>
+      <Documentation>Used to indicate a temporary user with an one-time password.</Documentation>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="Vendor Specific User Info" ReferenceName="VendorSpecificUserInfo" ReferencePath="xact.radius" VariableName="vendorSpecificUserInfo"/>
+</DataType>

@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Authenticate Radius User And Remove Expired" TypeName="AuthenticateRadiusUserAndRemoveExpired" TypePath="xact.radius" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Authenticate Radius User And Remove Expired" Name="AuthenticateRadiusUserAndRemoveExpired">
+    <Input>
+      <Data ID="14" Label="User from Input" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser14"/>
+      <Data ID="39" Label="User from Database" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser39"/>
+      <Data ID="52" Label="RequestAuthenticator" ReferenceName="RequestAuthenticator" ReferencePath="xact.radius" VariableName="requestAuthenticator52"/>
+    </Input>
+    <Output>
+      <Data ID="9473" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code9473"/>
+    </Output>
+    <ServiceReference ID="6972" Label="Delete" ReferenceName="Delete" ReferencePath="xnwh.persistence">
+      <Source RefID="6971"/>
+      <Target RefID="6971"/>
+    </ServiceReference>
+    <ServiceReference ID="7225" Label="XynaRadiusServices" ReferenceName="XynaRadiusServices.XynaRadiusServices" ReferencePath="xact.radius">
+      <Source RefID="7224"/>
+      <Target RefID="7224"/>
+    </ServiceReference>
+    <ServiceReference ID="8645" Label="XynaRadiusServices" ReferenceName="XynaRadiusServices.XynaRadiusServices" ReferencePath="xact.radius">
+      <Source RefID="8644"/>
+      <Target RefID="8644"/>
+    </ServiceReference>
+    <ServiceReference ID="6312" Label="Delete" ReferenceName="Delete" ReferencePath="xnwh.persistence">
+      <Source RefID="6311"/>
+      <Target RefID="6311"/>
+    </ServiceReference>
+    <Function ID="7224" Label="Check Credentials Expired">
+      <Source RefID="7225"/>
+      <Source RefID="39"/>
+      <Target RefID="7225"/>
+      <Target RefID="7227"/>
+      <Invoke Operation="checkCredentialsExpired" ServiceID="7225">
+        <Source RefID="39">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="7225">
+        <Target RefID="7227"/>
+      </Receive>
+    </Function>
+    <Choice ID="4132" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="7227"/>
+      <Target RefID="9160"/>
+      <Input>
+        <Data ID="7397" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text7397">
+          <Source RefID="4132"/>
+        </Data>
+        <Source RefID="7227"/>
+      </Input>
+      <Case ID="4133" Label="true" Premise="%0%.text==&quot;true&quot;">
+        <Function ID="6971" Label="Delete User with Expired Password">
+          <Source RefID="6972"/>
+          <Source RefID="39"/>
+          <Source RefID="7082"/>
+          <Target RefID="6972"/>
+          <Invoke Operation="Delete" ServiceID="6972">
+            <Source RefID="39">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+                <ExpectedType>xact.radius.RadiusUser</ExpectedType>
+              </Meta>
+            </Source>
+            <Source RefID="7082">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="6972"/>
+        </Function>
+        <Mappings ID="4583" Label="Set Reject">
+          <Output>
+            <Data ID="9152" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code9152">
+              <Source RefID="4583"/>
+            </Data>
+            <Target RefID="9153"/>
+          </Output>
+          <Mapping>%0%.value="3"</Mapping>
+        </Mappings>
+        <Assign ID="4136">
+          <Source RefID="9153"/>
+          <Target RefID="9160"/>
+          <Copy>
+            <Source RefID="9153"/>
+            <Target RefID="9160"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="4134" Label="false">
+        <Choice ID="3529" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="14"/>
+          <Source RefID="39"/>
+          <Target RefID="8949"/>
+          <Input>
+            <Data ID="3544" Label="User from Input" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser3544">
+              <Source RefID="3529"/>
+            </Data>
+            <Source RefID="14">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Input>
+            <Data ID="3569" Label="User from Database" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser3569">
+              <Source RefID="3529"/>
+            </Data>
+            <Source RefID="39">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Case ID="3530" Label="true" Premise="%0%.iPAddress==%1%.iPAddress">
+            <Function ID="8644" Label="Validate Credentials">
+              <Source RefID="8645"/>
+              <Source RefID="14"/>
+              <Source RefID="52"/>
+              <Target RefID="8645"/>
+              <Target RefID="8647"/>
+              <Invoke Operation="validateCredentials" ServiceID="8645">
+                <Source RefID="14">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+                <Source RefID="52"/>
+              </Invoke>
+              <Receive ServiceID="8645">
+                <Target RefID="8647"/>
+              </Receive>
+            </Function>
+            <Choice ID="6111" TypeName="BaseChoiceTypeFormula" TypePath="server">
+              <Source RefID="39"/>
+              <Source RefID="8647"/>
+              <Input>
+                <Data ID="8492" Label="User from Database" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser8492">
+                  <Source RefID="6111"/>
+                </Data>
+                <Source RefID="39">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Input>
+                <Data ID="8784" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code8784">
+                  <Source RefID="6111"/>
+                </Data>
+                <Source RefID="8647"/>
+              </Input>
+              <Case ID="6112" Label="true" Premise="%0%.timestamp&gt;&quot;0&quot;&amp;&amp;%1%.value==&quot;2&quot;">
+                <Function ID="6311" Label="Delete User with One-time Password">
+                  <Source RefID="6312"/>
+                  <Source RefID="39"/>
+                  <Source RefID="6456"/>
+                  <Target RefID="6312"/>
+                  <Invoke Operation="Delete" ServiceID="6312">
+                    <Source RefID="39">
+                      <Meta>
+                        <LinkType>UserConnected</LinkType>
+                        <ExpectedType>xact.radius.RadiusUser</ExpectedType>
+                      </Meta>
+                    </Source>
+                    <Source RefID="6456">
+                      <Meta>
+                        <LinkType>Constant</LinkType>
+                      </Meta>
+                    </Source>
+                  </Invoke>
+                  <Receive ServiceID="6312"/>
+                </Function>
+                <Assign ID="6115"/>
+              </Case>
+              <Case ID="6113" Label="false">
+                <Assign ID="6117"/>
+              </Case>
+            </Choice>
+            <Assign ID="3533">
+              <Source RefID="8647"/>
+              <Target RefID="8949"/>
+              <Copy>
+                <Source RefID="8647"/>
+                <Target RefID="8949"/>
+              </Copy>
+            </Assign>
+            <Data ID="8647" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code8647">
+              <Source RefID="8644"/>
+            </Data>
+          </Case>
+          <Case ID="3531" Label="false">
+            <Mappings ID="3610" Label="Set Reject">
+              <Output>
+                <Data ID="8941" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code8941">
+                  <Source RefID="3610"/>
+                </Data>
+                <Target RefID="8942"/>
+              </Output>
+              <Mapping>%0%.value="3"</Mapping>
+            </Mappings>
+            <Assign ID="3535">
+              <Source RefID="8942"/>
+              <Target RefID="8949"/>
+              <Copy>
+                <Source RefID="8942"/>
+                <Target RefID="8949"/>
+              </Copy>
+            </Assign>
+          </Case>
+        </Choice>
+        <Assign ID="4138">
+          <Source RefID="8949"/>
+          <Target RefID="9160"/>
+          <Copy>
+            <Source RefID="8949"/>
+            <Target RefID="9160"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="6456" Label="Delete parameter" ReferenceName="DeleteParameter" ReferencePath="xnwh.persistence" VariableName="const_DeleteParameter6456">
+      <Data VariableName="includingHistory">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+    </Data>
+    <Data ID="7082" Label="Delete parameter" ReferenceName="DeleteParameter" ReferencePath="xnwh.persistence" VariableName="const_DeleteParameter7082">
+      <Data VariableName="includingHistory">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data Label="Reference handling" ReferenceName="ReferenceHandling" ReferencePath="xnwh.persistence" VariableName="referenceHandling">
+        <Data VariableName="forward">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+          <Value/>
+        </Data>
+        <Data VariableName="backward">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+          <Value>delete</Value>
+        </Data>
+      </Data>
+    </Data>
+    <Data ID="7227" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text7227">
+      <Source RefID="7224"/>
+    </Data>
+    <Data ID="8942" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code8942">
+      <Source RefID="3610"/>
+    </Data>
+    <Data ID="8949" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code8949">
+      <Source RefID="3529"/>
+    </Data>
+    <Data ID="9153" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code9153">
+      <Source RefID="4583"/>
+    </Data>
+    <Data ID="9160" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code9160">
+      <Source RefID="4132"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="9160"/>
+      <Target RefID="9473"/>
+      <Copy>
+        <Source RefID="9160"/>
+        <Target RefID="9473"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
