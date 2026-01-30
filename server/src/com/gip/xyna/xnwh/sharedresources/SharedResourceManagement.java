@@ -290,12 +290,6 @@ public class SharedResourceManagement extends Section {
   }
 
 
-  // public PluginDescription getSharedResourceSynchronizerDescription(String synchronizerTypeName) {
-  //   SharedResourceSynchronizerFactory factory = synchronizerFactories.get(synchronizerTypeName);
-  //   return factory != null ? factory.getDescription() : null;
-  // }
-
-
   public List<PluginDescription> listSharedResourceSynchronizerDescriptions() {
     List<PluginDescription> result = new ArrayList<>();
     for (SharedResourceSynchronizerFactory factory : synchronizerFactories.values()) {
