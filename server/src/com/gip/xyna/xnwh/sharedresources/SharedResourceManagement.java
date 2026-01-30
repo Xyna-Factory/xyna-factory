@@ -26,10 +26,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
@@ -70,6 +72,9 @@ public class SharedResourceManagement extends Section {
   private final Map<String, String> sharedResourceToSynchronizerMap;
 
 
+  private final Set<SharedResourceSynchronizerFactoryClassLoader> synchronizerFactoryClassloaders;
+
+
   public SharedResourceManagement() throws XynaException {
     super();
     sharedResourcePortal = new SharedResourcePortal(() -> new FactorySharedResourceRequestRecorder());
@@ -77,6 +82,7 @@ public class SharedResourceManagement extends Section {
     synchronizerFactories = new HashMap<>();
     synchronizerInstances = new HashMap<>();
     sharedResourceToSynchronizerMap = new ConcurrentHashMap<>();
+    synchronizerFactoryClassloaders = new HashSet<>();
   }
 
 
@@ -106,6 +112,13 @@ public class SharedResourceManagement extends Section {
       SharedResourceSynchronizerStorage.shutdown();
     } catch (PersistenceLayerException e) {
       throw new RuntimeException(String.format("Could not shutdown SharedResourceSynchronizerStorage: %s", e.getMessage()), e);
+    }
+    for (SharedResourceSynchronizerFactoryClassLoader loader : synchronizerFactoryClassloaders) {
+      try {
+        loader.close();
+      } catch (IOException e) {
+        logger.warn("Could not close shared resource synchronizer classloader", e);
+      }
     }
   }
 
@@ -142,8 +155,9 @@ public class SharedResourceManagement extends Section {
                     FileUtils.readAttributeFromJar(jarPath, Constants.SHAREDRESOURCESYNCHRONIZER_FACTORY_FQN_MANIFEST_ATTRIBUTE);
 
                 if (factoryFQN != null) {
-                  try (SharedResourceSynchronizerFactoryClassLoader classLoader =
-                      new SharedResourceSynchronizerFactoryClassLoader(folderName)) {
+                  try {
+                    SharedResourceSynchronizerFactoryClassLoader classLoader = new SharedResourceSynchronizerFactoryClassLoader(folderName);
+                    synchronizerFactoryClassloaders.add(classLoader);
                     Class<?> clazz = classLoader.loadClass(factoryFQN);
                     if (!SharedResourceSynchronizerFactory.class.isAssignableFrom(clazz)) {
                       throw new IllegalArgumentException(String.format("Class %s in %s does not implement %s", factoryFQN, jarPath,
