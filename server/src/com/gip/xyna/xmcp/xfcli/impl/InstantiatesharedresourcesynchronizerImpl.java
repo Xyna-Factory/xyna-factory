@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xmcp.xfcli.ReturnCode;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 import com.gip.xyna.xmcp.xfcli.generated.Instantiatesharedresourcesynchronizer;
 import com.gip.xyna.xnwh.sharedresources.SharedResourceSynchronizerInstance;
@@ -44,6 +45,7 @@ public class InstantiatesharedresourcesynchronizerImpl extends XynaCommandImplem
         status = SharedResourceSynchronizerInstance.Status.fromValue(startOption);
       } catch (IllegalArgumentException e) {
         writeLineToCommandLine(statusOutputStream, "Invalid start option: " + startOption);
+        writeEndToCommandLine(statusOutputStream, ReturnCode.GENERAL_ERROR);
         return;
       }
     }
@@ -56,8 +58,7 @@ public class InstantiatesharedresourcesynchronizerImpl extends XynaCommandImplem
     } catch (Exception e) {
       writeLineToCommandLine(statusOutputStream, String
           .format("Could not instantiate SharedResourceSynchronizer \"%s\" for type \"%s\": %s", instanceName, typeName, e.getMessage()));
-      return;
+      writeEndToCommandLine(statusOutputStream, ReturnCode.GENERAL_ERROR);
     }
-
   }
 }
