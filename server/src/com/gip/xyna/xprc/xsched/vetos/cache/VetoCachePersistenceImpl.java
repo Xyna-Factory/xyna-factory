@@ -298,8 +298,8 @@ public class VetoCachePersistenceImpl implements VetoCachePersistence {
           sep = ", ";
         }
         logger.trace( sb.toString() );
-      } else {
-        logger.info( "deleted "+toDelete.size()+ " and persisted " + toPersist.size() + " vetos");
+      } else if (logger.isDebugEnabled()) {
+        logger.debug( "deleted "+toDelete.size()+ " and persisted " + toPersist.size() + " vetos");
       }
     }
     
