@@ -21,7 +21,9 @@ package com.gip.xyna.xnwh.sharedresources;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
+import com.gip.xyna.utils.collections.lists.StringSerializableList;
 import com.gip.xyna.xnwh.persistence.Column;
 import com.gip.xyna.xnwh.persistence.Persistable;
 import com.gip.xyna.xnwh.persistence.ResultSetReader;
@@ -36,6 +38,8 @@ public class SharedResourceSynchronizerInstanceStorable extends Storable<SharedR
 
   public static final String COL_INSTANCE_NAME = "instancename";
   public static final String COL_SYNCHRONIZER_TYPE_NAME = "sharedresourcesynchronizertypename";
+  public static final String COL_CONFIGURATION = "configuration";
+  public static final String COL_STATUS = "status";
 
   private static final long serialVersionUID = 1L;
 
@@ -45,6 +49,12 @@ public class SharedResourceSynchronizerInstanceStorable extends Storable<SharedR
   @Column(name = COL_SYNCHRONIZER_TYPE_NAME)
   private String synchronizerTypeName;
 
+  @Column(name = COL_CONFIGURATION)
+  private StringSerializableList<String> configuration = StringSerializableList.autoSeparator(String.class);
+
+  @Column(name = COL_STATUS)
+  private String status;
+
   private static SharedResourceSynchronizerInstanceStorableReader reader = new SharedResourceSynchronizerInstanceStorableReader();
 
 
@@ -52,9 +62,14 @@ public class SharedResourceSynchronizerInstanceStorable extends Storable<SharedR
   }
 
 
-  public SharedResourceSynchronizerInstanceStorable(String instanceName, String synchronizerTypeName) {
+  public SharedResourceSynchronizerInstanceStorable(String instanceName, String synchronizerTypeName, List<String> configuration,
+                                                    SharedResourceSynchronizerInstance.Status status) {
     this.instanceName = instanceName;
     this.synchronizerTypeName = synchronizerTypeName;
+    if (configuration != null) {
+      this.configuration.setValues(configuration);
+    }
+    this.status = status.toString();
   }
 
 
@@ -73,6 +88,8 @@ public class SharedResourceSynchronizerInstanceStorable extends Storable<SharedR
       SharedResourceSynchronizerInstanceStorable result = new SharedResourceSynchronizerInstanceStorable();
       result.instanceName = rs.getString(COL_INSTANCE_NAME);
       result.synchronizerTypeName = rs.getString(COL_SYNCHRONIZER_TYPE_NAME);
+      result.configuration.deserializeFromString(rs.getString(COL_CONFIGURATION));
+      result.status = rs.getString(COL_STATUS);
       return result;
     }
 
@@ -90,6 +107,8 @@ public class SharedResourceSynchronizerInstanceStorable extends Storable<SharedR
     SharedResourceSynchronizerInstanceStorable cast = data;
     instanceName = cast.instanceName;
     synchronizerTypeName = cast.synchronizerTypeName;
+    configuration.setValues(cast.configuration);
+    status = cast.status;
   }
 
 
@@ -110,6 +129,26 @@ public class SharedResourceSynchronizerInstanceStorable extends Storable<SharedR
 
   public void setSynchronizerTypeName(String synchronizerTypeName) {
     this.synchronizerTypeName = synchronizerTypeName;
+  }
+
+
+  public List<String> getConfiguration() {
+    return configuration;
+  }
+
+
+  public void setConfiguration(List<String> configuration) {
+    this.configuration.setValues(configuration);
+  }
+
+
+  public String getStatus() {
+    return status;
+  }
+
+
+  public void setStatus(String status) {
+    this.status = status;
   }
 
 }
