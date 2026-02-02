@@ -3261,10 +3261,12 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
     }
     File targetDir = new File(targetDirPath);
     File[] subdirs = targetDir.listFiles( (dir, name) -> new File(dir, name).isDirectory() );
+    subdirs = subdirs == null ? new File[0] : subdirs;
     for (File subdir : subdirs) {
       deleteObsoleteJarsInTargetDir(subdir.getAbsolutePath(), sourceFiles);
     }
     File[] jarFiles = targetDir.listFiles( (dir, name) -> name.toLowerCase().endsWith(".jar") );
+    jarFiles = jarFiles == null ? new File[0] : jarFiles;
     for (File file : jarFiles) {
       File targetDirFile = toCanonicalOrAbsoluteFile(file);
       if (!sourceFileSet.contains(targetDirFile)) { 
