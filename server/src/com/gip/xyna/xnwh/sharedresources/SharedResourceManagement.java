@@ -45,6 +45,8 @@ import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.xfctrl.classloading.SharedResourceSynchronizerFactoryClassLoader;
 import com.gip.xyna.xmcp.PluginDescription;
 import com.gip.xyna.xnwh.persistence.ODSImpl.PersistenceLayerInstances;
+import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceSynchronizerInstance.Status;
 
 
 
@@ -52,6 +54,7 @@ public class SharedResourceManagement extends Section {
 
   public static final String DEFAULT_NAME = "SharedResourceManagement";
   private final SharedResourcePortal sharedResourcePortal;
+  private final SharedResourceSynchronizerStorage sharedResourceSynchronizerStorage;
 
   /**
    * maps from synchronizerTypeName to factory
@@ -70,12 +73,17 @@ public class SharedResourceManagement extends Section {
   private final Map<String, String> sharedResourceToSynchronizerMap;
 
 
+  private final Set<SharedResourceSynchronizerFactoryClassLoader> synchronizerFactoryClassloaders;
+
+
   public SharedResourceManagement() throws XynaException {
     super();
     sharedResourcePortal = new SharedResourcePortal(() -> new FactorySharedResourceRequestRecorder());
+    sharedResourceSynchronizerStorage = new SharedResourceSynchronizerStorage();
     synchronizerFactories = new HashMap<>();
     synchronizerInstances = new HashMap<>();
     sharedResourceToSynchronizerMap = new ConcurrentHashMap<>();
+    synchronizerFactoryClassloaders = new HashSet<>();
   }
 
 
@@ -95,6 +103,24 @@ public class SharedResourceManagement extends Section {
         .after("SharedResourceManagement.loadSynchronizers").execAsync(this::instantiateSynchronizers);
     fExec.addTask(SharedResourceManagement.class, "configureSharedResourceTypes").after("SharedResourceManagement.instantiateSynchronizers")
         .execAsync(this::configureSRTypes);
+  }
+
+
+  @Override
+  protected void shutdown() throws XynaException {
+    super.shutdown();
+    try {
+      SharedResourceSynchronizerStorage.shutdown();
+    } catch (PersistenceLayerException e) {
+      throw new RuntimeException(String.format("Could not shutdown SharedResourceSynchronizerStorage: %s", e.getMessage()), e);
+    }
+    for (SharedResourceSynchronizerFactoryClassLoader loader : synchronizerFactoryClassloaders) {
+      try {
+        loader.close();
+      } catch (IOException e) {
+        logger.warn("Could not close shared resource synchronizer classloader", e);
+      }
+    }
   }
 
 
@@ -130,8 +156,9 @@ public class SharedResourceManagement extends Section {
                     FileUtils.readAttributeFromJar(jarPath, Constants.SHAREDRESOURCESYNCHRONIZER_FACTORY_FQN_MANIFEST_ATTRIBUTE);
 
                 if (factoryFQN != null) {
-                  try (SharedResourceSynchronizerFactoryClassLoader classLoader =
-                      new SharedResourceSynchronizerFactoryClassLoader(folderName)) {
+                  try {
+                    SharedResourceSynchronizerFactoryClassLoader classLoader = new SharedResourceSynchronizerFactoryClassLoader(folderName);
+                    synchronizerFactoryClassloaders.add(classLoader);
                     Class<?> clazz = classLoader.loadClass(factoryFQN);
                     if (!SharedResourceSynchronizerFactory.class.isAssignableFrom(clazz)) {
                       throw new IllegalArgumentException(String.format("Class %s in %s does not implement %s", factoryFQN, jarPath,
@@ -139,9 +166,9 @@ public class SharedResourceManagement extends Section {
                     }
                     // Register the factory
                     SharedResourceSynchronizerFactory factory = (SharedResourceSynchronizerFactory) clazz.getConstructor().newInstance();
-                    String synchronizerName = factory.getSynchronizerName();
-                    synchronizerFactories.putIfAbsent(synchronizerName, factory);
-                    synchronizerJarPaths.computeIfAbsent(synchronizerName, k -> new ArrayList<>()).add(jarPath);
+                    String synchronizerTypeName = factory.getSynchronizerName();
+                    synchronizerFactories.putIfAbsent(synchronizerTypeName, factory);
+                    synchronizerJarPaths.computeIfAbsent(synchronizerTypeName, k -> new ArrayList<>()).add(jarPath);
                   } catch (Exception e) {
                     throw new RuntimeException(String.format("Could not instantiate SharedResourceSynchronizerFactory \"%s\" from %s: %s",
                                                              factoryFQN, jarPath, e.getMessage()),
@@ -184,11 +211,83 @@ public class SharedResourceManagement extends Section {
   }
 
 
+  private SharedResourceSynchronizer instantiateSynchronizer(SharedResourceSynchronizerInstance instance) {
+    String typeName = instance.getTypeName();
+    SharedResourceSynchronizerFactory factory = synchronizerFactories.get(typeName);
+    if (factory == null) {
+      throw new IllegalArgumentException(String.format("No SharedResourceSynchronizerFactory for type \"%s\" found.", typeName));
+    }
+
+    String instanceName = instance.getInstanceName();
+    try {
+      SharedResourceSynchronizer synchronizer = factory.createSynchronizer(instance.getConfiguration());
+      synchronizerInstances.put(instanceName, synchronizer);
+      return synchronizer;
+    } catch (Exception e) {
+      throw new RuntimeException(String.format("Could not instantiate SharedResourceSynchronizer \"%s\" for type \"%s\": %s", instanceName,
+                                               typeName, e.getMessage()),
+                                 e);
+    }
+  }
+
+
   private void instantiateSynchronizers() {
+    try {
+      SharedResourceSynchronizerStorage.init();
+    } catch (PersistenceLayerException e) {
+      throw new RuntimeException(String.format("Could not initialize SharedResourceSynchronizerStorage: %s", e.getMessage()), e);
+    }
+
+    List<SharedResourceSynchronizerInstance> instances = sharedResourceSynchronizerStorage.listAllInstances();
+
+    for (SharedResourceSynchronizerInstance instance : instances) {
+      SharedResourceSynchronizer synchronizer = instantiateSynchronizer(instance);
+      if (instance.getStatus() == Status.Start) {
+        startSynchronizer(synchronizer);
+      } else if (instance.getStatus() == Status.NextStart) {
+        // do not start synchronizer yet, but mark it for next start
+        instance.setStatus(Status.Start);
+        sharedResourceSynchronizerStorage.storeInstance(instance);
+      }
+    }
+  }
+
+
+  private void startSynchronizer(SharedResourceSynchronizer synchronizer) {
+    try {
+      synchronizer.start();
+    } catch (Exception e) {
+      throw new RuntimeException(String.format("Could not start SharedResourceSynchronizer \"%s\": %s",
+                                               synchronizer.getInstanceDescription(), e.getMessage()),
+                                 e);
+    }
   }
 
 
   private void configureSRTypes() {
+  }
+
+
+  public SharedResourceSynchronizer createSharedResourceSynchronizer(String typeName, String instanceName, List<String> configuration,
+                                                                     Status status) {
+    SharedResourceSynchronizerInstance instance = new SharedResourceSynchronizerInstance();
+    instance.setInstanceName(instanceName);
+    instance.setTypeName(typeName);
+    instance.setConfiguration(configuration);
+    instance.setStatus(status);
+
+    SharedResourceSynchronizer synchronizer = instantiateSynchronizer(instance);
+
+    if (status == Status.NextStart) {
+      instance.setStatus(Status.Start);
+    }
+    sharedResourceSynchronizerStorage.storeInstance(instance);
+
+    if (status.equals(Status.Start)) {
+      startSynchronizer(synchronizer);
+    }
+
+    return synchronizer;
   }
 
 
