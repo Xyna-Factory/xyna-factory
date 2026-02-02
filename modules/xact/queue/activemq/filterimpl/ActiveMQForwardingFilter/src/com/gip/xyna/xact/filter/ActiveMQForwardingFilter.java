@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import xact.queue.MessageProperties;
 import xact.queue.Property;
 import xact.queue.QueueMessage;
 
-import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.exceptions.XynaException;
@@ -42,20 +41,14 @@ import javax.jms.Message;
 import javax.jms.TextMessage;
 
 import org.apache.log4j.Logger;
-import com.gip.xyna.utils.exceptions.XynaException;
-import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
-import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
 import com.gip.xyna.xdev.xfractmod.xmdm.EventListener;
 
 public class ActiveMQForwardingFilter extends ConnectionFilter<ActiveMQTriggerConnection> {
 
-  private static final XynaPropertyBoolean useLegacyOrdertype 
-    = new XynaPropertyBoolean("xact.activemq.filter.forwarding.useLegacyOrdertype", false)
-      .setDefaultDocumentation(DocumentationLanguage.EN,
-                               "User ordertypename with external queue name and prefix xact.activemq.filter.forwarding.");
+  private static final long serialVersionUID = 1L;
+
 
   private static Logger logger = CentralFactoryLogging.getLogger(ActiveMQForwardingFilter.class);
-  private static String LEGACY_ORDERTYPE_PREFIX = "xact.activemq.filter.forwarding.";
   private static String ORDERTYPE_PREFIX = "xact.activemq.filter.forwarding.ProcessActiveMQMessage.queue=";
 
   /**
@@ -111,15 +104,8 @@ public class ActiveMQForwardingFilter extends ConnectionFilter<ActiveMQTriggerCo
       messageProperties.setProperties( getProperties(tc.getMessage()) );
       queueMessage.setMessageProperties(messageProperties);
       
-      String orderTypeToBeStarted = "";
-      if (useLegacyOrdertype.get()) {
-        String queueNameStr = tc.getExternalQueueName();
-        String adjustedQueueName = queueNameStr.substring(0, 1).toUpperCase() + queueNameStr.substring(1);
-        orderTypeToBeStarted = LEGACY_ORDERTYPE_PREFIX + adjustedQueueName;
-      } else {
-        String queueNameStr = tc.getXynaQueueMgmtQueueName();
-        orderTypeToBeStarted = ORDERTYPE_PREFIX + queueNameStr;
-      }
+      String queueNameStr = tc.getXynaQueueMgmtQueueName();
+      String orderTypeToBeStarted = ORDERTYPE_PREFIX + queueNameStr;
 
       if (logger.isDebugEnabled()) {
         logger.debug("Going to start Order Type " + orderTypeToBeStarted);
@@ -136,7 +122,7 @@ public class ActiveMQForwardingFilter extends ConnectionFilter<ActiveMQTriggerCo
       throw new XynaException("Error in Filter", e);
     }
   }
-    
+
     private List<Property> getProperties(Message message) throws JMSException {
       Enumeration<?> enums = message.getPropertyNames();
       if( enums == null || ! enums.hasMoreElements() ) {
@@ -183,6 +169,7 @@ public class ActiveMQForwardingFilter extends ConnectionFilter<ActiveMQTriggerCo
    * Called once for each filter instance when it is deployed and again on each classloader change (e.g. when changing corresponding implementation jars).
    * @param triggerInstance trigger instance this filter instance is registered to
    */
+  @SuppressWarnings("rawtypes")
   public void onDeployment(EventListener triggerInstance) {
     super.onDeployment(triggerInstance);
   }
@@ -191,6 +178,7 @@ public class ActiveMQForwardingFilter extends ConnectionFilter<ActiveMQTriggerCo
    * Called once for each filter instance when it is undeployed and again on each classloader change (e.g. when changing corresponding implementation jars).
    * @param triggerInstance trigger instance this filter instance is registered to
    */
+  @SuppressWarnings("rawtypes")
   public void onUndeployment(EventListener triggerInstance) {
     super.onUndeployment(triggerInstance);
   }

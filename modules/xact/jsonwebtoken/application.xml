@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="JSONWebToken" factoryVersion="" versionName="1.0.0" xmlVersion="1.1">
+<Application applicationName="JSONWebToken" factoryVersion="" versionName="1.0.1" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Tools um JSON Web Tokens zu erzeugen, zu parsen und zu bearbeiten</Description>
     <Description Lang="EN">Tools for creating, parsing and working with JSON Web Tokens</Description>
