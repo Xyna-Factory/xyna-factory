@@ -306,9 +306,9 @@ public class TriggerProcessor implements WorkspaceContentProcessor<Trigger> {
     if (files != null) {
       for (File file : files) {
         Path path = Paths.get(file.getParent());
-        if (path.getNameCount() > 3) {
-          // remove prefix "../revision/revision_REV>/"
-          Path resultPath = path.subpath(3, path.getNameCount() - 1);
+        if (path.getNameCount() > 4) {
+          // remove prefix "../revision/revision_REV>/trigger"
+          Path resultPath = path.subpath(4, path.getNameCount());
           resultList.add((new File(resultPath.toString(), file.getName())).getPath());
         } else {
           resultList.add(file.getPath());
@@ -334,12 +334,17 @@ public class TriggerProcessor implements WorkspaceContentProcessor<Trigger> {
 
     StringSerializableList<String> ssl;
     ssl = StringSerializableList.autoSeparator(String.class, ":|/;\\@-_.+#=[]?§$%&!", ':');
-    String[] jarFiles = ssl.deserializeFromString(item.getJarfiles()).toArray(new String[]{});
+    String[] jarFiles = ssl.deserializeFromString(item.getJarfiles()).toArray(new String[]{});    
     ssl = StringSerializableList.autoSeparator(String.class, ":|/;\\@-_.+#=[]?§$%&!", ':');
     String[] sharedLibs = ssl.deserializeFromString(item.getSharedlibs()).toArray(new String[]{});
     if (jarFiles.length > 0 && item.getReferences() == null) {
       throw new RuntimeException("No references found (trigger: " + item.getTriggerName() + ")");
     }
+
+    for (int i=0; i<jarFiles.length; i++) {
+      jarFiles[i] = Path.of(jarFiles[i]).getFileName().toFile().getName();
+    }
+
     File[] jarFilesArray = new File[jarFiles.length];
     int idx = 0;
     List<Reference> references = new ArrayList<>(item.getReferences());
