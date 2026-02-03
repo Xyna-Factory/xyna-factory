@@ -17,5 +17,5 @@
 -->
 <XynaCommandLineCommand>
   <CommandDefinition Name="startsharedresourcesynchronizerinstance" Groups="Shared Resource Management" Description="Start a shared resource synchronizer instance."/>
-  <Argument Name="instanceName" Description="The name of the shared resource synchronizer insatnce." />
+  <Argument Name="instanceName" Description="The name of the shared resource synchronizer instance." />
 </XynaCommandLineCommand>
