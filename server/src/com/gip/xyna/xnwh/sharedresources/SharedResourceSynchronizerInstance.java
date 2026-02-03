@@ -19,10 +19,50 @@ package com.gip.xyna.xnwh.sharedresources;
 
 
 
+import java.util.List;
+
+
+
 public class SharedResourceSynchronizerInstance {
+
+  public enum Status {
+
+    Stop("Stop"), Start("Start"), NextStart("NextStart");
+
+
+    private final String value;
+
+
+    Status(String value) {
+      this.value = value;
+    }
+
+
+    public static Status fromValue(String value) {
+      for (Status status : Status.values()) {
+        if (status.value.equals(value)) {
+          return status;
+        }
+      }
+      throw new IllegalArgumentException("Invalid value: " + value);
+    }
+
+
+    public String getValue() {
+      return value;
+    }
+
+
+    public String toString() {
+      return value;
+    }
+  }
+
 
   private String instanceName;
   private String typeName;
+  private List<String> configuration;
+  private Status status = Status.Stop;
 
 
   public String getInstanceName() {
@@ -42,5 +82,31 @@ public class SharedResourceSynchronizerInstance {
 
   public void setTypeName(String typeName) {
     this.typeName = typeName;
+  }
+
+
+  public List<String> getConfiguration() {
+    return configuration;
+  }
+
+
+  public void setConfiguration(List<String> configuration) {
+    if (configuration == null) {
+      throw new IllegalArgumentException("Configuration cannot be null");
+    }
+    this.configuration = configuration;
+  }
+
+
+  public Status getStatus() {
+    return status;
+  }
+
+
+  public void setStatus(Status status) {
+    if (status == null) {
+      throw new IllegalArgumentException("Status cannot be null");
+    }
+    this.status = status;
   }
 }
