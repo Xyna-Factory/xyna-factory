@@ -334,7 +334,7 @@ public class TriggerProcessor implements WorkspaceContentProcessor<Trigger> {
 
     StringSerializableList<String> ssl;
     ssl = StringSerializableList.autoSeparator(String.class, ":|/;\\@-_.+#=[]?§$%&!", ':');
-    String[] jarFiles = ssl.deserializeFromString(item.getJarfiles()).toArray(new String[]{});    
+    String[] jarFiles = ssl.deserializeFromString(item.getJarfiles()).toArray(new String[]{});
     ssl = StringSerializableList.autoSeparator(String.class, ":|/;\\@-_.+#=[]?§$%&!", ':');
     String[] sharedLibs = ssl.deserializeFromString(item.getSharedlibs()).toArray(new String[]{});
     if (jarFiles.length > 0 && item.getReferences() == null) {
