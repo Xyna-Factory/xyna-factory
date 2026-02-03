@@ -41,6 +41,7 @@ public class OasImportHistoryStorable extends Storable<OasImportHistoryStorable>
       result.importDate = rs.getString(COL_IMPORT_DATE);
       result.fileName = rs.getString(COL_FILE_NAME);
       result.importStatus = rs.getString(COL_IMPORT_STATUS);
+      result.importRtc = rs.getString(COL_IMPORT_RTC);
       return result;
     }
   }
@@ -74,6 +75,7 @@ public class OasImportHistoryStorable extends Storable<OasImportHistoryStorable>
   public static final String COL_SPECIFICATION_FILE = "specificationFile";
   public static final String COL_IMPORT_STATUS = "importStatus";
   public static final String COL_ERROR_MESSAGE = "errorMessage";
+  public static final String COL_IMPORT_RTC = "importRtc";
   
   
   @Column(name = COL_UNIQUE_ID)
@@ -96,6 +98,9 @@ public class OasImportHistoryStorable extends Storable<OasImportHistoryStorable>
   
   @Column(name = COL_ERROR_MESSAGE, type = ColumnType.BLOBBED_JAVAOBJECT)
   private String errorMessage;
+  
+  @Column(name = COL_IMPORT_RTC)
+  private String importRtc;
 
   
   @Override
@@ -129,6 +134,7 @@ public class OasImportHistoryStorable extends Storable<OasImportHistoryStorable>
     this.specificationFile = cast.specificationFile;
     this.importStatus = cast.importStatus;
     this.errorMessage = cast.errorMessage;
+    this.importRtc = cast.importRtc;
   }
   
   
@@ -201,4 +207,13 @@ public class OasImportHistoryStorable extends Storable<OasImportHistoryStorable>
     this.errorMessage = errorMessage;
   }
 
+
+  public String getIMportRtc() {
+    return importRtc;
+  }
+
+  
+  public void setImportRtc(String importRtc) {
+    this.importRtc = importRtc;
+  }
 }

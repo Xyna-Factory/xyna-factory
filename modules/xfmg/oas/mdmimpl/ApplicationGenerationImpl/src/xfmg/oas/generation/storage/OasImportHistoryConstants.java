@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,5 +25,6 @@ public class OasImportHistoryConstants {
   public static final String PATH_TYPE = "type";
   public static final String PATH_DATE = "date0";
   public static final String PATH_IMPORTSTATUS = "importStatus";
+  public static final String PATH_IMPORT_RTC = "importRtc";
   
 }
