@@ -695,10 +695,6 @@ public class XynaOrder implements Serializable {
         rootRevisionTL.remove();
       }
     }
-    
-    if(responseListener == null && logger.isWarnEnabled()) {
-      logger.warn("ResponseListener of " + this + " is null after deserialization.", new RuntimeException());
-    }
   }
 
 
