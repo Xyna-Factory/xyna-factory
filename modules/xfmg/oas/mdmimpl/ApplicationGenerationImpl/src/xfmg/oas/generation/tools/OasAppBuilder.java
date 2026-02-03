@@ -49,6 +49,7 @@ import com.gip.xyna.xdev.xlibdev.supp4eclipse.Support4Eclipse;
 import com.gip.xyna.xfmg.xfctrl.XynaFactoryControl;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 import com.gip.xyna.xfmg.xfctrl.filemgmt.FileManagement;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement.PathType;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
@@ -83,16 +84,17 @@ public class OasAppBuilder {
     statusHandler.storeStatusAppBinaryGen();
     separateFiles(target);
     compileFilter(target);
-    String appName = readApplicationXML(target);
+    String appFileName = createAppFileNameFromXml(target);
+    Application app = readApplicationXml(target);
  
     File targetAsFile = new File(target);
-    File unzipedApp = new File("/tmp/" + appName);
+    File unzipedApp = new File("/tmp/" + appFileName);
     files.add(unzipedApp);
     File tmpFile;
     try {
       FileUtils.copyRecursivelyWithFolderStructure(targetAsFile, unzipedApp);
       FileUtils.deleteDirectoryRecursively(targetAsFile);
-      tmpFile = File.createTempFile(appName + "_", ".zip");
+      tmpFile = File.createTempFile(appFileName + "_", ".zip");
       files.add(tmpFile);
     } catch (IOException | Ex_FileAccessException e1) {
       throw new RuntimeException(e1);
@@ -109,10 +111,21 @@ public class OasAppBuilder {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-    return new OASApplicationData(id, files);
+    String appName = removeAppNameSuffix(app.getName(), generator);
+    appName = String.format("%s/%s", appName, app.getVersionName()); 
+    return new OASApplicationData(id, files, appName);
   }
-  
-  
+
+
+  private String removeAppNameSuffix(String appName, String generator) {
+    switch(generator) {
+      case "xmom-data-model" : return appName.substring(0, Math.max(0, appName.length() - "_Data_Model".length()));
+      case "xmom-server" : return appName.substring(0, Math.max(0, appName.length() - "_Provider".length()));
+      case "xmom-client" : return appName.substring(0, Math.max(0, appName.length() - "_Client".length()));
+      default: return appName;
+    }
+  }
+
   public void createOasAppOffline(String generator, String targetDir, String specFile) {
     try {
       Path tmpDir = Files.createTempDirectory("oasmain");
@@ -122,7 +135,7 @@ public class OasAppBuilder {
 
         callGenerator(generator, tmpDirAsString, specFile);
         separateFiles(tmpDirAsString);
-        String appName = readApplicationXML(tmpDirAsString);
+        String appName = createAppFileNameFromXml(tmpDirAsString);
 
         File targetAppFile = new File(targetDir, appName + ".zip");
         try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(targetAppFile))) {
@@ -173,27 +186,32 @@ public class OasAppBuilder {
   }
   
   
-  private String readApplicationXML(String target) {
+  private Application readApplicationXml(String target) {
     Path applicationXML = Path.of(target, "application.xml");
-    String appname = "app";
+    String appName = "app";
+    String versionName = "0.0.0";
     if (!applicationXML.toFile().exists()) {
-      return appname;
+      return new Application(appName, versionName);
     }
     try {
       Document applicationDocument = XMLUtils.parseString(Files.readString(applicationXML));
       if (applicationDocument.getDocumentElement().hasAttribute("applicationName")) {
-        appname = applicationDocument.getDocumentElement().getAttribute("applicationName");
+        appName = applicationDocument.getDocumentElement().getAttribute("applicationName");
       }
       if (applicationDocument.getDocumentElement().hasAttribute("versionName")) {
-        appname = appname + "_" + applicationDocument.getDocumentElement().getAttribute("versionName");
-        
+        versionName = applicationDocument.getDocumentElement().getAttribute("versionName");
       }
     } catch (IOException | XPRC_XmlParsingException e) {
       throw new RuntimeException(e);
     }
-    return appname;
+    return new Application(appName, versionName);
   }
 
+
+  private String createAppFileNameFromXml(String target) {
+    Application app = readApplicationXml(target);
+    return String.format("%s_%s", app.getName(), app.getVersionName());
+  }
 
   private FilenameFilter toSplitFilter = new FilenameFilter() {
 
