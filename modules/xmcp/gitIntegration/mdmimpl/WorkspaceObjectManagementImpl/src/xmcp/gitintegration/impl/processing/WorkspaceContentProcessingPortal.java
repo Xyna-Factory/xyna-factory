@@ -62,8 +62,9 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
     result = new HashMap<>();
     //register WorkspaceContentProcessors here: addToMap(result, new <WorkspaceContentType>Processor());
     addToMap(result, new RuntimeContextDependencyProcessor());
-    addToMap(result, new OrderTypeProcessor());
+    addToMap(result, new SharedLibraryProcessor());
     addToMap(result, new DatatypeProcessor());
+    addToMap(result, new OrderTypeProcessor());
     addToMap(result, new OrderInputSourceProcessor());
     addToMap(result, new TriggerProcessor());
     addToMap(result, new TriggerInstanceProcessor());
@@ -71,7 +72,6 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
     addToMap(result, new FilterInstanceProcessor());
     addToMap(result, new XMOMStorableProcessor());
     addToMap(result, new ApplicationDefinitionProcessor());
-    addToMap(result, new SharedLibraryProcessor());
     return result;
   }
 
