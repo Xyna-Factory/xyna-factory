@@ -161,6 +161,7 @@ public class VetoInformationStorable extends ClusteredStorable<VetoInformationSt
       vis.usingOrdertype = rs.getString(COL_USING_ORDERTYPE);
       vis.documentation = rs.getString(COL_DOCUMENTATION);
       vis.created = rs.getLong(COL_CREATED);
+      vis.created = vis.created == 0 ? null : vis.created;
       vis.setBinding(rs.getInt( COL_BINDING ) );
       return vis;
     }
@@ -193,6 +194,7 @@ public class VetoInformationStorable extends ClusteredStorable<VetoInformationSt
       }
       if (selectedCols.contains(VetoColumn.CREATED)) {
         veto.created = rs.getLong(VetoColumn.CREATED.getColumnName());
+        veto.created = veto.created == 0 ? null : veto.created;
       }
       return veto;
     }
