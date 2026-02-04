@@ -45,6 +45,7 @@ public class SearchOasImportHistory implements WarehouseRetryExecutableNoExcepti
     OasImportHistoryStorable.COL_FILE_NAME + ", " +
     OasImportHistoryStorable.COL_IMPORT_TYPE + ", " +
     OasImportHistoryStorable.COL_IMPORT_DATE + ", " +
+    OasImportHistoryStorable.COL_IMPORT_RTC + ", " +
     OasImportHistoryStorable.COL_IMPORT_STATUS +
     " FROM " + OasImportHistoryStorable.TABLE_NAME;
   private static final OasImportHistoryAdapter _adapter = new OasImportHistoryAdapter();
@@ -57,6 +58,8 @@ public class SearchOasImportHistory implements WarehouseRetryExecutableNoExcepti
                                   sqlColumnName(OasImportHistoryStorable.COL_IMPORT_TYPE).build(),
      FilterColumnConfig.builder().xmomPath(OasImportHistoryConstants.PATH_DATE).
                                   sqlColumnName(OasImportHistoryStorable.COL_IMPORT_DATE).build(),
+     FilterColumnConfig.builder().xmomPath(OasImportHistoryConstants.PATH_IMPORT_RTC).
+                                  sqlColumnName(OasImportHistoryStorable.COL_IMPORT_RTC).build(),
      FilterColumnConfig.builder().xmomPath(OasImportHistoryConstants.PATH_IMPORTSTATUS).
                                   sqlColumnName(OasImportHistoryStorable.COL_IMPORT_STATUS).build()));
   
@@ -82,8 +85,8 @@ public class SearchOasImportHistory implements WarehouseRetryExecutableNoExcepti
     QueryGenerator qg = ODSImpl.getInstance().getQueryGenerator(con.getConnectionType(), OasImportHistoryStorable.TABLE_NAME);
     TableFilter filter = _filterBuilder.build(_filterColumnInputList, qg.escape);
     String sql = SELECT_BASE + filter.getWhereClause();
-    PreparedQuery<OasImportHistoryStorable> query = OasImportHistoryStorage.getQueryCache().getQueryFromCache(sql, con,
-                                                      OasImportHistoryStorable.getOasImportHistoryMultiLineReader());
+    PreparedQuery<OasImportHistoryStorable> query = OasImportHistoryStorage.getQueryCache()
+        .getQueryFromCache(sql, con, OasImportHistoryStorable.getOasImportHistoryMultiLineReader(), OasImportHistoryStorable.TABLE_NAME);
     List<OasImportHistoryStorable> result = con.query(query, filter.buildParameter(), _queryLength);
     return result.stream().map(x -> _adapter.adapt(x)).collect(Collectors.toList());
   }

@@ -1,6 +1,6 @@
-/*
+<!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2026 Xyna GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- */
-
-package xfmg.oas.generation.storage;
-
-
-public class OasImportHistoryConstants {
-
-  public static final String PATH_FILENAME = "fileName";
-  public static final String PATH_TYPE = "type";
-  public static final String PATH_DATE = "date0";
-  public static final String PATH_IMPORTSTATUS = "importStatus";
-  public static final String PATH_IMPORT_RTC = "importRtc";
-  
-}
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="listsharedresourcesynchronizertypes" Groups="Shared Resource Management" Description="Lists available shared resource synchronizer types with their configuration parameters."/>
+</XynaCommandLineCommand>
