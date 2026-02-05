@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 import com.gip.xyna.FileUtils;
@@ -53,7 +52,8 @@ public class SharedResourceManagement extends Section {
 
   public static final String DEFAULT_NAME = "SharedResourceManagement";
   private final SharedResourcePortal sharedResourcePortal;
-  private final SharedResourceSynchronizerStorage sharedResourceSynchronizerStorage;
+  private final SharedResourceSynchronizerInstanceStorage sharedResourceSynchronizerStorage;
+  private final SharedResourceTypeStorage sharedResourceTypeStorage;
 
   /**
    * maps from synchronizerTypeName to factory
@@ -78,10 +78,11 @@ public class SharedResourceManagement extends Section {
   public SharedResourceManagement() throws XynaException {
     super();
     sharedResourcePortal = new SharedResourcePortal(() -> new FactorySharedResourceRequestRecorder());
-    sharedResourceSynchronizerStorage = new SharedResourceSynchronizerStorage();
+    sharedResourceSynchronizerStorage = new SharedResourceSynchronizerInstanceStorage();
+    sharedResourceTypeStorage = new SharedResourceTypeStorage();
     synchronizerFactories = new HashMap<>();
     synchronizerInstances = new HashMap<>();
-    sharedResourceToSynchronizerMap = new ConcurrentHashMap<>();
+    sharedResourceToSynchronizerMap = new HashMap<>();
     synchronizerFactoryClassloaders = new HashSet<>();
   }
 
@@ -109,9 +110,10 @@ public class SharedResourceManagement extends Section {
   protected void shutdown() throws XynaException {
     super.shutdown();
     try {
-      SharedResourceSynchronizerStorage.shutdown();
+      SharedResourceSynchronizerInstanceStorage.shutdown();
+      SharedResourceTypeStorage.shutdown();
     } catch (PersistenceLayerException e) {
-      throw new RuntimeException(String.format("Could not shutdown SharedResourceSynchronizerStorage: %s", e.getMessage()), e);
+      throw new RuntimeException(String.format("Could not shutdown SharedResourceStorage: %s", e.getMessage()), e);
     }
     for (SharedResourceSynchronizerFactoryClassLoader loader : synchronizerFactoryClassloaders) {
       try {
@@ -131,6 +133,8 @@ public class SharedResourceManagement extends Section {
    * SharedResourceSynchronizerFactory implementation class.
    */
   private void loadSynchronizers() {
+    this.logger.info("Initializing SharedResourceManagement...");
+
     Path rootDir = Paths.get(Constants.SHAREDRESOURCESYNCHRONIZERS_BASEDIR);
     if (!Files.isDirectory(rootDir)) {
       this.logger.info(String.format("Directory %s not found. No SharedResourceSynchronizers will be loaded.", rootDir));
@@ -232,7 +236,7 @@ public class SharedResourceManagement extends Section {
 
   private void instantiateSynchronizers() {
     try {
-      SharedResourceSynchronizerStorage.init();
+      SharedResourceSynchronizerInstanceStorage.init();
     } catch (PersistenceLayerException e) {
       throw new RuntimeException(String.format("Could not initialize SharedResourceSynchronizerStorage: %s", e.getMessage()), e);
     }
@@ -264,6 +268,21 @@ public class SharedResourceManagement extends Section {
 
 
   private void configureSRTypes() {
+    try {
+      SharedResourceTypeStorage.init();
+    } catch (PersistenceLayerException e) {
+      throw new RuntimeException(String.format("Could not initialize SharedResourceTypeStorage: %s", e.getMessage()), e);
+    }
+
+    List<SharedResourceTypeStorable> types = sharedResourceTypeStorage.listAllTypes();
+
+    for (SharedResourceTypeStorable type : types) {
+      sharedResourceToSynchronizerMap.put(type.getSharedResourceTypeIdentifier(), type.getSynchronizerInstanceIdentifier());
+      if (type.getSynchronizerInstanceIdentifier() != null) {
+        SharedResourceSynchronizer synchronizer = synchronizerInstances.get(type.getSynchronizerInstanceIdentifier());
+        sharedResourcePortal.configureSharedResource(type.getSharedResourceTypeIdentifier(), synchronizer);
+      }
+    }
   }
 
 
@@ -305,7 +324,10 @@ public class SharedResourceManagement extends Section {
    * of listSharedResourceTypes.
    */
   public void addSharedResource(String type) {
-    sharedResourceToSynchronizerMap.putIfAbsent(type, null);
+    if (!sharedResourceToSynchronizerMap.containsKey(type)) {
+      sharedResourceToSynchronizerMap.put(type, null);
+      sharedResourceTypeStorage.storeType(type, null);
+    }
   }
 
 
@@ -337,19 +359,29 @@ public class SharedResourceManagement extends Section {
 
 
   /**
+   * returns true if the given shared resource type has a synchronizer configured, false otherwise
+   */
+  public boolean hasConfiguredSynchronizer(String resourceType) {
+    return sharedResourceToSynchronizerMap.get(resourceType) != null;
+  }
+
+
+  /**
    * Sets the configuration of the given resource. If synchronizerInstanceIdentifier is null, the
    * resource configuration is deleted.
    */
   public void configureSharedResourceType(String resource, String synchronizerInstanceIdentifier) {
     if (synchronizerInstanceIdentifier == null) {
       sharedResourcePortal.configureSharedResource(resource, null);
-      return;
+    } else {
+      SharedResourceSynchronizer synchronizer = synchronizerInstances.get(synchronizerInstanceIdentifier);
+      if (synchronizer == null) {
+        throw new IllegalArgumentException("No SharedResourceSynchronizer '" + synchronizerInstanceIdentifier + "' configured");
+      }
+      sharedResourcePortal.configureSharedResource(resource, synchronizer);
     }
-    SharedResourceSynchronizer synchronizer = synchronizerInstances.get(synchronizerInstanceIdentifier);
-    if (synchronizer == null) {
-      throw new IllegalArgumentException("No SharedResourceSynchronizer '" + synchronizerInstanceIdentifier + "' configured");
-    }
-    sharedResourcePortal.configureSharedResource(resource, synchronizer);
+    sharedResourceToSynchronizerMap.put(resource, synchronizerInstanceIdentifier);
+    sharedResourceTypeStorage.storeType(resource, synchronizerInstanceIdentifier);
   }
 
 
