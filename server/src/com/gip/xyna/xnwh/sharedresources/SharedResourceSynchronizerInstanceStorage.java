@@ -33,7 +33,7 @@ import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutor.WarehouseRet
 
 
 
-public class SharedResourceSynchronizerStorage {
+public class SharedResourceSynchronizerInstanceStorage {
 
   public static void init() throws PersistenceLayerException {
     ODSImpl ods = ODSImpl.getInstance();
