@@ -17,6 +17,15 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Code" TypeName="Code" TypePath="xact.radius" Version="1.8">
   <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>
+      <![CDATA[The code that determines the RADIUS packet type. The values are:
+1 for Access-Request
+2 for Access-Accept
+3 for Access-Reject
+11 for Access-Challenge
+]]>
+    </Documentation>
     <IsXynaComponent>true</IsXynaComponent>
   </Meta>
   <Data Label="value" VariableName="value">
