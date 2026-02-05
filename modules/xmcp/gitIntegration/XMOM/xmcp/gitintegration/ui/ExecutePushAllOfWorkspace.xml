@@ -63,58 +63,73 @@
       </Output>
       <Mapping>%1%=%0%.fileChangeList</Mapping>
     </Mappings>
-    <Foreach ID="977">
+    <Choice ID="1147" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="564"/>
-      <Target RefID="979"/>
-      <InputList RefID="564">
-        <Data ID="978" Label="Selected File Change" ReferenceName="SelectedFileChange" ReferencePath="xmcp.gitintegration.repository" VariableName="selectedFileChange978"/>
-      </InputList>
-      <OutputList RefID="979">
-        <Data ID="952" Label="File" ReferenceName="File" ReferencePath="base" VariableName="file952">
-          <Source RefID="729"/>
+      <Input>
+        <Data ID="1220" IsList="true" Label="Selected File Change" ReferenceName="SelectedFileChange" ReferencePath="xmcp.gitintegration.repository" VariableName="selectedFileChange1220">
+          <Source RefID="1147"/>
         </Data>
-      </OutputList>
-      <Mappings ID="729" Label="Mapping">
-        <Input>
-          <Data ID="838" Label="Selected File Change" ReferenceName="SelectedFileChange" ReferencePath="xmcp.gitintegration.repository" VariableName="selectedFileChange838">
-            <Source RefID="729"/>
-          </Data>
-          <Source RefID="978"/>
-        </Input>
-        <Output>
-          <Data ID="746" Label="File" ReferenceName="File" ReferencePath="base" VariableName="file746">
-            <Source RefID="729"/>
-          </Data>
-          <Target RefID="952"/>
-        </Output>
-        <Mapping>%1%=%0%.fileChange.file</Mapping>
-      </Mappings>
-    </Foreach>
-    <Function ID="128" Label="Push">
-      <Source RefID="129"/>
-      <Source RefID="1126"/>
-      <Source RefID="1105"/>
-      <Source RefID="979"/>
-      <Target RefID="129"/>
-      <Target RefID="131"/>
-      <Invoke Operation="push" ServiceID="129">
-        <Source RefID="1126"/>
-        <Source RefID="1105"/>
-        <Source RefID="979"/>
-      </Invoke>
-      <Receive ServiceID="129">
-        <Target RefID="131"/>
-      </Receive>
-    </Function>
-    <Data ID="131" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text131">
-      <Source RefID="128"/>
-    </Data>
+        <Source RefID="564"/>
+      </Input>
+      <Case ID="1148" Label="true" Premise="length(%0%)&gt;&quot;0&quot;">
+        <Foreach ID="977">
+          <Source RefID="564"/>
+          <Target RefID="1170"/>
+          <InputList RefID="564">
+            <Data ID="978" Label="Selected File Change" ReferenceName="SelectedFileChange" ReferencePath="xmcp.gitintegration.repository" VariableName="selectedFileChange978"/>
+          </InputList>
+          <OutputList RefID="1170">
+            <Data ID="952" Label="File" ReferenceName="File" ReferencePath="base" VariableName="file952">
+              <Source RefID="729"/>
+            </Data>
+          </OutputList>
+          <Mappings ID="729" Label="Mapping">
+            <Input>
+              <Data ID="838" Label="Selected File Change" ReferenceName="SelectedFileChange" ReferencePath="xmcp.gitintegration.repository" VariableName="selectedFileChange838">
+                <Source RefID="729"/>
+              </Data>
+              <Source RefID="978"/>
+            </Input>
+            <Output>
+              <Data ID="746" Label="File" ReferenceName="File" ReferencePath="base" VariableName="file746">
+                <Source RefID="729"/>
+              </Data>
+              <Target RefID="952"/>
+            </Output>
+            <Mapping>%1%=%0%.fileChange.file</Mapping>
+          </Mappings>
+        </Foreach>
+        <Function ID="128" Label="Push">
+          <Source RefID="129"/>
+          <Source RefID="1126"/>
+          <Source RefID="1105"/>
+          <Source RefID="1170"/>
+          <Target RefID="129"/>
+          <Target RefID="1187"/>
+          <Invoke Operation="push" ServiceID="129">
+            <Source RefID="1126"/>
+            <Source RefID="1105"/>
+            <Source RefID="1170"/>
+          </Invoke>
+          <Receive ServiceID="129">
+            <Target RefID="1187"/>
+          </Receive>
+        </Function>
+        <Assign ID="1151"/>
+        <Data ID="1170" IsList="true" Label="File" ReferenceName="File" ReferencePath="base" VariableName="file1170">
+          <Source RefID="977"/>
+          <Target RefID="979"/>
+        </Data>
+        <Data ID="1187" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text1187">
+          <Source RefID="128"/>
+        </Data>
+      </Case>
+      <Case ID="1149" Label="false">
+        <Assign ID="1153"/>
+      </Case>
+    </Choice>
     <Data ID="564" IsList="true" Label="Selected File Change" ReferenceName="SelectedFileChange" ReferencePath="xmcp.gitintegration.repository" VariableName="selectedFileChange564">
       <Source RefID="527"/>
-    </Data>
-    <Data ID="979" IsList="true" Label="File" ReferenceName="File" ReferencePath="base" VariableName="file979">
-      <Source RefID="977"/>
-      <Target RefID="979"/>
     </Data>
     <Data ID="1105" Label="Message - Text" ReferenceName="Text" ReferencePath="base" VariableName="text1105"/>
     <Data ID="1126" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository1126"/>
