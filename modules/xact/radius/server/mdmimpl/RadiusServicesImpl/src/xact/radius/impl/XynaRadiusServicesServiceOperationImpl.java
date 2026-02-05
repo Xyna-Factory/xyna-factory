@@ -56,7 +56,7 @@ public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymen
       .setDefaultDocumentation(DocumentationLanguage.EN, "Maximum validity period for users with a one-time password");
   private final static XynaPropertyString sharedSecretXynaProp = new XynaPropertyString(SHAREDSECRETPROPERTY, "sharedSecret", false)
       .setDefaultDocumentation(DocumentationLanguage.DE,
-                               "Standardwert fï¿½r den Radius Server. Wird verwendet, wenn kein benutzerspezifisches shared secret existiert.")
+                               "Standardwert für den Radius Server. Wird verwendet, wenn kein benutzerspezifisches shared secret existiert.")
       .setDefaultDocumentation(DocumentationLanguage.EN,
                                "Default value for the radius server. Used when no user-specific shared secret exists.");
 
