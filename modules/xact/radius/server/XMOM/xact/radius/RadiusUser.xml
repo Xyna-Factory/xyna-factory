@@ -75,5 +75,9 @@
       <Documentation>Used to indicate a temporary user with an one-time password.</Documentation>
     </Meta>
   </Data>
-  <Data IsList="true" Label="Vendor Specific User Info" ReferenceName="VendorSpecificUserInfo" ReferencePath="xact.radius" VariableName="vendorSpecificUserInfo"/>
+  <Data IsList="true" Label="Vendor Specific User Info" ReferenceName="VendorSpecificUserInfo" ReferencePath="xact.radius" VariableName="vendorSpecificUserInfo">
+    <Meta>
+      <Documentation>Additional vendor specific user information</Documentation>
+    </Meta>
+  </Data>
 </DataType>

@@ -25,7 +25,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
-import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
@@ -33,7 +32,6 @@ import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyDuration;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyString;
 
-import base.Text;
 import xact.radius.Code;
 import xact.radius.Node;
 import xact.radius.RadiusUser;
@@ -53,12 +51,12 @@ public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymen
   private static final String TIMEOUTPROPERTY = "xact.radius.passwordExpirationTime";
   private static final String SHAREDSECRETPROPERTY = "xact.radius.sharedSecret";
 
-  private static final XynaPropertyDuration timeoutXynaProp = new XynaPropertyDuration("xact.radius.passwordExpirationTime", "900 s")
+  private static final XynaPropertyDuration timeoutXynaProp = new XynaPropertyDuration(TIMEOUTPROPERTY, "900 s")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Maximale Gültigkeitsdauer für Benutzer mit Einmalpasswort")
       .setDefaultDocumentation(DocumentationLanguage.EN, "Maximum validity period for users with a one-time password");
   private final static XynaPropertyString sharedSecretXynaProp = new XynaPropertyString(SHAREDSECRETPROPERTY, "sharedSecret", false)
       .setDefaultDocumentation(DocumentationLanguage.DE,
-                               "Standardwert für den Radius Server. Wird verwendet, wenn kein benutzerspezifisches shared secret existiert.")
+                               "Standardwert fï¿½r den Radius Server. Wird verwendet, wenn kein benutzerspezifisches shared secret existiert.")
       .setDefaultDocumentation(DocumentationLanguage.EN,
                                "Default value for the radius server. Used when no user-specific shared secret exists.");
 
@@ -101,27 +99,16 @@ public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymen
   }
 
 
-  public Text checkCredentialsExpired(RadiusUser radiusUser) {
-    Long timeout = getTimeout();
-
-    // permanent user or one-time password not expired
-    if (radiusUser.getTimestamp() == 0L || (System.currentTimeMillis() - radiusUser.getTimestamp()) <= timeout) {
-      return new Text("false");
-    }
-    return new Text("true"); // password expired
-  }
-
-
-  public Code validateCredentials(RadiusUser radiusUser, RequestAuthenticator requestAuthenticator) {
-    String radiusUserpassword = radiusUser.getPassword();
-    String sharedsecret = radiusUser.getSharedSecret();
-    if (sharedsecret == null || sharedsecret.length() == 0) {
-      sharedsecret = sharedSecretXynaProp.get();
+  public Code validateCredentials(RadiusUser inputUser, RadiusUser databaseUser, RequestAuthenticator requestAuthenticator) {
+    String databaseUserPassword = databaseUser.getPassword();
+    String sharedSecret = databaseUser.getSharedSecret();
+    if (sharedSecret == null || sharedSecret.length() == 0) {
+      sharedSecret = sharedSecretXynaProp.get();  // use default shared secret from property
     }
 
-    String passwordindatabase = encode(sharedsecret, requestAuthenticator.getValue(), radiusUserpassword);
+    String passwordindatabase = encode(sharedSecret, requestAuthenticator.getValue(), databaseUserPassword);
 
-    if (!passwordindatabase.equals(radiusUserpassword)) {
+    if (!passwordindatabase.equals(inputUser.getPassword())) {
       if (logger.isDebugEnabled()) {
         logger.debug("RADIUS Authentication failed, because password does not match. Sending Reject!");
       }
@@ -145,23 +132,6 @@ public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymen
     }
 
     return radUser;
-  }
-
-
-  private static long getTimeout() {
-    String expirationtime = XynaFactory.getPortalInstance().getFactoryManagementPortal().getProperty(TIMEOUTPROPERTY);
-    long timeout = 15 * 60000; // 15 minutes default value
-    if (expirationtime == null || expirationtime.length() == 0) {
-      timeout = timeoutXynaProp.getMillis();
-    } else {
-      try {
-        timeout = Long.parseLong(expirationtime);
-      } catch (Exception e) {
-        logger.warn("Property " + TIMEOUTPROPERTY + " not set correctly. Using 15 minutes!");
-      }
-    }
-
-    return timeout;
   }
 
 

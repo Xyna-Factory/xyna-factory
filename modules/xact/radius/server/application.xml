@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="RadiusServer" factoryVersion="" versionName="1.0.2" xmlVersion="1.1">
+--><Application applicationName="RadiusServer" factoryVersion="" versionName="1.2.0" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
@@ -48,6 +48,10 @@
     </Ordertype>
     <Ordertype implicitDependency="true">
       <DestinationKey>xact.radius.AuthenticateRadiusUserAndRemoveExpired</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xact.radius.CheckCredentialsExpired</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -84,12 +88,16 @@
       <FqName>xact.radius.AddRADIUSAttributes</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
-    <XMOMEntry implicitDependency="true">
+    <XMOMEntry implicitDependency="false">
       <FqName>xact.radius.AuthenticateRadiusUser</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
-    <XMOMEntry implicitDependency="true">
+    <XMOMEntry implicitDependency="false">
       <FqName>xact.radius.AuthenticateRadiusUserAndRemoveExpired</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xact.radius.CheckCredentialsExpired</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
@@ -297,13 +305,6 @@
     </XmomStorable>
     <XmomStorable>
       <XmlName>xact.radius.RadiusUser</XmlName>
-      <Path>vendorSpecificUserInfo[].key</Path>
-      <OdsName>vendorspecificuserinfo0</OdsName>
-      <FqPath>vendorSpecificUserInfo[]{xact.radius.VendorSpecificUserInfo}.key</FqPath>
-      <ColumnName>key</ColumnName>
-    </XmomStorable>
-    <XmomStorable>
-      <XmlName>xact.radius.RadiusUser</XmlName>
       <Path>vendorSpecificUserInfo[].name</Path>
       <OdsName>vendorspecificuserinfo0</OdsName>
       <FqPath>vendorSpecificUserInfo[]{xact.radius.VendorSpecificUserInfo}.name</FqPath>
@@ -335,47 +336,6 @@
       <Path>vendorSpecificUserInfo[].value</Path>
       <OdsName>vendorspecificuserinfo0</OdsName>
       <FqPath>vendorSpecificUserInfo[]{xact.radius.VendorSpecificUserInfo}.value</FqPath>
-      <ColumnName>value</ColumnName>
-    </XmomStorable>
-    <XmomStorable>
-      <XmlName>xact.radius.RadiusUser</XmlName>
-      <Path>vendorSpecificUserInfo</Path>
-      <OdsName>vendorspecificuserinfo</OdsName>
-      <FqPath>vendorSpecificUserInfo{xact.radius.VendorSpecificUserInfo}</FqPath>
-    </XmomStorable>
-    <XmomStorable>
-      <XmlName>xact.radius.RadiusUser</XmlName>
-      <Path>vendorSpecificUserInfo.key</Path>
-      <OdsName>vendorspecificuserinfo</OdsName>
-      <FqPath>vendorSpecificUserInfo{xact.radius.VendorSpecificUserInfo}.key</FqPath>
-      <ColumnName>key</ColumnName>
-    </XmomStorable>
-    <XmomStorable>
-      <XmlName>xact.radius.RadiusUser</XmlName>
-      <Path>vendorSpecificUserInfo.parentuid</Path>
-      <OdsName>vendorspecificuserinfo</OdsName>
-      <FqPath>vendorSpecificUserInfo{xact.radius.VendorSpecificUserInfo}.parentuid</FqPath>
-      <ColumnName>parentuid</ColumnName>
-    </XmomStorable>
-    <XmomStorable>
-      <XmlName>xact.radius.RadiusUser</XmlName>
-      <Path>vendorSpecificUserInfo.typename</Path>
-      <OdsName>vendorspecificuserinfo</OdsName>
-      <FqPath>vendorSpecificUserInfo{xact.radius.VendorSpecificUserInfo}.typename</FqPath>
-      <ColumnName>typename</ColumnName>
-    </XmomStorable>
-    <XmomStorable>
-      <XmlName>xact.radius.RadiusUser</XmlName>
-      <Path>vendorSpecificUserInfo.unid</Path>
-      <OdsName>vendorspecificuserinfo</OdsName>
-      <FqPath>vendorSpecificUserInfo{xact.radius.VendorSpecificUserInfo}.unid</FqPath>
-      <ColumnName>unid</ColumnName>
-    </XmomStorable>
-    <XmomStorable>
-      <XmlName>xact.radius.RadiusUser</XmlName>
-      <Path>vendorSpecificUserInfo.value</Path>
-      <OdsName>vendorspecificuserinfo</OdsName>
-      <FqPath>vendorSpecificUserInfo{xact.radius.VendorSpecificUserInfo}.value</FqPath>
       <ColumnName>value</ColumnName>
     </XmomStorable>
   </XmomStorables>

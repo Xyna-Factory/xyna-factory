@@ -27,151 +27,38 @@
       <Data ID="3840" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser3840"/>
     </Output>
     <Throws>
-      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException6777"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException7454"/>
     </Throws>
     <ServiceReference ID="716" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
       <Source RefID="715"/>
       <Target RefID="715"/>
     </ServiceReference>
+    <ServiceReference ID="6869" Label="XynaRadiusServices" ReferenceName="XynaRadiusServices.XynaRadiusServices" ReferencePath="xact.radius">
+      <Source RefID="6868"/>
+      <Target RefID="6868"/>
+    </ServiceReference>
     <ServiceReference ID="6184" Label="Authenticate Radius User And Remove Expired" ReferenceName="AuthenticateRadiusUserAndRemoveExpired" ReferencePath="xact.radius">
       <Source RefID="6183"/>
       <Target RefID="6183"/>
     </ServiceReference>
-    <Mappings ID="262" Label="User from Input Nodes">
-      <Output>
-        <Data ID="271" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser271">
-          <Source RefID="262"/>
-        </Data>
-        <Target RefID="272"/>
-      </Output>
-    </Mappings>
-    <Foreach ID="225">
+    <Function ID="6868" Label="Get Basic User Info from Nodes">
+      <Source RefID="6869"/>
       <Source RefID="26"/>
-      <InputList RefID="26">
-        <Data ID="226" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node226"/>
-      </InputList>
-      <Choice ID="196" TypeName="BaseChoiceTypeFormula" TypePath="server">
-        <Source RefID="226"/>
-        <Meta>
-          <OuterConditionPart>%0%.typeName==?</OuterConditionPart>
-        </Meta>
-        <Input>
-          <Data ID="208" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node208">
-            <Source RefID="196"/>
-          </Data>
-          <Source RefID="226"/>
-        </Input>
-        <Case ID="243" Label="" Premise="%0%.typeName==&quot;USER-NAME&quot;">
-          <Mappings ID="376" Label="Set Node as TypeWithValueNode">
-            <Input>
-              <Data ID="385" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node385">
-                <Source RefID="376"/>
-              </Data>
-              <Source RefID="226">
-                <Meta>
-                  <LinkType>UserConnected</LinkType>
-                </Meta>
-              </Source>
-            </Input>
-            <Output>
-              <Data ID="402" Label="TypeWithValueNode" ReferenceName="TypeWithValueNode" ReferencePath="xact.radius" VariableName="typeWithValueNode402">
-                <Source RefID="376"/>
-              </Data>
-              <Target RefID="403"/>
-            </Output>
-            <Mapping>%1%=%0%</Mapping>
-          </Mappings>
-          <Mappings ID="281" Label="Set Username (assignment to source)">
-            <Input>
-              <Data ID="290" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser290">
-                <Source RefID="281"/>
-              </Data>
-              <Source RefID="272"/>
-            </Input>
-            <Input>
-              <Data ID="444" Label="TypeWithValueNode" ReferenceName="TypeWithValueNode" ReferencePath="xact.radius" VariableName="typeWithValueNode444">
-                <Source RefID="281"/>
-              </Data>
-              <Source RefID="403"/>
-            </Input>
-            <Mapping>%0%.username=replaceall(%1%.value, "\"", "")</Mapping>
-          </Mappings>
-          <Assign ID="245"/>
-        </Case>
-        <Case ID="509" Label="" Premise="%0%.typeName==&quot;USER-PASSWORD&quot;">
-          <Mappings ID="584" Label="Set Node as TypeWithValueNode">
-            <Input>
-              <Data ID="585" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node585"/>
-              <Source RefID="226">
-                <Meta>
-                  <LinkType>UserConnected</LinkType>
-                </Meta>
-              </Source>
-            </Input>
-            <Output>
-              <Data ID="586" Label="TypeWithValueNode" ReferenceName="TypeWithValueNode" ReferencePath="xact.radius" VariableName="typeWithValueNode586"/>
-              <Target RefID="587"/>
-            </Output>
-            <Mapping>%1%=%0%</Mapping>
-          </Mappings>
-          <Mappings ID="596" Label="Set Password (assignment to source)">
-            <Input>
-              <Data ID="597" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser597"/>
-              <Source RefID="272"/>
-            </Input>
-            <Input>
-              <Data ID="598" Label="TypeWithValueNode" ReferenceName="TypeWithValueNode" ReferencePath="xact.radius" VariableName="typeWithValueNode598"/>
-              <Source RefID="587"/>
-            </Input>
-            <Mapping>%0%.username=%1%.value</Mapping>
-          </Mappings>
-          <Assign ID="511"/>
-        </Case>
-        <Case ID="639" Label="" Premise="%0%.typeName==&quot;NAS-Identifier&quot;">
-          <Mappings ID="658" Label="Set Node as TypeWithValueNode">
-            <Input>
-              <Data ID="659" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node659"/>
-              <Source RefID="226">
-                <Meta>
-                  <LinkType>UserConnected</LinkType>
-                </Meta>
-              </Source>
-            </Input>
-            <Output>
-              <Data ID="660" Label="TypeWithValueNode" ReferenceName="TypeWithValueNode" ReferencePath="xact.radius" VariableName="typeWithValueNode660"/>
-              <Target RefID="661"/>
-            </Output>
-            <Mapping>%1%=%0%</Mapping>
-          </Mappings>
-          <Mappings ID="670" Label="Set IP Address (assignment to source)">
-            <Input>
-              <Data ID="671" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser671"/>
-              <Source RefID="272"/>
-            </Input>
-            <Input>
-              <Data ID="672" Label="TypeWithValueNode" ReferenceName="TypeWithValueNode" ReferencePath="xact.radius" VariableName="typeWithValueNode672"/>
-              <Source RefID="661"/>
-            </Input>
-            <Mapping>%0%.iPAddress=%1%.value</Mapping>
-          </Mappings>
-          <Assign ID="641"/>
-        </Case>
-        <Case ID="197" IsDefault="true" Label="default">
-          <Assign ID="199"/>
-        </Case>
-      </Choice>
-      <Data ID="403" Label="TypeWithValueNode" ReferenceName="TypeWithValueNode" ReferencePath="xact.radius" VariableName="typeWithValueNode403">
-        <Source RefID="376"/>
-      </Data>
-      <Data ID="587" Label="TypeWithValueNode" ReferenceName="TypeWithValueNode" ReferencePath="xact.radius" VariableName="typeWithValueNode587"/>
-      <Data ID="661" Label="TypeWithValueNode" ReferenceName="TypeWithValueNode" ReferencePath="xact.radius" VariableName="typeWithValueNode661"/>
-    </Foreach>
+      <Target RefID="6869"/>
+      <Target RefID="6871"/>
+      <Invoke Operation="getBasicUserInfoFromNodes" ServiceID="6869">
+        <Source RefID="26"/>
+      </Invoke>
+      <Receive ServiceID="6869">
+        <Target RefID="6871"/>
+      </Receive>
+    </Function>
     <Mappings ID="5441" Label="Mapping">
       <Input>
         <Data ID="5634" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser5634">
           <Source RefID="5441"/>
         </Data>
-        <Source RefID="272"/>
+        <Source RefID="6871"/>
       </Input>
       <Input>
         <Data ID="5875" Label="SourceIP" ReferenceName="SourceIP" ReferencePath="xact.radius" VariableName="sourceIP5875">
@@ -208,7 +95,7 @@
         </Data>
         <Target RefID="720"/>
       </Output>
-      <Mapping>%1%.formula=concat("(%0%.username==\"", replaceall(replaceall(%0%.username, "\\\\", "\\\\\\\\"), "\"", "\\\\\""), "\") &amp;&amp; (%0%.password==\"", replaceall(replaceall(%0%.password, "\\\\", "\\\\\\\\"), "\"", "\\\\\""), "\") &amp;&amp; (%0%.iPAddress==\"", replaceall(replaceall(%0%.iPAddress, "\\\\", "\\\\\\\\"), "\"", "\\\\\""), "\")")</Mapping>
+      <Mapping>%1%.formula=concat("(%0%.username==\"", replaceall(replaceall(%0%.username, "\\\\", "\\\\\\\\"), "\"", "\\\\\""), "\") &amp;&amp; (%0%.iPAddress==\"", replaceall(replaceall(%0%.iPAddress, "\\\\", "\\\\\\\\"), "\"", "\\\\\""), "\")")</Mapping>
     </Mappings>
     <Function ID="715" Label="Query">
       <Source RefID="716"/>
@@ -220,7 +107,6 @@
       <Meta>
         <QueryFilter>
           <Condition>%0%.username==%1%.username</Condition>
-          <Condition>%0%.password==%1%.password</Condition>
           <Condition>%0%.iPAddress==%1%.iPAddress</Condition>
         </QueryFilter>
       </Meta>
@@ -256,7 +142,7 @@
         <Source RefID="764"/>
       </Input>
       <Case ID="1399" Label="true" Premise="length(%0%)==&quot;1&quot;">
-        <Mappings ID="1566" Label="Get User">
+        <Mappings ID="1566" Label="Get Database User">
           <Input>
             <Data ID="1607" IsList="true" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser1607">
               <Source RefID="1566"/>
@@ -273,13 +159,13 @@
         </Mappings>
         <Function ID="6183" Label="Authenticate Radius User And Remove Expired">
           <Source RefID="6184"/>
-          <Source RefID="272"/>
+          <Source RefID="5491"/>
           <Source RefID="1689"/>
           <Source RefID="47"/>
           <Target RefID="6184"/>
           <Target RefID="6186"/>
           <Invoke Operation="AuthenticateRadiusUserAndRemoveExpired" ServiceID="6184">
-            <Source RefID="272">
+            <Source RefID="5491">
               <Meta>
                 <LinkType>UserConnected</LinkType>
               </Meta>
@@ -388,9 +274,6 @@
         </Assign>
       </Case>
     </Choice>
-    <Data ID="272" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser272">
-      <Source RefID="262"/>
-    </Data>
     <Data ID="720" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition720">
       <Source RefID="713"/>
       <Target RefID="717"/>
@@ -444,6 +327,9 @@
     </Data>
     <Data ID="6536" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code6536">
       <Source RefID="1398"/>
+    </Data>
+    <Data ID="6871" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser6871">
+      <Source RefID="6868"/>
     </Data>
     <Exception ID="2115" Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="const_XMOMStorableAccessException2115">
       <Target RefID="2060"/>

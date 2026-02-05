@@ -23,71 +23,56 @@
   <Service Label="XynaRadiusServices" TypeName="XynaRadiusServices">
     <Operation IsStatic="true" Label="Validate Credentials" Name="validateCredentials">
       <Input>
-        <Data ID="1" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser1"/>
-        <Data ID="2" Label="RequestAuthenticator" ReferenceName="RequestAuthenticator" ReferencePath="xact.radius" VariableName="requestAuthenticator2"/>
+        <Data ID="1" Label="Radius User from Input" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser1"/>
+        <Data ID="2" Label="Radius User from Database" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser2"/>
+        <Data ID="3" Label="RequestAuthenticator" ReferenceName="RequestAuthenticator" ReferencePath="xact.radius" VariableName="requestAuthenticator3"/>
       </Input>
       <Output>
-        <Data ID="3" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code3"/>
+        <Data ID="4" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code4"/>
       </Output>
       <Meta>
         <Documentation>Validate the user credentials (CHAP).
 Returns the Code "2" if the the validation was successful, else "3".</Documentation>
       </Meta>
       <SourceCode>
-        <CodeSnippet Type="Java">return xact.radius.XynaRadiusServicesImpl.validateCredentials(radiusUser1, requestAuthenticator2);</CodeSnippet>
-      </SourceCode>
-    </Operation>
-    <Operation IsStatic="true" Label="Check Credentials Expired" Name="checkCredentialsExpired">
-      <Input>
-        <Data ID="4" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser4"/>
-      </Input>
-      <Output>
-        <Data ID="5" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text5"/>
-      </Output>
-      <Meta>
-        <Documentation>Reads the property "xact.radius.passwordExpirationTime" and the Timestamp when the user was created to check whether the user credentials have expired.
-Returns the Text "true", if the password has expired, else "false".
-Always returns "false" for permanent users.</Documentation>
-      </Meta>
-      <SourceCode>
-        <CodeSnippet Type="Java">return xact.radius.XynaRadiusServicesImpl.checkCredentialsExpired(radiusUser4);</CodeSnippet>
+        <CodeSnippet Type="Java">return xact.radius.XynaRadiusServicesImpl.validateCredentials(radiusUser1, radiusUser2, requestAuthenticator3);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Get Privilege Level" Name="getPrivilegeLevel">
       <Input>
-        <Data ID="6" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole6"/>
-        <Data ID="7" Label="Vendor" ReferenceName="Vendor" ReferencePath="xact.radius" VariableName="vendor7"/>
+        <Data ID="7" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole7"/>
+        <Data ID="8" Label="Vendor" ReferenceName="Vendor" ReferencePath="xact.radius" VariableName="vendor8"/>
       </Input>
       <Output>
-        <Data ID="8" Label="Privilege Level" ReferenceName="PrivilegeLevel" ReferencePath="xact.radius" VariableName="privilegeLevel8"/>
+        <Data ID="9" Label="Privilege Level" ReferenceName="PrivilegeLevel" ReferencePath="xact.radius" VariableName="privilegeLevel9"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return xact.radius.XynaRadiusServicesImpl.getPrivilegeLevel(functionalRole6, vendor7);</CodeSnippet>
+        <CodeSnippet Type="Java">return xact.radius.XynaRadiusServicesImpl.getPrivilegeLevel(functionalRole7, vendor8);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Get Xyna Property" Name="getXynaProperty">
       <Input>
-        <Data ID="9" Label="Xyna property key" ReferenceName="XynaPropertyKey" ReferencePath="xact.radius" VariableName="xynaPropertyKey9"/>
+        <Data ID="10" Label="Xyna property key" ReferenceName="XynaPropertyKey" ReferencePath="xact.radius" VariableName="xynaPropertyKey10"/>
       </Input>
       <Output>
-        <Data ID="10" Label="Xyna property string value" ReferenceName="XynaPropertyStringValue" ReferencePath="xact.radius" VariableName="xynaPropertyStringValue10"/>
+        <Data ID="11" Label="Xyna property string value" ReferenceName="XynaPropertyStringValue" ReferencePath="xact.radius" VariableName="xynaPropertyStringValue11"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return xact.radius.XynaRadiusServicesImpl.getXynaProperty(xynaPropertyKey9);</CodeSnippet>
+        <CodeSnippet Type="Java">return xact.radius.XynaRadiusServicesImpl.getXynaProperty(xynaPropertyKey10);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Get Basic User Info from Nodes" Name="getBasicUserInfoFromNodes">
       <Input>
-        <Data ID="11" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node11"/>
+        <Data ID="12" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node12"/>
       </Input>
       <Output>
-        <Data ID="12" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser12"/>
+        <Data ID="13" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser13"/>
       </Output>
       <Meta>
         <Documentation>Get username, password and nas-identifier from the nodes sent in the access request.</Documentation>
       </Meta>
       <SourceCode>
-        <CodeSnippet Type="Java">return xact.radius.XynaRadiusServicesImpl.getBasicUserInfoFromNodes(node11);</CodeSnippet>
+        <CodeSnippet Type="Java">return xact.radius.XynaRadiusServicesImpl.getBasicUserInfoFromNodes(node12);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
