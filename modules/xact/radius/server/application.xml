@@ -54,10 +54,6 @@
       <DestinationKey>xact.radius.CheckCredentialsExpired</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
-    <Ordertype implicitDependency="true">
-      <DestinationKey>xact.radius.CleanExpiredUsers</DestinationKey>
-      <OrderContextMapping>false</OrderContextMapping>
-    </Ordertype>
     <Ordertype implicitDependency="false">
       <DestinationKey>xact.radius.CreateVendorSpecificRadiusNodes</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
@@ -98,10 +94,6 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
       <FqName>xact.radius.CheckCredentialsExpired</FqName>
-      <Type>WORKFLOW</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xact.radius.CleanExpiredUsers</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
@@ -186,6 +178,10 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xact.radius.UnknownRole</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xact.radius.UserCredentialsExpired</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
@@ -293,48 +289,48 @@
     <XmomStorable>
       <XmlName>xact.radius.RadiusUser</XmlName>
       <Path>vendorSpecificUserInfo[]</Path>
-      <OdsName>vendorspecificuserinfo0</OdsName>
+      <OdsName>vendorspecificuserinfo</OdsName>
       <FqPath>vendorSpecificUserInfo[]{xact.radius.VendorSpecificUserInfo}</FqPath>
     </XmomStorable>
     <XmomStorable>
       <XmlName>xact.radius.RadiusUser</XmlName>
       <Path>vendorSpecificUserInfo[].idx</Path>
-      <OdsName>vendorspecificuserinfo0</OdsName>
+      <OdsName>vendorspecificuserinfo</OdsName>
       <FqPath>vendorSpecificUserInfo[]{xact.radius.VendorSpecificUserInfo}.idx</FqPath>
       <ColumnName>idx</ColumnName>
     </XmomStorable>
     <XmomStorable>
       <XmlName>xact.radius.RadiusUser</XmlName>
       <Path>vendorSpecificUserInfo[].name</Path>
-      <OdsName>vendorspecificuserinfo0</OdsName>
+      <OdsName>vendorspecificuserinfo</OdsName>
       <FqPath>vendorSpecificUserInfo[]{xact.radius.VendorSpecificUserInfo}.name</FqPath>
       <ColumnName>name</ColumnName>
     </XmomStorable>
     <XmomStorable>
       <XmlName>xact.radius.RadiusUser</XmlName>
       <Path>vendorSpecificUserInfo[].parentuid</Path>
-      <OdsName>vendorspecificuserinfo0</OdsName>
+      <OdsName>vendorspecificuserinfo</OdsName>
       <FqPath>vendorSpecificUserInfo[]{xact.radius.VendorSpecificUserInfo}.parentuid</FqPath>
       <ColumnName>parentuid</ColumnName>
     </XmomStorable>
     <XmomStorable>
       <XmlName>xact.radius.RadiusUser</XmlName>
       <Path>vendorSpecificUserInfo[].typename</Path>
-      <OdsName>vendorspecificuserinfo0</OdsName>
+      <OdsName>vendorspecificuserinfo</OdsName>
       <FqPath>vendorSpecificUserInfo[]{xact.radius.VendorSpecificUserInfo}.typename</FqPath>
       <ColumnName>typename</ColumnName>
     </XmomStorable>
     <XmomStorable>
       <XmlName>xact.radius.RadiusUser</XmlName>
       <Path>vendorSpecificUserInfo[].unid</Path>
-      <OdsName>vendorspecificuserinfo0</OdsName>
+      <OdsName>vendorspecificuserinfo</OdsName>
       <FqPath>vendorSpecificUserInfo[]{xact.radius.VendorSpecificUserInfo}.unid</FqPath>
       <ColumnName>unid</ColumnName>
     </XmomStorable>
     <XmomStorable>
       <XmlName>xact.radius.RadiusUser</XmlName>
       <Path>vendorSpecificUserInfo[].value</Path>
-      <OdsName>vendorspecificuserinfo0</OdsName>
+      <OdsName>vendorspecificuserinfo</OdsName>
       <FqPath>vendorSpecificUserInfo[]{xact.radius.VendorSpecificUserInfo}.value</FqPath>
       <ColumnName>value</ColumnName>
     </XmomStorable>

@@ -27,12 +27,8 @@
       <Data ID="3840" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser3840"/>
     </Output>
     <Throws>
-      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException7454"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException7123"/>
     </Throws>
-    <ServiceReference ID="716" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
-      <Source RefID="715"/>
-      <Target RefID="715"/>
-    </ServiceReference>
     <ServiceReference ID="6869" Label="XynaRadiusServices" ReferenceName="XynaRadiusServices.XynaRadiusServices" ReferencePath="xact.radius">
       <Source RefID="6868"/>
       <Target RefID="6868"/>
@@ -40,6 +36,10 @@
     <ServiceReference ID="6184" Label="Authenticate Radius User And Remove Expired" ReferenceName="AuthenticateRadiusUserAndRemoveExpired" ReferencePath="xact.radius">
       <Source RefID="6183"/>
       <Target RefID="6183"/>
+    </ServiceReference>
+    <ServiceReference ID="716" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
+      <Source RefID="715"/>
+      <Target RefID="715"/>
     </ServiceReference>
     <Function ID="6868" Label="Get Basic User Info from Nodes">
       <Source RefID="6869"/>
@@ -225,6 +225,7 @@
                 <Target RefID="4239"/>
               </Output>
               <Mapping>%0%.value="3"</Mapping>
+              <Mapping>%1%=null</Mapping>
             </Mappings>
             <Assign ID="2244">
               <Source RefID="4239"/>

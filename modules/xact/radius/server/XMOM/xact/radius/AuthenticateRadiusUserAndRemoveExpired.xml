@@ -25,48 +25,48 @@
     <Output>
       <Data ID="9473" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code9473"/>
     </Output>
-    <ServiceReference ID="9536" Label="Check Credentials Expired" ReferenceName="CheckCredentialsExpired" ReferencePath="xact.radius">
-      <Source RefID="9535"/>
-      <Target RefID="9535"/>
+    <ServiceReference ID="6972" Label="Delete" ReferenceName="Delete" ReferencePath="xnwh.persistence">
+      <Source RefID="6971"/>
+      <Target RefID="6971"/>
     </ServiceReference>
-    <ServiceReference ID="8645" Label="XynaRadiusServices" ReferenceName="XynaRadiusServices.XynaRadiusServices" ReferencePath="xact.radius">
-      <Source RefID="8644"/>
-      <Target RefID="8644"/>
+    <ServiceReference ID="9641" Label="Check Credentials Expired" ReferenceName="CheckCredentialsExpired" ReferencePath="xact.radius">
+      <Source RefID="9640"/>
+      <Target RefID="9640"/>
     </ServiceReference>
     <ServiceReference ID="6312" Label="Delete" ReferenceName="Delete" ReferencePath="xnwh.persistence">
       <Source RefID="6311"/>
       <Target RefID="6311"/>
     </ServiceReference>
-    <ServiceReference ID="6972" Label="Delete" ReferenceName="Delete" ReferencePath="xnwh.persistence">
-      <Source RefID="6971"/>
-      <Target RefID="6971"/>
+    <ServiceReference ID="8645" Label="XynaRadiusServices" ReferenceName="XynaRadiusServices.XynaRadiusServices" ReferencePath="xact.radius">
+      <Source RefID="8644"/>
+      <Target RefID="8644"/>
     </ServiceReference>
-    <Function ID="9535" Label="Check Credentials Expired">
-      <Source RefID="9536"/>
+    <Function ID="9640" Label="Check Credentials Expired">
+      <Source RefID="9641"/>
       <Source RefID="39"/>
-      <Target RefID="9536"/>
-      <Target RefID="9538"/>
-      <Invoke Operation="CheckCredentialsExpired" ServiceID="9536">
+      <Target RefID="9641"/>
+      <Target RefID="9643"/>
+      <Invoke Operation="CheckCredentialsExpired" ServiceID="9641">
         <Source RefID="39">
           <Meta>
             <LinkType>UserConnected</LinkType>
           </Meta>
         </Source>
       </Invoke>
-      <Receive ServiceID="9536">
-        <Target RefID="9538"/>
+      <Receive ServiceID="9641">
+        <Target RefID="9643"/>
       </Receive>
     </Function>
     <Choice ID="4132" TypeName="BaseChoiceTypeFormula" TypePath="server">
-      <Source RefID="9538"/>
-      <Target RefID="9160"/>
+      <Source RefID="9643"/>
+      <Target RefID="9932"/>
       <Input>
-        <Data ID="7397" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text7397">
+        <Data ID="9821" Label="User Credentials Expired" ReferenceName="UserCredentialsExpired" ReferencePath="xact.radius" VariableName="userCredentialsExpired9821">
           <Source RefID="4132"/>
         </Data>
-        <Source RefID="9538"/>
+        <Source RefID="9643"/>
       </Input>
-      <Case ID="4133" Label="true" Premise="%0%.text==&quot;true&quot;">
+      <Case ID="4133" Label="true" Premise="%0%.value">
         <Function ID="6971" Label="Delete User with Expired Password">
           <Source RefID="6972"/>
           <Source RefID="39"/>
@@ -98,10 +98,10 @@
         </Mappings>
         <Assign ID="4136">
           <Source RefID="9153"/>
-          <Target RefID="9160"/>
+          <Target RefID="9932"/>
           <Copy>
             <Source RefID="9153"/>
-            <Target RefID="9160"/>
+            <Target RefID="9932"/>
           </Copy>
         </Assign>
       </Case>
@@ -235,10 +235,10 @@
         </Choice>
         <Assign ID="4138">
           <Source RefID="8949"/>
-          <Target RefID="9160"/>
+          <Target RefID="9932"/>
           <Copy>
             <Source RefID="8949"/>
-            <Target RefID="9160"/>
+            <Target RefID="9932"/>
           </Copy>
         </Assign>
       </Case>
@@ -282,17 +282,17 @@
     <Data ID="9153" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code9153">
       <Source RefID="4583"/>
     </Data>
-    <Data ID="9160" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code9160">
+    <Data ID="9643" Label="User Credentials Expired" ReferenceName="UserCredentialsExpired" ReferencePath="xact.radius" VariableName="userCredentialsExpired9643">
+      <Source RefID="9640"/>
+    </Data>
+    <Data ID="9932" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code9932">
       <Source RefID="4132"/>
     </Data>
-    <Data ID="9538" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text9538">
-      <Source RefID="9535"/>
-    </Data>
     <Assign ID="1">
-      <Source RefID="9160"/>
+      <Source RefID="9932"/>
       <Target RefID="9473"/>
       <Copy>
-        <Source RefID="9160"/>
+        <Source RefID="9932"/>
         <Target RefID="9473"/>
       </Copy>
     </Assign>

@@ -36,15 +36,15 @@
       <Data ID="27" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node27"/>
     </Output>
     <Throws>
-      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException1296"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException1389"/>
     </Throws>
-    <ServiceReference ID="158" Label="Determine Functional Role" ReferenceName="DetermineFunctionalRole" ReferencePath="xact.radius">
-      <Source RefID="184"/>
-      <Target RefID="184"/>
-    </ServiceReference>
     <ServiceReference ID="345" Label="Authenticate Radius User" ReferenceName="AuthenticateRadiusUser" ReferencePath="xact.radius">
       <Source RefID="344"/>
       <Target RefID="344"/>
+    </ServiceReference>
+    <ServiceReference ID="158" Label="Determine Functional Role" ReferenceName="DetermineFunctionalRole" ReferencePath="xact.radius">
+      <Source RefID="184"/>
+      <Target RefID="184"/>
     </ServiceReference>
     <ServiceReference ID="236" Label="Add RADIUS Attributes" ReferenceName="AddRADIUSAttributes" ReferencePath="xact.radius">
       <Source RefID="237"/>
@@ -182,7 +182,11 @@
             <Mappings ID="276" Label="Retrun no Nodes">
               <Input>
                 <Data ID="274" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node274"/>
-                <Source RefID="18"/>
+                <Source RefID="1339">
+                  <Meta>
+                    <LinkType>Constant</LinkType>
+                  </Meta>
+                </Source>
               </Input>
               <Output>
                 <Data ID="275" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node275"/>
@@ -339,6 +343,7 @@
     <Data ID="1245" Label="NAS-Identifier" ReferenceName="NASIdentifier" ReferencePath="xact.radius" VariableName="nASIdentifier1245">
       <Source RefID="546"/>
     </Data>
+    <Data ID="1339" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="const_Node1339"/>
     <Assign ID="3">
       <Source RefID="269"/>
       <Source RefID="230"/>

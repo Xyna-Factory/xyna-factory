@@ -120,18 +120,18 @@ public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymen
 
 
   public RadiusUser getBasicUserInfoFromNodes(List<? extends Node> inputNodes) {
-    RadiusUser radUser = new RadiusUser();
+    RadiusUser.Builder radUserBuilder = new RadiusUser.Builder();
 
     for (Node n : inputNodes) {
       if (n.getTypeName().equalsIgnoreCase("USER-NAME"))
-        radUser.setUsername(((TypeWithValueNode) n).getValue().replaceAll("\"", ""));
+        radUserBuilder.username(((TypeWithValueNode) n).getValue().replaceAll("\"", ""));
       if (n.getTypeName().equalsIgnoreCase("USER-PASSWORD"))
-        radUser.setPassword(((TypeWithValueNode) n).getValue());
+        radUserBuilder.password(((TypeWithValueNode) n).getValue());
       if (n.getTypeName().equalsIgnoreCase("NAS-Identifier"))
-        radUser.setIPAddress(((TypeWithValueNode) n).getValue());
+        radUserBuilder.iPAddress(((TypeWithValueNode) n).getValue());
     }
 
-    return radUser;
+    return radUserBuilder.instance();
   }
 
 
