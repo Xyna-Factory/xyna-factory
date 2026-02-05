@@ -96,9 +96,9 @@ public class LoadChangesTools {
     change.unversionedSetFileFullPath(path);
     change.unversionedSetType(typestr);
     for (WorkspaceFileChangeList wfcl : cs.getChanges()) {
-      String wspath = wfcl.getWorkspacePath();
+      String wspath = wfcl.getWorkspacePath()  + "/";
       if (path.startsWith(wspath) && (path.length() > wspath.length())) {
-        String subpath = path.substring(wspath.length() + 1);
+        String subpath = path.substring(wspath.length());
         change.unversionedSetFileSubpath(subpath);
         if (wfcl.getIndexedFileChangeList() == null) {
           change.unversionedSetIndex(0);

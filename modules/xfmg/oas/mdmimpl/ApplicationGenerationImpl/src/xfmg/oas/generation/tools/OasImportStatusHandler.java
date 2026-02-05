@@ -91,10 +91,23 @@ public class OasImportStatusHandler {
     if (_storable.isEmpty()) { return; }
     store(addAppTypeIfSet(Constants.STATUS_APP_IMPORT));
   }
-  
-  
+
+
+  public void storeTargetRtc(String targetRtc) {
+    if (_storable.isEmpty()) { return; }
+    _storable.get().unversionedSetImportRtc(targetRtc);
+    try {
+      new OasImportHistoryStorage().storeOasImportHistory(_storable.get());
+    } catch (Exception e) {
+      if (_logger.isErrorEnabled()) {
+        _logger.error("Error setting oas import history target rtc. " + e.getMessage(), e);
+      }
+    }
+  }
+
+
   private void store(String status) {
-    _storable.get().setImportStatus(status);
+    _storable.get().unversionedSetImportStatus(status);
     try {
       new OasImportHistoryStorage().storeOasImportHistory(_storable.get());
     } catch (Exception e) {
