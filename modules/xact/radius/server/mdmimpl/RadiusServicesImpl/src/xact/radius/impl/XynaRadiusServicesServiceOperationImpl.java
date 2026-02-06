@@ -83,12 +83,6 @@ public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymen
   }
 
 
-  public xact.radius.XynaPropertyStringValue getXynaProperty(xact.radius.XynaPropertyKey xynaPropertyKey) {
-    String result = com.gip.xyna.XynaFactory.getInstance().getFactoryManagement().getProperty(xynaPropertyKey.getXynaPropertyKey());
-    return new xact.radius.XynaPropertyStringValue(result);
-  }
-
-
   public xact.radius.PrivilegeLevel getPrivilegeLevel(xact.radius.FunctionalRole role, xact.radius.Vendor vendor) {
     String vendorName = vendor != null ? vendor.getName() : null;
 

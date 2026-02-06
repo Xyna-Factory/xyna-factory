@@ -50,17 +50,6 @@ Returns the Code "2" if the the validation was successful, else "3".</Documentat
         <CodeSnippet Type="Java">return xact.radius.XynaRadiusServicesImpl.getPrivilegeLevel(functionalRole7, vendor8);</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="Get Xyna Property" Name="getXynaProperty">
-      <Input>
-        <Data ID="10" Label="Xyna property key" ReferenceName="XynaPropertyKey" ReferencePath="xact.radius" VariableName="xynaPropertyKey10"/>
-      </Input>
-      <Output>
-        <Data ID="11" Label="Xyna property string value" ReferenceName="XynaPropertyStringValue" ReferencePath="xact.radius" VariableName="xynaPropertyStringValue11"/>
-      </Output>
-      <SourceCode>
-        <CodeSnippet Type="Java">return xact.radius.XynaRadiusServicesImpl.getXynaProperty(xynaPropertyKey10);</CodeSnippet>
-      </SourceCode>
-    </Operation>
     <Operation IsStatic="true" Label="Get Basic User Info from Nodes" Name="getBasicUserInfoFromNodes">
       <Input>
         <Data ID="12" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node12"/>
