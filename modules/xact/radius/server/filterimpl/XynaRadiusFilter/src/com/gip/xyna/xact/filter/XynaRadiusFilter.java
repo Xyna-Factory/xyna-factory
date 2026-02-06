@@ -34,8 +34,8 @@ import org.apache.log4j.Logger;
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.trigger.XynaRadiusTriggerConnection;
-import com.gip.xyna.xact.trigger.tlvdecoding.radius.RadiusConfigurationDecoder;
 import com.gip.xyna.xact.trigger.tlvencoding.radius.Node;
+import com.gip.xyna.xact.trigger.tlvdecoding.radius.RadiusConfigurationDecoder;
 import com.gip.xyna.xact.trigger.tlvencoding.radius.RadiusConfigurationEncoder;
 import com.gip.xyna.xact.trigger.tlvencoding.radius.TextConfigTree;
 import com.gip.xyna.xact.trigger.tlvencoding.radius.TextConfigTreeReader;
@@ -48,6 +48,7 @@ import com.gip.xyna.xdev.xfractmod.xmdm.Container;
 import com.gip.xyna.xdev.xfractmod.xmdm.EventListener;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObjectList;
+import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyString;
 import com.gip.xyna.xprc.XynaOrder;
 import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
@@ -68,7 +69,9 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
   public void onDeployment(EventListener trigger) {
     super.onDeployment(trigger);
 
-    wfAccessRequest = new XynaPropertyString("xyna.radius.wf.AccessRequest", "xact.radius.RADIUSAccessRequest");
+    wfAccessRequest = new XynaPropertyString("xyna.radius.wf.AccessRequest", "xact.radius.RADIUSAccessRequest")
+        .setDefaultDocumentation(DocumentationLanguage.DE, "Workflow für den Access-Request, der vom Filter aufgerufen wird.")
+        .setDefaultDocumentation(DocumentationLanguage.EN, "Workflow for the access request that will be called by the filter.");
   }
 
 
