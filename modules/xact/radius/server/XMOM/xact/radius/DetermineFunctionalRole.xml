@@ -58,9 +58,9 @@
     </Mappings>
     <Choice ID="446" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="162"/>
-      <Target RefID="593"/>
+      <Target RefID="619"/>
       <Meta>
-        <OuterConditionPart>tolowercase(%0%.value)==?</OuterConditionPart>
+        <OuterConditionPart>tolowercase(%0%.get())==?</OuterConditionPart>
       </Meta>
       <Input>
         <Data ID="458" Label="Xyna Property String" ReferenceName="XynaPropertyString" ReferencePath="xfmg.xods.configuration" VariableName="xynaPropertyString458">
@@ -68,7 +68,7 @@
         </Data>
         <Source RefID="162"/>
       </Input>
-      <Case ID="483" Premise="tolowercase(%0%.value)==&quot;super-user&quot;">
+      <Case ID="483" Label="" Premise="tolowercase(%0%.get())==&quot;super-user&quot;">
         <Mappings ID="519" Label="Mapping">
           <Input>
             <Data ID="520" Label="Super User" ReferenceName="SuperUser" ReferencePath="xact.radius" VariableName="superUser520"/>
@@ -86,14 +86,14 @@
         </Mappings>
         <Assign ID="485">
           <Source RefID="523"/>
-          <Target RefID="593"/>
+          <Target RefID="619"/>
           <Copy>
             <Source RefID="523"/>
-            <Target RefID="593"/>
+            <Target RefID="619"/>
           </Copy>
         </Assign>
       </Case>
-      <Case ID="532" Premise="tolowercase(%0%.value)==&quot;read-write&quot;">
+      <Case ID="532" Label="" Premise="tolowercase(%0%.get())==&quot;read-write&quot;">
         <Mappings ID="551" Label="Mapping">
           <Input>
             <Data ID="552" Label="Read Write User" ReferenceName="ReadWriteUser" ReferencePath="xact.radius" VariableName="readWriteUser552"/>
@@ -111,14 +111,14 @@
         </Mappings>
         <Assign ID="534">
           <Source RefID="555"/>
-          <Target RefID="593"/>
+          <Target RefID="619"/>
           <Copy>
             <Source RefID="555"/>
-            <Target RefID="593"/>
+            <Target RefID="619"/>
           </Copy>
         </Assign>
       </Case>
-      <Case ID="564" Premise="tolowercase(%0%.value)==&quot;read-only&quot;">
+      <Case ID="564" Label="" Premise="tolowercase(%0%.get())==&quot;read-only&quot;">
         <Mappings ID="30" Label="Mapping">
           <Input>
             <Data ID="107" Label="Read Only User" ReferenceName="ReadOnlyUser" ReferencePath="xact.radius" VariableName="readOnlyUser107"/>
@@ -136,10 +136,10 @@
         </Mappings>
         <Assign ID="566">
           <Source RefID="583"/>
-          <Target RefID="593"/>
+          <Target RefID="619"/>
           <Copy>
             <Source RefID="583"/>
-            <Target RefID="593"/>
+            <Target RefID="619"/>
           </Copy>
         </Assign>
         <Data ID="583" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole583"/>
@@ -162,10 +162,10 @@
         </Mappings>
         <Assign ID="449">
           <Source RefID="592"/>
-          <Target RefID="593"/>
+          <Target RefID="619"/>
           <Copy>
             <Source RefID="592"/>
-            <Target RefID="593"/>
+            <Target RefID="619"/>
           </Copy>
         </Assign>
         <Data ID="592" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole592"/>
@@ -187,14 +187,14 @@
     <Data ID="523" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole523"/>
     <Data ID="553" ReferenceName="ReadWriteUser" ReferencePath="xact.radius" VariableName="readWriteUser553"/>
     <Data ID="555" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole555"/>
-    <Data ID="593" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole593">
+    <Data ID="619" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole619">
       <Source RefID="446"/>
     </Data>
     <Assign ID="4">
-      <Source RefID="593"/>
+      <Source RefID="619"/>
       <Target RefID="99"/>
       <Copy>
-        <Source RefID="593"/>
+        <Source RefID="619"/>
         <Target RefID="99"/>
       </Copy>
     </Assign>
