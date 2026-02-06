@@ -51,6 +51,7 @@ import com.gip.xyna.xnwh.sharedresources.SharedResourceSynchronizerInstance.Stat
 public class SharedResourceManagement extends Section {
 
   public static final String DEFAULT_NAME = "SharedResourceManagement";
+  public static final int FUTURE_EXECUTION_ID = XynaFactory.getInstance().getFutureExecution().nextId();
   private final SharedResourcePortal sharedResourcePortal;
   private final SharedResourceSynchronizerInstanceStorage sharedResourceSynchronizerStorage;
   private final SharedResourceTypeStorage sharedResourceTypeStorage;
@@ -101,7 +102,7 @@ public class SharedResourceManagement extends Section {
         .after(PersistenceLayerInstances.class).execAsync(this::loadSynchronizers);
     fExec.addTask("SharedResourceManagement.instantiateSynchronizers", "SharedResourceManagement.instantiateSynchronizers")
         .after("SharedResourceManagement.loadSynchronizers").execAsync(this::instantiateSynchronizers);
-    fExec.addTask(SharedResourceManagement.class, "configureSharedResourceTypes").after("SharedResourceManagement.instantiateSynchronizers")
+    fExec.addTask(FUTURE_EXECUTION_ID, "configureSharedResourceTypes").after("SharedResourceManagement.instantiateSynchronizers")
         .execAsync(this::configureSRTypes);
   }
 

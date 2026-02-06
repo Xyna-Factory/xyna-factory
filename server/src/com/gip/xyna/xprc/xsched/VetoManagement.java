@@ -52,6 +52,7 @@ import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.UserType;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyEnum;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.persistence.ODSImpl.PersistenceLayerInstances;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceManagement;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 import com.gip.xyna.xprc.XynaProcessing;
@@ -63,6 +64,7 @@ import com.gip.xyna.xprc.xsched.scheduling.OrderInformation;
 import com.gip.xyna.xprc.xsched.selectvetos.VetoSearchResult;
 import com.gip.xyna.xprc.xsched.selectvetos.VetoSelectImpl;
 import com.gip.xyna.xprc.xsched.vetos.AdministrativeVeto;
+import com.gip.xyna.xprc.xsched.vetos.VM_SharedResource;
 import com.gip.xyna.xprc.xsched.vetos.VetoAllocationResult;
 import com.gip.xyna.xprc.xsched.vetos.VetoInformation;
 import com.gip.xyna.xprc.xsched.vetos.VetoManagementAlgorithmType;
@@ -77,6 +79,7 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
 
   private static Logger logger = CentralFactoryLogging.getLogger(VetoManagement.class);
   public static final String DEFAULT_NAME = "Veto Management";
+  public static final String XYNA_VETO_SR = "xyna.veto";
   
   private VetoManagementInterface vmAlgorithm;
   private ClusterContext rmiClusterContext;
@@ -180,6 +183,7 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
           execAsync( new Runnable() {public void run() { initClusterContext(); }});
     fExec.addTask(VetoManagement.class, "VetoManagement").
       after(XynaClusteringServicesManagement.class, XynaProperty.class, PersistenceLayerInstances.class).
+      after(SharedResourceManagement.FUTURE_EXECUTION_ID).
       before(WorkflowDatabase.FUTURE_EXECUTION_ID).
       execAsync( new Runnable() {public void run() { initVetoManagement(); }});
   }
@@ -201,12 +205,17 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
     if (initializing.compareAndSet(false, true)) {
       VM_ALGORITHM_TYPE.registerDependency(UserType.XynaFactory, DEFAULT_NAME);
       VetoHistory.HISTORY_SIZE.registerDependency(UserType.XynaFactory, DEFAULT_NAME);
-      try {
-        VetoManagementAlgorithmType vmat = VM_ALGORITHM_TYPE.get();
-        vmAlgorithm = vmat.instantiate( isClustered() ? ClusterMode.Unsupported : ClusterMode.Local);
-        rmiClusterStateChangeHandler.setVetoManagementAlgorithmType( vmat );
-      } catch (XynaException e) {
-        throw new RuntimeException(e);
+      SharedResourceManagement srm = XynaFactory.getInstance().getXynaNetworkWarehouse().getSharedResourceManagement();
+      if(srm.hasConfiguredSynchronizer(XYNA_VETO_SR)) {
+        vmAlgorithm = new VM_SharedResource();
+      } else {
+        try {
+          VetoManagementAlgorithmType vmat = VM_ALGORITHM_TYPE.get();
+          vmAlgorithm = vmat.instantiate( isClustered() ? ClusterMode.Unsupported : ClusterMode.Local);
+          rmiClusterStateChangeHandler.setVetoManagementAlgorithmType( vmat );
+        } catch (XynaException e) {
+          throw new RuntimeException(e);
+        }
       }
       registerStatistics();
     }

@@ -175,7 +175,7 @@ public class SQLSharedResourceSynchronizerFactory implements SharedResourceSynch
   @Override
   public PluginDescription getDescription() {
     PluginDescription.Builder result = PluginDescription.create(PluginType.sharedResourceSynchronizer);
-    result.name("SqlSharedResourceSynchronizer");
+    result.name(getSynchronizerName());
     result.label("Shared Resource Synchronizer: SqlSharedResourceSynchronizer");
     result.description("Connects to an SQL Database to synchronize shared resources.");
     result.parameters(ParameterUsage.Create, importParameters);
