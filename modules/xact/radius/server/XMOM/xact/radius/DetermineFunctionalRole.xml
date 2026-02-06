@@ -32,20 +32,20 @@
     </Meta>
     <Mappings ID="152" Label="Get property">
       <Input>
-        <Data ID="282" Label="Xyna Property String" ReferenceName="XynaPropertyString" ReferencePath="xfmg.xods.configuration" VariableName="xynaPropertyString282">
-          <Source RefID="152"/>
-        </Data>
-        <Source RefID="299">
-          <Meta>
-            <LinkType>Constant</LinkType>
-          </Meta>
-        </Source>
-      </Input>
-      <Input>
         <Data ID="610" Label="User Role" ReferenceName="UserRole" ReferencePath="xact.radius" VariableName="userRole610">
           <Source RefID="152"/>
         </Data>
         <Source RefID="97"/>
+      </Input>
+      <Input>
+        <Data ID="708" Label="Use Value" ReferenceName="UseValue" ReferencePath="xfmg.xods.configuration.parameter" VariableName="useValue708">
+          <Source RefID="152"/>
+        </Data>
+        <Source RefID="717">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
       </Input>
       <Output>
         <Data ID="161" Label="Xyna Property String" ReferenceName="XynaPropertyString" ReferencePath="xfmg.xods.configuration" VariableName="xynaPropertyString161">
@@ -53,8 +53,9 @@
         </Data>
         <Target RefID="162"/>
       </Output>
-      <Mapping>%2%=%0%</Mapping>
-      <Mapping>%2%.propertyName=concat("\"xact.radius.rightmanagment.", %1%.role)</Mapping>
+      <Mapping>%2%.propertyName=concat("xact.radius.rightmanagment.", %0%.role)</Mapping>
+      <Mapping>%2%.behaviourIfPropertyNotSet=%1%</Mapping>
+      <Mapping>%2%.value=""</Mapping>
     </Mappings>
     <Choice ID="446" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="162"/>
@@ -180,9 +181,6 @@
     <Data ID="162" Label="Xyna Property String" ReferenceName="XynaPropertyString" ReferencePath="xfmg.xods.configuration" VariableName="xynaPropertyString162">
       <Source RefID="152"/>
     </Data>
-    <Data ID="299" Label="Xyna Property String" ReferenceName="XynaPropertyString" ReferencePath="xfmg.xods.configuration" VariableName="const_XynaPropertyString299">
-      <Data ReferenceName="UseValue" ReferencePath="xfmg.xods.configuration.parameter" VariableName="behaviourIfPropertyNotSet"/>
-    </Data>
     <Data ID="521" ReferenceName="SuperUser" ReferencePath="xact.radius" VariableName="superUser521"/>
     <Data ID="523" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole523"/>
     <Data ID="553" ReferenceName="ReadWriteUser" ReferencePath="xact.radius" VariableName="readWriteUser553"/>
@@ -190,6 +188,7 @@
     <Data ID="619" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole619">
       <Source RefID="446"/>
     </Data>
+    <Data ID="717" Label="Use Value" ReferenceName="UseValue" ReferencePath="xfmg.xods.configuration.parameter" VariableName="const_UseValue717"/>
     <Assign ID="4">
       <Source RefID="619"/>
       <Target RefID="99"/>
