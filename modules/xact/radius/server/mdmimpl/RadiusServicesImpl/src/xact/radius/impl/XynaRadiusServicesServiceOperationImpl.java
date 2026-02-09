@@ -25,28 +25,18 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
-import com.gip.xyna.XynaFactory;
-import com.gip.xyna.XMOM.base.IPv4;
 import com.gip.xyna.utils.exceptions.XynaException;
-import com.gip.xyna.xdev.xfractmod.xmdm.Container;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
+import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyDuration;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyString;
-import com.gip.xyna.xnwh.persistence.Command;
-import com.gip.xyna.xnwh.persistence.ODS;
-import com.gip.xyna.xnwh.persistence.ODSConnection;
-import com.gip.xyna.xnwh.persistence.ODSConnectionType;
-import com.gip.xyna.xnwh.persistence.ODSImpl;
-import com.gip.xyna.xnwh.persistence.Parameter;
-import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
-import com.gip.xyna.xnwh.persistence.PreparedQuery;
-import com.gip.xyna.xnwh.persistence.Query;
 
 import xact.radius.Code;
 import xact.radius.Node;
+import xact.radius.RadiusUser;
+import xact.radius.RequestAuthenticator;
 import xact.radius.TypeWithValueNode;
-import xact.radius.impl.database.RadiusUserStorable;
 import xact.radius.impl.util.ByteUtil;
 
 
@@ -55,20 +45,20 @@ public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymen
 
   private static Logger logger = CentralFactoryLogging.getLogger(XynaRadiusServicesServiceOperationImpl.class);
 
-  private static String REJECT = "3";
-  private static String ACCEPT = "2";
+  private static final String REJECT = "3";
+  private static final String ACCEPT = "2";
 
-  private static String sharedSecretProp = "xact.radius.sharedSecret";
-  private static String timeoutProp = "xact.radius.passwordExpirationTime";
+  private static final String TIMEOUTPROPERTY = "xact.radius.passwordExpirationTime";
+  private static final String SHAREDSECRETPROPERTY = "xact.radius.sharedSecret";
 
-  private static String sqlGetUserByName =
-      "select * from " + RadiusUserStorable.TABLENAME + " where " + RadiusUserStorable.COL_USERNAME + " =  ?";
-
-  private static String sqlDeleteUsersByTimeout = "delete from " + RadiusUserStorable.TABLENAME + " where "
-      + RadiusUserStorable.COL_TIMESTAMP + " > 0 and " + RadiusUserStorable.COL_TIMESTAMP + "  < ?";
-
-  private final static XynaPropertyDuration timeoutXynaProp = new XynaPropertyDuration(timeoutProp, "900 s");
-  private final static XynaPropertyString sharedSecretXynaProp = new XynaPropertyString(sharedSecretProp, "sharedSecret", false);
+  private static final XynaPropertyDuration timeoutXynaProp = new XynaPropertyDuration(TIMEOUTPROPERTY, "900 s")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Maximale Gültigkeitsdauer für Benutzer mit Einmalpasswort")
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Maximum validity period for users with a one-time password");
+  private final static XynaPropertyString sharedSecretXynaProp = new XynaPropertyString(SHAREDSECRETPROPERTY, "sharedSecret", false)
+      .setDefaultDocumentation(DocumentationLanguage.DE,
+                               "Standardwert für den Radius Server. Wird verwendet, wenn kein benutzerspezifisches shared secret existiert.")
+      .setDefaultDocumentation(DocumentationLanguage.EN,
+                               "Default value for the radius server. Used when no user-specific shared secret exists.");
 
 
   public XynaRadiusServicesServiceOperationImpl() {
@@ -76,54 +66,20 @@ public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymen
 
 
   public void onDeployment() throws XynaException {
-
-    ODS ods = ODSImpl.getInstance(true);
-    try {
-      ods.registerStorable(RadiusUserStorable.class);
-    } catch (Exception e) {
-      logger.error("storable registration", e);
-    }
-
   }
 
 
   public void onUndeployment() throws XynaException {
-    ODS ods = ODSImpl.getInstance(true);
-    try {
-      ods.unregisterStorable(RadiusUserStorable.class);
-    } catch (Exception e) {
-      logger.error("storable unregistration", e);
-    }
   }
 
 
   public Long getOnUnDeploymentTimeout() {
-    // The (un)deployment runs in its own thread. The service may define a timeout
-    // in milliseconds, after which Thread.interrupt is called on this thread.
-    // If null is returned, the default timeout (defined by XynaProperty
-    // xyna.xdev.xfractmod.xmdm.deploymenthandler.timeout) will be used.;
     return null;
   }
 
 
   public BehaviorAfterOnUnDeploymentTimeout getBehaviorAfterOnUnDeploymentTimeout() {
-    // Defines the behavior of the (un)deployment after reaching the timeout and if
-    // this service ignores a Thread.interrupt.
-    // - BehaviorAfterOnUnDeploymentTimeout.EXCEPTION: Deployment will be aborted,
-    // while undeployment will log the exception and NOT abort.;
-    // - BehaviorAfterOnUnDeploymentTimeout.IGNORE: (Un)Deployment will be continued
-    // in another thread asynchronously.;
-    // - BehaviorAfterOnUnDeploymentTimeout.KILLTHREAD: (Un)Deployment will be
-    // continued after calling Thread.stop on the thread.;
-    // executing the (Un)Deployment.
-    // If null is returned, the factory default <IGNORE> will be used.
     return null;
-  }
-
-
-  public xact.radius.XynaPropertyStringValue getXynaProperty(xact.radius.XynaPropertyKey xynaPropertyKey) {
-    String result = com.gip.xyna.XynaFactory.getInstance().getFactoryManagement().getProperty(xynaPropertyKey.getXynaPropertyKey());
-    return new xact.radius.XynaPropertyStringValue(result);
   }
 
 
@@ -137,215 +93,39 @@ public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymen
   }
 
 
-  private static RadiusUserStorable queryUserByName(String username) {
-    ODSConnection ods = XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getODS().openConnection(ODSConnectionType.HISTORY);
-
-    try {
-      PreparedQuery<RadiusUserStorable> pq =
-          ods.prepareQuery(new Query<RadiusUserStorable>(sqlGetUserByName, (new RadiusUserStorable()).getReader()), false);
-      return ods.queryOneRow(pq, new Parameter(username));
-    } catch (PersistenceLayerException e) {
-      logger.error(null, e);
-    } finally {
-      try {
-        ods.closeConnection();
-      } catch (PersistenceLayerException e) {
-        logger.error(null, e);
-      }
+  public Code validateCredentials(RadiusUser inputUser, RadiusUser databaseUser, RequestAuthenticator requestAuthenticator) {
+    String databaseUserPassword = databaseUser.getPassword();
+    String sharedSecret = databaseUser.getSharedSecret();
+    if (sharedSecret == null || sharedSecret.length() == 0) {
+      sharedSecret = sharedSecretXynaProp.get();  // use default shared secret from property
     }
 
-    return null;
-  }
+    String passwordindatabase = encode(sharedSecret, requestAuthenticator.getValue(), databaseUserPassword);
 
-
-  private static void storeRadiusUserEntry(RadiusUserStorable entry) throws PersistenceLayerException {
-
-    ODSConnection ods = XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getODS().openConnection(ODSConnectionType.HISTORY);
-    try {
-      ods.persistObject(entry);
-      ods.commit();
-
-    } catch (Exception e) {
-      logger.error("Problems saving single Radius User: ", e);
-    } finally {
-      ods.closeConnection();
-    }
-  }
-
-
-  private static void deleteRadiusUserEntry(RadiusUserStorable entry) {
-    ODSConnection ods = XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getODS().openConnection(ODSConnectionType.HISTORY);
-    try {
-      if (logger.isDebugEnabled())
-        logger.debug("Removing User/Password entry");
-      ods.deleteOneRow(entry);
-      ods.commit();
-      if (logger.isDebugEnabled())
-        logger.debug("User/Password removed!");
-    } catch (PersistenceLayerException e) {
-      logger.error(null, e);
-    } finally {
-      try {
-        ods.closeConnection();
-      } catch (PersistenceLayerException e) {
-        logger.error(null, e);
-      }
-    }
-
-  }
-
-
-  public xact.radius.RadiusAddUserResult addTemporaryRadiusUser(IPv4 inputip, xact.radius.RadiusUserData userdata) {
-    if (logger.isDebugEnabled())
-      logger.debug("addTemporaryRadiusUser called for " + userdata.getUsername() + "@" + inputip.getValue());
-
-    long timestamp = System.currentTimeMillis();
-
-    String username = userdata.getUsername();
-    String password = userdata.getPassword();
-    String role = userdata.getRole();
-    String ip = inputip.getValue();
-    String sharedsecret = "";
-    String servicetype = "";
-
-    if (sharedsecret == null || sharedsecret.length() == 0) {
-      if (logger.isDebugEnabled())
-        logger.debug("Reading sharedSecret from property " + sharedSecretProp);
-      sharedsecret = sharedSecretXynaProp.get();
-    }
-    if (sharedsecret == null || sharedsecret.length() == 0) {
-      logger.error("Property " + sharedSecretProp + " not set. Can't create new radius user. Aborting ...");
-
-      return new xact.radius.RadiusAddUserResult("Property " + sharedSecretProp + " not set. Can't create new radius user. Aborting ...");
-    }
-
-    if (ip == null || ip.length() == 0) {
-      logger.error("Could not determine IP! Aborting...");
-      return new xact.radius.RadiusAddUserResult("Could not determine IP! Aborting...");
-    }
-
-    RadiusUserStorable founduser = queryUserByName(username);
-
-    try {
-      RadiusUserStorable newuser =
-          new RadiusUserStorable(founduser != null ? founduser.getId() : com.gip.xyna.idgeneration.IDGenerator.getInstance().getUniqueId("radius"),
-                                 username, password, sharedsecret, servicetype, timestamp, role, ip);
-      if (logger.isDebugEnabled())
-        logger.debug("Creating User with: id: " + newuser.getId() + " username: " + username + " servicetype: " + servicetype
-            + " timestamp: " + timestamp + " role: " + role + " ip: " + ip);
-
-      storeRadiusUserEntry(newuser);
-    } catch (PersistenceLayerException e) {
-      logger.error("Problems saving new temporary RadiusUser: ", e);
-      return new xact.radius.RadiusAddUserResult("Problems saving new temporary RadiusUser!");
-    } catch (XynaException e) {
-      logger.error("Problem creating id for new temporary RadiusUser: ", e);
-      return new xact.radius.RadiusAddUserResult("Problem creating id for new temporary RadiusUser!");
-    }
-
-    return new xact.radius.RadiusAddUserResult("Successful");
-  }
-
-
-  private static long getTimeout() {
-    if (logger.isDebugEnabled())
-      logger.debug("Reading Password Expiration Time from property ...");
-    String expirationtime = XynaFactory.getPortalInstance().getFactoryManagementPortal().getProperty(timeoutProp);
-    long timeout = 15 * 60000; // 15 Minuten defaultwert
-    if (expirationtime == null || expirationtime.length() == 0) {
-      timeout = timeoutXynaProp.getMillis();
-    } else {
-      try {
-        timeout = Long.parseLong(expirationtime);
-      } catch (Exception e) {
-        logger.warn("Property " + timeoutProp + " not set correctly. Using 15 minutes!");
-      }
-    }
-
-    return timeout;
-  }
-
-
-  private static xact.radius.Code authenticateRadiusUserAndRemoveExpired(RadiusUserStorable founduser, String radiusUserpassword,
-                                                                         xact.radius.SourceIP sourceip, String requestauthenticator) {
-
-    long timeout = getTimeout();
-
-    if (logger.isDebugEnabled())
-      logger.debug("Starting RADIUS authentication ...");
-
-    if (founduser == null) {
-      if (logger.isDebugEnabled())
-        logger.debug("RADIUS user not found! Authentication failed. Sending Reject!");
-      return new xact.radius.Code(REJECT);
-    }
-
-    if (!(sourceip.getValue().equals(founduser.getIp()))) {
-      if (logger.isDebugEnabled())
-        logger.debug("RADIUS Authentication failed, because ip does not match. (src: " + sourceip.getValue() + " expected: "
-            + founduser.getIp() + ") Sending Reject");
-      return new xact.radius.Code(REJECT);
-    }
-
-    String passwordindatabase = encode(founduser.getSharedSecret(), requestauthenticator, founduser.getUserPassword());
-    if (!passwordindatabase.equals(radiusUserpassword)) {
-      if (logger.isDebugEnabled())
+    if (!passwordindatabase.equals(inputUser.getPassword())) {
+      if (logger.isDebugEnabled()) {
         logger.debug("RADIUS Authentication failed, because password does not match. Sending Reject!");
-      return new xact.radius.Code(REJECT);
-    }
-
-    if (founduser.getTimestamp() == 0 || (System.currentTimeMillis() - founduser.getTimestamp()) <= timeout) {
-      if (logger.isDebugEnabled())
-        logger.debug("RADIUS Authentication successful. Sending Accept!");
-
-      if (founduser.getTimestamp() > 0) // Einmalpasswort mit Ablaufdatum
-      {
-        if (logger.isDebugEnabled())
-          logger.debug("One time password used.");
-        deleteRadiusUserEntry(founduser);
       }
-
-      return new xact.radius.Code(ACCEPT);
-    } else {
-      if (logger.isDebugEnabled())
-        logger.debug("RADIUS Authentication failed, because password used is expired. Sending Reject!");
+      return new Code(REJECT);
     }
 
-    return new xact.radius.Code(REJECT);
+    return new Code(ACCEPT);
   }
 
 
-  public Container authenticateRadiusUser(List<? extends Node> inputnodes, xact.radius.Code xmomcode,
-                                          xact.radius.RequestAuthenticator xmomauthenticator, xact.radius.SourceIP sourceip) {
-    String code = xmomcode.getValue();
-    String requestauthenticator = xmomauthenticator.getValue();
-    String radiusUsername = "";
-    String radiusUserpassword = "";
-    String nasidentifier = "";
+  public RadiusUser getBasicUserInfoFromNodes(List<? extends Node> inputNodes) {
+    RadiusUser.Builder radUserBuilder = new RadiusUser.Builder();
 
-    for (Node n : inputnodes) {
+    for (Node n : inputNodes) {
       if (n.getTypeName().equalsIgnoreCase("USER-NAME"))
-        radiusUsername = ((TypeWithValueNode) n).getValue().replaceAll("\"", "");
+        radUserBuilder.username(((TypeWithValueNode) n).getValue().replaceAll("\"", ""));
       if (n.getTypeName().equalsIgnoreCase("USER-PASSWORD"))
-        radiusUserpassword = ((TypeWithValueNode) n).getValue();
+        radUserBuilder.password(((TypeWithValueNode) n).getValue());
       if (n.getTypeName().equalsIgnoreCase("NAS-Identifier"))
-        nasidentifier = ((TypeWithValueNode) n).getValue();
-
+        radUserBuilder.iPAddress(((TypeWithValueNode) n).getValue());
     }
 
-    if (logger.isDebugEnabled())
-      logger.debug("got Code: " + code + " Authenticator: " + requestauthenticator + " Username: " + radiusUsername);
-    if (logger.isDebugEnabled())
-      logger.debug("got NAS-Identifier: " + nasidentifier);
-
-    RadiusUserStorable founduser = queryUserByName(radiusUsername);
-    Code resCode = authenticateRadiusUserAndRemoveExpired(founduser, radiusUserpassword, sourceip, requestauthenticator);
-
-    xact.radius.NASIdentifier nasidentifiernode = new xact.radius.NASIdentifier(nasidentifier);
-    xact.radius.UserRole userrolenode = new xact.radius.UserRole(founduser != null ? founduser.getRole() : "");
-
-    return new Container(resCode, userrolenode, nasidentifiernode);
-
+    return radUserBuilder.instance();
   }
 
 
@@ -433,28 +213,6 @@ public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymen
     result = ByteUtil.toHexValue(resultarray);
 
     return result;
-  }
-
-
-  public void cleanUsers() {
-    long timeout = getTimeout();
-
-    ODSConnection ods = XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getODS().openConnection(ODSConnectionType.HISTORY);
-
-    try {
-      Command sqlCmd = new Command(sqlDeleteUsersByTimeout);
-      Parameter sqlparameter = new Parameter(System.currentTimeMillis() - timeout);
-      ods.executeDML(ods.prepareCommand(sqlCmd), sqlparameter);
-      ods.commit();
-    } catch (PersistenceLayerException e) {
-      logger.error(null, e);
-    } finally {
-      try {
-        ods.closeConnection();
-      } catch (PersistenceLayerException e) {
-        logger.error(null, e);
-      }
-    }
   }
 
 }

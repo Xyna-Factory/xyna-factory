@@ -54,4 +54,9 @@
       <Type>String</Type>
     </Meta>
   </Data>
+  <Data Label="Import Rtc" VariableName="importRtc">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
 </DataType>
