@@ -342,15 +342,16 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
 
   @Override
   public <T> SharedResourceRequestResult<T> delete(SharedResourceDefinition<T> resource, List<String> ids) {
-    Connection con = getConnection();
-    if (con == null) {
-      return new SharedResourceRequestResult<T>(false, NO_CONNECTION_AVAILABLE_EXCEPTION, null);
-    }
     if (ids == null || ids.size() == 0) {
       if (logger.isDebugEnabled()) {
         logger.debug("No ids passed to delete request. resource: " + resource.getPath());
       }
       return new SharedResourceRequestResult<T>(true, null, null);
+    }
+    
+    Connection con = getConnection();
+    if (con == null) {
+      return new SharedResourceRequestResult<T>(false, NO_CONNECTION_AVAILABLE_EXCEPTION, null);
     }
     try {
       String parameterString = "?, ".repeat(ids.size());
@@ -452,13 +453,12 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
   @Override
   public <T> SharedResourceRequestResult<T> update(SharedResourceDefinition<T> resource, List<String> ids,
                                                    Function<SharedResourceInstance<T>, SharedResourceInstance<T>> update) {
+    if (ids == null || ids.isEmpty()) {
+      return new SharedResourceRequestResult<T>(true, null, null);
+    }
     Connection con = getConnection();
     if (con == null) {
       return new SharedResourceRequestResult<T>(false, NO_CONNECTION_AVAILABLE_EXCEPTION, null);
-    }
-
-    if (ids == null || ids.isEmpty()) {
-      return new SharedResourceRequestResult<T>(true, null, null);
     }
 
     List<SharedResourceInstance<T>> resources = new ArrayList<>();

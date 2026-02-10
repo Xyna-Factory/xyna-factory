@@ -24,7 +24,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
+
+import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.CollectionUtils;
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
@@ -49,8 +53,8 @@ import com.gip.xyna.xprc.xsched.vetos.VM_Cache.VetoFilter;
 public class VM_SharedResource implements VetoManagementInterface {
 
   public static final SharedResourceDefinition<SharedResourceVeto> XYNA_VETO_SR_DEF =
-      new KryoSerializedSharedResourceDefinition<SharedResourceVeto>(VetoManagement.XYNA_VETO_SR, SharedResourceVeto.class);
-
+      new KryoSerializedSharedResourceDefinition<>(VetoManagement.XYNA_VETO_SR, SharedResourceVeto.class);
+  private static final Logger logger = CentralFactoryLogging.getLogger(VM_SharedResource.class);
   private final SharedResourceManagement srm;
 
 
@@ -61,36 +65,60 @@ public class VM_SharedResource implements VetoManagementInterface {
 
   @Override
   public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> vetos, long urgency) {
-    // TODO Auto-generated method stub
-    return null;
+    List<SharedResourceInstance<SharedResourceVeto>> vetosToCreate = new ArrayList<>();
+    for (String vetoName : vetos) {
+      SharedResourceVeto value = new SharedResourceVeto();
+      value.usingOrderId = orderInformation.getOrderId();
+      value.usingOrderType = orderInformation.getOrderType();
+      value.usingRootOrderId = orderInformation.getRootOrderId();
+      SharedResourceInstance<SharedResourceVeto> instance = new SharedResourceInstance<>(vetoName, value);
+      vetosToCreate.add(instance);
+    }
+    SharedResourceRequestResult<SharedResourceVeto> createResult = srm.create(XYNA_VETO_SR_DEF, vetosToCreate);
+    return createResult.isSuccess() ? VetoAllocationResult.SUCCESS : VetoAllocationResult.FAILED;
   }
 
 
   @Override
   public void undoAllocation(OrderInformation orderInformation, List<String> vetos) {
-    // TODO Auto-generated method stub
-
+    SharedResourceRequestResult<SharedResourceVeto> deleteResult = srm.delete(XYNA_VETO_SR_DEF, vetos);
+    if (!deleteResult.isSuccess()) {
+      logger.error("Error while trying to deallocate vetos.", deleteResult.getException());
+    }
   }
 
 
   @Override
   public void finalizeAllocation(OrderInformation orderInformation, List<String> vetos) {
-    // TODO Auto-generated method stub
-
+    //ntbd
   }
 
 
   @Override
   public boolean freeVetos(OrderInformation orderInformation) {
-    // TODO Auto-generated method stub
-    return false;
+    return freeVetosOfOrder(orderInformation.getOrderId());
   }
 
 
   @Override
   public boolean freeVetosForced(long orderId) {
-    // TODO Auto-generated method stub
-    return false;
+    return freeVetosOfOrder(orderId);
+  }
+
+
+  private boolean freeVetosOfOrder(long orderId) {
+    SharedResourceRequestResult<SharedResourceVeto> readVetosResult = srm.readAll(XYNA_VETO_SR_DEF);
+    if (!readVetosResult.isSuccess()) {
+      return false;
+    }
+    List<SharedResourceInstance<SharedResourceVeto>> vetos = readVetosResult.getResources();
+    vetos = vetos == null ? Collections.emptyList() : vetos;
+    vetos.removeIf(x -> x.getValue() != null && x.getValue().usingOrderId != orderId);
+
+    List<String> vetoIds = vetos.stream().map(x -> x.getId()).collect(Collectors.toList());
+
+    SharedResourceRequestResult<SharedResourceVeto> deleteVetosResult = srm.delete(XYNA_VETO_SR_DEF, vetoIds);
+    return deleteVetosResult.isSuccess();
   }
 
 
@@ -100,8 +128,8 @@ public class VM_SharedResource implements VetoManagementInterface {
 
     SharedResourceVeto srVeto = new SharedResourceVeto();
     srVeto.documentation = administrativeVeto.getDocumentation();
-    srVeto.usingOrderId = -1l;
-    srVeto.usingRootOrderId = -1l;
+    srVeto.usingOrderId = AdministrativeVeto.ADMIN_VETO_ORDERID;
+    srVeto.usingRootOrderId = AdministrativeVeto.ADMIN_VETO_ORDERID;
     srVeto.usingOrderType = AdministrativeVeto.ADMIN_VETO_ORDERTYPE;
     SharedResourceInstance<SharedResourceVeto> veto = new SharedResourceInstance<SharedResourceVeto>(administrativeVeto.getName(), srVeto);
     SharedResourceRequestResult<SharedResourceVeto> createResult = srm.create(XYNA_VETO_SR_DEF, List.of(veto));
