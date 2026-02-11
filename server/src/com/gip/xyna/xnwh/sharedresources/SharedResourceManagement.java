@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Function;
@@ -383,6 +384,62 @@ public class SharedResourceManagement extends Section {
     }
     sharedResourceToSynchronizerMap.put(resource, synchronizerInstanceIdentifier);
     sharedResourceTypeStorage.storeType(resource, synchronizerInstanceIdentifier);
+  }
+
+
+  /**
+   * Deletes the shared resource synchronizer instance. The instance will be stopped. Shared resource types configured to
+   * this synchronizer instance will be reset.
+   * @param synchronizerInstanceIdentifier which shared resource synchronizer should be deleted
+   * @return  list of all shared resource types that were configured to this shared resource synchronizer instance
+   */
+  public List<String> deleteSharedResourceSynchronizer(String synchronizerInstanceIdentifier) {
+    SharedResourceSynchronizer synchronizer = synchronizerInstances.remove(synchronizerInstanceIdentifier);
+    if (synchronizer == null) {
+      throw new IllegalArgumentException("Can not remove unknown synchronizer instance '" + synchronizerInstanceIdentifier + "'");
+    }
+    if (logger.isInfoEnabled()) {
+      logger.info("Deleting shared resource synchronizer instance '" + synchronizerInstanceIdentifier + "' - " + synchronizer);
+    }
+
+    synchronizer.stop();
+
+    List<String> result = new ArrayList<>();
+    Set<Entry<String, String>> entries = new HashSet<>(sharedResourceToSynchronizerMap.entrySet());
+    for (Entry<String, String> entry : entries) {
+      String entrySharedResourceType = entry.getKey();
+      String entrySynchronizerInstanceId = entry.getValue();
+      if (Objects.equals(synchronizerInstanceIdentifier, entrySynchronizerInstanceId)) {
+        sharedResourceToSynchronizerMap.remove(entrySharedResourceType);
+        sharedResourcePortal.configureSharedResource(entrySharedResourceType, null);
+        result.add(entrySharedResourceType);
+      }
+    }
+    return result;
+  }
+
+
+  public void startSharedResourceSynchronizerInstance(String synchronizerInstanceIdentifier) {
+    SharedResourceSynchronizer synchronizer = synchronizerInstances.get(synchronizerInstanceIdentifier);
+    if (synchronizer == null) {
+      throw new IllegalArgumentException("Can not start unknown synchronizer instance '" + synchronizerInstanceIdentifier + "'");
+    }
+    if (logger.isInfoEnabled()) {
+      logger.info("Starting shared resource synchronizer instance '" + synchronizerInstanceIdentifier + "' - " + synchronizer);
+    }
+    synchronizer.start();
+  }
+
+
+  public void stopSharedResourceSynchronizerInstance(String synchronizerInstanceIdentifier) {
+    SharedResourceSynchronizer synchronizer = synchronizerInstances.get(synchronizerInstanceIdentifier);
+    if (synchronizer == null) {
+      throw new IllegalArgumentException("Can not stop unknown synchronizer instance '" + synchronizerInstanceIdentifier + "'");
+    }
+    if (logger.isInfoEnabled()) {
+      logger.info("Stopping shared resource synchronizer instance '" + synchronizerInstanceIdentifier + "' - " + synchronizer);
+    }
+    synchronizer.stop();
   }
 
 

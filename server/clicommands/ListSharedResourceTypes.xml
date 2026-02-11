@@ -16,5 +16,5 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="listsharedresourcetypes" Groups="Shared Resource Management" Description="Lists all known shared resources with their configured instance, if any."/>
+  <CommandDefinition Name="listsharedresourcetypes" Groups="Shared Resource Management" Description="Lists all known shared resources with their configured synchronizer instance, if any."/>
 </XynaCommandLineCommand>

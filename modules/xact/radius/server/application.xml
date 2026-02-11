@@ -15,12 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="RadiusServer" factoryVersion="" versionName="1.2.0" xmlVersion="1.1">
+--><Application applicationName="RadiusServer" factoryVersion="" versionName="1.2.2" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>
         <VersionName>1.1.4</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>Crypto</ApplicationName>
+        <VersionName>1.0.11</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>XynaPropertyMgmt</ApplicationName>
+        <VersionName>1.0.3</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
@@ -40,6 +48,10 @@
     </Ordertype>
     <Ordertype implicitDependency="true">
       <DestinationKey>xact.radius.AddRADIUSAttributes</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xact.radius.AddRadiusUser</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -82,6 +94,10 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xact.radius.AddRADIUSAttributes</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.radius.AddRadiusUser</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
@@ -194,14 +210,6 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
       <FqName>xact.radius.VendorSpecificUserInfo</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xact.radius.XynaPropertyKey</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xact.radius.XynaPropertyStringValue</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
@@ -335,4 +343,13 @@
       <ColumnName>value</ColumnName>
     </XmomStorable>
   </XmomStorables>
+  <InheritanceRules>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xact.radius.AddRadiusUser</OrdertypeName>
+      <ChildFilter/>
+      <Value>10</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+  </InheritanceRules>
 </Application>

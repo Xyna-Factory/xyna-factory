@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="configuresharedresourcetype" Groups="Shared Resource Management" Description="Configures a shared resouce to the given shared resource provider instance" />
+  <CommandDefinition Name="configuresharedresourcetype" Groups="Shared Resource Management" Description="Configures a shared resouce to the given shared resource synchronizer instance" />
   <BoolOption Name="d" LongName="delete" Description="Delete the configuration" Optional="true"/>
   <Argument Name="resourceType" Description="Type of the shared resource to configure."/>
   <Argument Name="synchronizerInstanceName" Description="Name of the shared resource synchronizer instance." Optional="true"/>

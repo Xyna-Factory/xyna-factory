@@ -136,6 +136,9 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
 
   @Override
   public void start() {
+    if (state.is(State.running)) {
+      return;
+    }
     if (!state.compareAndSet(State.stopped, State.starting)) {
       if (logger.isWarnEnabled()) {
         logger.warn("rejecting start of " + this + ". Current state is " + state.get());
@@ -185,6 +188,9 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
 
   @Override
   public void stop() {
+    if (state.is(State.stopped)) {
+      return;
+    }
     if (!state.compareAndSet(State.running, State.stopping)) {
       if (logger.isWarnEnabled()) {
         logger.warn("rejecting stop of " + this + ". Current state is " + state.get());
