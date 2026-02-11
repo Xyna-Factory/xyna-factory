@@ -29,6 +29,7 @@ import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.UserType;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyDuration;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyInt;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyString;
@@ -82,10 +83,18 @@ public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymen
 
 
   public void onDeployment() throws XynaException {
+    timeoutXynaProp.registerDependency(UserType.Service, TIMEOUTPROPERTY);
+    sharedSecretXynaProp.registerDependency(UserType.Service, SHAREDSECRETPROPERTY);
+    aesKeyNameXynaProp.registerDependency(UserType.Service, AESKEYNAMEPROPERTY);
+    aesKeySizeXynaProp.registerDependency(UserType.Service, AESKEYSIZEPROPERTY);
   }
 
 
   public void onUndeployment() throws XynaException {
+    timeoutXynaProp.unregister();
+    sharedSecretXynaProp.unregister();
+    aesKeyNameXynaProp.unregister();
+    aesKeySizeXynaProp.unregister();
   }
 
 
