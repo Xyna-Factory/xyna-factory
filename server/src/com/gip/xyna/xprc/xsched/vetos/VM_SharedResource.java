@@ -75,16 +75,16 @@ public class VM_SharedResource implements VetoManagementInterface {
       vetosToCreate.add(instance);
     }
     SharedResourceRequestResult<SharedResourceVeto> createResult = srm.create(XYNA_VETO_SR_DEF, vetosToCreate);
+    if(logger.isDebugEnabled()) {
+      logger.debug("create Veto Result for " + orderInformation.getOrderId() + ": success? " + createResult.isSuccess());
+    }
     return createResult.isSuccess() ? VetoAllocationResult.SUCCESS : VetoAllocationResult.FAILED;
   }
 
 
   @Override
   public void undoAllocation(OrderInformation orderInformation, List<String> vetos) {
-    SharedResourceRequestResult<SharedResourceVeto> deleteResult = srm.delete(XYNA_VETO_SR_DEF, vetos);
-    if (!deleteResult.isSuccess()) {
-      logger.error("Error while trying to deallocate vetos.", deleteResult.getException());
-    }
+    freeVetosForced(orderInformation.getOrderId());
   }
 
 
@@ -129,8 +129,8 @@ public class VM_SharedResource implements VetoManagementInterface {
     SharedResourceVeto srVeto = new SharedResourceVeto();
     srVeto.documentation = administrativeVeto.getDocumentation();
     srVeto.usingOrderId = AdministrativeVeto.ADMIN_VETO_ORDERID;
-    srVeto.usingRootOrderId = AdministrativeVeto.ADMIN_VETO_ORDERID;
     srVeto.usingOrderType = AdministrativeVeto.ADMIN_VETO_ORDERTYPE;
+    srVeto.usingRootOrderId = AdministrativeVeto.ADMIN_VETO_ORDERID;
     SharedResourceInstance<SharedResourceVeto> veto = new SharedResourceInstance<SharedResourceVeto>(administrativeVeto.getName(), srVeto);
     SharedResourceRequestResult<SharedResourceVeto> createResult = srm.create(XYNA_VETO_SR_DEF, List.of(veto));
     if (!createResult.isSuccess()) {

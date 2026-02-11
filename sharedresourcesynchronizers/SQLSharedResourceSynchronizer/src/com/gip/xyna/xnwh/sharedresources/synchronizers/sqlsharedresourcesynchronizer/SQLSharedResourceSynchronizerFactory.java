@@ -107,6 +107,9 @@ public class SQLSharedResourceSynchronizerFactory implements SharedResourceSynch
       throw new IllegalArgumentException(e);
     }
     String tableName = TABLENAME.getFromMap(param);
+    if(tableName.contains(" ")) {
+      errors.add("Tablename must not contain spaces");
+    }
     String url = readPropertyWithEnv(URL, URL_ENV, param, errors);
     String username = readPropertyWithEnv(USER, USER_ENV, param, errors);
     String password = readPropertyWithEnv(PASSWORD, PASSWORD_ENV, param, errors);
