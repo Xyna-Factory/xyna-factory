@@ -30,14 +30,19 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTi
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyDuration;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyInt;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyString;
 
+import base.Text;
 import xact.radius.Code;
 import xact.radius.Node;
 import xact.radius.RadiusUser;
 import xact.radius.RequestAuthenticator;
 import xact.radius.TypeWithValueNode;
 import xact.radius.impl.util.ByteUtil;
+import xint.crypto.AESCrypto;
+import xint.crypto.exceptions.AESCryptoException;
+import xint.crypto.parameter.AESCryptoParameter;
 
 
 
@@ -50,15 +55,26 @@ public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymen
 
   private static final String TIMEOUTPROPERTY = "xact.radius.passwordExpirationTime";
   private static final String SHAREDSECRETPROPERTY = "xact.radius.sharedSecret";
+  private static final String AESKEYNAMEPROPERTY = "xact.radius.aes.keyName";
+  private static final String AESKEYSIZEPROPERTY = "xact.radius.aes.keySize";
 
   private static final XynaPropertyDuration timeoutXynaProp = new XynaPropertyDuration(TIMEOUTPROPERTY, "900 s")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Maximale Gültigkeitsdauer für Benutzer mit Einmalpasswort")
       .setDefaultDocumentation(DocumentationLanguage.EN, "Maximum validity period for users with a one-time password");
   private final static XynaPropertyString sharedSecretXynaProp = new XynaPropertyString(SHAREDSECRETPROPERTY, "sharedSecret", false)
       .setDefaultDocumentation(DocumentationLanguage.DE,
-                               "Standardwert für den Radius Server. Wird verwendet, wenn kein benutzerspezifisches shared secret existiert.")
+                               "Standardwert für den RADIUS Server. Wird verwendet, wenn kein benutzerspezifisches shared secret existiert.")
       .setDefaultDocumentation(DocumentationLanguage.EN,
-                               "Default value for the radius server. Used when no user-specific shared secret exists.");
+                               "Default value for the RADIUS server. Used when no user-specific shared secret exists.");
+
+  private final static XynaPropertyString aesKeyNameXynaProp = new XynaPropertyString(AESKEYNAMEPROPERTY, null, true)
+      .setDefaultDocumentation(DocumentationLanguage.DE,
+                               "Name (identifier) des AES-Schlüssels zum Ver- und Entschlüsseln der RADIUS-Benutzerdaten.")
+      .setDefaultDocumentation(DocumentationLanguage.EN,
+                               "Name (identifier) of the AES key for encryption and decryption of RADIUS user data");
+  private final static XynaPropertyInt aesKeySizeXynaProp = new XynaPropertyInt(AESKEYSIZEPROPERTY, 256)
+      .setDefaultDocumentation(DocumentationLanguage.DE, "AES Schlüssellänge (bits): 128, 192, oder 256 (default)")
+      .setDefaultDocumentation(DocumentationLanguage.EN, "AES key size (bits): 128, 192, or 256 (default)");
 
 
   public XynaRadiusServicesServiceOperationImpl() {
@@ -94,10 +110,19 @@ public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymen
 
 
   public Code validateCredentials(RadiusUser inputUser, RadiusUser databaseUser, RequestAuthenticator requestAuthenticator) {
+    AESCryptoParameter aesParam = new AESCryptoParameter(aesKeyNameXynaProp.get(), aesKeySizeXynaProp.get());
     String databaseUserPassword = databaseUser.getPassword();
     String sharedSecret = databaseUser.getSharedSecret();
-    if (sharedSecret == null || sharedSecret.length() == 0) {
-      sharedSecret = sharedSecretXynaProp.get();  // use default shared secret from property
+
+    try {
+      databaseUserPassword = AESCrypto.aESDecrypt(new Text(databaseUserPassword), aesParam).getText();
+      if (sharedSecret != null && sharedSecret.length() > 0) {
+        sharedSecret = AESCrypto.aESDecrypt(new Text(sharedSecret), aesParam).getText();
+      } else {
+        sharedSecret = sharedSecretXynaProp.get(); // use default shared secret from property
+      }
+    } catch (AESCryptoException e) {
+      throw new RuntimeException("Error during decryption of user data", e);
     }
 
     String passwordindatabase = encode(sharedSecret, requestAuthenticator.getValue(), databaseUserPassword);
