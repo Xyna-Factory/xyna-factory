@@ -314,12 +314,12 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
 
   @Override
   public <T> SharedResourceRequestResult<T> create(SharedResourceDefinition<T> resource, List<SharedResourceInstance<T>> data) {
+    if (data == null || data.isEmpty()) {
+      return new SharedResourceRequestResult<T>(true, null, null);
+    }
     Connection con = getConnection();
     if (con == null) {
       return new SharedResourceRequestResult<T>(false, NO_CONNECTION_AVAILABLE_EXCEPTION, null);
-    }
-    if (data == null || data.isEmpty()) {
-      return new SharedResourceRequestResult<T>(true, null, null);
     }
     try {
       String sql = INSERT_TEMPLATE + INSERT_VALUE_PLACEHOLDER.repeat(data.size());
