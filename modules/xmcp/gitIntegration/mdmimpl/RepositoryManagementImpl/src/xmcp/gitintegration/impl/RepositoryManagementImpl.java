@@ -29,20 +29,31 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
+import com.gip.xyna.FileUtils;
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.utils.collections.CollectionUtils;
+import com.gip.xyna.utils.collections.CollectionUtils.Transformation;
+import com.gip.xyna.xdev.ProjectCreationOrChangeProvider.BatchRepositoryEvent;
 import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.exceptions.XFMG_CouldNotBuildNewWorkspace;
 import com.gip.xyna.xfmg.exceptions.XFMG_CouldNotRemoveWorkspace;
+import com.gip.xyna.xfmg.xfctrl.cmdctrl.CommandControl;
+import com.gip.xyna.xfmg.xfctrl.dependencies.RuntimeContextDependencyManagement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.workspacemgmt.WorkspaceManagement;
 import com.gip.xyna.xfmg.xfctrl.workspacemgmt.parameters.RemoveWorkspaceParameters;
+import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase.XMOMType;
+import com.gip.xyna.xfmg.xopctrl.usermanagement.TemporarySessionAuthentication;
+import com.gip.xyna.xmcp.XynaMultiChannelPortal;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Workspace;
+import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement.PathType;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.persistence.ODSConnection;
 import com.gip.xyna.xnwh.persistence.ODSConnectionType;
@@ -56,14 +67,28 @@ import com.gip.xyna.xnwh.persistence.StorableClassList;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoException;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoResult;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutor;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.DeploymentMode;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.WorkflowProtectionMode;
 
+import xmcp.gitintegration.CREATE;
+import xmcp.gitintegration.InfoWorkspaceContentDiffGroup;
+import xmcp.gitintegration.InfoWorkspaceContentDiffGroupList;
+import xmcp.gitintegration.ListId;
 import xmcp.gitintegration.WorkspaceContent;
+import xmcp.gitintegration.WorkspaceContentDifference;
+import xmcp.gitintegration.WorkspaceContentDifferences;
+import xmcp.gitintegration.WorkspaceContentDifferencesResolution;
+import xmcp.gitintegration.WorkspaceContentItem;
 import xmcp.gitintegration.WorkspaceObjectManagement;
+import xmcp.gitintegration.impl.RepositoryManagementImpl.AddRepositoryConnectionResult.Success;
 import xmcp.gitintegration.repository.Repository;
 import xmcp.gitintegration.repository.RepositoryConnection;
 import xmcp.gitintegration.repository.RepositoryConnectionGroup;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -231,6 +256,333 @@ public class RepositoryManagementImpl {
   }
   private static boolean matchWsFile(Path filePath, BasicFileAttributes fileAttr) {
     return fileAttr.isRegularFile() && filePath.endsWith(WORKSPACE_XML);
+  }
+
+  
+  public static AddRepositoryConnectionResult addRepositoryConnection(String repoPath, String workspace, boolean full, boolean setup) {
+    List<RepositoryConnectionStorable> workspaces;
+    try {
+      workspaces = findRelevantWorkspacesToConnect(repoPath, workspace, full);
+    } catch (Exception e) {
+      return new AddRepositoryConnectionResult(Success.NONE, Collections.emptyList(), e.getMessage());
+    }
+    if (workspaces.isEmpty()) {
+      String msg = full ? "Could not find any workspaces in path!" : "Could not find given workspace in path!";
+      return new AddRepositoryConnectionResult(Success.NONE, Collections.emptyList(), msg);
+    }
+
+    List<String> errors = new ArrayList<>();
+    List<String> actionsPerformed = new ArrayList<>();
+    int successfulConnections = 0;
+    for (RepositoryConnectionStorable storable : workspaces) {
+      boolean success = createWorkspaceWithSymlinks(storable, actionsPerformed, errors);
+      successfulConnections += success ? 1 : 0;
+    }
+    //if setup is requested, setup each relevant workspace (in correct order)
+    if(setup && errors.isEmpty()) {
+        setupWorkspaces(workspaces, actionsPerformed, errors);
+    } else if(setup) {
+      errors.add("Skipping setup because of previous errors");
+    }
+    Success success = successfulConnections == 0 ? Success.NONE : errors.isEmpty() ? Success.FULL : Success.PARTIAL;
+    return new AddRepositoryConnectionResult(success, Collections.emptyList(), String.join("\n", errors));
+  }
+
+  
+  private static void setupWorkspaces(List<RepositoryConnectionStorable> storables, List<String> actionsPerformed, List<String> errors) {
+    Map<String, WorkspaceContentDifferences> workspaceDiffsByWorkspace = new HashMap<>();
+    List<Long> revisions = new ArrayList<>();
+    Map<Long, String> revisionToWsNameMap = new HashMap<>();
+    //create difference lists
+    //resolve runtimeContextDependencies
+    for(RepositoryConnectionStorable storable : storables) {
+      WorkspaceContent wsContent = WorkspaceObjectManagement.createWorkspaceContent(new xprc.xpce.Workspace(storable.getWorkspacename()));
+      String path = Paths.get(storable.getPath(), storable.getSubpath()).toAbsolutePath().toString();
+      WorkspaceContent repoContent = WorkspaceObjectManagement.createWorkspaceContentFromFile(new base.File(path));
+      WorkspaceContentDifferences diffs = WorkspaceObjectManagement.compareWorkspaceContent(repoContent, wsContent);
+      workspaceDiffsByWorkspace.put(storable.getWorkspacename(), diffs);
+      ListId listId = new ListId.Builder().listId(diffs.getListId()).instance();
+      List<? extends WorkspaceContentDifference> entries = diffs.getDifferences();
+      for(WorkspaceContentDifference entry : entries) {
+        if(!(entry.getContentType().equals("runtimecontextdependency"))) {
+          continue;
+        }
+        WorkspaceContentDifferencesResolution.Builder builder = new WorkspaceContentDifferencesResolution.Builder();
+        builder.entryId(entry.getEntryId());
+        builder.resolution(entry.getDifferenceType().getClass().getSimpleName());
+        String dependency = writeDependency(entry);
+        actionsPerformed.add("Trying to "+ entry.getDifferenceType() +" rtc dependency for " + storable.getWorkspacename() + " to " + dependency);
+        WorkspaceObjectManagement.resolveWorkspaceDifferences(listId, List.of(builder.instance()));
+      }
+      InfoWorkspaceContentDiffGroupList info = WorkspaceObjectManagement.adaptWorkspaceDifferenceList(listId);
+      List<? extends InfoWorkspaceContentDiffGroup> groups = info.getInfoWorkspaceContentDiffGroup();
+      boolean remainingChanges = false;
+      for(InfoWorkspaceContentDiffGroup group : groups) {
+        if(group.getContentType().equals("runtimecontextdependency") && group.getDifferenceList() != null && !group.getDifferenceList().isEmpty()) {
+          remainingChanges = true;
+        }
+      }
+      if(remainingChanges) {
+        errors.add("Could not resolve all rtc dependencies of workspace " + storable.getWorkspacename());
+      } else {
+        actionsPerformed.add("Successfully resolved all rtc dependencies of workspace " + storable.getWorkspacename());
+        revisions.add(getRevision(storable.getWorkspacename()));
+      }
+    }
+    List<Long> sortedRevisions = sortWorkspaces(revisions);
+
+    for(Long revision : new ArrayList<>(sortedRevisions)) {
+      try {
+        refreshworkspace(revision, false, actionsPerformed, errors);
+        actionsPerformed.add("Registered objects of revision " + revision);
+      } catch(Exception e) {
+        errors.add("Error during registration of xmom objects for revision " + revision);
+      }
+    }
+    
+    for(Long revision : sortedRevisions) {
+      WorkspaceContentDifferences diffs = workspaceDiffsByWorkspace.get(revisionToWsNameMap.get(revision));
+      ListId listId = new ListId.Builder().listId(diffs.getListId()).instance();
+      for(WorkspaceContentDifference entry: diffs.getDifferences()) {
+        if(entry.getContentType().equals("applicationdefinition")) {
+          continue;
+        }
+        WorkspaceContentDifferencesResolution.Builder builder = new WorkspaceContentDifferencesResolution.Builder();
+        builder.entryId(entry.getEntryId());
+        builder.resolution(entry.getDifferenceType().getClass().getSimpleName());
+        WorkspaceObjectManagement.resolveWorkspaceDifferences(listId, List.of(builder.instance()));
+      }
+    }
+    
+    for(Long revision : new ArrayList<>(sortedRevisions)) {
+      try {
+        refreshworkspace(revision, true, actionsPerformed, errors);
+        actionsPerformed.add("Registered objects of revision " + revision);
+      } catch(Exception e) {
+        errors.add("Error during registration of xmom objects for revision " + revision);
+      }
+    }
+    
+    for(Long revision : sortedRevisions) {
+      WorkspaceContentDifferences diffs = workspaceDiffsByWorkspace.get(revisionToWsNameMap.get(revision));
+      ListId listId = new ListId.Builder().listId(diffs.getListId()).instance();
+      for(WorkspaceContentDifference entry: diffs.getDifferences()) {
+        WorkspaceContentDifferencesResolution.Builder builder = new WorkspaceContentDifferencesResolution.Builder();
+        builder.entryId(entry.getEntryId());
+        builder.resolution(entry.getDifferenceType().getClass().getSimpleName());
+        WorkspaceObjectManagement.resolveWorkspaceDifferences(listId, List.of(builder.instance()));
+      }
+    }
+  }
+  
+  
+  private static void refreshworkspace(Long revision, boolean deploy, List<String> actionsPerformed, List<String> errors) throws Exception {
+    XynaMultiChannelPortal portal = (XynaMultiChannelPortal) XynaFactory.getInstance().getXynaMultiChannelPortal();
+    TemporarySessionAuthentication tsa =
+    TemporarySessionAuthentication.tempAuthWithUniqueUserAndOperationLock("RefreshWS", TemporarySessionAuthentication.TEMPORARY_CLI_USER_ROLE, revision,
+                                                                          CommandControl.Operation.XMOM_SAVE);
+    tsa.initiate();
+    try {
+      Collection<String> allObjectNames = collectObjectNames(revision);
+      BatchRepositoryEvent repositoryEvent = new BatchRepositoryEvent(revision);
+      if(!deploy) {
+        for (String objectName : allObjectNames) {
+          File file = new File(GenerationBase.getFileLocationOfXmlNameForSaving(objectName, revision) + ".xml");
+          if (file.exists()) {
+            String xml = FileUtils.readFileAsString(file);
+            try {
+              portal.saveMDM(xml, true, tsa.getUsername(), tsa.getSessionId(), revision, repositoryEvent, true, true);
+            } catch (Exception e) {
+              errors.add("exception during registration of " + objectName + " in revision " + revision);
+            }
+          }
+        }
+      } else {
+        List<GenerationBase> toDeploy = new ArrayList<>();
+        for (String objectName : allObjectNames) {
+          File file = new File(GenerationBase.getFileLocationOfXmlNameForSaving(objectName, revision) + ".xml");
+          XMOMType type = XMOMType.getXMOMTypeByFile(file);
+          toDeploy.add(GenerationBase.getInstance(type, objectName, revision));
+        }
+        GenerationBase.deploy(toDeploy, DeploymentMode.codeChanged, false, WorkflowProtectionMode.BREAK_ON_USAGE);
+      }
+    } catch(Exception e) {
+      tsa.destroy();
+      throw e;
+    }
+  }
+
+  
+  private static Collection<String> collectObjectNames(Long revision) {
+    final String savedMdmDir = RevisionManagement.getPathForRevision(PathType.XMOM, revision, false);
+    List<File> files = FileUtils.getMDMFiles(new File(savedMdmDir), new ArrayList<File>());
+    return CollectionUtils.transformAndSkipNull(files, new Transformation<File, String>() {
+      public String transform(File from) {
+        String xmlName = from.getPath().substring(savedMdmDir.length() + 1).replaceAll(Constants.FILE_SEPARATOR, ".");
+        xmlName = xmlName.substring(0, xmlName.length() - ".xml".length());
+        if (GenerationBase.isReservedServerObjectByFqOriginalName(xmlName)) {
+          return null;
+        } else {
+          return xmlName;
+        }
+      }
+    });
+  }
+  
+  private static List<Long> sortWorkspaces(List<Long> revisions) {
+    List<Long> result = new ArrayList<>();
+    RuntimeContextDependencyManagement rcdm;
+    rcdm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
+    for(Long revision : revisions) {
+      if(result.contains(revision)) {
+        continue;
+      }
+      addRevisionToResult(result, revision, revisions, rcdm);
+    }
+    return result;
+  }
+  
+  private static void addRevisionToResult(List<Long> result, Long revision, List<Long> revisions, RuntimeContextDependencyManagement rcdm) {
+    Set<Long> dependencies = new HashSet<>();
+    rcdm.getDependenciesRecursivly(revision, dependencies);
+    for(Long dependency : dependencies) {
+      if(revisions.contains(dependency) && !result.contains(dependency)) {
+        addRevisionToResult(result, dependency, revisions, rcdm);
+      }
+    }
+    
+    result.add(revision);
+  }
+
+  private static String writeDependency(WorkspaceContentDifference entry) {
+    WorkspaceContentItem item = (entry.getDifferenceType() instanceof CREATE) ? entry.getNewItem() : entry.getExistingItem();
+    xmcp.gitintegration.RuntimeContextDependency casted = ((xmcp.gitintegration.RuntimeContextDependency)item);
+    return casted.getDepName() + ((casted.getDepAddition() != null && !casted.getDepAddition().isEmpty()) ? "/" + casted.getDepAddition() : "");
+  }
+
+  private static boolean createWorkspaceWithSymlinks(RepositoryConnectionStorable storable, List<String> actions, List<String> errors) {
+    String workspaceName = storable.getWorkspacename();
+    if (getRevision(workspaceName) != null) {
+      errors.add("Workspace '" + storable.getWorkspacename() + "' already exists.");
+      return false;
+    }
+    Path subPath = Paths.get(storable.getPath(), storable.getSubpath());
+    if (!subPath.resolve(SAVED).resolve(XMOM).toFile().isDirectory() && !subPath.resolve(XMOM).toFile().isDirectory()) {
+      errors.add("Sub path of workspace.xml for workspace '" + workspaceName + "' does not contain the " + SAVED + "/" + XMOM + " or "
+          + XMOM + " directory! Subpath: " + storable.getSubpath());
+      return false;
+    }
+
+    Long revision = createWorkspace(workspaceName);
+    if (revision == null) {
+      errors.add("Could not create workspace '" + workspaceName + "' within the factory!");
+      return false;
+    } else {
+      actions.add("Created workspace for " + workspaceName + " (" + revision + ")");
+    }
+
+    if (!createSymlinks(storable, actions, errors)) {
+      actions.add("Tried to delete workspace " + workspaceName + " (" + revision + ")");
+      Long rev = deleteWorkspace(workspaceName);
+      if (rev == null) {
+        errors.add("Deletion of workspace " + workspaceName + " was NOT successfull.");
+      } else {
+        actions.add("Deletion of workspace " + workspaceName + " was  successfull.");
+      }
+      return false;
+    }
+
+    return true;
+  }
+
+
+  private static boolean createSymlinks(RepositoryConnectionStorable storable, List<String> actions, List<String> errors) {
+    Path revisionPath =
+        Path.of(Constants.BASEDIR, Constants.REVISION_PATH, Constants.PREFIX_REVISION + getRevision(storable.getWorkspacename()));
+    if (storable.getSavedinrepo()) {
+      if (deleteDirectory(revisionPath)) {
+        errors.add("Error: Could not delete directory '" + revisionPath + "' within the factory!");
+        return false;
+      }
+      if (!createSymbolicLink(revisionPath, Paths.get(storable.getPath(), storable.getSubpath()))) {
+        errors.add("Could not create symbolic link '" + revisionPath + "' within the factory!");
+        return false;
+      }
+      return true;
+    }
+
+    Path workspacePathAbs = Path.of(storable.getPath(), storable.getSubpath()).toAbsolutePath();
+    try {
+      Files.createDirectory(revisionPath.resolve(SAVED));
+    } catch (IOException e) {
+      _logger.error(e.getMessage(), e);
+      errors.add("Could not create directory '" + revisionPath.resolve(SAVED) + "' within the factory!");
+      return false;
+    }
+
+    if (!createSymbolicLink(revisionPath.resolve(SAVED).resolve(XMOM), workspacePathAbs.resolve(XMOM))) {
+      errors.add("Could not create symbolic link '" + revisionPath.resolve(SAVED).resolve(XMOM) + "' within the factory!");
+      return false;
+    }
+    // create symlink for config directory, if any
+    if (WorkspaceConfigSplit.valueOf(storable.getSplittype()) != WorkspaceConfigSplit.NONE) {
+      if (!createSymbolicLink(revisionPath.resolve(CONFIG), workspacePathAbs.resolve(CONFIG))) {
+        errors.add("Could not create symbolic link '" + revisionPath.resolve(CONFIG) + "' within the factory!");
+        return false;
+      }
+    } else {
+      Path workspaceXmlPath = Paths.get(workspacePathAbs.toString(), WORKSPACE_XML);
+      Path filename = workspaceXmlPath.getFileName();
+      if (!createSymbolicLink(revisionPath.resolve(filename), workspaceXmlPath)) {
+        errors.add("Could not create symbolic link '" + revisionPath.resolve(filename) + "' within the factory!");
+        return false;
+      }
+    }
+
+
+    return true;
+  }
+
+
+  private static boolean createSymbolicLink(Path from, Path to) {
+    try {
+      Files.createSymbolicLink(from, to);
+    } catch (IOException e) {
+      _logger.error(e.getMessage(), e);
+      return false;
+    }
+    return true;
+  }
+
+
+  private static List<RepositoryConnectionStorable> findRelevantWorkspacesToConnect(String repoPath, String workspace, boolean full) {
+    List<RepositoryConnectionStorable> result = new ArrayList<>();
+    if (!new File(repoPath).isDirectory()) {
+      throw new RuntimeException("Error: Path '" + repoPath + "' is not a directory!");
+    }
+    Path basePath = Paths.get(repoPath).toAbsolutePath();
+    String basePathStr = basePath.toString();
+    Map<String, Path> workspaceXmlPathMap;
+    try {
+      workspaceXmlPathMap = createWorkspaceXmlPathMap(basePath, full, workspace);
+    } catch (IOException e) {
+      _logger.error(e.getMessage(), e);
+      throw new RuntimeException("Error: Exception occured while searching for workspace.xml files!");
+    }
+    for (Entry<String, Path> entry : workspaceXmlPathMap.entrySet()) {
+      String workspaceName = entry.getKey();
+      Path pathToWorkspaceXml = entry.getValue();
+      boolean savedInRepo = entry.getValue().resolve(SAVED).resolve(XMOM).toFile().isDirectory();
+      boolean isSplit = pathToWorkspaceXml.endsWith(CONFIG);
+      Path subPath = isSplit ? pathToWorkspaceXml.getParent() : pathToWorkspaceXml;
+      String subPathString = subPath.toAbsolutePath().toString().substring(basePathStr.length() + 1); //+1 for "/"
+      String workspaceXmlBasePath = pathToWorkspaceXml.toAbsolutePath().toString();
+      String splitStr = determineSplitType(isSplit, workspaceXmlBasePath);
+      RepositoryConnectionStorable storable;
+      storable = new RepositoryConnectionStorable(workspaceName, basePathStr, subPathString, savedInRepo, splitStr);
+      result.add(storable);
+    }
+    return result;
   }
 
 
@@ -666,6 +1018,34 @@ public class RepositoryManagementImpl {
       result.add(group);
     }
     return result;
+  }
+  
+  public static class AddRepositoryConnectionResult {
+    private final Success success;
+    private final List<String> actionsPerformed;
+    private final String errorMsg;
+    
+    public AddRepositoryConnectionResult(Success success, List<String> actionsPerformed, String errorMsg) {
+      this.success = success;
+      this.actionsPerformed = actionsPerformed;
+      this.errorMsg = errorMsg;
+    }
+    
+    public Success getSuccess() {
+      return success;
+    }
+    
+    public List<String> getActionsPerformed() {
+      return actionsPerformed;
+    }
+    
+    public String getErrorMsg() {
+      return errorMsg;
+    }
+    
+    public static enum Success {
+      NONE, PARTIAL, FULL
+    }
   }
   
 }
