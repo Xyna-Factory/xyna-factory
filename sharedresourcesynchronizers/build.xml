@@ -30,7 +30,7 @@
     <target name="build">
 
         <xynaTarget name="buildSQLSharedResourceSynchronizer" if="xyna.sharedresourcesynchronizer.SQLSharedResourceSynchronizer">
-            <ant antfile="build.xml" target="build" inheritAll="false" dir="sqlsharedresourcesynchronizer">
+            <ant antfile="build.xml" target="build" inheritAll="false" dir="SQLSharedResourceSynchronizer">
                 <property name="target.dir" value="${target.dir}/sqlsharedresourcesynchronizer" />
             </ant>
         </xynaTarget>
