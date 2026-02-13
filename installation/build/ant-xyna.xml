@@ -184,10 +184,10 @@
   <!-- = = = = = = = = = = = = = = = = =
                 macrodef: prepareInstall          
                = = = = = = = = = = = = = = = = = -->
+  <!--             
   <macrodef name="prepareInstall"
             description="Copy all needed libraries to ${user.home}/.ant/lib">
     <sequential>
-      <!-- Oracle -->
       <if>
         <equals arg1="${isOracleAS}" arg2="true" />
         <then>
@@ -229,7 +229,6 @@
           </fail>
         </then>
       </if>
-      <!-- sshexec and scp -->
       <if>
         <isset property="install.ant.jsch" />
         <then>
@@ -289,7 +288,6 @@
                    classname="com.gip.xyna.utils.install.db.oracle.StoreBlob">
             <classpath>
               <pathelement location="${install.lib.dir}/xynautils-ant-I20110915_1541.jar" />
-              <!--<pathelement location="${install.lib.dir}/ojdbc14.jar" />-->
             </classpath>
           </typedef>
           <typedef name="persistencelayerinstance"
@@ -311,6 +309,7 @@
       </taskdef>
     </then>
   </if>
+  -->
 
   <!-- =================================
          target: update
