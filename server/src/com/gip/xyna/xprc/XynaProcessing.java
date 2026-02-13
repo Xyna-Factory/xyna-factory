@@ -1157,17 +1157,17 @@ public class XynaProcessing extends XynaProcessingBase {
   }
     
   public void allocateAdministrativeVeto(String vetoName, String documentation) throws XPRC_AdministrativeVetoAllocationDenied, PersistenceLayerException {
-    getXynaScheduler().getVetoManagement().allocateAdministrativeVeto(new AdministrativeVeto(vetoName, documentation));
+    getXynaScheduler().getVetoManagement().allocateAdministrativeVeto(new AdministrativeVeto(vetoName, documentation, System.currentTimeMillis()));
   }
 
 
   public void freeAdministrativeVeto(String vetoName) throws XPRC_AdministrativeVetoDeallocationDenied, PersistenceLayerException {
-    getXynaScheduler().getVetoManagement().freeAdministrativeVeto(new AdministrativeVeto(vetoName,null));
+    getXynaScheduler().getVetoManagement().freeAdministrativeVeto(new AdministrativeVeto(vetoName,null, null));
   }
   
   
   public void setDocumentationOfAdministrativeVeto(String vetoName, String documentation) throws PersistenceLayerException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
-    getXynaScheduler().getVetoManagement().setDocumentationOfAdministrativeVeto(new AdministrativeVeto(vetoName, documentation));
+    getXynaScheduler().getVetoManagement().setDocumentationOfAdministrativeVeto(new AdministrativeVeto(vetoName, documentation, System.currentTimeMillis()));
   }
 
 

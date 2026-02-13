@@ -41,6 +41,7 @@ public class VetoInformationStorable extends ClusteredStorable<VetoInformationSt
   public static final String COL_USING_ROOT_ORDER_ID = "usingRootOrderId";
   public static final String COL_USING_ORDERTYPE = "usingOrdertype";
   public static final String COL_DOCUMENTATION = "documentation";
+  public static final String COL_CREATED = "created";
 
   private static final long serialVersionUID = -3562898639780808778L;
 
@@ -55,6 +56,8 @@ public class VetoInformationStorable extends ClusteredStorable<VetoInformationSt
   private String usingOrdertype;
   @Column(name = COL_DOCUMENTATION, size = 2000)
   private String documentation;
+  @Column(name = COL_CREATED)
+  private Long created;
   
   
   public VetoInformationStorable() {
@@ -67,15 +70,16 @@ public class VetoInformationStorable extends ClusteredStorable<VetoInformationSt
     this.vetoName = vetoName;
   }
   
-  public VetoInformationStorable(String vetoName, OrderInformation orderInformation, int binding) {
+  public VetoInformationStorable(String vetoName, OrderInformation orderInformation, Long created, int binding) {
     this(vetoName, binding);
     this.usingOrderId = orderInformation.getOrderId();
     this.usingRootOrderId = orderInformation.getRootOrderId();
     this.usingOrdertype = orderInformation.getOrderType();
+    this.created = created;
   }
   
-  public VetoInformationStorable(String vetoName, OrderInformation orderInformation, String documentation, int binding) {
-    this(vetoName, orderInformation, binding);
+  public VetoInformationStorable(String vetoName, OrderInformation orderInformation, String documentation, Long created, int binding) {
+    this(vetoName, orderInformation, created, binding);
     this.documentation = documentation;
   }
 
@@ -113,29 +117,36 @@ public class VetoInformationStorable extends ClusteredStorable<VetoInformationSt
   public void setDocumentation(String documentation) {
     this.documentation = documentation;
   }
-  
-  
+
+  public Long getCreated() {
+    return created;
+  }
+
+  public void setCreated(Long created) {
+    this.created = created;
+  }
+
   private static VetoInformationStorableReader reader = new VetoInformationStorableReader();
   
   public static final Transformation<VetoInformation, VetoInformationStorable> fromVetoInformation = 
       new Transformation<VetoInformation, VetoInformationStorable>() {
         public VetoInformationStorable transform(VetoInformation from) {
           return new VetoInformationStorable(from.getName(), from.getOrderInformation(),
-                                             from.getDocumentation(), from.getBinding());
+                                             from.getDocumentation(), from.getCreated(), from.getBinding());
         }
   };
   
-  public static final Transformation<VetoInformationStorable, VetoInformation> toVetoInformation = 
+  public static final Transformation<VetoInformationStorable, VetoInformation> toVetoInformation =
       new Transformation<VetoInformationStorable, VetoInformation>() {
         public VetoInformation transform(VetoInformationStorable from) {
-          return new VetoInformation(from.getVetoName(), 
-              from.getUsingOrder(),
-              from.getDocumentation(), from.getBinding());
+          return new VetoInformation(from.getVetoName(), from.getUsingOrder(), 
+                                     from.getDocumentation(), from.getCreated(),
+                                     from.getBinding());
         }
-  };
+      };
  
   @Override
-  public ResultSetReader<VetoInformationStorable>  getReader() {
+  public ResultSetReader<VetoInformationStorable> getReader() {
     return reader;
   }
   
@@ -149,6 +160,8 @@ public class VetoInformationStorable extends ClusteredStorable<VetoInformationSt
       vis.usingRootOrderId = rs.getLong(COL_USING_ROOT_ORDER_ID);
       vis.usingOrdertype = rs.getString(COL_USING_ORDERTYPE);
       vis.documentation = rs.getString(COL_DOCUMENTATION);
+      vis.created = rs.getLong(COL_CREATED);
+      vis.created = vis.created == 0 ? null : vis.created;
       vis.setBinding(rs.getInt( COL_BINDING ) );
       return vis;
     }
@@ -179,6 +192,10 @@ public class VetoInformationStorable extends ClusteredStorable<VetoInformationSt
       if (selectedCols.contains(VetoColumn.DOCUMENTATION)) {
         veto.documentation = rs.getString(VetoColumn.DOCUMENTATION.getColumnName());
       }
+      if (selectedCols.contains(VetoColumn.CREATED)) {
+        veto.created = rs.getLong(VetoColumn.CREATED.getColumnName());
+        veto.created = veto.created == 0 ? null : veto.created;
+      }
       return veto;
     }
   }
@@ -199,6 +216,7 @@ public class VetoInformationStorable extends ClusteredStorable<VetoInformationSt
     usingRootOrderId = cast.usingRootOrderId;
     usingOrdertype = cast.usingOrdertype;
     documentation = cast.documentation;
+    created = cast.created;
   }
 
 

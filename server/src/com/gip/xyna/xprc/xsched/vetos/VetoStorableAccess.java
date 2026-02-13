@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -294,7 +294,7 @@ public class VetoStorableAccess implements VetoManagementInterface {
       if( veto == null || veto.length() == 0 ) {
         return new VetoAllocationResult(new XPRC_VetonameMustNotBeEmpty());
       }
-      viss.put(veto, new VetoInformationStorable(veto, orderInformation, ownBinding));
+      viss.put(veto, new VetoInformationStorable(veto, orderInformation, System.currentTimeMillis(), ownBinding));
     }
 
     //Pruefen, ob Vetos bereits in Verwendung sind
