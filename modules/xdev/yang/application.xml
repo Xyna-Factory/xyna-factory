@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="YangAppGenerator" factoryVersion="" versionName="1.2.0" xmlVersion="1.1">
+--><Application applicationName="YangAppGenerator" factoryVersion="" versionName="1.2.1" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Benutzeroberfläche und Funktionalität zum Einlesen und Arbeiten mit Datenmodellen im YANG Format</Description>
     <Description Lang="EN">Graphic User interface and functionality for parsing and working with datamodels in the YANG format</Description>
@@ -81,6 +81,10 @@
     </Ordertype>
     <Ordertype implicitDependency="true">
       <DestinationKey>xmcp.yang.fman.DeleteVariableFromOperationSignature</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.FixSignature</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -284,6 +288,10 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.yang.fman.DeleteVariableFromOperationSignature</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.FixSignature</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
