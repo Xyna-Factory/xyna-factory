@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import java.util.Collection;
 
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 import com.gip.xyna.xmcp.xfcli.generated.Listvetos;
 import com.gip.xyna.xprc.xsched.VetoInformationStorable;
@@ -36,15 +37,16 @@ public class ListvetosImpl extends XynaCommandImplementation<Listvetos> {
 
     Collection<VetoInformationStorable> vetos = XynaFactory.getInstance().getProcessing().listVetoInformation();
 
-    String formatHeader = "   %15s  %15s  %30s  %7s  %-60s";
-    String formatLine   = " - %15s  %15d  %30s  %7d  %-60s";
+    String formatHeader = "   %15s  %15s  %30s  %7s  %25s  %-60s";
+    String formatLine   = " - %15s  %15d  %30s  %7d  %25s  %-60s";
 
-    String formattedHeader = String.format(formatHeader, "Name", "Order ID", "Ordertype", "Binding", "Documentation");
+    String formattedHeader = String.format(formatHeader, "Name", "Order ID", "Ordertype", "Binding", "Created (UTC)", "Documentation");
     writeLineToCommandLine(statusOutputStream, formattedHeader);
     for (VetoInformationStorable veto : vetos) {
       String s =
           String.format(formatLine, veto.getVetoName(), veto.getUsingOrderId(), veto.getUsingOrdertype(),
-                        veto.getBinding(),
+                        veto.getBinding(), 
+                        veto.getCreated() != null ? Constants.defaultUTCSimpleDateFormatWithMS().format(veto.getCreated()) : "",
                         veto.getDocumentation() != null ? veto.getDocumentation() : "");
       writeLineToCommandLine(statusOutputStream, s);
     }
