@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,17 +21,25 @@ package xmcp.gitintegration.cli.impl;
 
 import java.io.OutputStream;
 import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xmcp.xfcli.ReturnCode;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 import xmcp.gitintegration.cli.generated.Addrepositoryconnection;
 import xmcp.gitintegration.impl.RepositoryManagementImpl;
+import xmcp.gitintegration.impl.RepositoryManagementImpl.AddRepositoryConnectionResult;
+import xmcp.gitintegration.impl.RepositoryManagementImpl.AddRepositoryConnectionResult.Success;
 
 
 
 public class AddrepositoryconnectionImpl extends XynaCommandImplementation<Addrepositoryconnection> {
 
   public void execute(OutputStream statusOutputStream, Addrepositoryconnection payload) throws XynaException {
-    String result = RepositoryManagementImpl.addRepositoryConnection(payload.getPath(), payload.getWorkspace(), payload.getFull());
-    writeToCommandLine(statusOutputStream, result);
+    AddRepositoryConnectionResult result = RepositoryManagementImpl.addRepositoryConnection(payload.getPath(), payload.getWorkspace(), payload.getFull(), payload.getSetup());
+    writeToCommandLine(statusOutputStream, "Actions performed:");
+    writeToCommandLine(statusOutputStream, String.join("\n", result.getActionsPerformed()));
+    if(result.getErrorMsg() != null && !result.getErrorMsg().isEmpty()) {
+      writeToCommandLine(statusOutputStream, String.format("Error: %s", result.getErrorMsg()));
+    }
+    writeEndToCommandLine(statusOutputStream, result.getSuccess() == Success.FULL ? ReturnCode.SUCCESS : ReturnCode.GENERAL_ERROR);
   }
 
 }
