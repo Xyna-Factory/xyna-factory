@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,8 @@ public enum VetoColumn {
   USINGORDERID("usingOrderId"),
   USINGROOTORDERID("usingRootOrderId"),
   USINGORDERTYPE("usingOrdertype"),
-  DOCUMENTATION("documentation");
+  DOCUMENTATION("documentation"),
+  CREATED("created");
   
   private String columnName;
   private String[] aliases;
