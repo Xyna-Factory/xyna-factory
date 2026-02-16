@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -198,7 +198,7 @@ public class VetoCache {
   }
   
   public void allocate(VetoCacheEntry veto, OrderInformation orderInformation, long urgency) {
-    VetoInformation vi = new VetoInformation(veto.getName(), orderInformation, ownBinding);
+    VetoInformation vi = new VetoInformation(veto.getName(), orderInformation, System.currentTimeMillis(), ownBinding);
     veto.allocate(vi, urgency);
   }
   
@@ -221,7 +221,7 @@ public class VetoCache {
   
   public boolean createAdministrativeVeto(AdministrativeVeto administrativeVeto) {
     VetoCacheEntry vceNew = new VetoCacheEntry(administrativeVeto.getName(), State.Compare);
-    vceNew.setVetoInformation( new VetoInformation(administrativeVeto, ownBinding) );
+    vceNew.setVetoInformation( new VetoInformation(administrativeVeto, System.currentTimeMillis(), ownBinding) );
     VetoCacheEntry vce = vetoCache.putIfAbsent(administrativeVeto.getName(), vceNew);
     if( vce == null ) {
       vetosToProcess.add(administrativeVeto.getName());
@@ -231,7 +231,7 @@ public class VetoCache {
   
   public String changeAdminVeto(VetoCacheEntry veto, AdministrativeVeto administrativeVeto) {
     VetoInformation oldVetoInfo = veto.getVetoInformation();
-    VetoInformation newVetoInfo = new VetoInformation(administrativeVeto, ownBinding);
+    VetoInformation newVetoInfo = new VetoInformation(administrativeVeto, System.currentTimeMillis(), ownBinding);
     veto.setVetoInformation(newVetoInfo);
     if( veto.isAdministrative() ) {
       //Umsetzen des Status, damit Änderung vom VetoCacheProcessor bearbeitet wird
