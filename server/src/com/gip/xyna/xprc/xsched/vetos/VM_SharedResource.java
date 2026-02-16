@@ -66,12 +66,13 @@ public class VM_SharedResource implements VetoManagementInterface {
   @Override
   public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> vetos, long urgency) {
     List<SharedResourceInstance<SharedResourceVeto>> vetosToCreate = new ArrayList<>();
+    Long now = System.currentTimeMillis();
     for (String vetoName : vetos) {
       SharedResourceVeto value = new SharedResourceVeto();
       value.usingOrderId = orderInformation.getOrderId();
       value.usingOrderType = orderInformation.getOrderType();
       value.usingRootOrderId = orderInformation.getRootOrderId();
-      SharedResourceInstance<SharedResourceVeto> instance = new SharedResourceInstance<>(vetoName, value);
+      SharedResourceInstance<SharedResourceVeto> instance = new SharedResourceInstance<>(vetoName, now, value);
       vetosToCreate.add(instance);
     }
     SharedResourceRequestResult<SharedResourceVeto> createResult = srm.create(XYNA_VETO_SR_DEF, vetosToCreate);
@@ -131,7 +132,8 @@ public class VM_SharedResource implements VetoManagementInterface {
     srVeto.usingOrderId = AdministrativeVeto.ADMIN_VETO_ORDERID;
     srVeto.usingOrderType = AdministrativeVeto.ADMIN_VETO_ORDERTYPE;
     srVeto.usingRootOrderId = AdministrativeVeto.ADMIN_VETO_ORDERID;
-    SharedResourceInstance<SharedResourceVeto> veto = new SharedResourceInstance<SharedResourceVeto>(administrativeVeto.getName(), srVeto);
+    Long now = System.currentTimeMillis();
+    SharedResourceInstance<SharedResourceVeto> veto = new SharedResourceInstance<SharedResourceVeto>(administrativeVeto.getName(), now, srVeto);
     SharedResourceRequestResult<SharedResourceVeto> createResult = srm.create(XYNA_VETO_SR_DEF, List.of(veto));
     if (!createResult.isSuccess()) {
       SharedResourceRequestResult<SharedResourceVeto> readResult = srm.read(XYNA_VETO_SR_DEF, List.of(veto.getId()));
@@ -152,7 +154,7 @@ public class VM_SharedResource implements VetoManagementInterface {
     Function<SharedResourceInstance<SharedResourceVeto>, SharedResourceInstance<SharedResourceVeto>> update = (x) -> {
       oldDoc.documenation = x.getValue().documentation;
       x.getValue().documentation = administrativeVeto.getDocumentation();
-      return new SharedResourceInstance<SharedResourceVeto>(x.getId(), x.getValue());
+      return new SharedResourceInstance<SharedResourceVeto>(x.getId(), x.getCreated(), x.getValue());
     };
 
     SharedResourceRequestResult<SharedResourceVeto> updateResult;
@@ -178,7 +180,8 @@ public class VM_SharedResource implements VetoManagementInterface {
     }
     SharedResourceVeto value = readResult.getResources().get(0).getValue();
     OrderInformation orderInfo = new OrderInformation(value.usingOrderId, value.usingRootOrderId, value.usingOrderType);
-    VetoInformation info = new VetoInformation(readResult.getResources().get(0).getId(), orderInfo, value.documentation, 0);
+    Long created = administrativeVeto.getCreated();
+    VetoInformation info = new VetoInformation(readResult.getResources().get(0).getId(), orderInfo, value.documentation, created, 0);
     return info;
   }
 
@@ -195,7 +198,7 @@ public class VM_SharedResource implements VetoManagementInterface {
     for (SharedResourceInstance<SharedResourceVeto> instance : vetoData.getResources()) {
       SharedResourceVeto value = instance.getValue();
       OrderInformation orderInfo = new OrderInformation(value.usingOrderId, value.usingRootOrderId, value.usingOrderType);
-      VetoInformation info = new VetoInformation(instance.getId(), orderInfo, value.documentation, 0);
+      VetoInformation info = new VetoInformation(instance.getId(), orderInfo, value.documentation, instance.getCreated(), 0);
       result.add(info);
     }
 
