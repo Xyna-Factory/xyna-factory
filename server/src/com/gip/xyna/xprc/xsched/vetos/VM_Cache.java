@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,7 +88,7 @@ public class VM_Cache implements VetoManagementInterface {
     //jetzt ist es unwahrscheinlich, dass administratives Veto zeitgleich gesetzt wird
     List<String> allocated = new ArrayList<String>(vetos.size());
     for( String v : vetos ) {
-      VetoInformation vi = new VetoInformation(v,usingOrder, ownBinding);
+      VetoInformation vi = new VetoInformation(v,usingOrder, System.currentTimeMillis(), ownBinding);
       VetoInformation existing = vetoCache.putIfAbsent(v, vi );
       if( existing != null ) {
         if( existing.getUsingOrderId() != null && !existing.getUsingOrderId().equals(usingOrder.getOrderId()) ) {
@@ -164,7 +164,7 @@ public class VM_Cache implements VetoManagementInterface {
   }
 
   public void allocateAdministrativeVeto(AdministrativeVeto administrativeVeto) throws XPRC_AdministrativeVetoAllocationDenied {
-    VetoInformation vi = new VetoInformation(administrativeVeto, ownBinding);
+    VetoInformation vi = new VetoInformation(administrativeVeto, System.currentTimeMillis(), ownBinding);
     VetoInformation existing = vetoCache.putIfAbsent(vi.getName(), vi);
     if( existing != null ) {
       throw new XPRC_AdministrativeVetoAllocationDenied(existing.getName(), existing.getUsingOrderId());
