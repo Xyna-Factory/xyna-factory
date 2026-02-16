@@ -28,29 +28,11 @@
     <Output>
       <Data ID="0" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node"/>
     </Output>
-    <ServiceReference ID="1509" Label="XynaRadiusServices" ReferenceName="XynaRadiusServices.XynaRadiusServices" ReferencePath="xact.radius">
-      <Source RefID="1508"/>
-      <Target RefID="1508"/>
-    </ServiceReference>
     <Meta>
       <FixedHeight>32</FixedHeight>
       <Abstract.UID>64657432-926B-A56C-03CA-949B57C5EFFA</Abstract.UID>
       <FixedWidth>193</FixedWidth>
     </Meta>
-    <Function ID="1508" Label="Get Privilege Level">
-      <Source RefID="1509"/>
-      <Source RefID="105"/>
-      <Source RefID="1760"/>
-      <Target RefID="1509"/>
-      <Target RefID="1511"/>
-      <Invoke Operation="getPrivilegeLevel" ServiceID="1509">
-        <Source RefID="105"/>
-        <Source RefID="1760"/>
-      </Invoke>
-      <Receive ServiceID="1509">
-        <Target RefID="1511"/>
-      </Receive>
-    </Function>
     <Mappings ID="12" Label="Create Vendor Specific Node">
       <Meta>
         <Documentation>Type: Vendor-Specific9</Documentation>
@@ -71,9 +53,6 @@
       </Output>
     </Mappings>
     <Data ID="1248" Label="Type Only Node" ReferenceName="TypeOnlyNode" ReferencePath="xact.radius" VariableName="typeOnlyNode1248"/>
-    <Data ID="1511" Label="Privilege Level" ReferenceName="PrivilegeLevel" ReferencePath="xact.radius" VariableName="privilegeLevel1511">
-      <Source RefID="1508"/>
-    </Data>
     <Data ID="1843" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node1843">
       <Source RefID="1825"/>
     </Data>
