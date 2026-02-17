@@ -152,7 +152,7 @@ public class VM_SharedResource implements VetoManagementInterface {
     DocumentationContainer oldDoc = new DocumentationContainer();
 
     Function<SharedResourceInstance<SharedResourceVeto>, SharedResourceInstance<SharedResourceVeto>> update = (x) -> {
-      oldDoc.documenation = x.getValue().documentation;
+      oldDoc.documentation = x.getValue().documentation;
       x.getValue().documentation = administrativeVeto.getDocumentation();
       return new SharedResourceInstance<SharedResourceVeto>(x.getId(), x.getCreated(), x.getValue());
     };
@@ -163,7 +163,7 @@ public class VM_SharedResource implements VetoManagementInterface {
       throw new XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY(administrativeVeto.getName(), VetoInformationStorable.TABLE_NAME);
     }
 
-    return oldDoc.documenation;
+    return oldDoc.documentation;
   }
 
 
@@ -240,6 +240,6 @@ public class VM_SharedResource implements VetoManagementInterface {
 
   private static class DocumentationContainer {
 
-    private String documenation;
+    private String documentation;
   }
 }
