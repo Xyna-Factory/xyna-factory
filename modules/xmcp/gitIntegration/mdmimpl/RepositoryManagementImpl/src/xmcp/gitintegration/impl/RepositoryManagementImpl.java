@@ -277,15 +277,23 @@ public class RepositoryManagementImpl {
     for (RepositoryConnectionStorable storable : workspaces) {
       boolean success = createWorkspaceWithSymlinks(storable, actionsPerformed, errors);
       successfulConnections += success ? 1 : 0;
+      if(success) {
+        persistRepositoryConnectionStorable(storable);
+        actionsPerformed.add("registered repository connection for " + storable.getWorkspacename());
+      }
     }
     //if setup is requested, setup each relevant workspace (in correct order)
     if(setup && errors.isEmpty()) {
+      try {
         setupWorkspaces(workspaces, actionsPerformed, errors);
+      } catch(Exception e) {
+        errors.add(e.getMessage());
+      }
     } else if(setup) {
       errors.add("Skipping setup because of previous errors");
     }
     Success success = successfulConnections == 0 ? Success.NONE : errors.isEmpty() ? Success.FULL : Success.PARTIAL;
-    return new AddRepositoryConnectionResult(success, Collections.emptyList(), String.join("\n", errors));
+    return new AddRepositoryConnectionResult(success, actionsPerformed, String.join("\n", errors));
   }
 
   
@@ -297,12 +305,14 @@ public class RepositoryManagementImpl {
     //resolve runtimeContextDependencies
     for(RepositoryConnectionStorable storable : storables) {
       WorkspaceContent wsContent = WorkspaceObjectManagement.createWorkspaceContent(new xprc.xpce.Workspace(storable.getWorkspacename()));
-      String path = Paths.get(storable.getPath(), storable.getSubpath()).toAbsolutePath().toString();
-      WorkspaceContent repoContent = WorkspaceObjectManagement.createWorkspaceContentFromFile(new base.File(path));
-      WorkspaceContentDifferences diffs = WorkspaceObjectManagement.compareWorkspaceContent(repoContent, wsContent);
+      Path pathToWorkspaceXml = Paths.get(storable.getPath(), storable.getSubpath()).toAbsolutePath().normalize();
+      boolean split = WorkspaceConfigSplit.fromId(storable.getSplittype()).get() != WorkspaceConfigSplit.NONE;
+      pathToWorkspaceXml = pathToWorkspaceXml.resolve(split ? CONFIG : WORKSPACE_XML);
+      WorkspaceContent repoContent = WorkspaceObjectManagement.createWorkspaceContentFromFile(new base.File(pathToWorkspaceXml.toString()));
+      WorkspaceContentDifferences diffs = WorkspaceObjectManagement.compareWorkspaceContent(wsContent, repoContent);
       workspaceDiffsByWorkspace.put(storable.getWorkspacename(), diffs);
       ListId listId = new ListId.Builder().listId(diffs.getListId()).instance();
-      List<? extends WorkspaceContentDifference> entries = diffs.getDifferences();
+      List<? extends WorkspaceContentDifference> entries = new ArrayList<>(diffs.getDifferences());
       for(WorkspaceContentDifference entry : entries) {
         if(!(entry.getContentType().equals("runtimecontextdependency"))) {
           continue;
@@ -311,8 +321,9 @@ public class RepositoryManagementImpl {
         builder.entryId(entry.getEntryId());
         builder.resolution(entry.getDifferenceType().getClass().getSimpleName());
         String dependency = writeDependency(entry);
-        actionsPerformed.add("Trying to "+ entry.getDifferenceType() +" rtc dependency for " + storable.getWorkspacename() + " to " + dependency);
-        WorkspaceObjectManagement.resolveWorkspaceDifferences(listId, List.of(builder.instance()));
+        actionsPerformed.add("Trying to "+ entry.getDifferenceType().getClass().getSimpleName() +" rtc dependency for " + storable.getWorkspacename() + " to " + dependency);
+        resolveWorkspaceDifferences(listId, List.of(builder.instance()), errors);
+        diffs.getDifferences().remove(entry);
       }
       InfoWorkspaceContentDiffGroupList info = WorkspaceObjectManagement.adaptWorkspaceDifferenceList(listId);
       List<? extends InfoWorkspaceContentDiffGroup> groups = info.getInfoWorkspaceContentDiffGroup();
@@ -330,9 +341,11 @@ public class RepositoryManagementImpl {
       }
     }
     List<Long> sortedRevisions = sortWorkspaces(revisions);
-
+    RevisionManagement rm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     for(Long revision : new ArrayList<>(sortedRevisions)) {
       try {
+        String workspaceName = rm.getWorkspace(revision).getName();
+        revisionToWsNameMap.put(revision, workspaceName);
         refreshworkspace(revision, false, actionsPerformed, errors);
         actionsPerformed.add("Registered objects of revision " + revision);
       } catch(Exception e) {
@@ -343,21 +356,22 @@ public class RepositoryManagementImpl {
     for(Long revision : sortedRevisions) {
       WorkspaceContentDifferences diffs = workspaceDiffsByWorkspace.get(revisionToWsNameMap.get(revision));
       ListId listId = new ListId.Builder().listId(diffs.getListId()).instance();
-      for(WorkspaceContentDifference entry: diffs.getDifferences()) {
+      for(WorkspaceContentDifference entry: new ArrayList<>(diffs.getDifferences())) {
         if(entry.getContentType().equals("applicationdefinition")) {
           continue;
         }
         WorkspaceContentDifferencesResolution.Builder builder = new WorkspaceContentDifferencesResolution.Builder();
         builder.entryId(entry.getEntryId());
         builder.resolution(entry.getDifferenceType().getClass().getSimpleName());
-        WorkspaceObjectManagement.resolveWorkspaceDifferences(listId, List.of(builder.instance()));
+        resolveWorkspaceDifferences(listId, List.of(builder.instance()), errors);
+        diffs.getDifferences().remove(entry);
       }
     }
     
     for(Long revision : new ArrayList<>(sortedRevisions)) {
       try {
         refreshworkspace(revision, true, actionsPerformed, errors);
-        actionsPerformed.add("Registered objects of revision " + revision);
+        actionsPerformed.add("Deployed objects of revision " + revision);
       } catch(Exception e) {
         errors.add("Error during registration of xmom objects for revision " + revision);
       }
@@ -370,8 +384,17 @@ public class RepositoryManagementImpl {
         WorkspaceContentDifferencesResolution.Builder builder = new WorkspaceContentDifferencesResolution.Builder();
         builder.entryId(entry.getEntryId());
         builder.resolution(entry.getDifferenceType().getClass().getSimpleName());
-        WorkspaceObjectManagement.resolveWorkspaceDifferences(listId, List.of(builder.instance()));
+        resolveWorkspaceDifferences(listId, List.of(builder.instance()), errors);
       }
+    }
+  }
+
+
+  private static void resolveWorkspaceDifferences(ListId listId, List<WorkspaceContentDifferencesResolution> entries, List<String> errors) {
+    try {
+      WorkspaceObjectManagement.resolveWorkspaceDifferences(listId, entries);
+    } catch(Exception e) {
+      errors.add(e.getMessage());
     }
   }
   
@@ -407,8 +430,9 @@ public class RepositoryManagementImpl {
         GenerationBase.deploy(toDeploy, DeploymentMode.codeChanged, false, WorkflowProtectionMode.BREAK_ON_USAGE);
       }
     } catch(Exception e) {
-      tsa.destroy();
       throw e;
+    } finally {
+      tsa.destroy();
     }
   }
 
@@ -498,20 +522,24 @@ public class RepositoryManagementImpl {
 
   private static boolean createSymlinks(RepositoryConnectionStorable storable, List<String> actions, List<String> errors) {
     Path revisionPath =
-        Path.of(Constants.BASEDIR, Constants.REVISION_PATH, Constants.PREFIX_REVISION + getRevision(storable.getWorkspacename()));
+        Path.of(Constants.BASEDIR, Constants.REVISION_PATH, Constants.PREFIX_REVISION + getRevision(storable.getWorkspacename())).toAbsolutePath().normalize();
     if (storable.getSavedinrepo()) {
       if (deleteDirectory(revisionPath)) {
-        errors.add("Error: Could not delete directory '" + revisionPath + "' within the factory!");
+        errors.add("Could not delete directory '" + revisionPath + "' within the factory!");
         return false;
+      } else {
+        actions.add("Created directory: " + revisionPath.toAbsolutePath().normalize().toString());
       }
       if (!createSymbolicLink(revisionPath, Paths.get(storable.getPath(), storable.getSubpath()))) {
         errors.add("Could not create symbolic link '" + revisionPath + "' within the factory!");
         return false;
+      } else {
+        actions.add("Created symbolic link from " + revisionPath + " to " + Paths.get(storable.getPath(), storable.getSubpath()));
       }
       return true;
     }
 
-    Path workspacePathAbs = Path.of(storable.getPath(), storable.getSubpath()).toAbsolutePath();
+    Path workspacePathAbs = Path.of(storable.getPath(), storable.getSubpath()).toAbsolutePath().normalize();
     try {
       Files.createDirectory(revisionPath.resolve(SAVED));
     } catch (IOException e) {
@@ -519,16 +547,22 @@ public class RepositoryManagementImpl {
       errors.add("Could not create directory '" + revisionPath.resolve(SAVED) + "' within the factory!");
       return false;
     }
+    actions.add("Created directory " + revisionPath.resolve(SAVED));
 
     if (!createSymbolicLink(revisionPath.resolve(SAVED).resolve(XMOM), workspacePathAbs.resolve(XMOM))) {
       errors.add("Could not create symbolic link '" + revisionPath.resolve(SAVED).resolve(XMOM) + "' within the factory!");
       return false;
+    } else {
+      actions.add("Created symbolic link from " + revisionPath.resolve(SAVED).resolve(XMOM) + " to " + workspacePathAbs.resolve(XMOM));
     }
     // create symlink for config directory, if any
-    if (WorkspaceConfigSplit.valueOf(storable.getSplittype()) != WorkspaceConfigSplit.NONE) {
+    Optional<WorkspaceConfigSplit> split = WorkspaceConfigSplit.fromId(storable.getSplittype());
+    if (split.isPresent() && split.get() != WorkspaceConfigSplit.NONE) {
       if (!createSymbolicLink(revisionPath.resolve(CONFIG), workspacePathAbs.resolve(CONFIG))) {
         errors.add("Could not create symbolic link '" + revisionPath.resolve(CONFIG) + "' within the factory!");
         return false;
+      } else {
+        actions.add("Created symbolic link from " + revisionPath.resolve(CONFIG) + " to " + workspacePathAbs.resolve(CONFIG));
       }
     } else {
       Path workspaceXmlPath = Paths.get(workspacePathAbs.toString(), WORKSPACE_XML);
@@ -536,6 +570,8 @@ public class RepositoryManagementImpl {
       if (!createSymbolicLink(revisionPath.resolve(filename), workspaceXmlPath)) {
         errors.add("Could not create symbolic link '" + revisionPath.resolve(filename) + "' within the factory!");
         return false;
+      } else {
+        actions.add("Created symbolic link from " + revisionPath.resolve(filename) + " to " + workspaceXmlPath);
       }
     }
 
@@ -573,9 +609,9 @@ public class RepositoryManagementImpl {
       String workspaceName = entry.getKey();
       Path pathToWorkspaceXml = entry.getValue();
       boolean savedInRepo = entry.getValue().resolve(SAVED).resolve(XMOM).toFile().isDirectory();
-      boolean isSplit = pathToWorkspaceXml.endsWith(CONFIG);
+      boolean isSplit = pathToWorkspaceXml.getParent().endsWith(CONFIG);
       Path subPath = isSplit ? pathToWorkspaceXml.getParent() : pathToWorkspaceXml;
-      String subPathString = subPath.toAbsolutePath().toString().substring(basePathStr.length() + 1); //+1 for "/"
+      String subPathString = subPath.getParent().toAbsolutePath().toString().substring(basePathStr.length() + 1); //+1 for "/"
       String workspaceXmlBasePath = pathToWorkspaceXml.toAbsolutePath().toString();
       String splitStr = determineSplitType(isSplit, workspaceXmlBasePath);
       RepositoryConnectionStorable storable;
