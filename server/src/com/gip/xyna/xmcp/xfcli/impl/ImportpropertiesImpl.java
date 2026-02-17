@@ -64,7 +64,7 @@ public class ImportpropertiesImpl extends XynaCommandImplementation<Importproper
   }
 
   /* ===========================================================================================
-   * CSV import
+   * CSV Import
      =========================================================================================== */
 
   /**
@@ -126,6 +126,7 @@ public class ImportpropertiesImpl extends XynaCommandImplementation<Importproper
         // Preserve the original newline INSIDE a CSV field
         sb.append("\n");
       }
+
       sb.append(line);
       if (quotesBalanced(sb)) {
         return sb.toString();
@@ -218,7 +219,7 @@ public class ImportpropertiesImpl extends XynaCommandImplementation<Importproper
   }
 
   /* ===========================================================================================
-   * YAML import
+   * YAML Import
      =========================================================================================== */
 
   /**
@@ -255,7 +256,9 @@ public class ImportpropertiesImpl extends XynaCommandImplementation<Importproper
         if (line.startsWith(getIndent(indentDepth, indentLevel)) && line.endsWith(ExportpropertiesImpl.YAML_NAME_POSTFIX)) {
           // finish previous entry
           if (curName != null) {
-            storeProperty(curName, valueBuffer.toString(), null, overwriteExisting); // TODO: docus
+            String docusStr = docuBuffer != null ? docuBuffer.toString() : "";
+            Map<DocumentationLanguage, String> docus = DocumentationMap.valueOf(docusStr.replace("=&gt;", "=>"));
+            storeProperty(curName, valueBuffer.toString(), docus, overwriteExisting);
           }
 
           // property name is everything before the postfix
@@ -293,7 +296,7 @@ public class ImportpropertiesImpl extends XynaCommandImplementation<Importproper
   }
 
   /* ===========================================================================================
-   * General import helpers
+   * General Import Helpers
      =========================================================================================== */
 
   private static void storeProperty(String propertyName, String propertyValue, Map<DocumentationLanguage, String> docus, boolean overwrite)

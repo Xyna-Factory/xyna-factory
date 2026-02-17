@@ -96,7 +96,7 @@ public class ExportpropertiesImpl extends XynaCommandImplementation<Exportproper
   }
 
   /* ===========================================================================================
-   * CSV export
+   * CSV Export
      =========================================================================================== */
 
   private static void generateCSV(StringBuilder sb, String filter, boolean inclUnchanged, boolean inclDoc) {
@@ -155,7 +155,7 @@ public class ExportpropertiesImpl extends XynaCommandImplementation<Exportproper
   }
 
   /* ===========================================================================================
-   * YAML export
+   * YAML Export
      =========================================================================================== */
 
   private static void generateYAML(StringBuilder sb, String filter, boolean inclUnchanged, boolean inclDoc) {
@@ -195,7 +195,7 @@ public class ExportpropertiesImpl extends XynaCommandImplementation<Exportproper
   }
 
   /* ===========================================================================================
-   * General export helpers
+   * General Export Helpers
      =========================================================================================== */
 
   private static Collection<XynaPropertyWithDefaultValue> getProperties(String filter, boolean inclUnchanged) {
