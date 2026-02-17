@@ -19,5 +19,5 @@
   <CommandDefinition Name="importproperties" Groups="Xyna Properties" Description="Imports Xyna Properties from a file."/>
   <Argument Name="filename" Description="The input file name"/>
   <Argument Name="format" Description="The format of the export (one of: CSV, YAML), default: CSV" Optional="true"/>
-  <BoolOption Name="overwrite" LongName="overwriteExisting" Description="Whether to overwrite existing Properties, default: true" Optional="true"/>
+  <BoolOption Name="overwrite" LongName="overwriteExisting" Description="Overwrite existing Properties" Optional="true"/>
 </XynaCommandLineCommand>

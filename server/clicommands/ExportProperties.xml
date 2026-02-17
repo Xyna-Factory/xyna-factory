@@ -20,6 +20,6 @@
   <Argument Name="filename" Description="The output file name"/>
   <Argument Name="format" Description="The format of the export (one of: CSV, YAML), default: CSV" Optional="true"/>
   <Argument Name="filter" Description="Filter string to be matched, using a regular expression" Optional="true"/>
-  <BoolOption Name="inclUnchanged" LongName="includeUnchangedProperties" Description="Whether to include Properties with a default value and no specified value that overrides it, default: false" Optional="true"/>
-  <BoolOption Name="inclDoc" LongName="includeDocumentation" Description="Whether to include the documentation in all available languages in the export, default: false" Optional="true"/>
+  <BoolOption Name="inclUnchanged" LongName="includeUnchangedProperties" Description="Include Properties with a default value and no specified value that overrides it" Optional="true"/>
+  <BoolOption Name="inclDoc" LongName="includeDocumentation" Description="Include the documentation in all available languages in the export" Optional="true"/>
 </XynaCommandLineCommand>

@@ -50,11 +50,7 @@ public class ImportpropertiesImpl extends XynaCommandImplementation<Importproper
     final String data = FileUtils.readFileAsString(file);
 
     OutputFormat format;
-    try {
-      format = OutputFormat.valueOf(payload.getFormat().toUpperCase());
-    } catch (Exception e) {
-      format = OutputFormat.CSV;
-    }
+    format = payload.getFormat() == null ? OutputFormat.CSV : OutputFormat.valueOf(payload.getFormat().toUpperCase());
 
     try {
       importProperties(data, format, payload.getOverwriteExisting());
@@ -253,7 +249,7 @@ public class ImportpropertiesImpl extends XynaCommandImplementation<Importproper
         }
 
         // a new property starts where the level 1 indented line ends with YAML_NAME_POSTFIX
-        if (line.startsWith(getIndent(indentDepth, indentLevel)) && line.endsWith(ExportpropertiesImpl.YAML_NAME_POSTFIX)) {
+        if (line.startsWith(getIndent(indentDepth, indentLevel)) && line.endsWith(ExportpropertiesImpl.YAML_VALUE_POSTFIX)) {
           // finish previous entry
           if (curName != null) {
             String docusStr = docuBuffer != null ? docuBuffer.toString() : "";
@@ -262,7 +258,7 @@ public class ImportpropertiesImpl extends XynaCommandImplementation<Importproper
           }
 
           // property name is everything before the postfix
-          curName = line.substring(indentDepth * indentLevel, line.length() - ExportpropertiesImpl.YAML_NAME_POSTFIX.length()).trim();
+          curName = line.substring(indentDepth * indentLevel, line.length() - ExportpropertiesImpl.YAML_VALUE_POSTFIX.length()).trim();
           valueBuffer = new StringBuilder();
           docuBuffer = null;
         }

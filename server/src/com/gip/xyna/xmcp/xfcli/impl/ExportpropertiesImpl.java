@@ -19,13 +19,10 @@ package com.gip.xyna.xmcp.xfcli.impl;
 
 import java.io.File;
 import java.io.OutputStream;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -55,12 +52,10 @@ public class ExportpropertiesImpl extends XynaCommandImplementation<Exportproper
   public static final String CSV_DELIMITER = ";";
 
   // YAML
-  public static final String YAML_NAME_POSTFIX = ".propertyvalue: |";
+  public static final String YAML_VALUE_POSTFIX = ".propertyvalue: |";
   public static final String YAML_DOCU_POSTFIX = ".propertydocumentation: |";
   public static final int YAML_INDENTATION_DEPTH = 2;
-  public static final String YAML_HEADER = "kind: ConfigMap\n"
-      + "metadata:\n"
-      + " ".repeat(YAML_INDENTATION_DEPTH) + "date:";
+  public static final String YAML_HEADER = "metadata:\n" + " ".repeat(YAML_INDENTATION_DEPTH) + "date:";
   public static final String YAML_DATA_START = "data:";
 
 
@@ -82,11 +77,7 @@ public class ExportpropertiesImpl extends XynaCommandImplementation<Exportproper
 
   public void execute(OutputStream statusOutputStream, Exportproperties payload) throws XynaException {
     OutputFormat format;
-    try {
-      format = OutputFormat.valueOf(payload.getFormat().toUpperCase());
-    } catch (Exception e) {
-      format = OutputFormat.CSV;
-    }
+    format = payload.getFormat() == null ? OutputFormat.CSV : OutputFormat.valueOf(payload.getFormat().toUpperCase());
 
     String export = export(format, payload.getFilter(), payload.getIncludeUnchangedProperties(), payload.getIncludeDocumentation());
 
@@ -115,7 +106,7 @@ public class ExportpropertiesImpl extends XynaCommandImplementation<Exportproper
     // add properties
 
     Collection<XynaPropertyWithDefaultValue> properties = getProperties(filter, inclUnchanged);
-    for (XynaPropertyWithDefaultValue property : properties) {
+    properties.forEach(property -> {
       Map<DocumentationLanguage, String> docus = property.getDocuOrDefDocu();
 
       List<String> row = Stream.concat(
@@ -127,7 +118,7 @@ public class ExportpropertiesImpl extends XynaCommandImplementation<Exportproper
       ).collect(Collectors.toList());
 
       addCSVRow(sb, row);
-    }
+    });
   }
 
   private static void addCSVRow(StringBuilder sb, List<String> values) {
@@ -164,7 +155,7 @@ public class ExportpropertiesImpl extends XynaCommandImplementation<Exportproper
     sb.append(" " + OffsetDateTime.now().withNano(0) + "\n");
     sb.append(YAML_DATA_START + "\n");
 
-    // add property data
+    // add properties
     Collection<XynaPropertyWithDefaultValue> properties = getProperties(filter, inclUnchanged);
     properties.forEach(property -> {
       String docuStr = inclDoc
@@ -181,7 +172,7 @@ public class ExportpropertiesImpl extends XynaCommandImplementation<Exportproper
     Function<String, String> indentLines = value -> getIndent(indentLevel + 1) +
         ((value != null) ? value.replace("\n", "\n" + getIndent(indentLevel + 1)) : "");
 
-    sb.append(getIndent(indentLevel) + propertyName + YAML_NAME_POSTFIX + "\n");
+    sb.append(getIndent(indentLevel) + propertyName + YAML_VALUE_POSTFIX + "\n");
     sb.append(indentLines.apply(propertyValue) + "\n");
 
     if (docu != null && docu.length() > 0) {
@@ -205,11 +196,7 @@ public class ExportpropertiesImpl extends XynaCommandImplementation<Exportproper
     filteredProps.removeIf(prop -> (prop.getValue() == null && !inclUnchanged) ||
                                    (filter != null && !prop.getName().matches(filter)));
 
-    Collections.sort(filteredProps, new Comparator<XynaPropertyWithDefaultValue>() {
-      public int compare(XynaPropertyWithDefaultValue o1, XynaPropertyWithDefaultValue o2) {
-        return o1.getName().compareTo(o2.getName());
-      }
-    });
+    Collections.sort(filteredProps, (o1, o2) -> o1.getName().compareTo(o2.getName()));
 
     return filteredProps;
   }
