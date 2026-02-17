@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2026 Xyna GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,22 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Code" TypeName="Code" TypePath="xact.radius" Version="1.8">
-  <Meta>
-    <IsServiceGroupOnly>false</IsServiceGroupOnly>
-    <Documentation>
-      <![CDATA[The code that determines the RADIUS packet type. The values are:
-1 for Access-Request
-2 for Access-Accept
-3 for Access-Reject
-11 for Access-Challenge
-]]>
-    </Documentation>
-    <IsXynaComponent>true</IsXynaComponent>
-  </Meta>
-  <Data Label="value" VariableName="value">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-</DataType>
+-->
+ <XynaCommandLineCommand>
+  <CommandDefinition Name="importproperties" Groups="Xyna Properties" Description="Imports Xyna Properties from a file."/>
+  <Argument Name="filename" Description="The input file name"/>
+  <Argument Name="format" Description="The format of the export (one of: CSV, YAML), default: CSV" Optional="true"/>
+  <BoolOption Name="overwrite" LongName="overwriteExisting" Description="Overwrite existing Properties" Optional="true"/>
+</XynaCommandLineCommand>

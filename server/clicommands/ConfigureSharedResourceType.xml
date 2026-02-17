@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2026 Xyna GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="RadiusUserData" TypeName="RadiusUserData" TypePath="xact.radius" Version="1.8">
-  <Meta>
-    <IsXynaComponent>true</IsXynaComponent>
-  </Meta>
-  <Data Label="Username" VariableName="username">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="Password" VariableName="password">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="Role" VariableName="role">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-</DataType>
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="configuresharedresourcetype" Groups="Shared Resource Management" Description="Configures a shared resouce to the given shared resource synchronizer instance" />
+  <BoolOption Name="d" LongName="delete" Description="Delete the configuration" Optional="true"/>
+  <Argument Name="resourceType" Description="Type of the shared resource to configure."/>
+  <Argument Name="synchronizerInstanceName" Description="Name of the shared resource synchronizer instance." Optional="true"/>
+</XynaCommandLineCommand>
