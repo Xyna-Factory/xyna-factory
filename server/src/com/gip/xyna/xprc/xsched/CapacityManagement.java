@@ -111,6 +111,8 @@ public class CapacityManagement extends FunctionGroup
   public static final String DEFAULT_NAME = "Capacity Management";
   
   public static final String MANAGEMENT_LOCK_NAME = DEFAULT_NAME + "-lock";
+  
+  public static final String XYNA_CAPACITY_SR = "xyna.capacity"; 
 
   /**
    * Cache, auf dem gescheduled wird, um nicht ständig auf den PersistenceLayer zugreifen zu müssen
