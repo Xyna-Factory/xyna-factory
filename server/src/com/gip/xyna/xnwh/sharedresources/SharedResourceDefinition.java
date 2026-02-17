@@ -32,7 +32,7 @@ public abstract class SharedResourceDefinition<T> {
   public abstract byte[] serialize(T value);
 
 
-  public abstract SharedResourceInstance<T> deserialize(byte[] value, String id);
+  public abstract SharedResourceInstance<T> deserialize(byte[] value, String id, Long created);
 
 
   public String getPath() {

@@ -47,4 +47,8 @@ public class AdministrativeVeto {
   public String getDocumentation() {
     return documentation;
   }
+
+  public Long getCreated() {
+    return created;
+  }
 }

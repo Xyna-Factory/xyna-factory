@@ -107,6 +107,9 @@ public class SQLSharedResourceSynchronizerFactory implements SharedResourceSynch
       throw new IllegalArgumentException(e);
     }
     String tableName = TABLENAME.getFromMap(param);
+    if(tableName.contains(" ")) {
+      errors.add("Tablename must not contain spaces");
+    }
     String url = readPropertyWithEnv(URL, URL_ENV, param, errors);
     String username = readPropertyWithEnv(USER, USER_ENV, param, errors);
     String password = readPropertyWithEnv(PASSWORD, PASSWORD_ENV, param, errors);
@@ -175,7 +178,7 @@ public class SQLSharedResourceSynchronizerFactory implements SharedResourceSynch
   @Override
   public PluginDescription getDescription() {
     PluginDescription.Builder result = PluginDescription.create(PluginType.sharedResourceSynchronizer);
-    result.name("SqlSharedResourceSynchronizer");
+    result.name(getSynchronizerName());
     result.label("Shared Resource Synchronizer: SqlSharedResourceSynchronizer");
     result.description("Connects to an SQL Database to synchronize shared resources.");
     result.parameters(ParameterUsage.Create, importParameters);

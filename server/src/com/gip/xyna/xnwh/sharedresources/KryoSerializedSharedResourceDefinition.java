@@ -51,18 +51,18 @@ public class KryoSerializedSharedResourceDefinition<T> extends SharedResourceDef
   @Override
   public byte[] serialize(T value) {
     Output output = new ByteBufferOutput(bufferSize);
-    kryo.writeObject(output, value);
+    kryo.writeObjectOrNull(output, value, clazz);
     output.close();
     return output.toBytes();
   }
 
 
   @Override
-  public SharedResourceInstance<T> deserialize(byte[] value, String id) {
+  public SharedResourceInstance<T> deserialize(byte[] value, String id, Long created) {
     Input input = new Input(value);
     T val = kryo.readObjectOrNull(input, clazz);
     input.close();
-    return new SharedResourceInstance<T>(id, val);
+    return new SharedResourceInstance<T>(id, created, val);
   }
 
 }
