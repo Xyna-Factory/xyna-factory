@@ -21,62 +21,47 @@
   </Meta>
   <Libraries>XynaRadiusServicesImpl.jar</Libraries>
   <Service Label="XynaRadiusServices" TypeName="XynaRadiusServices">
-    <Operation IsStatic="true" Label="Add temporary radius user" Name="addTemporaryRadiusUser">
+    <Operation IsStatic="true" Label="Validate Credentials" Name="validateCredentials">
       <Input>
-        <Data Label="IPv 4" ReferenceName="IPv4" ReferencePath="base" VariableName="iPv4"/>
-        <Data Label="Radius User Data" ReferenceName="RadiusUserData" ReferencePath="xact.radius" VariableName="radiusUserData22"/>
+        <Data ID="1" Label="Radius User from Input" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser1"/>
+        <Data ID="2" Label="Radius User from Database" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser2"/>
+        <Data ID="3" Label="RequestAuthenticator" ReferenceName="RequestAuthenticator" ReferencePath="xact.radius" VariableName="requestAuthenticator3"/>
       </Input>
       <Output>
-        <Data Label="Radius Add User Result" ReferenceName="RadiusAddUserResult" ReferencePath="xact.radius" VariableName="radiusAddUserResult23"/>
+        <Data ID="4" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code4"/>
       </Output>
+      <Meta>
+        <Documentation>Validate the user credentials (CHAP).
+Returns the Code "2" if the the validation was successful, else "3".</Documentation>
+      </Meta>
       <SourceCode>
-        <CodeSnippet Type="Java">return xact.radius.XynaRadiusServicesImpl.addTemporaryRadiusUser(iPv4, radiusUserData22);</CodeSnippet>
-      </SourceCode>
-    </Operation>
-    <Operation IsStatic="true" Label="Authenticate Radius User" Name="authenticateRadiusUser">
-      <Input>
-        <Data IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node"/>
-        <Data Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code"/>
-        <Data Label="Request Authenticator" ReferenceName="RequestAuthenticator" ReferencePath="xact.radius" VariableName="requestAuthenticator"/>
-        <Data Label="Source IP" ReferenceName="SourceIP" ReferencePath="xact.radius" VariableName="sourceIP"/>
-      </Input>
-      <Output>
-        <Data Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code0"/>
-        <Data Label="User Role" ReferenceName="UserRole" ReferencePath="xact.radius" VariableName="userRole28"/>
-        <Data Label="NAS-Identifier" ReferenceName="NASIdentifier" ReferencePath="xact.radius" VariableName="nASIdentifier29"/>
-      </Output>
-      <SourceCode>
-        <CodeSnippet Type="Java">return xact.radius.XynaRadiusServicesImpl.authenticateRadiusUser(node, code, requestAuthenticator, sourceIP);</CodeSnippet>
-      </SourceCode>
-    </Operation>
-    <Operation IsStatic="true" Label="Clean Users" Name="cleanUsers">
-      <Input/>
-      <Output/>
-      <SourceCode>
-        <CodeSnippet Type="Java">xact.radius.XynaRadiusServicesImpl.cleanUsers();</CodeSnippet>
-      </SourceCode>
-    </Operation>
-    <Operation IsStatic="true" Label="Get Xyna Property" Name="getXynaProperty">
-      <Input>
-        <Data Label="Xyna property key" ReferenceName="XynaPropertyKey" ReferencePath="xact.radius" VariableName="xynaPropertyKey31"/>
-      </Input>
-      <Output>
-        <Data Label="Xyna property string value" ReferenceName="XynaPropertyStringValue" ReferencePath="xact.radius" VariableName="xynaPropertyStringValue32"/>
-      </Output>
-      <SourceCode>
-        <CodeSnippet Type="Java">return xact.radius.XynaRadiusServicesImpl.getXynaProperty(xynaPropertyKey31);</CodeSnippet>
+        <CodeSnippet Type="Java">return xact.radius.XynaRadiusServicesImpl.validateCredentials(radiusUser1, radiusUser2, requestAuthenticator3);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Get Privilege Level" Name="getPrivilegeLevel">
       <Input>
-        <Data ID="2" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole2"/>
-        <Data ID="3" Label="Vendor" ReferenceName="Vendor" ReferencePath="xact.radius" VariableName="vendor3"/>
+        <Data ID="7" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole7"/>
+        <Data ID="8" Label="Vendor" ReferenceName="Vendor" ReferencePath="xact.radius" VariableName="vendor8"/>
       </Input>
       <Output>
-        <Data ID="1" Label="Privilege Level" ReferenceName="PrivilegeLevel" ReferencePath="xact.radius" VariableName="privilegeLevel1"/>
+        <Data ID="9" Label="Privilege Level" ReferenceName="PrivilegeLevel" ReferencePath="xact.radius" VariableName="privilegeLevel9"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return xact.radius.XynaRadiusServicesImpl.getPrivilegeLevel(functionalRole2, vendor3);</CodeSnippet>
+        <CodeSnippet Type="Java">return xact.radius.XynaRadiusServicesImpl.getPrivilegeLevel(functionalRole7, vendor8);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Basic User Info from Nodes" Name="getBasicUserInfoFromNodes">
+      <Input>
+        <Data ID="12" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node12"/>
+      </Input>
+      <Output>
+        <Data ID="13" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser13"/>
+      </Output>
+      <Meta>
+        <Documentation>Get username, password and nas-identifier from the nodes sent in the access request.</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.radius.XynaRadiusServicesImpl.getBasicUserInfoFromNodes(node12);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

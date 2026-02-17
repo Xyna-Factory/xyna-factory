@@ -38,6 +38,7 @@ import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
+import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.xods.configuration.Configuration;
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
@@ -104,12 +105,13 @@ public class ProcessMonitorServicesServiceOperationImpl implements ExtendedDeplo
 
   private static final String NAME_KEY = "name";
   private static final String WAITING_ORDERS_COUNT = "waitingOrdersCount";
+  private static final String CREATED_KEY = "created";
   private static final String ASCENDING_ORDER = "asc";
   private static final String DESCENDING_ORDER = "dsc";
 
   private static final String ZETA_TABLE_LIMIT_KEY = "zeta.table.limit";
 
-  private enum SortCriterion { ORDER_ID, NAME, WAITING_ORDERS_COUNT };
+  private enum SortCriterion { ORDER_ID, NAME, WAITING_ORDERS_COUNT, CREATED };
 
   public static final XynaPropertyBoolean CUSTOM_COLUMN0_ENABLED = new XynaPropertyBoolean(CUSTOM_FIELD_PROPERTY_PREFIX + "0." + CUSTOM_FIELD_PROPERTY_ENABLED, false)
       .setDefaultDocumentation(DocumentationLanguage.DE, "Steuert, ob die 1. Custom Column in der Auftragsübersicht mit " + CUSTOM_FIELD_PROPERTY_PREFIX + "0." + CUSTOM_FIELD_PROPERTY_LABEL + " als Label angezeigt wird.")
@@ -382,6 +384,9 @@ public class ProcessMonitorServicesServiceOperationImpl implements ExtendedDeplo
       case WAITING_ORDERS_COUNT:
         tableHelper.sortConfig(fi -> TableHelper.createSortIfValid(WAITING_ORDERS_COUNT, DESCENDING_ORDER));
         break;
+      case CREATED:
+        tableHelper.sortConfig(fi -> TableHelper.createSortIfValid(CREATED_KEY, ASCENDING_ORDER));
+        break;
       default :
         tableHelper.sortConfig(fi -> TableHelper.createSortIfValid(NAME_KEY, ASCENDING_ORDER));
         break;
@@ -393,7 +398,8 @@ public class ProcessMonitorServicesServiceOperationImpl implements ExtendedDeplo
     Map<ResourceInfo, Set<XynaOrderWaitingForResourceInfo>> waitingOrders = xynaScheduler.getOrdersWaitingForResources();
     TableHelper<Veto, Filter> tableHelper = TableHelper.<Veto, Filter>init(filter)
         .addSelectFunction(NAME_KEY, Veto::getName)
-        .addSelectFunction(WAITING_ORDERS_COUNT, Veto::getWaitingOrdersCount);
+        .addSelectFunction(WAITING_ORDERS_COUNT, Veto::getWaitingOrdersCount)
+        .addSelectFunction(CREATED_KEY, Veto::getCreated);
 
     SortCriterion sortCriterionEnum;
     try {
@@ -409,9 +415,12 @@ public class ProcessMonitorServicesServiceOperationImpl implements ExtendedDeplo
       // filter, limit and sort result
 
       List<Veto> result = vetoInformations.stream()
-          .map(storable -> new Veto(storable.getVetoName(), Collections.unmodifiableList(Arrays.asList(storable.getUsingOrderId())), 
-                                    waitingOrders.get(new ResourceInfo(storable.getVetoName(), ResourceType.VETO)) == null ? 0 :
-                                    waitingOrders.get(new ResourceInfo(storable.getVetoName(), ResourceType.VETO)).size()))
+          .map(storable -> new Veto.Builder()
+               .name(storable.getVetoName())
+               .runningOrders(Collections.unmodifiableList(Arrays.asList(storable.getUsingOrderId())))
+               .waitingOrdersCount(waitingOrders.getOrDefault(new ResourceInfo(storable.getVetoName(), ResourceType.VETO), Collections.emptySet()).size())
+               .created(storable.getCreated() != null ? Constants.defaultUTCSimpleDateFormatWithMS().format(storable.getCreated()) : "")
+               .instance())
           .filter(tableHelper.filter())
           .collect(Collectors.toList());
       tableHelper.sort(result);
