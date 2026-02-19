@@ -36,6 +36,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
@@ -46,6 +47,7 @@ import com.gip.xyna.utils.db.DBConnectionData.DBConnectionDataBuilder;
 import com.gip.xyna.utils.db.Parameter;
 import com.gip.xyna.utils.db.types.BLOB;
 import com.gip.xyna.utils.timing.Duration;
+import com.gip.xyna.xnwh.exceptions.XNWH_SharedResourceInstanceAlreadyExists;
 import com.gip.xyna.xnwh.sharedresources.SharedResourceDefinition;
 import com.gip.xyna.xnwh.sharedresources.SharedResourceInstance;
 import com.gip.xyna.xnwh.sharedresources.SharedResourceRequestResult;
@@ -338,7 +340,15 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
         ps.executeUpdate();
       }
     } catch (Exception e) {
-      return new SharedResourceRequestResult<T>(false, e, null);
+      Exception exceptionToReturn = e;
+      if(e instanceof SQLException) {
+        if(((SQLException)e).getErrorCode() == 1062) {
+          List<String> ids = data.stream().map(x -> x.getId()).collect(Collectors.toList());
+          String idString = String.join(", ", ids);
+          exceptionToReturn = new XNWH_SharedResourceInstanceAlreadyExists(resource.getPath(), idString);
+        }
+      }
+      return new SharedResourceRequestResult<T>(false, exceptionToReturn, null);
     } finally {
       idleConnections.add(con);
     }
