@@ -48,6 +48,7 @@ import com.gip.xyna.utils.db.Parameter;
 import com.gip.xyna.utils.db.types.BLOB;
 import com.gip.xyna.utils.timing.Duration;
 import com.gip.xyna.xnwh.exceptions.XNWH_SharedResourceInstanceAlreadyExists;
+import com.gip.xyna.xnwh.exceptions.XNWH_SharedResourceInstanceDoesNotExist;
 import com.gip.xyna.xnwh.sharedresources.SharedResourceDefinition;
 import com.gip.xyna.xnwh.sharedresources.SharedResourceInstance;
 import com.gip.xyna.xnwh.sharedresources.SharedResourceRequestResult;
@@ -60,7 +61,6 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
   private static final Logger logger = CentralFactoryLogging.getLogger(SQLSharedResourceSynchronizer.class);
 
   private static final Exception NO_CONNECTION_AVAILABLE_EXCEPTION = new RuntimeException("No connection available");
-  private static final Exception MISSING_ENTRIES_EXCEPTION = new RuntimeException("Some entries to update are missing");
   private static final Exception UPDATE_INTERRUPTED_EXCEPTION = new RuntimeException("Update method returned null");
   private static final Exception UPDATE_MODIFIED_ID_EXCEPTION = new RuntimeException("Update modified instance id");
   private static final String INSERT_VALUE_PLACEHOLDER = "(?, ?, ?, ?),\n";
@@ -342,7 +342,7 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     } catch (Exception e) {
       Exception exceptionToReturn = e;
       if(e instanceof SQLException) {
-        if(((SQLException)e).getErrorCode() == 1062) {
+        if(((SQLException)e).getErrorCode() == 1062) { //TODO: code by connector
           List<String> ids = data.stream().map(x -> x.getId()).collect(Collectors.toList());
           String idString = String.join(", ", ids);
           exceptionToReturn = new XNWH_SharedResourceInstanceAlreadyExists(resource.getPath(), idString);
@@ -486,7 +486,12 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
       resources = executeRead(con, resource, ids, true);
       if (resources.size() != ids.size()) {
         con.setAutoCommit(true);
-        return new SharedResourceRequestResult<T>(false, MISSING_ENTRIES_EXCEPTION, null);
+        List<String> missingIdList = new ArrayList<>(ids);
+        missingIdList.removeAll(resources.stream().map(x -> x.getId()).collect(Collectors.toList()));
+        String missingIds = String.join(", ", missingIdList);
+        String firstMissingId = missingIdList.get(0);
+        XNWH_SharedResourceInstanceDoesNotExist ex = new XNWH_SharedResourceInstanceDoesNotExist(resource.getPath(), missingIds, firstMissingId);
+        return new SharedResourceRequestResult<T>(false, ex, null);
       }
       for (SharedResourceInstance<T> oldInstance : resources) {
         SharedResourceInstance<T> newInstance = update.apply(oldInstance);

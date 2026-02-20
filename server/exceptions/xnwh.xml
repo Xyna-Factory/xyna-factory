@@ -461,6 +461,29 @@
          </Meta>
       </Data>
       <MessageText Language="DE">Es existiert mindestens eine Shared Resource Instanz vom Typ '%0%' mit einer id in (%1%).</MessageText>
-      <MessageText Language="EN">A Shared Resource instance with id '%0%' exists already.</MessageText>
+      <MessageText Language="EN">A Shared Resource instance of type '%0%' with id in (%1%) exists already.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02267" TypeName="XNWH_SharedResourceInstanceDoesNotExist" TypePath="com.gip.xyna.xnwh.exceptions" >
+      <Data Label="type" VariableName="type">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="ids" VariableName="ids">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="firstid" VariableName="firstid">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Es existieren keine Shared Resource Instanzen vom Typ '%0%' mit ids (%1%).</MessageText>
+      <MessageText Language="EN">No Shared Resource instances of type '%0%' with ids in (%1) exist.</MessageText>
+   </ExceptionType>
+   <ExceptionType Code="XYNA-02268" TypeName="XNWH_SharedResourceException" TypePath="com.gip.xyna.xnwh.exceptions" >
+      <MessageText Language="DE">Es ist eine Exception im Zusammenhang mit Shared Resourses aufgetreten.</MessageText>
+      <MessageText Language="EN">A Shared Resourse related exception occurred.</MessageText>
    </ExceptionType>
 </ExceptionStore>
