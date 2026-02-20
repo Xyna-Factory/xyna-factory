@@ -22,10 +22,12 @@ package com.gip.xyna.xnwh.sharedresources;
 public class SharedResourceInstance<T> {
 
   private final String id;
+  private final Long created;
   private final T value;
 
 
-  public SharedResourceInstance(String id, T value) {
+  public SharedResourceInstance(String id, Long created, T value) {
+    this.created = created;
     this.id = id;
     this.value = value;
   }
@@ -33,6 +35,11 @@ public class SharedResourceInstance<T> {
 
   public String getId() {
     return id;
+  }
+
+
+  public Long getCreated() {
+    return created;
   }
 
 
