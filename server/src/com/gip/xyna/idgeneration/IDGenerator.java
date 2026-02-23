@@ -33,6 +33,7 @@ import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xfmg.xclusteringservices.XynaClusteringServicesManagement;
 import com.gip.xyna.xnwh.persistence.ODSImpl;
 import com.gip.xyna.xnwh.persistence.ODSImpl.PersistenceLayerInstances;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceManagement;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xprc.XynaProcessing;
 import com.gip.xyna.xprc.exceptions.XPRC_FACTORY_IS_SHUTTING_DOWN;
@@ -45,7 +46,7 @@ public class IDGenerator extends FunctionGroup {
 
 
   private static long ID_OFFSET = 10000;
-  @Deprecated  //Use IDGenerator.class
+  @Deprecated //Use IDGenerator.class
   public static final int FUTUREEXECUTION_ID = XynaFactory.getInstance().getFutureExecution().nextId();
 
   private volatile static IDGenerator _instance;
@@ -54,13 +55,15 @@ public class IDGenerator extends FunctionGroup {
   private volatile boolean isInitialized;
   private volatile boolean isShutdown;
   public IdGenerationAlgorithm idGenerationAlgorithm;
-  
+
   private static AtomicLong sessionUniqueIdCounter = new AtomicLong();
-  
+
   public static final String DEFAULT_NAME = IDGenerator.class.getSimpleName();
 
   public static final String REALM_DEFAULT = "default";
-  
+  public static final String XYNA_IDGENERATION_SR = "xyna.idgeneration";
+
+
   /**
    * gibt für diese jvm eindeutige ids. wird beim serverstart resetted.
    * 
@@ -71,10 +74,11 @@ public class IDGenerator extends FunctionGroup {
     return sessionUniqueIdCounter.incrementAndGet();
   }
 
+
   public static long getID_OFFSET() {
     return ID_OFFSET;
   }
-  
+
 
   public static IDGenerator getInstance() throws XynaException {
     if (_instance == null) {
@@ -115,29 +119,37 @@ public class IDGenerator extends FunctionGroup {
 
   @Override
   protected void init() throws XynaException {
-    idGenerationAlgorithm = new IdGenerationAlgorithmUsingBlocksAndClusteredStorable();
     FutureExecution fExec = XynaFactory.getInstance().getFutureExecution();
-    fExec.addTask(IDGenerator.class,"IDGenerator.initStorable").
-      after(PersistenceLayerInstances.class,XynaClusteringServicesManagement.class).
-      before(XynaProcessing.FUTUREEXECUTIONID_ORDER_EXECUTION).
-      execAsync(new Runnable() { public void run() { initStorable(); }});
-    fExec.addTask(FUTUREEXECUTION_ID,"IDGenerator.setID").deprecated().
-      after(IDGenerator.class).
-      execAsync();  //dummy zum Setzen von FUTUREEXECUTION_ID
+    fExec.addTask(IDGenerator.class, "IDGenerator.initAlgorithm").after(PersistenceLayerInstances.class, XynaClusteringServicesManagement.class)
+        .before(XynaProcessing.FUTUREEXECUTIONID_ORDER_EXECUTION).execAsync(new Runnable() {
+
+          public void run() {
+            initAlgorithm();
+          }
+        });
+    fExec.addTask(FUTUREEXECUTION_ID, "IDGenerator.setID").deprecated().after(IDGenerator.class).execAsync(); //dummy zum Setzen von FUTUREEXECUTION_ID
   }
-  
-  private void initStorable() {
-    try {
-      ODSImpl.getInstance().registerStorable(GeneratedIDsStorable.class);
-    } catch (PersistenceLayerException e) {
-      throw new RuntimeException(e);
+
+
+  private void initAlgorithm() {
+    SharedResourceManagement sharedResourceManagement = XynaFactory.getInstance().getXynaNetworkWarehouse().getSharedResourceManagement();
+    if (sharedResourceManagement.hasConfiguredSynchronizer(XYNA_IDGENERATION_SR)) {
+      logger.info("Using IdGenerationAlgorithmUsingBlocksAndSharedResources for ID generation.");
+      idGenerationAlgorithm = new IdGenerationAlgorithmUsingBlocksAndSharedResources();
+    } else {
+      try {
+        ODSImpl.getInstance().registerStorable(GeneratedIDsStorable.class);
+      } catch (PersistenceLayerException e) {
+        throw new RuntimeException(e);
+      }
+      logger.info("Using IdGenerationAlgorithmUsingBlocksAndClusteredStorable for ID generation.");
+      idGenerationAlgorithm = new IdGenerationAlgorithmUsingBlocksAndClusteredStorable();
     }
-    
+
     try {
       idGenerationAlgorithm.init();
       isInitialized = true;
       isShutdown = false;
-
     } catch (PersistenceLayerException e) {
       throw new RuntimeException(e);
     }
@@ -147,14 +159,15 @@ public class IDGenerator extends FunctionGroup {
   @Override
   public void shutdown() throws XynaException {
 
-      if (!isInitialized) {
-        return;
-      }
-      idGenerationAlgorithm.shutdown();
-      isShutdown = true;
-      isInitialized = false;
+    if (!isInitialized) {
+      return;
+    }
+    idGenerationAlgorithm.shutdown();
+    isShutdown = true;
+    isInitialized = false;
 
   }
+
 
   /*
    * ACHTUNG: abwärtskompatibel halten, weil in projekten verwendet
@@ -165,24 +178,25 @@ public class IDGenerator extends FunctionGroup {
   public long getUniqueId() {
     return getUniqueId(REALM_DEFAULT);
   }
-  
-  
+
+
   /**
    * @return a unique id within the realm 
    */
   public long getUniqueId(String realm) {
-      if (isShutdown) {
-        //dann darf da auch keiner mehr drauf zugreifen. vor dem shutdown muss das sichergestellt werden => runtimeexception
-        throw new RuntimeException(new XPRC_FACTORY_IS_SHUTTING_DOWN("Generate unique ID"));
-      }
+    if (isShutdown) {
+      //dann darf da auch keiner mehr drauf zugreifen. vor dem shutdown muss das sichergestellt werden => runtimeexception
+      throw new RuntimeException(new XPRC_FACTORY_IS_SHUTTING_DOWN("Generate unique ID"));
+    }
     return idGenerationAlgorithm.getUniqueId(realm);
   }
 
 
   public void setBlockSize(String realm, long blockSize) {
-    ((IdGenerationAlgorithmUsingBlocksAndClusteredStorable) idGenerationAlgorithm).setBlockSize(realm, blockSize);
+    idGenerationAlgorithm.setBlockSize(realm, blockSize);
   }
-  
+
+
   /**
    * gibt die als lastStoredId gespeicherte id vom anderen binding/knoten zurück 
    * nur unterstützt, wenn factory geclustered ist
@@ -190,7 +204,8 @@ public class IDGenerator extends FunctionGroup {
   public long getIdLastUsedByOtherNode(String realm) {
     return idGenerationAlgorithm.getIdLastUsedByOtherNode(realm);
   }
-  
+
+
   /**
    * speichert die zuletzt vergebene id vom eigenen knoten in der datenbank als lastStoredId
    * nur unterstützt, wenn factory geclustered ist

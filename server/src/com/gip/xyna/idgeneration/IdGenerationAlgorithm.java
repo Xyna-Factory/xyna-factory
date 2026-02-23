@@ -22,9 +22,9 @@ import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 
 
 /**
- * Interface, um verschiedene IdGeneration-Algorithmen im IDGenerator verwenden zu können.
+ * Interface, um verschiedene IdGeneration-Algorithmen im IDGenerator verwenden zu kï¿½nnen.
  * IDGenerator stellt sicher, dass auf die Methoden dieses Interfaces nicht konkurrierend 
- * zugegriffen wird, daher sind keine weiteren Locks etc. nötig.
+ * zugegriffen wird, daher sind keine weiteren Locks etc. nï¿½tig.
  */
 public interface IdGenerationAlgorithm {
 
@@ -48,5 +48,6 @@ public interface IdGenerationAlgorithm {
 
   void storeLastUsed(String realm);
   
+  void setBlockSize(String realm, long blockSize);
 
 }
