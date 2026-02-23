@@ -75,6 +75,9 @@ import xmcp.gitintegration.CREATE;
 import xmcp.gitintegration.InfoWorkspaceContentDiffGroup;
 import xmcp.gitintegration.InfoWorkspaceContentDiffGroupList;
 import xmcp.gitintegration.ListId;
+import xmcp.gitintegration.Reference;
+import xmcp.gitintegration.ReferenceData;
+import xmcp.gitintegration.ReferenceManagement;
 import xmcp.gitintegration.WorkspaceContent;
 import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.WorkspaceContentDifferences;
@@ -354,7 +357,8 @@ public class RepositoryManagementImpl {
     }
     
     for(Long revision : sortedRevisions) {
-      WorkspaceContentDifferences diffs = workspaceDiffsByWorkspace.get(revisionToWsNameMap.get(revision));
+      String workspaceName = revisionToWsNameMap.get(revision);
+      WorkspaceContentDifferences diffs = workspaceDiffsByWorkspace.get(workspaceName);
       ListId listId = new ListId.Builder().listId(diffs.getListId()).instance();
       for(WorkspaceContentDifference entry: new ArrayList<>(diffs.getDifferences())) {
         if(entry.getContentType().equals("applicationdefinition")) {
@@ -363,10 +367,16 @@ public class RepositoryManagementImpl {
         WorkspaceContentDifferencesResolution.Builder builder = new WorkspaceContentDifferencesResolution.Builder();
         builder.entryId(entry.getEntryId());
         builder.resolution(entry.getDifferenceType().getClass().getSimpleName());
+        String obj = writeObject(entry);
+        actionsPerformed.add("Trying to "+ entry.getDifferenceType().getClass().getSimpleName() +" " + entry.getContentType() + " " + obj);
         resolveWorkspaceDifferences(listId, List.of(builder.instance()), errors);
         diffs.getDifferences().remove(entry);
       }
+
+      triggerDatatypeReferences(workspaceName, revision, actionsPerformed, errors);
+      
     }
+    
     
     for(Long revision : new ArrayList<>(sortedRevisions)) {
       try {
@@ -384,8 +394,34 @@ public class RepositoryManagementImpl {
         WorkspaceContentDifferencesResolution.Builder builder = new WorkspaceContentDifferencesResolution.Builder();
         builder.entryId(entry.getEntryId());
         builder.resolution(entry.getDifferenceType().getClass().getSimpleName());
+        String obj = writeObject(entry);
+        actionsPerformed.add("Trying to "+ entry.getDifferenceType().getClass().getSimpleName() +" " + entry.getContentType() + " " + obj);
         resolveWorkspaceDifferences(listId, List.of(builder.instance()), errors);
       }
+    }
+  }
+
+
+  private static void triggerDatatypeReferences(String workspaceName, Long revision, List<String> actionsPerformed, List<String> errors) {
+    List<? extends ReferenceData> references = ReferenceManagement.listReferences(new xprc.xpce.Workspace(workspaceName));
+    if (references == null || references.isEmpty()) {
+      return;
+    }
+    references = references.stream().filter(x -> x.getObjectType().equals("DATATYPE")).collect(Collectors.toList());
+    if(references.isEmpty()) {
+      return;
+    }
+    List<Reference> refsToTrigger = new ArrayList<>();
+    for(ReferenceData refData : references) {
+      Reference.Builder builder = new Reference.Builder();
+      builder.path(refData.getPath());
+      builder.type(refData.getReferenceType());
+      refsToTrigger.add(builder.instance());
+    }
+    try {
+      ReferenceManagement.triggerReferences(refsToTrigger, null, revision);
+    } catch(Exception e) {
+      errors.add("Could not trigger references for datatypes in " + workspaceName);
     }
   }
 
@@ -476,6 +512,12 @@ public class RepositoryManagementImpl {
     }
     
     result.add(revision);
+  }
+  
+  
+  private static String writeObject(WorkspaceContentDifference entry) {
+    WorkspaceContentItem item = (entry.getDifferenceType() instanceof CREATE) ? entry.getNewItem() : entry.getExistingItem();
+    return item.toString(); //TODO: add method to Workspace Object Management
   }
 
   private static String writeDependency(WorkspaceContentDifference entry) {
