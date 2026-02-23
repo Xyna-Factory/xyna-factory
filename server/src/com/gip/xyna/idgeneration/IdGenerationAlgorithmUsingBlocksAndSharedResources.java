@@ -1,6 +1,22 @@
+/*
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ */
+
 package com.gip.xyna.idgeneration;
-
-
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,8 +33,6 @@ import com.gip.xyna.xnwh.sharedresources.SharedResourceInstance;
 import com.gip.xyna.xnwh.sharedresources.SharedResourceManagement;
 import com.gip.xyna.xnwh.sharedresources.SharedResourceRequestResult;
 
-
-
 public class IdGenerationAlgorithmUsingBlocksAndSharedResources implements IdGenerationAlgorithm {
 
   private SharedResourceManagement sharedResourceManagement;
@@ -28,26 +42,22 @@ public class IdGenerationAlgorithmUsingBlocksAndSharedResources implements IdGen
 
   private static final long DEFAULT_BLOCK_SIZE = 1000;
 
-  private static final SharedResourceDefinition<Long> resource =
-      new KryoSerializedSharedResourceDefinition<Long>(IDGenerator.XYNA_IDGENERATION_SR, Long.class);
-
+  private static final SharedResourceDefinition<Long> resource = new KryoSerializedSharedResourceDefinition<Long>(
+      IDGenerator.XYNA_IDGENERATION_SR, Long.class);
 
   private class IdBlock {
 
     private long nextId;
     private long blockEnd; // exclusive
 
-
     private IdBlock(long blockStart, long blockEnd) {
       this.nextId = blockStart;
       this.blockEnd = blockEnd;
     }
 
-
     public boolean hasNext() {
       return nextId < blockEnd;
     }
-
 
     public long getNext() {
       if (!hasNext()) {
@@ -57,21 +67,17 @@ public class IdGenerationAlgorithmUsingBlocksAndSharedResources implements IdGen
     }
   }
 
-
   public IdGenerationAlgorithmUsingBlocksAndSharedResources() {
   }
-
 
   @Override
   public void init() throws PersistenceLayerException {
     sharedResourceManagement = XynaFactory.getInstance().getXynaNetworkWarehouse().getSharedResourceManagement();
   }
 
-
   @Override
   public void shutdown() throws PersistenceLayerException {
   }
-
 
   @Override
   public long getUniqueId(String realm) {
@@ -82,7 +88,8 @@ public class IdGenerationAlgorithmUsingBlocksAndSharedResources implements IdGen
       return idBlock.getNext();
     }
 
-    // otherwise, allocate a new block starting from the last allocated ID (or 0 if no block has been allocated yet)
+    // otherwise, allocate a new block starting from the last allocated ID (or 0 if
+    // no block has been allocated yet)
     SharedResourceRequestResult<Long> result = sharedResourceManagement.read(resource, Arrays.asList(realm));
     if (result.isSuccess()) {
       List<SharedResourceInstance<Long>> resources = result.getResources();
@@ -106,25 +113,24 @@ public class IdGenerationAlgorithmUsingBlocksAndSharedResources implements IdGen
       ids.put(realm, idBlock);
       return idBlock.getNext();
     } else {
-      throw new RuntimeException(String.format("Failed to read shared resource %s for realm %s: %s", IDGenerator.XYNA_IDGENERATION_SR,
-                                               realm, result.getException().getMessage()),
-                                 result.getException());
+      throw new RuntimeException(
+          String.format("Failed to read shared resource %s for realm %s: %s", IDGenerator.XYNA_IDGENERATION_SR,
+              realm, result.getException().getMessage()),
+          result.getException());
     }
 
   }
 
-
   @Override
   public long getIdLastUsedByOtherNode(String realm) {
-    throw new UnsupportedOperationException("Method 'getIdLastUsedByOtherNode' is not supported using shared resources");
+    throw new UnsupportedOperationException(
+        "Method 'getIdLastUsedByOtherNode' is not supported using shared resources");
   }
-
 
   @Override
   public void storeLastUsed(String realm) {
     throw new UnsupportedOperationException("Method 'storeLastUsed' is not supported using shared resources");
   }
-
 
   @Override
   public void setBlockSize(String realm, long blockSize) {
