@@ -121,12 +121,7 @@ public class IDGenerator extends FunctionGroup {
   protected void init() throws XynaException {
     FutureExecution fExec = XynaFactory.getInstance().getFutureExecution();
     fExec.addTask(IDGenerator.class, "IDGenerator.initAlgorithm").after(PersistenceLayerInstances.class, XynaClusteringServicesManagement.class)
-        .before(XynaProcessing.FUTUREEXECUTIONID_ORDER_EXECUTION).execAsync(new Runnable() {
-
-          public void run() {
-            initAlgorithm();
-          }
-        });
+        .before(XynaProcessing.FUTUREEXECUTIONID_ORDER_EXECUTION).execAsync(this::initAlgorithm);
     fExec.addTask(FUTUREEXECUTION_ID, "IDGenerator.setID").deprecated().after(IDGenerator.class).execAsync(); //dummy zum Setzen von FUTUREEXECUTION_ID
   }
 
