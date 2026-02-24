@@ -23,7 +23,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
 import java.net.DatagramPacket;
 import java.security.MessageDigest;
 import java.util.ArrayList;
@@ -34,8 +33,8 @@ import org.apache.log4j.Logger;
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.trigger.XynaRadiusTriggerConnection;
-import com.gip.xyna.xact.trigger.tlvencoding.radius.Node;
 import com.gip.xyna.xact.trigger.tlvdecoding.radius.RadiusConfigurationDecoder;
+import com.gip.xyna.xact.trigger.tlvencoding.radius.Node;
 import com.gip.xyna.xact.trigger.tlvencoding.radius.RadiusConfigurationEncoder;
 import com.gip.xyna.xact.trigger.tlvencoding.radius.TextConfigTree;
 import com.gip.xyna.xact.trigger.tlvencoding.radius.TextConfigTreeReader;
@@ -44,21 +43,27 @@ import com.gip.xyna.xact.trigger.tlvencoding.radius.TypeWithValueNode;
 import com.gip.xyna.xact.trigger.tlvencoding.util.ByteUtil;
 import com.gip.xyna.xact.trigger.tlvencoding.util.Md5HMAC;
 import com.gip.xyna.xdev.xfractmod.xmdm.ConnectionFilter;
-import com.gip.xyna.xdev.xfractmod.xmdm.Container;
 import com.gip.xyna.xdev.xfractmod.xmdm.EventListener;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObjectList;
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.UserType;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyInt;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyString;
 import com.gip.xyna.xprc.XynaOrder;
 import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
 
+import base.Text;
+import xact.radius.AccessResponseParameter;
 import xact.radius.Code;
 import xact.radius.Identifier;
 import xact.radius.RadiusMessage;
 import xact.radius.RequestAuthenticator;
 import xact.radius.SourceIP;
 import xact.radius.SourcePort;
+import xint.crypto.AESCrypto;
+import xint.crypto.exceptions.AESCryptoException;
+import xint.crypto.parameter.AESCryptoParameter;
 
 
 
@@ -67,22 +72,32 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
   private static final long serialVersionUID = 1L;
   private static Logger logger = CentralFactoryLogging.getLogger(XynaRadiusFilter.class);
 
-  private static XynaPropertyString wfAccessRequest;
 
-  private static String sharedSecretProp = "xact.radius.sharedSecret";
-  private final static XynaPropertyString sharedSecretXynaProp = new XynaPropertyString(sharedSecretProp, "sharedSecret", false);
+  private static final String SHAREDSECRETPROP = "xact.radius.sharedSecret";
+  private static final String AESKEYNAMEPROPERTY = "xact.radius.aes.keyName";
+  private static final String AESKEYSIZEPROPERTY = "xact.radius.aes.keySize";
+  private static final String ACCESSREQUESTWFPROPERTY = "xyna.radius.wf.AccessRequest";
+
+  private final static XynaPropertyString sharedSecretXynaProp = new XynaPropertyString(SHAREDSECRETPROP, "sharedSecret", false);
+  private final static XynaPropertyString aesKeyNameXynaProp = new XynaPropertyString(AESKEYNAMEPROPERTY, null, true);
+  private final static XynaPropertyInt aesKeySizeXynaProp = new XynaPropertyInt(AESKEYSIZEPROPERTY, 256);
+  private final static XynaPropertyString wfAccessRequestProp =
+      new XynaPropertyString(ACCESSREQUESTWFPROPERTY, "xact.radius.RADIUSAccessRequest")
+          .setDefaultDocumentation(DocumentationLanguage.DE, "Workflow für den Access-Request, der vom Filter aufgerufen wird.")
+          .setDefaultDocumentation(DocumentationLanguage.EN, "Workflow for the access request that will be called by the filter.");
 
 
+  @SuppressWarnings("rawtypes")
   public void onDeployment(EventListener trigger) {
     super.onDeployment(trigger);
-
-    wfAccessRequest = new XynaPropertyString("xyna.radius.wf.AccessRequest", "xact.radius.RADIUSAccessRequest")
-        .setDefaultDocumentation(DocumentationLanguage.DE, "Workflow für den Access-Request, der vom Filter aufgerufen wird.")
-        .setDefaultDocumentation(DocumentationLanguage.EN, "Workflow for the access request that will be called by the filter.");
+    wfAccessRequestProp.registerDependency(UserType.Filter, ACCESSREQUESTWFPROPERTY);
   }
 
 
+  @SuppressWarnings("rawtypes")
   public void onUndeployment(EventListener trigger) {
+    super.onUndeployment(trigger);
+    wfAccessRequestProp.unregister();
   }
 
 
@@ -191,7 +206,7 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
       }
     }
 
-    DestinationKey dk = new DestinationKey(wfAccessRequest.get());
+    DestinationKey dk = new DestinationKey(wfAccessRequestProp.get());
     Code xmomcode = new Code(code);
     Identifier xmomidentifier = new Identifier(id);
     RequestAuthenticator xmomauthenticator = new RequestAuthenticator(authenticatorstring);
@@ -279,58 +294,63 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
       logger.debug("Starting to process workflow response ...");
     }
 
-    if (!(response instanceof Container)) {
-      if (logger.isDebugEnabled()) {
-        logger.debug("Xyna Container expected as output of workflow!");
-      }
+    if (!(response instanceof AccessResponseParameter)){
+      logger.error("Workflow output is not of type xact.radius.AccessResponseParameter. Aborting response!");
       return;
     }
-    Container respcontainer = (Container) response;
-    if (respcontainer.size() != 4) {
-      logger.warn("Radius response has to contain Code, Identifier, Authenticator and a list of Attribute Nodes! Aborting answer!");
-      return;
-    }
+    AccessResponseParameter responseParam = (AccessResponseParameter) response;
 
-    int code = -1;
-    int identifier = -1;
+    int code;
+    int identifier;
     try {
-      code = Integer.parseInt(((Code) respcontainer.get(0)).getValue());
-      identifier = Integer.parseInt(((Identifier) respcontainer.get(1)).getValue());
-    } catch (Exception e) {
-      logger.warn("Check Code and Identifier given. Aborting reply!");
+      code = Integer.parseInt(responseParam.getCode().getValue());
+      identifier = Integer.parseInt(responseParam.getIdentifier().getValue());
+    } catch (NumberFormatException e) {
+      logger.error("Check Code and Identifier given. Aborting response!");
       return;
     }
 
-    String sharedsecret = sharedSecretXynaProp.get();
-    if (sharedsecret == null || sharedsecret.length() == 0) {
-      logger.error("Property " + sharedSecretProp + " not set. No shared secret available for radius answer! Not sending one!");
+    String requestAuthenticatorString = responseParam.getRequestAuthenticator().getValue();
+    if (requestAuthenticatorString == null || requestAuthenticatorString.isEmpty()) {
+      logger.error("Request authenticatior is missing or empty. Aborting response!");
+      return;
+    }
+
+    String sharedSecret = responseParam.getSharedSecret();
+    AESCryptoParameter aesParam = new AESCryptoParameter(aesKeyNameXynaProp.get(), aesKeySizeXynaProp.get());
+    try {
+      if (sharedSecret != null && sharedSecret.length() > 0) {
+        sharedSecret = AESCrypto.aESDecrypt(new Text(sharedSecret), aesParam).getText();
+      } else {
+        sharedSecret = sharedSecretXynaProp.get(); // use default shared secret from property
+      }
+    } catch (AESCryptoException e) {
+      throw new RuntimeException("Error during decryption of shared secret", e);
+    }
+    if (sharedSecret == null || sharedSecret.length() == 0) {
+      logger.error("Property " + sharedSecretXynaProp.getPropertyName()
+          + " not set. No shared secret available for radius answer! Not sending one!");
       return;
     }
 
     // Liste von Nodes aus Workflowantwort erstellen
     List<Node> resultlist = new ArrayList<Node>();
     boolean addMessageAuthenticator = false;
-    for (Object n : (XynaObjectList<?>) respcontainer.get(3)) {
-      if (!(n instanceof xact.radius.Node)) {
-        if (logger.isDebugEnabled()) {
-          logger.debug("Only Nodes expected, but got different XynaObject!");
+    if (responseParam.getNode() != null) {
+      for (xact.radius.Node node : responseParam.getNode()) {
+        // Feststellen ob EAP Message Authenticator noetig ist
+        if (node.getTypeName().equals("EAP-Message")) {
+          addMessageAuthenticator = true;
         }
-        continue;
+        try {
+          resultlist.add(convertNode(node));
+        } catch (Exception e) {
+          logger.warn("Problems converting node " + node.getTypeName() + ": ", e);
+        }
       }
-      xact.radius.Node node = (xact.radius.Node) n;
-      // Feststellen ob EAP Message Authenticator noetig ist
-      if (node.getTypeName().equals("EAP-Message")) {
-        addMessageAuthenticator = true;
+      if (logger.isDebugEnabled()) {
+        logger.debug("Received nodes of workflow output succesfully converted and Radius parameters set!");
       }
-      try {
-        resultlist.add(convertNode(node));
-      } catch (Exception e) {
-        logger.warn("Problems converting node " + node.getTypeName() + ": ", e);
-      }
-    }
-
-    if (logger.isDebugEnabled()) {
-      logger.debug("Received nodes of workflow output succesfully converted and Radius parameters set!");
     }
 
     RadiusConfigurationEncoder enc = tc.getEncoder();
@@ -341,13 +361,12 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
       logger.info("Encoding of received Radius Options failed!", e);
     }
 
-    // Response Authenticator bauen
-    String requestauthenticatorstring = ((RequestAuthenticator) respcontainer.get(2)).getValue();
-    byte[] requestauthenticator = ByteUtil.toByteArray(requestauthenticatorstring); // RequestAuthenticator holen
+    // build response authenticator
+    byte[] requestAuthenticator = ByteUtil.toByteArray(requestAuthenticatorString);
     byte[] options = output.toByteArray();
-    byte[] sharedS = sharedsecret.getBytes();
-    // Code+ID+Laenge+RequestAuthenticator+Attribute+SharedSecret
-    byte[] authenticatorarray = buildRadiusAuthenticator(code, identifier, requestauthenticator, options, sharedS); // MD5 ueber
+    byte[] sharedSecretBytes = sharedSecret.getBytes();
+    // MD5 of code+identifier+length+requestAuthenticator+attributes+sharedSecret
+    byte[] authenticatorarray = buildRadiusAuthenticator(code, identifier, requestAuthenticator, options, sharedSecretBytes);
     if (logger.isDebugEnabled()) {
       logger.debug("Radius Message to Send: ");
       logger.debug("Code: " + code);
@@ -364,11 +383,11 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
     try {
       data = createRadiusMessage(code, identifier, authenticatorarray, options);
       if (addMessageAuthenticator) {
-        data = createRadiusMessage(code, identifier, requestauthenticator, options);
+        data = createRadiusMessage(code, identifier, requestAuthenticator, options);
         if (logger.isDebugEnabled()) {
           logger.debug("Data before adding MessageAuthenticator: " + ByteUtil.toHexValue(data));
         }
-        byte[] messageWithMessageAuthenticator = createMessageAuthenticator(data, sharedsecret);
+        byte[] messageWithMessageAuthenticator = createMessageAuthenticator(data, sharedSecretBytes);
         if (logger.isDebugEnabled()) {
           logger.debug("Message after adding new MessageAuthenticator: " + ByteUtil.toHexValue(messageWithMessageAuthenticator));
         }
@@ -376,7 +395,7 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
         if (logger.isDebugEnabled()) {
           logger.debug("Options from new message: " + ByteUtil.toHexValue(options));
         }
-        authenticatorarray = buildRadiusAuthenticator(code, identifier, requestauthenticator, options, sharedS); // MD5 ueber
+        authenticatorarray = buildRadiusAuthenticator(code, identifier, requestAuthenticator, options, sharedSecretBytes);
         if (logger.isDebugEnabled()) {
           logger.debug("new generated RadiusAuthenticator: " + ByteUtil.toHexValue(authenticatorarray));
         }
@@ -456,7 +475,7 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
    * @return description of this filter
    */
   public String getClassDescription() {
-    return "Filter for Radius access requests, calls the workflow specified in the property: " + wfAccessRequest.getPropertyName();
+    return "Filter for Radius access requests, calls the workflow specified in the property: " + wfAccessRequestProp.getPropertyName();
   }
 
 
@@ -537,7 +556,7 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
   }
 
 
-  public static byte[] createMessageAuthenticator(byte[] message, String sharedSecret) {
+  public static byte[] createMessageAuthenticator(byte[] message, byte[] sharedSecret) {
 
     if (logger.isDebugEnabled()) {
       logger.debug("CreateMessageAuthenticator: Inputmessage: " + ByteUtil.toHexValue(message));
@@ -564,16 +583,10 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
     }
 
     // Makes the hash
-
     byte[] hMACMD5 = new byte[18];
-    String shsec = sharedSecret;
-    int charlength = shsec.length() * 2;
-    shsec = "0x" + toHex(shsec).substring(40 - charlength).toUpperCase();
-    byte[] sharedSecretBytes = ByteUtil.toByteArray(shsec);
-    hMACMD5 = Md5HMAC.hmac(sharedSecretBytes, finalmessage);
+    hMACMD5 = Md5HMAC.hmac(sharedSecret, finalmessage);
 
     byte[] resultmessage = new byte[message.length + hMACMD5.length + 2];
-
     byte[] eapstart = ByteUtil.toByteArray("0x5012");
 
     System.arraycopy(message, 0, resultmessage, 0, message.length);
@@ -581,19 +594,6 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
     System.arraycopy(hMACMD5, 0, resultmessage, message.length + eapstart.length, hMACMD5.length);
 
     return resultmessage;
-  }
-
-
-  public static String intToHexString(int intToParse) {
-    String parsedInt = "";
-    byte[] array = ByteUtil.toByteArray(intToParse);
-    parsedInt = parsedInt + ByteUtil.toHexValue(array);
-    return parsedInt;
-  }
-
-
-  public static String toHex(String arg) {
-    return String.format("%040x", new BigInteger(arg.getBytes(/* YOUR_CHARSET? */)));
   }
 
 }
