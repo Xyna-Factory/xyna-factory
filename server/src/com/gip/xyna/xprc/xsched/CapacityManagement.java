@@ -63,6 +63,7 @@ import com.gip.xyna.xnwh.persistence.ODS;
 import com.gip.xyna.xnwh.persistence.ODSConnection;
 import com.gip.xyna.xnwh.persistence.ODSConnectionType;
 import com.gip.xyna.xnwh.persistence.ODSImpl.PersistenceLayerInstances;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceManagement;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.persistence.StorableClassList;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoException;
@@ -81,6 +82,7 @@ import com.gip.xyna.xprc.xpce.planning.Capacity;
 import com.gip.xyna.xprc.xprcods.workflowdb.WorkflowDatabase;
 import com.gip.xyna.xprc.xsched.capacities.CMClustered;
 import com.gip.xyna.xprc.xsched.capacities.CMLocal;
+import com.gip.xyna.xprc.xsched.capacities.CMSharedResource;
 import com.gip.xyna.xprc.xsched.capacities.CMUnsupported;
 import com.gip.xyna.xprc.xsched.capacities.CapacityAllocationResult;
 import com.gip.xyna.xprc.xsched.capacities.CapacityCache;
@@ -290,6 +292,7 @@ public class CapacityManagement extends FunctionGroup
       execAsync(new Runnable() { public void run() { initStorables(); }});
     fExec.addTask(CapacityManagement.class, "CapacityManagement.initUnclustered").
       after("CapacityManagement.initStorables").after(XynaClusteringServicesManagement.class).
+      after(SharedResourceManagement.FUTURE_EXECUTION_ID).
       before(WorkflowDatabase.FUTURE_EXECUTION_ID).
       execAsync(new Runnable() { public void run() { initUnclustered(); }});
   }
@@ -334,18 +337,25 @@ public class CapacityManagement extends FunctionGroup
   }
   
   private void initUnclustered() {
-    boolean rmiUnclustered = rmiClusterContext.getClusterState() == ClusterState.NO_CLUSTER;
-    boolean storableUnclustered = storableClusterContext.getClusterState() == ClusterState.NO_CLUSTER;
-    if( rmiUnclustered && storableUnclustered ) {
-      //Initialisierung, wenn die Factory nicht geclusteret ist. In diesem Falle wird kein enableClustering gerufen 
-      //und es gibt auch keinen Aufruf des ClusterStateChangeHandlers. 
-      //Daher muss hier das CapacityManagement auf andere Weise fertig initialisiert werden
-      CapacityStorable tmpInstance = new CapacityStorable();
-      ownBinding = tmpInstance.getLocalBinding(ODSConnectionType.DEFAULT);
-      cmAlgorithmBuilder.local();
-      if (logger.isInfoEnabled()) {
-        logger.info("CapacityManagement-Algorithm is " + cmAlgorithm.getClass().getSimpleName()
-            + " after unclustered init");
+    
+    SharedResourceManagement srm = XynaFactory.getInstance().getXynaNetworkWarehouse().getSharedResourceManagement();
+    srm.addSharedResource(XYNA_CAPACITY_SR);
+    if(srm.hasConfiguredSynchronizer(XYNA_CAPACITY_SR)) {
+      cmAlgorithm = new CMSharedResource();
+    } else {
+      boolean rmiUnclustered = rmiClusterContext.getClusterState() == ClusterState.NO_CLUSTER;
+      boolean storableUnclustered = storableClusterContext.getClusterState() == ClusterState.NO_CLUSTER;
+      if( rmiUnclustered && storableUnclustered ) {
+        //Initialisierung, wenn die Factory nicht geclusteret ist. In diesem Falle wird kein enableClustering gerufen 
+        //und es gibt auch keinen Aufruf des ClusterStateChangeHandlers. 
+        //Daher muss hier das CapacityManagement auf andere Weise fertig initialisiert werden
+        CapacityStorable tmpInstance = new CapacityStorable();
+        ownBinding = tmpInstance.getLocalBinding(ODSConnectionType.DEFAULT);
+        cmAlgorithmBuilder.local();
+        if (logger.isInfoEnabled()) {
+          logger.info("CapacityManagement-Algorithm is " + cmAlgorithm.getClass().getSimpleName()
+              + " after unclustered init");
+        }
       }
     }
 
@@ -396,15 +406,43 @@ public class CapacityManagement extends FunctionGroup
   //Implementierung des Interface CapacityManagementInterface
 
   public CapacityAllocationResult allocateCapacities(OrderInformation orderInformation, SchedulingData schedulingData) {
-    return cmAlgorithm.allocateCapacities(orderInformation,schedulingData);
+    if(logger.isDebugEnabled()) {
+      logger.debug("allocateCapacities called for " + orderInformation.getOrderId() + " with" 
+                   + " Capacities: " +  schedulingData.getCapacities() 
+                   + " TransferableCapacities: " + schedulingData.getTransferCapacities()
+                   + " MultiCaps: " + schedulingData.getMultiAllocationCapacities());
+    }
+    CapacityAllocationResult result =  cmAlgorithm.allocateCapacities(orderInformation,schedulingData);
+    if(logger.isDebugEnabled()) {
+      logger.debug("allocateCapacities result for " + orderInformation.getOrderId() + ":"
+      + " allocated " + result.isAllocated()
+      + " demand: " + result.getDemand()
+      + " freeCardinality: " + result.getFreeCardinality()
+      + " exception: " + result.getXynaException()
+      + " orderInstancestatus: " + result.getOrderInstanceStatus());
+    }
+    return result;
   }
   
   public void undoAllocation(OrderInformation orderInformation, SchedulingData schedulingData) {
+    if(logger.isDebugEnabled()) {
+      logger.debug("undoAllocation called for " + orderInformation.getOrderId() + " with" 
+                   + " Capacities: " +  schedulingData.getCapacities() 
+                   + " TransferableCapacities: " + schedulingData.getTransferCapacities()
+                   + " MultiCaps: " + schedulingData.getMultiAllocationCapacities());
+    }
     cmAlgorithm.undoAllocation(orderInformation,schedulingData);
   }
   
   public boolean transferCapacities(XynaOrderServerExtension xo, TransferCapacities transferCapacities) {
-    return cmAlgorithm.transferCapacities(xo, transferCapacities);
+    if(logger.isDebugEnabled()) {
+      logger.debug("transferCapacities called for order " + xo.getId() + " with " + transferCapacities);
+    }
+    boolean result = cmAlgorithm.transferCapacities(xo, transferCapacities);
+    if(logger.isDebugEnabled()) {
+      logger.debug("transferCapacities result for order " + xo.getId() + ": " + result);
+    }
+    return result;
   }
   
   public CapacityReservation getCapacityReservation() {
@@ -517,14 +555,23 @@ public class CapacityManagement extends FunctionGroup
   }
 
   public boolean freeCapacities(XynaOrderServerExtension xo) {
+    if(logger.isDebugEnabled()) {
+      logger.debug("freeCapacities called for order " + xo.getId());
+    }
     return cmAlgorithm.freeCapacities(xo);
   }
   
   public boolean freeTransferableCapacities(XynaOrderServerExtension xo) {
+    if(logger.isDebugEnabled()) {
+      logger.debug("freeTransferableCapacities called for order " + xo.getId());
+    }
     return cmAlgorithm.freeTransferableCapacities(xo);
   }
   
   public boolean forceFreeCapacities(long orderId) {
+    if(logger.isDebugEnabled()) {
+      logger.debug("forceFreeCapacities called for order " + orderId);
+    }
     return cmAlgorithm.forceFreeCapacities(orderId);
   }
   

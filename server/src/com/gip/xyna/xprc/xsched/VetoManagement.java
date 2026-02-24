@@ -206,6 +206,7 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
       VM_ALGORITHM_TYPE.registerDependency(UserType.XynaFactory, DEFAULT_NAME);
       VetoHistory.HISTORY_SIZE.registerDependency(UserType.XynaFactory, DEFAULT_NAME);
       SharedResourceManagement srm = XynaFactory.getInstance().getXynaNetworkWarehouse().getSharedResourceManagement();
+      srm.addSharedResource(XYNA_VETO_SR);
       if(srm.hasConfiguredSynchronizer(XYNA_VETO_SR)) {
         vmAlgorithm = new VM_SharedResource();
       } else {

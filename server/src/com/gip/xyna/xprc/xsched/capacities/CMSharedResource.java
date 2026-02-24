@@ -91,9 +91,25 @@ public class CMSharedResource implements CapacityManagementInterface {
     allocInfo = AllocateCapacitiesInformationContainer.createAllocateCapacitiesInformationContainer(orderInformation, schedulingData);
     SharedResourceRequestResult<SharedResourceCapacity> updateResult = executeAllocUpdate(allocInfo);
 
+    if (!updateResult.isSuccess()) {
+      logger.debug("Error while allocating capacities for order " + orderInformation.getOrderId() + ":"
+          + updateResult.getException().getMessage());
+    }
+
     if (updateResult.isSuccess()) {
+      if (logger.isDebugEnabled()) {
+        logger.debug("Successfully allocated capacities for order " + orderInformation.getOrderId());
+        for (String entry : allocInfo.regularCapacityMap.keySet()) {
+          logger.debug("  Allocated " + allocInfo.regularCapacityMap.get(entry) + " instances of capacity " + entry);
+        }
+        for (String entry : allocInfo.transferCapacityMap.keySet()) {
+          logger.debug("  Allocated " + allocInfo.transferCapacityMap.get(entry) + " transferable instances of capacity " + entry);
+        }
+      }
+
       if (schedulingData.getMultiAllocationCapacities() != null) {
-        schedulingData.getMultiAllocationCapacities().setAllocations(schedulingData.getMultiAllocationCapacities().getMinAllocation());
+        int allocations = allocateAdditionalMultiAllocationCapacitiesIfPossible(schedulingData, orderInformation.getOrderId());
+        schedulingData.getMultiAllocationCapacities().setAllocations(allocations);
       }
 
       schedulingData.setHasAcquiredCapacities(true);
@@ -118,6 +134,78 @@ public class CMSharedResource implements CapacityManagementInterface {
   }
 
 
+  private int allocateAdditionalMultiAllocationCapacitiesIfPossible(SchedulingData schedulingData, Long orderId) {
+    int allocations = schedulingData.getMultiAllocationCapacities().getMinAllocation();
+    List<String> ids = new ArrayList<>();
+    for (Capacity cap : schedulingData.getMultiAllocationCapacities().getCapacities()) {
+      for (int i = 0; i < allocations; i++) {
+        ids.add(cap.getCapName());
+      }
+    }
+
+    if (ids.size() == 1) {
+      return allocateAdditionalMutilAllocationCapacitiesOneShot(ids, schedulingData, orderId);
+    }
+    long now = System.currentTimeMillis();
+    int maxAllocations = schedulingData.getMultiAllocationCapacities().getMaxAllocation();
+    Map<String, Integer> capacityMap = new HashMap<>();
+    for (Capacity cap : schedulingData.getMultiAllocationCapacities().getCapacities()) {
+      capacityMap.put(cap.getCapName(), cap.getCardinality());
+    }
+    Function<SharedResourceInstance<SharedResourceCapacity>, SharedResourceInstance<SharedResourceCapacity>> update;
+    update = (x) -> {
+      String capacityName = x.getId();
+      int freeCaps = x.getValue().cardinality - x.getValue().inuse;
+      if (freeCaps < capacityMap.get(capacityName)) {
+        return null;
+      }
+      x.getValue().inuse += capacityMap.get(x.getId());
+      if (schedulingData.getMultiAllocationCapacities().isTransferable()) {
+        x.getValue().orders.get(orderId).transferableCapacityInstances += capacityMap.get(x.getId());
+      } else {
+        x.getValue().orders.get(orderId).capacityInstances += capacityMap.get(x.getId());
+      }
+      return new SharedResourceInstance<>(x.getId(), now, x.getValue());
+    };
+    for (int i = schedulingData.getMultiAllocationCapacities().getMinAllocation(); i < maxAllocations; i++) {
+      SharedResourceRequestResult<SharedResourceCapacity> updateResult = srm.update(XYNA_CAP_SR_DEF, ids, update);
+      if (!updateResult.isSuccess()) {
+        return allocations;
+      }
+      allocations++;
+    }
+    return allocations;
+  }
+
+
+  private int allocateAdditionalMutilAllocationCapacitiesOneShot(List<String> ids, SchedulingData schedulingData, Long orderId) {
+    AllocationContainer container = new AllocationContainer();
+    Function<SharedResourceInstance<SharedResourceCapacity>, SharedResourceInstance<SharedResourceCapacity>> update;
+    int maxToAllocate =
+        schedulingData.getMultiAllocationCapacities().getMaxAllocation() - schedulingData.getMultiAllocationCapacities().getMinAllocation();
+    int cardinalityPerAllocation = schedulingData.getMultiAllocationCapacities().getCapacities().get(0).getCardinality();
+    long now = System.currentTimeMillis();
+    update = (x) -> {
+      int free = x.getValue().cardinality - x.getValue().inuse;
+      int canAllocate = free / cardinalityPerAllocation;
+      int toAllocate = Math.min(maxToAllocate, canAllocate);
+      container.allocations = toAllocate;
+      x.getValue().inuse += toAllocate * cardinalityPerAllocation;
+      if (schedulingData.getMultiAllocationCapacities().isTransferable()) {
+        x.getValue().orders.get(orderId).transferableCapacityInstances += toAllocate * cardinalityPerAllocation;
+      } else {
+        x.getValue().orders.get(orderId).capacityInstances += toAllocate * cardinalityPerAllocation;
+      }
+      return new SharedResourceInstance<>(x.getId(), now, x.getValue());
+    };
+    SharedResourceRequestResult<SharedResourceCapacity> updateResult = srm.update(XYNA_CAP_SR_DEF, ids, update);
+    if (!updateResult.isSuccess()) {
+      return schedulingData.getMultiAllocationCapacities().getMinAllocation();
+    }
+    return schedulingData.getMultiAllocationCapacities().getMinAllocation() + container.allocations;
+  }
+
+
   private CapacityAllocationResult createCapacityAllocationResultMissingCap(AllocateCapacitiesInformationContainer allocInfo,
                                                                             String capName) {
     int demand = allocInfo.totalCapacityMap.get(capName);
@@ -138,7 +226,7 @@ public class CMSharedResource implements CapacityManagementInterface {
     int numFree = allocInfo.capFreeInsufficent;
     int demand = allocInfo.capDemandInsufficient;
 
-    if (allocInfo.capInUseInsufficient == 0 && allocInfo.maxCardinalityInsufficient < demand) {
+    if (allocInfo.maxCardinalityInsufficient >= demand) {
       return new CapacityAllocationResult(capName, demand, numFree, false);
     }
 
@@ -163,27 +251,36 @@ public class CMSharedResource implements CapacityManagementInterface {
     Function<SharedResourceInstance<SharedResourceCapacity>, SharedResourceInstance<SharedResourceCapacity>> update;
     update = (x) -> {
       String capacityName = x.getId();
+      int totalDemand = capacityMap.get(capacityName);
       SharedResourceCapacity toUpdate = x.getValue();
       if (State.DISABLED.toString().equals(toUpdate.stateString)) {
         allocInfo.capNameOfDisabled = capacityName;
-        allocInfo.capDemandDisabled = capacityMap.get(capacityName);
+        allocInfo.capDemandDisabled = totalDemand;
+        if (logger.isDebugEnabled()) {
+          logger.debug("Capacity " + capacityName + " is disabled");
+        }
         return null;
       }
 
       int freeCaps = toUpdate.cardinality - toUpdate.inuse;
-      if (freeCaps < capacityMap.get(capacityName)) {
+      if (freeCaps < totalDemand) {
         allocInfo.capNameInsufficent = capacityName;
-        allocInfo.capDemandInsufficient = capacityMap.get(capacityName);
+        allocInfo.capDemandInsufficient = totalDemand;
         allocInfo.capFreeInsufficent = freeCaps;
         allocInfo.capInUseInsufficient = toUpdate.inuse;
         allocInfo.maxCardinalityInsufficient = toUpdate.cardinality;
+        if (logger.isDebugEnabled()) {
+          logger.debug("Insufficient free capacity for capacity " + capacityName + ": demand=" + allocInfo.capDemandInsufficient + ", free="
+              + allocInfo.capFreeInsufficent + ", inUse=" + allocInfo.capInUseInsufficient + ", maxCardinality="
+              + allocInfo.maxCardinalityInsufficient);
+        }
         return null;
       }
 
       toUpdate.inuse += capacityMap.get(capacityName);
       Order order = toUpdate.orders.getOrDefault(orderId, new Order());
-      order.capacityInstances += allocInfo.regularCapacityMap.get(capacityName);
-      order.transferableCapacityInstances += allocInfo.transferCapacityMap.get(capacityName);
+      order.capacityInstances += allocInfo.regularCapacityMap.getOrDefault(capacityName, 0);
+      order.transferableCapacityInstances += allocInfo.transferCapacityMap.getOrDefault(capacityName, 0);
       order.orderType = orderType;
       toUpdate.orders.put(orderId, order);
 
@@ -300,7 +397,7 @@ public class CMSharedResource implements CapacityManagementInterface {
         return null;
       }
       oldOrder.transferableCapacityInstances -= capacitiesToTransferMap.get(x.getId());
-      Order newOrder = new Order();
+      Order newOrder = x.getValue().orders.getOrDefault(xo.getId(), new Order());
       newOrder.capacityInstances = capacitiesToTransferMap.get(x.getId());
       newOrder.orderType = xo.getDestinationKey().getOrderType();
       newOrder.transferableCapacityInstances = 0;
@@ -529,16 +626,24 @@ public class CMSharedResource implements CapacityManagementInterface {
   private List<CapacityUsageSlotInformation> convert(SharedResourceInstance<SharedResourceCapacity> entry, int idx) {
     List<CapacityUsageSlotInformation> result = new ArrayList<>();
     String name = entry.getId();
-    boolean occupied = entry.getValue().inuse > 0;
     int slotIdx = 0;
     int maxSlotIdx = entry.getValue().cardinality - 1;
+    int emptySlots = entry.getValue().cardinality - entry.getValue().inuse;
     for (Entry<Long, Order> order : entry.getValue().orders.entrySet()) {
       String orderType = order.getValue().orderType;
       Long orderId = order.getKey();
       for (int i = 0; i < order.getValue().capacityInstances; i++) {
-        result.add(new CapacityUsageSlotInformation(name, idx, occupied, orderType, orderId, false, 0, slotIdx++, maxSlotIdx));
+        result.add(new CapacityUsageSlotInformation(name, idx, true, orderType, orderId, false, 0, slotIdx++, maxSlotIdx));
+      }
+      for (int i = 0; i < order.getValue().transferableCapacityInstances; i++) {
+        result.add(new CapacityUsageSlotInformation(name, idx, true, orderType, orderId, true, 0, slotIdx++, maxSlotIdx));
       }
     }
+    for (int i = 0; i < emptySlots; i++) {
+      result.add(new CapacityUsageSlotInformation(name, idx, false, null, ExtendedCapacityUsageInformation.ORDER_ID_FOR_UNOCCUPIED_CAPACITY,
+                                                  false, 0, slotIdx++, maxSlotIdx));
+    }
+
 
     return result;
   }
@@ -591,6 +696,11 @@ public class CMSharedResource implements CapacityManagementInterface {
     }
   }
 
+
+  private static class AllocationContainer {
+
+    int allocations;
+  }
 
   private static class SharedResourceCapacity {
 
@@ -669,11 +779,13 @@ public class CMSharedResource implements CapacityManagementInterface {
       for (Capacity capacity : transferableCapacities) {
         totalCapacityMap.putIfAbsent(capacity.getCapName(), 0);
         totalCapacityMap.compute(capacity.getCapName(), (x, y) -> y + capacity.getCardinality());
+        transferableCapacityMap.put(capacity.getCapName(), capacity.getCardinality());
 
       }
       for (Capacity capacity : regularCapacities) {
         totalCapacityMap.putIfAbsent(capacity.getCapName(), 0);
         totalCapacityMap.compute(capacity.getCapName(), (x, y) -> y + capacity.getCardinality());
+        regularCapacityMap.put(capacity.getCapName(), capacity.getCardinality());
       }
 
 

@@ -486,4 +486,8 @@
       <MessageText Language="DE">Es ist eine Exception im Zusammenhang mit Shared Resourses aufgetreten.</MessageText>
       <MessageText Language="EN">A Shared Resourse related exception occurred.</MessageText>
    </ExceptionType>
+   <ExceptionType Code="XYNA-02268" TypeName="XNWH_SharedResourceConcurrentUpdateException" TypePath="com.gip.xyna.xnwh.exceptions"  BaseTypeName="XNWH_SharedResourceException" BaseTypePath="com.gip.xyna.xnwh.exceptions">
+      <MessageText Language="DE">Shared Resource Instance wurde seit dem letzten Lesen geändert.</MessageText>
+      <MessageText Language="EN">Shared Resource Instance has changed since last read.</MessageText>
+   </ExceptionType>
 </ExceptionStore>

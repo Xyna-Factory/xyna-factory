@@ -47,6 +47,7 @@ import com.gip.xyna.utils.db.DBConnectionData.DBConnectionDataBuilder;
 import com.gip.xyna.utils.db.Parameter;
 import com.gip.xyna.utils.db.types.BLOB;
 import com.gip.xyna.utils.timing.Duration;
+import com.gip.xyna.xnwh.exceptions.XNWH_SharedResourceConcurrentUpdateException;
 import com.gip.xyna.xnwh.exceptions.XNWH_SharedResourceInstanceAlreadyExists;
 import com.gip.xyna.xnwh.exceptions.XNWH_SharedResourceInstanceDoesNotExist;
 import com.gip.xyna.xnwh.sharedresources.SharedResourceDefinition;
@@ -170,7 +171,7 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
         try {
           Connection con = connectionData.createConnection();
           createdConnections.add(con);
-          idleConnections.add(con);
+          returnConnection(con);
         } catch (Exception e) {
           missingConnections.incrementAndGet();
           if (logger.isWarnEnabled()) {
@@ -341,8 +342,8 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
       }
     } catch (Exception e) {
       Exception exceptionToReturn = e;
-      if(e instanceof SQLException) {
-        if(((SQLException)e).getErrorCode() == 1062) { //TODO: code by connector
+      if (e instanceof SQLException) {
+        if (((SQLException) e).getErrorCode() == 1062) { //TODO: code by connector
           List<String> ids = data.stream().map(x -> x.getId()).collect(Collectors.toList());
           String idString = String.join(", ", ids);
           exceptionToReturn = new XNWH_SharedResourceInstanceAlreadyExists(resource.getPath(), idString);
@@ -350,7 +351,7 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
       }
       return new SharedResourceRequestResult<T>(false, exceptionToReturn, null);
     } finally {
-      idleConnections.add(con);
+      returnConnection(con);
     }
 
     return new SharedResourceRequestResult<T>(true, null, null);
@@ -383,7 +384,7 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     } catch (Exception e) {
       return new SharedResourceRequestResult<T>(false, e, null);
     } finally {
-      idleConnections.add(con);
+      returnConnection(con);
     }
 
     return new SharedResourceRequestResult<T>(true, null, null);
@@ -402,7 +403,7 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     } catch (Exception e) {
       return new SharedResourceRequestResult<T>(false, e, null);
     } finally {
-      idleConnections.add(con);
+      returnConnection(con);
     }
     return new SharedResourceRequestResult<T>(true, null, resources);
   }
@@ -453,7 +454,7 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     } catch (Exception e) {
       return new SharedResourceRequestResult<T>(false, e, null);
     } finally {
-      idleConnections.add(con);
+      returnConnection(con);
     }
     return new SharedResourceRequestResult<T>(true, null, resources);
   }
@@ -479,6 +480,24 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
       return new SharedResourceRequestResult<T>(false, NO_CONNECTION_AVAILABLE_EXCEPTION, null);
     }
 
+    for (int i = 0; i < 1000; i++) {
+      SharedResourceRequestResult<T> result = updateInternal(resource, ids, update, con);
+      if (!result.isSuccess() && result.getException() instanceof XNWH_SharedResourceConcurrentUpdateException) {
+        if (logger.isDebugEnabled()) {
+          logger.debug("Concurrent update detected. Retrying update. Attempt " + (i + 1));
+        }
+      } else {
+        return result;
+      }
+    }
+
+    return new SharedResourceRequestResult<T>(false, new XNWH_SharedResourceConcurrentUpdateException(), null);
+  }
+
+
+  private <T> SharedResourceRequestResult<T> updateInternal(SharedResourceDefinition<T> resource, List<String> ids,
+                                                            Function<SharedResourceInstance<T>, SharedResourceInstance<T>> update,
+                                                            Connection con) {
     List<SharedResourceInstance<T>> resources = new ArrayList<>();
     List<SharedResourceInstance<T>> newInstances = new ArrayList<>();
     try {
@@ -490,7 +509,8 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
         missingIdList.removeAll(resources.stream().map(x -> x.getId()).collect(Collectors.toList()));
         String missingIds = String.join(", ", missingIdList);
         String firstMissingId = missingIdList.get(0);
-        XNWH_SharedResourceInstanceDoesNotExist ex = new XNWH_SharedResourceInstanceDoesNotExist(resource.getPath(), missingIds, firstMissingId);
+        XNWH_SharedResourceInstanceDoesNotExist ex =
+            new XNWH_SharedResourceInstanceDoesNotExist(resource.getPath(), missingIds, firstMissingId);
         return new SharedResourceRequestResult<T>(false, ex, null);
       }
       for (SharedResourceInstance<T> oldInstance : resources) {
@@ -519,10 +539,15 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
       }
     } catch (Exception e) {
       con = rollbackOrCloseConnection(con);
+      if (e instanceof SQLException) {
+        if (((SQLException) e).getErrorCode() == 1020) { //TODO: code by connector
+          return new SharedResourceRequestResult<T>(false, new XNWH_SharedResourceConcurrentUpdateException(e), null);
+        }
+      }
       return new SharedResourceRequestResult<T>(false, e, null);
     } finally {
       if (con != null) {
-        idleConnections.add(con);
+        returnConnection(con);
       }
     }
 
@@ -556,5 +581,21 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     }
 
     return result;
+  }
+  
+  private void returnConnection(Connection con) {
+    if(con == null) {
+      return;
+    }
+    try {
+      if(con.isClosed()) {
+        missingConnections.incrementAndGet();
+      } else {
+        idleConnections.add(con);
+      }
+    } catch (Exception e) {
+      missingConnections.incrementAndGet();
+    }
+   
   }
 }
