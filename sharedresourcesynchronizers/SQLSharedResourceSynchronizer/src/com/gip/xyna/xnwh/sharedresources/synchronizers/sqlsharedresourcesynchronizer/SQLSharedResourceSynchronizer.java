@@ -61,7 +61,7 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
   private static final Exception MISSING_ENTRIES_EXCEPTION = new RuntimeException("Some entries to update are missing");
   private static final Exception UPDATE_INTERRUPTED_EXCEPTION = new RuntimeException("Update method returned null");
   private static final Exception UPDATE_MODIFIED_ID_EXCEPTION = new RuntimeException("Update modified instance id");
-  private static final String INSERT_VALUE_PLACEHOLDER = "(?, ?, ?),\n";
+  private static final String INSERT_VALUE_PLACEHOLDER = "(?, ?, ?, ?),\n";
   private static final String DESC_FORMAT = "SQLSharedResourceSynchronizer - %s - %s - Connections[idle/configured/missing]: %d/%d/%d";
 
   static {
@@ -109,10 +109,10 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
   public SQLSharedResourceSynchronizer(String tableName, String url, String username, String password, int numConnections,
                                        Duration connectionTimeout, Duration socketTimeout) {
     CREATE_TABLE_STATEMENT = String
-        .format("CREATE TABLE IF NOT EXISTS %s (sr_path VARCHAR(128) NOT NULL, sr_id VARCHAR(128) NOT NULL, sr_data MEDIUMBLOB NULL DEFAULT NULL, PRIMARY KEY (sr_path, sr_id) USING BTREE)",
+        .format("CREATE TABLE IF NOT EXISTS %s (sr_path VARCHAR(128) NOT NULL, sr_id VARCHAR(128) NOT NULL, sr_created BIGINT(20) NULL, sr_data MEDIUMBLOB NULL DEFAULT NULL, PRIMARY KEY (sr_path, sr_id) USING BTREE)",
                 tableName);
     DELETE_TEMPLATE = String.format("DELETE FROM %s WHERE sr_id IN (", tableName);
-    INSERT_TEMPLATE = String.format("INSERT INTO %s (sr_path, sr_id, sr_data) VALUES\n", tableName);
+    INSERT_TEMPLATE = String.format("INSERT INTO %s (sr_path, sr_id, sr_created, sr_data) VALUES\n", tableName);
     SELECT_TEMPLATE = String.format("SELECT * FROM %s WHERE sr_path = ? AND sr_id IN (", tableName);
     SELECT_ALL_TEMPLATE = String.format("SELECT * FROM %s", tableName);
     UPDATE_STATEMENT = String.format("UPDATE %s SET sr_data = ? WHERE sr_path = ? AND sr_id = ?", tableName);
@@ -310,6 +310,7 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
       }
       result.addParameter(resource.getPath());
       result.addParameter(instance.getId());
+      result.addParameter(instance.getCreated());
       if (!blobFirst) {
         result.addParameter(new BLOB(stream));
       }
@@ -320,12 +321,12 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
 
   @Override
   public <T> SharedResourceRequestResult<T> create(SharedResourceDefinition<T> resource, List<SharedResourceInstance<T>> data) {
+    if (data == null || data.isEmpty()) {
+      return new SharedResourceRequestResult<T>(true, null, null);
+    }
     Connection con = getConnection();
     if (con == null) {
       return new SharedResourceRequestResult<T>(false, NO_CONNECTION_AVAILABLE_EXCEPTION, null);
-    }
-    if (data == null || data.isEmpty()) {
-      return new SharedResourceRequestResult<T>(true, null, null);
     }
     try {
       String sql = INSERT_TEMPLATE + INSERT_VALUE_PLACEHOLDER.repeat(data.size());
@@ -348,15 +349,16 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
 
   @Override
   public <T> SharedResourceRequestResult<T> delete(SharedResourceDefinition<T> resource, List<String> ids) {
-    Connection con = getConnection();
-    if (con == null) {
-      return new SharedResourceRequestResult<T>(false, NO_CONNECTION_AVAILABLE_EXCEPTION, null);
-    }
     if (ids == null || ids.size() == 0) {
       if (logger.isDebugEnabled()) {
         logger.debug("No ids passed to delete request. resource: " + resource.getPath());
       }
       return new SharedResourceRequestResult<T>(true, null, null);
+    }
+
+    Connection con = getConnection();
+    if (con == null) {
+      return new SharedResourceRequestResult<T>(false, NO_CONNECTION_AVAILABLE_EXCEPTION, null);
     }
     try {
       String parameterString = "?, ".repeat(ids.size());
@@ -449,8 +451,9 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
 
   private <T> SharedResourceInstance<T> readFromResultSet(SharedResourceDefinition<T> resource, ResultSet rs) throws SQLException {
     String id = rs.getString(2);
-    byte[] data = rs.getBytes(3);
-    SharedResourceInstance<T> instance = resource.deserialize(data, id);
+    Long created = rs.getLong(3);
+    byte[] data = rs.getBytes(4);
+    SharedResourceInstance<T> instance = resource.deserialize(data, id, created);
     return instance;
   }
 
@@ -458,13 +461,12 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
   @Override
   public <T> SharedResourceRequestResult<T> update(SharedResourceDefinition<T> resource, List<String> ids,
                                                    Function<SharedResourceInstance<T>, SharedResourceInstance<T>> update) {
+    if (ids == null || ids.isEmpty()) {
+      return new SharedResourceRequestResult<T>(true, null, null);
+    }
     Connection con = getConnection();
     if (con == null) {
       return new SharedResourceRequestResult<T>(false, NO_CONNECTION_AVAILABLE_EXCEPTION, null);
-    }
-
-    if (ids == null || ids.isEmpty()) {
-      return new SharedResourceRequestResult<T>(true, null, null);
     }
 
     List<SharedResourceInstance<T>> resources = new ArrayList<>();

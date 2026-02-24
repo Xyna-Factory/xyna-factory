@@ -1,6 +1,6 @@
-/*
+<!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2026 Xyna GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- */
-package com.gip.xyna.xnwh.sharedresources;
-
-
-
-public abstract class SharedResourceDefinition<T> {
-
-  private final String path;
-
-
-  public SharedResourceDefinition(String path) {
-    this.path = path;
-  }
-
-
-  public abstract byte[] serialize(T value);
-
-
-  public abstract SharedResourceInstance<T> deserialize(byte[] value, String id, Long created);
-
-
-  public String getPath() {
-    return path;
-  }
-}
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="listsharedresourcetypes" Groups="Shared Resource Management" Description="Lists all known shared resources with their configured synchronizer instance, if any."/>
+</XynaCommandLineCommand>

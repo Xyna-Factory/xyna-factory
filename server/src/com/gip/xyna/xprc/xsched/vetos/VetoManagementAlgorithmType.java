@@ -185,8 +185,17 @@ public enum VetoManagementAlgorithmType implements DocumentedEnum {
       return ClusterMode.Unsupported;
     }
     
-  }
-  
+  },
+  SharedResourceManagement( Documentation.
+                  en("Usage of shared resource management").
+                  de("Speicherung über Shared Resource Management").
+                  build()
+                  )  {
+                @Override
+                public VetoManagementInterface instantiate(ClusterMode mode) throws XynaException {
+                  return new VM_SharedResource();
+                }
+              }
   
   ;
   

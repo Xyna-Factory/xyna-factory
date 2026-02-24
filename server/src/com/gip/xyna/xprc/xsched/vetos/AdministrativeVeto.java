@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,14 +28,16 @@ public class AdministrativeVeto {
   
   private String name;
   private String documentation;
+  private Long created;
 
-  public AdministrativeVeto(String name, String documentation) {
+  public AdministrativeVeto(String name, String documentation, Long created) {
     this.name = name;
     this.documentation = documentation;
+    this.created = created;
   }
 
   public VetoInformationStorable toVetoInformationStorable(int currentOwnBinding) {
-    return new VetoInformationStorable(name, ADMIN_VETO_ORDER_INFORMATION, documentation, currentOwnBinding);
+    return new VetoInformationStorable(name, ADMIN_VETO_ORDER_INFORMATION, documentation, created, currentOwnBinding);
   }
 
   public String getName() {
@@ -44,5 +46,9 @@ public class AdministrativeVeto {
 
   public String getDocumentation() {
     return documentation;
+  }
+
+  public Long getCreated() {
+    return created;
   }
 }

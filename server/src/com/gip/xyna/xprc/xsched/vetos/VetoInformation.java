@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,29 +29,33 @@ public class VetoInformation implements Serializable {
   private final OrderInformation usingOrder;
   private final boolean administrative;
   private final int binding;
+  private final Long created;
   private String documentation;
   
-  public VetoInformation(AdministrativeVeto administrativeVeto, int binding) {
+  public VetoInformation(AdministrativeVeto administrativeVeto, Long created, int binding) {
     this.name = administrativeVeto.getName();
     this.usingOrder = null;
     this.administrative = true;
     this.binding =  binding;
+    this.created = created;
     this.documentation = administrativeVeto.getDocumentation();
   }
 
-  public VetoInformation(String name, OrderInformation usingOrder, int binding) {
+  public VetoInformation(String name, OrderInformation usingOrder, Long created, int binding) {
     this.name = name;
     this.usingOrder = usingOrder;
     this.administrative = false;
     this.binding =  binding;
+    this.created = created;
   }
 
-  public VetoInformation(String name, OrderInformation usingOrder, String documentation, int binding) {
+  public VetoInformation(String name, OrderInformation usingOrder, String documentation, Long created, int binding) {
     this.name = name;
     this.usingOrder = usingOrder;
     this.documentation = documentation;
     this.administrative = AdministrativeVeto.ADMIN_VETO_ORDERID.equals(usingOrder.getOrderId());
     this.binding = binding;
+    this.created = created;
   }
   
   public VetoInformation(String name) {
@@ -59,17 +63,18 @@ public class VetoInformation implements Serializable {
     this.usingOrder = null;
     this.administrative = false;
     this.binding = 0;
+    this.created = null;
   }
   
   @Override
   public String toString() {
     if( administrative ) {
-      return "VetoInformation("+name+": "+documentation+")";
+      return "VetoInformation("+name+": "+documentation+": "+created+")";
     } else {
       if( binding != 0 ) {
-        return "VetoInformation("+binding+"-"+name+": "+usingOrder+")";
+        return "VetoInformation("+binding+"-"+name+": "+usingOrder+": "+created+")";
       } else {
-        return "VetoInformation("+name+": "+usingOrder+")";
+        return "VetoInformation("+name+": "+usingOrder+": "+created+")";
       }
     }
   } 
@@ -126,6 +131,10 @@ public class VetoInformation implements Serializable {
     } else {
       return AdministrativeVeto.ADMIN_VETO_ORDERTYPE;
     }
+  }
+  
+  public Long getCreated() {
+    return created;
   }
 
   public int getBinding() {
