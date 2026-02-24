@@ -71,32 +71,28 @@ public abstract class MDMUpdate {
 
 
   protected static void addRelevantFileNamesAndDocuments(File savedMDMFolder, List<File> deployedMDMFolder, Map<String, Document> alreadyAdded) throws XynaException {
-    addFiles(savedMDMFolder, true, alreadyAdded);
+    addFiles(savedMDMFolder, alreadyAdded);
     for (File f : deployedMDMFolder) {
-      addFiles(f, false, alreadyAdded);
+      addFiles(f, alreadyAdded);
     }
   }
 
   protected static void addRelevantFileNamesAndDocuments(long revision, Map<String, Document> alreadyAdded) throws XynaException {
     File deployedDir = new File(RevisionManagement.getPathForRevision(PathType.XMOM, revision));
-    addFiles(deployedDir, false, alreadyAdded);
+    addFiles(deployedDir, alreadyAdded);
 
     File savedDir = new File(RevisionManagement.getPathForRevision(PathType.XMOM, revision, false));
-    addFiles(savedDir, false, alreadyAdded);
+    addFiles(savedDir, alreadyAdded);
   }
 
-  private static void addFiles(File dir, boolean dirMustExist, Map<String, Document> alreadyAdded) throws XynaException {
+  private static void addFiles(File dir, Map<String, Document> alreadyAdded) throws XynaException {
     if (!dir.isDirectory()) {
-      if (dirMustExist) {
-        throw new XynaException("directory " + dir.getPath() + " not found");
-      } else {
-        return;
-      }
+      return;
     }
     File[] files = dir.listFiles(xmlFilter);
     for (File f : files) {
       if (f.isDirectory()) {
-        addFiles(f, dirMustExist, alreadyAdded);
+        addFiles(f, alreadyAdded);
       } else {
         String absFilename = f.getAbsolutePath();
         if (!alreadyAdded.containsKey(absFilename)) {
