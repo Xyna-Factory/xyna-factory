@@ -517,6 +517,9 @@ public class ModelledExpressionManagement {
       try {
         ti = var.getFollowedVariable().getTypeInfo(true);
         boolean isList = var.getFollowedVariable().getTypeInfo(false).isList();
+        if (isList && lastPartHasIndexDev(var.getParts())) {
+          isList = false;
+        }
         if (ti.isBaseType()) {
           return new TypeInfo(ti.getBaseType(), isList);
         } else if (ti.isModelledType()) {
@@ -531,6 +534,12 @@ public class ModelledExpressionManagement {
       }
     }
 
+    private boolean lastPartHasIndexDev(List<VariableAccessPart> list) {
+      if (list == null || list.isEmpty()) {
+        return false;
+      }
+      return list.get(list.size() - 1).getIndexDef() != null;
+    }
 
     private TypeInfo determineTypeOfExpression(Expression ex) {
       if (ex instanceof SingleVarExpression) {

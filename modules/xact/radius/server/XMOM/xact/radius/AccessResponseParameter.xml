@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Access Response Parameter" TypeName="AccessResponseParameter" TypePath="xact.radius" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>This data type is passed to the filter to build the Access-Accept or Access-Reject message.</Documentation>
+  </Meta>
+  <Data Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code">
+    <Meta>
+      <Documentation>RADIUS Code</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Identifier" ReferenceName="Identifier" ReferencePath="xact.radius" VariableName="identifier">
+    <Meta>
+      <Documentation>The request identifier from the Access-Request.</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Request Authenticator" ReferenceName="RequestAuthenticator" ReferencePath="xact.radius" VariableName="requestAuthenticator">
+    <Meta>
+      <Documentation>The Request Authenticator from the Access-Request</Documentation>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node">
+    <Meta>
+      <Documentation>List of RADIUS attributes.</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Shared Secret" VariableName="sharedSecret">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Encrypted user-specific shared secret. If null or empty, the filter uses the default shared secret from the property xact.radius.sharedSecret.</Documentation>
+    </Meta>
+  </Data>
+</DataType>
