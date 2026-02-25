@@ -44,6 +44,7 @@ import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase.XMOMType;
 import com.gip.xyna.xprc.XynaOrderServerExtension.ExecutionType;
+import com.gip.xyna.xprc.exceptions.XPRC_InvalidPackageNameException;
 import com.gip.xyna.xprc.exceptions.XPRC_XmlParsingException;
 import com.gip.xyna.xprc.xfractwfe.generation.AVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
@@ -344,7 +345,7 @@ public class ApplicationXMLGenerator {
     }
 
     System.out.println("Calculating implicit XMOM entries ...");
-    calculateImplicitXMOMEntries(explicitContent, implicitContent, ctx);
+    calculateImplicitXMOMEntries(explicitContent, implicitContent, ctx, allOrderTypes);
     System.out.println("finishing up application.xml ...");
     setOrderTypeConfig(xml, explicitContent, implicitContent, allOrderTypes, orderTypesInContent, explicitOrderTypes);
 
@@ -618,7 +619,7 @@ public class ApplicationXMLGenerator {
 
 
   private static void calculateImplicitXMOMEntries(Set<GenerationBase> explicitContent, Set<GenerationBase> implicitContent,
-                                                   XMOMContext ctx)
+                                                   XMOMContext ctx, Map<String, OrderType> orderTypes)
       throws Exception {
     Set<String> subtypeCheckDone = new HashSet<>();
     System.out.println("Checking explicit entries for dependencies ...");
@@ -629,6 +630,8 @@ public class ApplicationXMLGenerator {
       addSubtypesOfOutputsOfOperations(gb, implicitContent, subtypeCheckDone, ctx);
       implicitContent
           .addAll(gb.getDependenciesRecursively().getDependencies(false).stream().filter(a -> a.exists()).collect(Collectors.toList()));
+      //add planning destinations etc
+      addImplicitOrderTypeDeps(explicitContent, implicitContent, gb, orderTypes, ctx);
     }
     int lastCount = -1;
     int newCount = implicitContent.size();
@@ -643,11 +646,28 @@ public class ApplicationXMLGenerator {
         addSubtypesOfOutputsOfOperations(gb, toAdd, subtypeCheckDone, ctx);
         toAdd.addAll(gb.getDependenciesRecursively().getDependencies(false).stream().filter(a -> a.exists()).collect(Collectors.toList()));
 
+        addImplicitOrderTypeDeps(explicitContent, toAdd, gb, orderTypes, ctx);
       }
       implicitContent.addAll(toAdd);
       newCount = implicitContent.size();
     }
     implicitContent.removeAll(explicitContent);
+  }
+
+
+  private static void addImplicitOrderTypeDeps(Set<GenerationBase> explicitContent, Set<GenerationBase> implicitContent, GenerationBase gb,
+                                               Map<String, OrderType> orderTypes, XMOMContext ctx)
+      throws XPRC_InvalidPackageNameException, Ex_FileAccessException, XPRC_XmlParsingException {
+    if (gb instanceof WF) {
+      OrderType ot = orderTypes.get(gb.getOriginalFqName());
+      if (ot != null && ot.getDispatcherDestinations() != null) {
+        for (DispatcherDestination dd : ot.getDispatcherDestinations()) {
+          if (dd.getDestinationType().equals(ExecutionType.XYNA_FRACTAL_WORKFLOW.getTypeAsString())) {
+            implicitContent.add(WF.getOrCreateInstance(dd.getDestinationValue(), ctx.cache, ctx.revision, ctx.source));
+          }
+        }
+      }
+    }
   }
 
 
