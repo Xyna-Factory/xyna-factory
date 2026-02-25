@@ -250,6 +250,7 @@ public class CMSharedResource implements CapacityManagementInterface {
     Long now = System.currentTimeMillis();
     Function<SharedResourceInstance<SharedResourceCapacity>, SharedResourceInstance<SharedResourceCapacity>> update;
     update = (x) -> {
+      allocInfo.reset();
       String capacityName = x.getId();
       int totalDemand = capacityMap.get(capacityName);
       SharedResourceCapacity toUpdate = x.getValue();
@@ -524,6 +525,8 @@ public class CMSharedResource implements CapacityManagementInterface {
     Function<SharedResourceInstance<SharedResourceCapacity>, SharedResourceInstance<SharedResourceCapacity>> update;
     ChangeCardinalityExceptionContainer container = new ChangeCardinalityExceptionContainer();
     update = (x) -> {
+      container.ex1 = null;
+      container.ex2 = null;
       if (x.getValue().inuse > newOverallCardinality) {
         String state = x.getValue().stateString;
         String active = State.ACTIVE.toString();
@@ -745,6 +748,15 @@ public class CMSharedResource implements CapacityManagementInterface {
     public int capFreeInsufficent;
     public int capDemandInsufficient;
 
+    public void reset() {
+      capNameOfDisabled = null;
+      capDemandDisabled = 0;
+      capNameInsufficent = null;
+      capInUseInsufficient = 0;
+      maxCardinalityInsufficient = 0;
+      capFreeInsufficent = 0;
+      capDemandInsufficient = 0;
+    }
 
     public static AllocateCapacitiesInformationContainer createAllocateCapacitiesInformationContainer(OrderInformation orderInformation,
                                                                                                       SchedulingData schedulingData) {
