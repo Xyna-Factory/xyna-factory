@@ -133,11 +133,16 @@ public class {{filterName}} extends ConnectionFilter<HTTPTriggerConnection> {
       OASFilterConfigurationParameter conf = (OASFilterConfigurationParameter) baseConfig;
       String baseURL = conf.getBaseURL().orElse("{{basePathWithoutHost}}");
 
-      logger.debug("Checking base URL " + baseURL);
+      if (logger.isDebugEnabled()) {
+        logger.debug("Checking base URL " + baseURL);
+      }
       if (uri.startsWith(baseURL)) {
+        String uriWithoutBase = uri.substring(baseURL.length);
         for (PathParameter pathPara: pathParameter) {
-          logger.debug("Checking URI " + pathPara.toString());
-          if (pathPara.matchPath(uri)) {
+          if (logger.isDebugEnabled()) {
+            logger.debug("Checking URI " + pathPara.toString());
+          }
+          if (pathPara.matchPath(uriWithoutBase)) {
             String ordertype = pathPara.getOrdertype(tc.getMethod());
             GeneralXynaObject implDatatype = fqnInstanceDatatypeMapSucceed.get(new Pair<>(pathPara.getInstanceDatatype(tc.getMethod()), getRevision()));
 
@@ -288,7 +293,9 @@ public class {{filterName}} extends ConnectionFilter<HTTPTriggerConnection> {
       } else {
         charset = mime.substring(mime.indexOf("charset=") + 8);
         if (!Charset.isSupported(charset)) {
-          logger.warn("unsupported charset " + charset + ".");
+          if (logger.isWarnEnabled()) {
+            logger.warn("unsupported charset " + charset + ".");
+          }
           throw new RuntimeException("unsupported charset " + charset + ".");
         }
       }
@@ -297,7 +304,9 @@ public class {{filterName}} extends ConnectionFilter<HTTPTriggerConnection> {
     try {
       bytes = data.getBytes(charset);
     } catch (UnsupportedEncodingException e) {
-      logger.warn("unsupported charset " + charset + ": " + e.getMessage());
+      if (logger.isWarnEnabled()) {
+        logger.warn("unsupported charset " + charset + ": " + e.getMessage());
+      }
       throw new RuntimeException("unsupported charset " + charset + ".");
     }
     Long contentLength = (long) bytes.length;
@@ -352,7 +361,9 @@ public class {{filterName}} extends ConnectionFilter<HTTPTriggerConnection> {
       if (subType.getRevision().equals(getRevision()) && !subType.isAbstract())
         return  XynaObject.instantiate(subType.getOriginalFqName(), true, getRevision());
 
-    logger.warn("No succeed found for " + instanceDatatype + ".");
+    if (logger.isWarnEnabled()) {
+      logger.warn("No subtype found for " + instanceDatatype + ".");
+    }
     return null;
   }
 
@@ -383,9 +394,12 @@ public class {{filterName}} extends ConnectionFilter<HTTPTriggerConnection> {
       super.onUndeployment(triggerInstance);
       if (instancesWithSameFilterAndRevison == 1) {
         Set<Pair<String, Long>> keys = fqnInstanceDatatypeMapSucceed.keySet();
-        for (Pair<String, Long> key: keys) {
-          if (key.getSecond().equals(getRevision())) {
-            fqnInstanceDatatypeMapSucceed.remove(key);
+        Iterator<Pair<String, Long>> iterator = keys.iterator();
+        Pair<String, Long> currentPair;
+        while(iterator.hasNext()) {
+          currentPair = iterator.next();
+          if (currentPair.getSecond().equals(getRevision())) {
+            iterator.remove();
           }
         }
       }
@@ -422,7 +436,7 @@ class PathParameter {
   private String[] attributeNames;
 
   public PathParameter(String path, String... attributes) {
-    pathRegEx = Pattern.compile(path + "$");
+    pathRegEx = Pattern.compile("^" + path + "$");
     attributeNames = attributes;
   }
 
@@ -475,7 +489,7 @@ class OASFilterConfigurationParameter extends FilterConfigurationParameter {
   public static final StringParameter<String> BASE_URL =
       StringParameter.typeString("base-url")
       .documentation(Documentation
-                     .de("Überschreibt URL aus der Spezifikation")
+                     .de("?berschreibt URL aus der Spezifikation")
                      .en("Overwrites URL from specification")
                      .build()).optional().build();
 
