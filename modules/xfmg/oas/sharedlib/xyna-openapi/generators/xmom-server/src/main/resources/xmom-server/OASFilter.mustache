@@ -17,6 +17,7 @@
 }}
 package com.gip.xyna.xact.filter;
 
+import com.gip.xyna.xact.exceptions.XACT_InvalidFilterConfigurationParameterValueException;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
 import com.gip.xyna.xact.trigger.SocketNotAvailableException;
@@ -44,6 +45,8 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.utils.misc.Documentation;
+import com.gip.xyna.utils.misc.StringParameter;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -56,6 +59,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Properties;
@@ -97,7 +101,7 @@ public class {{filterName}} extends ConnectionFilter<HTTPTriggerConnection> {
    */
   @Override
   public FilterConfigurationParameter createFilterConfigurationTemplate() {
-    return null;
+    return new OASFilterConfigurationParameter();
   }
 
   /**
@@ -126,31 +130,37 @@ public class {{filterName}} extends ConnectionFilter<HTTPTriggerConnection> {
         uri = uri.substring(0, uri.length()-1);
       }
 
-      for (PathParameter pathPara: pathParameter) {
-        logger.debug("Checking URI " + pathPara.toString());
-        if (pathPara.matchPath(uri)) {
-          String ordertype = pathPara.getOrdertype(tc.getMethod());
-          GeneralXynaObject implDatatype = fqnInstanceDatatypeMapSucceed.get(new Pair<>(pathPara.getInstanceDatatype(tc.getMethod()), getRevision()));
+      OASFilterConfigurationParameter conf = (OASFilterConfigurationParameter) baseConfig;
+      String baseURL = conf.getBaseURL().orElse("{{basePathWithoutHost}}");
 
-          if (isInWorkspace() && !checkClassLoader(implDatatype)) {
-            implDatatype = searchAndInstanciateFirstSucceed(pathPara.getInstanceDatatype(tc.getMethod()));
-            fqnInstanceDatatypeMapSucceed.put(new Pair<>(pathPara.getInstanceDatatype(tc.getMethod()), getRevision()), implDatatype);
-          }
+      logger.debug("Checking base URL " + baseURL);
+      if (uri.startsWith(baseURL)) {
+        for (PathParameter pathPara: pathParameter) {
+          logger.debug("Checking URI " + pathPara.toString());
+          if (pathPara.matchPath(uri)) {
+            String ordertype = pathPara.getOrdertype(tc.getMethod());
+            GeneralXynaObject implDatatype = fqnInstanceDatatypeMapSucceed.get(new Pair<>(pathPara.getInstanceDatatype(tc.getMethod()), getRevision()));
 
-          if (ordertype != null && implDatatype != null) {
-            tc.read();
-            HttpRequest req = readRequest(tc);
-            req.setURLPathParameter(pathPara.getPathAttribute(uri));
-            req.setHTTPMethod(tc.getMethod());
-            req.setRequestPath(tc.getUri());
-            XynaOrder xo = new XynaOrder(new DestinationKey(ordertype), implDatatype, req);
-            return FilterResponse.responsible(xo);
-          } else if (ordertype == null) {
-            sendStatusCode(tc, "405 Method Not Allowed");
-            return FilterResponse.responsibleWithoutXynaorder();
-          } else {
-            sendStatusCode(tc, HTTPTriggerConnection.HTTP_NOTIMPLEMENTED);
-            return FilterResponse.responsibleWithoutXynaorder();
+            if (isInWorkspace() && !checkClassLoader(implDatatype)) {
+              implDatatype = searchAndInstanciateFirstSucceed(pathPara.getInstanceDatatype(tc.getMethod()));
+              fqnInstanceDatatypeMapSucceed.put(new Pair<>(pathPara.getInstanceDatatype(tc.getMethod()), getRevision()), implDatatype);
+            }
+
+            if (ordertype != null && implDatatype != null) {
+              tc.read();
+              HttpRequest req = readRequest(tc);
+              req.setURLPathParameter(pathPara.getPathAttribute(uri));
+              req.setHTTPMethod(tc.getMethod());
+              req.setRequestPath(tc.getUri());
+              XynaOrder xo = new XynaOrder(new DestinationKey(ordertype), implDatatype, req);
+              return FilterResponse.responsible(xo);
+            } else if (ordertype == null) {
+              sendStatusCode(tc, "405 Method Not Allowed");
+              return FilterResponse.responsibleWithoutXynaorder();
+            } else {
+              sendStatusCode(tc, HTTPTriggerConnection.HTTP_NOTIMPLEMENTED);
+              return FilterResponse.responsibleWithoutXynaorder();
+            }
           }
         }
       }
@@ -412,7 +422,7 @@ class PathParameter {
   private String[] attributeNames;
 
   public PathParameter(String path, String... attributes) {
-    pathRegEx = Pattern.compile("^" + path + "$");
+    pathRegEx = Pattern.compile(path + "$");
     attributeNames = attributes;
   }
 
@@ -455,5 +465,39 @@ class PathParameter {
 
   public String toString() {
     return this.pathRegEx.toString();
+  }
+}
+
+class OASFilterConfigurationParameter extends FilterConfigurationParameter {
+
+  private static final long serialVersionUID = 1L;
+
+  public static final StringParameter<String> BASE_URL =
+      StringParameter.typeString("base-url")
+      .documentation(Documentation
+                     .de("Überschreibt URL aus der Spezifikation")
+                     .en("Overwrites URL from specification")
+                     .build()).optional().build();
+
+  private Optional<String> baseURL;
+
+  protected static final List<StringParameter<?>> ALL_PARAMETERS =
+      StringParameter.asList(BASE_URL);
+
+  @Override
+  public List<StringParameter<?>> getAllStringParameters() {
+    return ALL_PARAMETERS;
+  }
+
+
+  @Override
+  public OASFilterConfigurationParameter build(Map<String, Object> map) throws XACT_InvalidFilterConfigurationParameterValueException {
+    OASFilterConfigurationParameter param = new OASFilterConfigurationParameter();
+    param.baseURL = Optional.ofNullable(BASE_URL.getFromMap(map));
+    return param;
+  }
+
+  public Optional<String> getBaseURL() {
+    return baseURL;
   }
 }
