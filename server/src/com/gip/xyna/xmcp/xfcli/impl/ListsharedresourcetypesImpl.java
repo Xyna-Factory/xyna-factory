@@ -51,7 +51,7 @@ public class ListsharedresourcetypesImpl extends XynaCommandImplementation<Lists
       if (storable.getSynchronizerInstanceIdentifier() != null) {
         output.append("synchronizer: ").append(storable.getSynchronizerInstanceIdentifier()).append("\n");
       } else {
-        output.append("no synchronizer configured\n  ");
+        output.append("no synchronizer configured\n");
       }
     }
 
