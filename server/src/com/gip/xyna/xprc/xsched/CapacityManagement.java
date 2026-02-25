@@ -419,7 +419,8 @@ public class CapacityManagement extends FunctionGroup
       + " demand: " + result.getDemand()
       + " freeCardinality: " + result.getFreeCardinality()
       + " exception: " + result.getXynaException()
-      + " orderInstancestatus: " + result.getOrderInstanceStatus());
+      + " orderInstancestatus: " + result.getOrderInstanceStatus()
+      + " Scheduler: " + cache.getCurrentSchedulingRun());
     }
     return result;
   }
@@ -429,7 +430,8 @@ public class CapacityManagement extends FunctionGroup
       logger.debug("undoAllocation called for " + orderInformation.getOrderId() + " with" 
                    + " Capacities: " +  schedulingData.getCapacities() 
                    + " TransferableCapacities: " + schedulingData.getTransferCapacities()
-                   + " MultiCaps: " + schedulingData.getMultiAllocationCapacities());
+                   + " MultiCaps: " + schedulingData.getMultiAllocationCapacities()
+                   + " Scheduler: " + cache.getCurrentSchedulingRun());
     }
     cmAlgorithm.undoAllocation(orderInformation,schedulingData);
   }
