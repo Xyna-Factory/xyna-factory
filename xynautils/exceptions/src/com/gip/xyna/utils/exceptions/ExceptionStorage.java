@@ -230,6 +230,8 @@ public class ExceptionStorage {
     }, xmlFile);
     for (JavaClass jc : jcs) {
       String fileName = createFileNameFromFQClassName(jc.getFQClassName(), srcDir);
+      long uid = jc.getSourceCode("Utils").hashCode();
+      jc.addMemberVar("private static final long serialVersionUID = " + uid + "L");
       FileUtils.writeToFile(jc.getSourceCode("Utils"), fileName);
     }
     for (ExceptionStorageInstance importedEsi : currentEsi.getIncludes()) {
