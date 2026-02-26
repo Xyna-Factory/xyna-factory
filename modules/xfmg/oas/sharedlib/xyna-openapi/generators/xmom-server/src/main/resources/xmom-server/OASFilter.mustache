@@ -132,7 +132,7 @@ public class {{filterName}} extends ConnectionFilter<HTTPTriggerConnection> {
       }
 
       OASFilterConfigurationParameter conf = (OASFilterConfigurationParameter) baseConfig;
-      String baseURL = conf.getBaseURL().orElse("{{basePathWithoutHost}}");
+      String baseURL = conf.getBaseURL();
 
       if (logger.isDebugEnabled()) {
         logger.debug("Checking base URL " + baseURL);
@@ -494,7 +494,7 @@ class OASFilterConfigurationParameter extends FilterConfigurationParameter {
                      .en("Replaces URL from specification")
                      .build()).optional().build();
 
-  private Optional<String> baseURL;
+  private String baseURL;
 
   protected static final List<StringParameter<?>> ALL_PARAMETERS =
       StringParameter.asList(BASE_URL);
@@ -508,14 +508,14 @@ class OASFilterConfigurationParameter extends FilterConfigurationParameter {
   @Override
   public OASFilterConfigurationParameter build(Map<String, Object> map) throws XACT_InvalidFilterConfigurationParameterValueException {
     OASFilterConfigurationParameter param = new OASFilterConfigurationParameter();
-    param.baseURL = Optional.ofNullable(BASE_URL.getFromMap(map));
-    param.BASE_URL.map(url ->
-      url.startsWith("/") ? url : "/" + url
-    );
+    param.baseURL = Optional
+      .ofNullable(BASE_URL.getFromMap(map))
+      .map(url -> url.startsWith("/") ? url : "/" + url)
+      .orElse("{{basePathWithoutHost}}");
     return param;
   }
 
-  public Optional<String> getBaseURL() {
+  public String getBaseURL() {
     return baseURL;
   }
 }
