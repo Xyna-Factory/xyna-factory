@@ -509,6 +509,9 @@ class OASFilterConfigurationParameter extends FilterConfigurationParameter {
   public OASFilterConfigurationParameter build(Map<String, Object> map) throws XACT_InvalidFilterConfigurationParameterValueException {
     OASFilterConfigurationParameter param = new OASFilterConfigurationParameter();
     param.baseURL = Optional.ofNullable(BASE_URL.getFromMap(map));
+    param.BASE_URL.map(url ->
+      url.startsWith("/") ? url : "/" + url
+    );
     return param;
   }
 
