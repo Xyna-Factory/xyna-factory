@@ -137,7 +137,7 @@ public class {{filterName}} extends ConnectionFilter<HTTPTriggerConnection> {
         logger.debug("Checking base URL " + baseURL);
       }
       if (uri.startsWith(baseURL)) {
-        String uriWithoutBase = uri.substring(baseURL.length);
+        String uriWithoutBase = uri.substring(baseURL.length());
         for (PathParameter pathPara: pathParameter) {
           if (logger.isDebugEnabled()) {
             logger.debug("Checking URI " + pathPara.toString());
@@ -489,7 +489,7 @@ class OASFilterConfigurationParameter extends FilterConfigurationParameter {
   public static final StringParameter<String> BASE_URL =
       StringParameter.typeString("base-url")
       .documentation(Documentation
-                     .de("?berschreibt URL aus der Spezifikation")
+                     .de("Überschreibt URL aus der Spezifikation")
                      .en("Overwrites URL from specification")
                      .build()).optional().build();
 
