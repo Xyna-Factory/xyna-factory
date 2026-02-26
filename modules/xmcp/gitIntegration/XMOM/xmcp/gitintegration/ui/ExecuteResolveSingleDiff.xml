@@ -27,13 +27,13 @@
       <Data ID="1465" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList1465"/>
       <Data ID="1617" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection1617"/>
     </Output>
-    <ServiceReference ID="1174" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
-      <Source RefID="1173"/>
-      <Target RefID="1173"/>
-    </ServiceReference>
     <ServiceReference ID="1556" Label="Refresh Diff Details Child Elements" ReferenceName="RefreshDiffDetailsChildElements" ReferencePath="xmcp.gitintegration.ui">
       <Source RefID="1555"/>
       <Target RefID="1555"/>
+    </ServiceReference>
+    <ServiceReference ID="1174" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="1173"/>
+      <Target RefID="1173"/>
     </ServiceReference>
     <Mappings ID="1161" Label="Mapping">
       <Input>
@@ -78,11 +78,14 @@
       <Source RefID="1160"/>
       <Source RefID="1210"/>
       <Target RefID="1174"/>
+      <Target RefID="1647"/>
       <Invoke Operation="resolveWorkspaceDifferences" ServiceID="1174">
         <Source RefID="1160"/>
         <Source RefID="1210"/>
       </Invoke>
-      <Receive ServiceID="1174"/>
+      <Receive ServiceID="1174">
+        <Target RefID="1647"/>
+      </Receive>
     </Function>
     <Function ID="1555" Label="Refresh Diff Details Child Elements">
       <Source RefID="1556"/>
@@ -116,6 +119,7 @@
     <Data ID="1560" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection1560">
       <Source RefID="1555"/>
     </Data>
+    <Data ID="1647" IsList="true" Label="Resolve Workspace Content Differences Result" ReferenceName="ResolveWorkspaceContentDifferencesResult" ReferencePath="xmcp.gitintegration" VariableName="resolveWorkspaceContentDifferencesResult1647"/>
     <Assign ID="1">
       <Source RefID="1558"/>
       <Source RefID="1559"/>

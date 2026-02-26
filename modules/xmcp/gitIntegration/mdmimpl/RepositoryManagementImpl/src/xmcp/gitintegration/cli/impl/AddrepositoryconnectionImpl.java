@@ -34,11 +34,18 @@ public class AddrepositoryconnectionImpl extends XynaCommandImplementation<Addre
 
   public void execute(OutputStream statusOutputStream, Addrepositoryconnection payload) throws XynaException {
     AddRepositoryConnectionResult result = RepositoryManagementImpl.addRepositoryConnection(payload.getPath(), payload.getWorkspace(), payload.getFull(), payload.getSetup());
-    writeToCommandLine(statusOutputStream, "Actions performed:\n\t");
-    writeToCommandLine(statusOutputStream, String.join("\n\t", result.getActionsPerformed()));
-    writeToCommandLine(statusOutputStream, "\n");
+    if(result.getActionsPerformed().isEmpty()) {
+      writeToCommandLine(statusOutputStream, "No actions were performed.\n");
+    } else {
+      writeToCommandLine(statusOutputStream, "Actions performed:\n\t");
+      writeToCommandLine(statusOutputStream, String.join("\n\t", result.getActionsPerformed()));
+      writeToCommandLine(statusOutputStream, "\n");
+    }
     if(result.getErrorMsg() != null && !result.getErrorMsg().isEmpty()) {
       writeToCommandLine(statusOutputStream, String.format("Error: %s", result.getErrorMsg()));
+    }
+    if(result.getSuccess() == Success.FULL) {
+      writeToCommandLine(statusOutputStream, "Successfully added repository connection" + (payload.getFull() ? "s":""));
     }
     writeEndToCommandLine(statusOutputStream, result.getSuccess() == Success.FULL ? ReturnCode.SUCCESS : ReturnCode.GENERAL_ERROR);
   }

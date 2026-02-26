@@ -26,6 +26,8 @@ import java.util.Optional;
 
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
+
+import xmcp.gitintegration.ResolveWorkspaceContentDifferencesResult;
 import xmcp.gitintegration.cli.generated.Resolveworkspacexml;
 import xmcp.gitintegration.impl.ResolveWorkspaceDifferencesParameter;
 import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
@@ -48,7 +50,13 @@ public class ResolveworkspacexmlImpl extends XynaCommandImplementation<Resolvewo
       param.setResolution(payload.getResolution());
       List<ResolveWorkspaceDifferencesParameter> list = new ArrayList<>();
       list.add(param);
-      result = portal.resolveList(listid, list);
+      List<ResolveWorkspaceContentDifferencesResult> resolveResult = portal.resolveList(listid, list);
+      StringBuilder sb = new StringBuilder();
+      for(ResolveWorkspaceContentDifferencesResult item : resolveResult) {
+        String successString = item.getSuccess() ? " " : "not";
+        sb.append(String.format("Entry %d was %sresolved successfully %s\n", item.getEntryId(), successString, item.getMessage()));
+      }
+      result = sb.toString();
     }
     writeToCommandLine(statusOutputStream, result);
   }
