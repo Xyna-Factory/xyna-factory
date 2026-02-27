@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xmcp.gitintegration.ListId;
+import xmcp.gitintegration.ResolveWorkspaceContentDifferencesResult;
 import xmcp.gitintegration.WorkspaceContentDifferencesResolution;
 import xmcp.gitintegration.impl.ResolveWorkspaceDifferencesParameter;
 import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
@@ -29,7 +30,7 @@ import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
 
 public class ResolveWorkspaceDiffsTools {
     
-  public void resolveWorkspaceDifferences(ListId listId, List<? extends WorkspaceContentDifferencesResolution> inputlist) {
+  public List<ResolveWorkspaceContentDifferencesResult> resolveWorkspaceDifferences(ListId listId, List<? extends WorkspaceContentDifferencesResolution> inputlist) {
     WorkspaceContentProcessingPortal portal = new WorkspaceContentProcessingPortal();
     List<ResolveWorkspaceDifferencesParameter> paramlist = new ArrayList<>();
       
@@ -39,7 +40,7 @@ public class ResolveWorkspaceDiffsTools {
       param.setEntry(res.getEntryId());
       paramlist.add(param);
     }    
-    portal.resolveList(listId.getListId(), paramlist);    
+    return portal.resolveList(listId.getListId(), paramlist).getResults();
   }
 
 }

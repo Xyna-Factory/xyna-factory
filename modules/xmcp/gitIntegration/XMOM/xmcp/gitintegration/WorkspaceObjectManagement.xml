@@ -87,9 +87,11 @@
         <Data ID="16" Label="List Id" ReferenceName="ListId" ReferencePath="xmcp.gitintegration" VariableName="listId16"/>
         <Data ID="15" IsList="true" Label="Workspace Content Differences Resolution" ReferenceName="WorkspaceContentDifferencesResolution" ReferencePath="xmcp.gitintegration" VariableName="workspaceContentDifferencesResolution15"/>
       </Input>
-      <Output/>
+      <Output>
+        <Data ID="9367" IsList="true" Label="Resolve Workspace Content Differences Result" ReferenceName="ResolveWorkspaceContentDifferencesResult" ReferencePath="xmcp.gitintegration" VariableName="resolveWorkspaceContentDifferencesResult9367"/>
+      </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">xmcp.gitintegration.WorkspaceObjectManagementImpl.resolveWorkspaceDifferences(listId16, workspaceContentDifferencesResolution15);</CodeSnippet>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.WorkspaceObjectManagementImpl.resolveWorkspaceDifferences(listId16, workspaceContentDifferencesResolution15);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Close Workspace Differences List" Name="closeWorkspaceDifferencesList">
@@ -130,6 +132,21 @@
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return xmcp.gitintegration.WorkspaceObjectManagementImpl.adaptWorkspaceDifferenceList(listId9361);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create Difference String" Name="createDifferenceString">
+      <Input>
+        <Data ID="9365" Label="Workspace Content Difference" ReferenceName="WorkspaceContentDifference" ReferencePath="xmcp.gitintegration" VariableName="workspaceContentDifference9365"/>
+      </Input>
+      <Output>
+        <Data ID="9366" Label="Result" VariableName="text9366">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.WorkspaceObjectManagementImpl.createDifferenceString(workspaceContentDifference9365);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
