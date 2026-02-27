@@ -17,7 +17,7 @@
 -->
 <XynaCommandLineCommand>
   <CommandDefinition Name="instantiatesharedresourcesynchronizer" Groups="Shared Resource Management" Description="Instantiates a shared resource synchronizer with the given type and configuration." />
-    <Argument Name="startOption" Description="start: Start the synchronizer after instantiation; stop: Do not start the synchronizer, nextStart: Start the synchronizer with the next factory start. Default: stop" Optional="true"/>
+    <Argument Name="startOption" Description="Start: Start the synchronizer after instantiation; Stop: Do not start the synchronizer, NextStart: Start the synchronizer with the next factory start. Default: stop" Optional="true"/>
     <Argument Name="synchronizerType" Description="Type of the shared resource synchronizer to instantiate."/>
     <Argument Name="instanceName" Description="Name of the shared resource synchronizer instance."/>
     <Argument Name="configuration" Description="Configuration parameters for the shared resource synchronizer as key=value pairs" Optional="true" MultipleValues="true"/>
