@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,6 +71,38 @@ public class SharedResourceSynchronizerInstanceStorage {
     } catch (PersistenceLayerException e) {
       throw new RuntimeException(e);
     }
+  }
+
+
+  public void deleteInstance(String instanceName) {
+    if (instanceName == null) {
+      throw new IllegalArgumentException("Cannot delete instance with null name");
+    }
+    try {
+      buildExecutor().execute(new DeleteInstance(instanceName));
+    } catch (PersistenceLayerException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+
+  private static class DeleteInstance implements WarehouseRetryExecutableNoResult {
+
+    private final String instanceName;
+
+
+    public DeleteInstance(String instanceName) {
+      this.instanceName = instanceName;
+    }
+
+
+    @Override
+    public void executeAndCommit(ODSConnection con) throws PersistenceLayerException {
+      SharedResourceSynchronizerInstanceStorable storable = new SharedResourceSynchronizerInstanceStorable();
+      storable.setInstanceName(instanceName);
+      con.deleteOneRow(storable);
+    }
+
   }
 
 

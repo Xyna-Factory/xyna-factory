@@ -34,7 +34,7 @@ public class SharedResourceTypeStorable extends Storable<SharedResourceTypeStora
 
   public static final String TABLE_NAME = "sharedresourcetypes";
 
-  public static final String COL_SHARED_RESOURCE_TYPE_IDENTIFIER = "sahredresourcetypeidentifier";
+  public static final String COL_SHARED_RESOURCE_TYPE_IDENTIFIER = "sharedresourcetypeidentifier";
   public static final String COL_SYNCHRONIZER_INSTANCE_IDENTIFIER = "synchronizerinstanceidentifier";
 
   private static final long serialVersionUID = 1L;
