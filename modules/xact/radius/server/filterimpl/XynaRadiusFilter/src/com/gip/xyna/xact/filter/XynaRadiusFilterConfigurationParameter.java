@@ -37,8 +37,8 @@ public class XynaRadiusFilterConfigurationParameter extends FilterConfigurationP
     private static final String DEFAULTACCESSREQUESTWF = "xact.radius.RADIUSAccessRequest";
     public static final StringParameter<String> ACCESSREQUESTWF =
             StringParameter.typeString("accessRequestWorkflow").defaultValue(DEFAULTACCESSREQUESTWF)
-                    .documentation(Documentation.de("FQN des Access-Request-Workflows, default: " + DEFAULTACCESSREQUESTWF)
-                            .en("FQN of the Access-Request workflow, default: " + DEFAULTACCESSREQUESTWF).build())
+                    .documentation(Documentation.de("FQN des Access-Request-Workflows")
+                            .en("FQN of the Access-Request workflow").build())
                     .optional().build();
     protected static final List<StringParameter<?>> ALL_PARAMETERS = StringParameter.asList(ACCESSREQUESTWF);
 
