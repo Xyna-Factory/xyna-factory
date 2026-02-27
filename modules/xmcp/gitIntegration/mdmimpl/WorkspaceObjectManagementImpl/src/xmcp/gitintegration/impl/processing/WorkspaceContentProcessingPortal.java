@@ -276,7 +276,7 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
   }
 
 
-  public List<ResolveWorkspaceContentDifferencesResult> resolveList(long diffListId, List<ResolveWorkspaceDifferencesParameter> paramlist) {
+  public ResolveResult resolveList(long diffListId, List<ResolveWorkspaceDifferencesParameter> paramlist) {
     WorkspaceDifferenceListStorage storage = new WorkspaceDifferenceListStorage();
     List<ResolveWorkspaceContentDifferencesResult> result = new LinkedList<>();
     WorkspaceContentDifferences differences = storage.loadDifferences(diffListId);
@@ -284,28 +284,30 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
       ResolveWorkspaceContentDifferencesResult singleResult = resolveSingleDifference(param, differences);
       result.add(singleResult);
     }
-    finishResolve(storage, differences);
+    boolean closedList = finishResolve(storage, differences);
     result.removeIf(x -> x == null);
-    return result;
+    return new ResolveResult(closedList, result, differences.getDifferences().size());
   }
 
 
-  public String resolveAll(long diffListId, Optional<String> resolution) {
+  public ResolveResult resolveAll(long diffListId, Optional<String> resolution) {
     WorkspaceDifferenceListStorage storage = new WorkspaceDifferenceListStorage();
-    StringBuilder sb = new StringBuilder();
     WorkspaceContentDifferences differences = storage.loadDifferences(diffListId);
-    resolveAllDifferencesImpl(resolution, differences, sb);
-    finishResolve(storage, differences);
-    return sb.toString();
+    List<ResolveWorkspaceContentDifferencesResult> entryResults = resolveAllDifferencesImpl(resolution, differences);
+    boolean closedList = finishResolve(storage, differences);
+    
+    return new ResolveResult(closedList, entryResults, differences.getDifferences().size());
   }
 
 
-  private void finishResolve(WorkspaceDifferenceListStorage storage, WorkspaceContentDifferences differences) {
+  private boolean finishResolve(WorkspaceDifferenceListStorage storage, WorkspaceContentDifferences differences) {
     if (differences.getDifferences().size() > 0) {
       storage.persist(differences);
+      return false;
     } else {
       //all done. Remove list
       storage.deleteWorkspaceDifferenceList(differences.getListId());
+      return true;
     }
   }
 
@@ -322,16 +324,21 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
   }
 
 
-  private void resolveAllDifferencesImpl(Optional<String> resolution, WorkspaceContentDifferences differences,
-                                         StringBuilder sb) {
+  private List<ResolveWorkspaceContentDifferencesResult> resolveAllDifferencesImpl(Optional<String> resolution, WorkspaceContentDifferences differences) {
     List<? extends WorkspaceContentDifference> differenceList = differences.getDifferences();
+    List<ResolveWorkspaceContentDifferencesResult> result = new ArrayList<>();
     for (int i = differenceList.size() - 1; i >= 0; i--) {
       WorkspaceContentDifference entry = differenceList.get(i);
+      StringBuilder sb = new StringBuilder();
       boolean success = tryResolveItem(entry, differences.getWorkspaceName(), resolution, sb);
       if (success) {
         differenceList.remove(entry);
       }
+      ResolveWorkspaceContentDifferencesResult.Builder builder = new ResolveWorkspaceContentDifferencesResult.Builder();
+      result.add(builder.entryId(entry.getEntryId()).success(success).message(sb.toString()).instance());
     }
+
+    return result;
   }
 
 
@@ -424,4 +431,28 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
     }
   }
 
+  
+  public static class ResolveResult {
+    private boolean closedList;
+    private List<ResolveWorkspaceContentDifferencesResult> results;
+    private int remainingEntries;
+    
+    public ResolveResult(boolean closedList, List<ResolveWorkspaceContentDifferencesResult> results, int remainingEntries) {
+      this.closedList = closedList;
+      this.results = results;
+      this.remainingEntries = remainingEntries;
+    }
+    
+    public boolean isClosedList() {
+      return closedList;
+    }
+    
+    public List<ResolveWorkspaceContentDifferencesResult> getResults() {
+      return results;
+    }
+    
+    public int getRemainingEntries() {
+      return remainingEntries;
+    }
+  }
 }

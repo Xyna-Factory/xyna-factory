@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ public class ResolveWorkspaceDiffsTools {
       param.setEntry(res.getEntryId());
       paramlist.add(param);
     }    
-    return portal.resolveList(listId.getListId(), paramlist);    
+    return portal.resolveList(listId.getListId(), paramlist).getResults();
   }
 
 }
