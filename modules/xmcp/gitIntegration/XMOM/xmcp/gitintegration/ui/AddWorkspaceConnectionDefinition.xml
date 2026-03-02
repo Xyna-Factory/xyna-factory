@@ -66,13 +66,21 @@
     </Mappings>
     <Mappings ID="764" Label="Checkbox: Full">
       <Output>
-        <Data ID="824" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition824">
+        <Data ID="824" Label="Checkbox Definition - Full" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition824">
           <Source RefID="764"/>
         </Data>
         <Target RefID="825"/>
       </Output>
       <Mapping>%0%.label="Full (Optional)"</Mapping>
       <Mapping>%0%.dataPath="%0%.full"</Mapping>
+    </Mappings>
+    <Mappings ID="1759" Label="Checkbox: Full">
+      <Output>
+        <Data ID="1760" Label="Checkbox Definition - Setup" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition1760"/>
+        <Target RefID="1761"/>
+      </Output>
+      <Mapping>%0%.label="Setup Workspaces (Optional)"</Mapping>
+      <Mapping>%0%.dataPath="%0%.setup"</Mapping>
     </Mappings>
     <Mappings ID="933" Label="Create Start order Button: Add Connection">
       <Input>
@@ -116,10 +124,24 @@
         </Source>
       </Input>
       <Input>
-        <Data ID="850" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition850">
+        <Data ID="850" Label="Checkbox Definition - full" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition850">
           <Source RefID="48"/>
         </Data>
-        <Source RefID="825"/>
+        <Source RefID="825">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="1858" Label="Checkbox Definition - Setup" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition1858">
+          <Source RefID="48"/>
+        </Data>
+        <Source RefID="1761">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
       </Input>
       <Input>
         <Data ID="1086" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1086">
@@ -133,14 +155,15 @@
         </Data>
         <Target RefID="860"/>
       </Output>
-      <Mapping>%4%.label="New Workspace Connection"</Mapping>
-      <Mapping>%4%.dataPath="%0%"</Mapping>
-      <Mapping>%4%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
-      <Mapping>%4%.children["1"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%1%</Mapping>
-      <Mapping>%4%.children["2"]#cast("xmcp.forms.datatypes.CheckboxDefinition")=%2%</Mapping>
-      <Mapping>%4%.children["3"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%3%</Mapping>
-      <Mapping>%4%.triggerClearDataChangeState.eventId="gitintegration_add-workspace-connection_clean"</Mapping>
-      <Mapping>%4%.closable="true"</Mapping>
+      <Mapping>%5%.label="New Workspace Connection"</Mapping>
+      <Mapping>%5%.dataPath="%0%"</Mapping>
+      <Mapping>%5%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
+      <Mapping>%5%.children["1"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%1%</Mapping>
+      <Mapping>%5%.children["2"]#cast("xmcp.forms.datatypes.CheckboxDefinition")=%2%</Mapping>
+      <Mapping>%5%.children["3"]#cast("xmcp.forms.datatypes.CheckboxDefinition")=%3%</Mapping>
+      <Mapping>%5%.children["4"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%4%</Mapping>
+      <Mapping>%5%.triggerClearDataChangeState.eventId="gitintegration_add-workspace-connection_clean"</Mapping>
+      <Mapping>%5%.closable="true"</Mapping>
     </Mappings>
     <Data ID="170" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition170">
       <Source RefID="160"/>
@@ -161,6 +184,7 @@
     <Data ID="1726" Label="Workspace Connection Data" ReferenceName="WorkspaceConnectionData" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceConnectionData1726">
       <Source RefID="1708"/>
     </Data>
+    <Data ID="1761" Label="Checkbox Definition - Full" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition1761"/>
     <Assign ID="1">
       <Source RefID="860"/>
       <Source RefID="1726"/>

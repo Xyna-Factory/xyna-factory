@@ -25,13 +25,13 @@
       <Data ID="1090" IsList="true" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui" VariableName="repositoryConnectionGroupGuiData1090"/>
       <Data ID="1143" IsList="true" Label="Info Diff Repository" ReferenceName="InfoDiffRepository" ReferencePath="xmcp.gitintegration" VariableName="infoDiffRepository1143"/>
     </Output>
-    <ServiceReference ID="93" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
-      <Source RefID="92"/>
-      <Target RefID="92"/>
-    </ServiceReference>
     <ServiceReference ID="1456" Label="Create Main Panel Child Elements" ReferenceName="CreateMainPanelChildElements" ReferencePath="xmcp.gitintegration.ui">
       <Source RefID="1455"/>
       <Target RefID="1455"/>
+    </ServiceReference>
+    <ServiceReference ID="93" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="92"/>
+      <Target RefID="92"/>
     </ServiceReference>
     <Mappings ID="128" Label="Get Input Data">
       <Input>
@@ -56,21 +56,38 @@
         </Data>
         <Target RefID="182"/>
       </Output>
+      <Output>
+        <Data ID="1485" Label="Setup" ReferenceName="Flag" ReferencePath="xmcp.gitintegration" VariableName="flag1485">
+          <Source RefID="128"/>
+        </Data>
+        <Target RefID="1486"/>
+      </Output>
       <Mapping>%1%.text=%0%.path</Mapping>
       <Mapping>%2%.name=%0%.workspace</Mapping>
       <Mapping>%3%.value=%0%.full</Mapping>
+      <Mapping>%4%.value=%0%.setup</Mapping>
     </Mappings>
     <Function ID="92" Label="Add Repository Connection">
       <Source RefID="93"/>
       <Source RefID="146"/>
       <Source RefID="164"/>
       <Source RefID="182"/>
+      <Source RefID="1486"/>
       <Target RefID="93"/>
       <Target RefID="95"/>
       <Invoke Operation="addRepositoryConnection" ServiceID="93">
         <Source RefID="146"/>
         <Source RefID="164"/>
-        <Source RefID="182"/>
+        <Source RefID="182">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="1486">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
       </Invoke>
       <Receive ServiceID="93">
         <Target RefID="95"/>
@@ -109,6 +126,9 @@
     </Data>
     <Data ID="1460" IsList="true" Label="Info Diff Repository" ReferenceName="InfoDiffRepository" ReferencePath="xmcp.gitintegration" VariableName="infoDiffRepository1460">
       <Source RefID="1455"/>
+    </Data>
+    <Data ID="1486" Label="Setup" ReferenceName="Flag" ReferencePath="xmcp.gitintegration" VariableName="flag1486">
+      <Source RefID="128"/>
     </Data>
     <Assign ID="1">
       <Source RefID="1458"/>
