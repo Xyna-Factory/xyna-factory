@@ -48,6 +48,7 @@ import xmcp.gitintegration.Flag;
 import xprc.xpce.Workspace;
 import xmcp.gitintegration.RepositoryManagementServiceOperation;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
+import xmcp.gitintegration.impl.RepositoryManagementImpl.AddRepositoryConnectionResult;
 import xmcp.gitintegration.repository.Branch;
 import xmcp.gitintegration.repository.BranchData;
 import xmcp.gitintegration.repository.ChangeSet;
@@ -103,8 +104,10 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
   }
 
 
-  public Text addRepositoryConnection(Text path, Workspace workspace, Flag full) {
-    return new Text(RepositoryManagementImpl.addRepositoryConnection(path.getText(), workspace.getName(), full.getValue()));
+  public Text addRepositoryConnection(Text path, Workspace workspace, Flag full, Flag setup) {
+    AddRepositoryConnectionResult result;
+    result = RepositoryManagementImpl.addRepositoryConnection(path.getText(), workspace.getName(), full.getValue(), setup.getValue());
+    return new Text(result.getSuccess() + result.getErrorMsg());
   }
 
 

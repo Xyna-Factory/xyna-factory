@@ -20,15 +20,18 @@ package xmcp.gitintegration.cli.impl;
 
 
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xmcp.xfcli.ReturnCode;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
+
+import xmcp.gitintegration.ResolveWorkspaceContentDifferencesResult;
 import xmcp.gitintegration.cli.generated.Resolveworkspacexml;
 import xmcp.gitintegration.impl.ResolveWorkspaceDifferencesParameter;
 import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
+import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal.ResolveResult;
 
 
 
@@ -37,20 +40,40 @@ public class ResolveworkspacexmlImpl extends XynaCommandImplementation<Resolvewo
   public void execute(OutputStream statusOutputStream, Resolveworkspacexml payload) throws XynaException {
     WorkspaceContentProcessingPortal portal = new WorkspaceContentProcessingPortal();
     long listid = Long.valueOf(payload.getId());
-    String result = "";
+
     if (payload.getClose()) {
-      result = portal.closeDifferenceList(listid);
-    } else if (payload.getEntry() == null && payload.getAll()) {
-      result = portal.resolveAll(listid, Optional.ofNullable(payload.getResolution()));
+      writeToCommandLine(statusOutputStream, portal.closeDifferenceList(listid));
+      return;
+    }
+
+    if (payload.getEntry() == null && !payload.getAll()) {
+      writeToCommandLine(statusOutputStream, "Either entry or all must be specified.");
+      writeEndToCommandLine(statusOutputStream, ReturnCode.GENERAL_ERROR);
+      return;
+    }
+
+    ResolveResult resolveResult;
+    if (payload.getAll()) {
+      resolveResult = portal.resolveAll(listid, Optional.ofNullable(payload.getResolution()));
     } else {
       ResolveWorkspaceDifferencesParameter param = new ResolveWorkspaceDifferencesParameter();
       param.setEntry(Long.valueOf(payload.getEntry()));
       param.setResolution(payload.getResolution());
-      List<ResolveWorkspaceDifferencesParameter> list = new ArrayList<>();
-      list.add(param);
-      result = portal.resolveList(listid, list);
+      resolveResult = portal.resolveList(listid, List.of(param));
     }
-    writeToCommandLine(statusOutputStream, result);
+    StringBuilder sb = new StringBuilder();
+    for (ResolveWorkspaceContentDifferencesResult item : resolveResult.getResults()) {
+      String successString = item.getSuccess() ? "" : "not";
+      sb.append(String.format("Entry %d was %sresolved successfully %s\n", item.getEntryId(), successString, item.getMessage()));
+    }
+    if (resolveResult.isClosedList()) {
+      sb.append("The list was closed because all entries were resolved.");
+    } else {
+      int remainingEntries = resolveResult.getRemainingEntries();
+      String entryString = remainingEntries == 1 ? "is one entry" : "are " + remainingEntries + " entries";
+      sb.append(String.format("There %s remaining in the list.", entryString));
+    }
+    writeToCommandLine(statusOutputStream, sb.toString());
   }
 
 }
