@@ -276,8 +276,8 @@ public class SessionManagement extends FunctionGroup implements IPropertyChangeL
       }
       sessionUserMap.addSession(randomId, credentials.getUserName());
     } catch (XFMG_UserIsLockedException e) {
-      if (logger.isDebugEnabled()) {
-        logger.debug("could not create session ", e);
+      if (logger.isWarnEnabled()) {
+        logger.warn("could not create session ", e);
       }
       //sollte nur vorkommen, wenn sich ein Benutzer gerade einloggt, während er gesperrt wird
       quitSession(randomId);
