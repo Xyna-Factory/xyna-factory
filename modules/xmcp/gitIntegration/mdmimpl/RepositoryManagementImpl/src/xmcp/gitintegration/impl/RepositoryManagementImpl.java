@@ -35,6 +35,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jgit.lib.RepositoryCache;
+import org.eclipse.jgit.util.FS;
 
 import com.gip.xyna.FileUtils;
 import com.gip.xyna.XynaFactory;
@@ -96,7 +98,7 @@ import java.util.HashSet;
 
 public class RepositoryManagementImpl {
 
-  private static Logger _logger = Logger.getLogger(RepositoryManagementImpl.class); 
+  private static Logger logger = Logger.getLogger(RepositoryManagementImpl.class); 
 
   private static PreparedQueryCache queryCache = new PreparedQueryCache();
 
@@ -128,21 +130,21 @@ public class RepositoryManagementImpl {
         return "Error: Could not follow symbolic link '" + linkPath + "'!";
       }
     } catch (IOException e) {
-      _logger.error(e.getMessage(), e);
+      logger.error(e.getMessage(), e);
       return "Error: Could not find symbolic link '" + linkPath + "'!";
     }
     // delete symbolic link
     try {
       Files.delete(linkPath);
     } catch (IOException e) {
-      _logger.error(e.getMessage(), e);
+      logger.error(e.getMessage(), e);
       return "Error: Could not delete symbolic link '" + linkPath + "'!";
     }
     // create new directory at link path
     try {
       Files.createDirectory(linkPath);
     } catch (IOException e) {
-      _logger.error(e.getMessage(), e);
+      logger.error(e.getMessage(), e);
       return "Error: Could not create directory '" + linkPath + "'!";
     }
     // copy content from target path to newly created link path
@@ -171,7 +173,7 @@ public class RepositoryManagementImpl {
         }
       });
     } catch (IOException e) {
-      _logger.error(e.getMessage(), e);
+      logger.error(e.getMessage(), e);
       return false;
     }
     return true;
@@ -196,7 +198,7 @@ public class RepositoryManagementImpl {
         }
       });
     } catch (IOException e) {
-      _logger.error(e.getMessage(), e);
+      logger.error(e.getMessage(), e);
       return false;
     }
     return true;
@@ -213,7 +215,7 @@ public class RepositoryManagementImpl {
     try {
       Files.delete(path);
     } catch (IOException e) {
-      _logger.error(e.getMessage(), e);
+      logger.error(e.getMessage(), e);
       return false;
     }
     return true;
@@ -592,7 +594,7 @@ public class RepositoryManagementImpl {
     try {
       Files.createDirectory(revisionPath.resolve(SAVED));
     } catch (IOException e) {
-      _logger.error(e.getMessage(), e);
+      logger.error(e.getMessage(), e);
       errors.add("Could not create directory '" + revisionPath.resolve(SAVED) + "' within the factory!");
       return false;
     }
@@ -633,7 +635,7 @@ public class RepositoryManagementImpl {
     try {
       Files.createSymbolicLink(from, to);
     } catch (IOException e) {
-      _logger.error(e.getMessage(), e);
+      logger.error(e.getMessage(), e);
       return false;
     }
     return true;
@@ -651,7 +653,7 @@ public class RepositoryManagementImpl {
     try {
       workspaceXmlPathMap = createWorkspaceXmlPathMap(basePath, full, workspace);
     } catch (IOException e) {
-      _logger.error(e.getMessage(), e);
+      logger.error(e.getMessage(), e);
       throw new RuntimeException("Error: Exception occured while searching for workspace.xml files!");
     }
     for (Entry<String, Path> entry : workspaceXmlPathMap.entrySet()) {
@@ -679,8 +681,8 @@ public class RepositoryManagementImpl {
       if(optional.isPresent()) {
         return content.getSplit();
       } else {
-        if(_logger.isWarnEnabled()) {
-          _logger.warn("invalid split type '" + content.getSplit() + " in " + filePath + " assuming " + splitStr);
+        if(logger.isWarnEnabled()) {
+          logger.warn("invalid split type '" + content.getSplit() + " in " + filePath + " assuming " + splitStr);
         }
       }
     }
@@ -979,6 +981,197 @@ public class RepositoryManagementImpl {
       result.add(group);
     }
     return result;
+  }
+  
+  public static void addLocalWorkspaceToRepository(RepositoryConnection connection) {
+    String validationResult = validateLocalWorkspaceConnectionRequest(connection);
+    if(validationResult != null) {
+      createEvent(validationResult);
+      logger.error(validationResult);
+      return;
+    }
+    
+    //create directory at subPath, if it does not exist already
+    String absoluteRepoPath = Path.of(connection.getPath()).toAbsolutePath().normalize().toString();
+    String subPath = connection.getSubpath();
+    Path workspacePathInRepo = Path.of(absoluteRepoPath, subPath).toAbsolutePath().normalize();
+    try {
+      Files.createDirectories(workspacePathInRepo);
+    } catch (IOException e) {
+      createEvent(e.getMessage());
+      logger.error("Error creating workspace directory in repository: " + e.getMessage(), e);
+      return;
+    }
+    //either create a config directory in the revision or call createWorkspaceXml (if splitType == none)
+    if(!createWorkspaceXml(connection, workspacePathInRepo)) {
+      return;
+    }
+
+    //copy files from revision to that directory
+    if(!copyWorkspaceContent(connection, workspacePathInRepo)) {
+      return;
+    }
+    
+    if(!deleteRevContentAndSetSymlinks(connection, workspacePathInRepo)) {
+      return;
+    }
+    
+    //create a RepostoryConnectionStorable
+    WorkspaceConfigSplit split = WorkspaceConfigSplit.fromId(connection.getSplittype()).orElse(WorkspaceConfigSplit.NONE);
+    RepositoryConnectionStorable storable = new RepositoryConnectionStorable(connection.getWorkspaceName(), connection.getPath(), connection.getSubpath(), connection.getSavedinrepo(), split.getId());
+    persistRepositoryConnectionStorable(storable);
+    createEvent("Successfully added workspace " + connection.getWorkspaceName() + " to repository");
+  }
+  
+  
+  private static boolean deleteRevContentAndSetSymlinks(RepositoryConnection connection, Path workspacePathInRepo) {
+    Path revisionPath = Path.of(Constants.BASEDIR, Constants.REVISION_PATH, Constants.PREFIX_REVISION + getRevision(connection.getWorkspaceName())).toAbsolutePath().normalize();
+    if(connection.getSavedinrepo()) {
+      try {
+        Files.delete(revisionPath);
+      } catch(IOException e) {
+        createEvent("Error deleting revision content: " + e.getMessage());
+        logger.error("Error deleting revision content: " + e.getMessage(), e);
+        try {
+          Files.copy(workspacePathInRepo, revisionPath);
+        } catch(IOException e1) {
+          createEvent("Error during cleanup after failed deletion of revision content: " + e1.getMessage());
+          logger.error("Error during cleanup after failed deletion of revision content: " + e1.getMessage(), e1);
+        }
+        return false;
+      }
+      createSymbolicLink(revisionPath, workspacePathInRepo);
+    } else {
+      try {
+        Files.deleteIfExists(revisionPath.resolve(SAVED).resolve(XMOM));
+        createSymbolicLink(revisionPath.resolve(SAVED).resolve(XMOM), workspacePathInRepo.resolve(XMOM));
+      } catch(IOException e) {
+        createEvent("Error deleting revision content: " + e.getMessage());
+        logger.error("Error deleting revision content: " + e.getMessage(), e);
+        try {
+          Files.copy(workspacePathInRepo.resolve(XMOM), revisionPath.resolve(SAVED).resolve(XMOM));
+        } catch(IOException e1) {
+          createEvent("Error during cleanup after failed deletion of revision content: " + e1.getMessage());
+          logger.error("Error during cleanup after failed deletion of revision content: " + e1.getMessage(), e1);
+        }
+        return false;
+      }
+      WorkspaceConfigSplit split = WorkspaceConfigSplit.fromId(connection.getSplittype()).orElse(WorkspaceConfigSplit.NONE);
+      String workspaceXmlPath = split == WorkspaceConfigSplit.NONE ? WORKSPACE_XML : CONFIG;
+      try {
+        Files.deleteIfExists(revisionPath.resolve(workspaceXmlPath));
+        createSymbolicLink(revisionPath.resolve(workspaceXmlPath), workspacePathInRepo.resolve(workspaceXmlPath));
+      } catch(IOException e) {
+        createEvent("Error deleting workspace xml: " + e.getMessage());
+        logger.error("Error deleting workspace xml: " + e.getMessage(), e);
+        try {
+          Files.copy(workspacePathInRepo.resolve(workspaceXmlPath), revisionPath.resolve(workspaceXmlPath));
+        } catch(IOException e1) {
+          createEvent("Error during cleanup after failed deletion of workspace xml: " + e1.getMessage());
+          logger.error("Error during cleanup after failed deletion of workspace xml: " + e1.getMessage(), e1);
+        }
+        return false;
+      }
+    }
+    return true;
+  }
+
+
+  private static boolean createWorkspaceXml(RepositoryConnection connection, Path workspacePathInRepo) {
+    WorkspaceConfigSplit split = WorkspaceConfigSplit.fromId(connection.getSplittype()).orElse(WorkspaceConfigSplit.NONE);
+    if (split == WorkspaceConfigSplit.NONE) {
+      xprc.xpce.Workspace workspace = new xprc.xpce.Workspace(connection.getWorkspaceName());
+      String workspaceXmlContent = WorkspaceObjectManagement.createWorkspaceXml(workspace).getText();
+      Path workspaceXmlPath = workspacePathInRepo.resolve(WORKSPACE_XML);
+      try {
+        Files.writeString(workspaceXmlPath, workspaceXmlContent);
+      } catch (IOException e) {
+        createEvent(e.getMessage());
+        logger.error("Error creating workspace xml: " + e.getMessage(), e);
+        return false;
+      }
+    } else {
+      Path configPathInRepo = workspacePathInRepo.resolve(CONFIG);
+      try {
+        Files.createDirectories(configPathInRepo);
+      } catch (IOException e) {
+        createEvent(e.getMessage());
+        logger.error("Error creating config directory in repository: " + e.getMessage(), e);
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private static boolean copyWorkspaceContent(RepositoryConnection connection, Path workspacePathInRepo) {
+    Long revision = getRevision(connection.getWorkspaceName());
+    Path revPath = Path.of(Constants.BASEDIR, Constants.REVISION_PATH, Constants.PREFIX_REVISION + revision).toAbsolutePath().normalize();
+    try {
+      if(connection.getSavedinrepo()) {
+        Files.copy(revPath, workspacePathInRepo);
+      } else {
+        Files.copy(revPath.resolve(SAVED).resolve(XMOM), workspacePathInRepo.resolve(XMOM));
+        WorkspaceConfigSplit split = WorkspaceConfigSplit.fromId(connection.getSplittype()).orElse(WorkspaceConfigSplit.NONE);
+        String workspaceXml = split == WorkspaceConfigSplit.NONE ? revPath.resolve(WORKSPACE_XML).toString() : CONFIG;
+        Files.copy(revPath.resolve(workspaceXml), workspacePathInRepo.resolve(workspaceXml));
+      }
+    } catch (IOException e) {
+      createEvent("Error during copy of workspace content: " + e.getMessage());
+      logger.error("Error during copy of workspace content: " + e.getMessage(), e);
+      try {
+        Files.deleteIfExists(workspacePathInRepo);
+      } catch (IOException e1) {
+        createEvent("Error during cleanup after failed copy of workspace content: " + e1.getMessage());
+        logger.error("Error during cleanup after failed copy of workspace content: " + e1.getMessage(), e1);
+      }
+      return false;
+    }
+
+    return true;
+  }
+  
+  private static void createEvent(String message) {
+    //TODO:
+  }
+  
+  private static String validateLocalWorkspaceConnectionRequest(RepositoryConnection connection) {
+    String absoluteRepoPath = Path.of(connection.getPath()).toAbsolutePath().normalize().toString();
+    String repository = new File(absoluteRepoPath, ".git").toString();
+    String workspaceName = connection.getWorkspaceName();
+    
+    //validate there is a repository at connection.path
+    boolean isRepo = RepositoryCache.FileKey.isGitRepository(new File(repository), FS.DETECTED);
+    if(!isRepo) {
+      return "Validation of local workspace connection failed because '" + repository + "' is not a git repository.";
+    }
+    
+    //validate there is either an empty directory at subPath or it does not exist
+    File workspaceFile = new File(absoluteRepoPath, connection.getSubpath());
+    if(workspaceFile.exists() && (!workspaceFile.isDirectory() || workspaceFile.list().length > 0)) {
+      return "Validation of local workspace connection failed because '" + workspaceFile + "' is not an empty directory.";
+    }
+    
+    //workspace exists
+    Long revision = getRevision(workspaceName); 
+    if(revision == null) {
+      return "Validation of local workspace connection failed because workspace '" + workspaceName + "' does not exist.";
+    }
+   
+    //validate that we can create symbolic links
+    Path from = Path.of(Constants.BASEDIR, Constants.REVISION_PATH, Constants.PREFIX_REVISION + revision, "symlinktest").toAbsolutePath().normalize();
+    Path to = Path.of(absoluteRepoPath, connection.getSubpath(), "symlinktest").toAbsolutePath().normalize();
+    if(!createSymbolicLink(from, to)) {
+      return "Validation of local workspace connection failed because symbolic links cannot be created.";
+    } else {
+      try {
+        Files.deleteIfExists(to);
+        Files.deleteIfExists(from);
+      } catch (IOException e) {
+        logger.error("Error during cleanup of symbolic link test files: " + e.getMessage(), e);
+      }
+    }
+  
+    return null;
   }
   
   public static class AddRepositoryConnectionResult {

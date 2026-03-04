@@ -305,4 +305,16 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
     }
   }
 
+
+  @Override
+  public List<? extends Workspace> listUnconnectedWorkspaces() {
+    return new UnconnectedWorkspaceLister().listUnconnectedWorkspaces();
+  }
+
+
+  @Override
+  public void addLocalWorkspaceToRepository(RepositoryConnection repositoryConnection) {
+    RepositoryManagementImpl.addLocalWorkspaceToRepository(repositoryConnection);
+  }
+
 }

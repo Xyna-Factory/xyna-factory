@@ -225,5 +225,23 @@
         <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.status(repository899);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="List Unconnected Workspaces" Name="listUnconnectedWorkspaces">
+      <Input/>
+      <Output>
+        <Data ID="902" IsList="true" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace902"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.listUnconnectedWorkspaces();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Add Local Workspace to Repository" Name="addLocalWorkspaceToRepository">
+      <Input>
+        <Data ID="903" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection903"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.gitintegration.RepositoryManagementImpl.addLocalWorkspaceToRepository(repositoryConnection903);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>
