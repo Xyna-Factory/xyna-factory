@@ -508,9 +508,8 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
         List<String> missingIdList = new ArrayList<>(ids);
         missingIdList.removeAll(resources.stream().map(x -> x.getId()).collect(Collectors.toList()));
         String missingIds = String.join(", ", missingIdList);
-        String firstMissingId = missingIdList.get(0);
-        XNWH_SharedResourceInstanceDoesNotExist ex =
-            new XNWH_SharedResourceInstanceDoesNotExist(resource.getPath(), missingIds, firstMissingId);
+        XNWH_SharedResourceInstanceDoesNotExist ex;
+        ex = new XNWH_SharedResourceInstanceDoesNotExist(resource.getPath(), missingIdList, missingIds);
         return new SharedResourceRequestResult<T>(false, ex, null);
       }
       for (SharedResourceInstance<T> oldInstance : resources) {

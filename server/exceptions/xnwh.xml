@@ -469,12 +469,12 @@
             <Type>String</Type>
          </Meta>
       </Data>
-      <Data Label="ids" VariableName="ids">
+      <Data Label="ids" VariableName="ids" IsList="true">
          <Meta>
             <Type>String</Type>
          </Meta>
       </Data>
-      <Data Label="firstid" VariableName="firstid">
+      <Data Label="is String" VariableName="idString">
          <Meta>
             <Type>String</Type>
          </Meta>

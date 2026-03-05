@@ -50,6 +50,7 @@ import com.gip.xyna.xprc.exceptions.XPRC_Scheduler_TooHighCapacityCardinalityExc
 import com.gip.xyna.xprc.xpce.planning.Capacity;
 import com.gip.xyna.xprc.xsched.CapacityInformation;
 import com.gip.xyna.xprc.xsched.CapacityManagement;
+import com.gip.xyna.xprc.xsched.CapacityManagement.CapacityProblemReaction;
 import com.gip.xyna.xprc.xsched.CapacityManagement.State;
 import com.gip.xyna.xprc.xsched.ExtendedCapacityUsageInformation;
 import com.gip.xyna.xprc.xsched.SchedulingData;
@@ -103,10 +104,20 @@ public class CMSharedResource implements CapacityManagementInterface {
       return new SharedResourceInstance<>(x.getId(), now, x.getValue());
     };
     SharedResourceRequestResult<SharedResourceCapacity> result = srm.update(XYNA_CAP_SR_DEF, allocInfo.ids, update);
-    if (!result.isSuccess()) {
+    if (!result.isSuccess() && result.getException() instanceof XNWH_SharedResourceInstanceDoesNotExist
+        && XynaProperty.SCHEDULER_UNDEFINED_CAPACITY_REACTION.get() == CapacityProblemReaction.Schedule) {
+      XNWH_SharedResourceInstanceDoesNotExist ex = (XNWH_SharedResourceInstanceDoesNotExist) result.getException();
+      allocInfo.ids.removeAll(ex.getIds());
+      if(allocInfo.ids.isEmpty()) {
+        result = new SharedResourceRequestResult<>(true, null, null);
+      } else {
+        result = srm.update(XYNA_CAP_SR_DEF, allocInfo.ids, update);
+      }
+    }
+    if (!result.isSuccess()) { 
       return handleFailedAllocation(result, allocInfo);
     }
-    if (schedulingData.getMultiAllocationCapacities() != null) {
+    if (!allocInfo.ids.isEmpty() && schedulingData.getMultiAllocationCapacities() != null) {
       return handleMultiAllocationCapacities(allocInfo, schedulingData);
     }
     schedulingData.setHasAcquiredCapacities(true);
