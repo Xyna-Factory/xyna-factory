@@ -32,10 +32,6 @@
       <Source RefID="2475"/>
       <Target RefID="2475"/>
     </ServiceReference>
-    <ServiceReference ID="2183" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
-      <Source RefID="2182"/>
-      <Target RefID="2182"/>
-    </ServiceReference>
     <ServiceReference ID="1262" Label="Workspace Split Type" ReferenceName="WorkspaceSplitType.WorkspaceSplitType" ReferencePath="xmcp.gitintegration.repository">
       <Source RefID="1261"/>
       <Target RefID="1261"/>
@@ -43,6 +39,10 @@
     <ServiceReference ID="3170" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="3169"/>
       <Target RefID="3169"/>
+    </ServiceReference>
+    <ServiceReference ID="2183" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="2182"/>
+      <Target RefID="2182"/>
     </ServiceReference>
     <Function ID="3169" Label="get Own RuntimeContext">
       <Source RefID="3170"/>
@@ -60,6 +60,7 @@
         </Data>
         <Target RefID="1448"/>
       </Output>
+      <Mapping>%0%.splittype="none"</Mapping>
     </Mappings>
     <Function ID="2182" Label="List Unconnected Workspaces">
       <Source RefID="2183"/>
@@ -215,6 +216,8 @@
       <Mapping>%1%.serviceFQN="xmcp.gitintegration.ui.ExecuteAddLocalWorkspaceToRepository"</Mapping>
       <Mapping>%1%.synchronously="true"</Mapping>
       <Mapping>%1%.dataPath="%0%"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="gitintegration_add-local-workspace-to-repository_clean"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["1"].eventId="gitintegration_add-workspace-connection_update"</Mapping>
     </Mappings>
     <Mappings ID="31" Label="Mapping">
       <Input>
