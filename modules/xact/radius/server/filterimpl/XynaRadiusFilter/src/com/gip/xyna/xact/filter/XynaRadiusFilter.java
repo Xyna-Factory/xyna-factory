@@ -44,10 +44,9 @@ import com.gip.xyna.xact.trigger.tlvencoding.util.ByteUtil;
 import com.gip.xyna.xact.trigger.tlvencoding.util.Md5HMAC;
 import com.gip.xyna.xdev.xfractmod.xmdm.ConnectionFilter;
 import com.gip.xyna.xdev.xfractmod.xmdm.EventListener;
+import com.gip.xyna.xdev.xfractmod.xmdm.FilterConfigurationParameter;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObjectList;
-import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
-import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.UserType;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyInt;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyString;
 import com.gip.xyna.xprc.XynaOrder;
@@ -72,47 +71,49 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
   private static final long serialVersionUID = 1L;
   private static Logger logger = CentralFactoryLogging.getLogger(XynaRadiusFilter.class);
 
-
   private static final String SHAREDSECRETPROP = "xact.radius.sharedSecret";
   private static final String AESKEYNAMEPROPERTY = "xact.radius.aes.keyName";
   private static final String AESKEYSIZEPROPERTY = "xact.radius.aes.keySize";
-  private static final String ACCESSREQUESTWFPROPERTY = "xyna.radius.wf.AccessRequest";
 
   private final static XynaPropertyString sharedSecretXynaProp = new XynaPropertyString(SHAREDSECRETPROP, "sharedSecret", false);
   private final static XynaPropertyString aesKeyNameXynaProp = new XynaPropertyString(AESKEYNAMEPROPERTY, null, true);
   private final static XynaPropertyInt aesKeySizeXynaProp = new XynaPropertyInt(AESKEYSIZEPROPERTY, 256);
-  private final static XynaPropertyString wfAccessRequestProp =
-      new XynaPropertyString(ACCESSREQUESTWFPROPERTY, "xact.radius.RADIUSAccessRequest")
-          .setDefaultDocumentation(DocumentationLanguage.DE, "Workflow für den Access-Request, der vom Filter aufgerufen wird.")
-          .setDefaultDocumentation(DocumentationLanguage.EN, "Workflow for the access request that will be called by the filter.");
 
 
   @SuppressWarnings("rawtypes")
   public void onDeployment(EventListener trigger) {
     super.onDeployment(trigger);
-    wfAccessRequestProp.registerDependency(UserType.Filter, ACCESSREQUESTWFPROPERTY);
   }
 
 
   @SuppressWarnings("rawtypes")
   public void onUndeployment(EventListener trigger) {
     super.onUndeployment(trigger);
-    wfAccessRequestProp.unregister();
+  }
+
+
+  @Override
+  public FilterConfigurationParameter createFilterConfigurationTemplate() {
+    return new XynaRadiusFilterConfigurationParameter();
   }
 
 
   /**
-   * analyzes TriggerConnection and creates XynaOrder if it accepts the connection. if this filter does not return a
-   * XynaOrder, Xyna Processing will call generateXynaOrder() of the next Filter registered for the Trigger
-   *
+   * Analyzes TriggerConnection and creates XynaOrder if it accepts the connection.
+   * This method returns a FilterResponse object, which includes the XynaOrder if the filter is responsible for the request.
+   * # If this filter is not responsible the returned object must be: FilterResponse.notResponsible()
+   * # If this filter is responsible the returned object must be: FilterResponse.responsible(XynaOrder order)
+   * # If this filter is responsible but the request is handled without creating a XynaOrder the
+   *   returned object must be: FilterResponse.responsibleWithoutXynaorder()
+   * # If this filter is responsible but the request should be handled by an older version of the filter in another application version, the returned
+   *    object must be: FilterResponse.responsibleButTooNew().
    * @param tc
-   * @return XynaOrder which will be started by Xyna Processing. null if this Filter doesn't accept the connection
-   * @throws XynaException caused by errors reading data from triggerconnection or having an internal error. results in
-   *           onError() being called by Xyna Processing.
-   * @throws InterruptedException if onError() should not be called. (e.g. if for a http trigger connection this filter
-   *           decides, it wants to return a 500 servererror, and not call any workflow)
+   * @return FilterResponse object
+   * @throws XynaException caused by errors reading data from triggerconnection or having an internal error.
+   *         Results in onError() being called by Xyna Processing.
    */
-  public XynaOrder generateXynaOrder(XynaRadiusTriggerConnection tc) throws XynaException, InterruptedException {
+  @Override
+  public FilterResponse createXynaOrder(XynaRadiusTriggerConnection tc, FilterConfigurationParameter baseConfig) throws XynaException {
     if (logger.isDebugEnabled())
       logger.debug("Radius packet received!");
 
@@ -120,7 +121,7 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
     int dpLen = datagramPacket.getLength();
     if (dpLen < 20) {
       logger.info("Received Packet too short. Not accepting it.");
-      return null;
+      return FilterResponse.responsibleWithoutXynaorder();
     }
 
     byte[] data = datagramPacket.getData();
@@ -129,11 +130,11 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
     int packetlength = (data[2] & 0xFF) * 256 + (data[3] & 0xFF);
     if (dpLen != packetlength) {
       logger.info("Received Packet has wrong length! Not accepting it.");
-      return null;
+      return FilterResponse.responsibleWithoutXynaorder();
     }
     if (!code.equals("1")) {
       logger.info("Radius Code in Radius Packet not configured. Not accepting Message.");
-      return null; // kein erwarteter Nachrichtentyp => nicht annehmen.
+      return FilterResponse.notResponsible();
     }
 
     byte[] authenticator = new byte[16];
@@ -206,7 +207,8 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
       }
     }
 
-    DestinationKey dk = new DestinationKey(wfAccessRequestProp.get());
+    String accessRequestWf = ((XynaRadiusFilterConfigurationParameter) baseConfig).getAccessRequestWf();
+    DestinationKey dk = new DestinationKey(accessRequestWf);
     Code xmomcode = new Code(code);
     Identifier xmomidentifier = new Identifier(id);
     RequestAuthenticator xmomauthenticator = new RequestAuthenticator(authenticatorstring);
@@ -218,7 +220,8 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
       logger.debug("Sending XynaOrder ...");
     }
 
-    return new XynaOrder(dk, xmomcode, xmomidentifier, xmomauthenticator, xmomip, xmomport, output, xmommessage);
+    XynaOrder xo = new XynaOrder(dk, xmomcode, xmomidentifier, xmomauthenticator, xmomip, xmomport, output, xmommessage);
+    return FilterResponse.responsible(xo);
   }
 
 
@@ -294,7 +297,7 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
       logger.debug("Starting to process workflow response ...");
     }
 
-    if (!(response instanceof AccessResponseParameter)){
+    if (!(response instanceof AccessResponseParameter)) {
       logger.error("Workflow output is not of type xact.radius.AccessResponseParameter. Aborting response!");
       return;
     }
@@ -475,12 +478,8 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
    * @return description of this filter
    */
   public String getClassDescription() {
-    return "Filter for Radius access requests, calls the workflow specified in the property: " + wfAccessRequestProp.getPropertyName();
-  }
-
-
-  public static int unsignedByteToInt(byte b) {
-    return (int) b & 0xFF;
+    return "Filter for RADIUS access requests, calls the workflow specified by the start parameter"
+        + XynaRadiusFilterConfigurationParameter.ACCESSREQUESTWF.getName();
   }
 
 
