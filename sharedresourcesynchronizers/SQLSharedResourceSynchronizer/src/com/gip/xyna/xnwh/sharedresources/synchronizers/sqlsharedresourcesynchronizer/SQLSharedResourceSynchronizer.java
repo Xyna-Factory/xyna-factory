@@ -87,6 +87,7 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
   private String username;
   private String password;
   private int numConnections;
+  private int concurrentModificationRetries;
   private Duration connectionTimeout;
   private Duration socketTimeout;
   private int queryTimeoutSeconds;
@@ -136,7 +137,7 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
 
 
   public SQLSharedResourceSynchronizer(String tableName, String url, String username, String password, int numConnections,
-                                       Duration connectionTimeout, Duration socketTimeout) {
+                                       int concurrentModificationRetries, Duration connectionTimeout, Duration socketTimeout) {
     CREATE_TABLE_STATEMENT = String
         .format("CREATE TABLE IF NOT EXISTS %s (sr_path VARCHAR(128) NOT NULL, sr_id VARCHAR(128) NOT NULL, sr_created BIGINT(20) NULL, sr_data MEDIUMBLOB NULL DEFAULT NULL, PRIMARY KEY (sr_path, sr_id) USING BTREE)",
                 tableName);
@@ -151,6 +152,7 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     this.username = username;
     this.password = password;
     this.numConnections = numConnections;
+    this.concurrentModificationRetries = concurrentModificationRetries;
     this.connectionTimeout = connectionTimeout;
     this.socketTimeout = socketTimeout;
     this.queryTimeoutSeconds = (int) connectionTimeout.getDuration(TimeUnit.SECONDS);
@@ -507,7 +509,7 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
       return new SharedResourceRequestResult<T>(false, NO_CONNECTION_AVAILABLE_EXCEPTION, null);
     }
 
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < concurrentModificationRetries; i++) {
       SharedResourceRequestResult<T> result = updateInternal(resource, ids, update, con);
       if (!result.isSuccess() && result.getException() instanceof XNWH_SharedResourceConcurrentUpdateException) {
         if (logger.isDebugEnabled()) {
