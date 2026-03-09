@@ -26,8 +26,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -44,6 +46,7 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.concurrent.AtomicEnum;
 import com.gip.xyna.utils.db.DBConnectionData;
 import com.gip.xyna.utils.db.DBConnectionData.DBConnectionDataBuilder;
+import com.gip.xyna.utils.db.DBConnectionData.Type;
 import com.gip.xyna.utils.db.Parameter;
 import com.gip.xyna.utils.db.types.BLOB;
 import com.gip.xyna.utils.timing.Duration;
@@ -103,9 +106,32 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
 
   private final ExecutorService cleanupExecutor;
 
+  private final Map<Type, Map<SQLErrorType, Integer>> errorCodes = setupErrorCodes();
+
 
   private enum State {
     starting, running, stopping, stopped
+  }
+  
+  private enum SQLErrorType {
+    uniqueCostraint, changeDuringTransaction
+  }
+
+  private static Map<Type, Map<SQLErrorType, Integer>> setupErrorCodes() {
+    Map<Type, Map<SQLErrorType, Integer>> result = new HashMap<>();
+
+    Map<SQLErrorType, Integer> codeMap = new HashMap<>();
+    codeMap.put(SQLErrorType.uniqueCostraint, 1062);
+    codeMap.put(SQLErrorType.changeDuringTransaction, 1020);
+    result.put(Type.MARIADB, codeMap);
+    result.put(Type.MySQL, codeMap);
+
+    codeMap = new HashMap<>();
+    codeMap.put(SQLErrorType.uniqueCostraint, 1);
+    codeMap.put(SQLErrorType.changeDuringTransaction, 1555);
+    result.put(Type.Oracle, codeMap);
+    
+    return result;
   }
 
 
@@ -343,7 +369,8 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     } catch (Exception e) {
       Exception exceptionToReturn = e;
       if (e instanceof SQLException) {
-        if (((SQLException) e).getErrorCode() == 1062) { //TODO: code by connector
+        int errorCode = ((SQLException) e).getErrorCode();
+        if (isError(errorCode, SQLErrorType.uniqueCostraint)) {
           List<String> ids = data.stream().map(x -> x.getId()).collect(Collectors.toList());
           String idString = String.join(", ", ids);
           exceptionToReturn = new XNWH_SharedResourceInstanceAlreadyExists(resource.getPath(), idString);
@@ -539,7 +566,8 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     } catch (Exception e) {
       con = rollbackOrCloseConnection(con);
       if (e instanceof SQLException) {
-        if (((SQLException) e).getErrorCode() == 1020) { //TODO: code by connector
+        int errorCode = ((SQLException) e).getErrorCode();
+        if (isError(errorCode, SQLErrorType.changeDuringTransaction)) {
           return new SharedResourceRequestResult<T>(false, new XNWH_SharedResourceConcurrentUpdateException(e), null);
         }
       }
@@ -551,6 +579,16 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     }
 
     return new SharedResourceRequestResult<T>(true, null, null);
+  }
+
+
+  private boolean isError(int errorCode, SQLErrorType type) {
+    Map<SQLErrorType, Integer> errorCodeMap = errorCodes.get(connectionData.getType());
+    if(errorCodeMap != null && errorCodeMap.containsKey(type)) {
+      int uniqueConstraintErrorCode = errorCodeMap.get(type);
+      return errorCode == uniqueConstraintErrorCode;
+    }
+    return false;
   }
 
 
