@@ -69,7 +69,7 @@ public class MultiAllocationCapacities implements Serializable {
 
   @Override
   public String toString() {
-    return "MultiAllocationCapacities("+capacities+","+allocations+",min="+minAllocation+",max="+maxAllocation+")";
+    return "MultiAllocationCapacities("+capacities+","+allocations+",min="+minAllocation+",max="+maxAllocation+",transferable="+transferable+")";
   }
   
   

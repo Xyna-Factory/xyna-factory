@@ -68,4 +68,8 @@ public class TransferCapacities implements Serializable {
     return fromOrderId;
   }
   
+  public String toString() {
+    return "TransferCapacities: fromOrderId=" + fromOrderId + ", capacities=" + capacities;
+  }
+  
 }
