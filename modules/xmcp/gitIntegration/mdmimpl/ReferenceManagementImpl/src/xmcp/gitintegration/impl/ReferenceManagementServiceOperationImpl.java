@@ -20,13 +20,29 @@ package xmcp.gitintegration.impl;
 
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xact.trigger.Filter;
+import com.gip.xyna.xact.trigger.Trigger;
+import com.gip.xyna.xact.trigger.XynaActivationTrigger;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
+import com.gip.xyna.xfmg.xfctrl.dependencies.DependencyNode;
+import com.gip.xyna.xfmg.xfctrl.dependencies.DependencyRegister.DependencySourceType;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
+import com.gip.xyna.xmcp.SharedLib;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
+import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
+import com.gip.xyna.xprc.xfractwfe.generation.DOM;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import xmcp.gitintegration.Reference;
@@ -39,6 +55,7 @@ import xmcp.gitintegration.impl.references.InternalReference;
 import xmcp.gitintegration.repository.RepositoryConnection;
 import xmcp.gitintegration.storage.ReferenceStorable;
 import xmcp.gitintegration.storage.ReferenceStorage;
+import xmcp.gitintegration.ui.IndexedObjectReference;
 import xprc.xpce.Workspace;
 import xmcp.gitintegration.ReferenceManagementServiceOperation;
 
@@ -113,6 +130,13 @@ public class ReferenceManagementServiceOperationImpl implements ExtendedDeployme
     }
     return builder.instance();
   }
+  
+  private Reference convertToReference(ReferenceStorable storable) {
+    Reference.Builder builder = new Reference.Builder();
+    builder.path(storable.getPath());
+    builder.type(storable.getReftype());
+    return builder.instance();
+  }
 
   public void removeReference(RemoveReferenceData removeReferenceData5) {
     ReferenceInteraction impl = new ReferenceInteraction();
@@ -156,6 +180,106 @@ public class ReferenceManagementServiceOperationImpl implements ExtendedDeployme
       return new Workspace(XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().getWorkspace(revision).getName());
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       throw new RuntimeException(e);
+    }
+  }
+  
+  private List<ObjectWithReferences> loadReferenceObjectNames(Long revision) {
+    List<ObjectWithReferences> result = new ArrayList<>();
+    XynaActivationTrigger xat = XynaFactory.getInstance().getActivation().getActivationTrigger();
+    Trigger[] triggers = xat.getTriggers(revision);
+    for(int i=0; i< triggers.length; i++) {
+      result.add(new ObjectWithReferences(triggers[i].getTriggerName(), "TRIGGER"));
+    }
+    //Filter
+    try {
+      Filter[] filters = xat.getFilters(revision);
+      for (int i = 0; i < filters.length; i++) {
+        result.add(new ObjectWithReferences(filters[i].getName(), "FILTER"));
+      }
+    } catch (PersistenceLayerException e) {
+
+    }
+    
+    //SharedLibraries
+    Collection<SharedLib> libs = XynaFactory.getInstance().getXynaMultiChannelPortalPortal().listSharedLibs(revision);
+    for(SharedLib lib : libs) {
+      result.add(new ObjectWithReferences(lib.getName(), "SHARED_LIBRARY"));
+    }
+
+    //DataTypes that have at least one referenced library
+    Set<DependencyNode> doms = XynaFactory.getInstance().getFactoryManagementPortal().getXynaFactoryControl().getDependencyRegister()
+        .getDependencyNodesByType(DependencySourceType.DATATYPE, revision);
+    GenerationBaseCache cache = new GenerationBaseCache();
+    for(DependencyNode dom : doms) {
+      String fqn = dom.getUniqueName();
+      try {
+        DOM d = DOM.getOrCreateInstance(fqn, cache, revision);
+        d.parse(false);
+        Set<String> add = new HashSet<>(d.getAdditionalLibraries());
+        add.addAll(d.getPythonLibraries());
+        if(!add.isEmpty()) {
+          result.add(new ObjectWithReferences(fqn, "DATATYPE"));
+        }
+      } catch(Exception e) {
+        
+      }
+    }
+    
+    return result;
+  }
+
+  @Override
+  public List<? extends IndexedObjectReference> loadReferencesForGui(RepositoryConnection connection) {
+    List<IndexedObjectReference> result = new ArrayList<>();
+    ReferenceStorage storage = new ReferenceStorage();
+    Long revision = getRevision(connection.getWorkspaceName());
+    List<ReferenceStorable> references = storage.getAllReferencesForWorkspace(revision);
+    Map<String, List<ReferenceStorable>> referenceMap = new HashMap<>();
+    for(ReferenceStorable storable : references) {
+      referenceMap.putIfAbsent(storable.getObjectName(), new ArrayList<>());
+      referenceMap.get(storable.getObjectName()).add(storable);
+    }
+    List<ObjectWithReferences> objects = loadReferenceObjectNames(revision);
+    objects.sort((x,y) -> x.name.compareTo(y.name));
+    int idx = 0;
+    for(ObjectWithReferences obj : objects) {
+      IndexedObjectReference.Builder builder = new IndexedObjectReference.Builder();
+      builder.index(idx++);
+      builder.name(obj.name);
+      builder.objectType(obj.type);
+      List<ReferenceStorable> refs = referenceMap.getOrDefault(obj.name, Collections.emptyList());
+      builder.numberOfReferences(refs.size());
+      List<Reference> referenceList = refs.stream().map(this::convertToReference).collect(Collectors.toList());
+      builder.reference(referenceList);
+      builder.objectValid(true);
+      result.add(builder.instance());
+      referenceMap.remove(obj.name);
+    }
+    
+    for(Entry<String, List<ReferenceStorable>> entry : referenceMap.entrySet()) {
+      IndexedObjectReference.Builder builder = new IndexedObjectReference.Builder();
+      builder.index(idx++);
+      builder.name(entry.getKey());
+      builder.objectType(entry.getValue().get(0).getObjecttype()); //TODO: check if types are consistent
+      List<ReferenceStorable> refs = referenceMap.getOrDefault(entry.getKey(), Collections.emptyList());
+      builder.numberOfReferences(refs.size());
+      List<Reference> referenceList = refs.stream().map(this::convertToReference).collect(Collectors.toList());
+      builder.reference(referenceList);
+      builder.objectValid(false);
+      result.add(builder.instance());
+    }
+    
+    return result;
+  }
+  
+  
+  private static class ObjectWithReferences {
+    private String name;
+    private String type;
+    
+    public ObjectWithReferences(String name, String type) {
+      this.name = name;
+      this.type = type;
     }
   }
 }

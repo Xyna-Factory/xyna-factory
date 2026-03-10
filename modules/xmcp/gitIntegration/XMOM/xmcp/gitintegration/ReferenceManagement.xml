@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,9 @@
   <Libraries>ReferenceManagementImpl.jar</Libraries>
   <SharedLibraries>XynaObjectGitIntegrationManagement</SharedLibraries>
   <Service Label="Reference Management" TypeName="ReferenceManagement">
+    <Meta>
+      <AdditionalDependencies/>
+    </Meta>
     <Operation IsStatic="true" Label="Add Reference" Name="addReference">
       <Input>
         <Data ID="3" Label="Reference Data" ReferenceName="ReferenceData" ReferencePath="xmcp.gitintegration" VariableName="referenceData3"/>
@@ -68,6 +71,17 @@
       <Output/>
       <SourceCode>
         <CodeSnippet Type="Java">xmcp.gitintegration.ReferenceManagementImpl.triggerReferences(reference6, file7, integerNumber8);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Load References for Gui" Name="loadReferencesForGui">
+      <Input>
+        <Data ID="9" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection9"/>
+      </Input>
+      <Output>
+        <Data ID="10" IsList="true" Label="Indexed Object Reference" ReferenceName="IndexedObjectReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedObjectReference10"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.ReferenceManagementImpl.loadReferencesForGui(repositoryConnection9);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

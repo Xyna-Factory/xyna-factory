@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Create Reference Panel" TypeName="CreateReferencePanel" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Create Reference Panel" Name="CreateReferencePanel">
+    <Input>
+      <Data ID="14" Label="Indexed Object Reference" ReferenceName="IndexedObjectReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedObjectReference14"/>
+    </Input>
+    <Output>
+      <Data ID="35" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition35"/>
+    </Output>
+    <Mappings ID="195" Label="Mapping">
+      <Input>
+        <Data ID="292" Label="Indexed Object Reference" ReferenceName="IndexedObjectReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedObjectReference292">
+          <Source RefID="195"/>
+        </Data>
+        <Source RefID="14"/>
+      </Input>
+      <Output>
+        <Data ID="213" Label="Text Item Definition - Type" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition213">
+          <Source RefID="195"/>
+        </Data>
+        <Target RefID="214"/>
+      </Output>
+      <Mapping>%1%.label="Type"</Mapping>
+      <Mapping>%1%.dataPath=concat("%0%.", %0%.index, ".type")</Mapping>
+    </Mappings>
+    <Mappings ID="204" Label="Mapping">
+      <Input>
+        <Data ID="283" Label="Indexed Object Reference" ReferenceName="IndexedObjectReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedObjectReference283">
+          <Source RefID="204"/>
+        </Data>
+        <Source RefID="14"/>
+      </Input>
+      <Output>
+        <Data ID="223" Label="Text Item Definition - References" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition223">
+          <Source RefID="204"/>
+        </Data>
+        <Target RefID="224"/>
+      </Output>
+      <Mapping>%1%.label="References"</Mapping>
+      <Mapping>%1%.dataPath=concat("%0%.", %0%.index, ".numberOfReferences")</Mapping>
+    </Mappings>
+    <Mappings ID="389" Label="Mapping">
+      <Output>
+        <Data ID="398" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition398">
+          <Source RefID="389"/>
+        </Data>
+        <Target RefID="399"/>
+      </Output>
+      <Mapping>%0%.label="Manage..."</Mapping>
+    </Mappings>
+    <Mappings ID="56" Label="Mapping">
+      <Input>
+        <Data ID="186" Label="Indexed Object Reference" ReferenceName="IndexedObjectReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedObjectReference186">
+          <Source RefID="56"/>
+        </Data>
+        <Source RefID="14"/>
+      </Input>
+      <Input>
+        <Data ID="249" Label="Text Item Definition - Type" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition249">
+          <Source RefID="56"/>
+        </Data>
+        <Source RefID="214">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="258" Label="Text Item Definition - References" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition258">
+          <Source RefID="56"/>
+        </Data>
+        <Source RefID="224">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="408" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition408">
+          <Source RefID="56"/>
+        </Data>
+        <Source RefID="399"/>
+      </Input>
+      <Output>
+        <Data ID="65" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition65">
+          <Source RefID="56"/>
+        </Data>
+        <Target RefID="66"/>
+      </Output>
+      <Mapping>%4%.label=%0%.name</Mapping>
+      <Mapping>%4%.children["0"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%1%</Mapping>
+      <Mapping>%4%.children["1"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%2%</Mapping>
+      <Mapping>%4%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%3%</Mapping>
+    </Mappings>
+    <Data ID="66" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition66">
+      <Source RefID="56"/>
+    </Data>
+    <Data ID="214" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition214">
+      <Source RefID="195"/>
+    </Data>
+    <Data ID="224" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition224">
+      <Source RefID="204"/>
+    </Data>
+    <Data ID="399" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition399">
+      <Source RefID="389"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="66"/>
+      <Target RefID="35"/>
+      <Copy>
+        <Source RefID="66"/>
+        <Target RefID="35"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
