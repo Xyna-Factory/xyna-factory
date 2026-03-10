@@ -116,7 +116,7 @@ public class IdGenerationAlgorithmUsingBlocksAndSharedResources implements IdGen
 
   @Override
   public void storeLastUsed(String realm) {
-    throw new UnsupportedOperationException("Method 'storeLastUsed' is not supported using shared resources");
+    //ntbd - factory is not clustered
   }
 
   @Override
