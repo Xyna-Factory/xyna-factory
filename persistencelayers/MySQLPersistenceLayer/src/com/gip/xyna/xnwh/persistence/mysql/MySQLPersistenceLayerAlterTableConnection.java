@@ -170,7 +170,7 @@ class MySQLPersistenceLayerAlterTableConnection
 
     private MySQLPersistenceLayer mySQLPersistenceLayer;
 
-    private MySQLPersistenceLayerConnection mySQLPersistenceLayerConnection;
+    private MySQLPersistenceLayerRegularConnection mySQLPersistenceLayerConnection;
 
     private SQLUtils sqlUtils;
 
@@ -180,7 +180,7 @@ class MySQLPersistenceLayerAlterTableConnection
     // darüber übertrifft Integer.MAX_VALUE und ergibt somit keinen Sinn mehr
     private final int MAX_HASH = (int) (Math.log(Integer.MAX_VALUE) / Math.log(36));
 
-    MySQLPersistenceLayerAlterTableConnection(MySQLPersistenceLayer pl, MySQLPersistenceLayerConnection plCon,
+    MySQLPersistenceLayerAlterTableConnection(MySQLPersistenceLayer pl, MySQLPersistenceLayerRegularConnection plCon,
             SQLUtils utils) {
         this.mySQLPersistenceLayerConnection = plCon;
         this.mySQLPersistenceLayer = pl;
@@ -742,7 +742,7 @@ class MySQLPersistenceLayerAlterTableConnection
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         unlock();
     }
 

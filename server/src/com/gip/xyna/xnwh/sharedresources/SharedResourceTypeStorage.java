@@ -19,6 +19,7 @@ package com.gip.xyna.xnwh.sharedresources;
 
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,10 +63,47 @@ public class SharedResourceTypeStorage {
 
 
   public void storeType(String sharedResourceTypeIdentifier, String synchronizerInstanceIdentifier) {
+    WarehouseRetryExecutableNoResult executable;
     try {
-      buildExecutor().execute(new StoreType(new SharedResourceTypeStorable(sharedResourceTypeIdentifier, synchronizerInstanceIdentifier)));
+      if (synchronizerInstanceIdentifier == null) {
+        executable = new DeleteTypes(List.of(sharedResourceTypeIdentifier));
+      } else {
+        executable = new StoreType(new SharedResourceTypeStorable(sharedResourceTypeIdentifier, synchronizerInstanceIdentifier));
+      }
+      buildExecutor().execute(executable);
     } catch (PersistenceLayerException e) {
       throw new RuntimeException(e);
+    }
+  }
+
+
+  public void deleteTypes(List<String> sharedResourceTypeIdentifiers) {
+    try {
+      buildExecutor().execute(new DeleteTypes(sharedResourceTypeIdentifiers));
+    } catch (PersistenceLayerException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+
+  private static class DeleteTypes implements WarehouseRetryExecutableNoResult {
+
+    private List<SharedResourceTypeStorable> sharedResourceTypes;
+
+
+    public DeleteTypes(List<String> sharedResourceTypeIdentifiers) {
+      sharedResourceTypes = new ArrayList<>();
+      for (String identifier : sharedResourceTypeIdentifiers) {
+        SharedResourceTypeStorable type = new SharedResourceTypeStorable();
+        type.setSharedResourceTypeIdentifier(identifier);
+        sharedResourceTypes.add(type);
+      }
+    }
+
+
+    @Override
+    public void executeAndCommit(ODSConnection con) throws PersistenceLayerException {
+      con.delete(sharedResourceTypes);
     }
   }
 
@@ -81,19 +119,16 @@ public class SharedResourceTypeStorage {
 
   private static class StoreType implements WarehouseRetryExecutableNoResult {
 
-    private String sharedResourceTypeIdentifier;
-    private String synchronizerInstanceIdentifier;
+    private SharedResourceTypeStorable type;
 
 
     public StoreType(SharedResourceTypeStorable type) {
-      this.sharedResourceTypeIdentifier = type.getPrimaryKey().toString();
-      this.synchronizerInstanceIdentifier = type.getSynchronizerInstanceIdentifier();
+      this.type = type;
     }
 
 
     @Override
     public void executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-      SharedResourceTypeStorable type = new SharedResourceTypeStorable(sharedResourceTypeIdentifier, synchronizerInstanceIdentifier);
       con.persistObject(type);
     }
   }

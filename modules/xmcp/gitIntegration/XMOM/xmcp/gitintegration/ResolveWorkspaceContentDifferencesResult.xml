@@ -15,26 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Workspace Connection Data" TypeName="WorkspaceConnectionData" TypePath="xmcp.gitintegration.repository" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Resolve Workspace Content Differences Result" TypeName="ResolveWorkspaceContentDifferencesResult" TypePath="xmcp.gitintegration" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Path" VariableName="path">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="Workspace" VariableName="workspace">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="Full" VariableName="full">
+  <Data Label="Success" VariableName="success">
     <Meta>
       <Type>boolean</Type>
     </Meta>
   </Data>
-  <Data Label="Setup" VariableName="setup">
+  <Data Label="EntryId" VariableName="entryId">
+    <Meta>
+      <Type>long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Message" VariableName="message">
     <Meta>
       <Type>String</Type>
     </Meta>

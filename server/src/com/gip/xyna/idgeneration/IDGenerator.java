@@ -128,6 +128,7 @@ public class IDGenerator extends FunctionGroup {
 
   private void initAlgorithm() {
     SharedResourceManagement sharedResourceManagement = XynaFactory.getInstance().getXynaNetworkWarehouse().getSharedResourceManagement();
+    sharedResourceManagement.addSharedResource(XYNA_IDGENERATION_SR);
     if (sharedResourceManagement.hasConfiguredSynchronizer(XYNA_IDGENERATION_SR)) {
       logger.info("Using IdGenerationAlgorithmUsingBlocksAndSharedResources for ID generation.");
       idGenerationAlgorithm = new IdGenerationAlgorithmUsingBlocksAndSharedResources();

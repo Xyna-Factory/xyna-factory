@@ -47,11 +47,11 @@ public class ListsharedresourcetypesImpl extends XynaCommandImplementation<Lists
 
     StringBuilder output = new StringBuilder();
     for (SharedResourceTypeStorable storable : list) {
-      output.append(storable.getSharedResourceTypeIdentifier()).append(" - ");
+      output.append("  ").append(storable.getSharedResourceTypeIdentifier()).append(" - ");
       if (storable.getSynchronizerInstanceIdentifier() != null) {
-        output.append("synchronizer: ").append(storable.getSynchronizerInstanceIdentifier()).append("\n  ");
+        output.append("synchronizer: ").append(storable.getSynchronizerInstanceIdentifier()).append("\n");
       } else {
-        output.append("no synchronizer configured\n  ");
+        output.append("no synchronizer configured\n");
       }
     }
 

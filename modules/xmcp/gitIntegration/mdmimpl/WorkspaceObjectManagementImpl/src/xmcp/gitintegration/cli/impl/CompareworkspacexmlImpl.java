@@ -56,7 +56,7 @@ public class CompareworkspacexmlImpl extends XynaCommandImplementation<Comparewo
       writeToCommandLine(statusOutputStream, "Use resolveworkspacexml to update factory\n");
       writeToCommandLine(statusOutputStream, "Use listworkspacediffs to show open lists\n");
     }
-    String differenceString = diffs.size() == 1 ? "is one difference " : "are " + diffs.size() + " differences ";
+    String differenceString = diffs.size() == 1 ? "is one difference" : "are " + diffs.size() + " differences";
     writeToCommandLine(statusOutputStream, "There " + differenceString + " between workspace.xml and factory state.\n");
     OutputCreator<WorkspaceContentItem, WorkspaceContentDifference, WorkspaceContentItemDifferenceSelector> outputCreator = new OutputCreator<WorkspaceContentItem, WorkspaceContentDifference, WorkspaceContentItemDifferenceSelector>(new WorkspaceContentItemDifferenceSelector());
     String output = outputCreator.createOutput(diffs, portal);

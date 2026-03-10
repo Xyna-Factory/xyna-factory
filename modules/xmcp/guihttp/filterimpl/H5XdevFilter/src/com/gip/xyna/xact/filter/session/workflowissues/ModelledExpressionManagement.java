@@ -723,6 +723,15 @@ public class ModelledExpressionManagement {
       //loosely type parameters
       //-> should they be a list
       List<Expression> subs = fe.getSubExpressions();
+      
+      if(function.getName().equals("concat")) {
+        if(subs.size() < 1) {
+          throw new InvalidFunctionException();
+        } else {
+          return; //everything will be converted to string
+        }
+      }
+      
       for(int i=0; i<subs.size(); i++) {
         TypeInfo is = determineTypeOfExpression(subs.get(i));
         TypeInfo should = fe.getParameterTypeDef(i);

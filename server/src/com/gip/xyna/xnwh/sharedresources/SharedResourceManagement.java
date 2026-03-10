@@ -410,11 +410,15 @@ public class SharedResourceManagement extends Section {
       String entrySharedResourceType = entry.getKey();
       String entrySynchronizerInstanceId = entry.getValue();
       if (Objects.equals(synchronizerInstanceIdentifier, entrySynchronizerInstanceId)) {
-        sharedResourceToSynchronizerMap.remove(entrySharedResourceType);
+        sharedResourceToSynchronizerMap.put(entrySharedResourceType, null);
         sharedResourcePortal.configureSharedResource(entrySharedResourceType, null);
         result.add(entrySharedResourceType);
       }
     }
+
+    sharedResourceTypeStorage.deleteTypes(result);
+    sharedResourceSynchronizerStorage.deleteInstance(synchronizerInstanceIdentifier);
+
     return result;
   }
 
