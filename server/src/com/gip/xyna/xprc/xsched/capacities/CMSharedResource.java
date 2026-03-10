@@ -741,12 +741,21 @@ public class CMSharedResource implements CapacityManagementInterface {
     int allocations;
   }
 
-  private static class SharedResourceCapacity {
+  public static class SharedResourceCapacity {
 
     public int cardinality;
     public int inuse;
     public String stateString;
     public Map<Long, Order> orders;
+
+    public SharedResourceCapacity() {
+
+    }
+
+    public SharedResourceCapacity(int cardinality, String stateString) {
+      this.cardinality = cardinality;
+      this.stateString = stateString;
+    }
   }
 
   private static class Order {

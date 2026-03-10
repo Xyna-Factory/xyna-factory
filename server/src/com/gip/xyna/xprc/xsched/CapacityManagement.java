@@ -63,7 +63,11 @@ import com.gip.xyna.xnwh.persistence.ODS;
 import com.gip.xyna.xnwh.persistence.ODSConnection;
 import com.gip.xyna.xnwh.persistence.ODSConnectionType;
 import com.gip.xyna.xnwh.persistence.ODSImpl.PersistenceLayerInstances;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceConfigurationChangeListener;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceInstance;
 import com.gip.xyna.xnwh.sharedresources.SharedResourceManagement;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceRequestResult;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceSynchronizer;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.persistence.StorableClassList;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoException;
@@ -83,6 +87,7 @@ import com.gip.xyna.xprc.xprcods.workflowdb.WorkflowDatabase;
 import com.gip.xyna.xprc.xsched.capacities.CMClustered;
 import com.gip.xyna.xprc.xsched.capacities.CMLocal;
 import com.gip.xyna.xprc.xsched.capacities.CMSharedResource;
+import com.gip.xyna.xprc.xsched.capacities.CMSharedResource.SharedResourceCapacity;
 import com.gip.xyna.xprc.xsched.capacities.CMUnsupported;
 import com.gip.xyna.xprc.xsched.capacities.CapacityAllocationResult;
 import com.gip.xyna.xprc.xsched.capacities.CapacityCache;
@@ -140,6 +145,7 @@ public class CapacityManagement extends FunctionGroup
   private CMClusterStateChangeHandler capacityClusterStateChangeHandler = new CMClusterStateChangeHandler();
   private FactoryShutdownClusterStateChangeHandler factoryShutdownClusterStateChangeHandler = new FactoryShutdownClusterStateChangeHandler();
   private RMIClusterStateChangeHandler rmiClusterStateChangeHandler;
+  private final SharedResourceConfigurationChangeListener changeListener = new CapacitySharedResourceConfigurationChangeListener();
   
   private ForeignDataStore<CapacityInformation> capacityStatisticsStore;
     
@@ -339,7 +345,7 @@ public class CapacityManagement extends FunctionGroup
   private void initUnclustered() {
     
     SharedResourceManagement srm = XynaFactory.getInstance().getXynaNetworkWarehouse().getSharedResourceManagement();
-    srm.addSharedResource(XYNA_CAPACITY_SR);
+    srm.addSharedResource(XYNA_CAPACITY_SR, changeListener);
     if(srm.hasConfiguredSynchronizer(XYNA_CAPACITY_SR)) {
       cmAlgorithm = new CMSharedResource();
     } else {
@@ -1046,6 +1052,60 @@ public class CapacityManagement extends FunctionGroup
     for (CapacityChangeListener l : listeners) {
       l.capacityChanged(capName);
     }
+  }
+
+
+  private class CapacitySharedResourceConfigurationChangeListener implements SharedResourceConfigurationChangeListener {
+
+    @Override
+    public void configurationChanged(SharedResourceSynchronizer from, SharedResourceSynchronizer to, boolean copyContent) {
+      if(copyContent) {
+        
+        List<CapacityInformation> caps;
+        CapacityManagementInterface oldAlgo = cmAlgorithm;
+        try {
+          caps = cmAlgorithm.listCapacities();
+        } catch (XPRC_ClusterStateChangedException e) {
+          throw new RuntimeException(e);
+        }
+        
+        if(to == null) {
+          cmAlgorithmBuilder.local();
+          for(CapacityInformation info : caps) {
+            try {
+              cmAlgorithm.addCapacity(info.getName(), info.getCardinality(), info.getState());
+            } catch (XPRC_CAPACITY_ALREADY_DEFINED e) {
+              //okay
+            } catch (PersistenceLayerException e) {
+              throw new RuntimeException(e);
+            }
+          }
+        } else {
+          cmAlgorithm.close();
+          cmAlgorithm = new CMSharedResource();
+          List<SharedResourceInstance<SharedResourceCapacity>> data = new ArrayList<>();
+          long now = System.currentTimeMillis();
+          for(CapacityInformation info : caps) {
+            SharedResourceCapacity instance = new SharedResourceCapacity(info.getCardinality(), info.getState().toString());
+            data.add(new SharedResourceInstance<SharedResourceCapacity>(info.getName(), now, instance));
+          }
+          SharedResourceRequestResult<SharedResourceCapacity> result = to.create(CMSharedResource.XYNA_CAP_SR_DEF, data);
+          if(!result.isSuccess()) {
+            cmAlgorithm = oldAlgo;
+            throw new RuntimeException("Could not copy Capacities to Shared Resource.", result.getException());
+          }
+        }
+        
+      } else {
+        if(to == null) {
+          cmAlgorithmBuilder.local();
+        } else {
+          cmAlgorithm.close();
+          cmAlgorithm = new CMSharedResource();
+        }
+      }
+    }
+    
   }
 
 }
