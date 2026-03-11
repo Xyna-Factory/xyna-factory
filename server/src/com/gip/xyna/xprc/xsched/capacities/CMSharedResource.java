@@ -749,12 +749,13 @@ public class CMSharedResource implements CapacityManagementInterface {
     public Map<Long, Order> orders;
 
     public SharedResourceCapacity() {
-
+      orders = new HashMap<>();
     }
 
     public SharedResourceCapacity(int cardinality, String stateString) {
       this.cardinality = cardinality;
       this.stateString = stateString;
+      orders = new HashMap<>();
     }
   }
 
