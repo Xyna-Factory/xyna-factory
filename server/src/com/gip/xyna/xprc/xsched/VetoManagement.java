@@ -379,65 +379,57 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
 
     @Override
     public void configurationChanged(SharedResourceSynchronizer from, SharedResourceSynchronizer to, boolean copyContent) {
-      if (copyContent) {
-        Collection<VetoInformation> vetos = vmAlgorithm.listVetos();
-        if (to != null) {
-          vmAlgorithm = new VM_SharedResource();
-        } else {
-          if (nonSharedResourceAlgorithm != null) {
-            vmAlgorithm = nonSharedResourceAlgorithm;
-          } else {
-            try {
-              VetoManagementAlgorithmType vmat = VM_ALGORITHM_TYPE.get();
-              vmAlgorithm = vmat.instantiate(isClustered() ? ClusterMode.Unsupported : ClusterMode.Local);
-              rmiClusterStateChangeHandler.setVetoManagementAlgorithmType(vmat);
-              nonSharedResourceAlgorithm = vmAlgorithm;
-            } catch (Exception e) {
-              throw new RuntimeException(e);
+      if (!copyContent) {
+        changeAlgorithm(to != null);
+        return;
+      }
+
+      Collection<VetoInformation> vetos = vmAlgorithm.listVetos();
+      changeAlgorithm(to != null);
+      long now = System.currentTimeMillis();
+      if (to == null) {
+        for (VetoInformation veto : vetos) {
+          try {
+            if (veto.isAdministrative()) {
+              vmAlgorithm.allocateAdministrativeVeto(new AdministrativeVeto(veto.getName(), veto.getDocumentation(), now));
+            } else {
+              OrderInformation orderInfo;
+              orderInfo = new OrderInformation(veto.getUsingOrderId(), veto.getUsingRootOrderId(), veto.getUsingOrderType());
+              vmAlgorithm.allocateVetos(orderInfo, List.of(veto.getName()), now);
+              vmAlgorithm.finalizeAllocation(orderInfo, List.of(veto.getName()));
             }
+          } catch (Exception e) {
+            throw new RuntimeException(e);
           }
-        }
-        long now = System.currentTimeMillis();
-        if (to == null) {
-          for (VetoInformation veto : vetos) {
-            try {
-              if (veto.isAdministrative()) {
-                vmAlgorithm.allocateAdministrativeVeto(new AdministrativeVeto(veto.getName(), veto.getDocumentation(), now));
-              } else {
-                OrderInformation orderInfo;
-                orderInfo = new OrderInformation(veto.getUsingOrderId(), veto.getUsingRootOrderId(), veto.getUsingOrderType());
-                vmAlgorithm.allocateVetos(orderInfo, List.of(veto.getName()), now);
-                vmAlgorithm.finalizeAllocation(orderInfo, List.of(veto.getName()));
-              }
-            } catch (Exception e) {
-              throw new RuntimeException(e);
-            }
-          }
-        } else {
-          List<SharedResourceInstance<SharedResourceVeto>> instances = new ArrayList<>();
-          for (VetoInformation veto : vetos) {
-            SharedResourceVeto instance = new SharedResourceVeto(veto.getUsingOrderId(), veto.getUsingRootOrderId(),
-                                                                 veto.getUsingOrderType(), veto.getDocumentation());
-            instances.add(new SharedResourceInstance<SharedResourceVeto>(veto.getName(), now, instance));
-          }
-          to.create(VM_SharedResource.XYNA_VETO_SR_DEF, instances);
         }
       } else {
-        if (to != null) {
-          vmAlgorithm = new VM_SharedResource();
-        } else {
-          if (nonSharedResourceAlgorithm != null) {
-            vmAlgorithm = nonSharedResourceAlgorithm;
-          } else {
-            try {
-              VetoManagementAlgorithmType vmat = VM_ALGORITHM_TYPE.get();
-              vmAlgorithm = vmat.instantiate(isClustered() ? ClusterMode.Unsupported : ClusterMode.Local);
-              rmiClusterStateChangeHandler.setVetoManagementAlgorithmType(vmat);
-              nonSharedResourceAlgorithm = vmAlgorithm;
-            } catch (Exception e) {
-              throw new RuntimeException(e);
-            }
-          }
+        List<SharedResourceInstance<SharedResourceVeto>> instances = new ArrayList<>();
+        for (VetoInformation veto : vetos) {
+          SharedResourceVeto instance =
+              new SharedResourceVeto(veto.getUsingOrderId(), veto.getUsingRootOrderId(), veto.getUsingOrderType(), veto.getDocumentation());
+          instances.add(new SharedResourceInstance<>(veto.getName(), now, instance));
+        }
+        to.create(VM_SharedResource.XYNA_VETO_SR_DEF, instances);
+      }
+    }
+
+
+    private void changeAlgorithm(boolean toSharedResource) {
+      if (toSharedResource) {
+        vmAlgorithm = new VM_SharedResource();
+        return;
+      }
+
+      if (nonSharedResourceAlgorithm != null) {
+        vmAlgorithm = nonSharedResourceAlgorithm;
+      } else {
+        try {
+          VetoManagementAlgorithmType vmat = VM_ALGORITHM_TYPE.get();
+          vmAlgorithm = vmat.instantiate(isClustered() ? ClusterMode.Unsupported : ClusterMode.Local);
+          rmiClusterStateChangeHandler.setVetoManagementAlgorithmType(vmat);
+          nonSharedResourceAlgorithm = vmAlgorithm;
+        } catch (Exception e) {
+          throw new RuntimeException(e);
         }
       }
     }

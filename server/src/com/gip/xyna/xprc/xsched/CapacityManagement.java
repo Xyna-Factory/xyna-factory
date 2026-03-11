@@ -1059,53 +1059,50 @@ public class CapacityManagement extends FunctionGroup
 
     @Override
     public void configurationChanged(SharedResourceSynchronizer from, SharedResourceSynchronizer to, boolean copyContent) {
-      if(copyContent) {
-        
-        List<CapacityInformation> caps;
-        CapacityManagementInterface oldAlgo = cmAlgorithm;
-        try {
-          caps = cmAlgorithm.listCapacities();
-        } catch (XPRC_ClusterStateChangedException e) {
-          throw new RuntimeException(e);
-        }
-        
-        if(to == null) {
+      if (!copyContent) {
+        if (to == null) {
           cmAlgorithmBuilder.local();
-          for(CapacityInformation info : caps) {
-            try {
-              cmAlgorithm.addCapacity(info.getName(), info.getCardinality(), info.getState());
-            } catch (XPRC_CAPACITY_ALREADY_DEFINED e) {
-              //okay
-            } catch (PersistenceLayerException e) {
-              throw new RuntimeException(e);
-            }
-          }
         } else {
           cmAlgorithm.close();
           cmAlgorithm = new CMSharedResource();
-          List<SharedResourceInstance<SharedResourceCapacity>> data = new ArrayList<>();
-          long now = System.currentTimeMillis();
-          for(CapacityInformation info : caps) {
-            SharedResourceCapacity instance = new SharedResourceCapacity(info.getCardinality(), info.getState().toString());
-            data.add(new SharedResourceInstance<SharedResourceCapacity>(info.getName(), now, instance));
-          }
-          SharedResourceRequestResult<SharedResourceCapacity> result = to.create(CMSharedResource.XYNA_CAP_SR_DEF, data);
-          if(!result.isSuccess()) {
-            cmAlgorithm = oldAlgo;
-            throw new RuntimeException("Could not copy Capacities to Shared Resource.", result.getException());
+        }
+        return;
+      }
+      
+      List<CapacityInformation> caps;
+      CapacityManagementInterface oldAlgo = cmAlgorithm;
+      try {
+        caps = cmAlgorithm.listCapacities();
+      } catch (XPRC_ClusterStateChangedException e) {
+        throw new RuntimeException(e);
+      }
+
+      if (to == null) {
+        cmAlgorithmBuilder.local();
+        for (CapacityInformation info : caps) {
+          try {
+            cmAlgorithm.addCapacity(info.getName(), info.getCardinality(), info.getState());
+          } catch (XPRC_CAPACITY_ALREADY_DEFINED e) {
+            //okay
+          } catch (PersistenceLayerException e) {
+            throw new RuntimeException(e);
           }
         }
-        
       } else {
-        if(to == null) {
-          cmAlgorithmBuilder.local();
-        } else {
-          cmAlgorithm.close();
-          cmAlgorithm = new CMSharedResource();
+        cmAlgorithm.close();
+        cmAlgorithm = new CMSharedResource();
+        List<SharedResourceInstance<SharedResourceCapacity>> data = new ArrayList<>();
+        long now = System.currentTimeMillis();
+        for (CapacityInformation info : caps) {
+          SharedResourceCapacity instance = new SharedResourceCapacity(info.getCardinality(), info.getState().toString());
+          data.add(new SharedResourceInstance<SharedResourceCapacity>(info.getName(), now, instance));
+        }
+        SharedResourceRequestResult<SharedResourceCapacity> result = to.create(CMSharedResource.XYNA_CAP_SR_DEF, data);
+        if (!result.isSuccess()) {
+          cmAlgorithm = oldAlgo;
+          throw new RuntimeException("Could not copy Capacities to Shared Resource.", result.getException());
         }
       }
     }
-    
   }
-
 }
