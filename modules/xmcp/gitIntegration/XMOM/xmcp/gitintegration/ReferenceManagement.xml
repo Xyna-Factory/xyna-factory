@@ -84,5 +84,25 @@
         <CodeSnippet Type="Java">return xmcp.gitintegration.ReferenceManagementImpl.loadReferencesForGui(repositoryConnection9);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="Load References of Object" Name="loadReferencesOfObject">
+      <Input>
+        <Data ID="11" Label="Indexed Object Reference" ReferenceName="IndexedObjectReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedObjectReference11"/>
+      </Input>
+      <Output>
+        <Data ID="12" IsList="true" Label="Indexed Reference" ReferenceName="IndexedReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedReference12"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.ReferenceManagementImpl.loadReferencesOfObject(indexedObjectReference11);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="List Reference Method Types" Name="listReferenceMethodTypes">
+      <Input/>
+      <Output>
+        <Data ID="13" IsList="true" Label="Reference Method Type" ReferenceName="ReferenceMethodType" ReferencePath="xmcp.gitintegration" VariableName="referenceMethodType13"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.ReferenceManagementImpl.listReferenceMethodTypes();</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>

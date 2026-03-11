@@ -23,6 +23,7 @@
     <Output>
       <Data ID="14" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition14"/>
       <Data ID="600" IsList="true" Label="Indexed Object Reference" ReferenceName="IndexedObjectReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedObjectReference600"/>
+      <Data ID="728" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection728"/>
     </Output>
     <ServiceReference ID="299" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="298"/>
@@ -55,6 +56,15 @@
         <Target RefID="630"/>
       </Receive>
     </Function>
+    <Mappings ID="757" Label="Mapping">
+      <Output>
+        <Data ID="782" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition782">
+          <Source RefID="757"/>
+        </Data>
+        <Target RefID="783"/>
+      </Output>
+      <Mapping>%0%.dataPath="%1%.workspaceName"</Mapping>
+    </Mappings>
     <Mappings ID="27" Label="Mapping">
       <Input>
         <Data ID="318" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext318">
@@ -68,14 +78,22 @@
         </Data>
         <Source RefID="629"/>
       </Input>
+      <Input>
+        <Data ID="856" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition856">
+          <Source RefID="27"/>
+        </Data>
+        <Source RefID="783"/>
+      </Input>
       <Output>
         <Data ID="383" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition383">
           <Source RefID="27"/>
         </Data>
         <Target RefID="384"/>
       </Output>
-      <Mapping>%2%.label="Manage References"</Mapping>
-      <Mapping>%2%.children=%1%</Mapping>
+      <Mapping>%3%.label="Manage References"</Mapping>
+      <Mapping>%3%.children=%1%</Mapping>
+      <Mapping>%3%.closable="true"</Mapping>
+      <Mapping>%3%.header.leftArea.children["0"]=%2%</Mapping>
     </Mappings>
     <Data ID="301" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext301">
       <Source RefID="298"/>
@@ -89,11 +107,16 @@
     <Data ID="630" IsList="true" Label="Indexed Object Reference" ReferenceName="IndexedObjectReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedObjectReference630">
       <Source RefID="571"/>
     </Data>
+    <Data ID="783" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition783">
+      <Source RefID="757"/>
+    </Data>
     <Assign ID="1">
       <Source RefID="384"/>
       <Source RefID="630"/>
+      <Source RefID="110"/>
       <Target RefID="14"/>
       <Target RefID="600"/>
+      <Target RefID="728"/>
       <Copy>
         <Source RefID="384"/>
         <Target RefID="14"/>
@@ -101,6 +124,10 @@
       <Copy>
         <Source RefID="630"/>
         <Target RefID="600"/>
+      </Copy>
+      <Copy>
+        <Source RefID="110"/>
+        <Target RefID="728"/>
       </Copy>
     </Assign>
   </Operation>

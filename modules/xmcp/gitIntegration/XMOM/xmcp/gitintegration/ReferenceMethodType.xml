@@ -15,38 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Indexed Object Reference" TypeName="IndexedObjectReference" TypePath="xmcp.gitintegration.ui" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Reference Method Type" TypeName="ReferenceMethodType" TypePath="xmcp.gitintegration" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Index" VariableName="index">
-    <Meta>
-      <Type>int</Type>
-    </Meta>
-  </Data>
-  <Data Label="Object Type" VariableName="objectType">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
   <Data Label="Name" VariableName="name">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data IsList="true" Label="Reference" ReferenceName="Reference" ReferencePath="xmcp.gitintegration" VariableName="reference"/>
-  <Data Label="Number of References" VariableName="numberOfReferences">
-    <Meta>
-      <Type>int</Type>
-    </Meta>
-  </Data>
-  <Data Label="Object Valid" VariableName="objectValid">
-    <Meta>
-      <Type>boolean</Type>
-      <Documentation>does the referenced object exist</Documentation>
-    </Meta>
-  </Data>
-  <Data Label="Workspace Name" VariableName="workspaceName">
     <Meta>
       <Type>String</Type>
     </Meta>

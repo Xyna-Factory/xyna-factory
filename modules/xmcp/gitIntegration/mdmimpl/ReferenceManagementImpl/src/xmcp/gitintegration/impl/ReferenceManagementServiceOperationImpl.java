@@ -52,12 +52,15 @@ import xmcp.gitintegration.RepositoryManagement;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
 import xmcp.gitintegration.impl.processing.ReferenceSupport;
 import xmcp.gitintegration.impl.references.InternalReference;
+import xmcp.gitintegration.impl.references.ReferenceType;
 import xmcp.gitintegration.repository.RepositoryConnection;
 import xmcp.gitintegration.storage.ReferenceStorable;
 import xmcp.gitintegration.storage.ReferenceStorage;
 import xmcp.gitintegration.ui.IndexedObjectReference;
+import xmcp.gitintegration.ui.IndexedReference;
 import xprc.xpce.Workspace;
 import xmcp.gitintegration.ReferenceManagementServiceOperation;
+import xmcp.gitintegration.ReferenceMethodType;
 
 
 public class ReferenceManagementServiceOperationImpl implements ExtendedDeploymentTask, ReferenceManagementServiceOperation {
@@ -252,6 +255,7 @@ public class ReferenceManagementServiceOperationImpl implements ExtendedDeployme
       List<Reference> referenceList = refs.stream().map(this::convertToReference).collect(Collectors.toList());
       builder.reference(referenceList);
       builder.objectValid(true);
+      builder.workspaceName(connection.getWorkspaceName());
       result.add(builder.instance());
       referenceMap.remove(obj.name);
     }
@@ -266,6 +270,7 @@ public class ReferenceManagementServiceOperationImpl implements ExtendedDeployme
       List<Reference> referenceList = refs.stream().map(this::convertToReference).collect(Collectors.toList());
       builder.reference(referenceList);
       builder.objectValid(false);
+      builder.workspaceName(connection.getWorkspaceName());
       result.add(builder.instance());
     }
     
@@ -281,5 +286,39 @@ public class ReferenceManagementServiceOperationImpl implements ExtendedDeployme
       this.name = name;
       this.type = type;
     }
+  }
+
+
+  @Override
+  public List<? extends IndexedReference> loadReferencesOfObject(IndexedObjectReference indexedReference) {
+    List<IndexedReference> result = new ArrayList<>();
+    ReferenceStorage storage = new ReferenceStorage();
+    Long revision = getRevision(indexedReference.getWorkspaceName());
+    List<ReferenceStorable> references = storage.getAllReferencesForWorkspace(revision);
+    int idx = 0;
+    for(ReferenceStorable reference : references) {
+      if(!reference.getObjectName().equals(indexedReference.getName())) {
+        continue;
+      }
+      IndexedReference.Builder builder = new IndexedReference.Builder();
+      builder.index(idx++);
+      Reference.Builder refBuilder = new Reference.Builder();
+      refBuilder.path(reference.getPath());
+      refBuilder.type(reference.getReftype());
+      builder.reference(refBuilder.instance());
+      result.add(builder.instance());
+    }
+    return result;
+  }
+
+
+  @Override
+  public List<? extends ReferenceMethodType> listReferenceMethodTypes() {
+    ReferenceType[] values = ReferenceType.values();
+    List<ReferenceMethodType> result = new ArrayList<>();
+    for (int i = 0; i < values.length; i++) {
+      result.add(new ReferenceMethodType.Builder().name(values[i].toString()).instance());
+    }
+    return result;
   }
 }
