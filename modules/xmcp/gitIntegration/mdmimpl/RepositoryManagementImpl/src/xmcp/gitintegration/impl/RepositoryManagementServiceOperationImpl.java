@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,6 +49,7 @@ import xprc.xpce.Workspace;
 import xmcp.gitintegration.RepositoryManagementServiceOperation;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
 import xmcp.gitintegration.impl.RepositoryManagementImpl.AddRepositoryConnectionResult;
+import xmcp.gitintegration.impl.tracking.CollectingTracker;
 import xmcp.gitintegration.repository.Branch;
 import xmcp.gitintegration.repository.BranchData;
 import xmcp.gitintegration.repository.ChangeSet;
@@ -303,6 +304,20 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+  }
+
+
+  @Override
+  public List<? extends Workspace> listUnconnectedWorkspaces() {
+    return new UnconnectedWorkspaceLister().listUnconnectedWorkspaces();
+  }
+
+
+  @Override
+  public void addLocalWorkspaceToRepository(RepositoryConnection repositoryConnection) {
+    CollectingTracker eventTracker = new CollectingTracker();
+    RepositoryManagementImpl.addLocalWorkspaceToRepository(repositoryConnection, eventTracker);
+    //TODO: create message containing enventTracker messages
   }
 
 }
