@@ -20,6 +20,9 @@ package com.gip.xyna.idgeneration;
 
 
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -29,11 +32,21 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.FunctionGroup;
 import com.gip.xyna.FutureExecution;
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xfmg.xclusteringservices.XynaClusteringServicesManagement;
+import com.gip.xyna.xnwh.persistence.ODSConnection;
+import com.gip.xyna.xnwh.persistence.ODSConnectionType;
 import com.gip.xyna.xnwh.persistence.ODSImpl;
 import com.gip.xyna.xnwh.persistence.ODSImpl.PersistenceLayerInstances;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceConfigurationChangeListener;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceInstance;
 import com.gip.xyna.xnwh.sharedresources.SharedResourceManagement;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceRequestResult;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceSynchronizer;
+import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoException;
+import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoResult;
+import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutor;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xprc.XynaProcessing;
 import com.gip.xyna.xprc.exceptions.XPRC_FACTORY_IS_SHUTTING_DOWN;
@@ -62,6 +75,8 @@ public class IDGenerator extends FunctionGroup {
 
   public static final String REALM_DEFAULT = "default";
   public static final String XYNA_IDGENERATION_SR = "xyna.idgeneration";
+
+  private final SharedResourceConfigurationChangeListener changeListener = new IdGenerationSharedResourceChangeListener();
 
 
   /**
@@ -127,17 +142,17 @@ public class IDGenerator extends FunctionGroup {
 
 
   private void initAlgorithm() {
+    try {
+      ODSImpl.getInstance().registerStorable(GeneratedIDsStorable.class);
+    } catch (PersistenceLayerException e) {
+      throw new RuntimeException(e);
+    }
     SharedResourceManagement sharedResourceManagement = XynaFactory.getInstance().getXynaNetworkWarehouse().getSharedResourceManagement();
-    sharedResourceManagement.addSharedResource(XYNA_IDGENERATION_SR);
+    sharedResourceManagement.addSharedResource(XYNA_IDGENERATION_SR, changeListener);
     if (sharedResourceManagement.hasConfiguredSynchronizer(XYNA_IDGENERATION_SR)) {
       logger.info("Using IdGenerationAlgorithmUsingBlocksAndSharedResources for ID generation.");
       idGenerationAlgorithm = new IdGenerationAlgorithmUsingBlocksAndSharedResources();
     } else {
-      try {
-        ODSImpl.getInstance().registerStorable(GeneratedIDsStorable.class);
-      } catch (PersistenceLayerException e) {
-        throw new RuntimeException(e);
-      }
       logger.info("Using IdGenerationAlgorithmUsingBlocksAndClusteredStorable for ID generation.");
       idGenerationAlgorithm = new IdGenerationAlgorithmUsingBlocksAndClusteredStorable();
     }
@@ -210,4 +225,107 @@ public class IDGenerator extends FunctionGroup {
     idGenerationAlgorithm.storeLastUsed(realm);
   }
 
+
+  private class IdGenerationSharedResourceChangeListener implements SharedResourceConfigurationChangeListener {
+
+    @Override
+    public void configurationChanged(SharedResourceSynchronizer from, SharedResourceSynchronizer to, boolean copyContent) {
+      
+      if (copyContent) {
+        List<Pair<String, Long>> data = loadData(from);
+        if (to == null) {
+          try {
+            WarehouseRetryExecutor.buildMinorExecutor()
+            .connection(ODSConnectionType.DEFAULT)
+            .storable(GeneratedIDsStorable.class)
+            .execute(new WarehouseRetryExecutableNoResult() {
+
+              @Override
+              public void executeAndCommit(ODSConnection con) throws PersistenceLayerException {
+                List<GeneratedIDsStorable> collection = new ArrayList<>();
+                int ownBinding = new GeneratedIDsStorable().getLocalBinding(ODSConnectionType.DEFAULT);
+                for(Pair<String, Long> instance : data) {
+                      String id = instance.getFirst();
+                      if (instance.getFirst().equals("default")) {
+                        id = "XynaFactory";
+                      }
+                  GeneratedIDsStorable storable = new GeneratedIDsStorable(id, instance.getFirst(), ownBinding);
+
+                  storable.setLastStoredId(instance.getSecond());
+                  collection.add(storable);
+                }
+                con.persistCollection(collection);
+              }
+            });
+          } catch (PersistenceLayerException e) {
+            throw new RuntimeException(e);
+          }
+        } else {
+          List<SharedResourceInstance<Long>> instances = new ArrayList<>();
+          Long now = System.currentTimeMillis();
+          for(Pair<String, Long> toCreate : data) {
+            instances.add(new SharedResourceInstance<Long>(toCreate.getFirst(), now, toCreate.getSecond()));
+          }
+          SharedResourceRequestResult<Long> result = to.create(IdGenerationAlgorithmUsingBlocksAndSharedResources.resource, instances);
+          if(!result.isSuccess()) {
+            throw new RuntimeException(result.getException());
+          }
+        }
+      }
+      try {
+        idGenerationAlgorithm.shutdown();
+      } catch (PersistenceLayerException e) {
+        throw new RuntimeException(e);
+      }
+      if (to != null) {
+        logger.info("Using IdGenerationAlgorithmUsingBlocksAndSharedResources for ID generation.");
+        idGenerationAlgorithm = new IdGenerationAlgorithmUsingBlocksAndSharedResources();
+      } else {
+        logger.info("Using IdGenerationAlgorithmUsingBlocksAndClusteredStorable for ID generation.");
+        idGenerationAlgorithm = new IdGenerationAlgorithmUsingBlocksAndClusteredStorable();
+      }
+
+      try {
+        idGenerationAlgorithm.init();
+      } catch(Exception e) {
+        throw new RuntimeException(e);
+      }
+    }
+
+    private List<Pair<String, Long>> loadData(SharedResourceSynchronizer from) {
+      List<Pair<String, Long>> data;
+      if(from == null) {
+        try {
+          data = WarehouseRetryExecutor.buildMinorExecutor()
+              .connection(ODSConnectionType.DEFAULT)
+              .storable(GeneratedIDsStorable.class)
+              .execute(new WarehouseRetryExecutableNoException<List<Pair<String, Long>>>() {
+
+                @Override
+                public List<Pair<String, Long>> executeAndCommit(ODSConnection con) throws PersistenceLayerException {
+                  Collection<GeneratedIDsStorable> data = con.loadCollection(GeneratedIDsStorable.class);
+                  List<Pair<String, Long>> result = new ArrayList<>();
+                  for(GeneratedIDsStorable instance : data) {
+                    result.add(new Pair<String, Long>(instance.getRealm(), instance.getLastStoredId()));
+                  }
+                  return result;
+                }
+                
+              });
+        } catch (PersistenceLayerException e) {
+          throw new RuntimeException(e);
+        }
+      } else {
+        SharedResourceRequestResult<Long> instances = from.readAll(IdGenerationAlgorithmUsingBlocksAndSharedResources.resource);
+        if(!instances.isSuccess()) {
+          throw new RuntimeException(instances.getException());
+        }
+        data = new ArrayList<>();
+        for(SharedResourceInstance<Long> instance : instances.getResources()) {
+          data.add(new Pair<String, Long>(instance.getId(), instance.getValue()));
+        }
+      }
+      return data;
+    }
+  }
 }

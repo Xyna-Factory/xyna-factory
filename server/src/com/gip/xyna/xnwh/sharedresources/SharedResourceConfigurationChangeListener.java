@@ -1,6 +1,6 @@
-<!--
+/*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<XynaCommandLineCommand>
-  <CommandDefinition Name="configuresharedresourcetype" Groups="Shared Resource Management" Description="Configures a shared resouce to the given shared resource synchronizer instance" />
-  <BoolOption Name="d" LongName="delete" Description="Delete the configuration" Optional="true"/>
-  <Argument Name="resourceType" Description="Type of the shared resource to configure."/>
-  <Argument Name="synchronizerInstanceName" Description="Name of the shared resource synchronizer instance." Optional="true"/>
-  <BoolOption Name="c" LongName="copy" Description="Copy content to new configuration" Optional="true"/>
-</XynaCommandLineCommand>
+ */
+package com.gip.xyna.xnwh.sharedresources;
+
+
+public interface SharedResourceConfigurationChangeListener {
+
+  /**
+   * called when the shared resource type configuration changes.
+   * from or to might be null, but not both.
+   */
+  public void configurationChanged(SharedResourceSynchronizer from, SharedResourceSynchronizer to, boolean copyContent);
+}
