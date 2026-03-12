@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -234,13 +234,13 @@
         <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.listUnconnectedWorkspaces();</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="Add Local Workspace to Repository" Name="addLocalWorkspaceToRepository">
+    <Operation IsStatic="true" Label="Add Local Workspace to Repository" Name="addLocalWorkspaceToRepository" RequiresXynaOrder="true">
       <Input>
         <Data ID="903" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection903"/>
       </Input>
       <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java">xmcp.gitintegration.RepositoryManagementImpl.addLocalWorkspaceToRepository(repositoryConnection903);</CodeSnippet>
+        <CodeSnippet Type="Java">xmcp.gitintegration.RepositoryManagementImpl.addLocalWorkspaceToRepository(correlatedXynaOrder, repositoryConnection903);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
