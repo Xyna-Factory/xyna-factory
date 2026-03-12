@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,12 +68,13 @@ public class ApplicationDefinitionProcessor implements WorkspaceContentProcessor
   private static final String TAG_CONTENTENTRY_TYPE = "type";
   private static final String TAG_CONTENTENTRY_FQNAME = "fqName";
 
-  private static final String TEMPORARY_SESSION_AUTHENTICATION_USERNAME_CREATE = "ApplicationDefinitionProcessor.create";
+	private static final String TEMPORARY_SESSION_AUTHENTICATION_USERNAME_CREATE = "ApplicationDefinitionProcessor.create";
 
-  private static final RevisionManagement revisionManagement =
-      XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
+  private static final RevisionManagement revisionManagement = XynaFactory.isFactoryServer() ? XynaFactory.getInstance()
+      .getFactoryManagement().getXynaFactoryControl().getRevisionManagement() : null;
   private static final ApplicationManagementImpl applicationManagement =
-      (ApplicationManagementImpl) XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getApplicationManagement();
+      XynaFactory.isFactoryServer() ? (ApplicationManagementImpl) XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl()
+          .getApplicationManagement() : null;
 
   private static final Set<ApplicationEntryType> xmomType =
       Set.of(ApplicationEntryType.WORKFLOW, ApplicationEntryType.DATATYPE, ApplicationEntryType.EXCEPTION);
@@ -108,8 +109,8 @@ public class ApplicationDefinitionProcessor implements WorkspaceContentProcessor
         wcd.setContentType(TAG_APPLICATIONDEFINITION);
         wcd.setExistingItem(fromEntry);
         wcd.setDifferenceType(toEntry == null ? new DELETE() : new MODIFY());
-        toWorkingList.remove(toEntry); // remove entry from to-list
-        boolean hasChanged = !Objects.equals(fromEntry.getDocumentation(), toEntry.getDocumentation())
+        toWorkingList.remove(toEntry); // remove entry from to-list, because it is not a new entry
+        boolean hasChanged = toEntry == null || !Objects.equals(fromEntry.getDocumentation(), toEntry.getDocumentation())
             || (!compareRuntimeContextDependencies(fromEntry, toEntry).isEmpty())
             || (!getNewContentEntries(fromEntry, toEntry).isEmpty()) 
             || (!getNewContentEntries(toEntry, fromEntry).isEmpty());
@@ -296,7 +297,7 @@ public class ApplicationDefinitionProcessor implements WorkspaceContentProcessor
     int tableCount = 0;
     for (WorkspaceContentDifference wcd : wcdList) {
       tableCount++;
-      if (tableCount > OutputCreator.TABLE_LIMIT) {
+      if (tableCount > OutputCreator.TABLE_LIMIT.get()) {
         appendTruncatedList(ds);
         break;
       }
@@ -324,7 +325,7 @@ public class ApplicationDefinitionProcessor implements WorkspaceContentProcessor
     tableCount = 0;
     for (ContentEntry ce : createEntries) {
       tableCount++;
-      if (tableCount > OutputCreator.TABLE_LIMIT) {
+      if (tableCount > OutputCreator.TABLE_LIMIT.get()) {
         appendTruncatedList(ds);
         break;
       }
@@ -334,7 +335,7 @@ public class ApplicationDefinitionProcessor implements WorkspaceContentProcessor
     }
     for (ContentEntry ce : deleteEntries) {
       tableCount++;
-      if (tableCount > OutputCreator.TABLE_LIMIT) {
+      if (tableCount > OutputCreator.TABLE_LIMIT.get()) {
         appendTruncatedList(ds);
         break;
       }

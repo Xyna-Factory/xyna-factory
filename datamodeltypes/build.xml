@@ -22,7 +22,7 @@
     <property name="xyna.dataModelType.TR069" value="true" />
     <property name="xyna.dataModelType.XSD" value="true" />
 
-    <import file="../installation/build/ant-xyna.xml" />
+    <import file="../installation/build/macros.xml" />
 
     <property name="target.dir" value="${basedir}/deploy" />
 

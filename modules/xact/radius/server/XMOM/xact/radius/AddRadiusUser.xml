@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Add Radius User" TypeName="AddRadiusUser" TypePath="xact.radius" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Add Radius User" Name="AddRadiusUser">
+    <Input>
+      <Data ID="34" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser34"/>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="AES Crypto Exception" ReferenceName="AESCryptoException" ReferencePath="xint.crypto.exceptions" VariableName="aESCryptoException8026"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException8027"/>
+    </Throws>
+    <ServiceReference ID="1327" Label="Store" ReferenceName="Store" ReferencePath="xnwh.persistence">
+      <Source RefID="1326"/>
+      <Target RefID="1326"/>
+    </ServiceReference>
+    <ServiceReference ID="174" Label="AES Crypto" ReferenceName="AESCrypto.AESCrypto" ReferencePath="xint.crypto">
+      <Source RefID="173"/>
+      <Target RefID="173"/>
+    </ServiceReference>
+    <ServiceReference ID="1969" Label="AES Crypto" ReferenceName="AESCrypto.AESCrypto" ReferencePath="xint.crypto">
+      <Source RefID="1968"/>
+      <Target RefID="1968"/>
+    </ServiceReference>
+    <Mappings ID="14" Label="Update Timestamp">
+      <Input>
+        <Data ID="15" Label="Now" ReferenceName="Now" ReferencePath="base.date" VariableName="now15"/>
+        <Source RefID="16">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="73" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser73">
+          <Source RefID="14"/>
+        </Data>
+        <Source RefID="34"/>
+      </Input>
+      <Output>
+        <Data ID="280" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser280">
+          <Source RefID="14"/>
+        </Data>
+        <Target RefID="281"/>
+      </Output>
+      <Mapping>%2%=%1%</Mapping>
+      <Mapping>%2%.timestamp=%0%.toMillis()</Mapping>
+    </Mappings>
+    <Mappings ID="211" Label="Get Data to Encrypt">
+      <Input>
+        <Data ID="90" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser90">
+          <Source RefID="14"/>
+        </Data>
+        <Source RefID="281">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="5020" Label="Xyna Property xact.radius.aes.keyName" ReferenceName="XynaPropertyString" ReferencePath="xfmg.xods.configuration" VariableName="xynaPropertyString5020">
+          <Source RefID="211"/>
+        </Data>
+        <Source RefID="5105">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="5665" Label="Xyna Property xact.radius.aes.keySize" ReferenceName="XynaPropertyInteger" ReferencePath="xfmg.xods.configuration" VariableName="xynaPropertyInteger5665">
+          <Source RefID="211"/>
+        </Data>
+        <Source RefID="7949">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="410" Label="Password" ReferenceName="Text" ReferencePath="base" VariableName="text410">
+          <Source RefID="211"/>
+        </Data>
+        <Target RefID="411"/>
+      </Output>
+      <Output>
+        <Data ID="1645" Label="Shared Secret" ReferenceName="Text" ReferencePath="base" VariableName="text1645">
+          <Source RefID="211"/>
+        </Data>
+        <Target RefID="1646"/>
+      </Output>
+      <Output>
+        <Data ID="686" Label="AES Crypto Parameter" ReferenceName="AESCryptoParameter" ReferencePath="xint.crypto.parameter" VariableName="aESCryptoParameter686">
+          <Source RefID="211"/>
+        </Data>
+        <Target RefID="687"/>
+      </Output>
+      <Mapping>%3%.text=%0%.password</Mapping>
+      <Mapping>%4%.text=%0%.sharedSecret</Mapping>
+      <Mapping>%5%.secureStorageIdentifier=%1%.get()</Mapping>
+      <Mapping>%5%.keySize=%2%.get()</Mapping>
+    </Mappings>
+    <Function ID="173" Label="AES Encrypt Password">
+      <Source RefID="174"/>
+      <Source RefID="411"/>
+      <Source RefID="687"/>
+      <Target RefID="174"/>
+      <Target RefID="3378"/>
+      <Invoke Operation="aESEncrypt" ServiceID="174">
+        <Source RefID="411">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="687"/>
+      </Invoke>
+      <Receive ServiceID="174">
+        <Target RefID="3378"/>
+      </Receive>
+    </Function>
+    <Choice ID="3287" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="1646"/>
+      <Target RefID="4941"/>
+      <Input>
+        <Data ID="3633" Label="Shared Secret" ReferenceName="Text" ReferencePath="base" VariableName="text3633">
+          <Source RefID="3287"/>
+        </Data>
+        <Source RefID="1646">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="3288" Label="true" Premise="%0%.text==null">
+        <Mappings ID="4297" Label="Set Encrypted Data">
+          <Input>
+            <Data ID="4298" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser4298"/>
+            <Source RefID="281">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Input>
+            <Data ID="4299" Label="Encrypted Password" ReferenceName="Text" ReferencePath="base" VariableName="text4299"/>
+            <Source RefID="3378">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="4301" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser4301"/>
+            <Target RefID="4302"/>
+          </Output>
+          <Mapping>%2%=%0%</Mapping>
+          <Mapping>%2%.password=%1%.text</Mapping>
+        </Mappings>
+        <Assign ID="3291">
+          <Source RefID="4302"/>
+          <Target RefID="4941"/>
+          <Copy>
+            <Source RefID="4302"/>
+            <Target RefID="4941"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="3289" Label="false">
+        <Function ID="1968" Label="AES Encrypt Shared Secret">
+          <Source RefID="1969"/>
+          <Source RefID="1646"/>
+          <Source RefID="687"/>
+          <Target RefID="1969"/>
+          <Target RefID="3548"/>
+          <Invoke Operation="aESEncrypt" ServiceID="1969">
+            <Source RefID="1646">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+            <Source RefID="687"/>
+          </Invoke>
+          <Receive ServiceID="1969">
+            <Target RefID="3548"/>
+          </Receive>
+        </Function>
+        <Mappings ID="960" Label="Set Encrypted Data">
+          <Input>
+            <Data ID="963" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser963"/>
+            <Source RefID="281">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Input>
+            <Data ID="1196" Label="Encrypted Password" ReferenceName="Text" ReferencePath="base" VariableName="text1196">
+              <Source RefID="960"/>
+            </Data>
+            <Source RefID="3378">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Input>
+            <Data ID="2415" Label="Encrypted Shared Secret" ReferenceName="Text" ReferencePath="base" VariableName="text2415">
+              <Source RefID="960"/>
+            </Data>
+            <Source RefID="3548">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="964" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser964"/>
+            <Target RefID="4212"/>
+          </Output>
+          <Mapping>%3%=%0%</Mapping>
+          <Mapping>%3%.password=%1%.text</Mapping>
+          <Mapping>%3%.sharedSecret=%2%.text</Mapping>
+        </Mappings>
+        <Assign ID="3293">
+          <Source RefID="4212"/>
+          <Target RefID="4941"/>
+          <Copy>
+            <Source RefID="4212"/>
+            <Target RefID="4941"/>
+          </Copy>
+        </Assign>
+        <Data ID="3548" Label="Encrypted String" ReferenceName="Text" ReferencePath="base" VariableName="text3548">
+          <Source RefID="1968"/>
+        </Data>
+        <Data ID="4212" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser4212"/>
+      </Case>
+    </Choice>
+    <Function ID="1326" Label="Store">
+      <Source RefID="1327"/>
+      <Source RefID="4941"/>
+      <Source RefID="1516"/>
+      <Target RefID="1327"/>
+      <Target RefID="1329"/>
+      <Invoke Operation="Store" ServiceID="1327">
+        <Source RefID="4941">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+            <ExpectedType>xact.radius.RadiusUser</ExpectedType>
+          </Meta>
+        </Source>
+        <Source RefID="1516">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="1327">
+        <Target RefID="1329"/>
+      </Receive>
+    </Function>
+    <Data ID="16" ReferenceName="Now" ReferencePath="base.date" VariableName="now16">
+      <Data VariableName="date">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>2026-01-30 13:45:16</Value>
+      </Data>
+    </Data>
+    <Data ID="281" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser281">
+      <Source RefID="14"/>
+    </Data>
+    <Data ID="411" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text411">
+      <Source RefID="211"/>
+    </Data>
+    <Data ID="687" Label="AES Crypto Parameter" ReferenceName="AESCryptoParameter" ReferencePath="xint.crypto.parameter" VariableName="aESCryptoParameter687">
+      <Source RefID="211"/>
+    </Data>
+    <Data ID="1329" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable1329">
+      <Source RefID="1326"/>
+      <Source RefID="6"/>
+    </Data>
+    <Data ID="1516" Label="Store parameter" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="const_StoreParameter1516">
+      <Data VariableName="historizePreviousObject">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data VariableName="keepMetaFieldData">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data VariableName="forceRecursiveStore">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+    </Data>
+    <Data ID="1646" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text1646">
+      <Source RefID="211"/>
+    </Data>
+    <Data ID="3378" Label="Encrypted String" ReferenceName="Text" ReferencePath="base" VariableName="text3378">
+      <Source RefID="173"/>
+    </Data>
+    <Data ID="4302" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser4302"/>
+    <Data ID="4941" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser4941">
+      <Source RefID="3287"/>
+    </Data>
+    <Data ID="5105" Label="Xyna Property String" ReferenceName="XynaPropertyString" ReferencePath="xfmg.xods.configuration" VariableName="const_XynaPropertyString5105">
+      <Data VariableName="propertyName">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>xact.radius.aes.keyName</Value>
+      </Data>
+      <Data ReferenceName="ThrowException" ReferencePath="xfmg.xods.configuration.parameter" VariableName="behaviourIfPropertyNotSet"/>
+    </Data>
+    <Data ID="7949" Label="Xyna Property Integer" ReferenceName="XynaPropertyInteger" ReferencePath="xfmg.xods.configuration" VariableName="const_XynaPropertyInteger7949">
+      <Data VariableName="propertyName">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>xact.radius.aes.keySize</Value>
+      </Data>
+      <Data VariableName="value">
+        <Meta>
+          <Type>Integer</Type>
+        </Meta>
+        <Value>256</Value>
+      </Data>
+      <Data ReferenceName="UseValue" ReferencePath="xfmg.xods.configuration.parameter" VariableName="behaviourIfPropertyNotSet"/>
+    </Data>
+    <Assign ID="1"/>
+  </Operation>
+</Service>

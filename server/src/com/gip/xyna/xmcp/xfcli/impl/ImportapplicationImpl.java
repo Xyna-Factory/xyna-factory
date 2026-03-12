@@ -63,6 +63,7 @@ public class ImportapplicationImpl extends XynaCommandImplementation<Importappli
          .stopIfExistingAndRunning(payload.getStop())
          .xynaPropertiesImportSettings(!eis.isIncludeXynaProperties(), payload.getImportOnlyXynaProperties())
          .capacitiesImportSettings(!eis.isIncludeCapacities(), payload.getImportOnlyCapacities())
+         .keepExistingCapacities(eis.isKeepExistingCapacities())
          .clusterwide(payload.getGlobal())
          .regenerateCode(payload.getRegenerate())
          .verbose(payload.getVerbose())
@@ -87,6 +88,7 @@ public class ImportapplicationImpl extends XynaCommandImplementation<Importappli
   private static class ExcludeIncludeSetttings {
     boolean includeXynaProperties = false;
     boolean includeCapacities = false;
+    boolean keepExistingCapacities = false; 
     
     boolean capacitiesConfigured = false;
     boolean xynapropertiesConfigured = false;
@@ -100,6 +102,10 @@ public class ImportapplicationImpl extends XynaCommandImplementation<Importappli
        return includeCapacities;
     }
 
+    public boolean isKeepExistingCapacities() {
+       return keepExistingCapacities;
+    }
+    
     public boolean isIncludeXynaProperties() {
       return includeXynaProperties;
     }
@@ -113,8 +119,22 @@ public class ImportapplicationImpl extends XynaCommandImplementation<Importappli
         xynapropertiesConfigured = true;
       }
       if (payload.getIncludeCapacities()) {
+        if (payload.getIncludeCapacitiesKeepExisting()) {
+          throw new IllegalArgumentException("Contradictory parameters: IncludeCapacities and IncludeCapacitiesKeepExisting" +
+                                             " cannot both be set.");
+        }
         includeCapacities = true;
         capacitiesConfigured = true;
+        keepExistingCapacities = false;
+      }
+      if (payload.getIncludeCapacitiesKeepExisting()) {
+        if (payload.getIncludeCapacities()) {
+          throw new IllegalArgumentException("Contradictory parameters: IncludeCapacities and IncludeCapacitiesKeepExisting" +
+                                             " cannot both be set.");
+        }
+        includeCapacities = true;
+        capacitiesConfigured = true;
+        keepExistingCapacities = true;
       }
       
       if (payload.getExcludeCapacities()) {

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Recent OAS Import History Definition" TypeName="GetRecentOASImportHistoryDefinition" TypePath="xmcp.oas.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Get Recent OAS Import History Definition" Name="GetRecentOASImportHistoryDefinition">
+    <Input/>
+    <Output>
+      <Data ID="14" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition14"/>
+    </Output>
+    <ServiceReference ID="8471" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="8470"/>
+      <Target RefID="8470"/>
+    </ServiceReference>
+    <Function ID="8470" Label="get Own RuntimeContext">
+      <Source RefID="8471"/>
+      <Target RefID="8471"/>
+      <Target RefID="8473"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="8471"/>
+      <Receive ServiceID="8471">
+        <Target RefID="8473"/>
+      </Receive>
+    </Function>
+    <Mappings ID="2265" Label="Table Panel">
+      <Input>
+        <Data ID="16108" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext16108">
+          <Source RefID="2265"/>
+        </Data>
+        <Source RefID="8473"/>
+      </Input>
+      <Output>
+        <Data ID="2274" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition2274">
+          <Source RefID="2265"/>
+        </Data>
+        <Target RefID="2275"/>
+      </Output>
+      <Mapping>%1%.dataPath="%%"</Mapping>
+      <Mapping>%1%.label="Recent OAS Imports"</Mapping>
+      <Mapping>%1%.tableWorkflowFQN="xmcp.oas.fman.RecentOASImportTableInfo"</Mapping>
+      <Mapping>%1%.triggerRefresh.eventId="oas_imp_hist_refresh"</Mapping>
+      <Mapping>%1%.tableWorkflowRTC=%0%</Mapping>
+      <Mapping>%1%.closable="false"</Mapping>
+    </Mappings>
+    <Data ID="2275" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition2275">
+      <Source RefID="2265"/>
+    </Data>
+    <Data ID="8473" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext8473">
+      <Source RefID="8470"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="2275"/>
+      <Target RefID="14"/>
+      <Copy>
+        <Source RefID="2275"/>
+        <Target RefID="14"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

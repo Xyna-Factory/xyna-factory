@@ -1,0 +1,52 @@
+module test_module_zb_1_a {
+  yang-version 1.1;
+  namespace "http://www.gip.com/xyna/yang/test/testrpc_zb_1";
+  prefix "b2";
+  revision 2025-04-08;
+
+  rpc testrpc_zb_1_a {
+    input {
+      uses group_a;
+    }
+  }
+  
+  grouping group_a {
+    container a_root {
+      container a1 {
+        leaf b1 {
+          type string;
+        }
+        leaf b2 {
+          type string;
+        }
+        leaf b3 {
+          type string;
+        }
+      }
+      container a2 {
+        leaf c1 {
+          type string;
+        }
+        leaf c2 {
+          type string;
+        }
+        leaf c3 {
+          type string;
+          description "This is the description for leaf c3";
+        }
+      }
+      container a3 {
+        leaf d1 {
+          type string;
+        }
+        leaf d2 {
+          type string;
+        }
+        leaf d3 {
+          type string;
+        }
+      }
+    }
+  }
+  
+}

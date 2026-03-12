@@ -18,6 +18,7 @@
 package xdev.yang.impl.operation;
 
 
+import java.util.List;
 
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.xact.trigger.RunnableForFilterAccess;
@@ -33,9 +34,13 @@ import xact.http.enums.httpmethods.HTTPMethod;
 import xdev.yang.OperationCreationParameter;
 import xdev.yang.impl.Constants;
 import xdev.yang.impl.GuiHttpInteraction;
+import xdev.yang.impl.YangCapabilityUtils;
+import xdev.yang.impl.YangCapabilityUtils.YangDeviceCapability;
+import xdev.yang.impl.operation.OperationAssignmentUtils.YangStatementInfo;
 import xmcp.processmodeller.datatypes.response.GetDataTypeResponse;
 import xmcp.processmodeller.datatypes.response.UpdateXMOMItemResponse;
-
+import org.yangcentral.yangkit.model.api.stmt.Module;
+import org.yangcentral.yangkit.model.api.stmt.YangStatement;
 
 
 public class AddOperation {
@@ -58,11 +63,21 @@ public class AddOperation {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+    List<YangDeviceCapability> moduleCapabilities = YangCapabilityUtils.loadCapabilities(parameter.getDeviceFqn(), workspace);
+    List<Module> filteredModules = OperationAssignmentUtils.loadModules(workspace, moduleCapabilities);
+    boolean isConfig = parameter.getIsRpc() ? true : getIsConfig(parameter.getYangTagName(), filteredModules);
 
-    addOperationToDatatype(order, parameter);
+    addOperationToDatatype(order, parameter, isConfig, filteredModules);
+
     try (Operation result = Operation.open(order, fqn, workspace, operation)) {
-      result.addInput("MessageId", "xmcp.yang.MessageId");
-      result.addOutput("xact.templates.Document");
+      if (parameter.getIsRpc()) {
+        result.addInput("MessageId", "xmcp.yang.MessageId");
+        result.addInput(Constants.RPC_NETCONF_INPUT_NAME, "xact.templates.NETCONF");
+        result.addOutput("Document", "xact.templates.Document");
+      } else {
+        result.addInput("YangMappingCollection", "xmcp.yang.YangMappingCollection");
+        result.addOutput("YangMappingCollection", "xmcp.yang.YangMappingCollection");
+      }
       result.updateImplementation("return null;");
       result.save();
     } catch (Exception e) {
@@ -71,14 +86,33 @@ public class AddOperation {
   }
 
 
-  private static String createMetaTag(String deviceFqn, String rpc, String rpcNs) {
+  private boolean getIsConfig(String tagName, List<Module> filteredModules) {
+    List<YangStatement> rootStatements = OperationAssignmentUtils.findRootLevelStatements(filteredModules, tagName);
+    YangSubelementContentHelper helper = new YangSubelementContentHelper();
+    for(YangStatement candidate : rootStatements) {
+      if(tagName.equals(candidate.getArgStr())) {
+        return helper.getConfigSubelementValueBoolean(candidate);
+      }
+    }
+    throw new RuntimeException("Could not find " + tagName + " in root tags.");
+  }
+
+
+  private static String createMetaTag(String deviceFqn, String tag, String nsp, boolean isRpc, String keyword, boolean isConfig) {
     XmlBuilder builder = new XmlBuilder();
     builder.startElementWithAttributes(Constants.TAG_YANG);
     builder.addAttribute(Constants.ATT_YANG_TYPE, Constants.VAL_OPERATION);
     builder.endAttributes();
-    builder.element(Constants.TAG_RPC, rpc);
-    builder.element(Constants.TAG_RPC_NS, rpcNs);
+    if (isRpc) {
+      builder.element(Constants.TAG_RPC, tag);
+      builder.element(Constants.TAG_RPC_NS, nsp);
+    } else {
+      builder.element(Constants.TAG_YANG_TAG, tag);
+      builder.element(Constants.TAG_YANG_TAG_NS, nsp);
+    }
+    builder.element(Constants.TAG_YANG_TAG_KEYWORD, keyword);
     builder.element(Constants.TAG_DEVICE_FQN, deviceFqn);
+    builder.element(Constants.TAG_IS_CONFIG, String.valueOf(isConfig));
     builder.element(Constants.TAG_LISTCONFIGS);
     builder.startElementWithAttributes(Constants.TAG_SIGNATURE);
     builder.addAttribute(Constants.ATT_SIGNATURE_LOCATION, Constants.VAL_LOCATION_INPUT);
@@ -128,16 +162,21 @@ public class AddOperation {
     GuiHttpInteraction.executeRunnable(runnable, url, GuiHttpInteraction.METHOD_PUT, payload, "Could not add supertype to datatype.");
   }
   
-  public static void addOperationToDatatype(XynaOrderServerExtension order, OperationCreationParameter parameter) {
-    String rpcNs = parameter.getRpcNamespace();
+  private static void addOperationToDatatype(XynaOrderServerExtension order, OperationCreationParameter parameter,
+                                             boolean isConfig, List<Module> filteredModules) {
+    String tagNsp = parameter.getYangTagNamespace();
     String deviceFqn = parameter.getDeviceFqn();
-    String rpc = parameter.getRpc();
+    String tag = parameter.getYangTagName();
     String workspaceName = parameter.getWorkspaceName();
     String fqn = parameter.getOperationGroupFqn();
     String label = fqn.substring(fqn.lastIndexOf(".") + 1);
     String path = fqn.substring(0, fqn.lastIndexOf("."));
     String operation = parameter.getOperationName();
-    rpcNs = rpcNs == null || rpcNs.isBlank() ? OperationAssignmentUtils.loadRpcNs(rpc, deviceFqn, workspaceName) : rpcNs;
+    boolean isRpc = parameter.getIsRpc();
+    
+    YangStatementInfo ysi = OperationAssignmentUtils.loadTagInfo(tag, isRpc, filteredModules);
+    String loadedNsp = ysi.namespace;
+    tagNsp = (tagNsp == null || tagNsp.isBlank()) ? loadedNsp : tagNsp;
 
     UpdateXMOMItemResponse json = createService(order, parameter);
     String serviceNumber = String.valueOf(GuiHttpInteraction.loadServiceId(json, operation));
@@ -145,7 +184,7 @@ public class AddOperation {
       throw new RuntimeException("could not add service " + operation + " to datatype " + path + "." + label);
     }
     
-    String meta = createMetaTag(deviceFqn, rpc, rpcNs);
+    String meta = createMetaTag(deviceFqn, tag, tagNsp, isRpc, ysi.keyword, isConfig);
     meta = meta.replaceAll("\n", "\\\\n").replaceAll("\"", "\\\\\"");
     GuiHttpInteraction.setMetaTag(path, label, workspaceName, operation, meta, order);
     
@@ -153,8 +192,6 @@ public class AddOperation {
   }
 
   
-
-
   private static UpdateXMOMItemResponse createService(XynaOrderServerExtension order, OperationCreationParameter parameter) {
     String operation = parameter.getOperationName();
     String workspaceNameEscaped = GuiHttpInteraction.urlEncode(parameter.getWorkspaceName());

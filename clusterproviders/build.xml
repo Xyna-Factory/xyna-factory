@@ -18,7 +18,10 @@
 -->
 <project name="build_clusterproviders" default="build" basedir=".">
 
-  <import file="../installation/build/ant-xyna.xml" />
+  <property name="root.dir" value="${basedir}/../" />
+  
+  <import file="../installation/build/macros.xml" />
+  <import file="../installation/build/buildTests.xml" />
 
   <property name="clusterproviders.layers.token" value="&lt;!-- Clusterproviders (do not modify this line. it is used by the buildscripts to include clusterproviders) -->" />
 

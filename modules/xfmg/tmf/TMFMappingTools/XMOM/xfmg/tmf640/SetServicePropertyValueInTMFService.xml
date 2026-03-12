@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Set Service Property Value in TMF Service" TypeName="SetServicePropertyValueInTMFService" TypePath="xfmg.tmf640" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Set Service Property Value in TMF Service" Name="SetServicePropertyValueInTMFService">
+    <Input>
+      <Data ID="2" Label="Service" ReferenceName="Service" ReferencePath="tmf640.datamodel" VariableName="service2"/>
+      <Data ID="7" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember7"/>
+      <Data ID="12" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable12"/>
+    </Input>
+    <Output/>
+    <ServiceReference ID="27" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="26"/>
+      <Target RefID="26"/>
+    </ServiceReference>
+    <ServiceReference ID="768" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
+      <Source RefID="767"/>
+      <Target RefID="767"/>
+    </ServiceReference>
+    <ServiceReference ID="6422" Label="List Utils Ext" ReferenceName="ListUtilsExt.ListUtilsExt" ReferencePath="xprc.base.list">
+      <Source RefID="6421"/>
+      <Target RefID="6421"/>
+    </ServiceReference>
+    <ServiceReference ID="5173" Label="Named Variable Member" ReferenceName="NamedVariableMember.NamedVariableMember" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="5172"/>
+      <Target RefID="5172"/>
+    </ServiceReference>
+    <ServiceReference ID="117" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
+      <Source RefID="116"/>
+      <Target RefID="116"/>
+    </ServiceReference>
+    <ServiceReference ID="64" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="63"/>
+      <Target RefID="63"/>
+    </ServiceReference>
+    <Function ID="26" Label="Inspect Datatype">
+      <Source RefID="27"/>
+      <Source RefID="2"/>
+      <Target RefID="27"/>
+      <Target RefID="29"/>
+      <Invoke Operation="inspectDatatype" ServiceID="27">
+        <Source RefID="2">
+          <Meta>
+            <ExpectedType>tmf640.datamodel.Service</ExpectedType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="27">
+        <Target RefID="29"/>
+      </Receive>
+    </Function>
+    <Function ID="63" Label="List All Variable Members With Params">
+      <Source RefID="64"/>
+      <Source RefID="29"/>
+      <Source RefID="3289"/>
+      <Target RefID="64"/>
+      <Target RefID="66"/>
+      <Invoke Operation="listAllVariableMembersWithParams" ServiceID="64">
+        <Source RefID="29"/>
+        <Source RefID="3289">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="64">
+        <Target RefID="66"/>
+      </Receive>
+    </Function>
+    <Mappings ID="299" Label="Mapping">
+      <Input>
+        <Data ID="484" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable484">
+          <Source RefID="299"/>
+        </Data>
+        <Source RefID="12"/>
+      </Input>
+      <Output>
+        <Data ID="332" Label="Filter Member Variable by Label" ReferenceName="FilterMemberVariableByLabel" ReferencePath="xfmg.tmf.inspect" VariableName="filterMemberVariableByLabel332">
+          <Source RefID="299"/>
+        </Data>
+        <Target RefID="333"/>
+      </Output>
+      <Mapping>%1%.label=%0%.tMFServicePropertyAnnotations.propertyName</Mapping>
+    </Mappings>
+    <Function ID="116" Label="Filter">
+      <Source RefID="117"/>
+      <Source RefID="66"/>
+      <Source RefID="333"/>
+      <Target RefID="117"/>
+      <Target RefID="119"/>
+      <Invoke Operation="filter" ServiceID="117">
+        <Source RefID="66">
+          <Meta>
+            <ExpectedType>xprc.xpce.datatype.NamedVariableMember</ExpectedType>
+          </Meta>
+        </Source>
+        <Source RefID="333">
+          <Meta>
+            <ExpectedType>xfmg.tmf.inspect.FilterMemberVariableByLabel</ExpectedType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="117">
+        <Target RefID="119">
+          <Meta>
+            <ExpectedType>xprc.xpce.datatype.NamedVariableMember</ExpectedType>
+          </Meta>
+        </Target>
+      </Receive>
+    </Function>
+    <Function ID="767" Label="Sort">
+      <Source RefID="768"/>
+      <Source RefID="119"/>
+      <Source RefID="922"/>
+      <Target RefID="768"/>
+      <Target RefID="770"/>
+      <Invoke Operation="sort" ServiceID="768">
+        <Source RefID="119">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+            <ExpectedType>xprc.xpce.datatype.NamedVariableMember</ExpectedType>
+          </Meta>
+        </Source>
+        <Source RefID="922">
+          <Meta>
+            <LinkType>Constant</LinkType>
+            <ExpectedType>xfmg.tmf.inspect.SortByVarNameLength</ExpectedType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="768">
+        <Target RefID="770">
+          <Meta>
+            <ExpectedType>xprc.xpce.datatype.NamedVariableMember</ExpectedType>
+          </Meta>
+        </Target>
+      </Receive>
+    </Function>
+    <Mappings ID="1298" Label="Mapping">
+      <Input>
+        <Data ID="2691" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember2691">
+          <Source RefID="1298"/>
+        </Data>
+        <Source RefID="7">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="1383" Label="Wrapper" ReferenceName="Text" ReferencePath="base" VariableName="text1383">
+          <Source RefID="1298"/>
+        </Data>
+        <Target RefID="1384"/>
+      </Output>
+      <Mapping>%1%.text=%0%.getMemberValue()</Mapping>
+    </Mappings>
+    <Function ID="6421" Label="Extract First Element">
+      <Source RefID="6422"/>
+      <Source RefID="770"/>
+      <Target RefID="6422"/>
+      <Target RefID="6424"/>
+      <Invoke Operation="extractFirstElement" ServiceID="6422">
+        <Source RefID="770">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+            <ExpectedType>xprc.xpce.datatype.NamedVariableMember</ExpectedType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="6422">
+        <Target RefID="6424">
+          <Meta>
+            <ExpectedType>xprc.xpce.datatype.NamedVariableMember</ExpectedType>
+          </Meta>
+        </Target>
+      </Receive>
+    </Function>
+    <Function ID="5172" Label="Set Member Value Wrapped">
+      <Source RefID="5173"/>
+      <Source RefID="6424"/>
+      <Source RefID="1384"/>
+      <Target RefID="5173"/>
+      <Invoke Operation="setMemberValueWrapped" ServiceID="5173">
+        <Source RefID="6424">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="1384"/>
+      </Invoke>
+      <Receive ServiceID="5173"/>
+    </Function>
+    <Data ID="29" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector29">
+      <Source RefID="26"/>
+    </Data>
+    <Data ID="66" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember66">
+      <Source RefID="63"/>
+    </Data>
+    <Data ID="119" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember119"/>
+    <Data ID="333" Label="Filter Member Variable by Label" ReferenceName="FilterMemberVariableByLabel" ReferencePath="xfmg.tmf.inspect" VariableName="filterMemberVariableByLabel333">
+      <Source RefID="299"/>
+    </Data>
+    <Data ID="770" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember770"/>
+    <Data ID="922" Label="Sort by Var Name Length" ReferenceName="SortByVarNameLength" ReferencePath="xfmg.tmf.inspect" VariableName="const_SortByVarNameLength922"/>
+    <Data ID="1384" Label="Wrapper" ReferenceName="Text" ReferencePath="base" VariableName="text1384">
+      <Source RefID="1298"/>
+    </Data>
+    <Data ID="3289" Label="Inspection Parameter" ReferenceName="InspectionParameter" ReferencePath="xprc.xpce.datatype" VariableName="const_InspectionParameter3289"/>
+    <Data ID="6424" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember6424"/>
+    <Assign ID="1"/>
+  </Operation>
+</Service>

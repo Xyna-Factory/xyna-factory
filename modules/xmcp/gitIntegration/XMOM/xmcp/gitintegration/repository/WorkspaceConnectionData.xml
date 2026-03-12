@@ -34,4 +34,9 @@
       <Type>boolean</Type>
     </Meta>
   </Data>
+  <Data Label="Setup" VariableName="setup">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
 </DataType>

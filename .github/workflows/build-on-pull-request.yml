@@ -32,6 +32,7 @@ jobs:
      - name: build basic factory
        run: |
           cd installation
+          ./build.sh install_libs
           ./build.sh build
 
      - name: build changed modules

@@ -18,41 +18,41 @@
 -->
 <project name="build" default="build" basedir="." >
 
-  <import file="../../installation/build/ant-xyna.xml" />
   <import file="../../installation/build/macros.xml" />
 
   <property name="project.name.local" value="XynaLocalMemoryPersistenceLayer" />
 
   <property name="target.dir" value="${basedir}/deploy" />
 
-        <path id="libraries">
-                <fileset dir="${basedir}/lib/xyna">
-                  <include name="**/*.jar" />
-                </fileset>
-        </path>
+  <path id="libraries">
+    <fileset dir="${basedir}/lib/xyna">
+      <include name="**/*.jar" />
+    </fileset>
+  </path>
 
 
   <!-- ================================= 
-	         target: build             
-	        ================================= -->
-  <target name="build" depends="buildMemoryPersistenceLayer,resolve">
+        target: build
+       ================================= -->
+  <target name="build" depends="resolve">
     <buildJar destfile="${target.dir}/${project.name.local}.jar" />
-  	<copy todir="${target.dir}">
-  	        <fileset dir="${basedir}/lib">
-  	          <include name="*.jar" />
-  	        </fileset>
-  	      </copy>
+    <copy todir="${target.dir}">
+      <fileset dir="${basedir}/lib">
+        <include name="*.jar" />
+      </fileset>
+    </copy>
   </target>
 
-  <target name="buildMemoryPersistenceLayer">
-  	<ant dir="../XynaMemoryPersistenceLayer" target="build">
-  		<property name="target.dir" value="${basedir}/lib"></property>
-  	</ant>
-  </target>
 
   <target name="resolve">
-    <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/lib/xyna" />
+    <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/lib/xyna" scopes="compile" />
+    <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/lib" scopes="runtime"/>
     <loadLicenses targetDir="${basedir}/lib" />
+  </target>
+
+
+  <target name="installMavenArtifact" depends="build" description="install artifact to maven repository">
+     <install-maven-artifact artifactFile="${target.dir}/${project.name.local}.jar" pomFile="${basedir}/pom.xml" />
   </target>
 
 </project>

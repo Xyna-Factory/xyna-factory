@@ -23,6 +23,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -507,20 +508,31 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
             .addSelectFunction(TABLE_PATH_INTERVAL, TimeControlledOrderTableEntry::getInterval)
             .addSelectFunction(TABLE_PATH_STATUS, TimeControlledOrderTableEntry::getStatus);
     try {
-      BatchProcessSelectImpl select = new BatchProcessSelectImpl();
+      List<TimeControlledOrderTableEntry> result = new ArrayList<>();
+      Long lowestBatchProcessId = Long.MAX_VALUE;
+      int batchProcessSearchLimit = (tableInfo.getLimit() != null) ? tableInfo.getLimit() : 1000;
+      while (true) {
+        BatchProcessSelectImpl select = new BatchProcessSelectImpl();
+        List<TableHelper.Filter> filters = filterFunction.apply(tableInfo);
+        filters.forEach(f -> addWhereClause(tableHelper, select, f));
+        select.addWhereClause(select.whereBatchProcessId().isSmallerThan(lowestBatchProcessId));
 
-      List<TableHelper.Filter> filters = filterFunction.apply(tableInfo);
-      filters.forEach(f -> addWhereClause(tableHelper, select, f));
-
-      List<BatchProcessInformation> batchProcessInformations = batchProcessManagement.searchBatchProcesses(select, (tableInfo.getLimit() != null) ? tableInfo.getLimit() : -1).getResult();
-      List<TimeControlledOrderTableEntry> result = batchProcessInformations.stream()
-          .filter(bi -> filter.getShowArchived() != null && (bi.getMasterOrderCreationParameter() != null || filter.getShowArchived()))
-          .map(this::convertToTableEntry)
-          .filter(tableHelper.filter())
-          .collect(Collectors.toList());
-      tableHelper.sort(result);
-      return tableHelper.limit(result);
-    } catch (PersistenceLayerException ex) {
+        List<BatchProcessInformation> batchProcessInformation = batchProcessManagement.searchBatchProcesses(select, batchProcessSearchLimit).getResult();
+        List<TimeControlledOrderTableEntry> partialResult = batchProcessInformation.stream()
+            .filter(bi -> filter.getShowArchived() != null && (bi.getMasterOrderCreationParameter() != null || filter.getShowArchived()))
+            .map(this::convertToTableEntry)
+            .filter(tableHelper.filter())
+            .collect(Collectors.toList());
+        result.addAll(partialResult);
+        tableHelper.sort(result);
+        result = tableHelper.limit(result);
+        if (batchProcessInformation.size() == 0 || batchProcessInformation.size() < tableInfo.getLimit()) {
+          break;
+        }
+        lowestBatchProcessId = batchProcessInformation.get(batchProcessInformation.size() - 1).getBatchProcessId();
+      }
+      return result;
+    } catch (PersistenceLayerException | XNWH_WhereClauseBuildException ex) {
       throw new LoadTCOsException(ex.getMessage(), ex);
     }
   }
@@ -754,15 +766,6 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
         TableHelper.prepareQueryFilter(filter.getValue()).forEach(f -> {
           try {
             select.addWhereClause(select.whereApplication().isLike(f));
-          } catch (XNWH_WhereClauseBuildException ex) {
-            logger.error(ex.getMessage(), ex);
-          }
-        });
-        break;
-      case TABLE_PATH_ID:
-        TableHelper.prepareQueryFilter(filter.getValue()).forEach(f -> {
-          try {
-            select.addWhereClause(select.whereBatchProcessId().isLike(f));
           } catch (XNWH_WhereClauseBuildException ex) {
             logger.error(ex.getMessage(), ex);
           }

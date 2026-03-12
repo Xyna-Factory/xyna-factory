@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -106,7 +106,7 @@
             <dependency>
                 <groupId>com.gip.xyna</groupId>
                 <artifactId>OraclePersistenceLayer</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.1</version>
             </dependency>
             <dependency>
                 <groupId>com.gip.xyna</groupId>
@@ -126,7 +126,7 @@
             <dependency>
                 <groupId>com.gip.xyna</groupId>
                 <artifactId>xynafactory</artifactId>
-                <version>10.4.0.0</version>
+                <version>10.7.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.gip.xyna</groupId>
@@ -156,7 +156,7 @@
             <dependency>
                 <groupId>com.gip.xyna</groupId>
                 <artifactId>xynautils-exceptions</artifactId>
-                <version>4.0.0</version>
+                <version>4.0.1</version>
             </dependency>
             <dependency>
                 <groupId>com.gip.xyna</groupId>
@@ -175,6 +175,11 @@
             </dependency>
             <dependency>
                 <groupId>com.gip.xyna</groupId>
+                <artifactId>xynautils-xml</artifactId>
+                <version>3.0.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gip.xyna</groupId>
                 <artifactId>XynaXMLShellPersistenceLayer</artifactId>
                 <version>1.0.0</version>
             </dependency>
@@ -187,16 +192,6 @@
                 <groupId>com.hierynomus</groupId>
                 <artifactId>sshj</artifactId>
                 <version>0.39.0</version>
-            </dependency>
-            <dependency>
-                <groupId>com.ibm.mq</groupId>
-                <artifactId>com.ibm.mq.allclient</artifactId>                <!-- unfree -->
-                <version>9.4.1.1</version>
-            </dependency>
-            <dependency>
-                <groupId>com.ibm.mq</groupId>
-                <artifactId>com.ibm.mq.traceControl</artifactId>                <!-- unfree -->
-                <version>9.0.0.13</version>
             </dependency>
             <dependency>
                 <groupId>com.jcraft</groupId>
@@ -212,7 +207,7 @@
             <dependency>
                 <groupId>com.oracle.database.jdbc</groupId>
                 <artifactId>ojdbc11</artifactId>
-                <version>23.7.0.25.01</version>
+                <version>23.26.1.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.oracle.database.xml</groupId>
@@ -225,24 +220,9 @@
                 <version>21.8.0.0</version>
             </dependency>
             <dependency>
-                <groupId>com.sun</groupId>
-                <artifactId>tools</artifactId>
-                <version>1.6</version>
-            </dependency>
-            <dependency>
                 <groupId>com.sun.activation</groupId>
                 <artifactId>jakarta.activation</artifactId>
                 <version>1.2.1</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.jndi</groupId>
-                <artifactId>fscontext</artifactId>                <!-- unfree -->
-                <version>1.2</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.jndi</groupId>
-                <artifactId>providerutil</artifactId>                <!-- unfree -->
-                <version>1.2</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.mail</groupId>
@@ -257,12 +237,7 @@
             <dependency>
                 <groupId>commons-beanutils</groupId>
                 <artifactId>commons-beanutils</artifactId>
-                <version>1.9.4</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-beanutils</groupId>
-                <artifactId>commons-beanutils-core</artifactId>
-                <version>1.8.3</version>
+                <version>1.11.0</version>
             </dependency>
             <dependency>
                 <groupId>commons-cli</groupId>
@@ -282,7 +257,7 @@
             <dependency>
                 <groupId>commons-fileupload</groupId>
                 <artifactId>commons-fileupload</artifactId>
-                <version>1.5</version>
+                <version>1.6.0</version>
             </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
@@ -290,9 +265,9 @@
                 <version>2.17.0</version>
             </dependency>
             <dependency>
-                <groupId>commons-lang</groupId>
-                <artifactId>commons-lang</artifactId>
-                <version>2.4</version>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.18.0</version>
             </dependency>
             <dependency>
                 <groupId>commons-logging</groupId>
@@ -313,16 +288,6 @@
                 <groupId>concurrent</groupId>
                 <artifactId>concurrent</artifactId>
                 <version>1.3.3</version>
-            </dependency>
-            <dependency>
-                <groupId>javax</groupId>
-                <artifactId>javaee-api</artifactId>
-                <version>5.0-2</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.jms</groupId>
-                <artifactId>jms</artifactId>                <!-- unfree -->
-                <version>1.1</version>
             </dependency>
             <dependency>
                 <groupId>javax.sip</groupId>
@@ -347,32 +312,17 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>3.8.1</version>
+                <version>4.13.2</version>
             </dependency>
             <dependency>
                 <groupId>com.mysql</groupId>
                 <artifactId>mysql-connector-j</artifactId>
-                <version>9.2.0</version>
+                <version>9.6.0</version>
             </dependency>
             <dependency>
                 <groupId>org.mariadb.jdbc</groupId>
                 <artifactId>mariadb-java-client</artifactId>
-                <version>3.5.3</version>
-            </dependency>
-            <dependency>
-                <groupId>net.jradius</groupId>
-                <artifactId>jradius-core</artifactId>                <!-- unfree -->
-                <version>1.1.2</version>
-            </dependency>
-            <dependency>
-                <groupId>net.jradius</groupId>
-                <artifactId>jradius-dictionary</artifactId>                <!-- unfree -->
-                <version>1.1.2</version>
-            </dependency>
-            <dependency>
-                <groupId>net.jradius</groupId>
-                <artifactId>jradius-extended</artifactId>                <!-- unfree -->
-                <version>1.1.2</version>
+                <version>3.5.6</version>
             </dependency>
             <dependency>
                 <groupId>org.antlr</groupId>
@@ -382,7 +332,7 @@
             <dependency>
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>activemq-client</artifactId>
-                <version>5.17.6</version>
+                <version>5.17.7</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.geronimo.specs</groupId>
@@ -412,22 +362,22 @@
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-1.2-api</artifactId>
-                <version>2.24.1</version>
+                <version>2.25.3</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-api</artifactId>
-                <version>2.24.1</version>
+                <version>2.25.3</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-core</artifactId>
-                <version>2.24.1</version>
+                <version>2.25.3</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-slf4j-impl</artifactId>
-                <version>2.24.1</version>
+                <version>2.25.3</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.sshd</groupId>
@@ -443,6 +393,11 @@
                 <groupId>org.apache.velocity</groupId>
                 <artifactId>velocity-engine-core</artifactId>
                 <version>2.4.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.xmlbeans</groupId>
+                <artifactId>xmlbeans</artifactId>
+                <version>5.3.0</version>
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
@@ -475,19 +430,9 @@
                 <version>2.5.2</version>
             </dependency>
             <dependency>
-                <groupId>org.eclipse.jdt</groupId>
-                <artifactId>ecj</artifactId>
-                <version>I20181121gip</version>
-            </dependency>
-            <dependency>
                 <groupId>org.fusesource.hawtbuf</groupId>
                 <artifactId>hawtbuf</artifactId>
                 <version>1.11</version>
-            </dependency>
-            <dependency>
-                <groupId>org.gnu</groupId>
-                <artifactId>gnu-crypto</artifactId>                <!-- unfree -->
-                <version>2.0.1</version>
             </dependency>
             <dependency>
                 <groupId>org.jsmiparser</groupId>
@@ -527,7 +472,7 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>1.7.26</version>
+                <version>2.0.17</version>
             </dependency>
             <dependency>
                 <groupId>org.snmp4j</groupId>
@@ -574,6 +519,57 @@
                 <artifactId>yangkit-parser</artifactId>
                 <version>1.4.5</version>
             </dependency>
+            <dependency>
+                <groupId>com.jayway.jsonpath</groupId>
+                <artifactId>json-path</artifactId>
+                <version>2.9.0</version>
+            </dependency>
+            <dependency>
+                <groupId>net.minidev</groupId>
+                <artifactId>json-smart</artifactId>
+                <version>2.6.0</version>
+            </dependency>
+            <dependency>
+              <groupId>com.fasterxml.jackson.core</groupId>
+              <artifactId>jackson-core</artifactId>
+              <version>2.21.1</version>
+              <scope>runtime</scope>
+            </dependency>
+            <dependency>
+              <groupId>com.fasterxml.jackson.core</groupId>
+              <artifactId>jackson-annotations</artifactId>
+              <version>2.21</version>
+              <scope>runtime</scope>
+            </dependency>
+            <dependency>
+              <groupId>com.fasterxml.jackson.core</groupId>
+              <artifactId>jackson-databind</artifactId>
+              <version>2.21.1</version>
+              <scope>runtime</scope>
+            </dependency>
+            <dependency>
+              <groupId>io.jsonwebtoken</groupId>
+              <artifactId>jjwt-api</artifactId>
+              <version>0.12.6</version>
+              <scope>runtime</scope>
+            </dependency>
+            <dependency>
+              <groupId>io.jsonwebtoken</groupId>
+              <artifactId>jjwt-impl</artifactId>
+              <version>0.12.6</version>
+              <scope>runtime</scope>
+            </dependency>
+            <dependency>
+              <groupId>io.jsonwebtoken</groupId>
+              <artifactId>jjwt-jackson</artifactId>
+              <version>0.12.6</version>
+              <scope>runtime</scope>
+            </dependency>
+            <dependency>
+              <groupId>org.slf4j</groupId>
+              <artifactId>slf4j-nop</artifactId>
+              <version>2.0.17</version>
+          </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

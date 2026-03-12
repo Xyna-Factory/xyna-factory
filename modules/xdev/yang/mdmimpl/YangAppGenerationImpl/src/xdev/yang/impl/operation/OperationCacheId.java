@@ -28,15 +28,25 @@ public class OperationCacheId implements Comparable<OperationCacheId> {
   private final String workspaceName;
   private final String operation;
   
-  public OperationCacheId(LoadYangAssignmentsData data) {
-    this.fqn = data.getFqn();
-    this.workspaceName = data.getWorkspaceName();
-    this.operation = data.getOperation();
+  public OperationCacheId(String fqn, String workspaceName, String operation) {
     if (fqn == null) { throw new IllegalArgumentException("OperationCacheId: Fqn is empty"); }
     if (workspaceName == null) { throw new IllegalArgumentException("OperationCacheId: WorkspaceName is empty"); }
     if (operation == null) { throw new IllegalArgumentException("OperationCacheId: Operation is empty"); }
+    this.fqn = fqn;
+    this.workspaceName = workspaceName;
+    this.operation = operation;
   }
   
+  public static OperationCacheId fromLoadYangAssignmentsData(LoadYangAssignmentsData data) {
+    String fqn = data.getFqn();
+    String workspaceName = data.getWorkspaceName();
+    String operation = data.getOperation();
+    if (fqn == null) { throw new IllegalArgumentException("OperationCacheId: Fqn is empty"); }
+    if (workspaceName == null) { throw new IllegalArgumentException("OperationCacheId: WorkspaceName is empty"); }
+    if (operation == null) { throw new IllegalArgumentException("OperationCacheId: Operation is empty"); }
+    return new OperationCacheId(fqn, workspaceName, operation);
+  }
+
   public String getFqn() {
     return fqn;
   }

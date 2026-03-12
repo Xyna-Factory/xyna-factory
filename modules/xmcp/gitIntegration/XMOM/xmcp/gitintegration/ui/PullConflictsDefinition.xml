@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Pull Conflicts Definition" TypeName="PullConflictsDefinition" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Pull Conflicts Definition" Name="PullConflictsDefinition">
+    <Input>
+      <Data ID="2" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput2"/>
+    </Input>
+    <Output>
+      <Data ID="7" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition7"/>
+    </Output>
+    <ServiceReference ID="49" Label="GitIntegration UI Services" ReferenceName="GitIntegrationUIServices.GitIntegrationUIServices" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="48"/>
+      <Target RefID="48"/>
+    </ServiceReference>
+    <Function ID="48" Label="Create Conflicts Text Item Definitions">
+      <Source RefID="49"/>
+      <Source RefID="2"/>
+      <Target RefID="49"/>
+      <Target RefID="51"/>
+      <Invoke Operation="createConflictsTextItemDefinitions" ServiceID="49">
+        <Source RefID="2"/>
+      </Invoke>
+      <Receive ServiceID="49">
+        <Target RefID="51"/>
+      </Receive>
+    </Function>
+    <Mappings ID="16" Label="Mapping">
+      <Input>
+        <Data ID="68" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition68">
+          <Source RefID="16"/>
+        </Data>
+        <Source RefID="51"/>
+      </Input>
+      <Output>
+        <Data ID="25" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition25">
+          <Source RefID="16"/>
+        </Data>
+        <Target RefID="26"/>
+      </Output>
+      <Mapping>%1%.label="Conflicts - deploy listed xmom items"</Mapping>
+      <Mapping>%1%.hideIfEmpty="true"</Mapping>
+      <Mapping>%1%.children=%0%</Mapping>
+    </Mappings>
+    <Data ID="26" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition26">
+      <Source RefID="16"/>
+    </Data>
+    <Data ID="51" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition51">
+      <Source RefID="48"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="26"/>
+      <Target RefID="7"/>
+      <Copy>
+        <Source RefID="26"/>
+        <Target RefID="7"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

@@ -192,6 +192,10 @@
           tofile="${release.dir}/${project.name}" failonerror="false"/>
   </target>
 
+  <!-- =================================
+              target: installMavenArtifact
+       =================================
+-->
   <target name="installMavenArtifact" depends="build" description="install artifact to maven repository">
      <install-maven-artifact artifactFile="${release.dir}/${project.name}/${project.name}.jar" pomFile="${basedir}/pom.xml" />
   </target>
@@ -296,6 +300,23 @@
       <group title="XML" packages="com.gip.xyna.utils.xml*" />
       <group title="XynaTree" packages="com.gip.xyna.utils.xynatree*" />
     </javadoc>
+  </target>
+
+  <!-- =================================
+              target: resolve
+        =================================  -->
+  <target name="resolve" description="resolve" >
+    <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/lib" />
+  </target>
+
+  <!-- =================================
+        target: cleanup-lib
+        ================================= -->
+  <target name="cleanup-lib" description="cleanup-lib">
+    <mkdir dir="${basedir}/lib" />
+    <delete>
+      <fileset dir="${basedir}/lib" includes="**/*.jar"/>
+    </delete>
   </target>
 
 </project>

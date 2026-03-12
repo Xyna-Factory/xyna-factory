@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,13 +60,98 @@
       <Type>String</Type>
     </Meta>
   </Data>
-  <Service Label="SSHConnection Parameter" TypeName="SSHConnectionParameter">
+  <Data IsList="true" Label="key algorithms" VariableName="keyAlgorithms0">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Set to null or an empty list for legacy behavior.
+
+Possible values:
+ssh-rsa,
+ssh-rsa-cert-v01@openssh.com,
+rsa-sha2-256,
+rsa-sha2-512,
+ssh-dss,
+ssh-dss-cert-v01@openssh.com,
+ecdsa-sha2-nistp256,
+ecdsa-sha2-nistp256-cert-v01@openssh.com,
+ecdsa-sha2-nistp384,
+ecdsa-sha2-nistp384-cert-v01@openssh.com,
+ecdsa-sha2-nistp521,
+ecdsa-sha2-nistp521-cert-v01@openssh.com,
+ssh-ed25519,
+ssh-ed25519-cert-v01@openssh.com</Documentation>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="message authentication codes" VariableName="messageAuthenticationCodes">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Set to null or an empty list for legacy behavior.
+
+Possible values:
+hmac-md5,
+hmac-md5-96,
+hmac-md5-etm@openssh.com,
+hmac-md5-96-etm@openssh.com,
+hmac-ripemd160,
+hmac-ripemd160-96,
+hmac-ripemd160-etm@openssh.com,
+hmac-sha1,
+hmac-sha1-96,
+hmac-sha1-etm@openssh.com,
+hmac-sha1-96@openssh.com,
+hmac-sha2-256,
+hmac-sha2-256-etm@openssh.com,
+hmac-sha2-512,
+hmac-sha2-512-etm@openssh.com</Documentation>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="ciphers" VariableName="ciphers">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Set to null or an empty list for legacy behavior.
+
+Possible values:
+aes128-ctr,
+aes192-ctr,
+aes256-ctr,
+aes128-cbc,
+aes192-cbc,
+aes256-cbc,
+blowfish-ctr,
+blowfish-cbc,
+twofish128-ctr,
+twofish192-ctr,
+twofish256-ctr,
+twofish128-cbc,
+twofish192-cbc,
+twofish256-cbc,
+twofish-cbc,
+serpent128-ctr,
+serpent192-ctr,
+serpent256-ctr,
+serpent128-cbc,
+serpent192-cbc,
+serpent256-cbc,
+idea-ctr,
+idea-cbc,
+cast128-ctr,
+cast128-cbc,
+3des-ctr,
+3des-cbc,
+aes128-gcm@openssh.com,
+aes256-gcm@openssh.com,
+arcfour,
+arcfour128,
+arcfour256</Documentation>
+    </Meta>
+  </Data>
+  <Service Label="SSH connection parameter" TypeName="SSHConnectionParameter">
     <Meta>
       <AdditionalDependencies>
-        <Datatype>xact.templates.CommandLineInterface</Datatype>
-        <Datatype>xact.templates.NETCONF</Datatype>
         <Datatype>xact.ssh.SSHNETCONFConnection</Datatype>
         <Datatype>xact.ssh.SSHShellConnection</Datatype>
+        <Datatype>xact.templates.CommandLineInterface</Datatype>
+        <Datatype>xact.templates.NETCONF</Datatype>
       </AdditionalDependencies>
     </Meta>
     <Operation IsStatic="false" Label="Connect" Name="connect">

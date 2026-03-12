@@ -111,12 +111,9 @@ public class XmomServerGenerator extends DefaultCodegen {
     }
 
     // determine name of Filter
-    String xFilterName = "OASFilter";
-    if (!GeneratorProperty.getLegacyFilterNames(this)) {
-      xFilterName = vendorExtentions != null? (String)vendorExtentions.get("x-filter-name") : info.getTitle();
-      xFilterName = xFilterName != null && !xFilterName.trim().isEmpty()? xFilterName : info.getTitle();
-      xFilterName = Camelizer.camelize(Sanitizer.sanitize(xFilterName.replace('-', ' ').replace('_', ' ')), Case.PASCAL);
-    }
+    String xFilterName = vendorExtentions != null ? (String) vendorExtentions.get("x-filter-name") : info.getTitle();
+    xFilterName = xFilterName != null && !xFilterName.trim().isEmpty() ? xFilterName : info.getTitle();
+    xFilterName = Camelizer.camelize(Sanitizer.sanitize(xFilterName.replace('-', ' ').replace('_', ' ')), Case.PASCAL);
     GeneratorProperty.setFilterName(this, xFilterName);
     
     /**
@@ -180,7 +177,10 @@ public class XmomServerGenerator extends DefaultCodegen {
         System.out.println(xModel);
       }
 
-      if (model.getModel().isAdditionalPropertiesTrue) {
+      boolean hasAdditionalProperties = model.getModel().isAdditionalPropertiesTrue;
+      boolean additionalPropertiesSet = model.getModel().getAdditionalProperties() != null;
+      boolean noParentHasAdditionalProperties = !XynaModelUtils.parentModelHasAdditionalProperties(model.getModel().getParentModel());
+      if (hasAdditionalProperties && additionalPropertiesSet && noParentHasAdditionalProperties) {
         refineAdditionalProperty(model.getModel().getAdditionalProperties());
         String fqn = XynaCodegenModel.getFQN(model.getModel(), this);
         AdditionalPropertyWrapper addPropWrapper = codegenFactory.getOrCreateAdditionalPropertyWrapper(model.getModel().getAdditionalProperties(), fqn);

@@ -24,5 +24,10 @@
       <Type>String</Type>
     </Meta>
   </Data>
+  <Data Label="Split" VariableName="split">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
   <Data IsList="true" Label="Workspace Content Items" ReferenceName="WorkspaceContentItem" ReferencePath="xmcp.gitintegration" VariableName="workspaceContentItems"/>
 </DataType>

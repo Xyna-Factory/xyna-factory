@@ -91,16 +91,7 @@ public class TypeGeneration {
   private static Logger logger = CentralFactoryLogging.getLogger(TypeGeneration.class);
   
   public final static String XSD_DATAMODEL_BASE_APP_NAME = "XSD Datamodel Base";
-  //public final static String XSD_DATAMODEL_BASE_APP_VERSION = "1.0";
-  //public final static String XSD_DATAMODEL_BASE_APP_VERSION_WITH_VALIDATE = "1.1";
-  //public final static String XSD_DATAMODEL_BASE_APP_VERSION_DEPENDENCY_CONTEXT_ADJUSTED = "1.1.1";
-  //public final static String XSD_DATAMODEL_BASE_APP_VERSION_MIXED_DISTRIBUTIONS = "1.1.2";
-  //public final static String XSD_DATAMODEL_BASE_APP_VERSION_MIXED_DISTRIBUTIONS_BUGFIX = "1.1.3";
-  //public final static String XSD_DATAMODEL_BASE_APP_VERSION_NEWEST = "1.1.3"; //Bugfix 23382 falsche Version 0 
-  //public final static String XSD_DATAMODEL_BASE_APP_VERSION_NEWEST = "1.1.4";  //Bugfix 23393 XSD:AnyType wird nun besser umgesetzt
-  //public final static String XSD_DATAMODEL_BASE_APP_VERSION_REPAIR_REV = "1.1.5";  //Bugfix 23691: Revision Fallback auf Rootrevision
-  //public final static String XSD_DATAMODEL_BASE_APP_VERSION_FOUNDDM_NOT_NULL = "1.1.6";  //Bugfix 23293: ValidateXML hat Datamodel nicht ermittelt
-  public final static String XSD_DATAMODEL_BASE_APP_VERSION_CDATA = "1.1.7";
+  public final static String XSD_DATAMODEL_BASE_APP_VERSION = "1.1.19";
   
   private XSModel schema;
   private TypeInfoGenerator typeInfoGenerator;
@@ -337,13 +328,13 @@ public class TypeGeneration {
     Collection<ApplicationStorable> applications = appMgmt.listApplicationStorables();
     for (ApplicationStorable application : applications) {
       if (application.getName().equals(XSD_DATAMODEL_BASE_APP_NAME) &&
-          application.getVersion().equals(XSD_DATAMODEL_BASE_APP_VERSION_CDATA) &&
+          application.getVersion().equals(XSD_DATAMODEL_BASE_APP_VERSION) &&
           application.getStateAsEnum() != ApplicationState.AUDIT_MODE) {
-        return new RuntimeContextRequirementXmlEntry(XSD_DATAMODEL_BASE_APP_NAME, XSD_DATAMODEL_BASE_APP_VERSION_CDATA, null);
+        return new RuntimeContextRequirementXmlEntry(XSD_DATAMODEL_BASE_APP_NAME, XSD_DATAMODEL_BASE_APP_VERSION, null);
       }
     }
     createXsdBaseApp(appMgmt);
-    return new RuntimeContextRequirementXmlEntry(XSD_DATAMODEL_BASE_APP_NAME, XSD_DATAMODEL_BASE_APP_VERSION_CDATA, null);
+    return new RuntimeContextRequirementXmlEntry(XSD_DATAMODEL_BASE_APP_NAME, XSD_DATAMODEL_BASE_APP_VERSION, null);
   }
 
   public void createXsdBaseApp(ApplicationManagementImpl appMgmt) throws XPRC_VERSION_DETECTION_PROBLEM, PersistenceLayerException, Ex_FileAccessException, IOException, ParserConfigurationException {
@@ -359,7 +350,7 @@ public class TypeGeneration {
     utilsGen.createConstants();
     utilsGen.createAndAddUtilTypes(baseGenerator);
     StringBuilder comment = new StringBuilder("XSD Datamodel Utils");
-    File xsdBaseApp = baseGenerator.buildApplication(XSD_DATAMODEL_BASE_APP_NAME, XSD_DATAMODEL_BASE_APP_VERSION_CDATA, comment.toString(), createBasicAppRequirements(appMgmt));
+    File xsdBaseApp = baseGenerator.buildApplication(XSD_DATAMODEL_BASE_APP_NAME, XSD_DATAMODEL_BASE_APP_VERSION, comment.toString(), createBasicAppRequirements(appMgmt));
     try {
       importApplication(appMgmt, xsdBaseApp);
     } catch (Exception e) {

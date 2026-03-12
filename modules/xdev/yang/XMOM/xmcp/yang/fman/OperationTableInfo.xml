@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,11 +40,31 @@
         <Source RefID="22"/>
       </Input>
       <Case ID="204" Label="true" Premise="%0%.bootstrap==&quot;true&quot;">
+        <Mappings ID="740" Label="Mapping">
+          <Output>
+            <Data ID="771" IsList="true" Label="Selected Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn771">
+              <Source RefID="740"/>
+            </Data>
+            <Target RefID="772"/>
+          </Output>
+          <Mapping>%0%["0"].name="Operation Group"</Mapping>
+          <Mapping>%0%["1"].name="Operation"</Mapping>
+          <Mapping>%0%["2"].name="Rpc"</Mapping>
+          <Mapping>%0%["3"].name="Generic Yang Element"</Mapping>
+          <Mapping>%0%["4"].name="Runtime Context"</Mapping>
+          <Mapping>%0%["5"].name="Mapping Count"</Mapping>
+          <Mapping>%0%["0"].path="operationGroup"</Mapping>
+          <Mapping>%0%["1"].path="operation"</Mapping>
+          <Mapping>%0%["2"].path="rpcName"</Mapping>
+          <Mapping>%0%["3"].path="tagName"</Mapping>
+          <Mapping>%0%["4"].path="runtimeContext"</Mapping>
+          <Mapping>%0%["5"].path="mappingCount"</Mapping>
+        </Mappings>
         <Function ID="213" Label="Build TableInfo and Select Columns">
           <Source RefID="214"/>
           <Source RefID="22"/>
           <Source RefID="415"/>
-          <Source RefID="705"/>
+          <Source RefID="772"/>
           <Target RefID="214"/>
           <Target RefID="212"/>
           <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="214">
@@ -55,11 +75,7 @@
                 <ExpectedType>xmcp.yang.OperationTableData</ExpectedType>
               </Meta>
             </Source>
-            <Source RefID="705">
-              <Meta>
-                <LinkType>Constant</LinkType>
-              </Meta>
-            </Source>
+            <Source RefID="772"/>
           </Invoke>
           <Receive ServiceID="214">
             <Target RefID="212"/>
@@ -129,207 +145,8 @@
     <Data ID="537" IsList="true" Label="Operation Table Data" ReferenceName="OperationTableData" ReferencePath="xmcp.yang" VariableName="operationTableData537">
       <Source RefID="534"/>
     </Data>
-    <Data ID="705" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="const_TableColumn705">
-      <Value>
-        <Data ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
-          <Data VariableName="disableFilter">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="path">
-            <Meta>
-              <Type>String</Type>
-            </Meta>
-            <Value>operationGroup</Value>
-          </Data>
-          <Data VariableName="break0">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="pre">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="shrink">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="name">
-            <Meta>
-              <Type>String</Type>
-            </Meta>
-            <Value>Operation Group</Value>
-          </Data>
-          <Data VariableName="disableSort">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-        </Data>
-      </Value>
-      <Value>
-        <Data Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
-          <Data VariableName="disableFilter">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="path">
-            <Meta>
-              <Type>String</Type>
-            </Meta>
-            <Value>operation</Value>
-          </Data>
-          <Data VariableName="break0">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="pre">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="shrink">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="name">
-            <Meta>
-              <Type>String</Type>
-            </Meta>
-            <Value>Operation</Value>
-          </Data>
-          <Data VariableName="disableSort">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-        </Data>
-      </Value>
-      <Value>
-        <Data Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
-          <Data VariableName="disableFilter">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="path">
-            <Meta>
-              <Type>String</Type>
-            </Meta>
-            <Value>rpcName</Value>
-          </Data>
-          <Data VariableName="break0">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="pre">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="shrink">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="name">
-            <Meta>
-              <Type>String</Type>
-            </Meta>
-            <Value>Rpc</Value>
-          </Data>
-          <Data VariableName="disableSort">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-        </Data>
-      </Value>
-      <Value>
-        <Data Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
-          <Data VariableName="disableFilter">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="path">
-            <Meta>
-              <Type>String</Type>
-            </Meta>
-            <Value>runtimeContext</Value>
-          </Data>
-          <Data VariableName="break0">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="pre">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="shrink">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="name">
-            <Meta>
-              <Type>String</Type>
-            </Meta>
-            <Value>Runtime Context</Value>
-          </Data>
-          <Data VariableName="disableSort">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-        </Data>
-      </Value>
-      <Value>
-        <Data Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
-          <Data VariableName="path">
-            <Meta>
-              <Type>String</Type>
-            </Meta>
-            <Value>mappingCount</Value>
-          </Data>
-          <Data VariableName="name">
-            <Meta>
-              <Type>String</Type>
-            </Meta>
-            <Value>Mapping Count</Value>
-          </Data>
-        </Data>
-      </Value>
+    <Data ID="772" IsList="true" Label="Selected Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn772">
+      <Source RefID="740"/>
     </Data>
     <Assign ID="1">
       <Source RefID="117"/>

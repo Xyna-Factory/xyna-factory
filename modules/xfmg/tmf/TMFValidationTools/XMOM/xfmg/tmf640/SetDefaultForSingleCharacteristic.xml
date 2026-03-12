@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Set Default For Single Characteristic" TypeName="SetDefaultForSingleCharacteristic" TypePath="xfmg.tmf640" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Set Default For Single Characteristic" Name="SetDefaultForSingleCharacteristic">
+    <Input>
+      <Data ID="2" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="characteristicSpecification2"/>
+      <Data ID="7" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic7"/>
+    </Input>
+    <Output>
+      <Data ID="12" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic12"/>
+    </Output>
+    <ServiceReference ID="2619" Label="Create Characteristic With Default Value" ReferenceName="CreateCharacteristicWithDefaultValue" ReferencePath="xfmg.tmf640">
+      <Source RefID="2618"/>
+      <Target RefID="2618"/>
+    </ServiceReference>
+    <ServiceReference ID="23" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
+      <Source RefID="22"/>
+      <Target RefID="22"/>
+    </ServiceReference>
+    <Mappings ID="634" Label="Mapping">
+      <Input>
+        <Data ID="663" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="characteristicSpecification663">
+          <Source RefID="634"/>
+        </Data>
+        <Source RefID="2"/>
+      </Input>
+      <Input>
+        <Data ID="1367" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic1367">
+          <Source RefID="634"/>
+        </Data>
+        <Source RefID="7"/>
+      </Input>
+      <Output>
+        <Data ID="692" IsList="true" Label="CharacteristicValueSpecification" ReferenceName="CharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="characteristicValueSpecification692">
+          <Source RefID="634"/>
+        </Data>
+        <Target RefID="693"/>
+      </Output>
+      <Output>
+        <Data ID="1337" Label="CharacteristicListWrapper" ReferenceName="CharacteristicListWrapper" ReferencePath="xfmg.tmf.util" VariableName="characteristicListWrapper1337">
+          <Source RefID="634"/>
+        </Data>
+        <Target RefID="1338"/>
+      </Output>
+      <Mapping>%2%=%0%.characteristicValueSpecification</Mapping>
+      <Mapping>%3%.characteristic=%1%</Mapping>
+    </Mappings>
+    <Foreach ID="960">
+      <Source RefID="693"/>
+      <InputList RefID="693">
+        <Data ID="961" Label="CharacteristicValueSpecification" ReferenceName="CharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="characteristicValueSpecification961"/>
+      </InputList>
+      <Choice ID="862" TypeName="BaseChoiceTypeFormula" TypePath="server">
+        <Source RefID="961"/>
+        <Input>
+          <Data ID="897" Label="CharacteristicValueSpecification" ReferenceName="CharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="characteristicValueSpecification897">
+            <Source RefID="862"/>
+          </Data>
+          <Source RefID="961"/>
+        </Input>
+        <Case ID="863" Label="true" Premise="%0%.isDefault!=null&amp;&amp;%0%.isDefault">
+          <Mappings ID="2880" Label="Mapping">
+            <Input>
+              <Data ID="3061" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="characteristicSpecification3061">
+                <Source RefID="2880"/>
+              </Data>
+              <Source RefID="2"/>
+            </Input>
+            <Output>
+              <Data ID="2923" Label="Filter Characteristic by Name" ReferenceName="FilterCharacteristicByName" ReferencePath="xfmg.tmf.inspect" VariableName="filterCharacteristicByName2923">
+                <Source RefID="2880"/>
+              </Data>
+              <Target RefID="2924"/>
+            </Output>
+            <Mapping>%1%.name=%0%.name</Mapping>
+          </Mappings>
+          <Function ID="22" Label="Filter">
+            <Source RefID="23"/>
+            <Source RefID="7"/>
+            <Source RefID="2924"/>
+            <Target RefID="23"/>
+            <Target RefID="1480"/>
+            <Invoke Operation="filter" ServiceID="23">
+              <Source RefID="7">
+                <Meta>
+                  <ExpectedType>internalized.tmf640.datamodel.Characteristic</ExpectedType>
+                </Meta>
+              </Source>
+              <Source RefID="2924">
+                <Meta>
+                  <ExpectedType>xfmg.tmf.inspect.FilterCharacteristicByName</ExpectedType>
+                </Meta>
+              </Source>
+            </Invoke>
+            <Receive ServiceID="23">
+              <Target RefID="1480">
+                <Meta>
+                  <ExpectedType>internalized.tmf640.datamodel.Characteristic</ExpectedType>
+                </Meta>
+              </Target>
+            </Receive>
+          </Function>
+          <Choice ID="131" TypeName="BaseChoiceTypeFormula" TypePath="server">
+            <Source RefID="1480"/>
+            <Input>
+              <Data ID="251" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic251">
+                <Source RefID="131"/>
+              </Data>
+              <Source RefID="1480">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Input>
+            <Case ID="132" Label="true" Premise="length(%0%)&gt;&quot;0&quot;">
+              <Mappings ID="450" Label="ntbd: keep existing characteristic value"/>
+              <Assign ID="135"/>
+            </Case>
+            <Case ID="133" Label="false">
+              <Function ID="2618" Label="Create Characteristic With Default Value">
+                <Source RefID="2619"/>
+                <Source RefID="2"/>
+                <Source RefID="961"/>
+                <Target RefID="2619"/>
+                <Target RefID="2621"/>
+                <Invoke Operation="CreateCharacteristicWithDefaultValue" ServiceID="2619">
+                  <Source RefID="2"/>
+                  <Source RefID="961">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                </Invoke>
+                <Receive ServiceID="2619">
+                  <Target RefID="2621"/>
+                </Receive>
+              </Function>
+              <Mappings ID="1960" Label="Mapping">
+                <Input>
+                  <Data ID="1931" Label="CharacteristicListWrapper" ReferenceName="CharacteristicListWrapper" ReferencePath="xfmg.tmf.util" VariableName="characteristicListWrapper1931">
+                    <Source RefID="1537"/>
+                  </Data>
+                  <Source RefID="1338"/>
+                </Input>
+                <Input>
+                  <Data ID="1902" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic1902">
+                    <Source RefID="1537"/>
+                  </Data>
+                  <Source RefID="2621">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                </Input>
+                <Mapping>%0%.characteristic=append(%0%.characteristic, %1%)</Mapping>
+              </Mappings>
+              <Assign ID="137"/>
+              <Data ID="2621" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic2621">
+                <Source RefID="2618"/>
+              </Data>
+            </Case>
+          </Choice>
+          <Assign ID="866"/>
+          <Data ID="1480" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic1480">
+            <Source RefID="22"/>
+          </Data>
+        </Case>
+        <Case ID="864" Label="false">
+          <Assign ID="868"/>
+        </Case>
+      </Choice>
+      <Data ID="2924" Label="Filter Characteristic by Name" ReferenceName="FilterCharacteristicByName" ReferencePath="xfmg.tmf.inspect" VariableName="filterCharacteristicByName2924">
+        <Source RefID="2880"/>
+      </Data>
+    </Foreach>
+    <Mappings ID="2281" Label="Mapping">
+      <Input>
+        <Data ID="2310" Label="CharacteristicListWrapper" ReferenceName="CharacteristicListWrapper" ReferencePath="xfmg.tmf.util" VariableName="characteristicListWrapper2310">
+          <Source RefID="2281"/>
+        </Data>
+        <Source RefID="1338"/>
+      </Input>
+      <Output>
+        <Data ID="2339" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic2339">
+          <Source RefID="2281"/>
+        </Data>
+        <Target RefID="2340"/>
+      </Output>
+      <Mapping>%1%=%0%.characteristic</Mapping>
+    </Mappings>
+    <Data ID="693" IsList="true" Label="CharacteristicValueSpecification" ReferenceName="CharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="characteristicValueSpecification693">
+      <Source RefID="634"/>
+    </Data>
+    <Data ID="1338" Label="CharacteristicListWrapper" ReferenceName="CharacteristicListWrapper" ReferencePath="xfmg.tmf.util" VariableName="characteristicListWrapper1338">
+      <Source RefID="634"/>
+    </Data>
+    <Data ID="2340" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic2340">
+      <Source RefID="2281"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="2340"/>
+      <Target RefID="12"/>
+      <Copy>
+        <Source RefID="2340">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="12"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

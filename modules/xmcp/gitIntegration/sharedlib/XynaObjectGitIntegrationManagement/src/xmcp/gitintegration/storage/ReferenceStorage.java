@@ -21,7 +21,9 @@ package xmcp.gitintegration.storage;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.gip.xyna.xnwh.persistence.ODSConnection;
 import com.gip.xyna.xnwh.persistence.ODSConnectionType;
@@ -54,15 +56,14 @@ public class ReferenceStorage {
   
 
   public void modify(InternalReference from, InternalReference to, Long revision, String objectName, ReferenceObjectType objectType) {
-    ReferenceStorage storage = new ReferenceStorage();
-    storage.deleteReference(from.getPath(), revision, objectName);
+    deleteReference(from.getPath(), revision, objectName);
     ReferenceStorable storable = new ReferenceStorable();
     storable.setObjectName(objectName);
     storable.setWorkspace(revision);
     storable.setPath(to.getPath());
     storable.setReftype(to.getType().toString());
     storable.setObjecttype(objectType.toString());
-    storage.persist(storable);
+    persist(storable);
   }
 
   public List<ReferenceStorable> getReferencetorableList(Long revision, String objectName, ReferenceObjectType objectType) {
@@ -133,6 +134,19 @@ public class ReferenceStorage {
     } catch (PersistenceLayerException e) {
       throw new RuntimeException(e);
     }
+  }
+
+
+  public Map<String, List<ReferenceStorable>> getReferenceStorableListGroupByName(Long revision, ReferenceObjectType type) {
+    Map<String, List<ReferenceStorable>> resultMap = new HashMap<String, List<ReferenceStorable>>();
+    List<ReferenceStorable> refStorablList = getAllReferencesForType(revision, type);
+    if (refStorablList != null) {
+      for (ReferenceStorable refStorable : refStorablList) {
+        resultMap.putIfAbsent(refStorable.getObjectName(), new ArrayList<ReferenceStorable>());
+        resultMap.get(refStorable.getObjectName()).add(refStorable);
+      }
+    }
+    return resultMap;
   }
 
 

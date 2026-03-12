@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="ListUtils" TypeName="ListUtils" TypePath="base.list" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>ListUtilsImpl.jar</Libraries>
+  <Service Label="ListUtils" TypeName="ListUtils">
+    <Operation IsStatic="true" Label="Count" Name="count">
+      <Input>
+        <Data IsList="true" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="list">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data Label="Comparator" ReferenceName="Comparator" ReferencePath="base.list.comparator" VariableName="comparator"/>
+        <Data Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data Label="Count" ReferenceName="Count" ReferencePath="base" VariableName="count75"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return base.list.ListUtilsImpl.count(list, comparator, anyType);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Count with ZeroComparison" Name="countWithZeroComparison">
+      <Input>
+        <Data IsList="true" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="list">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data Label="Comparator" ReferenceName="Comparator" ReferencePath="base.list.comparator" VariableName="comparator"/>
+        <Data Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data Label="Zero Comparison" ReferenceName="ZeroComparison" ReferencePath="base.list" VariableName="zeroComparison"/>
+      </Input>
+      <Output>
+        <Data Label="Count" ReferenceName="Count" ReferencePath="base" VariableName="count69"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return base.list.ListUtilsImpl.countWithZeroComparison(list, comparator, anyType, zeroComparison);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Difference" Name="difference">
+      <Input>
+        <Data IsList="true" Label="Minuend" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data IsList="true" Label="Subtrahend" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType19">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data Label="Comparator" ReferenceName="Comparator" ReferencePath="base.list.comparator" VariableName="comparator"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Difference" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType20">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return base.list.ListUtilsImpl.difference(anyType, anyType19, comparator);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Filter" Name="filter">
+      <Input>
+        <Data IsList="true" Label="List" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data Label="Filter" ReferenceName="Filter" ReferencePath="base.list.filter" VariableName="filter"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="List" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType0">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return base.list.ListUtilsImpl.filter(anyType, filter);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Filter by Comparator  " Name="filterByComparator">
+      <Input>
+        <Data IsList="true" Label="List" ReferenceName="AnyType" ReferencePath="base" VariableName="list">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data Label="Comparator" ReferenceName="Comparator" ReferencePath="base.list.comparator" VariableName="comparator"/>
+        <Data Label="Compare To" ReferenceName="AnyType" ReferencePath="base" VariableName="compareTo">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Result" ReferenceName="AnyType" ReferencePath="base" VariableName="filteredList">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return base.list.ListUtilsImpl.filterByComparator(list, comparator, compareTo);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Filter by Comparator and ZeroComparison" Name="filterByComparatorAndZeroComparison">
+      <Input>
+        <Data IsList="true" Label="List" ReferenceName="AnyType" ReferencePath="base" VariableName="list">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data Label="Comparator" ReferenceName="Comparator" ReferencePath="base.list.comparator" VariableName="comparator"/>
+        <Data Label="Compare To" ReferenceName="AnyType" ReferencePath="base" VariableName="compareTo">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data Label="Zero Comparison" ReferenceName="ZeroComparison" ReferencePath="base.list" VariableName="zeroComparison"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Result" ReferenceName="AnyType" ReferencePath="base" VariableName="filteredList">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return base.list.ListUtilsImpl.filterByComparatorAndZeroComparison(list, comparator, compareTo, zeroComparison);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Intersection" Name="intersection">
+      <Input>
+        <Data IsList="true" Label="List A" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data IsList="true" Label="List B" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType22">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data Label="Comparator" ReferenceName="Comparator" ReferencePath="base.list.comparator" VariableName="comparator"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Intersection" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType23">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return base.list.ListUtilsImpl.intersection(anyType, anyType22, comparator);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Merge" Name="merge">
+      <Input>
+        <Data IsList="true" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data IsList="true" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType41">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data Label="Comparator" ReferenceName="Comparator" ReferencePath="base.list.comparator" VariableName="comparator"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Pair" ReferenceName="Pair" ReferencePath="base.list.pair" VariableName="pair"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return base.list.ListUtilsImpl.merge(anyType, anyType41, comparator);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Not Unique" Name="notUnique">
+      <Input>
+        <Data IsList="true" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data Label="Comparator" ReferenceName="Comparator" ReferencePath="base.list.comparator" VariableName="comparator"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType44">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return base.list.ListUtilsImpl.notUnique(anyType, comparator);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Pair" Name="pair">
+      <Input>
+        <Data IsList="true" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data IsList="true" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType128">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Pair" ReferenceName="Pair" ReferencePath="base.list.pair" VariableName="pair"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return base.list.ListUtilsImpl.pair(anyType, anyType128);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Remove" Name="remove">
+      <Input>
+        <Data IsList="true" Label="List" ReferenceName="AnyType" ReferencePath="base" VariableName="list">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data Label="Element" ReferenceName="AnyType" ReferencePath="base" VariableName="element">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data Label="Comparator" ReferenceName="Comparator" ReferencePath="base.list.comparator" VariableName="comparator"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="List" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return base.list.ListUtilsImpl.remove(list, element, comparator);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Remove and AddOrReplace" Name="removeAndAddOrReplace">
+      <Input>
+        <Data IsList="true" Label="Existing" ReferenceName="AnyType" ReferencePath="base" VariableName="existing">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data IsList="true" Label="Remove" ReferenceName="AnyType" ReferencePath="base" VariableName="remove">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data IsList="true" Label="Add or Replace" ReferenceName="AnyType" ReferencePath="base" VariableName="addOrReplace">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data Label="Comparator" ReferenceName="Comparator" ReferencePath="base.list.comparator" VariableName="comparator"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="List" ReferenceName="AnyType" ReferencePath="base" VariableName="list">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <Meta>
+        <Documentation>Entfernt  zuerst alle "Remove" aus "Existing".  Dann werden alle "Add or Replace" so hinzugefügt, dass keine Duplikate entstehen.</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">return base.list.ListUtilsImpl.removeAndAddOrReplace(existing, remove, addOrReplace, comparator);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Remove Empty" Name="removeEmpty">
+      <Input>
+        <Data IsList="true" Label="List" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="List" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType134">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return base.list.ListUtilsImpl.removeEmpty(anyType);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Replace" Name="replace">
+      <Input>
+        <Data IsList="true" Label="List" ReferenceName="AnyType" ReferencePath="base" VariableName="list">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data Label="Element" ReferenceName="AnyType" ReferencePath="base" VariableName="element">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data Label="Comparator" ReferenceName="Comparator" ReferencePath="base.list.comparator" VariableName="comparator"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="List" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return base.list.ListUtilsImpl.replace(list, element, comparator);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Replace or Add" Name="replaceOrAdd">
+      <Input>
+        <Data IsList="true" Label="List" ReferenceName="AnyType" ReferencePath="base" VariableName="list">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data Label="Element" ReferenceName="AnyType" ReferencePath="base" VariableName="element">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data Label="Comparator" ReferenceName="Comparator" ReferencePath="base.list.comparator" VariableName="comparator"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="List" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return base.list.ListUtilsImpl.replaceOrAdd(list, element, comparator);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Simple List to XMOM List" Name="simpleListToXMOMList">
+      <Input>
+        <Data Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data Label="Xmom Field From" ReferenceName="XmomField" ReferencePath="base.list" VariableName="xmomField"/>
+        <Data Label="Output Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType138">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data Label="Xmom Field To" ReferenceName="XmomField" ReferencePath="base.list" VariableName="xmomField137"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Output Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType139">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return base.list.ListUtilsImpl.simpleListToXMOMList(anyType, xmomField, anyType138, xmomField137);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Sort" Name="sort">
+      <Input>
+        <Data IsList="true" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="list">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data Label="Comparator" ReferenceName="Comparator" ReferencePath="base.list.comparator" VariableName="comparator"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="sortedList">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return base.list.ListUtilsImpl.sort(list, comparator);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Sort Inner List" Name="sortInnerList">
+      <Input>
+        <Data IsList="true" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="list">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data Label="Xmom Field" ReferenceName="XmomField" ReferencePath="base.list" VariableName="xmomField"/>
+        <Data Label="Comparator" ReferenceName="Comparator" ReferencePath="base.list.comparator" VariableName="comparator"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="sorted">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return null;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Sort Inner Primitive List" Name="sortInnerPrimitiveList">
+      <Input>
+        <Data IsList="true" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="list">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data Label="Sort Criterion" ReferenceName="SortCriterion" ReferencePath="base.list" VariableName="sortCriterion"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="sorted">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return null;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Sort with Criteria" Name="sortWithCriteria">
+      <Input>
+        <Data IsList="true" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="list">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data IsList="true" Label="Sort Criterion" ReferenceName="SortCriterion" ReferencePath="base.list" VariableName="sortCriteria"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="sorted">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return base.list.ListUtilsImpl.sortWithCriteria(list, sortCriteria);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Unique" Name="unique">
+      <Input>
+        <Data IsList="true" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="list">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data Label="Comparator" ReferenceName="Comparator" ReferencePath="base.list.comparator" VariableName="comparator"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="unique">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return base.list.ListUtilsImpl.unique(list, comparator);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Sub List" Name="subList">
+      <Input>
+        <Data ID="1" IsList="true" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="list">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data ID="3" Label="Start" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="start"/>
+        <Data ID="4" Label="Length" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="length"/>
+      </Input>
+      <Output>
+        <Data ID="2" IsList="true" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="subList">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <Meta>
+        <Documentation>Returns a sublist of the inital list. The result will depend on the start index and the provided length.
+
+Positive start indices:
+The sublist will start with the value given at index "Start" of the inital list.
+
+Negative start indices:
+Assume that the initial list is of length n.
+The sublist will start with the value given at index n-"Start" of the initial list.
+
+
+Length:
+Defines the length of the sublist.
+
+Indices greater than the initial list´s length will result in an empty sublist.
+Lengths greater than the initial list´s length will return the whole initial list.
+
+Examples:
+Initial list = [a, b, c, d]
+* "Sub List(1,2)" yields the following sublist = [b, c]
+* "Sub List(-1,0)" yields the following sublist = [e]
+* "Sub List(-3,2)" yields the following sublist = [c, d]</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">return base.list.ListUtilsImpl.subList(list, start, length);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

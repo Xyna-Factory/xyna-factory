@@ -1237,14 +1237,15 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
 
     ODSConnection con = ods.openConnection(ODSConnectionType.DEFAULT);
     try {
-      PreparedQuery<CronLikeOrder> query = cursorQueryCache.getQueryFromCache(selectString, con, reader);
+      PreparedQuery<CronLikeOrder> query = cursorQueryCache.getQueryFromCache(selectString, con, reader, CronLikeOrder.TABLE_NAME);
       List<CronLikeOrder> queryResult = con.query(query, paras, maxRows);
       for(CronLikeOrder clo : queryResult) {
         crons.add(new CronLikeOrderInformation(clo));
       }
       if (crons.size() >= maxRows) {
         PreparedQuery<? extends OrderCount> queryCount = cursorQueryCache.getQueryFromCache(selectCountString, con,
-                                                                                 OrderCount.getCountReader());
+                                                                                 OrderCount.getCountReader(),
+                                                                                 CronLikeOrder.TABLE_NAME);
         OrderCount count = con.queryOneRow(queryCount, paras);
         countAll = count.getCount();
       } else {
@@ -1284,8 +1285,7 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
       throws PersistenceLayerException {
     
     return new FactoryWarehouseCursor<CronLikeOrder>(con, CronLikeOrderHelpers.sqlGetCronLikeOrdersWithDifferentBinding, new Parameter(binding),
-        new CronLikeOrder.CronLikeOrderReader(), blockSize,
-        cursorQueryCache);
+        new CronLikeOrder.CronLikeOrderReader(), blockSize, cursorQueryCache, CronLikeOrder.TABLE_NAME);
   }
   
       
@@ -1307,7 +1307,7 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
       case NO_CLUSTER :
       case DISCONNECTED_MASTER :
         return new FactoryWarehouseCursor<CronLikeOrder>(con, CronLikeOrderHelpers.sqlGetNextCronLikeOrders, new Parameter(),
-                                                         reader, blockSize, cursorQueryCache);
+                                                         reader, blockSize, cursorQueryCache, CronLikeOrder.TABLE_NAME);
 
       case DISCONNECTED_SLAVE :
         return null;
@@ -1318,7 +1318,8 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
       default :
         return new FactoryWarehouseCursor<CronLikeOrder>(con, CronLikeOrderHelpers.sqlGetNextCronLikeOrdersForBinding,
                                                          new Parameter(currentOwnBinding),
-                                                         reader, blockSize, cursorQueryCache);
+                                                         reader, blockSize, cursorQueryCache,
+                                                         CronLikeOrder.TABLE_NAME);
     }
 
   }
@@ -1339,7 +1340,7 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
         return new FactoryWarehouseCursor<CronLikeOrder>(con, CronLikeOrderHelpers.sqlGetNextEnabledCronLikeOrders,
                                                          new Parameter(Boolean.TRUE),
                                                          new CronLikeOrder.CronLikeOrderReader(), blockSize,
-                                                         cursorQueryCache);
+                                                         cursorQueryCache, CronLikeOrder.TABLE_NAME);
 
       case DISCONNECTED_SLAVE :
         return null;
@@ -1352,7 +1353,7 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
                                                          CronLikeOrderHelpers.sqlGetNextEnabledCronLikeOrdersForBinding,
                                                          new Parameter(currentOwnBinding, Boolean.TRUE),
                                                          new CronLikeOrder.CronLikeOrderReader(), blockSize,
-                                                         cursorQueryCache);
+                                                         cursorQueryCache, CronLikeOrder.TABLE_NAME);
     }
 
   }
@@ -1754,7 +1755,7 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
     sql.append(" ORDER BY " + CronLikeOrder.COL_ID);
     return new FactoryWarehouseCursor<CronLikeOrder>(con, sql.toString(), parameter,
                                                      new CronLikeOrder.CronLikeOrderReader(), blockSize,
-                                                     cursorQueryCache);
+                                                     cursorQueryCache, CronLikeOrder.TABLE_NAME);
   }
 
 
@@ -1769,7 +1770,7 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
               return rs.getInt(1);
             }
 
-          }));
+          }, CronLikeOrder.TABLE_NAME));
       int cnt = con.queryOneRow(pq, new Parameter(revision, currentOwnBinding));
       return cnt;
     } finally {

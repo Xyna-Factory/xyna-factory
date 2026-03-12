@@ -29,7 +29,7 @@
     <property name="mdm.xml.path" value="xact/devicetypes" />
     <property name="mdm.xml.filename" value="OneOSDevice.xml" />
     <property name="mdm.service.path" value="xact.devicetypes.OneOSDevice" />
-    
+    <property name="config.folder.dir" value="${basedir}/config" />
     <property name="conf.filename" value="OneOSDevice.conf" />
 
 
@@ -47,7 +47,7 @@
 
     <target name="build" depends="buildService.build">
         <copy todir="${target.dir}">
-            <fileset dir="${base.lib.dir}">
+            <fileset dir="${config.folder.dir}">
                 <include name="${conf.filename}" />
             </fileset>
         </copy>

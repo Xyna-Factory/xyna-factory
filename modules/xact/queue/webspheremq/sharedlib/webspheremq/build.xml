@@ -25,7 +25,6 @@
 
     <property name="sharedLib.folder.name" value="webspheremq" />
     <property name="sharedLib.name" value="webspheremq" />
-    <property name="unfree.lib.dir" value="${basedir}/lib_unfree" />
 
     <import file="${root.dir}/installation/build/buildSharedLib.xml" />
 

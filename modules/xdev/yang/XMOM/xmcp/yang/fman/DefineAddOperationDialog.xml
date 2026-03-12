@@ -90,12 +90,12 @@
       <Mapping>%2%.dataPath="%0%.operationName"</Mapping>
       <Mapping>%3%.label="Workspace"</Mapping>
       <Mapping>%3%.dataPath="%0%.workspaceName"</Mapping>
-      <Mapping>%4%.label="RPC"</Mapping>
-      <Mapping>%4%.dataPath="%0%.rpc"</Mapping>
+      <Mapping>%4%.label="Yang Tag Name"</Mapping>
+      <Mapping>%4%.dataPath="%0%.yangTagName"</Mapping>
       <Mapping>%5%.label="Device Fqn"</Mapping>
       <Mapping>%5%.dataPath="%0%.deviceFqn"</Mapping>
-      <Mapping>%6%.label="(Optional) RPC Namespace"</Mapping>
-      <Mapping>%6%.dataPath="%0%.rpcNamespace"</Mapping>
+      <Mapping>%6%.label="(Optional) Yang Tag Namespace"</Mapping>
+      <Mapping>%6%.dataPath="%0%.yangTagNamespace"</Mapping>
       <Mapping>%7%.dataPath="%0%"</Mapping>
       <Mapping>%7%.label="Create Operation"</Mapping>
       <Mapping>%7%.serviceRTC=%0%</Mapping>
@@ -164,6 +164,43 @@
           </Meta>
         </Source>
       </Input>
+      <Output>
+        <Data ID="36" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition36">
+          <Source RefID="27"/>
+        </Data>
+        <Target RefID="37"/>
+      </Output>
+      <Mapping>%6%.label="Add Operation"</Mapping>
+      <Mapping>%6%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
+      <Mapping>%6%.children["1"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%1%</Mapping>
+      <Mapping>%6%.children["2"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%2%</Mapping>
+      <Mapping>%6%.children["3"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%3%</Mapping>
+      <Mapping>%6%.children["4"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%4%</Mapping>
+      <Mapping>%6%.children["5"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%5%</Mapping>
+    </Mappings>
+    <Mappings ID="1987" Label="Mapping">
+      <Output>
+        <Data ID="2004" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition2004">
+          <Source RefID="1987"/>
+        </Data>
+        <Target RefID="2005"/>
+      </Output>
+      <Mapping>%0%.label="Yang Tag is RPC"</Mapping>
+      <Mapping>%0%.dataPath="%0%.isRpc"</Mapping>
+    </Mappings>
+    <Mappings ID="1855" Label="Mapping">
+      <Input>
+        <Data ID="1890" Label="Form Definition In" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition1890">
+          <Source RefID="1855"/>
+        </Data>
+        <Source RefID="37"/>
+      </Input>
+      <Input>
+        <Data ID="2022" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition2022">
+          <Source RefID="1855"/>
+        </Data>
+        <Source RefID="2005"/>
+      </Input>
       <Input>
         <Data ID="448" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition448">
           <Source RefID="27"/>
@@ -171,19 +208,14 @@
         <Source RefID="458"/>
       </Input>
       <Output>
-        <Data ID="36" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition36">
-          <Source RefID="27"/>
+        <Data ID="1872" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition1872">
+          <Source RefID="1855"/>
         </Data>
-        <Target RefID="37"/>
+        <Target RefID="1873"/>
       </Output>
-      <Mapping>%7%.label="Add Operation"</Mapping>
-      <Mapping>%7%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
-      <Mapping>%7%.children["1"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%1%</Mapping>
-      <Mapping>%7%.children["2"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%2%</Mapping>
-      <Mapping>%7%.children["3"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%3%</Mapping>
-      <Mapping>%7%.children["4"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%4%</Mapping>
-      <Mapping>%7%.children["5"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%5%</Mapping>
-      <Mapping>%7%.children["6"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%6%</Mapping>
+      <Mapping>%3%=%0%</Mapping>
+      <Mapping>%3%.children["6"]=%1%</Mapping>
+      <Mapping>%3%.children["7"]=%2%</Mapping>
     </Mappings>
     <Data ID="37" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition37">
       <Source RefID="27"/>
@@ -213,13 +245,23 @@
       <Source RefID="102"/>
     </Data>
     <Data ID="1702" Label="Operation Creation Parameter" ReferenceName="OperationCreationParameter" ReferencePath="xdev.yang" VariableName="const_OperationCreationParameter1702"/>
+    <Data ID="1873" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition1873">
+      <Source RefID="1855"/>
+    </Data>
+    <Data ID="2005" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition2005">
+      <Source RefID="1987"/>
+    </Data>
     <Assign ID="1">
-      <Source RefID="37"/>
+      <Source RefID="1873"/>
       <Source RefID="1702"/>
       <Target RefID="14"/>
       <Target RefID="1585"/>
       <Copy>
-        <Source RefID="37"/>
+        <Source RefID="1873">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
         <Target RefID="14"/>
       </Copy>
       <Copy>

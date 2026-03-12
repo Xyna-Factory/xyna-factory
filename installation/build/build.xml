@@ -878,6 +878,12 @@
 	</propertyset>
 </ant>
 
+<ant dir="${root.dir}/sharedresourcesynchronizers" target="build">
+	<property name="target.dir" value="${build.dir}/server/sharedresourcesynchronizers" />
+	<propertyset >
+		<propertyref prefix="xyna.sharedresourcesynchronizer"/>
+	</propertyset>
+</ant>
 
 </target>
 

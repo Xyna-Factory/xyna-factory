@@ -20,13 +20,12 @@ package com.gip.xyna.utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Random;
 import java.util.zip.ZipInputStream;
 
 import com.gip.xyna.FileUtils;
 import com.gip.xyna.exceptions.Ex_FileAccessException;
 import com.gip.xyna.xact.exceptions.XACT_JarFileUnzipProblem;
-import com.gip.xyna.xfmg.Constants;
+import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
 
 
 public class FolderCopyWithBackup {
@@ -129,7 +128,8 @@ public class FolderCopyWithBackup {
   
   
   private String generateRandomZipFilename() {
-    return FileUtils.generateRandomFilename(Constants.BASEDIR, "temp_" + System.currentTimeMillis() + "_", ".zip");
+    File baseDir = new File(XynaProperty.TMP_DIR.get());
+    return FileUtils.generateRandomFilename(baseDir.getPath(), "temp_" + System.currentTimeMillis() + "_", ".zip");
   }
   
 

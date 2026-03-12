@@ -30,7 +30,6 @@
         <path location="${basedir}/../../../../../../.."/>
     </pathconvert>
 
-    <import file="${root.dir}/installation/build/ant-xyna.xml" />
     <import file="${root.dir}/installation/build/macros.xml" />
 
     <condition property="src.dir.available">

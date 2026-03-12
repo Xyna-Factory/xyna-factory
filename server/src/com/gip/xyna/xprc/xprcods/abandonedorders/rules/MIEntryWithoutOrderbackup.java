@@ -54,11 +54,13 @@ public class MIEntryWithoutOrderbackup extends AbandonedOrderDetectionRule<MIEnt
         readMIEntryWithOrderId =
             con.prepareQuery(new Query<ManualInteractionEntry>("select * from " + ManualInteractionEntry.TABLE_NAME
                 + " where " + ManualInteractionEntry.MI_COL_XYNAORDER_ID + "=? and "
-                + ManualInteractionEntry.COL_BINDING + "=?", new ManualInteractionEntry().getReader()), true);
+                + ManualInteractionEntry.COL_BINDING + "=?", new ManualInteractionEntry().getReader(),
+                ManualInteractionEntry.TABLE_NAME), true);
         readMIEntriesWithRootOrderId =
             con.prepareQuery(new Query<ManualInteractionEntry>("select * from " + ManualInteractionEntry.TABLE_NAME
                 + " where " + ManualInteractionEntry.MI_COL_XYNAORDER_ROOT_ID + "=? and "
-                + ManualInteractionEntry.COL_BINDING + "=?", new ManualInteractionEntry().getReader()), true);
+                + ManualInteractionEntry.COL_BINDING + "=?", new ManualInteractionEntry().getReader(),
+                ManualInteractionEntry.TABLE_NAME), true);
       } catch (PersistenceLayerException e) {
         throw new RuntimeException("Failed to prepare query. ", e);
       } finally {
@@ -86,7 +88,9 @@ public class MIEntryWithoutOrderbackup extends AbandonedOrderDetectionRule<MIEnt
     try {
       FactoryWarehouseCursor<? extends ManualInteractionEntry> cursor =
           con.getCursor("select * from " + ManualInteractionEntry.TABLE_NAME + " where "
-                            + ManualInteractionEntry.COL_BINDING + "=?", new Parameter(ownBinding),
+                            + ManualInteractionEntry.COL_BINDING + "=?", 
+                            ManualInteractionEntry.TABLE_NAME, 
+                            new Parameter(ownBinding),
                         new ManualInteractionEntry().getReader(), 500);
 
       List<? extends ManualInteractionEntry> next = cursor.getRemainingCacheOrNextIfEmpty();

@@ -61,7 +61,7 @@ public class LoadOrderBackupWithOwnBindingAndDifferentBootCountId extends OrderB
         
         PreparedQuery<OrderCount> prepareQueryCountOrders = con.prepareQuery(new Query<OrderCount>("select count(*) from "
                      + OrderInstanceBackup.TABLE_NAME + " where not (" + OrderInstanceBackup.COL_BOOTCNTID + "=?) and "
-                     + OrderInstanceBackup.COL_ID + " > ? and " + OrderInstanceBackup.COL_BINDING + " =?", OrderCount.getCountReader()), false);
+                     + OrderInstanceBackup.COL_ID + " > ? and " + OrderInstanceBackup.COL_BINDING + " =?", OrderCount.getCountReader(), OrderInstanceBackup.TABLE_NAME), false);
         
         refreshCursorAfterPause: while(true) {
           
@@ -74,6 +74,7 @@ public class LoadOrderBackupWithOwnBindingAndDifferentBootCountId extends OrderB
           FactoryWarehouseCursor<OrderInstanceBackup> cursor = con.getCursor("select * from " + OrderInstanceBackup.TABLE_NAME + 
                      " where not (" + OrderInstanceBackup.COL_BOOTCNTID + "=?) and " + OrderInstanceBackup.COL_ID + " > ? and "
                      + OrderInstanceBackup.COL_BINDING + " =? order by " + OrderInstanceBackup.COL_ROOT_ID + " asc",
+                     OrderInstanceBackup.TABLE_NAME,
                      new Parameter(XynaFactory.getInstance().getBootCntId(), lastId, ownBinding), OrderInstanceBackup.getReaderWarnIfNotDeserializable(), BLOCKSIZE);
           
           List<OrderInstanceBackup> incompleteFamily = new ArrayList<OrderInstanceBackup>();

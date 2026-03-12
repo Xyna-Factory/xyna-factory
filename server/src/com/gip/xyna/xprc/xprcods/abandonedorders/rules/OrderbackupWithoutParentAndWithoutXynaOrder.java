@@ -58,7 +58,7 @@ public class OrderbackupWithoutParentAndWithoutXynaOrder extends AbandonedOrderD
     try {
       readTargetOrderInstanceBackups =
           defCon.prepareQuery(new Query<OrderInstanceBackup>(READ_TARGETS_SQL, OrderInstanceBackup
-                                  .getReaderWarnIfNotDeserializable()), true);
+                                  .getReaderWarnIfNotDeserializable(), OrderInstanceBackup.TABLE_NAME), true);
     } finally {
       defCon.closeConnection();
     }
@@ -69,7 +69,8 @@ public class OrderbackupWithoutParentAndWithoutXynaOrder extends AbandonedOrderD
         readOrderbackupsWithRootOrderId =
           con.prepareQuery(new Query<OrderInstanceBackup>("select * from " + OrderInstanceBackup.TABLE_NAME
               + " where " + OrderInstanceBackup.COL_ROOT_ID + "=? and " + OrderInstanceBackup.COL_BINDING + "=?",
-                                                          new OrderInstanceBackup().getReader()), true);
+                                                          new OrderInstanceBackup().getReader(),
+                                                          OrderInstanceBackup.TABLE_NAME), true);
       } catch (PersistenceLayerException e) {
         throw new RuntimeException("Failed to prepare query. ", e);
       } finally {

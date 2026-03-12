@@ -44,10 +44,10 @@
     <delete dir="${impl.dir}/node_modules"/>
     <delete dir="${script.dir}/node_modules"/>
     <exec dir="${impl.dir}" executable="npm">
-      <arg value="install"/>
+      <arg value="clean-install"/>
     </exec>
     <exec dir="${script.dir}" executable="npm">
-      <arg value="install"/>
+      <arg value="clean-install"/>
     </exec>
   </target>
 

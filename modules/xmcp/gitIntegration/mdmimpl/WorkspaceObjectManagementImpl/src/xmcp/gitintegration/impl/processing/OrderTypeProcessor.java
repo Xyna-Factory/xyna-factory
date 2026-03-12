@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ package xmcp.gitintegration.impl.processing;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,8 +39,17 @@ import com.gip.xyna.xfmg.xods.ordertypemanagement.OrdertypeManagement;
 import com.gip.xyna.xfmg.xods.ordertypemanagement.OrdertypeParameter;
 import com.gip.xyna.xfmg.xods.ordertypemanagement.OrdertypeParameter.DestinationValueParameter;
 import com.gip.xyna.xprc.XynaOrderServerExtension.ExecutionType;
+import com.gip.xyna.xprc.XynaProcessingBase;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
+import com.gip.xyna.xprc.xpce.XynaProcessCtrlExecution;
+import com.gip.xyna.xprc.xpce.cleanup.CleanupDispatcher;
+import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
+import com.gip.xyna.xprc.xpce.dispatcher.DestinationValue;
+import com.gip.xyna.xprc.xpce.dispatcher.FractalWorkflowDestination;
+import com.gip.xyna.xprc.xpce.dispatcher.XynaDispatcher;
+import com.gip.xyna.xprc.xpce.execution.ExecutionDispatcher;
 import com.gip.xyna.xprc.xpce.parameterinheritance.ParameterInheritanceManagement.ParameterType;
+import com.gip.xyna.xprc.xpce.planning.PlanningDispatcher;
 
 import xmcp.gitintegration.CREATE;
 import xmcp.gitintegration.Capacity;
@@ -88,7 +96,15 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
 
   private static OrdertypeManagement orderTypeManagement;
   private static RevisionManagement revisionManagement;
+  private static XynaProcessingBase processing;
 
+
+  private static XynaProcessingBase getProcessing() {
+    if(processing == null) {
+      processing = XynaFactory.getInstance().getProcessing();
+    }
+    return processing;
+  }
 
   private static OrdertypeManagement getOrderTypeManagement() {
     if(orderTypeManagement == null) {
@@ -142,11 +158,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
           if (toEntry.getMonitoringLevel() != null) {
             toMonitotingLevel = toEntry.getMonitoringLevel();
           }
-          // workaround: set default inheritance rule explicitly instead of using value null
-          if (fromEntry.getInheritanceRules() != null && toEntry.getInheritanceRules() == null) {
-            toEntry.setInheritanceRules(Arrays.asList(new InheritanceRule.Builder().parameterType("MonitoringLevel").value("")
-                .childFilter("").precedence("0").instance()));
-          }
+
           if (!Objects.equals(fromEntry.getDocumentation(), toEntry.getDocumentation())
               || (getDispatcherDestinationDiffTypeMap(fromEntry, toEntry).size() > 0)
               || (getInheritanceRuleDiffTypeMap(fromEntry, toEntry).size() > 0) || (getCapacityDiffTypeMap(fromEntry, toEntry).size() > 0)
@@ -259,7 +271,8 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
       } else if (childNode.getNodeName().equals(TAG_CHILDFILTER)) {
         ih.setChildFilter(childNode.getTextContent());
       } else if (childNode.getNodeName().equals(TAG_VALUE)) {
-        ih.setValue(childNode.getTextContent());
+        String value = childNode.getTextContent();
+        ih.setValue(value.equals("null") ? "" : value);
       } else if (childNode.getNodeName().equals(TAG_PRECEDENCE)) {
         ih.setPrecedence(childNode.getTextContent());
       }
@@ -543,7 +556,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
     if (to.getDispatcherDestinations() != null) {
       List<DispatcherDestination> createList = new ArrayList<DispatcherDestination>();
       for (DispatcherDestination dd : to.getDispatcherDestinations()) {
-        if (fromMap.get(dd.getDispatcherName()) == null) {
+        if (fromMap.get(dd.getDispatcherName()) == null && isCustomDestination(dd, to.getName())) {
           createList.add(dd);
         }
       }
@@ -572,8 +585,8 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
         if (toMap.get(dd.getDispatcherName()) != null) {
           DispatcherDestination fromDd = dd;
           DispatcherDestination toDd = toMap.get(dd.getDispatcherName());
-          if (!fromDd.getDestinationType().equals(fromDd.getDestinationType())
-              || !fromDd.getDestinationValue().equals(fromDd.getDestinationValue())) {
+          if (!fromDd.getDestinationType().equals(toDd.getDestinationType())
+              || !fromDd.getDestinationValue().equals(toDd.getDestinationValue())) {
             // modifyList has 2 Elements (from,to)
             modifyList.add(fromDd);
             modifyList.add(toDd);
@@ -589,6 +602,19 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
 
   private static String createKey(InheritanceRule ir) {
     return ir.getParameterType() + ":" + ir.getChildFilter();
+  }
+  
+  
+  private static boolean isCustomDestination(DispatcherDestination dd, String orderTypeName) {
+    String dispatcherName = dd.getDispatcherName();
+    if (DISPATCHERNAME_PLANNING.equals(dispatcherName)) {
+      return !XynaDispatcher.DESTINATION_DEFAULT_PLANNING.getFQName().equals(dd.getDestinationValue());
+    } else if (DISPATCHERNAME_EXECUTION.equals(dispatcherName)) {
+      return !orderTypeName.equals(dd.getDestinationValue());
+    } else if (DISPATCHERNAME_CLEANUP.equals(dispatcherName)) {
+      return !XynaDispatcher.DESTINATION_EMPTY_WORKFLOW.getFQName().equals(dd.getDestinationValue());
+    }
+    return true;
   }
 
   private static Map<WorkspaceContentDifferenceType, List<InheritanceRule>> getInheritanceRuleDiffTypeMap(OrderType from, OrderType to) {
@@ -639,12 +665,10 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
     if (from.getInheritanceRules() != null) {
       List<InheritanceRule> modifyList = new ArrayList<InheritanceRule>();
       for (InheritanceRule ir : from.getInheritanceRules()) {
-        if (toMap.get(ir.getParameterType() + ":" + ir.getChildFilter()) != null) {
+        InheritanceRule toIr = toMap.get(ir.getParameterType() + ":" + ir.getChildFilter());
+        if (toIr != null) {
           InheritanceRule fromIr = ir;
-          InheritanceRule toIr = toMap.get(ir.getParameterType() + ":" + ir.getChildFilter());
-          if (!fromIr.getValue().equals(toIr.getValue())
-              || ((fromIr.getPrecedence() != null) && !fromIr.getPrecedence().equals(toIr.getPrecedence()))
-              || ((toIr.getPrecedence() != null) && !toIr.getPrecedence().equals(fromIr.getPrecedence()))) {
+          if (!compareValue(fromIr.getValue(), toIr.getValue()) || !Objects.equals(fromIr.getPrecedence(), toIr.getPrecedence())) {
             // modifyList has 2 Elements (from,to)
             modifyList.add(fromIr);
             modifyList.add(toIr);
@@ -658,6 +682,13 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
     return resultMap;
   }
 
+  private static boolean compareValue(String val1, String val2) {
+    if(Objects.equals(val1, val2)) {
+      return true;
+    }
+    
+    return (val1 == null && val2.isEmpty()) || (val2 == null && val1.isEmpty());
+  }
 
   private static Map<WorkspaceContentDifferenceType, List<Capacity>> getCapacityDiffTypeMap(OrderType from, OrderType to) {
     Map<WorkspaceContentDifferenceType, List<Capacity>> resultMap = new HashMap<WorkspaceContentDifferenceType, List<Capacity>>();
@@ -740,7 +771,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
         List<DispatcherDestination> ddList = new ArrayList<DispatcherDestination>();
         ot.setDispatcherDestinations(ddList);
         DestinationValueParameter dvp = otp.getPlanningDestinationValue();
-        if (dvp != null) {
+        if (dvp != null && otp.isCustomPlanningDestinationValue()) {
           DispatcherDestination dd = new DispatcherDestination();
           dd.setDispatcherName(DISPATCHERNAME_PLANNING);
           dd.setDestinationType(dvp.getDestinationType());
@@ -748,7 +779,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
           ddList.add(dd);
         }
         dvp = otp.getExecutionDestinationValue();
-        if (dvp != null) {
+        if (dvp != null && otp.isCustomExecutionDestinationValue()) {
           DispatcherDestination dd = new DispatcherDestination();
           dd.setDispatcherName(DISPATCHERNAME_EXECUTION);
           dd.setDestinationType(dvp.getDestinationType());
@@ -756,7 +787,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
           ddList.add(dd);
         }
         dvp = otp.getCleanupDestinationValue();
-        if (dvp != null) {
+        if (dvp != null && otp.isCustomCleanupDestinationValue()) {
           DispatcherDestination dd = new DispatcherDestination();
           dd.setDispatcherName(DISPATCHERNAME_CLEANUP);
           dd.setDestinationType(dvp.getDestinationType());
@@ -764,7 +795,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
           ddList.add(dd);
         }
 
-        // DispatcherDestination
+        // InheritanceRules
         List<InheritanceRule> irList = new ArrayList<InheritanceRule>();
         ot.setInheritanceRules(irList);
         Map<ParameterType, List<com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule>> irMap =
@@ -777,7 +808,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
               ir.setParameterType(ptEntry.toString());
               ir.setChildFilter(irEntry.getChildFilter());
               ir.setPrecedence(Integer.toString(irEntry.getPrecedence()));
-              ir.setValue(irEntry.getValueAsString());
+              ir.setValue(irEntry.getUnevaluatedValue());
               irList.add(ir);
             }
           }
@@ -845,11 +876,69 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
     try {
       OrdertypeParameter orderTypeParameter = createOrdertypeParameter(to, revision);
       getOrderTypeManagement().modifyOrdertype(orderTypeParameter);
+      updateDestinations(to, revision);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
   }
 
+  
+  private void updateDestinations(OrderType orderType, Long revision) {
+    try {
+      Workspace ws = getRevisionManagement().getWorkspace(revision);
+      DestinationKey dk = new DestinationKey(orderType.getName(), ws);
+      XynaProcessCtrlExecution xpce = getProcessing().getXynaProcessCtrlExecution();
+
+      DispatcherDestination planningDispatcherDest = getDispatcherDestination(orderType.getDispatcherDestinations(), DISPATCHERNAME_PLANNING);
+      PlanningDispatcher planningDispatcher = xpce.getXynaPlanning().getPlanningDispatcher();
+      String defaultFqName = XynaDispatcher.DESTINATION_DEFAULT_PLANNING.getFQName();
+      if (planningDispatcherDest != null && !defaultFqName.equals(planningDispatcherDest.getDestinationValue())) {
+        DestinationValue pdv = new FractalWorkflowDestination(planningDispatcherDest.getDestinationValue());
+        planningDispatcher.removeDestination(dk);
+        planningDispatcher.setCustomDestination(dk, pdv);
+      } else {
+        planningDispatcher.removeCustomDestination(dk, XynaDispatcher.DESTINATION_DEFAULT_PLANNING);
+        planningDispatcher.setDestination(dk, XynaDispatcher.DESTINATION_DEFAULT_PLANNING, false);
+      }
+
+      DispatcherDestination executionDispatcherDest = getDispatcherDestination(orderType.getDispatcherDestinations(), DISPATCHERNAME_EXECUTION);
+      ExecutionDispatcher executionDispatcher = xpce.getXynaExecution().getExecutionEngineDispatcher();
+      defaultFqName = orderType.getName();
+      DestinationValue edv = new FractalWorkflowDestination(orderType.getName());
+      if (executionDispatcherDest != null && !defaultFqName.equals(executionDispatcherDest.getDestinationValue())) {
+        executionDispatcher.removeDestination(dk);
+        executionDispatcher.setCustomDestination(dk, edv);
+      } else {
+        executionDispatcher.removeCustomDestination(dk, edv);
+        executionDispatcher.setDestination(dk, edv, false);
+      }
+
+      DispatcherDestination cleanupDispatcherDest = getDispatcherDestination(orderType.getDispatcherDestinations(), DISPATCHERNAME_CLEANUP);
+      CleanupDispatcher cleanupDispatcher = xpce.getXynaCleanup().getCleanupEngineDispatcher();
+      defaultFqName = XynaDispatcher.DESTINATION_EMPTY_WORKFLOW.getFQName();
+      if (cleanupDispatcherDest != null && !defaultFqName.equals(cleanupDispatcherDest.getDestinationValue())) {
+        DestinationValue cdv = new FractalWorkflowDestination(cleanupDispatcherDest.getDestinationValue());
+        cleanupDispatcher.removeDestination(dk);
+        cleanupDispatcher.setCustomDestination(dk, cdv);
+      } else {
+        cleanupDispatcher.removeCustomDestination(dk, XynaDispatcher.DESTINATION_EMPTY_WORKFLOW);
+        cleanupDispatcher.setDestination(dk, XynaDispatcher.DESTINATION_EMPTY_WORKFLOW, false);
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+  
+  
+  private DispatcherDestination getDispatcherDestination(List<? extends DispatcherDestination> candidates, String destinationName) {
+    if(candidates == null) { return null; }
+    for(DispatcherDestination candidate : candidates) {
+      if(candidate.getDispatcherName().equals(destinationName)) {
+        return candidate;
+      }
+    }
+    return null;
+  }
 
   @Override
   public void delete(OrderType item, long revision) {
@@ -869,6 +958,16 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
                                                                   ParameterType.BackupWhenRemoteCall, new ArrayList<>())));
         newPara.setRequiredCapacities(new HashSet<>());
         getOrderTypeManagement().modifyOrdertype(newPara);
+
+        DestinationKey dk = new DestinationKey(newPara.getOrdertypeName(), newPara.getRuntimeContext());
+        DestinationValue dv = new FractalWorkflowDestination(orderTypeParameter.getOrdertypeName());
+        XynaProcessCtrlExecution xpce = getProcessing().getXynaProcessCtrlExecution();
+        xpce.getXynaPlanning().getPlanningDispatcher().removeCustomDestination(dk, XynaDispatcher.DESTINATION_DEFAULT_PLANNING);
+        xpce.getXynaPlanning().getPlanningDispatcher().setDestination(dk, XynaDispatcher.DESTINATION_DEFAULT_PLANNING, false);
+        xpce.getXynaExecution().getExecutionEngineDispatcher().removeCustomDestination(dk, XynaDispatcher.DESTINATION_EMPTY_WORKFLOW);
+        xpce.getXynaExecution().getExecutionEngineDispatcher().setDestination(dk, dv, false);
+        xpce.getXynaCleanup().getCleanupEngineDispatcher().removeCustomDestination(dk, dv);
+        xpce.getXynaCleanup().getCleanupEngineDispatcher().setDestination(dk, XynaDispatcher.DESTINATION_EMPTY_WORKFLOW, false);
       } else {
         // delete additional custom order type
         getOrderTypeManagement().deleteOrdertype(orderTypeParameter);
@@ -917,7 +1016,11 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
     orderTypeParameter.setRequiredCapacities(capacitySet);
 
     // InheritanceRules
-    Map<ParameterType, List<com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule>> ruleMap = new HashMap<>();
+    Map<ParameterType, List<com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule>> ruleMap;
+    ruleMap = new HashMap<>(Map.of(ParameterType.MonitoringLevel, new ArrayList<>(), 
+                                   ParameterType.SuspensionBackupMode, new ArrayList<>(),
+                                   ParameterType.BackupWhenRemoteCall, new ArrayList<>()));
+    orderTypeParameter.setParameterInheritanceRules(ruleMap);
     if ((item.getInheritanceRules() != null) && (item.getInheritanceRules().size() > 0)) {
       for (InheritanceRule ir : item.getInheritanceRules()) {
         ParameterType pt = ParameterType.valueOf(ir.getParameterType());

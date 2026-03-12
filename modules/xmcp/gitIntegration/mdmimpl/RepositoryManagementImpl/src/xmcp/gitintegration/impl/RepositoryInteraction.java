@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -43,7 +44,6 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PushCommand;
 import org.eclipse.jgit.api.RmCommand;
 import org.eclipse.jgit.api.Status;
-import org.eclipse.jgit.api.StatusCommand;
 import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
 import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.ListBranchCommand.ListMode;
@@ -55,6 +55,8 @@ import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
+import org.eclipse.jgit.errors.RevisionSyntaxException;
+import org.eclipse.jgit.lib.AnyObjectId;
 import org.eclipse.jgit.lib.BranchConfig;
 import org.eclipse.jgit.lib.BranchTrackingStatus;
 import org.eclipse.jgit.lib.ObjectId;
@@ -76,6 +78,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.FileUtils;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.collections.Triple;
@@ -97,6 +100,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.WorkflowProtectionM
 
 import base.Text;
 import xmcp.gitintegration.Flag;
+import xmcp.gitintegration.WorkspaceContent;
 import xmcp.gitintegration.WorkspaceContentDifferences;
 import xmcp.gitintegration.WorkspaceObjectManagement;
 import xmcp.gitintegration.impl.RepositoryCredentialsManagement.XynaRepoCredentials;
@@ -106,11 +110,10 @@ import xmcp.gitintegration.repository.Branch;
 import xmcp.gitintegration.repository.BranchData;
 import xmcp.gitintegration.repository.ChangeSet;
 import xmcp.gitintegration.repository.Commit;
-import xmcp.gitintegration.repository.IndexedWorkspaceFileChange;
+import xmcp.gitintegration.repository.PullOutput;
 import xmcp.gitintegration.repository.RepositoryConnection;
-import xmcp.gitintegration.repository.RepositoryConnectionGroup;
+import xmcp.gitintegration.repository.RepositoryStatus;
 import xmcp.gitintegration.repository.RepositoryUser;
-import xmcp.gitintegration.repository.WorkspaceFileChangeList;
 import xmcp.gitintegration.storage.ReferenceStorable;
 import xmcp.gitintegration.storage.ReferenceStorage;
 import xmcp.gitintegration.storage.UserManagementStorage;
@@ -185,29 +188,35 @@ public class RepositoryInteraction {
       ObjectId id = repo.resolve(remoteBranch);
       try (RevWalk revWalk = new RevWalk(repo)) {
         RevCommit commit = revWalk.parseCommit(id);
-        RevTree tree = commit.getTree();
-        try (TreeWalk treeWalk = new TreeWalk(repo)) {
-          treeWalk.addTree(tree);
-          treeWalk.setRecursive(true);
-          treeWalk.setFilter(PathFilter.create(file));
-          while (treeWalk.next()) {
-            String path = treeWalk.getPathString();
-            if (path.endsWith(".xml")) {
-              ObjectId objectId = treeWalk.getObjectId(0);
-              ObjectLoader loader = repo.open(objectId);
-              Text txt = new Text();
-              txt.setText(new String(loader.getBytes()));
-              ret.add(txt);
-            }
-          }
-        }
+        ret = getFileContentFromCommit(repo, commit, file);
         revWalk.dispose();
       }
     }
     return ret;
   }
-  
-  
+
+
+  private List<Text> getFileContentFromCommit(Repository repo, RevCommit commit, String file) throws Exception {
+    List<Text> ret = new ArrayList<>();
+    RevTree tree = commit.getTree();
+    try (TreeWalk treeWalk = new TreeWalk(repo)) {
+      treeWalk.addTree(tree);
+      treeWalk.setRecursive(true);
+      treeWalk.setFilter(PathFilter.create(file));
+      while (treeWalk.next()) {
+        String path = treeWalk.getPathString();
+        if (path.endsWith(".xml")) {
+          ObjectId objectId = treeWalk.getObjectId(0);
+          ObjectLoader loader = repo.open(objectId);
+          Text txt = new Text();
+          txt.unversionedSetText(new String(loader.getBytes()));
+          ret.add(txt);
+        }
+      }
+    }
+    return ret;
+  }
+
   public BranchData listBranches(String repository) throws Exception {
     BranchData.Builder result = new BranchData.Builder();
     List<Branch> resultBranches = new ArrayList<>();
@@ -217,15 +226,25 @@ public class RepositoryInteraction {
       List<Ref> branches = git.branchList().setListMode(ListMode.ALL).call();
       for (Ref branch : branches) {
         Branch.Builder branchBuilder = new Branch.Builder();
-        branchBuilder.name(branch.getName()).commitHash(branch.getObjectId().getName()).target(branch.getTarget().getName());
+        branchBuilder.commitHash(branch.getObjectId().getName()).target(branch.getTarget().getName());
         resultBranches.add(branchBuilder.instance());
-        if (Objects.equals(currentBranchName, branch.getName())) {
+        boolean isCurrentBranch = Objects.equals(currentBranchName, branch.getName());
+        branchBuilder.name(cleanupName(branch.getName()));
+        if (isCurrentBranch) {
           result.currentBranch(branchBuilder.instance());
         }
       }
     }
     result.branches(resultBranches);
     return result.instance();
+  }
+
+
+  private String cleanupName(String name) {
+    if(name.startsWith("refs/heads/")) {
+      return name.substring("refs/heads/".length());
+    }
+    return name;
   }
 
 
@@ -253,7 +272,7 @@ public class RepositoryInteraction {
     Repository repo = loadRepo(repository, true);
     return new LoadChangesTools().loadChanges(repository, repo);
   }
-  
+
 
   public void push(String repository, String message, boolean dryrun, String user, List<String> filePatterns) throws Exception {
     if (message == null) { throw new IllegalArgumentException("Commit message is empty"); }
@@ -285,7 +304,7 @@ public class RepositoryInteraction {
         oldTreeParser.reset(reader, oldTreeId);
       }
 
-      // Check if local branch not exists and remote branch exists 
+      // Check if local branch not exists and remote branch exists
       CheckoutCommand checkoutCommand = git.checkout();
       checkoutCommand.setName(branch);
       if (!existsLocalBranch(git, branch) && existsRemoteBranch(git, branch)) {
@@ -368,44 +387,148 @@ public class RepositoryInteraction {
     container.user = repoUser.getRepositoryUsername();
     container.mail = repoUser.getMail();
     fetch(git, repo, container);
+    container.localCommitBeforePull = getCommitHash(git, repo, repo.getBranch());
+    container.remoteCommit = getCommitHash(git, repo, BranchTrackingStatus.of(repo, repo.getBranch()).getRemoteTrackingBranch());
     loadLocalDiffs(git, container);
     loadRemoteDiffs(git, repo, container);
     processLocalDiffs(container);
     processRemoteDiffs(container);
+
     return container;
   }
 
 
-  public GitDataContainer pull(String repository, boolean dryrun, String user) throws Exception {
-    Repository repo = loadRepo(repository, true);
+  private String getCommitHash(Git git, Repository repo, String branch) {
+    try {
+      Iterable<RevCommit> it = git.log().setMaxCount(1).add(repo.resolve(branch)).call();
+      for(RevCommit commit : it) {
+        return commit.getName();
+      }
+    } catch (RevisionSyntaxException | GitAPIException | IOException e) {
+      return "unknown";
+    }
+
+    return  "unknown";
+  }
+
+  public PullOutput pull(String repository, boolean dryrun, String user) throws Exception {
+    Repository repo = loadRepo(repository, false);
     GitDataContainer container = null;
 
     try (Git git = new Git(repo)) {
       container = fillGitDataContainer(git, repo, repository, user);
+      List<String> openDifferenceListIds = findOpenDifferenceListIds(repository);
+      if(!openDifferenceListIds.isEmpty()) {
+        PullOutput output = createPullOutput(container, dryrun);
+        output.unversionedSetException("There are open Differences Lists: " + String.join(", ", openDifferenceListIds));
+        return output;
+      }
       if (dryrun) {
-        print(container);
         container.creds = null;
-        return container;
+        print(container);
+        return createPullOutput(container, dryrun);
       }
       processConflicts(container);
       processReverts(git, repo, container);
       processPulls(git, repo, container);
       processExecs(container);
       processReferences(container);
+      updateSplit(repository, container);
+      processWorkspaceConfig(repo, container);
+    } catch(Exception e) {
+      if(container != null) {
+        container.creds = null;
+        PullOutput output = createPullOutput(container, dryrun);
+        output.unversionedSetException(e.getMessage());
+        logger.error(e);
+        return output;
+      } else {
+        PullOutput.Builder output = new PullOutput.Builder();
+        output.exception(e.getMessage());
+        output.executions(Collections.emptyList());
+        output.localChanges(Collections.emptyList());
+        output.remoteChanges(Collections.emptyList());
+        output.openedWorkspaceDiffLists(Collections.emptyList());
+        output.conflicts(Collections.emptyList());
+        output.reverts(Collections.emptyList());
+        output.repository(repository);
+        return output.instance();
+      }
     }
-    container.creds = null;
-    return container;
+    return createPullOutput(container, dryrun);
   }
 
+  private void processWorkspaceConfig(Repository repo, GitDataContainer container) throws Exception {
+    String fromHash = container.localCommitBeforePull;
+    String toHash = container.remoteCommit;
+
+    Set<String> changedWorkspacePaths = new HashSet<>();
+    Map<String, String> rtcMap = new HashMap<>();
+    List<? extends RepositoryConnectionStorable> connections = RepositoryManagementImpl.loadConnectionsForSingleRepository(container.repository);
+    for (RepositoryConnectionStorable connection : connections) {
+      String filter = "none".equals(connection.getSplittype()) ? "/workspace.xml" : "/config/";
+      String path = connection.getSubpath() + filter;
+      for (String change : container.pull) {
+        if (change.startsWith(path)) {
+          changedWorkspacePaths.add(path);
+          rtcMap.put(path, connection.getWorkspacename());
+        }
+      }
+    }
+
+    for(String changedWorkspacePath : changedWorkspacePaths) {
+      WorkspaceContent before = createWorkspaceContentFromCommit(repo, container, changedWorkspacePath, fromHash);
+      WorkspaceContent after = createWorkspaceContentFromCommit(repo, container, changedWorkspacePath, toHash);
+      
+      WorkspaceContentDifferences cmp = WorkspaceObjectManagement.compareWorkspaceContent(before, after);
+      if(cmp.getListId() != -1l) {
+        container.diffListIds.add(rtcMap.get(changedWorkspacePath) + ": " + cmp.getListId());
+      }
+    }
+  }
+
+  private WorkspaceContent createWorkspaceContentFromCommit(Repository repo, GitDataContainer container, String path, String commitHash) throws Exception {
+    AnyObjectId id = ObjectId.fromString(commitHash);
+    RevCommit commit = repo.parseCommit(id);
+    List<Text> workspaceXmlFiles = getFileContentFromCommit(repo, commit, path);
+    return WorkspaceObjectManagement.createWorkspaceContentFromText(workspaceXmlFiles);
+  }
+
+  private PullOutput createPullOutput(GitDataContainer data, boolean dryrun) {
+
+    List<String> localChanges = data.localDiffs == null ? Collections.emptyList() : data.localDiffs.stream().map(this::convertDiffEntry).collect(Collectors.toList());
+    List<String> remoteChanges = data.remoteDiffs == null ? Collections.emptyList() : data.remoteDiffs.stream().map(this::convertDiffEntry).collect(Collectors.toList());
+    List<String> reverts = new ArrayList<String>();
+    if(data.revert != null) { 
+      reverts.addAll(data.revert);
+    }
+    if(data.lAddrAddReverts != null) {
+      reverts.addAll(data.lAddrAddReverts);
+    }
+    PullOutput.Builder builder = new PullOutput.Builder();
+    builder.conflicts(data.conflicts);
+    builder.dryrun(dryrun);
+    builder.exception(null);
+    builder.executions(data.exec == null ? Collections.emptyList() : data.exec.stream().map(x -> x.execType + " " + x.repoPath).collect(Collectors.toList()));
+    builder.localChanges(localChanges);
+    builder.localCommitBeforePull(data.localCommitBeforePull); 
+    builder.openedWorkspaceDiffLists(data.diffListIds);
+    builder.remoteChanges(remoteChanges);
+    builder.remoteCommit(data.remoteCommit);
+    builder.repository(data.repository);
+    builder.reverts(reverts);
+    builder.warnings(data.warnings);
+    return builder.instance();
+  }
+
+  private String convertDiffEntry(DiffEntry entry) {
+    String path = entry.getChangeType() == ChangeType.DELETE ? entry.getOldPath() : entry.getNewPath();
+    return String.format("%s %s", entry.getChangeType().name(), path);
+  }
 
   private void print(GitDataContainer container) {
     if (logger.isDebugEnabled()) {
-      List<String> execs = container.exec.stream().map(x -> x.execType + " - " + x.repoPath).collect(Collectors.toList());
-      logger.debug("  Pull: " + container.pull.size() + ": " + String.join(", ", container.pull));
-      logger.debug("  Push: " + container.push.size() + ": " + String.join(", ", container.push));
-      logger.debug("  Exec: " + container.exec.size() + ": " + String.join(", ", execs));
-      logger.debug("  Conf: " + container.conflicts.size() + ": " + String.join(", ", container.conflicts));
-      logger.debug("  revt: " + container.revert.size() + ": " + String.join(", ", container.revert));
+      logger.debug(container.toString());
     }
   }
 
@@ -469,6 +592,27 @@ public class RepositoryInteraction {
   }
 
 
+  private void updateSplit(String repository, GitDataContainer container) {
+    List<String> workspaceXmlFiles = container.pull.stream().filter(x -> x.endsWith("/workspace.xml")).collect(Collectors.toList());
+    for(String workspaceXml : workspaceXmlFiles) {
+      if(isWorkspaceConfig(workspaceXml, repository)) {
+        RepositoryConnectionStorable storable = getRepoConnectionStorable(workspaceXml, repository);
+        if(storable == null) {
+          continue;
+        }
+        base.File completePath = new base.File(String.format("%s/%s", repository, workspaceXml));
+        WorkspaceContent content = WorkspaceObjectManagement.createWorkspaceContentFromFile(completePath);
+        if(content.getSplit() != null && content.getSplit().equals(storable.getSplittype())) {
+          if(logger.isInfoEnabled()) {
+            logger.info("Update split type of " + repository + " to " + content.getSplit());
+          }
+          storable.setSplittype(content.getSplit());
+          RepositoryManagementImpl.persistRepositoryConnectionStorable(storable);
+        }
+      }
+    }
+  }
+
   private Workspace getWorkspace(Long revision) {
     try {
       return new Workspace(XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement()
@@ -499,17 +643,21 @@ public class RepositoryInteraction {
       String repoPath = exec.repoPath;
       String filePath = Path.of(container.repository, repoPath).toString();
       Pair<String, String> fqnAndWorkspace = getFqnAndWorkspaceFromRepoPath(repoPath, container.repository);
-      if(fqnAndWorkspace == null) {
+      if (fqnAndWorkspace == null) {
         exceptions.add(new Triple<>(exec.execType, "unknown", exec.repoPath));
         continue;
       }
       String fqn = fqnAndWorkspace.getFirst();
       String workspace = fqnAndWorkspace.getSecond();
       RemovexmomobjectImpl removeXmom = new RemovexmomobjectImpl();
+      SavexmomobjectImpl saveXmom = new SavexmomobjectImpl();
       try {
         if (exec.execType == PullExecType.delete) {
           removeXmom.removeXmomObject(workspace, fqn);
+        } else if(exec.execType == PullExecType.save) {
+          saveXmom.saveXmomObject(workspace, fqn, false);
         } else {
+          saveXmom.saveXmomObject(workspace, fqn, false);
           Long revision = getRevisionMgmt().getRevision(null, null, workspace);
           toDeployByRevision.putIfAbsent(revision, new ArrayList<ObjectToDeploy>());
           toDeployByRevision.get(revision).add(new ObjectToDeploy(fqn, filePath));
@@ -520,8 +668,8 @@ public class RepositoryInteraction {
     }
 
     List<Long> revisionsSorted = sortRevisions(toDeployByRevision.keySet());
-    for(Long revision : revisionsSorted) {
-      if(logger.isDebugEnabled()) {
+    for (Long revision : revisionsSorted) {
+      if (logger.isDebugEnabled()) {
         logger.debug("depolying " + toDeployByRevision.get(revision).size() + " objects in revision " + revision);
       }
       deployRevision(revision, toDeployByRevision.get(revision), exceptions);
@@ -530,14 +678,14 @@ public class RepositoryInteraction {
 
     if (!exceptions.isEmpty()) {
       List<String> e = exceptions.stream().map(this::formatXmomRegistrationException).collect(Collectors.toList());
-      container.warnings = e;
+      container.warnings.addAll(e);
     }
   }
 
 
   private List<Long> sortRevisions(Set<Long> revisions) {
     RuntimeContextDependencyManagement rtcMgmt =
-XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
+        XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
     List<Long> revisionsOrdered = new ArrayList<>();
     for (Long candidate : revisions) {
       sortRevision(candidate, revisionsOrdered, revisions, rtcMgmt);
@@ -628,6 +776,22 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
   }
 
 
+
+  private boolean isWorkspaceConfig(String pathInRepo, String repository) {
+    RepositoryConnectionStorable storable = getRepoConnectionStorable(pathInRepo, repository);
+    if (storable == null) {
+      if (logger.isDebugEnabled()) {
+        logger.debug("Could not find entry for repository " + repository + " matching RepoPath: " + pathInRepo);
+      }
+      return false;
+    }   
+
+    String subPath = storable.getSubpath();
+    boolean isWorkspaceXml = pathInRepo.equals(subPath + "/" + RepositoryManagementImpl.WORKSPACE_XML);
+    boolean isInConfigFolder = pathInRepo.startsWith(subPath + "/" + RepositoryManagementImpl.CONFIG + "/");
+    return  isWorkspaceXml || isInConfigFolder; 
+  }
+
   /**
    * returns null if repoPath does not belong to an XMOM object
    */
@@ -644,7 +808,7 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
 
     String workspace = storable.getWorkspacename();
     String subPath = storable.getSubpath();
-    int offset = storable.getSavedinrepo() ? 12 : 5; // 5 => /XMOM/, 12 => /saved/XMOM/
+    int offset = storable.getSavedinrepo() ? 11 : 5; // 5 => XMOM/, 12 => saved/XMOM/
 
     if (pathInRepo.length() < subPath.length() + offset) {
       if (logger.isDebugEnabled()) {
@@ -677,9 +841,9 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
       logger.debug("pathInRepo: " + pathInRepo + ", subPath: " + subPath + " -- path: " + path);
     }
 
-    if (savedinrepo && path.startsWith("/saved/XMOM")) {
+    if (savedinrepo && path.startsWith("/saved/XMOM/")) {
       return true;
-    } else if (!savedinrepo && path.startsWith("/XMOM")) {
+    } else if (!savedinrepo && path.startsWith("/XMOM/")) {
       return true;
     }
 
@@ -689,7 +853,7 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
 
   private String formatXmomRegistrationException(Triple<PullExecType , String, String> input) {
     StringBuilder sb = new StringBuilder();
-    sb.append("Cound not ").append(input.getFirst()).append(" ");
+    sb.append("Could not ").append(input.getFirst()).append(" '");
     sb.append(input.getThird()).append("' in workspace '");
     sb.append(input.getSecond()).append("'.");
     return sb.toString();
@@ -719,16 +883,31 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
 
 
   private void processPulls(Git git, Repository repository, GitDataContainer container) throws Exception {
-    if (!container.push.isEmpty()) {
+    boolean stashRequired = !container.lAddrAddReverts.isEmpty() || container.localDiffs.size() > container.revert.size();
+    if(stashRequired) {
       git.stashCreate().setIncludeUntracked(true).call();
     }
     PullCommand cmd = git.pull();
     getCredentialsMgmt().addCredentialsToCommand(cmd, repository, container.creds);
     cmd.call();
 
-    if (!container.push.isEmpty()) {
+    if(stashRequired) {
+      if (!container.lAddrAddReverts.isEmpty()) {
+        git.checkout().addPaths(container.lAddrAddReverts).call();
+        for (String toDelete : container.lAddrAddReverts) {
+          File toDeleteFile = new File(toDelete);
+          FileUtils.deleteFileWithRetries(toDeleteFile);
+        }
+      }
+
       git.stashApply().call();
+      git.stashDrop().call();
+  
+      if (!container.lAddrAddReverts.isEmpty()) {
+        git.checkout().addPaths(container.lAddrAddReverts).call();
+      }
     }
+
   }
 
 
@@ -790,6 +969,12 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
       if (logger.isDebugEnabled()) {
         logger.debug("Match localEntry: " + entry + " with remote entry: " + remoteEntry);
         logger.debug("  " + entry.getNewPath() + " -- old: " + entry.getOldPath());
+      }
+
+      if(isWorkspaceConfig(repoPath, container.repository)) {
+        container.revert.add(repoPath);
+        container.pull.add(repoPath);
+        continue;
       }
 
       boolean saved_equals_deployed = false;
@@ -864,6 +1049,7 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
     switch (remoteEntry.getChangeType()) {
       case MODIFY :
         if (saved_eq_deployed) {
+          container.exec.add(new PullExec(PullExecType.save, localEntry.getNewPath()));
           container.revert.add(localEntry.getNewPath());
           container.pull.add(localEntry.getNewPath());
         } else {
@@ -899,7 +1085,9 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
       container.conflicts.add(localEntry.getNewPath());
       return;
     } else {
+      container.exec.add(new PullExec(PullExecType.save, localEntry.getNewPath()));
       container.revert.add(localEntry.getNewPath());
+      container.lAddrAddReverts.add(localEntry.getNewPath());
     }
 
   }
@@ -908,8 +1096,8 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
   private boolean pathMatch(DiffEntry e1, DiffEntry e2) {
     boolean e1_oldPath = e1.getOldPath() != null && e1.getOldPath() != DiffEntry.DEV_NULL;
     boolean e1_newPath = e1.getNewPath() != null && e1.getNewPath() != DiffEntry.DEV_NULL;
-    return (e1_oldPath && (Objects.equals(e1.getOldPath(), e2.getOldPath())) || (Objects.equals(e1.getOldPath(), e2.getNewPath())))
-        || (e1_newPath && (Objects.equals(e1.getNewPath(), e2.getOldPath())) || (Objects.equals(e1.getNewPath(), e2.getNewPath())));
+    return (e1_oldPath && (Objects.equals(e1.getOldPath(), e2.getOldPath()) || Objects.equals(e1.getOldPath(), e2.getNewPath())))
+        || (e1_newPath && (Objects.equals(e1.getNewPath(), e2.getOldPath()) || Objects.equals(e1.getNewPath(), e2.getNewPath())));
   }
 
 
@@ -991,11 +1179,11 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
     RmCommand rm = git.rm();
     boolean foundAdd = false;
     boolean foundRm = false;
-    
+
     if ((filePatterns == null) || (filePatterns.size() < 1)) {
       add.addFilepattern(".");
       foundAdd = true;
-    } 
+    }
     else {
       for (String str : filePatterns) {
         if (isDeletedFile(str, container)) {
@@ -1008,13 +1196,13 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
         }
       }
     }
-    
+
     if (foundAdd) {
       add.call();
-    }    
+    }
     if (foundRm) {
       rm.call();
-    }    
+    }
     CommitCommand commitCmd = git.commit().setAuthor(container.user, container.mail).setMessage(msg);
     commitCmd.call();
 
@@ -1033,19 +1221,23 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
     List<String> result = list.stream().map(x -> String.valueOf(x.getListId())).collect(Collectors.toList());
     return result;
   }
-   
+
 
   public static class GitDataContainer {
 
     private String repository;
+    private String localCommitBeforePull;
+    private String remoteCommit;
     private List<DiffEntry> localDiffs = new ArrayList<>();
     private List<DiffEntry> remoteDiffs = new ArrayList<>();
     private List<String> conflicts = new ArrayList<>();
     private List<String> revert = new ArrayList<>();
+    private List<String> lAddrAddReverts = new ArrayList<>(); //files that were added both locally and remotely
     private List<String> pull = new ArrayList<>();
     private List<String> push = new ArrayList<>();
-    private List<PullExec> exec = new ArrayList<>(); //command => true=add, false=remove, path
+    private List<PullExec> exec = new ArrayList<>();
     private List<String> warnings = new ArrayList<>();
+    private List<String> diffListIds = new ArrayList<>();
     private XynaRepoCredentials creds; //only used within this class
     private String user;
     private String mail;
@@ -1058,21 +1250,29 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
       List<String> localDiffString = localDiffs.stream().map(x -> x.toString()).collect(Collectors.toList());
       List<String> remoteDiffString = remoteDiffs.stream().map(x -> x.toString()).collect(Collectors.toList());
       sb.append("Data for repository: ").append(repository).append("\n");
-      sb.append("  Ldif: ").append(localDiffs.size()).append(": ").append(String.join(", ", localDiffString)).append("\n");
-      sb.append("  Rdif: ").append(remoteDiffs.size()).append(": ").append(String.join(", ", remoteDiffString)).append("\n");
-      sb.append("  Pull: ").append(pull.size()).append(": ").append(String.join(", ", pull)).append("\n");
-      sb.append("  Push: ").append(push.size()).append(": ").append(String.join(", ", push)).append("\n");
-      sb.append("  Exec: ").append(exec.size()).append(": ").append(String.join(", ", execString)).append("\n");
-      sb.append("  Conf: ").append(conflicts.size()).append(": ").append(String.join(", ", conflicts)).append("\n");
-      sb.append("  revt: ").append(revert.size()).append(": ").append(String.join(", ", revert)).append("\n");
+      appendField(sb, "Ldif", localDiffString);
+      appendField(sb, "Rdif", remoteDiffString);
+      appendField(sb, "Pull", pull);
+      appendField(sb, "Push", push);
+      appendField(sb, "Exec", execString);
+      appendField(sb, "Conf", conflicts);
+      appendField(sb, "Revt", revert);
+      appendField(sb, "Lrar", lAddrAddReverts);
       if (!warnings.isEmpty()) {
-        sb.append("  warn: ").append(warnings.size()).append(": ").append(String.join(", ", warnings)).append("\n");
+        appendField(sb, "Warn", warnings);
+      }
+      if(!diffListIds.isEmpty()) {
+        appendField(sb, "DiffLists", diffListIds);
       }
       return sb.toString();
     }
 
     public boolean containsWarnings() {
       return !warnings.isEmpty();
+    }
+
+    private void appendField(StringBuilder sb, String name, List<String> data) {
+      sb.append("  ").append(name).append(": ").append(data.size()).append(": ").append(String.join(", ", data)).append("\n");
     }
   }
 
@@ -1091,7 +1291,7 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
 
   private enum PullExecType {
 
-    delete, deploy;
+    delete, deploy, save;
 
 
     public static PullExecType convert(ChangeType type) {
@@ -1108,5 +1308,27 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
       this.fqn = fqn;
       this.fileName = fileName;
     }
+  }
+
+
+  public RepositoryStatus getStatus(String repository) throws Exception {
+    RepositoryStatus.Builder builder = new RepositoryStatus.Builder();
+    Repository repo = loadRepo(repository, false);
+
+    try (Git git = new Git(repo)) {
+      Status status = git.status().call();
+      List<String> untracked = new ArrayList<>(status.getUntracked());
+      Collections.sort(untracked);
+      List<String> changes = new ArrayList<>(status.getUncommittedChanges());
+      Collections.sort(untracked);
+      List<String> missing = new ArrayList<>(status.getMissing());
+      Collections.sort(untracked);
+      builder.untracked(untracked);
+      builder.changes(changes);
+      builder.missing(missing);
+    }
+    
+    
+    return builder.instance();
   }
 }

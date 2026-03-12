@@ -53,7 +53,8 @@ public class OrderbackupWithWrongBinding extends AbandonedOrderDetectionRule<Aba
       querySelectOrderbackupWithNoClusterBinding =
           defCon.prepareQuery(new Query<OrderInstanceBackup>("select " + OrderInstanceBackup.COL_ID + ","
               + OrderInstanceBackup.COL_ROOT_ID + " from " + OrderInstanceBackup.TABLE_NAME + " where "
-              + OrderInstanceBackup.COL_BINDING + "=?", OrderInstanceBackup.getSelectiveReader()), true);
+              + OrderInstanceBackup.COL_BINDING + "=?", OrderInstanceBackup.getSelectiveReader(),
+              OrderInstanceBackup.TABLE_NAME), true);
     } finally {
       defCon.closeConnection();
     }
@@ -64,7 +65,8 @@ public class OrderbackupWithWrongBinding extends AbandonedOrderDetectionRule<Aba
         readOrderbackupsWithRootOrderId =
           con.prepareQuery(new Query<OrderInstanceBackup>("select * from " + OrderInstanceBackup.TABLE_NAME
               + " where " + OrderInstanceBackup.COL_ROOT_ID + "=? and " + OrderInstanceBackup.COL_BINDING + "=?",
-                                                          new OrderInstanceBackup().getReader()), true);
+                                                          new OrderInstanceBackup().getReader(),
+                                                          OrderInstanceBackup.TABLE_NAME), true);
       } catch (PersistenceLayerException e) {
         throw new RuntimeException("Failed to prepare query. ", e);
       } finally {

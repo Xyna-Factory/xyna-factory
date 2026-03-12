@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="YangBase" factoryVersion="" versionName="1.1.0" xmlVersion="1.1">
+--><Application applicationName="YangBase" factoryVersion="" versionName="1.1.8" xmlVersion="1.1">
+  <ApplicationInfo>
+    <Description Lang="DE">Basisfunktionalität zum Umgang mit YANG Datenmodellen</Description>
+    <Description Lang="EN">Basic functionality for handling of YANG data models</Description>
+    <RuntimeContextRequirements>
+      <RuntimeContextRequirement>
+        <ApplicationName>Base</ApplicationName>
+        <VersionName>1.1.4</VersionName>
+      </RuntimeContextRequirement>
+    </RuntimeContextRequirements>
+  </ApplicationInfo>
   <XMOMEntries>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.yang.MessageId</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.ProtocolOperations</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.TraceYangMappingCollection</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
       <FqName>xmcp.yang.YangDevice</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.YangMapping</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.YangMappingCollection</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.YangMappingPath</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.YangMappingPathElement</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
@@ -31,6 +65,90 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.yang.YangOperationImplementation</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.netconf.EditConfigInputData</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.netconf.NetConfFilter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.netconf.NetConfSessionId</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.netconf.NetConfSource</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.netconf.NetConfTarget</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.netconf.enums.ConfigurationDatastoreCandidate</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.netconf.enums.ConfigurationDatastoreRunning</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.netconf.enums.ConfigurationDatastoreStartup</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.netconf.enums.DefaultOperationMerge</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.netconf.enums.DefaultOperationNone</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.netconf.enums.DefaultOperationReplace</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.netconf.enums.ErrorOptionContinueOnError</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.netconf.enums.ErrorOptionRollbackOnError</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.netconf.enums.ErrorOptionStopOnError</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.netconf.enums.NetConfConfigurationDatastoreType</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.netconf.enums.NetConfDefaultOperation</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.netconf.enums.NetConfErrorOption</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.netconf.enums.NetConfTestOption</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.netconf.enums.TestOptionSet</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.netconf.enums.TestOptionTestOnly</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.netconf.enums.TestOptionTestThenSet</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
   </XMOMEntries>

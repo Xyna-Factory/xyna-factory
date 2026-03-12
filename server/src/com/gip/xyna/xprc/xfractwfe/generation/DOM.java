@@ -1484,7 +1484,7 @@ public class DOM extends DomOrExceptionGenerationBase {
    * impl lib wird verwendet
    */
   public boolean libraryExists() {
-    return getAdditionalLibraries().contains(getImplClassName() + ".jar") && 
+    return getAdditionalLibraries().contains(getImplClassName() + ".jar") &&
            XynaFactory.isFactoryServer(); // ignore libraries for script access
   }
 
@@ -2149,9 +2149,8 @@ public class DOM extends DomOrExceptionGenerationBase {
    * sucht alle xmom storables, die in ihrer membervariablen-hierarchie diesen typ enthalten. <br>
    * diese müssen nämlich auch neu deployed werden, wenn this sich ändert (weil die storable-klassen sich ändern müssen).
    */
-  public Set<GenerationBase> getRootXMOMStorablesUsingThis(GenerationBaseCache parseAdditionalCache, Set<GenerationBase> visited) {
-    //dependencyregister bemühen. 
-
+  public Set<GenerationBase> getRootXMOMStorablesUsingThis(GenerationBaseCache parseAdditionalCache, Set<DOM> visited) {
+    //dependencyregister bemühen.
     Set<GenerationBase> ret = new HashSet<GenerationBase>();
     
     if (isInheritedFromStorable()) {
@@ -2191,10 +2190,8 @@ public class DOM extends DomOrExceptionGenerationBase {
     
     Set<GenerationBase> subTypes = getSubTypes(parseAdditionalCache, false);
     for (GenerationBase subType : subTypes) {
-      if (visited.add(subType)) {
-        if (subType instanceof DOM) {
-          ret.addAll(((DOM)subType).getRootXMOMStorablesUsingThis(parseAdditionalCache, visited));
-        }
+      if (subType instanceof DOM && visited.add((DOM)subType)) {
+        ret.addAll(((DOM)subType).getRootXMOMStorablesUsingThis(parseAdditionalCache, visited));
       }
     }
     if (isInheritedFromStorable()) {

@@ -1,0 +1,18 @@
+<Yang type="Usecase">
+  <Rpc>testrpc</Rpc>
+  <RpcNamespace>http://www.gip.com/xyna/yang/test/testrpc</RpcNamespace>
+  <DeviceFqn>ztest.us.Test_Yang_Device</DeviceFqn>
+  <ListConfigurations/>
+  <Signature location="input">
+    <SignatureEntry fqn="base.Text" variableName="var_1"/>
+    <SignatureEntry fqn="base.Text" variableName="var_3"/>
+    <SignatureEntry fqn="base.Text" variableName="var_3"/>
+  </Signature>
+  <Mappings>
+    <Mapping config="&quot;1234&quot;" keyword="rpc leaf" namespace="http://www.gip.com/xyna/yang/test/testrpc§http://www.gip.com/xyna/yang/test/testrpc" yang="testrpc/zip-code"/>
+    <Mapping config="&quot;aField-1&quot;" keyword="rpc container choice case container leaf" namespace="http://www.gip.com/xyna/yang/test/testrpc§http://www.gip.com/xyna/yang/test/testrpc§http://www.gip.com/xyna/yang/test/testrpc§http://www.gip.com/xyna/yang/test/testrpc§http://www.gip.com/xyna/yang/test/testrpc§http://www.gip.com/xyna/yang/test/testrpc" yang="testrpc/protocol/name/b/anotherContainer/aField"/>
+    <Mapping config="&quot;sec-1&quot;" keyword="rpc container choice case container leaf" namespace="http://www.gip.com/xyna/yang/test/testrpc§http://www.gip.com/xyna/yang/test/testrpc§http://www.gip.com/xyna/yang/test/testrpc§http://www.gip.com/xyna/yang/test/testrpc§http://www.gip.com/xyna/yang/test/testrpc§http://www.gip.com/xyna/yang/test/testrpc" yang="testrpc/protocol/name/b/anotherContainer/secondField"/>
+    <Mapping config="&quot;udp-1&quot;" keyword="rpc container choice case leaf" namespace="http://www.gip.com/xyna/yang/test/testrpc§http://www.gip.com/xyna/yang/test/testrpc§http://www.gip.com/xyna/yang/test/testrpc§http://www.gip.com/xyna/yang/test/testrpc§http://www.gip.com/xyna/yang/test/testrpc" yang="testrpc/protocol/name/a/udp"/>
+  </Mappings>
+  <Signature location="output"/>
+</Yang>

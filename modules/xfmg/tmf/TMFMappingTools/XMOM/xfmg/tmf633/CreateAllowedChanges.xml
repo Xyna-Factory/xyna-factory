@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Create Allowed Changes" TypeName="CreateAllowedChanges" TypePath="xfmg.tmf633" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Create Allowed Changes" Name="CreateAllowedChanges">
+    <Input>
+      <Data ID="63" Label="HashMap" ReferenceName="HashMap" ReferencePath="base.list" VariableName="hashMap63"/>
+      <Data ID="92771" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector92771"/>
+    </Input>
+    <Output>
+      <Data ID="22" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges22"/>
+    </Output>
+    <ServiceReference ID="93189" Label="Create Allowed Changes" ReferenceName="CreateAllowedChanges" ReferencePath="xfmg.tmf633">
+      <Source RefID="93188"/>
+      <Target RefID="93188"/>
+    </ServiceReference>
+    <ServiceReference ID="92732" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="92731"/>
+      <Target RefID="92731"/>
+    </ServiceReference>
+    <ServiceReference ID="86" Label="JSON Datamodel Services" ReferenceName="JSONDatamodelServices.JSONDatamodelServices" ReferencePath="xfmg.xfctrl.datamodel.json">
+      <Source RefID="85"/>
+      <Target RefID="85"/>
+    </ServiceReference>
+    <ServiceReference ID="93003" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="93002"/>
+      <Target RefID="93002"/>
+    </ServiceReference>
+    <ServiceReference ID="93068" Label="Get Meta Tags Of Datatype As Map" ReferenceName="GetMetaTagsOfDatatypeAsMap" ReferencePath="xfmg.tmf.inspect">
+      <Source RefID="93067"/>
+      <Target RefID="93067"/>
+    </ServiceReference>
+    <Mappings ID="48" Label="Mapping">
+      <Input>
+        <Data ID="49" Label="HashMap" ReferenceName="HashMap" ReferencePath="base.list" VariableName="hashMap49"/>
+        <Source RefID="63"/>
+      </Input>
+      <Output>
+        <Data ID="50" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document50"/>
+        <Target RefID="47"/>
+      </Output>
+      <Mapping>%1%.text=%0%.getr("TMFAllowedChanges")</Mapping>
+    </Mappings>
+    <Choice ID="92300" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="47"/>
+      <Input>
+        <Data ID="92335" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document92335">
+          <Source RefID="92300"/>
+        </Data>
+        <Source RefID="47"/>
+      </Input>
+      <Case ID="92301" Label="true" Premise="%0%.text!=null">
+        <Function ID="85" Label="Parse Object From JSON with Options">
+          <Source RefID="86"/>
+          <Source RefID="47"/>
+          <Source RefID="194"/>
+          <Source RefID="260"/>
+          <Target RefID="86"/>
+          <Target RefID="92476"/>
+          <Invoke Operation="parseObjectFromJSONWithOptions" ServiceID="86">
+            <Source RefID="47"/>
+            <Source RefID="194">
+              <Meta>
+                <LinkType>Constant</LinkType>
+                <ExpectedType>tmf633.datamodel.AllowedChanges</ExpectedType>
+              </Meta>
+            </Source>
+            <Source RefID="260">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="86">
+            <Target RefID="92476">
+              <Meta>
+                <ExpectedType>tmf633.datamodel.AllowedChanges</ExpectedType>
+              </Meta>
+            </Target>
+          </Receive>
+        </Function>
+        <Assign ID="92304">
+          <Source RefID="92476"/>
+          <Target RefID="92685"/>
+          <Copy>
+            <Source RefID="92476"/>
+            <Target RefID="92685"/>
+          </Copy>
+        </Assign>
+        <Data ID="92476" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges92476">
+          <Source RefID="85"/>
+        </Data>
+      </Case>
+      <Case ID="92302" Label="false">
+        <Mappings ID="92505" Label="Mapping">
+          <Output>
+            <Data ID="92534" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges92534">
+              <Source RefID="92505"/>
+            </Data>
+            <Target RefID="92535"/>
+          </Output>
+          <Mapping>%0%=null</Mapping>
+        </Mappings>
+        <Assign ID="92306">
+          <Source RefID="92535"/>
+          <Target RefID="92685"/>
+          <Copy>
+            <Source RefID="92535"/>
+            <Target RefID="92685"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Function ID="92731" Label="Get Supertype">
+      <Source RefID="92732"/>
+      <Source RefID="92771"/>
+      <Target RefID="92732"/>
+      <Target RefID="92734"/>
+      <Invoke Operation="getSupertype" ServiceID="92732">
+        <Source RefID="92771"/>
+      </Invoke>
+      <Receive ServiceID="92732">
+        <Target RefID="92734"/>
+      </Receive>
+    </Function>
+    <Choice ID="92812" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="92734"/>
+      <Input>
+        <Data ID="92855" Label="Supertype" ReferenceName="Text" ReferencePath="base" VariableName="text92855">
+          <Source RefID="92812"/>
+        </Data>
+        <Source RefID="92734"/>
+      </Input>
+      <Case ID="92813" Label="true" Premise="%0%!=null">
+        <Function ID="93002" Label="Inspect Datatype by Name">
+          <Source RefID="93003"/>
+          <Source RefID="92734"/>
+          <Target RefID="93003"/>
+          <Target RefID="93005"/>
+          <Invoke Operation="inspectDatatypeByName" ServiceID="93003">
+            <Source RefID="92734"/>
+          </Invoke>
+          <Receive ServiceID="93003">
+            <Target RefID="93005"/>
+          </Receive>
+        </Function>
+        <Function ID="93067" Label="Get Meta Tags Of Datatype As Map">
+          <Source RefID="93068"/>
+          <Source RefID="93005"/>
+          <Target RefID="93068"/>
+          <Target RefID="93070"/>
+          <Invoke Operation="GetMetaTagsOfDatatypeAsMap" ServiceID="93068">
+            <Source RefID="93005">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="93068">
+            <Target RefID="93070"/>
+          </Receive>
+        </Function>
+        <Function ID="93188" Label="Create Allowed Changes">
+          <Source RefID="93189"/>
+          <Source RefID="93070"/>
+          <Source RefID="93005"/>
+          <Target RefID="93189"/>
+          <Target RefID="93191"/>
+          <Invoke Operation="CreateAllowedChanges" ServiceID="93189">
+            <Source RefID="93070">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+            <Source RefID="93005">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="93189">
+            <Target RefID="93191"/>
+          </Receive>
+        </Function>
+        <Choice ID="102070" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="92685"/>
+          <Source RefID="93191"/>
+          <Input>
+            <Data ID="102137" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges102137">
+              <Source RefID="102070"/>
+            </Data>
+            <Source RefID="92685">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Input>
+            <Data ID="102378" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges102378">
+              <Source RefID="102070"/>
+            </Data>
+            <Source RefID="93191">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Case ID="102071" Label="true" Premise="%0%==null&amp;&amp;%1%==null">
+            <Mappings ID="102703" Label="Mapping">
+              <Output>
+                <Data ID="102947" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges102947">
+                  <Source RefID="102703"/>
+                </Data>
+                <Target RefID="102948"/>
+              </Output>
+              <Mapping>%0%=null</Mapping>
+            </Mappings>
+            <Assign ID="102074">
+              <Source RefID="102948"/>
+              <Target RefID="102955"/>
+              <Copy>
+                <Source RefID="102948"/>
+                <Target RefID="102955"/>
+              </Copy>
+            </Assign>
+          </Case>
+          <Case ID="102072" Label="false">
+            <Choice ID="96567" TypeName="BaseChoiceTypeFormula" TypePath="server">
+              <Source RefID="92685"/>
+              <Input>
+                <Data ID="96695" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges96695">
+                  <Source RefID="96567"/>
+                </Data>
+                <Source RefID="92685">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Case ID="96568" Label="true" Premise="%0%!=null">
+                <Mappings ID="100423" Label="Mapping">
+                  <Input>
+                    <Data ID="100484" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges100484">
+                      <Source RefID="100423"/>
+                    </Data>
+                    <Source RefID="92685">
+                      <Meta>
+                        <LinkType>UserConnected</LinkType>
+                      </Meta>
+                    </Source>
+                  </Input>
+                  <Output>
+                    <Data ID="100545" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges100545">
+                      <Source RefID="100423"/>
+                    </Data>
+                    <Target RefID="100546"/>
+                  </Output>
+                  <Mapping>%1%=%0%</Mapping>
+                </Mappings>
+                <Assign ID="96571">
+                  <Source RefID="100546"/>
+                  <Target RefID="100976"/>
+                  <Copy>
+                    <Source RefID="100546"/>
+                    <Target RefID="100976"/>
+                  </Copy>
+                </Assign>
+              </Case>
+              <Case ID="96569" Label="false">
+                <Mappings ID="100787" Label="Mapping">
+                  <Output>
+                    <Data ID="100968" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges100968">
+                      <Source RefID="100787"/>
+                    </Data>
+                    <Target RefID="100969"/>
+                  </Output>
+                  <Mapping>%0%.allof=null</Mapping>
+                  <Mapping>%0%.anyof=null</Mapping>
+                  <Mapping>%0%.ignored=null</Mapping>
+                </Mappings>
+                <Assign ID="96573">
+                  <Source RefID="100969"/>
+                  <Target RefID="100976"/>
+                  <Copy>
+                    <Source RefID="100969"/>
+                    <Target RefID="100976"/>
+                  </Copy>
+                </Assign>
+              </Case>
+            </Choice>
+            <Choice ID="101466" TypeName="BaseChoiceTypeFormula" TypePath="server">
+              <Source RefID="93191"/>
+              <Input>
+                <Data ID="101473" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges101473"/>
+                <Source RefID="93191">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Case ID="101467" Label="true" Premise="%0%!=null">
+                <Mappings ID="101475" Label="Mapping">
+                  <Input>
+                    <Data ID="101476" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges101476"/>
+                    <Source RefID="93191">
+                      <Meta>
+                        <LinkType>UserConnected</LinkType>
+                      </Meta>
+                    </Source>
+                  </Input>
+                  <Output>
+                    <Data ID="101477" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges101477"/>
+                    <Target RefID="101463"/>
+                  </Output>
+                  <Mapping>%1%=%0%</Mapping>
+                </Mappings>
+                <Assign>
+                  <Source RefID="101463"/>
+                  <Target RefID="101465"/>
+                  <Copy>
+                    <Source RefID="101463"/>
+                    <Target RefID="101465"/>
+                  </Copy>
+                </Assign>
+              </Case>
+              <Case ID="101468" Label="false">
+                <Mappings ID="101478" Label="Mapping">
+                  <Output>
+                    <Data ID="101479" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges101479"/>
+                    <Target RefID="101464"/>
+                  </Output>
+                  <Mapping>%0%.allof=null</Mapping>
+                  <Mapping>%0%.anyof=null</Mapping>
+                  <Mapping>%0%.ignored=null</Mapping>
+                </Mappings>
+                <Assign>
+                  <Source RefID="101464"/>
+                  <Target RefID="101465"/>
+                  <Copy>
+                    <Source RefID="101464"/>
+                    <Target RefID="101465"/>
+                  </Copy>
+                </Assign>
+              </Case>
+            </Choice>
+            <Mappings ID="93772" Label="Mapping">
+              <Input>
+                <Data ID="99281" Label="AllowedChanges1" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges99281">
+                  <Source RefID="93772"/>
+                </Data>
+                <Source RefID="100976">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Input>
+                <Data ID="99342" Label="AllowedChanges2" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges99342">
+                  <Source RefID="93772"/>
+                </Data>
+                <Source RefID="101465">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Output>
+                <Data ID="94231" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges94231">
+                  <Source RefID="93772"/>
+                </Data>
+                <Target RefID="102886"/>
+              </Output>
+              <Mapping>%2%.allof=concatlists(%0%.allof, %1%.allof)</Mapping>
+              <Mapping>%2%.anyof=concatlists(%0%.anyof, %1%.anyof)</Mapping>
+              <Mapping>%2%.ignored=concatlists(%0%.ignored, %1%.ignored)</Mapping>
+            </Mappings>
+            <Assign ID="102076">
+              <Source RefID="102886"/>
+              <Target RefID="102955"/>
+              <Copy>
+                <Source RefID="102886"/>
+                <Target RefID="102955"/>
+              </Copy>
+            </Assign>
+            <Data ID="102886" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges102886">
+              <Source RefID="93772"/>
+            </Data>
+          </Case>
+        </Choice>
+        <Assign ID="92816">
+          <Source RefID="102955"/>
+          <Target RefID="93404"/>
+          <Copy>
+            <Source RefID="102955"/>
+            <Target RefID="93404"/>
+          </Copy>
+        </Assign>
+        <Data ID="93005" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector93005">
+          <Source RefID="93002"/>
+        </Data>
+        <Data ID="93070" Label="HashMap" ReferenceName="HashMap" ReferencePath="base.list" VariableName="hashMap93070">
+          <Source RefID="93067"/>
+        </Data>
+        <Data ID="93191" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges93191">
+          <Source RefID="93188"/>
+        </Data>
+        <Data ID="101463" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges101463"/>
+        <Data ID="101464" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges101464"/>
+        <Data ID="101465" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges101465"/>
+      </Case>
+      <Case ID="92814" Label="false">
+        <Mappings ID="92964" Label="Mapping">
+          <Input>
+            <Data ID="93459" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges93459">
+              <Source RefID="92964"/>
+            </Data>
+            <Source RefID="92685"/>
+          </Input>
+          <Output>
+            <Data ID="93396" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges93396">
+              <Source RefID="92964"/>
+            </Data>
+            <Target RefID="93397"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Assign ID="92818">
+          <Source RefID="93397"/>
+          <Target RefID="93404"/>
+          <Copy>
+            <Source RefID="93397"/>
+            <Target RefID="93404"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="47" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document47"/>
+    <Data ID="194" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="const_AllowedChanges194"/>
+    <Data ID="260" Label="JSON Parsing Options" ReferenceName="JSONParsingOptions" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="const_JSONParsingOptions260">
+      <Data VariableName="useLabels">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+    </Data>
+    <Data ID="92535" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges92535">
+      <Source RefID="92505"/>
+    </Data>
+    <Data ID="92685" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges92685">
+      <Source RefID="92300"/>
+    </Data>
+    <Data ID="92734" Label="Supertype" ReferenceName="Text" ReferencePath="base" VariableName="text92734">
+      <Source RefID="92731"/>
+    </Data>
+    <Data ID="93397" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges93397">
+      <Source RefID="92964"/>
+    </Data>
+    <Data ID="93404" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges93404">
+      <Source RefID="92812"/>
+    </Data>
+    <Data ID="100546" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges100546">
+      <Source RefID="100423"/>
+    </Data>
+    <Data ID="100969" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges100969">
+      <Source RefID="100787"/>
+    </Data>
+    <Data ID="100976" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges100976">
+      <Source RefID="96567"/>
+    </Data>
+    <Data ID="102948" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges102948">
+      <Source RefID="102703"/>
+    </Data>
+    <Data ID="102955" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges102955">
+      <Source RefID="102070"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="93404"/>
+      <Target RefID="22"/>
+      <Copy>
+        <Source RefID="93404">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="22"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Copyright 2024 Xyna GmbH, Germany
+# Copyright 2025 Xyna GmbH, Germany
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,6 +26,10 @@ print_help() {
   echo "Usage: $0 plugins"
   echo "Usage: $0 clusterproviders"
   echo "Usage: $0 conpooltypes"
+  echo "Usage: $0 install_libs"
+  #creates necessary libs for generating application xmls from workspace-xml (from gitintegration)
+  # (invoked by buildApplication.xml generate-application-xml)
+  echo "Usage: $0 install_gitintegration_libs (depends on build)"
 }
 
 check_dependencies() {
@@ -42,8 +46,44 @@ check_dependencies_frontend() {
 }
 
 checkout_factory() {
-  echo "cheking out factory..."
+  echo "checking out factory..."
   # $1 where to check out
+}
+
+install_libs() {
+  echo "installing libs..."
+  if [[ -z ${MAVEN_RESOLVER_ANT_TASKS_VERSION} ]]; then
+    print_help
+    echo "Error: MAVEN_RESOLVER_ANT_TASKS_VERSION is not set"; 
+    exit 1
+  fi
+  if [[ -z ${ANT_CONTRIB_TASKS_VERSION} ]]; then
+    print_help
+    echo "Error: ANT_CONTRIB_TASKS_VERSION is not set"; 
+    exit 1
+  fi
+  HTTP_CODE_OK=200
+  
+  mkdir -p ${HOME}/.ant/lib
+  URL=https://repo1.maven.org/maven2/org/apache/maven/resolver/maven-resolver-ant-tasks/${MAVEN_RESOLVER_ANT_TASKS_VERSION}/maven-resolver-ant-tasks-${MAVEN_RESOLVER_ANT_TASKS_VERSION}-uber.jar
+  TARGET_FILE=${HOME}/.ant/lib/maven-resolver-ant-tasks-${MAVEN_RESOLVER_ANT_TASKS_VERSION}-uber.jar
+  HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" ${URL})
+  if [ "$HTTP_CODE" != "$HTTP_CODE_OK" ]; then 
+    echo "Error: HTTP_CODE=${HTTP_CODE}, URL=${URL}"; 
+    exit 1
+  fi
+  curl -s ${URL} -o "${TARGET_FILE}"
+  
+  URL=https://repo1.maven.org/maven2/ant-contrib/ant-contrib/${ANT_CONTRIB_TASKS_VERSION}/ant-contrib-${ANT_CONTRIB_TASKS_VERSION}.jar
+  TARGET_FILE="${HOME}/.ant/lib/ant-contrib-${ANT_CONTRIB_TASKS_VERSION}.jar"
+  HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" ${URL})
+  if [ "$HTTP_CODE" != "$HTTP_CODE_OK" ]; then 
+    echo "Error: HTTP_CODE=${HTTP_CODE}, URL=${URL}"; 
+    exit 1
+  fi
+  curl -s ${URL} -o "${TARGET_FILE}"
+  echo "ls -l ${HOME}/.ant/lib"
+  ls -l ${HOME}/.ant/lib
 }
 
 build_xynautils_exceptions() {
@@ -94,6 +134,24 @@ build_xynautils_ldap() {
 build_xynautils_misc() {
   echo "building xynautils-misc..."
   cd $SCRIPT_DIR/../xynautils/misc
+  mkdir -p lib
+  mvn dependency:resolve
+  mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
+  ant -Doracle.home=/tmp installMavenArtifact
+}
+
+build_xynautils_xml() {
+  echo "building xynautils-xml..."
+  cd $SCRIPT_DIR/../xynautils/xml
+  mkdir -p lib
+  mvn dependency:resolve
+  mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
+  ant -Doracle.home=/tmp installMavenArtifact
+}
+
+build_xynautils_soap() {
+  echo "building xynautils-soap..."
+  cd $SCRIPT_DIR/../xynautils/soap
   mkdir -p lib
   mvn dependency:resolve
   mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
@@ -194,6 +252,16 @@ compose_networkavailability() {
   cp $SCRIPT_DIR/../components/xact/NetworkAvailability/log4j.properties .
 }
 
+install_gitintegration_libs() {
+  mkdir -p $SCRIPT_DIR/build/lib/gitintegration
+  cd $SCRIPT_DIR/../modules/xmcp/gitIntegration
+  ant prepare-mdm-jar
+  cd $SCRIPT_DIR/../modules/xmcp/gitIntegration/mdmimpl/WorkspaceObjectManagementImpl
+  ant build
+  cp -r deploy/* $SCRIPT_DIR/build/lib/gitintegration
+  cp -r lib/xyna/* $SCRIPT_DIR/build/lib/gitintegration
+}
+
 build_prerequisites() {
   echo "building prerequisites..."
   cd $SCRIPT_DIR/../prerequisites/installation/delivery
@@ -286,39 +354,8 @@ compose_thirdparties() {
   cd $SCRIPT_DIR/../release
   mkdir third_parties
   cd $SCRIPT_DIR/build
-  # backup pom.xml
-  cp pom.xml pom.xml-bak
-  # comment "dependencyManagement"-tags
-  sed -i s/\<dependencyManagement\>/\<\!--dependencyManagement--\>/g pom.xml
-  sed -i s:\</dependencyManagement\>:\<\!--/dependencyManagement--\>:g pom.xml
-  # delete unfree or erroneous dependencies
-  sed -i '/<dependency>/{N;N;{/<artifactId>demonlib</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>DHCPClusterStateSharedLib</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>DHCPv6DBStorablesSharedLib</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>DHCPSharedLib</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>OraclePersistenceLayer</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>RemoteGenericODSAccess</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>SFTPTrigger</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>XynaContentStorables</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>XynaLocalMemoryPersistenceLayer</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>XynaXMLShellPersistenceLayer</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>com.ibm.mq.allclient</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>com.ibm.mq.traceControl</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>tools</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>fscontext</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>providerutil</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>javaee-api</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>jms</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>jradius-core</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>jradius-dictionary</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>jradius-extended</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>ecj</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>gnu-crypto</{N;N;d}}}' pom.xml
   # run license downloads (bom must have name "pom.xml")
-  mvn license:download-licenses -DlicensesOutputDirectory=$SCRIPT_DIR/../release/third_parties -DlicensesOutputFile=$SCRIPT_DIR/../release/third_parties/licenses.xml
-  # restore backup
-  rm pom.xml
-  mv pom.xml-bak pom.xml
+  mvn license:download-licenses -f third_parties.pom.xml -DlicensesOutputDirectory=$SCRIPT_DIR/../release/third_parties -DlicensesOutputFile=$SCRIPT_DIR/../release/third_parties/licenses.xml
   echo "license-download done"
 }
 
@@ -393,6 +430,7 @@ compose_server() {
   compose_server_exceptions
   compose_server_lib
   compose_server_orderinpoutsourcetypes
+  compose_server_sharedresourcesynchronizers
   compose_server_persistencelayers
   compose_server_repositoryaccess
   compose_server_resources
@@ -464,6 +502,11 @@ compose_server_orderinpoutsourcetypes() {
   cp -r $SCRIPT_DIR/../localbuild/server/orderinputsourcetypes .
 }
 
+compose_server_sharedresourcesynchronizers() {
+  cd $SCRIPT_DIR/../release/server
+  cp -r $SCRIPT_DIR/../localbuild/server/sharedresourcesynchronizers .
+}
+
 compose_server_lib() {
   cd $SCRIPT_DIR/../release/server
   mkdir lib
@@ -526,12 +569,20 @@ build_xynautils() {
   build_xynautils_snmp
   build_xynautils_ldap
   build_xynautils_misc
+  build_xynautils_xml
+  build_xynautils_soap
 }
 
 fill_lib() {
   echo "fill lib..."
   cd $SCRIPT_DIR/build/lib
   ant resolve
+}
+
+cleanup_lib() {
+  echo "cleanup lib..."
+  cd $SCRIPT_DIR/build/lib
+  rm -rf factory
 }
 
 build_all() {
@@ -557,12 +608,12 @@ build() {
   build_oracle_aq_tools
 }
 
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+. ${SCRIPT_DIR}/build.env
+GIT_BRANCH_XYNA_MODELLER=""
 
 check_dependencies
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 prepare_build
-
-GIT_BRANCH_XYNA_MODELLER=""
 
 case $1 in
   "xynautils")
@@ -598,6 +649,15 @@ case $1 in
     ;;
   "conpooltypes")
     build_conpooltypes
+    ;;
+  "install_libs")
+    install_libs
+    ;;
+  "cleanup_lib")
+    cleanup_lib
+    ;;
+  "install_gitintegration_libs")
+    install_gitintegration_libs
     ;;
   *)
     print_help

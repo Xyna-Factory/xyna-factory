@@ -20,13 +20,12 @@ package xact.http.impl;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
@@ -39,6 +38,7 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
@@ -55,6 +55,7 @@ import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.apache.http.protocol.HttpContext;
@@ -94,6 +95,7 @@ public class HttpConnectionImpl {
   private HttpHost host;
   private Authentication authentication;
   private AbsRelTime timeout;
+  private int retries;
 
   private HttpClientContext context;
   private CloseableHttpClient httpClient;
@@ -119,6 +121,7 @@ public class HttpConnectionImpl {
       userAgent = HTTPServiceServiceOperationImpl.DEFAULT_USER_AGENT.get();
     }
     host = host(connectParameter);
+    retries = connectParameter.getRetries();
   }
 
   private HttpHost host(ConnectParameter connectParameter) {
@@ -151,19 +154,47 @@ public class HttpConnectionImpl {
 
 
   public void connect(boolean https) throws ConnectException, TimeoutException {
-
     context = HttpClientContext.create();
     context.setTargetHost(host);
-
-    httpClient = HttpClients.custom()
+    HttpClientBuilder builder = HttpClients.custom()
         .setConnectionManager(createConnectionManager(https, createConnectionFactoryLookup()))
         .setUserAgent(userAgent)
         .setRoutePlanner( createHttpRoutePlanner(new HttpRoute(host,null,https)) )
         .setDefaultCredentialsProvider( createCredentialsProvider() )
-        .build();
-
+        .setRetryHandler(new CountBasedRetryHandler(retries));
+    Optional<HttpHost> proxy = createProxy(https);
+    if (proxy.isPresent()) {
+      builder.setProxy(proxy.get());
+    }
+    httpClient = builder.build();
   }
 
+  
+  private Optional<HttpHost> createProxy(boolean https) {
+    String portAsString = https ? System.getProperty("https.proxyPort") : System.getProperty("http.proxyPort");
+    String hostname = https ? System.getProperty("https.proxyHost") : System.getProperty("http.proxyHost");
+    if (logger.isDebugEnabled()) {
+      logger.debug("Got proxy properties: " + hostname + ":" + portAsString);
+    }
+    if (portAsString == null || hostname == null) {
+      return Optional.empty();
+    }
+    int port = -1;
+    try {
+      port = Integer.valueOf(portAsString);
+    } catch (Exception e) {
+      if (logger.isErrorEnabled()) {
+        logger.error("cannot parse proxy port value from system property 'https.proxyPort': " + portAsString, e);
+      }
+      return Optional.empty();
+    }
+    if (logger.isDebugEnabled()) {
+      logger.debug("Going to use proxy: " + hostname + ":" + port);
+    }
+    return Optional.of(new HttpHost(hostname, port, "http"));
+  }
+  
+  
   private Lookup<ConnectionSocketFactory> createConnectionFactoryLookup() throws ConnectException {
     return RegistryBuilder.<ConnectionSocketFactory>create()
                           .register("http", new PlainConnectionSocketFactory())
@@ -264,15 +295,28 @@ public class HttpConnectionImpl {
       // Request new connection. This can be a long process
       ConnectionRequest connRequest = conManager.requestConnection(route, null);
       HttpClientConnection connection = connRequest.get(timeout.getTime(), TimeUnit.MILLISECONDS);
-
+      int usedRetries = 0;
+      IOException exception = null;
+      boolean success = false;
       if (!connection.isOpen()) {
-        try {
-          // establish connection based on its route info
-          conManager.connect(connection, route, (int)timeout.getTime(), context);
-          // and mark it as route complete
-          conManager.routeComplete(connection, route, context);
-        } catch( IOException e) {
-          throw new ConnectException(e);
+        do {
+          try {
+            // establish connection based on its route info
+            conManager.connect(connection, route, (int) timeout.getTime(), context);
+            // and mark it as route complete
+            conManager.routeComplete(connection, route, context);
+            success = true;
+            if (logger.isDebugEnabled()) {
+              logger.debug("Http connection established after " + usedRetries + " of " + retries + " retries");
+            }
+          } catch (IOException e) {
+            usedRetries++;
+            exception = e;
+          }
+        } while (!success && usedRetries < retries);
+        
+        if(!success) {
+          throw new ConnectException(exception);
         }
       }
 
@@ -326,4 +370,19 @@ public class HttpConnectionImpl {
     return null;
   }
 
+  
+  private static class CountBasedRetryHandler implements HttpRequestRetryHandler {
+
+    private final int retries;
+    
+    public CountBasedRetryHandler(int retries) {
+      this.retries = retries;
+    }
+
+    @Override
+    public boolean retryRequest(IOException arg0, int executionCount, HttpContext arg2) {
+      return executionCount < retries;
+    }
+
+  }
 }

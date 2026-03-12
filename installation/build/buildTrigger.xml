@@ -28,12 +28,14 @@
 
     <import file="./macros.xml" />
 
+    <property name="application.dir" value="${basedir}/../.." />
     <property name="base.lib.dir" value="${basedir}/lib" />
     <property name="local.xml.dir" value="${basedir}/xmldefinition" />
     <property name="target.dir" value="${basedir}/deploy" />
 
     <property file="${basedir}/server.properties" />
     <property file="${root.dir}/server.properties" />
+    <property file="${application.dir}/workspace.properties" />
 
     <!-- depends on server make use of server variable -->
     <property name="deploy.sharedlibs" value=":" />
@@ -41,6 +43,10 @@
     <property name="third_parties.pom" value="${basedir}/third_parties.pom.xml" />
 
     <checkServerProperties />
+
+    <condition property="workspacename.available">
+        <isset property="workspacename" />
+    </condition>
 
     <condition property="exceptions.available">
         <available file="${basedir}/Exceptions.xml" />
@@ -66,6 +72,7 @@
                ================================= -->
     <target name="deploy" depends="build" description="Deploy jar file to xyna server.">
         <fail message="No server properties specified. Unable to deploy." unless="server.available" />
+        <fail message="No workspace specified." unless="workspacename.available" />
         <local name ="revision" />
         <local name = "revision.dir" />
         <local name = "deploy.template" />
@@ -76,8 +83,11 @@
         <property name="server.mdm.xml.path" value="${server.path}/${revision.dir}/saved/filter/${mdm.xml.name}" />
         <property name="deploy.template" value="addtrigger -fqClassName ${fqclassname} -workspaceName '${workspacename}' -jarFiles ${server.mdm.path}/${project.name}.jar -sharedLibs ${deploy.sharedlibs} -triggerName ${project.name}" />
 
-        <!-- clean directory on xyna server -->
-        <!--<custom-ssh-exec host="${server.host}" username="${server.userid}" command="rm -rf ${server.mdm.path}" /> -->
+        <condition property="foldername.not.ok">
+          <contains string="${project.name}" substring="../" />
+        </condition>
+        <fail if="foldername.not.ok" message="Foldername contains ../" />
+
         <!-- create directory on xyna server -->
         <custom-ssh-exec host="${server.host}" username="${server.userid}" command="mkdir -p ${server.mdm.path}" />
         <!-- copy xml file to server -->
@@ -85,11 +95,11 @@
             <equals arg1="${server.transmitXml}" arg2="yes" />
             <then>
                 <echo message="Copying XML file ${local.xml.dir}/${server.mdm.xml.filename} to server ${server.host}:${server.mdm.xml.path}" />
-                <custom-scp-to-remote fromdir="${local.xml.dir}" frominclude="${server.mdm.xml.filename}" todir="${server.userid}@${server.host}:${server.mdm.xml.path}" />
+                <default-scp-to-remote fromdir="${local.xml.dir}" frominclude="${server.mdm.xml.filename}" todir="${server.mdm.xml.path}" />
             </then>
         </if>
         <!-- copy libraries and licences to xyna server -->
-        <custom-scp-to-remote fromdir="${target.dir}" frominclude="**/*" todir="${server.userid}@${server.host}:${server.mdm.path}" />
+        <replace-jars-in-remote-dir source.dir="${target.dir}" remote.target.dir="${server.mdm.path}" xyna.server.path="${server.path}" />
 
         <!-- deploy trigger -->
         <custom-ssh-exec host="${server.host}" username="${server.userid}" command="cd ${server.path}; ./xynafactory.sh ${deploy.template}" />
@@ -191,5 +201,16 @@
             <arg value="y" />
         </java>
     </target>
+
+    <!-- ================================= 
+         target: cleanup-lib
+         ================================= -->
+    <target name="cleanup-lib">
+        <delete>
+            <fileset dir="${base.lib.dir}" includes="**/*.jar"/>
+        </delete>
+        <ant antfile="${application.dir}/build.xml" target="prepare-mdm-jar" inheritAll="false" dir="${application.dir}" />
+    </target>
+
 </project>
 

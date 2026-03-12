@@ -291,6 +291,8 @@ public class PythonMdmGeneration {
       sb.append("  pass\n\n");
       return;
     }
+    sb.append("  if obj is None:\n");
+    sb.append("    return None\n");
     sb.append("  fqn = obj[\"_fqn\"].replace('.', '_')\n");
     sb.append("  result = eval(f\"{fqn}()\")\n");
     sb.append("  for f in obj:\n");
@@ -302,11 +304,15 @@ public class PythonMdmGeneration {
   //can't use match yet - python version might be too old
   private void fillConvertList(StringBuilder sb) {
     sb.append("def _convert_list(values):\n");
+    sb.append("  if values is None:\n");
+    sb.append("    return None\n");
     sb.append("  result = []\n");
     sb.append("  for value in values:\n");
     sb.append("    if type(value).__name__ == \"HashMap\":\n");
     sb.append("      result.append(convert_to_python_object(value))\n");
     sb.append("    elif type(value) is list:\n");
+    sb.append("      result.append(_convert_list(value))\n");
+    sb.append("    elif type(value).__name__ == 'ArrayList':\n");
     sb.append("      result.append(_convert_list(value))\n");
     sb.append("    else:\n");
     sb.append("      result.append(value)\n\n");
@@ -322,6 +328,8 @@ public class PythonMdmGeneration {
     sb.append("  if type(value).__name__ == \"HashMap\":\n");
     sb.append("    object_to_set.set(fieldName, convert_to_python_object(value))\n");
     sb.append("  elif type(value) is list:\n");
+    sb.append("    object_to_set.set(fieldName, _convert_list(value))\n");
+    sb.append("  elif type(value).__name__ == 'ArrayList':\n");
     sb.append("    object_to_set.set(fieldName, _convert_list(value))\n");
     sb.append("  else:\n");
     sb.append("    object_to_set.set(fieldName, value)\n\n");
@@ -386,7 +394,7 @@ public class PythonMdmGeneration {
         sb.append(", ");
       }
       for (Pair<String, String> argument : info.argumentsWithTypes) {
-        sb.append(argument.getFirst());
+        appendAndEscapeIfKeyword(argument.getFirst(), sb);
         typeHint(sb, ": " + argument.getSecond(), typeHints);
         sb.append(", ");
       }
@@ -420,11 +428,11 @@ public class PythonMdmGeneration {
     } else {
       sb.append("self, ");
     }
-    sb.append("\"" + info.name + "\"");
+    sb.append("\"").append(info.name).append("\"");
     sb.append(", [");
     if (info.argumentsWithTypes != null && !info.argumentsWithTypes.isEmpty()) {
       for (Pair<String, String> argument : info.argumentsWithTypes) {
-        sb.append(argument.getFirst());
+        appendAndEscapeIfKeyword(argument.getFirst(), sb);
         sb.append(", ");
       }
       sb.setLength(sb.length() - 2); //remove last ", "

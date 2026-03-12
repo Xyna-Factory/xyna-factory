@@ -28,6 +28,7 @@ import java.util.concurrent.ConcurrentMap;
 import com.gip.xyna.utils.exceptions.ExceptionStorage;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.utils.exceptions.utils.codegen.CodeBuffer;
+import com.gip.xyna.utils.exceptions.utils.codegen.FqClassNameAdapter;
 import com.gip.xyna.utils.exceptions.utils.codegen.InvalidClassNameException;
 import com.gip.xyna.utils.exceptions.utils.codegen.JavaClass;
 import com.gip.xyna.utils.exceptions.utils.codegen.JavaGenUtils;
@@ -39,7 +40,9 @@ public class ExceptionStorageInstance_1_1 extends ExceptionStorageInstance {
   private static final String FIELD_MAP_NAME = "fieldMap";
   private static final String FIELD_GETTER_METHOD_NAME = "getField";
   
-  private List<ExceptionStorageInstance> importedStorages = new ArrayList<ExceptionStorageInstance>();
+  private List<ExceptionStorageInstance> importedStorages = new ArrayList<ExceptionStorageInstance>();  
+  private FqClassNameAdapter fqClassNameAdapter = new FqClassNameAdapter();
+  
   
   @Override
   public JavaClass[] generateJavaClasses(boolean loadFromResource, ExceptionEntryProvider provider, String xmlFile)
@@ -61,6 +64,7 @@ public class ExceptionStorageInstance_1_1 extends ExceptionStorageInstance {
         }
 
         JavaClass jc = new JavaClass(entry.getPath(), entry.getName());
+        jc.setFqClassNameAdapter(fqClassNameAdapter);
         
         jc.addImport(List.class.getName());
         
@@ -347,5 +351,9 @@ public class ExceptionStorageInstance_1_1 extends ExceptionStorageInstance {
     cb.addLB();
   }
 
+
+  public void setFqClassNameAdapter(FqClassNameAdapter fqClassNameAdapter) {
+    this.fqClassNameAdapter = fqClassNameAdapter;
+  }
 
 }

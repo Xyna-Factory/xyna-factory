@@ -195,7 +195,7 @@ public class VetoCachePersistenceImpl implements VetoCachePersistence {
     protected abstract boolean execute(VetoInformation vi);
 
     protected boolean checkValid(VetoInformation vi) {
-      return rootOrderIdsInBackup.contains( vi.getUsingRootOrderId() ); 
+      return vi.isAdministrative() || rootOrderIdsInBackup.contains( vi.getUsingRootOrderId() ); 
     }
   }
   
@@ -298,8 +298,8 @@ public class VetoCachePersistenceImpl implements VetoCachePersistence {
           sep = ", ";
         }
         logger.trace( sb.toString() );
-      } else {
-        logger.info( "deleted "+toDelete.size()+ " and persisted " + toPersist.size() + " vetos");
+      } else if (logger.isDebugEnabled()) {
+        logger.debug( "deleted "+toDelete.size()+ " and persisted " + toPersist.size() + " vetos");
       }
     }
     

@@ -18,7 +18,6 @@
 -->
 <project name="build" default="build" basedir="." >
 
-  <import file="../../installation/build/ant-xyna.xml" />
   <import file="../../installation/build/macros.xml" />
 
   <property name="project.name.local" value="XynaDevNullPersistenceLayer" />
@@ -41,6 +40,10 @@
   <target name="resolve">
     <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/lib/xyna" />
     <loadLicenses targetDir="${basedir}/lib" />
+  </target>
+
+  <target name="installMavenArtifact" depends="build" description="install artifact to maven repository">
+     <install-maven-artifact artifactFile="${target.dir}/${project.name.local}.jar" pomFile="${basedir}/pom.xml" />
   </target>
 
 </project>

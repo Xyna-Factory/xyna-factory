@@ -225,7 +225,9 @@ public class ResumeOrderJavaDestination extends JavaDestination {
           sb.append("select ").append(OrderInstanceBackup.COL_ROOT_ID).append(",").append(OrderInstanceBackup.COL_ID).append(",")
               .append(OrderInstanceBackup.COL_BINDING).append(" from ").append(OrderInstanceBackup.TABLE_NAME).append(" where ")
               .append(OrderInstanceBackup.COL_ID).append("=?");
-          Query<OrderInstanceBackup> query = new Query<OrderInstanceBackup>(sb.toString(), OrderInstanceBackup.getSelectiveReader());
+          Query<OrderInstanceBackup> query = new Query<OrderInstanceBackup>(sb.toString(), 
+              OrderInstanceBackup.getSelectiveReader(),
+              OrderInstanceBackup.TABLE_NAME);
           backupRootOrderIdQuery = con.prepareQuery(query, true);
         }
       }

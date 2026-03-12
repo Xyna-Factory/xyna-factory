@@ -146,31 +146,8 @@
     </path>
   </pathconvert>
 
-  <taskdef resource="net/sf/antcontrib/antcontrib.properties">
-    <classpath>
-      <pathelement location="${install.lib.dir}/ant-contrib.jar" />
-    </classpath>
-  </taskdef>
-
-  <taskdef name="for" classname="net.sf.antcontrib.logic.ForTask">
-    <classpath>
-      <pathelement location="${install.lib.dir}/ant-contrib.jar" />
-    </classpath>
-  </taskdef>
-
-  <taskdef name="var" classname="net.sf.antcontrib.property.Variable">
-    <classpath>
-      <pathelement location="${install.lib.dir}/ant-contrib.jar" />
-    </classpath>
-  </taskdef>
-
-  <taskdef name="propertyregex"
-           classname="net.sf.antcontrib.property.RegexTask">
-    <classpath>
-      <pathelement location="${install.lib.dir}/ant-contrib.jar" />
-    </classpath>
-  </taskdef>
-
+  <taskdef resource="net/sf/antcontrib/antlib.xml"/>
+ 
   <if>
     <and>
       <not>
@@ -211,12 +188,7 @@
   </if>
 
   <!-- Maven Resolver Ant Task - http://maven.apache.org/resolver-ant-tasks/ -->
-  <taskdef uri="antlib:org.apache.maven.resolver.ant" resource="org/apache/maven/resolver/ant/antlib.xml">
-    <classpath>
-      <fileset dir="${install.lib.dir}" includes="maven-resolver-ant-tasks-*uber.jar"/>
-    </classpath>
-  </taskdef>
-
+  <taskdef uri="antlib:org.apache.maven.resolver.ant" resource="org/apache/maven/resolver/ant/antlib.xml" />
   
   <!-- macro for downloading license files -->
   <macrodef name="loadLicenses">

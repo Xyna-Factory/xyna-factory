@@ -56,17 +56,25 @@ public class DetermineOperationAssignments {
       return result;
     }
     Document operationMeta = meta.getSecond();
-    String rpcName = OperationAssignmentUtils.readRpcName(operationMeta);
-    String rpcNamespace = OperationAssignmentUtils.readRpcNamespace(operationMeta);
-    if(rpcName == null || rpcNamespace == null) {
-      return result;
-    }
     String deviceFqn = OperationAssignmentUtils.readDeviceFqn(operationMeta);
     List<YangDeviceCapability> moduleCapabilities = YangCapabilityUtils.loadCapabilities(deviceFqn, workspaceName);
     List<String> supportedFeatures = YangCapabilityUtils.getSupportedFeatureNames(moduleCapabilities);
     FilteredModuleData filtered = getFilteredModules(data, workspaceName, moduleCapabilities);
-    result = OperationAssignmentUtils.loadPossibleAssignments(filtered.filteredModules, rpcName, rpcNamespace, data, operationMeta,
-                                                              supportedFeatures, filtered.fromCache);
+    
+    String rpcName = OperationAssignmentUtils.readRpcName(operationMeta);
+    String rpcNamespace = OperationAssignmentUtils.readRpcNamespace(operationMeta);
+    if (rpcName == null || rpcNamespace == null) {
+      String elemName = OperationAssignmentUtils.readTagName(operationMeta);
+      String elemNamespace = OperationAssignmentUtils.readTagNamespace(operationMeta);
+      if (elemName == null || elemNamespace == null) {
+        return result;
+      }
+      result = OperationAssignmentUtils.loadPossibleAssignmentsGeneric(filtered.filteredModules, elemName, elemNamespace, data, 
+                                                                       operationMeta, supportedFeatures, filtered.fromCache);
+    } else {
+      result = OperationAssignmentUtils.loadPossibleAssignmentsRpc(filtered.filteredModules, rpcName, rpcNamespace, data, operationMeta,
+                                                                   supportedFeatures, filtered.fromCache);
+    }
     fillValuesAndWarnings(operationMeta, filtered.filteredModules, result);
     return result;
   }
@@ -74,14 +82,14 @@ public class DetermineOperationAssignments {
   
   private FilteredModuleData getFilteredModules(LoadYangAssignmentsData data, String workspaceName, List<YangDeviceCapability> capabilities) {
     FilteredModuleData ret = new FilteredModuleData();
-    Optional<List<Module>> opt = OperationCache.getInstance().get(data);
+    OperationCacheId id = OperationCacheId.fromLoadYangAssignmentsData(data);
+    Optional<List<Module>> opt = OperationCache.getInstance().get(id);
     if (opt.isPresent()) {
       ret.filteredModules = opt.get();
       ret.fromCache = true;
     } else {
-      List<ModuleGroup> groups = OperationAssignmentUtils.loadModules(workspaceName);
-      ret.filteredModules = new ModuleFilterTools().filterAndReload(groups, capabilities);
-      OperationCache.getInstance().put(data, ret.filteredModules);
+      ret.filteredModules = OperationAssignmentUtils.loadModules(workspaceName, capabilities);
+      OperationCache.getInstance().put(id, ret.filteredModules);
     }
     return ret;
   }
@@ -124,6 +132,7 @@ public class DetermineOperationAssignments {
     int subAssignments = 0;
     String elemtype = entryPath.get(entryPath.size() - 1).getKeyword();    
     boolean isChoice = Constants.TYPE_CHOICE.equals(elemtype);
+    boolean retain = false;
     Set<String> caseSet = isChoice ? new HashSet<>() : null;
 
     for (OperationMapping mapping : mappings) {
@@ -133,6 +142,9 @@ public class DetermineOperationAssignments {
         if (isChoice && (mappingPath.size() > entryPath.size())) {
           MappingPathElement childElem = mappingPath.get(entryPath.size());
           caseSet.add(childElem.getYangPath());
+        }
+        if(mapping.getValue().equals("") && MappingPathElement.isMoreSpecificPath(mappingPath, entryPath)) {
+          retain = true;
         }
       }
     }
@@ -145,6 +157,7 @@ public class DetermineOperationAssignments {
       retval = String.format("contains %s assignment%s", subAssignments, subAssignments == 1 ? "" : "s");
     }
     entry.unversionedSetValue(retval);
+    entry.unversionedSetRetain(retain);
   }
 
 }

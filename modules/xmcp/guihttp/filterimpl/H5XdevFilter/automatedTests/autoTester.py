@@ -273,7 +273,7 @@ class RequestTester:
 
 
   def createSubprocessArguments(self, requestType, rdyUrl, rdyPayload, factoryIndexTranslated, writeCookies):
-    result = ['curl', '-k', '-X', requestType, rdyUrl]
+    result = ['curl', '-H', 'Expect:', '-k', '-X', requestType, rdyUrl]
 
     if requestType == "POST" or requestType == "PUT":
       result.append('-d')
@@ -340,7 +340,7 @@ class RequestTester:
     factoryIndexTranslated = self.factoryIndexMap[factoryIndex]
     self.urlExtension = "/upload"
     rdyUrl = self.formatUrl(factoryIndexTranslated)
-    result = ['curl', "-k", "-F", "file=@" + filepath, rdyUrl]
+    result = ['curl', '-H', 'Expect:', '-k', '-F', "file=@" + filepath, rdyUrl]
 
     self.addCookiesToArguments(result, factoryIndexTranslated, False)
 

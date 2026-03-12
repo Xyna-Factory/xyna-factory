@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Compare Children" TypeName="CompareChildren" TypePath="base.list.object" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Path" VariableName="path">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Type" VariableName="type">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Service Label="Compare Children" TypeName="CompareChildren">
+    <Operation IsStatic="false" Label="Compare" Name="compare">
+      <Input/>
+      <Output>
+        <Data ID="1179" IsList="true" Label="Simple Compare Result" ReferenceName="SimpleCompareResult" ReferencePath="base.list.object" VariableName="simpleCompareResult1179"/>
+        <Data ID="1182" IsList="true" Label="Children" ReferenceName="CompareChildren" ReferencePath="base.list.object" VariableName="compareChildren1182"/>
+        <Data ID="1185" IsList="true" Label="List Children" ReferenceName="CompareListChildren" ReferencePath="base.list.object" VariableName="compareListChildren1185"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">XynaObjectList&lt;SimpleCompareResult&gt; scrs = new XynaObjectList&lt;SimpleCompareResult&gt;(SimpleCompareResult.class);
+XynaObjectList&lt;CompareChildren&gt; ccs = new XynaObjectList&lt;CompareChildren&gt;(CompareChildren.class);
+XynaObjectList&lt;CompareListChildren&gt; clcs = new XynaObjectList&lt;CompareListChildren&gt;(CompareListChildren.class);
+
+Set&lt;String&gt; vars = first != null ? first.getVariableNames() : second.getVariableNames();
+for( String var : vars ) {
+   addComparison(scrs, ccs, clcs, var); 
+}
+return new Container(scrs, ccs, clcs);
+}
+
+private void addComparison( List&lt;SimpleCompareResult&gt; scrs, List&lt;CompareChildren&gt; ccs, List&lt;CompareListChildren&gt; clcs, String var ) {
+   Object f, s;
+   try {
+     f = first == null ? null : first.get(var);
+     s = second == null ? null : second.get(var);
+   } catch( Exception e) {
+     scrs.add(new SimpleCompareResult().buildSimpleCompareResult().xmomPath(this.path+var).aCR("R").value(e.getMessage()).instance());
+     return;
+   }
+   String acr = null;
+   Object main = null;
+   if( isEmpty(f) ) {
+     acr = isEmpty(s) ? null : "R";
+     main = s;
+   } else {
+     acr = isEmpty(s) ? "A" : "C";
+     main = f;
+   }
+   if( acr != null ) {
+     if( main instanceof XynaObject ) {
+	   ccs.add(new CompareChildren().instantiateImpl(this.path+var+"/", (XynaObject)f, (XynaObject)s));
+     } else if( main instanceof List ) {
+       clcs.add(new CompareListChildren().instantiateImpl(this.path+var+"/", (List)f, (List)s));
+     } else {
+       String value = null;
+       if( acr.equals("C") ) {
+         String fs = String.valueOf(f);
+         String ss = String.valueOf(s);
+         if( ! fs.equals(ss) ) {
+           value = ss + " -&gt; " + fs;
+         }
+       } else {
+	     value = String.valueOf(main);
+	   }
+       if( value != null ) {
+         scrs.add(new SimpleCompareResult().buildSimpleCompareResult().xmomPath(this.path+var).aCR(acr).value(value).instance());
+       }
+     }
+   }
+}
+
+private boolean isEmpty(Object o) {
+  if( o == null ) return true;
+  if( o instanceof List ) return ((List)o).isEmpty();
+  return false;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Instantiate" Name="instantiate">
+      <Input>
+        <Data ID="45" Label="First" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType45">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data ID="49" Label="Second" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType49">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="68" Label="Compare Children" ReferenceName="CompareChildren" ReferencePath="base.list.object" VariableName="compareChildren68"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return instantiateImpl("/", (XynaObject)anyType45, (XynaObject)anyType49 );
+}
+
+private XynaObject first;
+private XynaObject second;
+
+public CompareChildren instantiateImpl(String path, XynaObject first, XynaObject second) {
+  this.first = first;
+  this.second = second;
+  this.path = path;
+  this.type = (first != null ? first : second).getClass().getSimpleName();
+  return this;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Compare Recursively" Name="compareRecursively">
+      <Input>
+        <Data ID="1478" Label="Object Comparer" ReferenceName="ObjectComparer" ReferencePath="base.list.object" VariableName="objectComparer1478"/>
+      </Input>
+      <Output>
+        <Data ID="1483" IsList="true" Label="Simple Compare Result" ReferenceName="SimpleCompareResult" ReferencePath="base.list.object" VariableName="simpleCompareResult1483"/>
+      </Output>
+      <Call ReferenceName="CompareRecursively" ReferencePath="base.list.object"/>
+    </Operation>
+  </Service>
+</DataType>

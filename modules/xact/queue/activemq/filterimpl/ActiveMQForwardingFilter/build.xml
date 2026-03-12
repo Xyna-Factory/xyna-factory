@@ -28,8 +28,7 @@
     <property name="server.mdm.xml.filename" value="ActiveMQForwardingFilter.xml" />
     <property name="mdm.xml.name" value="ActiveMQForwardingFilter" />
     <property name="mdm.xml.filename" value="ActiveMQForwardingFilter" />
-    <!--property name="workspacename" value="HTTP" />
-    <property name="revision.dir" value="../revisions/rev_25" /-->
+
 
     <property name="trigger.name" value="ActiveMQ" />
     <property name="filter.name" value="ActiveMQForwardingFilter" />

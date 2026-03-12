@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,27 +68,6 @@
       <Output/>
       <SourceCode>
         <CodeSnippet Type="Java">xmcp.gitintegration.ReferenceManagementImpl.triggerReferences(reference6, file7, integerNumber8);</CodeSnippet>
-      </SourceCode>
-    </Operation>
-    <Operation IsStatic="true" Label="Find Referenced Jar" Name="findReferencedJar">
-      <Input>
-        <Data ID="10" IsList="true" Label="Reference" ReferenceName="Reference" ReferencePath="xmcp.gitintegration" VariableName="reference10"/>
-        <Data ID="11" Label="File Names" VariableName="fileNames">
-          <Meta>
-            <Type>String</Type>
-          </Meta>
-        </Data>
-        <Data ID="12" Label="Revision" VariableName="integerNumber12">
-          <Meta>
-            <Type>Long</Type>
-          </Meta>
-        </Data>
-      </Input>
-      <Output>
-        <Data ID="13" Label="File" ReferenceName="File" ReferencePath="base" VariableName="file13"/>
-      </Output>
-      <SourceCode>
-        <CodeSnippet Type="Java">return xmcp.gitintegration.ReferenceManagementImpl.findReferencedJar(reference10, fileNames, integerNumber12);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

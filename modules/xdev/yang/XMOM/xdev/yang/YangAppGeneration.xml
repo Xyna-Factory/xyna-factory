@@ -203,5 +203,25 @@
         <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.configureAnyxmlSubstantement(correlatedXynaOrder, loadYangAssignmentsData41, anyXmlSubstatementConfiguration42);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="Validate Signature" Name="validateSignature" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="3708" Label="Operation Table Data" ReferenceName="OperationTableData" ReferencePath="xmcp.yang" VariableName="operationTableData3708"/>
+      </Input>
+      <Output>
+        <Data ID="44" IsList="true" Label="Operation Signature Problem" ReferenceName="OperationSignatureProblem" ReferencePath="xmcp.yang.fman" VariableName="operationSignatureProblem44"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdev.yang.YangAppGenerationImpl.validateSignature(correlatedXynaOrder, operationTableData3708);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Fix Operation Signature" Name="fixOperationSignature" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="3709" Label="Operation Table Data" ReferenceName="OperationTableData" ReferencePath="xmcp.yang" VariableName="operationTableData3709"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.fixOperationSignature(correlatedXynaOrder, operationTableData3709);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>

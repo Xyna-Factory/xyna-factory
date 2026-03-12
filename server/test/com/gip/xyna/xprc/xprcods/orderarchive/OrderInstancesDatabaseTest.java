@@ -289,9 +289,10 @@ public class OrderInstancesDatabaseTest extends TestCase {
     ODS ods = XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getODS();
     ODSConnection con = ods.openConnection();
     try {
+      String tableName = new OrderInstance().getTableName();
       Query<OrderInstanceDetails> q = new Query<OrderInstanceDetails>("select * from "
-                      + new OrderInstance().getTableName() + " where " + OrderInstanceColumn.C_ORDER_TYPE.toString()
-                      + "=?", new OrderInstanceDetails(-1l).getReader());
+                      + tableName + " where " + OrderInstanceColumn.C_ORDER_TYPE.toString()
+                      + "=?", new OrderInstanceDetails(-1l).getReader(), tableName);
       PreparedQuery<OrderInstanceDetails> getAllInstancesWithOrderType = con.prepareQuery(q);
 
       List<OrderInstanceDetails> instances = con.query(getAllInstancesWithOrderType, new Parameter(wfFqClassName), -1);

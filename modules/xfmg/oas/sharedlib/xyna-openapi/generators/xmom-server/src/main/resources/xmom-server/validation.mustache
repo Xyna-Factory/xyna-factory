@@ -26,30 +26,28 @@ try {
 {{/isPrimitive}}
 {{^isPrimitive}}
   {{^isList}}
-    {{propFQN}} {{propVarName}} = {{getPropVarName}};
-    if ({{propVarName}} != null) {
+    if ({{getPropVarName}} != null) {
       {{^isGenericJsonObject}}
-        result.getErrorMessages().addAll({{propVarName}}.validate().getErrorMessages());
+        result.getErrorMessages().addAll({{getPropVarName}}.validate().getErrorMessages());
       {{/isGenericJsonObject}}
     }{{#isRequired}} else {
-        result.getErrorMessages().add("{{propClassName}}.{{propVarName}}: Object of type {{propRefType}} is required, but is null.");
+        result.getErrorMessages().add("{{propClassName}}.{{propVarName}}: Object of type {{propRefType}} is required but is null");
     }{{/isRequired}}
   {{/isList}}
   {{#isList}}
-    List&lt;? extends {{propFQN}}&gt; {{propVarName}} = {{getPropVarName}};
-    if ({{propVarName}} != null) {
+    if ({{getPropVarName}} != null) {
         {{#minItems}}
-        if ({{propVarName}}.size() &lt; {{minItems}}) {
-          result.getErrorMessages().add("{{propClassName}}.{{propVarName}}: List of type {{propRefType}} must have at least {{minItems}} items, but has fewer");
+        if ({{getPropVarName}}.size() &lt; {{minItems}}) {
+          result.getErrorMessages().add("{{propClassName}}.{{propVarName}}: List of type {{propRefType}} must have at least {{minItems}} items but has fewer");
         }
         {{/minItems}}
         {{#maxItems}}
-        if ({{propVarName}}.size() &gt; {{maxItems}}) {
-          result.getErrorMessages().add("{{propClassName}}.{{propVarName}}: List of type {{propRefType}} must not exceed {{maxItems}} items, but has more");
+        if ({{getPropVarName}}.size() &gt; {{maxItems}}) {
+          result.getErrorMessages().add("{{propClassName}}.{{propVarName}}: List of type {{propRefType}} must not exceed {{maxItems}} items but has more");
         }
         {{/maxItems}}
         {{^isGenericJsonList}}
-        for ({{propFQN}} obj : {{propVarName}}) {
+        for ({{propFQN}} obj : {{getPropVarName}}) {
             result.getErrorMessages().addAll(obj.validate().getErrorMessages());
         }
         {{/isGenericJsonList}}

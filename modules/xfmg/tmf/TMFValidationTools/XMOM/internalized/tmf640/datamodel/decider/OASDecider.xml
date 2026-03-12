@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="XynaObjectDecider" BaseTypePath="xfmg.xfctrl.datamodel.json.parameter" IsAbstract="false" Label="OASDecider" TypeName="OASDecider" TypePath="internalized.tmf640.datamodel.decider" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="OASDecider" TypeName="OASDecider">
+    <Operation IsStatic="false" Label="Decide Object on Read" Name="decideObjectOnRead">
+      <Input>
+        <Data ID="16" Label="Generic Type" VariableName="string16">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="2" Label="JSON Object" ReferenceName="JSONObject" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jSONObject2"/>
+      </Input>
+      <Output>
+        <Data ID="17" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype17">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+if (string16.equals("internalized.tmf640.datamodel.ExternalIdentifier")) {
+  String dyntype = "";
+  xfmg.xfctrl.datamodel.json.JSONValue value = jSONObject2.getMember("@type");
+  if (value != null) {
+    dyntype = value.getStringOrNumberValue();
+  }
+  if (dyntype.equals("ExternalIdentifier")) {
+    return new internalized.tmf640.datamodel.ExternalIdentifier();
+  }
+}
+if (string16.equals("internalized.tmf640.datamodel.Characteristic")) {
+  String dyntype = "";
+  xfmg.xfctrl.datamodel.json.JSONValue value = jSONObject2.getMember("@type");
+  if (value != null) {
+    dyntype = value.getStringOrNumberValue();
+  }
+  if (dyntype.equals("BooleanArrayCharacteristic")) {
+    return new internalized.tmf640.datamodel.BooleanArrayCharacteristic();
+  }
+  if (dyntype.equals("BooleanCharacteristic")) {
+    return new internalized.tmf640.datamodel.BooleanCharacteristic();
+  }
+  if (dyntype.equals("Characteristic")) {
+    return new internalized.tmf640.datamodel.Characteristic();
+  }
+  if (dyntype.equals("IntegerArrayCharacteristic")) {
+    return new internalized.tmf640.datamodel.IntegerArrayCharacteristic();
+  }
+  if (dyntype.equals("IntegerCharacteristic")) {
+    return new internalized.tmf640.datamodel.IntegerCharacteristic();
+  }
+  if (dyntype.equals("NumberArrayCharacteristic")) {
+    return new internalized.tmf640.datamodel.NumberArrayCharacteristic();
+  }
+  if (dyntype.equals("NumberCharacteristic")) {
+    return new internalized.tmf640.datamodel.NumberCharacteristic();
+  }
+  if (dyntype.equals("ObjectArrayCharacteristic")) {
+    return new internalized.tmf640.datamodel.ObjectArrayCharacteristic();
+  }
+  if (dyntype.equals("ObjectCharacteristic")) {
+    return new internalized.tmf640.datamodel.ObjectCharacteristic();
+  }
+  if (dyntype.equals("StringArrayCharacteristic")) {
+    return new internalized.tmf640.datamodel.StringArrayCharacteristic();
+  }
+  if (dyntype.equals("StringCharacteristic")) {
+    return new internalized.tmf640.datamodel.StringCharacteristic();
+  }
+}
+try {
+  return (com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject) this.getClass().getClassLoader().loadClass(string16).getConstructor().newInstance();
+} catch(Exception e) {
+  return null;
+}</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Continue Read with Object" Name="continueReadWithObject">
+      <Input>
+        <Data ID="10" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data ID="11" Label="JSON Object" ReferenceName="JSONObject" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jSONObject"/>
+      </Input>
+      <Output>
+        <Data ID="12" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype1">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <Meta>
+        <HasBeenPersisted>false</HasBeenPersisted>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+try {
+  if (anytype.getClass().getCanonicalName().equals("internalized.tmf640.datamodel.ResourceRefOrValue")) {
+    String dyntype = "";
+    xfmg.xfctrl.datamodel.json.JSONValue value = jSONObject.getMember("@type");
+    if (value != null) {
+      dyntype = value.getStringOrNumberValue();
+    }
+    anytype.set("attype", dyntype);
+    if (dyntype.equals("Resource")) {
+      internalized.tmf640.datamodel.Resource child = new internalized.tmf640.datamodel.Resource();
+      anytype.set("resource", child);
+      return child;
+    }
+    if (dyntype.equals("ResourceRef")) {
+      internalized.tmf640.datamodel.ResourceRef child = new internalized.tmf640.datamodel.ResourceRef();
+      anytype.set("resourceRef", child);
+      return child;
+    }
+  }
+} catch(Exception e) {
+  return null;
+}
+return anytype;
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Decide Object on Write" Name="decideObjectOnWrite">
+      <Input>
+        <Data ID="13" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="14" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <Meta>
+        <HasBeenPersisted>false</HasBeenPersisted>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+try {
+  if (anytype.getClass().getCanonicalName().equals("internalized.tmf640.datamodel.ResourceRefOrValue")) {
+    String dyntype = (String) anytype.get("attype");
+    if (dyntype.equals("Resource")) {
+      return (internalized.tmf640.datamodel.Resource) anytype.get("resource");
+    }
+    if (dyntype.equals("ResourceRef")) {
+      return (internalized.tmf640.datamodel.ResourceRef) anytype.get("resourceRef");
+    }
+  }
+} catch(Exception e) {
+  return null;
+}
+return anytype;
+      </CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="On Unknown Member" Name="onUnknownMember">
+      <Input>
+        <Data ID="20" Label="xyna object" ReferenceName="AnyType" ReferencePath="base" VariableName="xo">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data ID="21" Label="Variable Name" VariableName="varName">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="22" Label="JSON Value" ReferenceName="JSONValue" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jSONValue30"/>
+      </Input>
+      <Output/>
+      <Meta>
+        <Documentation>Called when the json contains a member that does not appear in the xyna object.</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+      try {
+      } catch(Exception e) {
+        if (logger.isWarnEnabled()) {
+          logger.warn(e);
+        }
+      }
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Write" Name="write">
+      <Input>
+        <Data ID="6" Label="OAS Base Type" ReferenceName="OASBaseType" ReferencePath="xmcp.oas.datatype" VariableName="oASBaseType6"/>
+      </Input>
+      <Output>
+        <Data ID="7" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document7"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
+jsonOptions.setUseLabels(true);
+
+return xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(oASBaseType6, jsonOptions);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Parse" Name="parse">
+      <Input>
+        <Data ID="3" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document3"/>
+        <Data ID="4" Label="OAS Base Type" ReferenceName="OASBaseType" ReferencePath="xmcp.oas.datatype" VariableName="oASBaseType4"/>
+      </Input>
+      <Output>
+        <Data ID="5" Label="OAS Base Type" ReferenceName="OASBaseType" ReferencePath="xmcp.oas.datatype" VariableName="oASBaseType5"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions();
+jsonOptions.setUseLabels(true);
+jsonOptions.setObjectDecider(this);
+
+return (xmcp.oas.datatype.OASBaseType) xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document3, oASBaseType4, jsonOptions);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

@@ -35,11 +35,12 @@
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/DatatypeInspectorImpl">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
-
-        <mkdir dir="${basedir}/mdmimpl/RuntimeContextServiceImpl/lib/xyna" />
-        <antcall target="create-mdm-jar" />
-            <supply-mdm-jar type="mdmimpl" name="RuntimeContextServiceImpl" />
-        <delete file="${basedir}/mdm.jar" />
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/NamedVariableMemberImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/NamedXMOMMemberImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/RuntimeContextServiceImpl">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
@@ -52,6 +53,8 @@
         <supply-mdm-jar type="mdmimpl" name="DatatypeInspectorImpl" />
         <supply-mdm-jar type="mdmimpl" name="OrderControlServiceImpl" />
         <supply-mdm-jar type="mdmimpl" name="RuntimeContextServiceImpl" />
+        <supply-mdm-jar type="mdmimpl" name="NamedVariableMemberImpl" />
+        <supply-mdm-jar type="mdmimpl" name="NamedXMOMMemberImpl" />
         <delete file="${basedir}/mdm.jar" />
     </target>
 

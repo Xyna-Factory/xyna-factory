@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,10 +34,12 @@ public class ActiveMQTriggerConnection extends TriggerConnection {
 
   private transient Message msg;
   private transient String xynaQueueMgmtQueueName;
+  private transient String externalQueueName;
   
-  public ActiveMQTriggerConnection(Message msg, String xynaQueueMgmtQueueName) {
+  public ActiveMQTriggerConnection(Message msg, String xynaQueueMgmtQueueName, String externalQueueName) {
     this.msg = msg;
     this.xynaQueueMgmtQueueName = xynaQueueMgmtQueueName;
+    this.externalQueueName = externalQueueName;
   }
   
   public Message getMessage() {
@@ -46,6 +48,10 @@ public class ActiveMQTriggerConnection extends TriggerConnection {
   
   public String getXynaQueueMgmtQueueName() {
     return xynaQueueMgmtQueueName;
+  }
+  
+  public String getExternalQueueName() {
+    return externalQueueName;
   }
   
 }

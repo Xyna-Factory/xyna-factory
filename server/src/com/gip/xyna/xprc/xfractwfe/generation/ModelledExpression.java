@@ -23,11 +23,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.Set;
 import java.util.Stack;
 
@@ -698,6 +697,7 @@ public class ModelledExpression {
     private StringBuilder sb = new StringBuilder();
     private boolean transformNextLiteralToClass = false;
     private boolean skipNextLiteral = false;
+    private Set<Object> adjustments = new HashSet<>();
     
     
     public JavaCodeGeneratorVisitor() {
@@ -955,7 +955,9 @@ public class ModelledExpression {
         } else {
           if (lastPart &&
               generateTypeResistantMappingCode.get() &&
-              p.getIndexDef() == null) { // could be limited to '&& isPrimitive'
+              p.getIndexDef() == null &&
+              !contextStack.empty() &&
+              adjustments.contains(contextStack.peek())) {
             getSB().append(".get(\"").append(p.getName()).append("\")");
           } else {
             getSB().append(".").append(GenerationBase.buildGetter(p.getName())).append("()");
@@ -1154,6 +1156,7 @@ public class ModelledExpression {
           typeInfo.isUnknown()) {
         if (qualifiesForDynamicAdjustment(exp)) {
           getSB().append(transformation_prefix(typeInfo));
+          adjustments.add(exp);
         } else {
           try {
             getSB().append(transformation("", exp.getOriginalType(), typeInfo)[0]);
@@ -1173,7 +1176,7 @@ public class ModelledExpression {
       if (typeInfo.isBaseType() || 
           typeInfo.isAnyNumber() ||
           typeInfo.isUnknown()) {
-        if (qualifiesForDynamicAdjustment(exp)) {
+        if (qualifiesForDynamicAdjustment(exp) && adjustments.contains(exp)) {
           getSB().append(")");
         } else {
           try {

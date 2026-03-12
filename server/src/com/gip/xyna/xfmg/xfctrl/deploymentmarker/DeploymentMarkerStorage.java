@@ -325,7 +325,10 @@ public class DeploymentMarkerStorage {
 
   @SuppressWarnings("unchecked")
   private List<DeploymentTaskStorable> searchTasksForDeploymentItem(ODSConnection con, DeploymentItemIdentifier deploymentItem, Long revision) throws PersistenceLayerException {
-    PreparedQuery<DeploymentTaskStorable> query = (PreparedQuery<DeploymentTaskStorable>) queryCache.getQueryFromCache(QUERY_GET_TASKS_FOR_DEPLOYMENT_ITEM, con, new DeploymentTaskStorable().getReader());
+    PreparedQuery<DeploymentTaskStorable> query = (PreparedQuery<DeploymentTaskStorable>) queryCache.getQueryFromCache(QUERY_GET_TASKS_FOR_DEPLOYMENT_ITEM, 
+                                                                                                                       con, 
+                                                                                                                       new DeploymentTaskStorable().getReader(),
+                                                                                                                       DeploymentTaskStorable.TABLENAME);
     List<DeploymentTaskStorable> tasks = con.query(query, new Parameter(deploymentItem.getName(), deploymentItem.getType().toString(), revision), -1);
     Collections.sort(tasks, new DeploymentTaskComparator());
     return tasks;
@@ -333,7 +336,10 @@ public class DeploymentMarkerStorage {
 
   @SuppressWarnings("unchecked")
   private List<DeploymentTaskStorable> searchTasksForRevision(ODSConnection con, Long revision) throws PersistenceLayerException {
-    PreparedQuery<DeploymentTaskStorable> query = (PreparedQuery<DeploymentTaskStorable>) queryCache.getQueryFromCache(QUERY_GET_TASKS_FOR_REVISION, con, new DeploymentTaskStorable().getReader());
+    PreparedQuery<DeploymentTaskStorable> query = (PreparedQuery<DeploymentTaskStorable>) queryCache.getQueryFromCache(QUERY_GET_TASKS_FOR_REVISION, 
+                                                                                                                       con, 
+                                                                                                                       new DeploymentTaskStorable().getReader(),
+                                                                                                                       DeploymentTaskStorable.TABLENAME);
     List<DeploymentTaskStorable> tasks = con.query(query, new Parameter(revision), -1);
     Collections.sort(tasks, new DeploymentTaskComparator());
     return tasks;
@@ -342,7 +348,7 @@ public class DeploymentMarkerStorage {
   public int countOpenDeploymentTasks(DeploymentItemIdentifier deploymentItem, Long revision) throws PersistenceLayerException {
     ODSConnection con = ods.openConnection(ODSConnectionType.HISTORY);
     try {
-      PreparedQuery<Integer> query = queryCache.getQueryFromCache(QUERY_COUNT_TASKS_FOR_DEPLOYMENT_ITEM, con, countReader);
+      PreparedQuery<Integer> query = queryCache.getQueryFromCache(QUERY_COUNT_TASKS_FOR_DEPLOYMENT_ITEM, con, countReader, DeploymentTaskStorable.TABLENAME);
       return con.queryOneRow(query, new Parameter(deploymentItem.getName(), deploymentItem.getType().toString(), revision, false));
     } finally {
       finallyClose(con);
@@ -368,7 +374,9 @@ public class DeploymentMarkerStorage {
 
   @SuppressWarnings("unchecked")
   private List<DeploymentTagStorable> searchTagsForDeploymentItem(ODSConnection con, DeploymentItemIdentifier deploymentItem, Long revision) throws PersistenceLayerException {
-    PreparedQuery<DeploymentTagStorable> query = (PreparedQuery<DeploymentTagStorable>) queryCache.getQueryFromCache(QUERY_GET_TAGS_FOR_DEPLOYMENT_ITEM, con, new DeploymentTagStorable().getReader());
+    PreparedQuery<DeploymentTagStorable> query = (PreparedQuery<DeploymentTagStorable>) queryCache.getQueryFromCache(QUERY_GET_TAGS_FOR_DEPLOYMENT_ITEM, 
+                                                                                                                     con, new DeploymentTagStorable().getReader(), 
+                                                                                                                     DeploymentTagStorable.TABLENAME);
     List<DeploymentTagStorable> tags = con.query(query, new Parameter(deploymentItem.getName(), deploymentItem.getType().toString(), revision), -1);
     //aufsteigend nach index sortieren
     Collections.sort(tags, new DeploymentTagComparator());
@@ -377,7 +385,10 @@ public class DeploymentMarkerStorage {
   
   @SuppressWarnings("unchecked")
   private List<DeploymentTagStorable> searchTagsForRevision(ODSConnection con, Long revision) throws PersistenceLayerException {
-    PreparedQuery<DeploymentTagStorable> query = (PreparedQuery<DeploymentTagStorable>) queryCache.getQueryFromCache(QUERY_GET_TAGS_FOR_REVISION, con, new DeploymentTagStorable().getReader());
+    PreparedQuery<DeploymentTagStorable> query = (PreparedQuery<DeploymentTagStorable>) queryCache.getQueryFromCache(QUERY_GET_TAGS_FOR_REVISION, 
+                                                                                                                     con, 
+                                                                                                                     new DeploymentTagStorable().getReader(),
+                                                                                                                     DeploymentTagStorable.TABLENAME);
     List<DeploymentTagStorable> tags = con.query(query, new Parameter(revision), -1);
     //aufsteigend nach index sortieren
     Collections.sort(tags, new DeploymentTagComparator());

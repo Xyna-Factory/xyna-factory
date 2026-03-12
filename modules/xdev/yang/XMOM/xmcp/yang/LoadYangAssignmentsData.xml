@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -77,6 +77,12 @@
   <Data Label="Subelement Deviation Info" VariableName="subelementDeviationInfo">
     <Meta>
       <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="List Key Names" ReferenceName="ListKeyName" ReferencePath="xmcp.yang" VariableName="listKeyNames"/>
+  <Data Label="Is Config" VariableName="isConfig">
+    <Meta>
+      <Type>boolean</Type>
     </Meta>
   </Data>
 </DataType>

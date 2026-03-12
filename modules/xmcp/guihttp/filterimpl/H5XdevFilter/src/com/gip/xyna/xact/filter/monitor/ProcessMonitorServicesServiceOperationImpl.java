@@ -402,8 +402,15 @@ public class ProcessMonitorServicesServiceOperationImpl {
   
   private void createEmptyJsonObject(JsonBuilder jsonBuilder, Step step, AVariable parameter, String subObjectName, List<Integer> foreachIndices, int retryCounter, boolean isMemberVar) {
     if(isMemberVar) {
+      if (parameter.isNull()) {
+        jsonBuilder.addAttribute(subObjectName);
+        jsonBuilder.addNullObject();
+        return;
+      }
+
       jsonBuilder.addObjectAttribute(subObjectName);
     }
+
     createMetaJson(jsonBuilder, step, parameter, parameter, subObjectName, foreachIndices, retryCounter, isMemberVar);
     if (parameter.isList()) {
       jsonBuilder.addListAttribute(XynaObjectVisitor.WRAPPED_LIST_TAG);
@@ -496,21 +503,26 @@ public class ProcessMonitorServicesServiceOperationImpl {
       } else if ( (parameter.getVarName().length() > 0) && (!parameter.getVarName().equals("n/a")) ) {
         // write list to JSON
         if (parameter.getValues() != null) {
-          jsonBuilder.addListAttribute(subObjectName);
-          for (String value : parameter.getValues()) {
-            if (parameter.getJavaTypeEnum() == PrimitiveType.STRING) {
-              jsonBuilder.addStringListElement(value);
-            } else if (parameter.getJavaTypeEnum() == PrimitiveType.INT || parameter.getJavaTypeEnum() == PrimitiveType.INTEGER || parameter.getJavaTypeEnum() == PrimitiveType.LONG || parameter.getJavaTypeEnum() == PrimitiveType.LONG_OBJ || parameter.getJavaTypeEnum() == PrimitiveType.DOUBLE || parameter.getJavaTypeEnum() == PrimitiveType.DOUBLE_OBJ) {
-              if ("NaN".equals(value)) {
+          if (!parameter.isNull()) {
+            jsonBuilder.addListAttribute(subObjectName);
+            for (String value : parameter.getValues()) {
+              if (parameter.getJavaTypeEnum() == PrimitiveType.STRING) {
                 jsonBuilder.addStringListElement(value);
+              } else if (parameter.getJavaTypeEnum() == PrimitiveType.INT || parameter.getJavaTypeEnum() == PrimitiveType.INTEGER || parameter.getJavaTypeEnum() == PrimitiveType.LONG || parameter.getJavaTypeEnum() == PrimitiveType.LONG_OBJ || parameter.getJavaTypeEnum() == PrimitiveType.DOUBLE || parameter.getJavaTypeEnum() == PrimitiveType.DOUBLE_OBJ) {
+                if ("NaN".equals(value)) {
+                  jsonBuilder.addStringListElement(value);
+                } else {
+                  jsonBuilder.addPrimitiveListElement(value);
+                }
               } else {
                 jsonBuilder.addPrimitiveListElement(value);
               }
-            } else {
-              jsonBuilder.addPrimitiveListElement(value);
             }
+            jsonBuilder.endList();
+          } else {
+            jsonBuilder.addAttribute(subObjectName);
+            jsonBuilder.addNullObject();
           }
-          jsonBuilder.endList();
         } else if (!parameter.isJavaBaseType()) {
           // create empty entry with meta-tag to let GUI know what type list is of
           createEmptyJsonObject(jsonBuilder, step, parameter, subObjectName, foreachIndices, retryCounter, isMemberVar);

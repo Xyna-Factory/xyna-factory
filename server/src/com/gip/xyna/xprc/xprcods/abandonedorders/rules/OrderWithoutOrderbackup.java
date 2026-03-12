@@ -53,9 +53,10 @@ public class OrderWithoutOrderbackup extends AbandonedOrderDetectionRule<Abandon
     if (readOrderarchivesWithRootOrderId == null) {
       ODSConnection con = ODSImpl.getInstance().openConnection();
       try {
+        String tableName = oa.getAuditAccess().getQueryBackingClass(con).getTableName();
         readOrderarchivesWithRootOrderId =
-            con.prepareQuery(new Query<OrderInstance>("select * from " + oa.getAuditAccess().getQueryBackingClass(con).getTableName() + " where "
-                + OrderInstance.COL_ROOT_ID + "=?", new OrderInstance().getReader()), true);
+            con.prepareQuery(new Query<OrderInstance>("select * from " + tableName + " where "
+                + OrderInstance.COL_ROOT_ID + "=?", new OrderInstance().getReader(), tableName), true);
       } catch (PersistenceLayerException e) {
         throw new RuntimeException("Failed to prepare query. ", e);
       } finally {
@@ -80,8 +81,9 @@ public class OrderWithoutOrderbackup extends AbandonedOrderDetectionRule<Abandon
     ODSConnection con = ods.openConnection();
 
     try {
+      String tableName = oa.getAuditAccess().getQueryBackingClass(con).getTableName();
       FactoryWarehouseCursor<? extends OrderInstance> cursor =
-          con.getCursor("select * from " + oa.getAuditAccess().getQueryBackingClass(con).getTableName(), new Parameter(), new OrderInstance().getReader(),
+          con.getCursor("select * from " + tableName, tableName, new Parameter(), new OrderInstance().getReader(),
                         500);
 
       List<? extends OrderInstance> next = cursor.getRemainingCacheOrNextIfEmpty();

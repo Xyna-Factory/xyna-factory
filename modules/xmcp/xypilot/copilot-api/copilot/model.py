@@ -22,22 +22,22 @@ ModelType = constr(regex="^(copilot-.+)$")
 
 
 class CompletionRequest(BaseModel):
-    model: ModelType
-    prompt: str | None
-    suffix: str | None
-    max_tokens: int | None
-    temperature: float | None = 0.6
-    top_p: float | None = 1.0
-    n: int | None = 1
-    stream: bool | None
+    model: ModelType # pyright: ignore[reportInvalidTypeForm]
+    prompt: str | None = None
+    suffix: str | None = None
+    max_tokens: int | None = None
+    temperature: float = 0.6
+    top_p: float = 1.0
+    n: int = 1
+    stream: bool = False
     logprobs: int | None = None
-    echo: bool | None
-    stop: str | list[str] | None
-    presence_penalty: float | None = 0
-    frequency_penalty: float | None = 1
-    best_of: int | None = 1
-    logit_bias: dict[str, float] | None
-    user: str | None
+    echo: bool = False
+    stop: str | list[str] | None = None
+    presence_penalty: float = 0
+    frequency_penalty: float = 1
+    best_of: int = 1
+    logit_bias: dict[str, float] | None = None
+    user: str | None = None
 
 
 class CompletionResponseUsage(BaseModel):
@@ -54,19 +54,19 @@ class CompletionResponseChoiceLogprobs(BaseModel):
 
 
 class CompletionResponseChoice(BaseModel):
-    text: str | None
-    index: int | None
+    text: str
+    index: int
     logprobs: CompletionResponseChoiceLogprobs | None
-    finish_reason: str | None
+    finish_reason: str
 
 
 class CompletionResponse(BaseModel):
     id: str
     object: str
     created: int
-    model: ModelType
+    model: ModelType # pyright: ignore[reportInvalidTypeForm]
     choices: list[CompletionResponseChoice]
-    usage: CompletionResponseUsage | None
+    usage: CompletionResponseUsage
 
 
 class CompletionResult(BaseModel):

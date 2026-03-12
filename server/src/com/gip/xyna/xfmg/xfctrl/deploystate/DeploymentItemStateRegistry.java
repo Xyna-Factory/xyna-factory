@@ -337,7 +337,8 @@ public class DeploymentItemStateRegistry implements DeploymentItemRegistry {
       PreparedQuery<DeploymentItemStateStorable> revisionRestorationQuery;
       if (REVISION_RESTORATION_QUERY == null) {
         try {
-          revisionRestorationQuery = con.prepareQuery(new Query<DeploymentItemStateStorable>(REVISION_RESTORATION_QUERY_SQL, DeploymentItemStateStorable.reader));
+          revisionRestorationQuery = con.prepareQuery(new Query<DeploymentItemStateStorable>(REVISION_RESTORATION_QUERY_SQL, DeploymentItemStateStorable.reader,
+              DeploymentItemStateStorable.TABLENAME));
           REVISION_RESTORATION_QUERY = revisionRestorationQuery;
         } catch (PersistenceLayerException e) {
           logger.debug("Failed to prepare revision restoration query '" + REVISION_RESTORATION_QUERY_SQL + "'", e);

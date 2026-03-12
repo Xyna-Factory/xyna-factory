@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Create Service Spec Id" TypeName="CreateServiceSpecId" TypePath="xfmg.tmf633.idgen" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Create Service Spec Id" Name="CreateServiceSpecId">
+    <Input>
+      <Data ID="2" Label="Spec Generator Context" ReferenceName="SpecGeneratorContext" ReferencePath="xfmg.tmf633" VariableName="specGeneratorContext2"/>
+      <Data ID="7" Label="HashMap" ReferenceName="HashMap" ReferencePath="base.list" VariableName="hashMap7"/>
+      <Data ID="12" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember12"/>
+    </Input>
+    <Output>
+      <Data ID="17" Label="id" ReferenceName="Text" ReferencePath="base" VariableName="text17"/>
+    </Output>
+    <ServiceReference ID="221" Label="Template Management" ReferenceName="TemplateManagement.TemplateManagement" ReferencePath="xact.templates">
+      <Source RefID="220"/>
+      <Target RefID="220"/>
+    </ServiceReference>
+    <ServiceReference ID="28" Label="Generate Hash For Type Structure" ReferenceName="GenerateHashForTypeStructure" ReferencePath="xfmg.tmf633.idgen">
+      <Source RefID="27"/>
+      <Target RefID="27"/>
+    </ServiceReference>
+    <ServiceReference ID="1317" Label="Template Management" ReferenceName="TemplateManagement.TemplateManagement" ReferencePath="xact.templates">
+      <Source RefID="1316"/>
+      <Target RefID="1316"/>
+    </ServiceReference>
+    <ServiceReference ID="250" Label="Template Management" ReferenceName="TemplateManagement.TemplateManagement" ReferencePath="xact.templates">
+      <Source RefID="249"/>
+      <Target RefID="249"/>
+    </ServiceReference>
+    <ServiceReference ID="1362" Label="Template Management" ReferenceName="TemplateManagement.TemplateManagement" ReferencePath="xact.templates">
+      <Source RefID="1361"/>
+      <Target RefID="1361"/>
+    </ServiceReference>
+    <Mappings ID="47" Label="Mapping">
+      <Input>
+        <Data ID="99" Label="Spec Generator Context" ReferenceName="SpecGeneratorContext" ReferencePath="xfmg.tmf633" VariableName="specGeneratorContext99">
+          <Source RefID="47"/>
+        </Data>
+        <Source RefID="2"/>
+      </Input>
+      <Output>
+        <Data ID="64" Label="fqType" ReferenceName="Text" ReferencePath="base" VariableName="text64">
+          <Source RefID="47"/>
+        </Data>
+        <Target RefID="65"/>
+      </Output>
+      <Mapping>%1%.text=%0%.fqNameOfService</Mapping>
+    </Mappings>
+    <Function ID="1316" Label="Begin document">
+      <Source RefID="1317"/>
+      <Source RefID="1464"/>
+      <Target RefID="1317"/>
+      <Target RefID="1319"/>
+      <Invoke Operation="start" ServiceID="1317">
+        <Source RefID="1464">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="1317">
+        <Target RefID="1319"/>
+      </Receive>
+    </Function>
+    <Mappings ID="1413" Label="">
+      <Meta>
+        <IsTemplate>true</IsTemplate>
+      </Meta>
+      <Input>
+        <Data ID="2021" Label="HashMap" ReferenceName="HashMap" ReferencePath="base.list" VariableName="hashMap2021">
+          <Source RefID="1413"/>
+        </Data>
+        <Source RefID="7"/>
+      </Input>
+      <Output>
+        <Data ID="1414" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart1414"/>
+        <Target RefID="1415"/>
+      </Output>
+      <Mapping>%1%.text=concat("\"lifecyclestatus\":", %0%.getr("TMFLifecycleStatus"))</Mapping>
+    </Mappings>
+    <Function ID="1361" Label="End document">
+      <Source RefID="1362"/>
+      <Source RefID="1319"/>
+      <Target RefID="1362"/>
+      <Target RefID="1364"/>
+      <Invoke Operation="stop" ServiceID="1362">
+        <Source RefID="1319"/>
+      </Invoke>
+      <Receive ServiceID="1362">
+        <Target RefID="1364"/>
+      </Receive>
+    </Function>
+    <Mappings ID="1513" Label="Mapping">
+      <Input>
+        <Data ID="2142" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document2142">
+          <Source RefID="1513"/>
+        </Data>
+        <Source RefID="1364"/>
+      </Input>
+      <Output>
+        <Data ID="1562" Label="prefix" ReferenceName="Text" ReferencePath="base" VariableName="text1562">
+          <Source RefID="1513"/>
+        </Data>
+        <Target RefID="1563"/>
+      </Output>
+      <Mapping>%1%.text=%0%.text</Mapping>
+    </Mappings>
+    <Function ID="27" Label="Generate Hash For Type Structure">
+      <Source RefID="28"/>
+      <Source RefID="65"/>
+      <Source RefID="1563"/>
+      <Source RefID="82"/>
+      <Target RefID="28"/>
+      <Target RefID="30"/>
+      <Invoke Operation="GenerateHashForTypeStructure" ServiceID="28">
+        <Source RefID="65">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="1563">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="82">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="28">
+        <Target RefID="30"/>
+      </Receive>
+    </Function>
+    <Function ID="220" Label="Begin document">
+      <Source RefID="221"/>
+      <Source RefID="285"/>
+      <Target RefID="221"/>
+      <Target RefID="223"/>
+      <Invoke Operation="start" ServiceID="221">
+        <Source RefID="285">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="221">
+        <Target RefID="223"/>
+      </Receive>
+    </Function>
+    <Choice ID="188" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="2"/>
+      <Input>
+        <Data ID="195" Label="Spec Generator Context" ReferenceName="SpecGeneratorContext" ReferencePath="xfmg.tmf633" VariableName="specGeneratorContext195"/>
+        <Source RefID="2"/>
+      </Input>
+      <Input>
+        <Data ID="197" Label="Spec Generator Context" ReferenceName="SpecGeneratorContext" ReferencePath="xfmg.tmf633" VariableName="specGeneratorContext197"/>
+        <Source RefID="2"/>
+      </Input>
+      <Case ID="189" Label="true" Premise="%1%.iDGeneratorContext.prefix!=null&amp;&amp;length(%0%.iDGeneratorContext.prefix)&gt;&quot;0&quot;">
+        <Mappings ID="199" Label="">
+          <Meta>
+            <IsTemplate>true</IsTemplate>
+          </Meta>
+          <Input>
+            <Data ID="201" Label="Spec Generator Context" ReferenceName="SpecGeneratorContext" ReferencePath="xfmg.tmf633" VariableName="specGeneratorContext201"/>
+            <Source RefID="2"/>
+          </Input>
+          <Output>
+            <Data ID="202" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart202"/>
+            <Target RefID="198"/>
+          </Output>
+          <Mapping>%1%.text=concat(%0%.iDGeneratorContext.prefix, ".")</Mapping>
+        </Mappings>
+        <Assign/>
+        <Data ID="198" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart198"/>
+      </Case>
+      <Case ID="190" Label="false">
+        <Assign/>
+      </Case>
+    </Choice>
+    <Mappings ID="736" Label="">
+      <Meta>
+        <IsTemplate>true</IsTemplate>
+      </Meta>
+      <Input>
+        <Data ID="771" Label="Spec Generator Context" ReferenceName="SpecGeneratorContext" ReferencePath="xfmg.tmf633" VariableName="specGeneratorContext771">
+          <Source RefID="736"/>
+        </Data>
+        <Source RefID="2"/>
+      </Input>
+      <Output>
+        <Data ID="737" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart737"/>
+        <Target RefID="738"/>
+      </Output>
+      <Mapping>%1%.text=concat(%0%.fqNameOfService, ".")</Mapping>
+    </Mappings>
+    <Mappings ID="903" Label="">
+      <Meta>
+        <IsTemplate>true</IsTemplate>
+      </Meta>
+      <Input>
+        <Data ID="906" Label="Spec Generator Context" ReferenceName="SpecGeneratorContext" ReferencePath="xfmg.tmf633" VariableName="specGeneratorContext906"/>
+        <Source RefID="2"/>
+      </Input>
+      <Output>
+        <Data ID="904" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart904"/>
+        <Target RefID="941"/>
+      </Output>
+      <Output>
+        <Data ID="907" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart907"/>
+        <Target RefID="942"/>
+      </Output>
+      <Mapping>%2%.text=concat(%0%.iDGeneratorContext.version, ".")</Mapping>
+    </Mappings>
+    <Mappings ID="1071" Label="">
+      <Meta>
+        <IsTemplate>true</IsTemplate>
+      </Meta>
+      <Input>
+        <Data ID="1106" Label="Hash" ReferenceName="Text" ReferencePath="base" VariableName="text1106">
+          <Source RefID="1071"/>
+        </Data>
+        <Source RefID="30">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="1072" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart1072"/>
+        <Target RefID="1073"/>
+      </Output>
+      <Mapping>%1%.text=concat(%0%.text)</Mapping>
+    </Mappings>
+    <Function ID="249" Label="End document">
+      <Source RefID="250"/>
+      <Source RefID="223"/>
+      <Target RefID="250"/>
+      <Target RefID="252"/>
+      <Invoke Operation="stop" ServiceID="250">
+        <Source RefID="223"/>
+      </Invoke>
+      <Receive ServiceID="250">
+        <Target RefID="252"/>
+      </Receive>
+    </Function>
+    <Mappings ID="318" Label="Mapping">
+      <Input>
+        <Data ID="385" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document385">
+          <Source RefID="318"/>
+        </Data>
+        <Source RefID="252">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="351" Label="id" ReferenceName="Text" ReferencePath="base" VariableName="text351">
+          <Source RefID="318"/>
+        </Data>
+        <Target RefID="352"/>
+      </Output>
+      <Mapping>%1%.text=%0%.text</Mapping>
+    </Mappings>
+    <Data ID="30" Label="Hash" ReferenceName="Text" ReferencePath="base" VariableName="text30">
+      <Source RefID="27"/>
+    </Data>
+    <Data ID="65" Label="fqType" ReferenceName="Text" ReferencePath="base" VariableName="text65">
+      <Source RefID="47"/>
+    </Data>
+    <Data ID="82" Label="IsList" ReferenceName="IsList" ReferencePath="xfmg.tmf633" VariableName="const_IsList82"/>
+    <Data ID="223" Label="Document Context" ReferenceName="DocumentContext" ReferencePath="xact.templates" VariableName="documentContext223">
+      <Source RefID="220"/>
+    </Data>
+    <Data ID="252" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document252">
+      <Source RefID="249"/>
+    </Data>
+    <Data ID="285" Label="Plain text" ReferenceName="PlainText" ReferencePath="xact.templates" VariableName="const_PlainText285"/>
+    <Data ID="352" Label="id" ReferenceName="Text" ReferencePath="base" VariableName="text352">
+      <Source RefID="318"/>
+    </Data>
+    <Data ID="738" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart738"/>
+    <Data ID="941" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart941"/>
+    <Data ID="942" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart942"/>
+    <Data ID="1073" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart1073"/>
+    <Data ID="1319" Label="Document Context" ReferenceName="DocumentContext" ReferencePath="xact.templates" VariableName="documentContext1319">
+      <Source RefID="1316"/>
+    </Data>
+    <Data ID="1364" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document1364">
+      <Source RefID="1361"/>
+    </Data>
+    <Data ID="1415" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart1415"/>
+    <Data ID="1464" Label="Plain text" ReferenceName="PlainText" ReferencePath="xact.templates" VariableName="const_PlainText1464"/>
+    <Data ID="1563" Label="prefix" ReferenceName="Text" ReferencePath="base" VariableName="text1563">
+      <Source RefID="1513"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="352"/>
+      <Target RefID="17"/>
+      <Copy>
+        <Source RefID="352">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="17"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

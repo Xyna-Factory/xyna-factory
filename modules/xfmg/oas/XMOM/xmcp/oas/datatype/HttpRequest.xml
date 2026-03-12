@@ -37,4 +37,14 @@
       <Type>String</Type>
     </Meta>
   </Data>
+  <Data Label="Trigger Port" VariableName="triggerPort">
+    <Meta>
+      <Type>int</Type>
+    </Meta>
+  </Data>
+  <Data Label="Sender Ip" VariableName="senderIp">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
 </DataType>

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -431,6 +431,9 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
       }
     } else {
       if (o == null) {
+        if (List.class.equals(typeOfField)) {
+          throw new RuntimeException("Can not assign non-list object to list attribute for member '" + varNameInXyna + "'.");
+        }
         if (Modifier.isAbstract(typeOfField.getModifiers())) {
           throw new RuntimeException("Can not instantiate abstract member type " + typeOfField + " for member " + varNameInXyna + ".");
         }
@@ -977,6 +980,8 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
         JSONValue jval = new JSONValue();
         if (o == null) {
           jval.unversionedSetType(JSONVALTYPES.NULL);
+        } else if(o instanceof JSONValue && options.inlineGenerics) {
+          jval = (JSONValue)o;
         } else if (o instanceof XynaObject) {
           JSONObject childJob = createFromXynaObjectRecursivly((XynaObject) o, newPath+"[]", options, scope, decider);
           jval.unversionedSetObjectValue(childJob);

@@ -15,7 +15,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  --><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
-  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="DEVEL-00500" IsAbstract="false" Label="SSH Exception" TypeName="SSHException" TypePath="xact.connection">
+  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="XYNA-XACT-15005" IsAbstract="false" Label="SSH Exception" TypeName="SSHException" TypePath="xact.connection">
     <Data Label="Reason" VariableName="reason">
       <Meta>
         <Type>String</Type>

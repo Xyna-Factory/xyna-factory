@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Set Defaults For Missing Characteristics JSON" TypeName="SetDefaultsForMissingCharacteristicsJSON" TypePath="xfmg.tmf640" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Set Defaults For Missing Characteristics JSON" Name="SetDefaultsForMissingCharacteristicsJSON">
+    <Input>
+      <Data ID="83" Label="Service JSON" ReferenceName="Text" ReferencePath="base" VariableName="text83"/>
+      <Data ID="125" Label="Service Specification JSON" ReferenceName="Text" ReferencePath="base" VariableName="text125"/>
+    </Input>
+    <Output>
+      <Data ID="2641" Label="Service JSON" ReferenceName="Text" ReferencePath="base" VariableName="text2641"/>
+    </Output>
+    <Throws>
+      <Exception Label="ServiceRelationshipNotFound" ReferenceName="ServiceRelationshipNotFound" ReferencePath="xfmg.tmf.util" VariableName="serviceRelationshipNotFound6707"/>
+      <Exception Label="IncompatibleServiceSpecification" ReferenceName="IncompatibleServiceSpecification" ReferencePath="xfmg.tmf.validation" VariableName="incompatibleServiceSpecification6708"/>
+    </Throws>
+    <ServiceReference ID="411" Label="JSON Datamodel Services" ReferenceName="JSONDatamodelServices.JSONDatamodelServices" ReferencePath="xfmg.xfctrl.datamodel.json">
+      <Source RefID="410"/>
+      <Target RefID="410"/>
+    </ServiceReference>
+    <ServiceReference ID="6204" Label="JSON Datamodel Services" ReferenceName="JSONDatamodelServices.JSONDatamodelServices" ReferencePath="xfmg.xfctrl.datamodel.json">
+      <Source RefID="6203"/>
+      <Target RefID="6203"/>
+    </ServiceReference>
+    <ServiceReference ID="2350" Label="JSON Datamodel Services" ReferenceName="JSONDatamodelServices.JSONDatamodelServices" ReferencePath="xfmg.xfctrl.datamodel.json">
+      <Source RefID="2349"/>
+      <Target RefID="2349"/>
+    </ServiceReference>
+    <ServiceReference ID="5345" Label="Set Defaults For Missing Characteristics" ReferenceName="SetDefaultsForMissingCharacteristics" ReferencePath="xfmg.tmf640">
+      <Source RefID="5344"/>
+      <Target RefID="5344"/>
+    </ServiceReference>
+    <Parallel>
+      <Serial>
+        <Mappings ID="296" Label="Mapping">
+          <Input>
+            <Data ID="645" Label="Service JSON" ReferenceName="Text" ReferencePath="base" VariableName="text645">
+              <Source RefID="296"/>
+            </Data>
+            <Source RefID="83">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="1364" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document1364">
+              <Source RefID="296"/>
+            </Data>
+            <Target RefID="1365"/>
+          </Output>
+          <Mapping>%1%.text=%0%.text</Mapping>
+        </Mappings>
+        <Function ID="6203" Label="Parse Object From JSON with Options">
+          <Source RefID="6204"/>
+          <Source RefID="1365"/>
+          <Source RefID="6590"/>
+          <Source RefID="6501"/>
+          <Target RefID="6204"/>
+          <Target RefID="6208"/>
+          <Invoke Operation="parseObjectFromJSONWithOptions" ServiceID="6204">
+            <Source RefID="1365"/>
+            <Source RefID="6590">
+              <Meta>
+                <LinkType>Constant</LinkType>
+                <ExpectedType>internalized.tmf640.datamodel.Service</ExpectedType>
+              </Meta>
+            </Source>
+            <Source RefID="6501">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="6204">
+            <Target RefID="6208">
+              <Meta>
+                <ExpectedType>internalized.tmf640.datamodel.Service</ExpectedType>
+              </Meta>
+            </Target>
+          </Receive>
+        </Function>
+        <Data ID="6208" Label="Service" ReferenceName="Service" ReferencePath="internalized.tmf640.datamodel" VariableName="service6208"/>
+      </Serial>
+      <Serial>
+        <Mappings ID="354" Label="Mapping">
+          <Input>
+            <Data ID="720" Label="Service Specification JSON" ReferenceName="Text" ReferencePath="base" VariableName="text720">
+              <Source RefID="354"/>
+            </Data>
+            <Source RefID="125">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="1736" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document1736">
+              <Source RefID="354"/>
+            </Data>
+            <Target RefID="1737"/>
+          </Output>
+          <Mapping>%1%.text=%0%.text</Mapping>
+        </Mappings>
+        <Function ID="410" Label="Parse Object From JSON with Options">
+          <Source RefID="411"/>
+          <Source RefID="1737"/>
+          <Source RefID="1290"/>
+          <Source RefID="2273"/>
+          <Target RefID="411"/>
+          <Target RefID="415"/>
+          <Invoke Operation="parseObjectFromJSONWithOptions" ServiceID="411">
+            <Source RefID="1737"/>
+            <Source RefID="1290">
+              <Meta>
+                <LinkType>Constant</LinkType>
+                <ExpectedType>internalized.tmf633.datamodel.ServiceSpecification</ExpectedType>
+              </Meta>
+            </Source>
+            <Source RefID="2273">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="411">
+            <Target RefID="415">
+              <Meta>
+                <ExpectedType>internalized.tmf633.datamodel.ServiceSpecification</ExpectedType>
+              </Meta>
+            </Target>
+          </Receive>
+        </Function>
+        <Data ID="415" Label="ServiceSpecification" ReferenceName="ServiceSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="serviceSpecification415"/>
+      </Serial>
+    </Parallel>
+    <Function ID="5344" Label="Set Defaults For Missing Characteristics">
+      <Source RefID="5345"/>
+      <Source RefID="6208"/>
+      <Source RefID="415"/>
+      <Target RefID="5345"/>
+      <Target RefID="5347"/>
+      <Invoke Operation="SetDefaultsForMissingCharacteristics" ServiceID="5345">
+        <Source RefID="6208"/>
+        <Source RefID="415"/>
+      </Invoke>
+      <Receive ServiceID="5345">
+        <Target RefID="5347"/>
+      </Receive>
+    </Function>
+    <Function ID="2349" Label="Write JSON with Options">
+      <Source RefID="2350"/>
+      <Source RefID="5347"/>
+      <Source RefID="3731"/>
+      <Target RefID="2350"/>
+      <Target RefID="2353"/>
+      <Invoke Operation="writeJSONWithOptions" ServiceID="2350">
+        <Source RefID="5347">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+            <ExpectedType>internalized.tmf640.datamodel.Service</ExpectedType>
+          </Meta>
+        </Source>
+        <Source RefID="3731">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="2350">
+        <Target RefID="2353"/>
+      </Receive>
+    </Function>
+    <Mappings ID="2737" Label="Mapping">
+      <Input>
+        <Data ID="2916" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document2916">
+          <Source RefID="2737"/>
+        </Data>
+        <Source RefID="2353">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="2826" Label="Service JSON" ReferenceName="Text" ReferencePath="base" VariableName="text2826">
+          <Source RefID="2737"/>
+        </Data>
+        <Target RefID="2827"/>
+      </Output>
+      <Mapping>%1%.text=%0%.text</Mapping>
+    </Mappings>
+    <Data ID="1290" Label="ServiceSpecification" ReferenceName="ServiceSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="const_ServiceSpecification1290"/>
+    <Data ID="1365" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document1365">
+      <Source RefID="296"/>
+    </Data>
+    <Data ID="1737" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document1737">
+      <Source RefID="354"/>
+    </Data>
+    <Data ID="2273" Label="JSON Parsing Options" ReferenceName="JSONParsingOptions" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="const_JSONParsingOptions2273">
+      <Data VariableName="useLabels">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>true</Value>
+      </Data>
+      <Data ReferenceName="OASDecider" ReferencePath="internalized.tmf633.datamodel.decider" VariableName="objectDecider"/>
+    </Data>
+    <Data ID="2353" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document2353">
+      <Source RefID="2349"/>
+    </Data>
+    <Data ID="2827" Label="Service JSON" ReferenceName="Text" ReferencePath="base" VariableName="text2827">
+      <Source RefID="2737"/>
+    </Data>
+    <Data ID="3731" Label="JSON Writing Options" ReferenceName="JSONWritingOptions" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="const_JSONWritingOptions3731">
+      <Data VariableName="useLabels">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>true</Value>
+      </Data>
+      <Data ReferenceName="OASDecider" ReferencePath="internalized.tmf640.datamodel.decider" VariableName="objectDecider"/>
+    </Data>
+    <Data ID="5347" Label="Service" ReferenceName="Service" ReferencePath="internalized.tmf640.datamodel" VariableName="service5347">
+      <Source RefID="5344"/>
+    </Data>
+    <Data ID="6501" Label="JSON Parsing Options" ReferenceName="JSONParsingOptions" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="const_JSONParsingOptions6501">
+      <Data VariableName="useLabels">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>true</Value>
+      </Data>
+      <Data IsList="true" Label="List Wrapper" ReferenceName="ListWrapper" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="listWrapper"/>
+      <Data IsList="true" Label="Member Substitution" ReferenceName="MemberSubstitution" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="memberSubstitution"/>
+      <Data ReferenceName="OASDecider" ReferencePath="internalized.tmf640.datamodel.decider" VariableName="objectDecider"/>
+      <Data IsList="true" Label="List to Map Transformation" ReferenceName="ListToMapTransformation" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="listToMapTransformation"/>
+    </Data>
+    <Data ID="6590" Label="Service" ReferenceName="Service" ReferencePath="internalized.tmf640.datamodel" VariableName="const_Service6590"/>
+    <Assign ID="1">
+      <Source RefID="2827"/>
+      <Target RefID="2641"/>
+      <Copy>
+        <Source RefID="2827">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="2641"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

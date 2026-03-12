@@ -1,0 +1,1701 @@
+openapi: 3.0.1
+info:
+  title: Service Catalog Management
+  description: |
+    ## Description
+    TMF633 based service catalog API.
+    ### Change History
+     + 10.09.2025 (1.1.15): Version bump because Xyna installer doesnt support letters in versions
+     + 15.07.2025 (1.1.14a): Change of version because of usage of new OAS Base Application 1.7.2
+     + 10.06.2025 (1.1.14): Added ignored list to allowed changes.
+     + 19.05.2025 (1.1.13): Added objects for new type of constraints: Allowed changes
+     + 15.04.2025 (1.1.12): Added ExternalIdentifierSpecification
+     + 31.03.2025 (1.1.11): Changed constraint context into Map
+     + 21.01.2025 (1.1.10a): Change of version because of usage of new OAS Base Application 1.4.2
+     + 13.01.2025 (1.1.10): New constraint fields (context, dependency)
+     + 02.09.2024 (1.1.9): serviceRelationshipCharacteristic - first letter to lower case
+     + 27.08.2024 (1.1.8): Added ID to POST
+     + 20.08.2024 (1.1.7): Added ServiceSpecRelationshipCharacteristic to ServiceSpecRelationship
+     + 23.07.2024 (1.1.6): Constraints, deleted examples
+     + 15.07.2024 (1.1.5): Set x-provider-path and x-client-path
+     + 08.07.2024 (1.1.3): Subclasses for CharacteristicValueSpecification added (ported from v5)
+  version: 1.1.15
+  x-api-category: G-API
+  x-segment:
+    - B2B
+    - WS
+  x-local:
+    - FN
+  x-standard-reference:
+    id: TMF633
+    version: 4.0.0
+  x-model-path: tmf633.datamodel
+  x-provider-path: tmf633.provider
+  x-client-path: tmf633.client
+tags:
+- name: serviceSpecification
+paths:
+  /serviceSpecification:
+    get:
+      tags:
+      - serviceSpecification
+      summary: Search ServiceSpecs
+      description: This operation list or find ServiceSpecification entities from the catalog
+      operationId: listServiceSpecification
+      parameters:
+      - name: fields
+        in: query
+        description: Comma-separated properties to be provided in response
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: Requested index for start of resources to be provided in response
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Requested number of resources to be provided in response
+        schema:
+          type: integer
+      - name: sort
+        in: query
+        description: Comma-separated properties to be used for sorting
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          headers:
+            X-Total-Count:
+              description: Total number of items matching criteria
+              schema:
+                type: integer
+            X-Result-Count:
+              description: Actual number of items returned in the response body
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ServiceSpecification'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+      - serviceSpecification
+      summary: Creates a ServiceSpecification
+      description: This operation creates a ServiceSpecification entity.
+      operationId: createServiceSpecification
+      requestBody:
+        description: The ServiceSpecification to be created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceSpecification_Create'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceSpecification'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /serviceSpecification/{id}:
+    get:
+      tags:
+      - serviceSpecification
+      summary: Retrieves a ServiceSpec by ID
+      description: This operation retrieves a ServiceSpecification entity. Attribute
+        selection is enabled for all first level attributes.
+      operationId: retrieveServiceSpecification
+      parameters:
+      - name: id
+        in: path
+        description: Identifier of the ServiceSpecification
+        required: true
+        schema:
+          type: string
+      - name: fields
+        in: query
+        description: Comma-separated properties to provide in response
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceSpecification'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    AssociationSpecificationRef:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+          description: unique identifier
+        href:
+          type: string
+          description: Hyperlink reference
+          format: uri
+        name:
+          type: string
+          description: Name of the related entity.
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          description: A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+        '@referredType':
+          type: string
+          description: The actual type of the target instance when needed for disambiguation.
+      description: reference to an AssociationSpecification object
+    CharacteristicSpecification:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID for the characteristic
+        configurable:
+          type: boolean
+          description: If true, the Boolean indicates that the target Characteristic
+            is configurable
+        description:
+          type: string
+          description: A narrative that explains the CharacteristicSpecification.
+        extensible:
+          type: boolean
+          description: An indicator that specifies that the values for the characteristic
+            can be extended by adding new values when instantiating a characteristic
+            for a resource.
+        isUnique:
+          type: boolean
+          description: An indicator that specifies if a value is unique for the specification.
+            Possible values are; "unique while value is in effect" and "unique whether
+            value is in effect or not"
+        maxCardinality:
+          type: integer
+          description: The maximum number of instances a CharacteristicValue can take
+            on. For example, zero to five phone numbers in a group calling plan, where
+            five is the value for the maxCardinality.
+        minCardinality:
+          type: integer
+          description: The minimum number of instances a CharacteristicValue can take
+            on. For example, zero to five phone numbers in a group calling plan, where
+            zero is the value for the minCardinality.
+        name:
+          type: string
+          description: A word, term, or phrase by which this characteristic specification
+            is known and distinguished from other characteristic specifications.
+        regex:
+          type: string
+          description: A rule or principle represented in regular expression used
+            to derive the value of a characteristic value.
+        valueType:
+          type: string
+          description: A kind of value that the characteristic can take on, such as
+            numeric, text and so forth
+        charSpecRelationship:
+          type: array
+          description: An aggregation, migration, substitution, dependency or exclusivity
+            relationship between/among Specification Characteristics.
+          items:
+            $ref: '#/components/schemas/CharacteristicSpecificationRelationship'
+        characteristicValueSpecification:
+          type: array
+          description: A CharacteristicValueSpecification object is used to define
+            a set of attributes, each of which can be assigned to a corresponding
+            set of attributes in a CharacteristicSpecification object. The values
+            of the attributes in the CharacteristicValueSpecification object describe
+            the values of the attributes that a corresponding Characteristic object
+            can take on.
+          items:
+            $ref: '#/components/schemas/CharacteristicValueSpecification'
+        validFor:
+          $ref: '#/components/schemas/TimePeriod'
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          description: A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+        '@valueSchemaLocation':
+          type: string
+          description: This (optional) field provides a link to the schema describing
+            the value type.
+      description: This class defines a characteristic specification.
+    CharacteristicSpecificationBase:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID for the characteristic
+        configurable:
+          type: boolean
+          description: If true, the Boolean indicates that the target Characteristic
+            is configurable
+        description:
+          type: string
+          description: A narrative that explains the CharacteristicSpecification.
+        extensible:
+          type: boolean
+          description: An indicator that specifies that the values for the characteristic
+            can be extended by adding new values when instantiating a characteristic
+            for a resource.
+        isUnique:
+          type: boolean
+          description: An indicator that specifies if a value is unique for the specification.
+            Possible values are; "unique while value is in effect" and "unique whether
+            value is in effect or not"
+        maxCardinality:
+          type: integer
+          description: The maximum number of instances a CharacteristicValue can take
+            on. For example, zero to five phone numbers in a group calling plan, where
+            five is the value for the maxCardinality.
+        minCardinality:
+          type: integer
+          description: The minimum number of instances a CharacteristicValue can take
+            on. For example, zero to five phone numbers in a group calling plan, where
+            zero is the value for the minCardinality.
+        name:
+          type: string
+          description: A word, term, or phrase by which this characteristic specification
+            is known and distinguished from other characteristic specifications.
+        regex:
+          type: string
+          description: A rule or principle represented in regular expression used
+            to derive the value of a characteristic value.
+        valueType:
+          type: string
+          description: A kind of value that the characteristic can take on, such as
+            numeric, text and so forth
+        validFor:
+          $ref: '#/components/schemas/TimePeriod'
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          description: A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+        '@valueSchemaLocation':
+          type: string
+          description: This (optional) field provides a link to the schema describing
+            the value type.
+      description: This class defines a characteristic specification.
+    CharacteristicSpecificationRelationship:
+      type: object
+      properties:
+        characteristicSpecificationId:
+          type: string
+          description: Unique identifier of the characteristic within the specification
+        name:
+          type: string
+          description: Name of the target characteristic within the specification
+        parentSpecificationHref:
+          type: string
+          description: Hyperlink reference to the parent specification containing
+            the target characteristic
+          format: uri
+        parentSpecificationId:
+          type: string
+          description: Unique identifier of the parent specification containing the
+            target characteristic
+        relationshipType:
+          type: string
+          description: Type of relationship such as aggregation, migration, substitution,
+            dependency, exclusivity
+        validFor:
+          $ref: '#/components/schemas/TimePeriod'
+      description: An aggregation, migration, substitution, dependency or exclusivity
+        relationship between/among Characteristic specifications. The specification
+        characteristic is embedded within the specification whose ID and href are
+        in this entity, and identified by its ID.
+    CharacteristicValueSpecification:
+      type: object
+      properties:
+        isDefault:
+          type: boolean
+          description: If true, the Boolean Indicates if the value is the default
+            value for a characteristic
+        rangeInterval:
+          type: string
+          description: An indicator that specifies the inclusion or exclusion of the
+            valueFrom and valueTo attributes. If applicable, possible values are "open",
+            "closed", "closedBottom" and "closedTop".
+        regex:
+          type: string
+          description: A regular expression constraint for given value
+        unitOfMeasure:
+          type: string
+          description: A length, surface, volume, dry measure, liquid measure, money,
+            weight, time, and the like. In general, a determinate quantity or magnitude
+            of the kind designated, taken as a standard of comparison for others of
+            the same kind, in assigning to them numerical values, as 1 foot, 1 yard,
+            1 mile, 1 square foot.
+        valueFrom:
+          type: integer
+          description: The low range value that a characteristic can take on
+        valueTo:
+          type: integer
+          description: The upper range value that a characteristic can take on
+        valueType:
+          type: string
+          description: A kind of value that the characteristic value can take on,
+            such as numeric, text and so forth
+        validFor:
+          $ref: '#/components/schemas/TimePeriod'
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          description: A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+      description: specification of a value (number or text or an object) that can
+        be assigned to a Characteristic.
+      discriminator:
+        propertyName: '@type'
+        mapping:
+          CharacteristicValueSpecification: '#/components/schemas/CharacteristicValueSpecification'
+          StringCharacteristicValueSpecification: '#/components/schemas/StringCharacteristicValueSpecification'
+          StringArrayCharacteristicValueSpecification: '#/components/schemas/StringArrayCharacteristicValueSpecification'
+          ObjectCharacteristicValueSpecification: '#/components/schemas/ObjectCharacteristicValueSpecification'
+          ObjectArrayCharacteristicValueSpecification: '#/components/schemas/ObjectArrayCharacteristicValueSpecification'
+          NumberCharacteristicValueSpecification: '#/components/schemas/NumberCharacteristicValueSpecification'
+          NumberArrayCharacteristicValueSpecification: '#/components/schemas/NumberArrayCharacteristicValueSpecification'
+          IntegerCharacteristicValueSpecification: '#/components/schemas/IntegerCharacteristicValueSpecification'
+          IntegerArrayCharacteristicValueSpecification: '#/components/schemas/IntegerArrayCharacteristicValueSpecification'
+          BooleanCharacteristicValueSpecification: '#/components/schemas/BooleanCharacteristicValueSpecification'
+          BooleanArrayCharacteristicValueSpecification: '#/components/schemas/BooleanArrayCharacteristicValueSpecification'
+    StringCharacteristicValueSpecification:
+      allOf:
+        - $ref: '#/components/schemas/CharacteristicValueSpecification'
+        - type: object
+          description: A specification for a characteristic for which the value is a string
+          properties:
+            value:
+              type: string
+              description: Value of the characteristic
+    StringArrayCharacteristicValueSpecification:
+      allOf:
+        - $ref: '#/components/schemas/CharacteristicValueSpecification'
+        - type: object
+          description: A specification for a characteristic for which the value is an array of strings
+          properties:
+            value:
+              type: array
+              items:
+                type: string
+    ObjectCharacteristicValueSpecification:
+      allOf:
+        - $ref: '#/components/schemas/CharacteristicValueSpecification'
+        - type: object
+          description: A specification for a characteristic for which the value is any object
+          properties:
+            value:
+              type: object
+              description: Value of the characteristic
+    ObjectArrayCharacteristicValueSpecification:
+      allOf:
+        - $ref: '#/components/schemas/CharacteristicValueSpecification'
+        - type: object
+          description: A specification for a characteristic for which the value is an array of objects
+          properties:
+            value:
+              type: array
+              items:
+                type: object
+    NumberCharacteristicValueSpecification:
+      allOf:
+        - $ref: '#/components/schemas/CharacteristicValueSpecification'
+        - type: object
+          description: >-
+            A specification for a characteristic for which the value is a number of no specific
+            format
+          properties:
+            value:
+              type: number
+              description: Value of the characteristic
+    NumberArrayCharacteristicValueSpecification:
+      allOf:
+        - $ref: '#/components/schemas/CharacteristicValueSpecification'
+        - type: object
+          description: >-
+            A specification for a characteristic for which the value is a number array with no
+            specific format
+          properties:
+            value:
+              type: array
+              items:
+                type: number
+    IntegerCharacteristicValueSpecification:
+      allOf:
+        - $ref: '#/components/schemas/CharacteristicValueSpecification'
+        - type: object
+          description: A specification for a characteristic for which the value is an integer number
+          properties:
+            value:
+              type: integer
+              description: Value of the characteristic
+    IntegerArrayCharacteristicValueSpecification:
+      allOf:
+        - $ref: '#/components/schemas/CharacteristicValueSpecification'
+        - type: object
+          description: >-
+            A specification for a characteristic for which the value is a number array of format
+            integer
+          properties:
+            value:
+              type: array
+              items:
+                type: integer
+    BooleanArrayCharacteristicValueSpecification:
+      allOf:
+        - $ref: '#/components/schemas/CharacteristicValueSpecification'
+        - type: object
+          description: A specification for a characteristic for which the value is an array booleans
+          properties:
+            value:
+              type: array
+              items:
+                type: boolean
+    BooleanCharacteristicValueSpecification:
+      allOf:
+        - $ref: '#/components/schemas/CharacteristicValueSpecification'
+        - type: object
+          description: A specification for a characteristic for which the value is a boolean
+          properties:
+            value:
+              type: boolean
+              description: Value of the characteristic
+    ConstraintRef:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+          description: unique identifier
+        href:
+          type: string
+          description: Hyperlink reference
+          format: uri
+        name:
+          type: string
+          description: Name of the related entity.
+        version:
+          type: string
+          description: constraint version
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          description: A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+        '@referredType':
+          type: string
+          description: The actual type of the target instance when needed for disambiguation.
+      description: Constraint reference. The Constraint resource represents a policy/rule
+        applied to an entity or entity spec.
+    Constraint:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the constraint.
+        description:
+          type: string
+          description: Description of the constraint.
+        dependencies:
+          type: array
+          items:
+            type: string
+          description: Names of dependent constraints. This constraint will only be evaluated
+            after the conditions of all dependent constraints were evaluated successfully.
+        context:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConstraintContext'
+          description: For each context type all context values that this constraint is restricted to.
+            The constraint will only be evaluated if all _current_ (provided at runtime) values are 
+            included in context values provided here. If this array does not contain an entry for a
+            _current_ context type, it is assumed to have no restriction for that context type.
+        condition:
+          $ref: '#/components/schemas/ConstraintRuleDefinition'
+        rule:
+          $ref: '#/components/schemas/ConstraintRuleDefinition'
+    ConstraintContext:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the context. An example would be HTTPRequest with possible values 
+            POST, GET, etc.          
+        value:
+          type: array
+          description: The values of this context that the constraint is restricted to. If the _current_ 
+            (provided at runtime) context value for this type is not included here, the constraint
+            will not be evaluated. If the array is empty, there is not any restriction (the same as if
+            the whole ConstraintContext is not provided at all).
+          items:
+            type: string
+    ConstraintRuleDefinition:
+      type: object
+      properties:
+        path:
+          type: array
+          items:
+            type: string
+        expression:
+          type: string
+    ChangeList:
+      type: object
+      description: List of changes as json path expressions
+      properties:
+        changes:
+          type: array
+          items:
+            type: string
+    AllowedChanges:
+      type: object
+      description: Contains nested lists of json path expressions that will be evaluated on the old service
+        as well as on the new service to detect changes in that part of the json. If the changes done to 
+        the service are not included in any of the sets defined here, the change is not allowed (except
+        when whole AllowedChanges is empty). One can define two kinds of json path lists. Either a 
+        list of things that _all_ have to be changed (and nothing else). Or a list of possible changes that
+        _may_ or may not have been changed (but again nothing else is changed).
+      properties:
+        allof:
+          type: array
+          description: Each of the nested list is a valid _allof_ allowed change, i.e. a service update is 
+            valid with regards to this list, if all of its entries are changed in the service update and
+            nothing else.
+          items:
+            $ref: '#/components/schemas/ChangeList'
+        anyof:
+          type: array
+          description: Each of these nested lists is a valid _anyof_ allowed change, i.e. any of its entries may
+            have been changed in the service update, but nothing else.
+          items:
+            $ref: '#/components/schemas/ChangeList'
+        ignored:
+          type: array
+          description: Changes to these paths will be ignored.
+          items:
+            type: string
+    EntityRef:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+          description: unique identifier
+        href:
+          type: string
+          description: Hyperlink reference
+          format: uri
+        name:
+          type: string
+          description: Name of the related entity.
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          description: A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+        '@referredType':
+          type: string
+          description: The actual type of the target instance when needed for disambiguation.
+      description: Entity reference schema to be use for all entityRef class.
+    EntitySpecification:
+      type: object
+      properties:
+        id:
+          type: string
+          description: unique identifier
+        href:
+          type: string
+          description: Hyperlink reference
+          format: uri
+        description:
+          type: string
+          description: Description of the specification
+        isBundle:
+          type: boolean
+          description: isBundle determines whether specification represents a single
+            specification (false), or a bundle of specifications (true).
+        lastUpdate:
+          type: string
+          description: Date and time of the last update of the specification
+          format: date-time
+        lifecycleStatus:
+          type: string
+          description: Used to indicate the current lifecycle status of this catalog
+            item
+        name:
+          type: string
+          description: Name given to the specification
+        version:
+          type: string
+          description: specification version
+        constraint:
+          type: array
+          description: This is a list of constraint references applied to this specification
+          items:
+            $ref: '#/components/schemas/Constraint'
+        entitySpecRelationship:
+          type: array
+          description: Relationship to another specification
+          items:
+            $ref: '#/components/schemas/EntitySpecificationRelationship'
+        relatedParty:
+          type: array
+          description: Parties who manage or otherwise have an interest in this specification
+          items:
+            $ref: '#/components/schemas/RelatedParty'
+        specCharacteristic:
+          type: array
+          description: List of characteristics that the entity can take
+          items:
+            $ref: '#/components/schemas/CharacteristicSpecification'
+        targetEntitySchema:
+          $ref: '#/components/schemas/TargetEntitySchema'
+        validFor:
+          $ref: '#/components/schemas/TimePeriod'
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          description: A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+      description: |-
+        EntitySpecification is a class that offers characteristics to describe a type
+        of entity. Entities are generic constructs that may be used to describe bespoke
+        business entities that are not effectively covered by the existing SID model.
+        Functionally, the entity specification acts as a template by which entities
+        may be instantiated and described. By sharing the same specification, these
+        entities would therefore share the same set of characteristics.
+        Note: The ‘configurable’ attribute on the specCharacteristics determines if an
+        entity instantiated from the entity specification can override the value of
+        the attribute. When set to false, the entity instance may not define a value
+        that differs from the value in the specification.
+    EntitySpecificationRelationship:
+      required:
+      - relationshipType
+      type: object
+      properties:
+        id:
+          type: string
+          description: unique identifier
+        href:
+          type: string
+          description: Hyperlink reference
+          format: uri
+        name:
+          type: string
+          description: Name of the related entity.
+        relationshipType:
+          type: string
+          description: Type of relationship such as migration, substitution, dependency,
+            exclusivity
+        role:
+          type: string
+          description: The association role for this entity specification
+        associationSpec:
+          $ref: '#/components/schemas/AssociationSpecificationRef'
+        validFor:
+          $ref: '#/components/schemas/TimePeriod'
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          description: A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+        '@referredType':
+          type: string
+          description: The actual type of the target instance when needed for disambiguation.
+      description: A migration, substitution, dependency or exclusivity relationship
+        between/among entity specifications.
+    Extensible:
+      type: object
+      properties:
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          description: A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+      description: Base Extensible schema for use in TMForum Open-APIs
+    ExternalIdentifierSpecification:
+      required:
+      - name
+      type: object
+      description: >-
+        A specification for an identification of an entity that is owned by or originates in a software system
+        different from the current system, for example a ProductOrder handed off from a commerce
+        platform into an order handling system. The structure identifies the system itself, the
+        nature of the entity within the system (e.g. class name) and the unique ID of the entity
+        within the system. It is anticipated that multiple external IDs can be held for a single
+        entity, e.g. if the entity passed through multiple systems on the way to the current
+        system. In this case the consumer is expected to sequence the IDs in the array in
+        reverse order of provenance, i.e. most recent system first in the list.
+      properties:
+        name:
+          type: string
+          description: Name of the external system that owns the entity.
+          example: MagentoCommerce
+        externalIdentifierType:
+          type: string
+          description: >-
+            Type of the identification, typically would be the type of the entity within the
+            external system
+          example: ProductOrder
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          description: A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+    FeatureSpecification:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Identifier of the feature specification. Must be locally unique
+            within the containing specification, thus allowing direct access to the
+            feature spec.
+        isBundle:
+          type: boolean
+          description: A flag indicating if this is a feature group (true) or not
+            (false)
+        isEnabled:
+          type: boolean
+          description: A flag indicating if the feature is enabled (true) or not (false)
+        name:
+          type: string
+          description: Unique name given to the feature specification
+        version:
+          type: string
+          description: Version of the feature specification
+        constraint:
+          type: array
+          description: This is a list of feature constraints
+          items:
+            $ref: '#/components/schemas/Constraint'
+        featureSpecCharacteristic:
+          type: array
+          description: This is a list of characteristics for a particular feature
+          items:
+            $ref: '#/components/schemas/FeatureSpecificationCharacteristic'
+        featureSpecRelationship:
+          type: array
+          description: A dependency, exclusivity or aggratation relationship between/among
+            feature specifications.
+          items:
+            $ref: '#/components/schemas/FeatureSpecificationRelationship'
+        validFor:
+          $ref: '#/components/schemas/TimePeriod'
+      description: Specification for resource, service or product features
+    FeatureSpecificationCharacteristic:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID for the characteristic
+        configurable:
+          type: boolean
+          description: If true, the Boolean indicates that the target Characteristic
+            is configurable
+        description:
+          type: string
+          description: A narrative that explains the CharacteristicSpecification.
+        extensible:
+          type: boolean
+          description: An indicator that specifies that the values for the characteristic
+            can be extended by adding new values when instantiating a characteristic
+            for a resource.
+        isUnique:
+          type: boolean
+          description: An indicator that specifies if a value is unique for the specification.
+            Possible values are; "unique while value is in effect" and "unique whether
+            value is in effect or not"
+        maxCardinality:
+          type: integer
+          description: The maximum number of instances a CharacteristicValue can take
+            on. For example, zero to five phone numbers in a group calling plan, where
+            five is the value for the maxCardinality.
+        minCardinality:
+          type: integer
+          description: The minimum number of instances a CharacteristicValue can take
+            on. For example, zero to five phone numbers in a group calling plan, where
+            zero is the value for the minCardinality.
+        name:
+          type: string
+          description: A word, term, or phrase by which this characteristic specification
+            is known and distinguished from other characteristic specifications.
+        regex:
+          type: string
+          description: A rule or principle represented in regular expression used
+            to derive the value of a characteristic value.
+        valueType:
+          type: string
+          description: A kind of value that the characteristic can take on, such as
+            numeric, text and so forth
+        featureSpecCharRelationship:
+          type: array
+          description: An aggregation, migration, substitution, dependency or exclusivity
+            relationship between/among feature characteristics.
+          items:
+            $ref: '#/components/schemas/FeatureSpecificationCharacteristicRelationship'
+        featureSpecCharacteristicValue:
+          type: array
+          description: Used to define a set of attributes, each of which can be assigned
+            to a corresponding set of attributes in a FeatureCharacteristic object.
+          items:
+            $ref: '#/components/schemas/CharacteristicValueSpecification'
+        validFor:
+          $ref: '#/components/schemas/TimePeriod'
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          description: A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+        '@valueSchemaLocation':
+          type: string
+          description: This (optional) field provides a link to the schema describing
+            the value type.
+      description: Configuration feature characteristic specification.
+    FeatureSpecificationCharacteristicRelationship:
+      type: object
+      properties:
+        characteristicId:
+          type: string
+          description: Unique identifier of the characteristic within the the target
+            feature specification
+        featureId:
+          type: string
+          description: Unique identifier of the target feature specification within
+            the resource specification.
+        name:
+          type: string
+          description: Name of the target characteristic
+        relationshipType:
+          type: string
+          description: Type of relationship such as aggregation, migration, substitution,
+            dependency, exclusivity
+        resourceSpecificationHref:
+          type: string
+          description: Hyperlink reference to the resource specification containing
+            the target feature and feature characteristic
+          format: uri
+        resourceSpecificationId:
+          type: string
+          description: Unique identifier of the resource specification containing
+            the target feature and feature characteristic
+        validFor:
+          $ref: '#/components/schemas/TimePeriod'
+      description: An aggregation, migration, substitution, dependency or exclusivity
+        relationship between/among FeatureSpecificationCharacteristics.
+    FeatureSpecificationRelationship:
+      required:
+      - name
+      - relationshipType
+      type: object
+      properties:
+        featureId:
+          type: string
+          description: Unique identifier of the target feature specification.
+        name:
+          type: string
+          description: This is the name of the target feature specification.
+        parentSpecificationHref:
+          type: string
+          description: Hyperlink reference to the parent specification containing
+            the target feature
+          format: uri
+        parentSpecificationId:
+          type: string
+          description: Unique identifier of the parent specification containing the
+            target feature
+        relationshipType:
+          type: string
+          description: This is the type of the feature specification relationship.
+        validFor:
+          $ref: '#/components/schemas/TimePeriod'
+      description: Relationship between feature specifications
+    Quantity:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: Numeric value in a given unit
+          format: float
+          default: 1.0
+        units:
+          type: string
+          description: Unit
+      description: An amount in a given unit
+    RelatedParty:
+      required:
+      - '@referredType'
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+          description: unique identifier
+        href:
+          type: string
+          description: Hyperlink reference
+          format: uri
+        name:
+          type: string
+          description: Name of the related entity.
+        role:
+          type: string
+          description: Role played by the related party
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          description: A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+        '@referredType':
+          type: string
+          description: The actual type of the target instance when needed for disambiguation.
+      description: Related Entity reference. A related party defines party or party
+        role linked to a specific entity.
+    ResourceSpecificationRef:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+          description: unique identifier
+        href:
+          type: string
+          description: Hyperlink reference
+          format: uri
+        name:
+          type: string
+          description: Name of the related entity.
+        version:
+          type: string
+          description: Resource Specification version
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          description: A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+        '@referredType':
+          type: string
+          description: The actual type of the target instance when needed for disambiguation.
+      description: |-
+        Resources are physical or non-physical components (or some combination of these)
+        within an enterprise's infrastructure or inventory. They are typically consumed
+        or used by services (for example a physical port assigned to a service) or
+        contribute to the realization of a Product (for example, a SIM card). They can
+        be drawn from the Application, Computing and Network domains, and include,
+        for example, Network Elements, software, IT systems, content and information,
+        and technology components.
+        A ResourceSpecification is an abstract base class for representing a generic
+        means for implementing a particular type of Resource. In essence, a
+        ResourceSpecification defines the common attributes and relationships of a set
+        of related Resources, while Resource defines a specific instance that is based
+        on a particular ResourceSpecification.
+    ServiceLevelSpecificationRef:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+          description: unique identifier
+        href:
+          type: string
+          description: Hyperlink reference
+          format: uri
+        name:
+          type: string
+          description: Name of the related entity.
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          description: A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+        '@referredType':
+          type: string
+          description: The actual type of the target instance when needed for disambiguation.
+      description: "A Service Level Specification represents a pre-defined or negotiated\
+        \ set of Service Level \nObjectives. In addition, certain consequences are\
+        \ associated with not meeting the Service Level \nObjectives. Service Level\
+        \ Agreements are expressed in terms of Service Level Specifications."
+    ServiceSpecRelationship:
+      required:
+      - relationshipType
+      type: object
+      properties:
+        id:
+          type: string
+          description: unique identifier
+        href:
+          type: string
+          description: Hyperlink reference
+          format: uri
+        name:
+          type: string
+          description: Name of the related entity.
+        relationshipType:
+          type: string
+          description: Type of relationship such as dependency, substitution or exclusivity
+        serviceSpecRelationshipCharacteristic:
+          type: array
+          items:
+            $ref: '#/components/schemas/CharacteristicSpecification'
+        role:
+          type: string
+          description: The association role for this service specification
+        validFor:
+          $ref: '#/components/schemas/TimePeriod'
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          description: A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+        '@referredType':
+          type: string
+          description: The actual type of the target instance when needed for disambiguation.
+      description: A dependency, substitution or exclusivity relationship between/among
+        service specifications.
+    ServiceSpecification:
+      type: object
+      properties:
+        id:
+          type: string
+          description: unique identifier
+        href:
+          type: string
+          description: Hyperlink reference
+          format: uri
+        description:
+          type: string
+          description: Description of the specification
+        isBundle:
+          type: boolean
+          description: isBundle determines whether specification represents a single
+            specification (false), or a bundle of specifications (true).
+        lastUpdate:
+          type: string
+          description: Date and time of the last update of the specification
+          format: date-time
+        lifecycleStatus:
+          type: string
+          description: Used to indicate the current lifecycle status of this catalog
+            item
+        name:
+          type: string
+          description: Name given to the specification
+        version:
+          type: string
+          description: specification version
+        constraint:
+          type: array
+          description: This is a list of constraint references applied to this specification
+          items:
+            $ref: '#/components/schemas/Constraint'
+        allowedChanges:
+          description: Specifies list of all of the allowed changes when updating a service
+          $ref: '#/components/schemas/AllowedChanges'
+        entitySpecRelationship:
+          type: array
+          description: Relationship to another specification
+          items:
+            $ref: '#/components/schemas/EntitySpecificationRelationship'
+        externalIdentifierSpecification:
+          type: array
+          description: A list of specifications of external identifiers associated with this specification
+          items:
+            $ref: '#/components/schemas/ExternalIdentifierSpecification'
+        featureSpecification:
+          type: array
+          description: A list of Features for this specification.
+          items:
+            $ref: '#/components/schemas/FeatureSpecification'
+        relatedParty:
+          type: array
+          description: Parties who manage or otherwise have an interest in this specification
+          items:
+            $ref: '#/components/schemas/RelatedParty'
+        resourceSpecification:
+          type: array
+          description: A list of resource specification references (ResourceSpecificationRef
+            [*]). The ResourceSpecification is required for a service specification
+            with type ResourceFacingServiceSpecification (RFSS).
+          items:
+            $ref: '#/components/schemas/ResourceSpecificationRef'
+        serviceLevelSpecification:
+          type: array
+          description: A list of service level specifications related to this service
+            specification, and which will need to be satisifiable for corresponding
+            service instances; e.g. Gold, Platinum
+          items:
+            $ref: '#/components/schemas/ServiceLevelSpecificationRef'
+        serviceSpecRelationship:
+          type: array
+          description: A list of service specifications related to this specification,
+            e.g. migration, substitution, dependency or exclusivity relationship
+          items:
+            $ref: '#/components/schemas/ServiceSpecRelationship'
+        specCharacteristic:
+          type: array
+          description: List of characteristics that the entity can take
+          items:
+            $ref: '#/components/schemas/CharacteristicSpecification'
+        targetEntitySchema:
+          $ref: '#/components/schemas/TargetEntitySchema'
+        validFor:
+          $ref: '#/components/schemas/TimePeriod'
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          description: A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+      description: |-
+        ServiceSpecification is a class that offers characteristics to describe a type of
+        service.
+        Functionally, it acts as a template by which Services may be instantiated. By
+        sharing the same specification, these services would therefore share the same
+        set of characteristics.
+    ServiceSpecification_Create:
+      required:
+      - name
+      type: object
+      properties:
+        # Added id to be able to define human readable id values
+        id:
+          type: string
+          description: unique identifier
+        description:
+          type: string
+          description: Description of the specification
+        isBundle:
+          type: boolean
+          description: isBundle determines whether specification represents a single
+            specification (false), or a bundle of specifications (true).
+        lastUpdate:
+          type: string
+          description: Date and time of the last update of the specification
+          format: date-time
+        lifecycleStatus:
+          type: string
+          description: Used to indicate the current lifecycle status of this catalog
+            item
+        name:
+          type: string
+          description: Name given to the specification
+        version:
+          type: string
+          description: specification version
+        constraint:
+          type: array
+          description: This is a list of constraint references applied to this specification
+          items:
+            $ref: '#/components/schemas/Constraint'
+        allowedChanges:
+          description: Specifies list of all of the allowed changes when updating a service
+          $ref: '#/components/schemas/AllowedChanges'
+        entitySpecRelationship:
+          type: array
+          description: Relationship to another specification
+          items:
+            $ref: '#/components/schemas/EntitySpecificationRelationship'
+        externalIdentifierSpecification:
+          type: array
+          description: A list of specifications of external identifiers associated with this specification
+          items:
+            $ref: '#/components/schemas/ExternalIdentifierSpecification'            
+        featureSpecification:
+          type: array
+          description: A list of Features for this specification.
+          items:
+            $ref: '#/components/schemas/FeatureSpecification'
+        relatedParty:
+          type: array
+          description: Parties who manage or otherwise have an interest in this specification
+          items:
+            $ref: '#/components/schemas/RelatedParty'
+        resourceSpecification:
+          type: array
+          description: A list of resource specification references (ResourceSpecificationRef
+            [*]). The ResourceSpecification is required for a service specification
+            with type ResourceFacingServiceSpecification (RFSS).
+          items:
+            $ref: '#/components/schemas/ResourceSpecificationRef'
+        serviceLevelSpecification:
+          type: array
+          description: A list of service level specifications related to this service
+            specification, and which will need to be satisifiable for corresponding
+            service instances; e.g. Gold, Platinum
+          items:
+            $ref: '#/components/schemas/ServiceLevelSpecificationRef'
+        serviceSpecRelationship:
+          type: array
+          description: A list of service specifications related to this specification,
+            e.g. migration, substitution, dependency or exclusivity relationship
+          items:
+            $ref: '#/components/schemas/ServiceSpecRelationship'
+        specCharacteristic:
+          type: array
+          description: List of characteristics that the entity can take
+          items:
+            $ref: '#/components/schemas/CharacteristicSpecification'
+        targetEntitySchema:
+          $ref: '#/components/schemas/TargetEntitySchema'
+        validFor:
+          $ref: '#/components/schemas/TimePeriod'
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          description: A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+      description: |-
+        ServiceSpecification is a class that offers characteristics to describe a type of
+        service.
+        Functionally, it acts as a template by which Services may be instantiated. By
+        sharing the same specification, these services would therefore share the same
+        set of characteristics.
+        Skipped properties: id,href
+    ServiceSpecification_Update:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description of the specification
+        isBundle:
+          type: boolean
+          description: isBundle determines whether specification represents a single
+            specification (false), or a bundle of specifications (true).
+        lifecycleStatus:
+          type: string
+          description: Used to indicate the current lifecycle status of this catalog
+            item
+        name:
+          type: string
+          description: Name given to the specification
+        version:
+          type: string
+          description: specification version
+        constraint:
+          type: array
+          description: This is a list of constraint references applied to this specification
+          items:
+            $ref: '#/components/schemas/Constraint'
+        allowedChanges:
+          description: Specifies list of all of the allowed changes when updating a service
+          $ref: '#/components/schemas/AllowedChanges'
+        entitySpecRelationship:
+          type: array
+          description: Relationship to another specification
+          items:
+            $ref: '#/components/schemas/EntitySpecificationRelationship'
+        externalIdentifierSpecification:
+          type: array
+          description: A list of specifications of external identifiers associated with this specification
+          items:
+            $ref: '#/components/schemas/ExternalIdentifierSpecification'            
+        featureSpecification:
+          type: array
+          description: A list of Features for this specification.
+          items:
+            $ref: '#/components/schemas/FeatureSpecification'
+        relatedParty:
+          type: array
+          description: Parties who manage or otherwise have an interest in this specification
+          items:
+            $ref: '#/components/schemas/RelatedParty'
+        resourceSpecification:
+          type: array
+          description: A list of resource specification references (ResourceSpecificationRef
+            [*]). The ResourceSpecification is required for a service specification
+            with type ResourceFacingServiceSpecification (RFSS).
+          items:
+            $ref: '#/components/schemas/ResourceSpecificationRef'
+        serviceLevelSpecification:
+          type: array
+          description: A list of service level specifications related to this service
+            specification, and which will need to be satisifiable for corresponding
+            service instances; e.g. Gold, Platinum
+          items:
+            $ref: '#/components/schemas/ServiceLevelSpecificationRef'
+        serviceSpecRelationship:
+          type: array
+          description: A list of service specifications related to this specification,
+            e.g. migration, substitution, dependency or exclusivity relationship
+          items:
+            $ref: '#/components/schemas/ServiceSpecRelationship'
+        specCharacteristic:
+          type: array
+          description: List of characteristics that the entity can take
+          items:
+            $ref: '#/components/schemas/CharacteristicSpecification'
+        targetEntitySchema:
+          $ref: '#/components/schemas/TargetEntitySchema'
+        validFor:
+          $ref: '#/components/schemas/TimePeriod'
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          description: A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+      description: |-
+        ServiceSpecification is a class that offers characteristics to describe a type of service.
+        Functionally, it acts as a template by which Services may be instantiated. By sharing the
+        same specification, these services would therefore share the same set of characteristics.
+        Skipped properties: id,href,lastUpdate
+    ServiceSpecificationRef:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+          description: unique identifier
+        href:
+          type: string
+          description: Hyperlink reference
+          format: uri
+        name:
+          type: string
+          description: Name of the related entity.
+        version:
+          type: string
+          description: Service specification version
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class
+        '@schemaLocation':
+          type: string
+          description: A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+        '@referredType':
+          type: string
+          description: The actual type of the target instance when needed for disambiguation.
+      description: 'Service specification reference: ServiceSpecification(s) required
+        to realize a ProductSpecification.'
+    TargetEntitySchema:
+      required:
+      - '@schemaLocation'
+      - '@type'
+      type: object
+      properties:
+        '@schemaLocation':
+          type: string
+          description: This field provides a link to the schema describing the target
+            entity
+        '@type':
+          type: string
+          description: Class type of the target entity
+      description: The reference object to the schema and type of target entity which
+        is described by a specification
+    TimePeriod:
+      type: object
+      properties:
+        endDateTime:
+          type: string
+          description: End of the time period, using IETC-RFC-3339 format
+          format: date-time
+          example: 1985-04-12T23:20:50.52Z
+        startDateTime:
+          type: string
+          description: Start of the time period, using IETC-RFC-3339 format
+          format: date-time
+          example: 1985-04-12T23:20:50.52Z
+      description: A period of time, either as a deadline (endDateTime only) a startDateTime
+        only, or both
+    EventSubscription:
+      required:
+      - callback
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the listener
+        callback:
+          type: string
+          description: The callback being registered.
+        query:
+          type: string
+          description: additional data to be passed
+      description: Sets the communication endpoint address the service instance must
+        use to deliver notification information
+    EventSubscriptionInput:
+      required:
+      - callback
+      type: object
+      properties:
+        callback:
+          type: string
+          description: The callback being registered.
+        query:
+          type: string
+          description: additional data to be passed
+      description: Sets the communication endpoint address the service instance must
+        use to deliver notification information
+    Error:
+      required:
+      - code
+      - reason
+      type: object
+      properties:
+        code:
+          type: string
+          description: Application relevant detail, defined in the API or a common
+            list.
+        reason:
+          type: string
+          description: Explanation of the reason for the error which can be shown
+            to a client user.
+        message:
+          type: string
+          description: More details and corrective actions related to the error which
+            can be shown to a client user.
+        status:
+          type: string
+          description: HTTP Error code extension
+        referenceError:
+          type: string
+          description: URI of documentation describing the error.
+          format: uri
+        '@baseType':
+          type: string
+          description: When sub-classing, this defines the super-class.
+        '@schemaLocation':
+          type: string
+          description: A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        '@type':
+          type: string
+          description: When sub-classing, this defines the sub-class entity name.
+      description: Used when an API throws an Error, typically with a HTTP error response-code
+        (3xx, 4xx, 5xx)

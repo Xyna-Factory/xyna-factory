@@ -399,5 +399,17 @@ public class ApplicationEntryStorable extends Storable<ApplicationEntryStorable>
     this.parentRevision = parentRevision;
   }
 
+  
+  @Override
+  public boolean equals(Object obj) {
+    if (!(obj instanceof ApplicationEntryStorable)) { return false; }
+    return COMPARATOR.compare(this, (ApplicationEntryStorable) obj) == 0;
+  }
+  
+  
+  @Override
+  public int hashCode() {
+    return name.hashCode();
+  }
 
 }

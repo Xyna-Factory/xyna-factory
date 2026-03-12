@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="Error" TypeName="Error" TypePath="internalized.tmf640.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>Used when an API throws an Error, typically with a HTTP error response-code (3xx, 4xx, 5xx)
+        </Documentation>
+  </Meta>
+  <Data Label="code" VariableName="code">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Application relevant detail, defined in the API or a common list.
+required
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="reason" VariableName="reason">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Explanation of the reason for the error which can be shown to a client user.
+required
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="message" VariableName="message">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>More details and corrective actions related to the error which can be shown to a client user.
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="status" VariableName="status">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>HTTP Error code extension
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="referenceError" VariableName="referenceError">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>URI of documentation describing the error.
+format: uri
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@baseType" VariableName="atbaseType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the super-class.
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@schemaLocation" VariableName="atschemaLocation">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>A URI to a JSON-Schema file that defines additional attributes and relationships
+format: uri
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@type" VariableName="attype">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the sub-class entity name.
+        </Documentation>
+    </Meta>
+  </Data>
+  <Service Label="Error" TypeName="Error">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+// validate Error.code of type String
+try {
+    var validator_code = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_code.setName("code");
+    validator_code.setValue(getCode());
+    validator_code.setRequired();
+    result.getErrorMessages().addAll(validator_code.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Error.code");
+}
+
+// validate Error.reason of type String
+try {
+    var validator_reason = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_reason.setName("reason");
+    validator_reason.setValue(getReason());
+    validator_reason.setRequired();
+    result.getErrorMessages().addAll(validator_reason.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Error.reason");
+}
+
+// validate Error.message of type String
+try {
+    var validator_message = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_message.setName("message");
+    validator_message.setValue(getMessage());
+    result.getErrorMessages().addAll(validator_message.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Error.message");
+}
+
+// validate Error.status of type String
+try {
+    var validator_status = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_status.setName("status");
+    validator_status.setValue(getStatus());
+    result.getErrorMessages().addAll(validator_status.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Error.status");
+}
+
+// validate Error.referenceError of type String
+try {
+    var validator_referenceError = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_referenceError.setName("referenceError");
+    validator_referenceError.setValue(getReferenceError());
+    validator_referenceError.setFormat("uri");
+    result.getErrorMessages().addAll(validator_referenceError.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Error.referenceError");
+}
+
+// validate Error.atbaseType of type String
+try {
+    var validator_atbaseType = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atbaseType.setName("@baseType");
+    validator_atbaseType.setValue(getAtbaseType());
+    result.getErrorMessages().addAll(validator_atbaseType.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Error.atbaseType");
+}
+
+// validate Error.atschemaLocation of type String
+try {
+    var validator_atschemaLocation = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atschemaLocation.setName("@schemaLocation");
+    validator_atschemaLocation.setValue(getAtschemaLocation());
+    validator_atschemaLocation.setFormat("uri");
+    result.getErrorMessages().addAll(validator_atschemaLocation.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Error.atschemaLocation");
+}
+
+// validate Error.attype of type String
+try {
+    var validator_attype = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_attype.setName("@type");
+    validator_attype.setValue(getAttype());
+    result.getErrorMessages().addAll(validator_attype.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Error.attype");
+}
+
+return result.getResult();
+                </CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

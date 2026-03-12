@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="OAS Endpoint Details Definition" TypeName="OASEndpointDetailsDefinition" TypePath="xmcp.oas.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="OAS Endpoint Details Definition" Name="OASEndpointDetailsDefinition">
+    <Input>
+      <Data ID="90" Label="Oas Api Datatype Info" ReferenceName="OasApiDatatypeInfo" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasApiDatatypeInfo90"/>
+    </Input>
+    <Output>
+      <Data ID="10" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition10"/>
+      <Data ID="546" Label="Endpoint Implementation Creation Data" ReferenceName="EndpointImplementationCreationData" ReferencePath="xmcp.oas.fman.datatypes" VariableName="endpointImplementationCreationData546"/>
+      <Data ID="808" IsList="true" Label="Oas Endpoint Service" ReferenceName="OasEndpointService" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasEndpointService808"/>
+      <Data ID="1096" Label="Oas Api Datatype Info" ReferenceName="OasApiDatatypeInfo" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasApiDatatypeInfo1096"/>
+    </Output>
+    <ServiceReference ID="636" Label="Oas Endpoint Details - with Datatype Definition" ReferenceName="OasEndpointDetailsWithDatatypeDefinition" ReferencePath="xmcp.oas.fman">
+      <Source RefID="635"/>
+      <Target RefID="635"/>
+    </ServiceReference>
+    <ServiceReference ID="454" Label="Oas Endpoint Details - Missing Definition" ReferenceName="OasEndpointDetailsMissingDefinition" ReferencePath="xmcp.oas.fman">
+      <Source RefID="453"/>
+      <Target RefID="453"/>
+    </ServiceReference>
+    <Choice ID="234" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="90"/>
+      <Target RefID="1198"/>
+      <Target RefID="1199"/>
+      <Target RefID="1200"/>
+      <Meta>
+        <OuterConditionPart>%0%.status==?</OuterConditionPart>
+      </Meta>
+      <Input>
+        <Data ID="246" Label="Oas Api Datatype Info" ReferenceName="OasApiDatatypeInfo" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasApiDatatypeInfo246">
+          <Source RefID="234"/>
+        </Data>
+        <Source RefID="90"/>
+      </Input>
+      <Case ID="271" Label="" Premise="%0%.status==&quot;Missing&quot;">
+        <Function ID="453" Label="Oas Endpoint Details - Missing Definition">
+          <Source RefID="454"/>
+          <Source RefID="90"/>
+          <Target RefID="454"/>
+          <Target RefID="456"/>
+          <Target RefID="547"/>
+          <Invoke Operation="OasEndpointDetailsMissingDefinition" ServiceID="454">
+            <Source RefID="90"/>
+          </Invoke>
+          <Receive ServiceID="454">
+            <Target RefID="456"/>
+            <Target RefID="547"/>
+          </Receive>
+        </Function>
+        <Mappings ID="861" Label="Mapping">
+          <Output>
+            <Data ID="886" IsList="true" Label="Oas Endpoint Service" ReferenceName="OasEndpointService" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasEndpointService886">
+              <Source RefID="861"/>
+            </Data>
+            <Target RefID="887"/>
+          </Output>
+        </Mappings>
+        <Assign ID="273">
+          <Source RefID="456"/>
+          <Source RefID="887"/>
+          <Source RefID="547"/>
+          <Target RefID="1198"/>
+          <Target RefID="1199"/>
+          <Target RefID="1200"/>
+          <Copy>
+            <Source RefID="456"/>
+            <Target RefID="1198"/>
+          </Copy>
+          <Copy>
+            <Source RefID="887"/>
+            <Target RefID="1199"/>
+          </Copy>
+          <Copy>
+            <Source RefID="547"/>
+            <Target RefID="1200"/>
+          </Copy>
+        </Assign>
+        <Data ID="456" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition456">
+          <Source RefID="453"/>
+        </Data>
+      </Case>
+      <Case ID="376" Label="" Premise="%0%.status==&quot;Incomplete&quot;">
+        <Function ID="635" Label="Oas Endpoint Details - with Datatype Definition">
+          <Source RefID="636"/>
+          <Source RefID="90"/>
+          <Target RefID="636"/>
+          <Target RefID="638"/>
+          <Target RefID="639"/>
+          <Target RefID="888"/>
+          <Invoke Operation="OasEndpointDetailsWithDatatypeDefinition" ServiceID="636">
+            <Source RefID="90"/>
+          </Invoke>
+          <Receive ServiceID="636">
+            <Target RefID="638"/>
+            <Target RefID="639"/>
+            <Target RefID="888"/>
+          </Receive>
+        </Function>
+        <Assign ID="378">
+          <Source RefID="638"/>
+          <Source RefID="888"/>
+          <Source RefID="639"/>
+          <Target RefID="1198"/>
+          <Target RefID="1199"/>
+          <Target RefID="1200"/>
+          <Copy>
+            <Source RefID="638"/>
+            <Target RefID="1198"/>
+          </Copy>
+          <Copy>
+            <Source RefID="888"/>
+            <Target RefID="1199"/>
+          </Copy>
+          <Copy>
+            <Source RefID="639"/>
+            <Target RefID="1200"/>
+          </Copy>
+        </Assign>
+        <Data ID="638" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition638">
+          <Source RefID="635"/>
+        </Data>
+        <Data ID="639" Label="Endpoint Implementation Creation Data" ReferenceName="EndpointImplementationCreationData" ReferencePath="xmcp.oas.fman.datatypes" VariableName="endpointImplementationCreationData639">
+          <Source RefID="635"/>
+        </Data>
+      </Case>
+      <Case Alias="376" ID="1196" Premise="%0%.status==&quot;Complete&quot;"/>
+      <Case ID="235" IsDefault="true" Label="default">
+        <Mappings ID="299" Label="Unknown Status">
+          <Input>
+            <Data ID="300" Label="Oas Api Datatype Info" ReferenceName="OasApiDatatypeInfo" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasApiDatatypeInfo300"/>
+            <Source RefID="90"/>
+          </Input>
+          <Output>
+            <Data ID="301" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition301"/>
+            <Target RefID="302"/>
+          </Output>
+          <Output>
+            <Data ID="564" Label="Endpoint Implementation Creation Data" ReferenceName="EndpointImplementationCreationData" ReferencePath="xmcp.oas.fman.datatypes" VariableName="endpointImplementationCreationData564">
+              <Source RefID="299"/>
+            </Data>
+            <Target RefID="565"/>
+          </Output>
+          <Output>
+            <Data ID="913" IsList="true" Label="Oas Endpoint Service" ReferenceName="OasEndpointService" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasEndpointService913">
+              <Source RefID="299"/>
+            </Data>
+            <Target RefID="914"/>
+          </Output>
+          <Mapping>%1%.label=concat("Unknown status ", %0%.status)</Mapping>
+        </Mappings>
+        <Assign ID="237">
+          <Source RefID="302"/>
+          <Source RefID="914"/>
+          <Source RefID="565"/>
+          <Target RefID="1198"/>
+          <Target RefID="1199"/>
+          <Target RefID="1200"/>
+          <Copy>
+            <Source RefID="302"/>
+            <Target RefID="1198"/>
+          </Copy>
+          <Copy>
+            <Source RefID="914"/>
+            <Target RefID="1199"/>
+          </Copy>
+          <Copy>
+            <Source RefID="565"/>
+            <Target RefID="1200"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="302" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition302"/>
+    <Data ID="547" Label="Endpoint Implementation Creation Data" ReferenceName="EndpointImplementationCreationData" ReferencePath="xmcp.oas.fman.datatypes" VariableName="endpointImplementationCreationData547"/>
+    <Data ID="565" Label="Endpoint Implementation Creation Data" ReferenceName="EndpointImplementationCreationData" ReferencePath="xmcp.oas.fman.datatypes" VariableName="endpointImplementationCreationData565">
+      <Source RefID="299"/>
+    </Data>
+    <Data ID="887" IsList="true" Label="Oas Endpoint Service" ReferenceName="OasEndpointService" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasEndpointService887">
+      <Source RefID="861"/>
+    </Data>
+    <Data ID="888" IsList="true" Label="Oas Endpoint Service" ReferenceName="OasEndpointService" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasEndpointService888"/>
+    <Data ID="914" IsList="true" Label="Oas Endpoint Service" ReferenceName="OasEndpointService" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasEndpointService914">
+      <Source RefID="299"/>
+    </Data>
+    <Data ID="1198" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1198">
+      <Source RefID="234"/>
+    </Data>
+    <Data ID="1199" IsList="true" Label="Oas Endpoint Service" ReferenceName="OasEndpointService" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasEndpointService1199">
+      <Source RefID="234"/>
+    </Data>
+    <Data ID="1200" Label="Endpoint Implementation Creation Data" ReferenceName="EndpointImplementationCreationData" ReferencePath="xmcp.oas.fman.datatypes" VariableName="endpointImplementationCreationData1200">
+      <Source RefID="234"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="1198"/>
+      <Source RefID="1200"/>
+      <Source RefID="1199"/>
+      <Source RefID="90"/>
+      <Target RefID="10"/>
+      <Target RefID="546"/>
+      <Target RefID="808"/>
+      <Target RefID="1096"/>
+      <Copy>
+        <Source RefID="1198"/>
+        <Target RefID="10"/>
+      </Copy>
+      <Copy>
+        <Source RefID="1200"/>
+        <Target RefID="546"/>
+      </Copy>
+      <Copy>
+        <Source RefID="1199"/>
+        <Target RefID="808"/>
+      </Copy>
+      <Copy>
+        <Source RefID="90"/>
+        <Target RefID="1096"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

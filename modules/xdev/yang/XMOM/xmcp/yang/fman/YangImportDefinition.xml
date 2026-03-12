@@ -208,6 +208,7 @@
       <Mapping>%6%.label="Operations"</Mapping>
       <Mapping>%6%.tableWorkflowFQN="xmcp.yang.fman.OperationTableInfo"</Mapping>
       <Mapping>%6%.tableWorkflowRTC=%3%</Mapping>
+      <Mapping>%6%.triggerRefresh.eventId="yang_operation_refresh"</Mapping>
     </Mappings>
     <Data ID="29" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition29">
       <Source RefID="19"/>

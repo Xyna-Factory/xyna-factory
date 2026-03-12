@@ -210,6 +210,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.compile.Compilation;
 import com.gip.xyna.xprc.xfractwfe.generation.compile.CompilationResult;
 import com.gip.xyna.xprc.xfractwfe.generation.compile.InMemoryCompilationSet;
 import com.gip.xyna.xprc.xfractwfe.generation.compile.JavaSourceFromString;
+import com.gip.xyna.xprc.xfractwfe.specialpurpose.synchronization.TimeoutSynchronizationInput;
 import com.gip.xyna.xprc.xpce.planning.Capacity;
 import com.gip.xyna.xprc.xpce.planning.Veto;
 import com.gip.xyna.xprc.xprcods.orderarchive.orderbackuphelper.OrderStartupAndMigrationManagement;
@@ -283,6 +284,7 @@ public abstract class GenerationBase {
   public static final String PORT_VALIDATION_EXCEPTION = "base.net.exception.PortValidationException";
   public static final String MAC_ADDRESS_VALIDATION_EXCEPTION = "base.net.exception.MACAddressValidationException";
   public static final String VLAN_ID_VALIDATION_EXCEPTION = "base.net.exception.VLANIDValidationException";
+  public static final String TIMEOUT_SYNCHRONIZATION_INPUT = "xprc.xfractwfe.specialpurpose.synchronization.TimeoutSynchronizationInput";
 
   private static final String pathSeparator = Constants.PATH_SEPARATOR;
   
@@ -348,7 +350,8 @@ public abstract class GenerationBase {
    *
    * alle andere deployment schritte werden durchgeführt
    */
-  private static final BijectiveMap<String, Class<?>> mdmObjectMappingToJavaClasses = new BijectiveMap<String, Class<?>>();
+  private static final GenerationBaseMdmMapping mdmObjectMappingToJavaClasses = new GenerationBaseMdmMapping();
+  
   static {
     mdmObjectMappingToJavaClasses.put(CORE_EXCEPTION, Exception.class); // Base
     mdmObjectMappingToJavaClasses.put(CORE_XYNAEXCEPTION, XynaException.class); // Base
@@ -380,6 +383,7 @@ public abstract class GenerationBase {
     mdmObjectMappingToJavaClasses.put(PORT_VALIDATION_EXCEPTION, PortValidationException.class); // Net
     mdmObjectMappingToJavaClasses.put(MAC_ADDRESS_VALIDATION_EXCEPTION, MACAddressValidationException.class); // Net
     mdmObjectMappingToJavaClasses.put(VLAN_ID_VALIDATION_EXCEPTION, VLANIDValidationException.class); // Net
+    mdmObjectMappingToJavaClasses.put(TIMEOUT_SYNCHRONIZATION_INPUT, TimeoutSynchronizationInput.class); // Server
     
     //xfmg.xods.configuration.*
     appendMapping( mdmObjectMappingToJavaClasses, com.gip.xyna.xfmg.xods.configuration.xynaobjects.BehaviourIfPropertyNotSet.class ); // XynaProperty
@@ -453,7 +457,7 @@ public abstract class GenerationBase {
     return fqNamesOfTypesUsedByRemoteCall;
   }
   
-  static void appendMapping( Map<String, Class<?>> map, Class<? extends GeneralXynaObject> clazz)  {
+  static void appendMapping(GenerationBaseMdmMapping map, Class<? extends GeneralXynaObject> clazz)  {
     XynaObjectAnnotation sxo = clazz.getAnnotation(XynaObjectAnnotation.class);
     map.put( sxo.fqXmlName(), clazz);
   }
@@ -522,6 +526,7 @@ public abstract class GenerationBase {
     public static final String ABSTRACT = "IsAbstract";
     public static final String ISSTATIC = "IsStatic";
     public static final String ISLIST = "IsList";
+    public static final String ISNULL = "IsNull";
     public static final String ISCANCELABLE = "IsCancelable";
     public static final String ISCASEENABLED = "IsEnabled";
     public static final String ISDEFAULTCASE = "IsDefault";
@@ -5437,7 +5442,7 @@ public abstract class GenerationBase {
     try {
       o = cacheReference.getFromCache(originalWFInputName, rev);
       if (o == null) {
-        o = new WF(originalWFInputName, fqClassName, cacheReference, rev, null);
+        o = new WF(originalWFInputName, fqClassName, cacheReference, rev, null, xmlInputSource);
         cacheReference.insertIntoCache(o);
       }
     } finally {
@@ -6231,16 +6236,18 @@ public abstract class GenerationBase {
     if (overrideReservedServerObjectsForCodeGenUpdates) {
       return false;
     }
-    Iterator<Class<?>> iter = mdmObjectMappingToJavaClasses.values().iterator();
-    while (iter.hasNext()) {
-      if (iter.next().getName().equals(className)) {
-        return true;
-      }
-    }
-    return false;
+    String value = mdmObjectMappingToJavaClasses.getInverseByServerClassName(className);
+    return (value !=null);
   }
 
 
+  public static java.util.Optional<String> getXmlNameByReservedServerObjectName(String className) {
+    if (className == null) { return java.util.Optional.empty(); }
+    String value = mdmObjectMappingToJavaClasses.getInverseByServerClassName(className);
+    return java.util.Optional.ofNullable(value);
+  }
+  
+  
   public static Set<String> getReservedServerObjectXmlNames() {
     return mdmObjectMappingToJavaClasses.keySet();
   }
@@ -6489,7 +6496,7 @@ public abstract class GenerationBase {
       if (serviceLibsBackup != null) {
         //TODO nur sinnvoll, wenn es ein deployment ist, bei dem unter server/services keine jars liegen, die alten jars aber erhalten bleiben sollen.
         //ansonsten gibt es eigtl noch den usecase: man will jetzt weniger jars verwenden als vorher.
-        serviceLibsBackup.copy(false);
+        serviceLibsBackup.copy(true);
       }
     }
   }
@@ -6952,11 +6959,11 @@ public abstract class GenerationBase {
         RuntimeContext rtc = revisions.getInverse(aRev);
         File rtcRootPath = rtcXMOMPaths.get(rtc);
         try {
-          if (Files.walk(java.nio.file.Path.of(rtcRootPath.getAbsolutePath()))
-                   .anyMatch(path -> path.endsWith(fqPath))) {
+          File file = java.nio.file.Path.of(rtcRootPath.getAbsolutePath(), fqPath).toFile();
+          if (file.exists()) {
             return aRev;
           }
-        } catch (IOException e) {
+        } catch (Exception e) {
           throw new RuntimeException(e);
         }
       }

@@ -34,9 +34,9 @@ public class ListrepositoryconnectionsImpl extends XynaCommandImplementation<Lis
 
   public void execute(OutputStream statusOutputStream, Listrepositoryconnections payload) throws XynaException {
     List<RepositoryConnection> data = RepositoryManagementImpl.listRepositoryConnections();
-    String format = "Repository: '%s' SubPath: '%s' Workspace: '%s'\n";
-    for(RepositoryConnection connection : data) {
-      String line = String.format(format, connection.getPath(), connection.getSubpath(), connection.getWorkspaceName());
+    String format = "Repository: '%s' SubPath: '%s' Workspace: '%s' split: '%s'\n";
+    for(RepositoryConnection con : data) {
+      String line = String.format(format, con.getPath(), con.getSubpath(), con.getWorkspaceName(), con.getSplittype());
       writeToCommandLine(statusOutputStream, line);
     }
   }

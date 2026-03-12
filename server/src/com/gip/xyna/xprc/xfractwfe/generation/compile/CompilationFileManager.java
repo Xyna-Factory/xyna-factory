@@ -274,7 +274,7 @@ class CompilationFileManager extends ForwardingJavaFileManager<JavaFileManager> 
     int idx = className.indexOf('$');
     if (idx > 0) { //klassenname muss mindestens ein zeichen sein
       className = className.substring(0, idx); //innere klasse abschneiden
-    } else {
+    } else if (className.endsWith(".class")){
       className = className.substring(0, className.length() - 6); //.class abschneiden
     }
     return className;

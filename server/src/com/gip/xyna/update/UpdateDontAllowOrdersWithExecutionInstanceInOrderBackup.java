@@ -101,8 +101,8 @@ public class UpdateDontAllowOrdersWithExecutionInstanceInOrderBackup extends Upd
 
           FactoryWarehouseCursor<OrderInstanceBackup> cursor =
               con.getCursor("select * from " + OrderInstanceBackup.TABLE_NAME + " where "
-                                + OrderInstanceBackup.COL_XYNAORDER + " is not null", new Parameter(),
-                            OrderInstanceBackup.getReaderWarnIfNotDeserializableNoDetails(), 100);
+                                + OrderInstanceBackup.COL_XYNAORDER + " is not null", OrderInstanceBackup.TABLE_NAME,
+                                new Parameter(), OrderInstanceBackup.getReaderWarnIfNotDeserializableNoDetails(), 100);
 
           for (List<OrderInstanceBackup> nextOibs : cursor.batched(100)) {
             for (OrderInstanceBackup oib : nextOibs) {

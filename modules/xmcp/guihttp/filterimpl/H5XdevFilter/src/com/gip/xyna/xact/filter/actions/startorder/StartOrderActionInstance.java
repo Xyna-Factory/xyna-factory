@@ -25,6 +25,7 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.utils.misc.JsonBuilder;
+import com.gip.xyna.xact.filter.H5XdevFilter;
 import com.gip.xyna.xact.filter.JsonFilterActionInstance;
 import com.gip.xyna.xact.filter.util.Utils;
 import com.gip.xyna.xact.filter.util.xo.XynaObjectJsonBuilder;
@@ -199,25 +200,27 @@ class StartOrderActionInstance extends JsonFilterActionInstance {
       t = xe;
       first = true;
 
-      if (multipleStackTraces) {
-        response.addToStackTrace("--- This is Stacktrace " + i + " of " + xynaExceptions.length + " ---");
-      }
+      if (!H5XdevFilter.SUPPRESS_STACKTRACES.get()) {
+        if (multipleStackTraces) {
+          response.addToStackTrace("--- This is Stacktrace " + i + " of " + xynaExceptions.length + " ---");
+        }
 
-      while (t != null) {
-        if (first) {
-          first = false;
-        } else {
-          response.addToStackTrace("Caused by: " + t.getMessage());
+        while (t != null) {
+          if (first) {
+            first = false;
+          } else {
+            response.addToStackTrace("Caused by: " + t.getMessage());
+          }
+          StackTraceElement[] ste = t.getStackTrace();
+          if (ste == null) {
+            response.addToStackTrace("NO STACKTRACE INFORMATION AVAILABLE!");
+            continue;
+          }
+          for (StackTraceElement s : ste) {
+            response.addToStackTrace(s == null ? "NULL" : s.toString());
+          }
+          t = t.getCause();
         }
-        StackTraceElement[] ste = t.getStackTrace();
-        if(ste == null) {
-          response.addToStackTrace("NO STACKTRACE INFORMATION AVAILABLE!");
-          continue;
-        }
-        for (StackTraceElement s : ste) {
-          response.addToStackTrace(s == null ? "NULL" : s.toString());
-        }
-        t = t.getCause();
       }
 
       if (xe instanceof XynaExceptionBase) {
@@ -238,25 +241,25 @@ class StartOrderActionInstance extends JsonFilterActionInstance {
       t = xynaExceptions[0]; //TODO multiple fehler weitergeben?
     }
     jb.addStringAttribute("errorMessage", t.getMessage());
-    jb.addAttribute("stackTrace");
-    jb.startList();
-
-    boolean first = true;
-    while (t != null) {
-      if (first) {
-        first = false;
-      } else {
-        jb.addStringListElement("Caused by: " + t.getMessage());
+    if (!H5XdevFilter.SUPPRESS_STACKTRACES.get()) {
+      jb.addAttribute("stackTrace");
+      jb.startList();
+  
+      boolean first = true;
+      while (t != null) {
+        if (first) {
+          first = false;
+        } else {
+          jb.addStringListElement("Caused by: " + t.getMessage());
+        }
+        StackTraceElement[] ste = t.getStackTrace();
+        for (StackTraceElement s : ste) {
+          jb.addStringListElement(s.toString());
+        }
+        t = t.getCause();
       }
-      StackTraceElement[] ste = t.getStackTrace();
-      for (StackTraceElement s : ste) {
-        jb.addStringListElement(s.toString());
-      }
-
-      t = t.getCause();
+      jb.endList();
     }
-
-    jb.endList();
     jb.endObject();
     return jb.toString();
   }

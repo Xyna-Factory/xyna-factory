@@ -820,7 +820,7 @@ public class DeploymentManagement {
   private FactoryWarehouseCursor<SerialVersionIgnoringCronLikeOrder> getCronLikeOrderCursor(ODSConnection connection,
                                                                                             int cacheSize)
       throws PersistenceLayerException {
-    return connection.getCursor(getAllCronLikeOrdersIgnoringSerialVersionUId,
+    return connection.getCursor(getAllCronLikeOrdersIgnoringSerialVersionUId, CronLikeOrder.TABLE_NAME,
                                 new Parameter(new CronLikeOrder().getLocalBinding(connection.getConnectionType())),
                                 SerialVersionIgnoringCronLikeOrder.getSerialVersionIgnoringReader(), cacheSize, queryCache);
   }
@@ -1069,7 +1069,7 @@ public class DeploymentManagement {
           public Long read(ResultSet rs) throws SQLException {
             return rs.getLong(OrderInstanceBackup.COL_ID);
           }
-        }));
+        }, OrderInstanceBackup.TABLE_NAME));
     return con.query( query, parameter, -1);
   }
   
@@ -1093,7 +1093,7 @@ public class DeploymentManagement {
       //Auftrag im Backup lesen und geändert backuppen, falls betroffen
       PreparedQuery<? extends SerialVersionIgnoringOrderInstanceBackup> oibQuery =
           queryCache.getQueryFromCache(selectOrderInstanceBackup, con,
-                                       SerialVersionIgnoringOrderInstanceBackup.getSerialVersionIgnoringReader());
+                                       SerialVersionIgnoringOrderInstanceBackup.getSerialVersionIgnoringReader(), OrderInstanceBackup.TABLE_NAME);
       SerialVersionIgnoringOrderInstanceBackup oib = con.queryOneRow(oibQuery, new Parameter(orderId));
       if (oib == null) {
         //Auftrag ist anscheinend fertig geworden, daher fehlt Backup nun
@@ -1869,7 +1869,8 @@ public class DeploymentManagement {
         }
         try {
           PreparedQuery<? extends OrderInstance> countQuery =
-              queryCache.getQueryFromCache(queryBuilder.toString(), con, new OrderInstance.DynamicOrderInstanceReader(relevantColumns));
+              queryCache.getQueryFromCache(queryBuilder.toString(), con, new OrderInstance.DynamicOrderInstanceReader(relevantColumns),
+                                           oa.getAuditAccess().getQueryBackingClass(con).getTableName());
           Collection<? extends OrderInstance> orders = con.query(countQuery, params, -1);
           int globalCount = 0;
           Map<String, Pair<Integer, List<Long>>> ordertypeCount = new HashMap<>();

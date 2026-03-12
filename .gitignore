@@ -162,10 +162,6 @@ localbuild
 ${third_parties.dir}/
 
 
-!**/lib/**/mdm.jar
-!**/lib/**/serviceDefinition.jar
-!**/lib/**/serviceDefinition-javadoc.jar
-
 !installation/build/lib/*.jar
 !xynautils/install/build/lib/*.jar
 
@@ -190,3 +186,7 @@ buildNumber.properties
 .mvn/timing.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
+
+# Issue 1491:Add workspace and server properties files to gitignore
+server.properties
+workspace.properties

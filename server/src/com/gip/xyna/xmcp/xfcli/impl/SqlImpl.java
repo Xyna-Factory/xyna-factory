@@ -32,6 +32,7 @@ import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.utils.misc.TableFormatter;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 import com.gip.xyna.xmcp.xfcli.generated.Sql;
+import com.gip.xyna.xnwh.exceptions.XNWH_UnsupportedPersistenceLayerFeatureException;
 import com.gip.xyna.xnwh.persistence.Column;
 import com.gip.xyna.xnwh.persistence.ODS;
 import com.gip.xyna.xnwh.persistence.ODSConnection;
@@ -56,6 +57,7 @@ public class SqlImpl extends XynaCommandImplementation<Sql> {
                                                                   Pattern.CASE_INSENSITIVE);
   private static final Pattern IS_COUNT_QUERY_PATTERN = Pattern.compile(".*count\\(\\*\\).*", Pattern.CASE_INSENSITIVE);
 
+  private static final Pattern FIND_TABLE_PATTERN = Pattern.compile(".*\\s+from\\s+[^\\s\\w]?(\\w+)[^\\s\\w]?\\s*", Pattern.CASE_INSENSITIVE);
 
   enum RequestType {
     Describe, Count, Select;
@@ -66,12 +68,22 @@ public class SqlImpl extends XynaCommandImplementation<Sql> {
     if( mat.matches() ) {
       return Pair.of(RequestType.Describe, mat.group(1) );
     }
-    String tableName = Query.parseSqlStringFindTable(statement);
+    String tableName = parseSqlStringFindTable(statement);
 
     if (IS_COUNT_QUERY_PATTERN.matcher(statement).matches()) {
       return Pair.of(RequestType.Count, tableName );
     }
     return Pair.of(RequestType.Select, tableName );
+  }
+  
+  
+  private String parseSqlStringFindTable(String sqlString) throws PersistenceLayerException {
+    Matcher m = FIND_TABLE_PATTERN.matcher(sqlString);
+    if (m.matches()) {
+      return m.group(1);
+    } else {
+      throw new XNWH_UnsupportedPersistenceLayerFeatureException("query statement: " + sqlString);
+    }
   }
 
   
@@ -126,10 +138,10 @@ public class SqlImpl extends XynaCommandImplementation<Sql> {
     ODSConnection con = ods.openConnection(connectionType);
     try {
       if( request.getFirst() == RequestType.Count ) {
-        count( statusOutputStream, con, sqlString);
+        count( statusOutputStream, con, sqlString, tableName);
         return;
       } else if( request.getFirst() == RequestType.Select ) {
-        select( statusOutputStream, con, storableInstance, sqlString, payload.getAsTable());
+        select( statusOutputStream, con, storableInstance, sqlString, payload.getAsTable(), tableName);
       } else {
         writeLineToCommandLine(statusOutputStream, "Unexpected statement");
         return;
@@ -158,8 +170,8 @@ public class SqlImpl extends XynaCommandImplementation<Sql> {
     }
   }
 
-  private void count(OutputStream statusOutputStream, ODSConnection con, String sqlString) throws PersistenceLayerException {
-    Query<?> query = new Query<OrderCount>(sqlString, OrderCount.getCountReader());
+  private void count(OutputStream statusOutputStream, ODSConnection con, String sqlString, String tableName) throws PersistenceLayerException {
+    Query<?> query = new Query<OrderCount>(sqlString, OrderCount.getCountReader(), tableName);
     PreparedQuery<?> preparedQuery = con.prepareQuery(query);
     List<?> result = con.query(preparedQuery, new Parameter(), -1);
     int size = result.size();
@@ -175,9 +187,9 @@ public class SqlImpl extends XynaCommandImplementation<Sql> {
     }
   }
   
-  private void select(OutputStream statusOutputStream, ODSConnection con, Storable<?> storableInstance, String sqlString, boolean asTable) throws PersistenceLayerException {
+  private void select(OutputStream statusOutputStream, ODSConnection con, Storable<?> storableInstance, String sqlString, boolean asTable, String tableName) throws PersistenceLayerException {
     //FIXME dynamischen reader verwenden der nur die spalten liest die ausgelesen werden.
-    Query<Storable<?>> query = new Query<Storable<?>>(sqlString, storableInstance.getReader());
+    Query<Storable<?>> query = new Query<Storable<?>>(sqlString, storableInstance.getReader(), tableName);
     PreparedQuery<Storable<?>> preparedQuery = con.prepareQuery(query);
     List<Storable<?>> result = con.query(preparedQuery, new Parameter(), -1);
     int size = result.size();

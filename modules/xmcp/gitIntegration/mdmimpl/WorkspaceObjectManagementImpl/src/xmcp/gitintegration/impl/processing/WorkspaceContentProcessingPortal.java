@@ -20,14 +20,12 @@ package xmcp.gitintegration.impl.processing;
 
 
 import java.util.ArrayList;
-import java.util.Collection;
 import org.w3c.dom.Node;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import com.gip.xyna.XynaFactory;
@@ -38,6 +36,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
 import xmcp.gitintegration.DELETE;
 import xmcp.gitintegration.CREATE;
 import xmcp.gitintegration.MODIFY;
+import xmcp.gitintegration.ResolveWorkspaceContentDifferencesResult;
 import xmcp.gitintegration.WorkspaceContent;
 import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.WorkspaceContentDifferenceType;
@@ -54,38 +53,34 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
 
   //String is the tagName
   protected static final Map<String, WorkspaceContentProcessor<? extends WorkspaceContentItem>> parserTypes = new HashMap<>();
+  protected static final List<WorkspaceContentProcessor<? extends WorkspaceContentItem>> processorOrder = new LinkedList<>();
   protected static final Map<Class<? extends WorkspaceContentType>, WorkspaceContentProcessor<? extends WorkspaceContentItem>> registeredTypes =
       createRegisteredTypesMap();
 
 
   private static Map<Class<? extends WorkspaceContentType>, WorkspaceContentProcessor<? extends WorkspaceContentItem>> createRegisteredTypesMap() {
     Map<Class<? extends WorkspaceContentType>, WorkspaceContentProcessor<? extends WorkspaceContentItem>> result;
-    result = new TreeMap<>((x, y) -> x.getCanonicalName().compareTo(y.getCanonicalName()));
+    result = new HashMap<>();
     //register WorkspaceContentProcessors here: addToMap(result, new <WorkspaceContentType>Processor());
     addToMap(result, new RuntimeContextDependencyProcessor());
-    addToMap(result, new ApplicationDefinitionProcessor());
-    addToMap(result, new OrderTypeProcessor());
-    addToMap(result, new TriggerInstanceProcessor());
+    addToMap(result, new SharedLibraryProcessor());
     addToMap(result, new DatatypeProcessor());
+    addToMap(result, new OrderTypeProcessor());
     addToMap(result, new OrderInputSourceProcessor());
     addToMap(result, new TriggerProcessor());
-    addToMap(result, new FilterInstanceProcessor());
+    addToMap(result, new TriggerInstanceProcessor());
     addToMap(result, new FilterProcessor());
+    addToMap(result, new FilterInstanceProcessor());
     addToMap(result, new XMOMStorableProcessor());
+    addToMap(result, new ApplicationDefinitionProcessor());
     return result;
   }
 
 
-  public static final HashMap<String, WorkspaceContentDifferenceType> differenceTypes = setupDifferenceTypes();
-
-
-  private static HashMap<String, WorkspaceContentDifferenceType> setupDifferenceTypes() {
-    HashMap<String, WorkspaceContentDifferenceType> result = new HashMap<>();
-    result.put(CREATE.class.getSimpleName(), new CREATE());
-    result.put(MODIFY.class.getSimpleName(), new MODIFY());
-    result.put(DELETE.class.getSimpleName(), new DELETE());
-    return result;
-  }
+  public static final Map<String, WorkspaceContentDifferenceType> differenceTypes =
+      Map.ofEntries(Map.entry(CREATE.class.getSimpleName(), new CREATE()), 
+                    Map.entry(MODIFY.class.getSimpleName(), new MODIFY()),
+                    Map.entry(DELETE.class.getSimpleName(), new DELETE()));
 
 
   @SuppressWarnings("unchecked")
@@ -93,6 +88,7 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
                                  WorkspaceContentProcessor<? extends WorkspaceContentItem> toAdd) {
     map.put((Class<? extends WorkspaceContentType>) getWorkspaceContentTypeFromProcessor(toAdd), toAdd);
     parserTypes.put(toAdd.getTagName(), toAdd);
+    processorOrder.add(toAdd);
   }
 
 
@@ -116,8 +112,7 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
 
   public List<WorkspaceContentDifference> compare(WorkspaceContent c1, WorkspaceContent c2) {
     List<WorkspaceContentDifference> result = new LinkedList<>();
-    Collection<WorkspaceContentProcessor<? extends WorkspaceContentItem>> types = registeredTypes.values();
-    for (WorkspaceContentProcessor<? extends WorkspaceContentItem> type : types) {
+    for (WorkspaceContentProcessor<? extends WorkspaceContentItem> type : processorOrder) {
       List<WorkspaceContentDifference> differencesThisType = compareSingleType(c1, c2, type);
       result.addAll(differencesThisType);
     }
@@ -155,7 +150,7 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
   public List<WorkspaceContentItem> createItems(Long revision) {
     List<WorkspaceContentItem> result = new LinkedList<WorkspaceContentItem>();
 
-    for (WorkspaceContentProcessor<? extends WorkspaceContentItem> supportedType : registeredTypes.values()) {
+    for (WorkspaceContentProcessor<? extends WorkspaceContentItem> supportedType : processorOrder) {
       List<? extends WorkspaceContentItem> subList = supportedType.createItems(revision);
       result.addAll(subList);
     }
@@ -267,10 +262,10 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
 
 
   @SuppressWarnings({"unchecked", "rawtypes"})
-  private String createDifferenceStringInternal(WorkspaceContentDifference diff) {
-    WorkspaceContentProcessor processor = registeredTypes.get(diff.getExistingItem().getClass());
-    checkProcessor(processor, diff.getExistingItem().getClass());
-    return processor.createDifferencesString(diff.getExistingItem(), diff.getNewItem());
+    private String createDifferenceStringInternal(WorkspaceContentDifference diff) {
+      WorkspaceContentProcessor processor = registeredTypes.get(diff.getExistingItem().getClass());
+      checkProcessor(processor, diff.getExistingItem().getClass());
+      return processor.createDifferencesString(diff.getExistingItem(), diff.getNewItem());
   }
 
 
@@ -281,37 +276,38 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
   }
 
 
-  public String resolveList(long diffListId, List<ResolveWorkspaceDifferencesParameter> paramlist) {
+  public ResolveResult resolveList(long diffListId, List<ResolveWorkspaceDifferencesParameter> paramlist) {
     WorkspaceDifferenceListStorage storage = new WorkspaceDifferenceListStorage();
-    StringBuilder sb = new StringBuilder();
+    List<ResolveWorkspaceContentDifferencesResult> result = new LinkedList<>();
     WorkspaceContentDifferences differences = storage.loadDifferences(diffListId);
     for (ResolveWorkspaceDifferencesParameter param : paramlist) {
-      resolveSingleDifference(param, differences, sb);
+      ResolveWorkspaceContentDifferencesResult singleResult = resolveSingleDifference(param, differences);
+      result.add(singleResult);
     }
-    finishResolve(storage, differences, sb);
-    return sb.toString();
+    boolean closedList = finishResolve(storage, differences);
+    result.removeIf(x -> x == null);
+    return new ResolveResult(closedList, result, differences.getDifferences().size());
   }
 
 
-  public String resolveAll(long diffListId, Optional<String> resolution) {
+  public ResolveResult resolveAll(long diffListId, Optional<String> resolution) {
     WorkspaceDifferenceListStorage storage = new WorkspaceDifferenceListStorage();
-    StringBuilder sb = new StringBuilder();
     WorkspaceContentDifferences differences = storage.loadDifferences(diffListId);
-    resolveAllDifferencesImpl(resolution, differences, sb);
-    finishResolve(storage, differences, sb);
-    return sb.toString();
+    List<ResolveWorkspaceContentDifferencesResult> entryResults = resolveAllDifferencesImpl(resolution, differences);
+    boolean closedList = finishResolve(storage, differences);
+    
+    return new ResolveResult(closedList, entryResults, differences.getDifferences().size());
   }
 
 
-  private void finishResolve(WorkspaceDifferenceListStorage storage, WorkspaceContentDifferences differences,
-                             StringBuilder sb) {
+  private boolean finishResolve(WorkspaceDifferenceListStorage storage, WorkspaceContentDifferences differences) {
     if (differences.getDifferences().size() > 0) {
       storage.persist(differences);
-      sb.append("There are " + differences.getDifferences().size() + " differences left in list " + differences.getListId());
+      return false;
     } else {
       //all done. Remove list
       storage.deleteWorkspaceDifferenceList(differences.getListId());
-      sb.append("All differences in list " + differences.getListId() + " have been resolved. List closed");
+      return true;
     }
   }
 
@@ -323,28 +319,32 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
     } catch (Exception e) {
       //if there is an exception, do not remove the entry
       sb.append("Exception occurred while resolving item " + entry.getEntryId() + ". It remains in the list. Details: " + e.getMessage());
-      sb.append("\n");
     }
     return false;
   }
 
 
-  private void resolveAllDifferencesImpl(Optional<String> resolution, WorkspaceContentDifferences differences,
-                                         StringBuilder sb) {
+  private List<ResolveWorkspaceContentDifferencesResult> resolveAllDifferencesImpl(Optional<String> resolution, WorkspaceContentDifferences differences) {
     List<? extends WorkspaceContentDifference> differenceList = differences.getDifferences();
+    List<ResolveWorkspaceContentDifferencesResult> result = new ArrayList<>();
     for (int i = differenceList.size() - 1; i >= 0; i--) {
       WorkspaceContentDifference entry = differenceList.get(i);
+      StringBuilder sb = new StringBuilder();
       boolean success = tryResolveItem(entry, differences.getWorkspaceName(), resolution, sb);
       if (success) {
         differenceList.remove(entry);
       }
+      ResolveWorkspaceContentDifferencesResult.Builder builder = new ResolveWorkspaceContentDifferencesResult.Builder();
+      result.add(builder.entryId(entry.getEntryId()).success(success).message(sb.toString()).instance());
     }
+
+    return result;
   }
 
 
-  private void resolveSingleDifference(ResolveWorkspaceDifferencesParameter param, WorkspaceContentDifferences differences,
-                                       StringBuilder sb) {
-    if (!param.getEntry().isPresent()) { return; }
+  private ResolveWorkspaceContentDifferencesResult resolveSingleDifference(ResolveWorkspaceDifferencesParameter param, WorkspaceContentDifferences differences) {
+    if (!param.getEntry().isPresent()) { return null; }
+    StringBuilder sb = new StringBuilder();
     long entryId = param.getEntry().get();
     Optional<? extends WorkspaceContentDifference> entryOptional = findEntry(differences, entryId);
     if (entryOptional.isEmpty()) {
@@ -356,6 +356,7 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
     if (success) {
       differences.getDifferences().remove(entry);
     }
+    return new ResolveWorkspaceContentDifferencesResult.Builder().entryId(entry.getEntryId()).success(success).message(sb.toString()).instance();
   }
 
 
@@ -430,4 +431,28 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
     }
   }
 
+  
+  public static class ResolveResult {
+    private boolean closedList;
+    private List<ResolveWorkspaceContentDifferencesResult> results;
+    private int remainingEntries;
+    
+    public ResolveResult(boolean closedList, List<ResolveWorkspaceContentDifferencesResult> results, int remainingEntries) {
+      this.closedList = closedList;
+      this.results = results;
+      this.remainingEntries = remainingEntries;
+    }
+    
+    public boolean isClosedList() {
+      return closedList;
+    }
+    
+    public List<ResolveWorkspaceContentDifferencesResult> getResults() {
+      return results;
+    }
+    
+    public int getRemainingEntries() {
+      return remainingEntries;
+    }
+  }
 }

@@ -17,10 +17,11 @@
  */
 package xmcp.gitintegration.impl.references;
 
+import java.io.File;
 import java.util.List;
 
 
 public interface ReferenceObjectTypeMethods {
 
-  public void trigger(List<InternalReference> references, String objectName, Long revision);
+  public void trigger(List<File> filesFromReferences, String objectName, Long revision);
 }

@@ -92,5 +92,14 @@
         <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getFullCapabilityFromString(capabilityKey);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="false" Label="Get Document Type" Name="getDocumentType">
+      <Input/>
+      <Output>
+        <Data ID="109" Label="NETCONF" ReferenceName="NETCONF" ReferencePath="xact.templates" VariableName="netconf110"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getDocumentType();</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>

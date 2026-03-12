@@ -400,7 +400,8 @@ public class OrderInputSourceManagement extends FunctionGroup {
       ODSConnection con = ods.openConnection(ODSConnectionType.HISTORY);
       querySpecifics =
           con.prepareQuery(new Query<OrderInputSourceSpecificStorable>("select * from " + OrderInputSourceSpecificStorable.TABLENAME
-              + " where " + OrderInputSourceSpecificStorable.COL_SOURCEID + " = ?", OrderInputSourceSpecificStorable.reader));
+              + " where " + OrderInputSourceSpecificStorable.COL_SOURCEID + " = ?", OrderInputSourceSpecificStorable.reader, 
+              OrderInputSourceSpecificStorable.TABLENAME));
       try {
         Collection<OrderInputSourceStorable> inputGens = con.loadCollection(OrderInputSourceStorable.class);
         for (OrderInputSourceStorable oigs : inputGens) {

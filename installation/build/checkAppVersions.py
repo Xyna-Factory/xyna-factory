@@ -65,15 +65,18 @@ for appl_xml in glob.glob("../../**/application.xml",recursive=True):
       ver_name=req.find('VersionName').text
       if app_name in application:
          if (application[app_name] != ver_name):
-            print ('application '+app_under_invenstigation+" has an reference to application "+app_name+" which has the wrong versionName")
+            print ('application '+app_under_invenstigation+" has a reference to application "+app_name+" which has the wrong versionName")
             print ('versionName Reference:'+ver_name)
             print ('versionName in Source:'+application[app_name])
             print ('file is '+appl_xml)
             found_huddel=True
       else:
-         # XSD Datamodel Base wird dynamisch vom Datenmodell erzeugt, da ist nichts eingecheckt
-         if (app_name != 'XSD Datamodel Base'):
-            print ('application '+app_under_invenstigation+" has an reference to application "+app_name+" that does not exist")
+         if app_name in ['XSD Datamodel Base', 'Service_Activation_and_Configuration_Data_Model', 'Service_Catalog_Management_Client']:
+            # XSD Datamodel Base wird dynamisch vom Datenmodell erzeugt, da ist nichts eingecheckt
+            # Service* Apps are generated during build from yamls
+            pass
+         else:
+            print ('application '+app_under_invenstigation+" has a reference to application "+app_name+" that does not exist")
             print ('file is '+appl_xml)
             found_huddel=True
 

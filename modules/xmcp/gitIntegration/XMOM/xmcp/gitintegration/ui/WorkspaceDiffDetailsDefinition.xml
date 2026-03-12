@@ -26,6 +26,10 @@
       <Data ID="11102" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList11102"/>
       <Data ID="14778" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection14778"/>
     </Output>
+    <ServiceReference ID="11567" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="11566"/>
+      <Target RefID="11566"/>
+    </ServiceReference>
     <ServiceReference ID="7690" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="7689"/>
       <Target RefID="7689"/>
@@ -33,10 +37,6 @@
     <ServiceReference ID="9901" Label="Build Workspace Diff Group Panel" ReferenceName="BuildWorkspaceDiffGroupPanel" ReferencePath="xmcp.gitintegration.ui">
       <Source RefID="9900"/>
       <Target RefID="9900"/>
-    </ServiceReference>
-    <ServiceReference ID="11567" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
-      <Source RefID="11566"/>
-      <Target RefID="11566"/>
     </ServiceReference>
     <Function ID="7689" Label="get Own RuntimeContext">
       <Source RefID="7690"/>
@@ -199,6 +199,15 @@
       <Mapping>%2%.header.leftArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%0%</Mapping>
       <Mapping>%2%.header.leftArea.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
     </Mappings>
+    <Mappings ID="14897" Label="Mapping">
+      <Output>
+        <Data ID="14983" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition14983">
+          <Source RefID="14897"/>
+        </Data>
+        <Target RefID="14984"/>
+      </Output>
+      <Mapping>%0%.label="(i) The list below shows all differences between the workspace configuration in the factory and the workspace-xml in the repository. Resolving them will update the configuration of the workspace in the factory."</Mapping>
+    </Mappings>
     <Mappings ID="13449" Label="Mapping">
       <Input>
         <Data ID="13482" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition13482">
@@ -210,13 +219,24 @@
           </Meta>
         </Source>
       </Input>
+      <Input>
+        <Data ID="14926" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition14926">
+          <Source RefID="13449"/>
+        </Data>
+        <Source RefID="14984">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
       <Output>
         <Data ID="13547" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition13547">
           <Source RefID="13449"/>
         </Data>
         <Target RefID="13548"/>
       </Output>
-      <Mapping>%1%["0"]=%0%</Mapping>
+      <Mapping>%2%["1"]=%0%</Mapping>
+      <Mapping>%2%["0"]=%1%</Mapping>
     </Mappings>
     <Mappings ID="9417" Label="Mapping">
       <Input>
@@ -236,7 +256,7 @@
         <Source RefID="11565"/>
       </Input>
       <Input>
-        <Data ID="13160" IsList="true" Label="Form Panel Definition List Buttons" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition13160">
+        <Data ID="13160" IsList="true" Label="Buttons and Description - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition13160">
           <Source RefID="9417"/>
         </Data>
         <Source RefID="13548">
@@ -280,6 +300,9 @@
     </Data>
     <Data ID="14364" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList14364">
       <Source RefID="14334"/>
+    </Data>
+    <Data ID="14984" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition14984">
+      <Source RefID="14897"/>
     </Data>
     <Exception ID="14303" Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception14303"/>
     <Assign ID="1">

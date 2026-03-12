@@ -28,7 +28,7 @@
     <property name="fqclassname" value="xint.crypto.PGPService" />
     <property name="mdm.xml.path" value="xint/crypto" />
     <property name="mdm.xml.filename" value="PGPService.xml" />
-    <property name="mdm.service.path" value="xint.crypt.PGPService" />
+    <property name="mdm.service.path" value="xint.crypto.PGPService" />
 
     <import file="${root.dir}/installation/build/buildService.xml" />
 

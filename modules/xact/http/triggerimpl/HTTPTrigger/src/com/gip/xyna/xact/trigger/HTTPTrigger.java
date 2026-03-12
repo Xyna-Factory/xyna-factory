@@ -392,7 +392,9 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
   public void onNoFilterFound(HTTPTriggerConnection con) {
     try {
       if (logger.isWarnEnabled()) {
-        logger.warn("No filter responsible for " + con.getMethod().toString() + " " + con.getUri() + ". Returning " + HTTPTriggerConnection.HTTP_NOTFOUND);
+        String method = con.getMethod() != null ? con.getMethod() : "<method was not parsed>";
+        logger.warn(String.format("Http Trigger %s: No filter responsible for %s %s. Returning %s", 
+                                  getStartParameter(), method, con.getUri(), HTTPTriggerConnection.HTTP_NOTFOUND));
       }
       String msg = "<html><body><h3>" + HTTPTriggerConnection.HTTP_NOTFOUND + "</h3></body></html>";
       byte[] msgBytes = msg.getBytes(con.getCharSet());
@@ -426,7 +428,7 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
   public void onProcessingRejected(String s, HTTPTriggerConnection con) {
     try {
       rejectCounter.incrementAndGet();
-      con.sendError(s);
+      con.sendErrorResponse(HTTPTriggerConnection.HTTP_SERVICE_ANAVAILABLE, s);
     } catch (SocketNotAvailableException e) {
       logger.info("socket was unexpectedly not available when trying to send errormessage to client", e);
     }

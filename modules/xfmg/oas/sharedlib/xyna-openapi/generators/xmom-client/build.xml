@@ -29,7 +29,6 @@
     <property name="tmp.metainf.dir" value="${basedir}/classes/meta_inf" />
     <property name="tmp.metainf.services.dir" value="${tmp.metainf.dir}/services" />
 
-    <import file="${root.dir}/installation/build/ant-xyna.xml" />
     <import file="${root.dir}/installation/build/macros.xml" />
 
     <condition property="src.dir.available">

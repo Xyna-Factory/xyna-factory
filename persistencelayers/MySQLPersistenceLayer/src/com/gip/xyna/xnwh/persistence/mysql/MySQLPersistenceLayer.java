@@ -66,6 +66,7 @@ import com.gip.xyna.xnwh.persistence.PersistenceLayerConnection;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.persistence.Storable;
 import com.gip.xyna.xnwh.persistence.sql.ZippedBlob;
+import com.gip.xyna.xnwh.persistence.xmom.QueryGenerator;
 import com.gip.xyna.xnwh.pools.ConnectionPoolManagement;
 import com.gip.xyna.xnwh.pools.MySQLPoolType;
 import com.gip.xyna.xnwh.pools.PoolDefinition;
@@ -629,6 +630,21 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
       throw new XNWH_GeneralPersistenceLayerException("shutdown of " + MySQLPersistenceLayer.class.getName()
           + " not successful. Some connections could not be closed.", e);
     }
+  }
+
+  public QueryGenerator getQueryGenerator() {
+    return new QueryGenerator(MySQLPersistenceLayer::escape, PLACE_FOR_WHERE);
+  }
+
+  private static final String PQC /* possibly qualified column - regexp pattern */ = "`?[a-zA-Z0-9_]+`?(\\.`?[a-zA-Z0-9_]+`?)?";
+  private static final String PLACE_FOR_WHERE_PATTERN = "\\s+FROM\\s+" + PQC + "(((\\s+(LEFT|RIGHT))?\\s+((INNER|OUTER)\\s+)?)?\\s*JOIN\\s+" + PQC + "(\\s+`?[a-zA-Z0-9_]+`?)?\\s+ON\\s+" + PQC + "\\s*=\\s*" + PQC + ")*";
+  private static Pattern PLACE_FOR_WHERE = Pattern.compile(PLACE_FOR_WHERE_PATTERN, Pattern.CASE_INSENSITIVE);
+
+  public static String escape(String s) {
+    if(XynaProperty.QUERY_ESCAPE.get() && !s.contains(".")) {
+      return String.format("`%s`", s.toLowerCase());
+    }
+    return s;
   }
 
 

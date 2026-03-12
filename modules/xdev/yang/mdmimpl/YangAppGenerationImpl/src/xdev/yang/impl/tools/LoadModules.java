@@ -42,7 +42,6 @@ import xdev.yang.impl.XmomDbInteraction;
 import xdev.yang.impl.operation.ModuleGroup;
 import xdev.yang.impl.operation.ModuleParseData;
 import xdev.yang.impl.operation.OperationAssignmentUtils;
-import xdev.yang.impl.tools.LoadApplicationList.ApplicationComparator;
 import xmcp.yang.YangModuleCollection;
 import xprc.xpce.Application;
 import xprc.xpce.RuntimeContext;

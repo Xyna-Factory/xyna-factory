@@ -440,6 +440,20 @@ public class ExpressionTests extends TestCase {
     assertTrue(compare(exp, expectedResult));
   }
   
+  
+  public void testListExpression() {
+      ModelledExpression exp = convert("%1%.data[\"0\"]");
+      ModelledExpression expectedResult = new ModelledExpression(
+              null,
+              new SingleVarExpression(
+                      new ExpressionVariable(1,
+                                 Arrays.asList(new VariableAccessPart[] { new VariableAccessPart("data", new LiteralExpression("0"))}), 
+                                 null))
+                        );
+      assertTrue(compare(exp, expectedResult));
+  }
+  
+  
   private static ModelledExpression convert(String expression) {
     com.gip.xyna.xprc.xfractwfe.generation.ModelledExpression me;
     try {

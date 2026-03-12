@@ -29,7 +29,7 @@
     <Meta>
       <Type>String</Type>
     </Meta>
-  </Data>  
+  </Data>
   <Data Label="recursion" VariableName="recursion">
     <Meta>
       <Type>String</Type>

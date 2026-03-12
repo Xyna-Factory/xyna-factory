@@ -23,7 +23,7 @@ class CopilotException(Exception):
     code: int
 
 
-    def __init__(self, message: str, error_type: str | None, param: str | None, code: int = 500):
+    def __init__(self, message: str, error_type: str | None = None, param: str | None = None, code: int = 500):
         self.message = message
         self.error_type = error_type
         self.param = param

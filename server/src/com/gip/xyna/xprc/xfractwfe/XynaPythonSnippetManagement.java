@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,8 @@ import java.util.List;
 import com.gip.xyna.Section;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
-import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
+import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
+import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xprc.xfractwfe.base.DeploymentHandling;
 import com.gip.xyna.xprc.xfractwfe.base.RevisionChangeUnDeploymentHandler;
 import com.gip.xyna.xprc.xfractwfe.python.Context;
@@ -34,6 +35,8 @@ import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreterFactory;
 import com.gip.xyna.xprc.xfractwfe.python.PythonMdmGeneration;
 import com.gip.xyna.xprc.xfractwfe.python.PythonProjectGeneration;
 import com.gip.xyna.xprc.xfractwfe.python.jep.JepInterpreterFactory;
+
+import jep.python.PyObject;
 
 
 
@@ -120,4 +123,21 @@ public class XynaPythonSnippetManagement extends Section {
   public List<String> getPythonKeywords() {
     return mdmGeneration.getPythonKeywords();
   }
+  
+  public void updateObject(Context context, GeneralXynaObject toUpdate, Object pythonObject) {
+    if (toUpdate == null) { return; }
+    if (!(toUpdate instanceof XynaObject)) { return; }
+    XynaObject origXo = (XynaObject) toUpdate;
+    GeneralXynaObject adaptedGxo = factory.convertToJava(context, pythonObject);
+    if (!toUpdate.getClass().getName().equals(adaptedGxo.getClass().getName())) { return; }
+    for (String field: origXo.getVariableNames()) {
+      try {
+        Object value = adaptedGxo.get(field);
+        toUpdate.set(field, value);
+      } catch (Exception e) {
+        throw new RuntimeException("Unexpected error converting python object to java: " + e.getMessage(), e);
+      }
+    }
+  }
+  
 }

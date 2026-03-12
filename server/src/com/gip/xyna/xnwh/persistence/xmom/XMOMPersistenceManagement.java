@@ -47,6 +47,7 @@ import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.FunctionGroup;
+import com.gip.xyna.FutureExecution;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.XynaFactoryPath;
 import com.gip.xyna.idgeneration.IDGenerator;
@@ -325,8 +326,12 @@ public class XMOMPersistenceManagement extends FunctionGroup implements XMOMPers
         .addUndeploymentHandler(DeploymentHandling.PRIORITY_DEPENDENCY_CREATION, new StructureCacheUnregistrator());
 
     idgen = IDGenerator.getInstance();
-    idgen.setBlockSize(IDGEN_REALM, 10000);
     init_internally();
+
+    FutureExecution fExec = XynaFactory.getInstance().getFutureExecution();
+    fExec.addTask(XMOMPersistenceManagement.class,"XMOMPersistenceManagement.setBlockSize").
+      after(IDGenerator.class).
+      execAsync(new Runnable() { public void run() { idgen.setBlockSize(IDGEN_REALM, 10000); }});
   }
   
   public long genId() {
@@ -400,18 +405,19 @@ public class XMOMPersistenceManagement extends FunctionGroup implements XMOMPers
      */
     private Map<StorableNode, Node<StorableNode>> graphData;
     private GenerationBaseCache gbc;
-    private Set<DOM> domsThatCacheSubtypes; 
-
+    private Set<DOM> domsThatCacheSubtypes;
     public void exec(GenerationBase gb, DeploymentMode mode) throws XPRC_DeploymentHandlerException {
       if (gb instanceof DOM) {
         DOM d = (DOM) gb;
         if (domsThatCacheSubtypes.add(d)) {
           d.setCacheSubTypes(true);  
+        } else {
+          return;
         }
         if (d.isInheritedFromStorable()) {
           getOrAddNode(d, true);
         }
-        for (GenerationBase root : d.getRootXMOMStorablesUsingThis(gbc, new HashSet<GenerationBase>())) {
+        for (GenerationBase root : d.getRootXMOMStorablesUsingThis(gbc, domsThatCacheSubtypes)) {
           DOM dom = (DOM) root;
           if (domsThatCacheSubtypes.add(dom)) {
             dom.setCacheSubTypes(true);  

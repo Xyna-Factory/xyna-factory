@@ -60,7 +60,7 @@ function api.get_panel_completion(line, col)
     -- params.doc.position.character = utf16_index
     -- params.position.character = params.doc.position.character
 
-    copilot.api.register_panel_handlers(panelId, {
+    copilot.panel.handlers.register_panel_handlers(panelId, {
         ---@param result copilot_panel_solution_data
         on_solution = function(result)
             api.result.num_solutions = api.result.num_solutions + 1
@@ -104,6 +104,8 @@ function api.get_panel_completion(line, col)
         function(err, result)
             if err then
                 print(string.format("%s", err))
+                vim.cmd [[q!]]
+                os.exit()
             elseif result.solutionCountTarget == 0 then
                 print("no completions found...")
             else
@@ -126,9 +128,14 @@ vim.schedule(
         copilot.client.use_client(function()
             print("ready...")
             api.enable_on_buffer()
-            api.trigger_copilot()
-            print(string.format("cursor at line %d, col %d...", line, col))
-            api.get_panel_completion(line, col)
+            -- wait 2 seconds TODO: this is a hack to fix RPC[Error] code_name = ServerNotInitialized, message = "Agent service not initialized."
+            print("waiting...")
+            vim.defer_fn(function()
+                print("triggering copilot...")
+                api.trigger_copilot()
+                print(string.format("cursor at line %d, col %d...", line, col))
+                api.get_panel_completion(line, col)
+            end, 2000)
         end)
     end
 )

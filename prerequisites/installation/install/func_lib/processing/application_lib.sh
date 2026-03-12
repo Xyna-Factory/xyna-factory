@@ -184,7 +184,7 @@ f_import_application () {
   if [[ ${FULL_APP_NAME} =~ ${PATTERN} ]]; then
     echo 
   else
-      f_xynafactory importapplication --force -filename ${PWD}/components/${APP_FILE} --stop ${IMPORT_APPLICATIONS_GLOBALLY}
+      f_xynafactory importapplication --force -filename ${PWD}/components/${APP_FILE} --includeCapacitiesKeepExisting --stop ${IMPORT_APPLICATIONS_GLOBALLY}
       echo -ne '\a'
       echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
       echo "!!!"
@@ -287,7 +287,7 @@ f_import_application () {
     local MANUAL_MIGRATION=0
 
     #  Neue Version importieren
-    f_xynafactory importapplication --force -filename ${PWD}/components/${APP_FILE} --stop ${IMPORT_APPLICATIONS_GLOBALLY}
+    f_xynafactory importapplication --force -filename ${PWD}/components/${APP_FILE} --includeCapacitiesKeepExisting --stop ${IMPORT_APPLICATIONS_GLOBALLY}
     local IMPORT_RESULT=$?
  
     if [ ${IMPORT_RESULT} = 0 -a ${BUGFIX_INSTALL} = 1 ]; then
@@ -356,7 +356,7 @@ f_application_exists_in_components () {
 
 # Rückgabe des DateiNamens, mit der Application unter components liegt
 #
-# Aufruf-Parameter 1=Name
+# Aufruf-Parameter 1=Name, oder Name.Version oder Name.Version.app
 # Ausgabe: 
 #   Dateiname (Beispiel "xprc/Processing.1.0.app")
 # Rückgabe:
@@ -370,12 +370,27 @@ f_find_application_in_components () {
   FILENAME=$(${VOLATILE_LS} ${FILTER} 2> /dev/null)
   EXISTS=$?
   if [ ${EXISTS} != 0 ] ; then
+    FILTER="components/*/*/${1}.[0-9]*.app";
+    FILENAME=$(${VOLATILE_LS} ${FILTER} 2> /dev/null)
+    EXISTS=$?
+  fi;
+  if [ ${EXISTS} != 0 ] ; then
     FILTER="components/*/${1}.app";
     FILENAME=$(${VOLATILE_LS} ${FILTER} 2> /dev/null)
     EXISTS=$?
   fi;
   if [ ${EXISTS} != 0 ] ; then
+    FILTER="components/*/*/${1}.app";
+    FILENAME=$(${VOLATILE_LS} ${FILTER} 2> /dev/null)
+    EXISTS=$?
+  fi;
+  if [ ${EXISTS} != 0 ] ; then
     FILTER="components/*/${1}";
+    FILENAME=$(${VOLATILE_LS} ${FILTER} 2> /dev/null)
+    EXISTS=$?
+  fi;
+  if [ ${EXISTS} != 0 ] ; then
+    FILTER="components/*/*/${1}";
     FILENAME=$(${VOLATILE_LS} ${FILTER} 2> /dev/null)
     EXISTS=$?
   fi;

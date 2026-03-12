@@ -51,7 +51,7 @@ public class PythonOperation extends CodeOperation {
     String result = "(" + type + ")pyMgmt.convertToJava(context, \"" + type + "\", " + var.getVarName() + ")";
     if(var.isList) {
       String fqn = var.getOriginalPath() + "." + var.getOriginalName();
-      result = "new com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObjectList("+ result + ", " + fqn + ".class)";
+      result = var.getVarName() + " == null ? null : new com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObjectList("+ result + ", " + fqn + ".class)";
     }
     return result;
   }
@@ -90,16 +90,18 @@ public class PythonOperation extends CodeOperation {
 
   private void addExecuteScript(CodeBuffer cb) {
     StringBuilder pythonscript = new StringBuilder();
-    String input = String.join(", ", getInputVars().stream().map(var -> var.varName).collect(Collectors.toList()));
+    List<String> escapedInputs = getInputVars().stream().map(var -> escape(var.varName)).collect(Collectors.toList());
+    String input = String.join(", ", escapedInputs);
     if(!isStatic()) {
       input = "this" + (input.length() > 0 ? ", " : "") + input;
     }
     pythonscript.append("def ").append(getAdaptedNameWithoutVersion()).append("(").append(input).append("):");
     String impl = getImpl().replaceAll("(?m)^", "  ");
+    impl = impl.replaceAll("\\\\", "\\\\\\\\");
     impl = impl.replaceAll("\"", "\\\\\\\"");
     impl = impl.replaceAll("\n", "\\\\n");
     pythonscript.append("\\n").append(impl).append("\\n");
-    String output = String.join(", ", getOutputVars().stream().map(var -> var.varName).collect(Collectors.toList()));
+    String output = String.join(", ", getOutputVars().stream().map(var -> escape(var.varName)).collect(Collectors.toList()));
     if (getOutputVars().size() > 0) {
       pythonscript.append("\\n(").append(output).append(") = ");
     }
@@ -133,18 +135,21 @@ public class PythonOperation extends CodeOperation {
     }
     
     for (AVariable var : getInputVars()) {
-      cb.addLine("interpreter.set(\"" + var.varName + "\", " + convertVariableToPython(var) + ")");
+      cb.addLine("interpreter.set(\"" + escape(var.varName) + "\", " + convertVariableToPython(var) + ")");
       if (var.isList) {
-        cb.addLine("interpreter.exec(\"" + var.varName + " = mdm._convert_list(" + var.varName + ")\")");
+        cb.addLine("interpreter.exec(\"" + escape(var.varName) + " = mdm._convert_list(" + escape(var.varName) + ")\")");
       } else if (!var.isJavaBaseType()) {
-        cb.addLine("interpreter.exec(\"" + var.varName + " = mdm.convert_to_python_object(" + var.varName + ")\")");
+        cb.addLine("interpreter.exec(\"" + escape(var.varName) + " = mdm.convert_to_python_object(" + escape(var.varName) + ")\")");
       }
     }
 
     addExecuteScript(cb);
 
+    if (!isStatic()) {
+      cb.addLine("pyMgmt.updateObject(context, this, interpreter.get(\"this\"));");
+    }
     for (AVariable var : getOutputVars()) {
-      cb.addLine(var.varName + " = interpreter.get(\"" + var.varName + "\")");
+      cb.addLine(var.varName + " = interpreter.get(\"" + escape(var.varName) + "\")");
     }
     addSetReturn(cb);
     cb.addLine("}");
@@ -158,6 +163,8 @@ public class PythonOperation extends CodeOperation {
     cb.append("impl = ").append(fqnPython).append("Impl(");
     if (!isStatic()) {
       cb.append("this");
+    } else {
+      cb.append("None");
     }
     cb.append(")\n");
     if (getOutputVars() != null && !getOutputVars().isEmpty()) {
@@ -170,7 +177,7 @@ public class PythonOperation extends CodeOperation {
         cb.append(", ");
       }
     }
-    cb.append(String.join(", ", getInputVars().stream().map(x -> x.getVarName()).collect(Collectors.toList())));
+    cb.append(String.join(", ", getInputVars().stream().map(x -> escape(x.getVarName())).collect(Collectors.toList())));
     cb.append(")");
 
     String impl = cb.toString().trim();
@@ -183,6 +190,11 @@ public class PythonOperation extends CodeOperation {
   
   public String getAdaptedNameWithoutVersion() {
     String ret = super.getNameWithoutVersion();    
+    return escape(ret);
+  }
+  
+  private String escape(String s) {
+    String ret = s;
     if (_pythonMdmGeneration.getPythonKeywords().contains(ret)) {
       ret = ret + "_";
     }

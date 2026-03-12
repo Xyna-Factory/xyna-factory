@@ -35,12 +35,13 @@
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="sharedlib/xyna-openapi">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
-
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/ApplicationGenerationImpl">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
-
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/OASObjectParsingImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/OasGuiServicesImpl">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
 
@@ -51,6 +52,7 @@
         <antcall target="create-mdm-jar" />
         <supply-mdm-jar type="mdmimpl" name="ApplicationGenerationImpl" />
         <supply-mdm-jar type="mdmimpl" name="OASObjectParsingImpl" />
+        <supply-mdm-jar type="mdmimpl" name="OasGuiServicesImpl" />
         <delete file="${basedir}/mdm.jar" />
     </target>
 

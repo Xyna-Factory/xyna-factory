@@ -15,7 +15,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  --><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
-  <ExceptionType BaseTypeName="UserAuthException" BaseTypePath="xact.ssh" Code="DEVEL-00501" IsAbstract="false" Label="Host Key Not Verifiable Exception" TypeName="HostKeyNotVerifiableException" TypePath="xact.ssh">
+  <ExceptionType BaseTypeName="UserAuthException" BaseTypePath="xact.ssh" Code="XACT-SSH-00003" IsAbstract="false" Label="Host Key Not Verifiable Exception" TypeName="HostKeyNotVerifiableException" TypePath="xact.ssh">
     <MessageText Language="DE">Host-Schlüssel ist nicht verifizierbar: %0%</MessageText>
     <MessageText Language="EN">Host key is not verifiable: %0%</MessageText>
   </ExceptionType>

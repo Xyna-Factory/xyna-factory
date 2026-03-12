@@ -24,7 +24,7 @@
 
      <property name="target.dir" value="${basedir}/deploy" />
 
-    <import file="../installation/build/ant-xyna.xml" />
+    <import file="../installation/build/macros.xml" />
 
     <!-- ================================= 
           target: build              

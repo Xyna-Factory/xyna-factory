@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="GitIntegration UI Services" TypeName="GitIntegrationUIServices" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="GitIntegration UI Services" TypeName="GitIntegrationUIServices">
+    <Operation IsStatic="true" Label="Create Revert Text Item Definitions" Name="createRevertTextItemDefinitions">
+      <Input>
+        <Data ID="1" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput1"/>
+      </Input>
+      <Output>
+        <Data ID="2" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition2"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">List&lt;String&gt; reverts = pullOutput1.getReverts();
+return createTextItemDefinitionsFromStringList(reverts, "reverts");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create Diff Lists Item Definitions" Name="createDiffListsItemDefinitions">
+      <Input>
+        <Data ID="5323" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput5323"/>
+      </Input>
+      <Output>
+        <Data ID="5324" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition5324"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">List&lt;String&gt; diffLists = pullOutput5323.getOpenedWorkspaceDiffLists();
+return createTextItemDefinitionsFromStringList(diffLists, "openedWorkspaceDiffLists");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create Conflicts Text Item Definitions" Name="createConflictsTextItemDefinitions">
+      <Input>
+        <Data ID="5325" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput5325"/>
+      </Input>
+      <Output>
+        <Data ID="5326" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition5326"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">List&lt;String&gt; conflicts = pullOutput5325.getConflicts();
+return createTextItemDefinitionsFromStringList(conflicts, "conflicts");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create Local Changes Text Item Definitions" Name="createLocalChangesTextItemDefinitions">
+      <Input>
+        <Data ID="5331" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput5331"/>
+      </Input>
+      <Output>
+        <Data ID="5330" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition5330"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">List&lt;String&gt; localChanges = pullOutput5331.getLocalChanges();
+return createTextItemDefinitionsFromStringList(localChanges, "localChanges");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create Remote Changes Text Item Definitions" Name="createRemoteChangesTextItemDefinitions">
+      <Input>
+        <Data ID="5332" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput5332"/>
+      </Input>
+      <Output>
+        <Data ID="5333" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition5333"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">List&lt;String&gt; remoteChanges = pullOutput5332.getRemoteChanges();
+return createTextItemDefinitionsFromStringList(remoteChanges, "remoteChanges");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create Text Item Definitions From StringList" Name="createTextItemDefinitionsFromStringList">
+      <Input>
+        <Data ID="5327" IsList="true" Label="StringList" VariableName="text5327">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="5329" Label="Path" VariableName="text5329">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="5328" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition5328"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">List&lt;String&gt; listInput = text5327;
+String path = text5329;
+List&lt;xmcp.forms.datatypes.TextItemDefinition&gt; result = new ArrayList&lt;&gt;();
+
+if(listInput == null) {
+    return result;
+}
+
+for(int i=0; i&lt;listInput.size(); i++) {
+    xmcp.forms.datatypes.TextItemDefinition.Builder builder = new xmcp.forms.datatypes.TextItemDefinition.Builder();
+    builder.label("");
+    builder.dataPath("%0%."+path+"." + i);
+    result.add(builder.instance());
+}
+
+return result;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create Repository Status Text Item Definitions" Name="createRepositoryStatusTextItemDefinitions">
+      <Input>
+        <Data ID="5334" Label="Repository Status" ReferenceName="RepositoryStatus" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryStatus5334"/>
+      </Input>
+      <Output>
+        <Data ID="5335" IsList="true" Label="Untracked - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition5335"/>
+        <Data ID="5336" IsList="true" Label="Changes - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition5336"/>
+        <Data ID="5337" IsList="true" Label="Missing - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition5337"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">List&lt;String&gt; untrackedItems = repositoryStatus5334.getUntracked();
+List&lt;? extends TextItemDefinition&gt; untracked = createTextItemDefinitionsFromStringList(untrackedItems, "untracked");
+List&lt;String&gt; changedItems = repositoryStatus5334.getChanges();
+List&lt;? extends TextItemDefinition&gt; changes = createTextItemDefinitionsFromStringList(changedItems, "changes");
+List&lt;String&gt; missingItems = repositoryStatus5334.getMissing();
+List&lt;? extends TextItemDefinition&gt; missing = createTextItemDefinitionsFromStringList(missingItems, "missing");
+return new Container(
+    new XynaObjectList&lt;TextItemDefinition&gt;(untracked, TextItemDefinition.class), 
+    new XynaObjectList&lt;TextItemDefinition&gt;(changes, TextItemDefinition.class), 
+    new XynaObjectList&lt;TextItemDefinition&gt;(missing, TextItemDefinition.class));</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

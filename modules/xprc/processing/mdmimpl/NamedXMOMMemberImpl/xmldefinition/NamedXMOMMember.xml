@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Named XMOM Member" TypeName="NamedXMOMMember" TypePath="xprc.xpce.datatype" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Label" VariableName="label">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Var Name" VariableName="varName">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Documentation" VariableName="documentation">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="FQ XML Name" VariableName="fQXMLName">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Libraries>NamedXMOMMemberImpl.jar</Libraries>
+  <Service Label="Named XMOM Member" TypeName="NamedXMOMMember">
+    <Operation IsStatic="false" Label="Get Documentation as Text" Name="getDocumentationAsText">
+      <Input/>
+      <Output>
+        <Data Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getDocumentationAsText();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Get Label as Text" Name="getLabelAsText">
+      <Input/>
+      <Output>
+        <Data Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getLabelAsText();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Get Member Object" Name="getMemberObject">
+      <Input/>
+      <Output>
+        <Data Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getMemberObject();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Is Instance Of" Name="isInstanceOf">
+      <Input>
+        <Data Label="FQ XML Name" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+      </Input>
+      <Output>
+        <Data Label="Result" VariableName="result">
+          <Meta>
+            <Type>Boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().isInstanceOf(text);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="is reserved object" Name="isReservedObject">
+      <Input/>
+      <Output>
+        <Data Label="is reserved" VariableName="isReserved">
+          <Meta>
+            <Type>Boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().isReservedObject();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Set Member Object" Name="setMemberObject">
+      <Input>
+        <Data Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().setMemberObject(anyType);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

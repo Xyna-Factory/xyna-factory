@@ -28,8 +28,6 @@ import com.gip.xyna.utils.collections.LruCache;
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyInt;
 
-import xmcp.yang.LoadYangAssignmentsData;
-
 
 public class OperationCache {
   
@@ -50,15 +48,13 @@ public class OperationCache {
     refresh(size);
   }
   
-  synchronized public void put(LoadYangAssignmentsData data, List<Module> modules) {
+  synchronized public void put(OperationCacheId id, List<Module> modules) {
     refreshIfNecessary();
-    OperationCacheId id = new OperationCacheId(data);
     _cache.put(id, modules);
   }
   
-  synchronized public Optional<List<Module>> get(LoadYangAssignmentsData data) {
+  synchronized public Optional<List<Module>> get(OperationCacheId id) {
     refreshIfNecessary();
-    OperationCacheId id = new OperationCacheId(data);
     return Optional.ofNullable(_cache.get(id));
   }
   

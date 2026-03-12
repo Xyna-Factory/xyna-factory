@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Pull Information Definition" TypeName="PullInformationDefinition" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Pull Information Definition" Name="PullInformationDefinition">
+    <Input>
+      <Data ID="4553" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput4553"/>
+    </Input>
+    <Output>
+      <Data ID="2" IsList="true" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition2"/>
+    </Output>
+    <ServiceReference ID="5196" Label="Pull Conflicts Definition" ReferenceName="PullConflictsDefinition" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="5195"/>
+      <Target RefID="5195"/>
+    </ServiceReference>
+    <ServiceReference ID="4958" Label="Pull - Revert Definition" ReferenceName="PullRevertDefinition" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="4957"/>
+      <Target RefID="4957"/>
+    </ServiceReference>
+    <ServiceReference ID="6975" Label="Execution Pull Scalar Information Definition" ReferenceName="ExecutionPullScalarInformationDefinition" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="6974"/>
+      <Target RefID="6974"/>
+    </ServiceReference>
+    <ServiceReference ID="6881" Label="Dryrun Pull Scalar Information Definition" ReferenceName="DryrunPullScalarInformationDefinition" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="6880"/>
+      <Target RefID="6880"/>
+    </ServiceReference>
+    <Choice ID="3403" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="4553"/>
+      <Target RefID="7002"/>
+      <Input>
+        <Data ID="4671" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput4671">
+          <Source RefID="3403"/>
+        </Data>
+        <Source RefID="4553"/>
+      </Input>
+      <Case ID="3404" Label="true" Premise="%0%.dryrun">
+        <Function ID="6880" Label="Dryrun Pull Scalar Information Definition">
+          <Source RefID="6881"/>
+          <Source RefID="4553"/>
+          <Target RefID="6881"/>
+          <Target RefID="6883"/>
+          <Invoke Operation="DryrunPullScalarInformationDefinition" ServiceID="6881">
+            <Source RefID="4553"/>
+          </Invoke>
+          <Receive ServiceID="6881">
+            <Target RefID="6883"/>
+          </Receive>
+        </Function>
+        <Assign ID="3407">
+          <Source RefID="6883"/>
+          <Target RefID="7002"/>
+          <Copy>
+            <Source RefID="6883"/>
+            <Target RefID="7002"/>
+          </Copy>
+        </Assign>
+        <Data ID="6883" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition6883">
+          <Source RefID="6880"/>
+        </Data>
+      </Case>
+      <Case ID="3405" Label="false">
+        <Function ID="6974" Label="Execution Pull Scalar Information Definition">
+          <Source RefID="6975"/>
+          <Source RefID="4553"/>
+          <Target RefID="6975"/>
+          <Target RefID="6977"/>
+          <Invoke Operation="ExecutionPullScalarInformationDefinition" ServiceID="6975">
+            <Source RefID="4553"/>
+          </Invoke>
+          <Receive ServiceID="6975">
+            <Target RefID="6977"/>
+          </Receive>
+        </Function>
+        <Assign ID="3409">
+          <Source RefID="6977"/>
+          <Target RefID="7002"/>
+          <Copy>
+            <Source RefID="6977"/>
+            <Target RefID="7002"/>
+          </Copy>
+        </Assign>
+        <Data ID="6977" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition6977">
+          <Source RefID="6974"/>
+        </Data>
+      </Case>
+    </Choice>
+    <Function ID="4957" Label="Pull - Revert Definition">
+      <Source RefID="4958"/>
+      <Source RefID="4553"/>
+      <Target RefID="4958"/>
+      <Target RefID="4960"/>
+      <Invoke Operation="PullRevertDefinition" ServiceID="4958">
+        <Source RefID="4553"/>
+      </Invoke>
+      <Receive ServiceID="4958">
+        <Target RefID="4960"/>
+      </Receive>
+    </Function>
+    <Function ID="5195" Label="Pull Conflicts Definition">
+      <Source RefID="5196"/>
+      <Source RefID="4553"/>
+      <Target RefID="5196"/>
+      <Target RefID="5198"/>
+      <Invoke Operation="PullConflictsDefinition" ServiceID="5196">
+        <Source RefID="4553"/>
+      </Invoke>
+      <Receive ServiceID="5196">
+        <Target RefID="5198"/>
+      </Receive>
+    </Function>
+    <Mappings ID="5867" Label="Mapping">
+      <Output>
+        <Data ID="5908" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition5908">
+          <Source RefID="5867"/>
+        </Data>
+        <Target RefID="5909"/>
+      </Output>
+      <Mapping>%0%.hideIfEmpty="true"</Mapping>
+      <Mapping>%0%.dataPath="%0%.exception"</Mapping>
+    </Mappings>
+    <Mappings ID="6431" Label="Mapping">
+      <Input>
+        <Data ID="6110" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition6110">
+          <Source RefID="3772"/>
+        </Data>
+        <Source RefID="5909"/>
+      </Input>
+      <Output>
+        <Data ID="6674" Label="Exception - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition6674">
+          <Source RefID="6431"/>
+        </Data>
+        <Target RefID="6675"/>
+      </Output>
+      <Mapping>%1%.children["0"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%0%</Mapping>
+      <Mapping>%1%.hideIfEmpty="true"</Mapping>
+      <Mapping>%1%.label="An exception occurred"</Mapping>
+    </Mappings>
+    <Mappings ID="3772" Label="Mapping">
+      <Input>
+        <Data ID="3823" Label="Scalar - Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition3823">
+          <Source RefID="3772"/>
+        </Data>
+        <Source RefID="7002">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="4048" Label="Reverts - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4048">
+          <Source RefID="3772"/>
+        </Data>
+        <Source RefID="4960">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="4097" Label="Conflicts - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4097">
+          <Source RefID="3772"/>
+        </Data>
+        <Source RefID="5198">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="6472" Label="Exception - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition6472">
+          <Source RefID="6431"/>
+        </Data>
+        <Source RefID="6675">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="3797" IsList="true" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition3797">
+          <Source RefID="3772"/>
+        </Data>
+        <Target RefID="3798"/>
+      </Output>
+      <Mapping>%4%["0"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%3%</Mapping>
+      <Mapping>%4%["1"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%0%</Mapping>
+      <Mapping>%4%["2"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%1%</Mapping>
+      <Mapping>%4%["3"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%2%</Mapping>
+    </Mappings>
+    <Data ID="3798" IsList="true" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition3798">
+      <Source RefID="3772"/>
+    </Data>
+    <Data ID="4960" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4960">
+      <Source RefID="4957"/>
+    </Data>
+    <Data ID="5198" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5198">
+      <Source RefID="5195"/>
+    </Data>
+    <Data ID="5909" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition5909">
+      <Source RefID="5867"/>
+    </Data>
+    <Data ID="6675" Label="Exception - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition6675">
+      <Source RefID="6431"/>
+    </Data>
+    <Data ID="7002" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition7002">
+      <Source RefID="3403"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="3798"/>
+      <Target RefID="2"/>
+      <Copy>
+        <Source RefID="3798"/>
+        <Target RefID="2"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

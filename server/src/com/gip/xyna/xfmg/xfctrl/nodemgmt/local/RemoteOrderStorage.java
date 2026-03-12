@@ -313,7 +313,7 @@ public class RemoteOrderStorage extends ObjectWithRemovalSupport {
                 return rs.getLong(StoredResponse.COL_ID);
               }
 
-            }));
+            }, StoredResponse.TABLE_NAME));
       }
       List<Long> l = con.query(loadIds, new Parameter(identifier), -1);
       for (final Long id : l) {

@@ -16,12 +16,17 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="XML" BaseTypePath="xact.templates" Label="NETCONF" TypeName="NETCONF" TypePath="xact.templates" Version="1.8">
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="XML" BaseTypePath="xact.templates" IsAbstract="false" Label="NETCONF" TypeName="NETCONF" TypePath="xact.templates" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
+  <Data Label="Version" VariableName="version">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
   <Service Label="NETCONF" TypeName="NETCONF">
-    <Operation ID="3" IsStatic="false" Label="detect critical error" Name="detectCritcalError">
+    <Operation IsStatic="false" Label="detect critical error" Name="detectCritcalError">
       <Input>
         <Data ID="0" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
       </Input>
@@ -30,16 +35,13 @@
         <Exception ID="2" Label="detected error" ReferenceName="DetectedError" ReferencePath="xact.connection" VariableName="detectedError"/>
       </Throws>
       <SourceCode>
-        <CodeSnippet Type="Java"><![CDATA[
-	  final String NETCONF_ERROR_TAG = "rpc-error";
-	  if (response.getResponse().getContent().contains("<" + NETCONF_ERROR_TAG + ">")) {
-	    throw new DetectedError(response.getCommand(), response.getResponse());
-	  }
-	]]>
-	</CodeSnippet>
+        <CodeSnippet Type="Java">final String NETCONF_ERROR_TAG = "rpc-error";
+      if (response.getResponse().getContent().contains("&lt;" + NETCONF_ERROR_TAG + "&gt;")) {
+        throw new DetectedError(response.getCommand(), response.getResponse());
+      }</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation ID="6" IsStatic="false" Label="is response complete" Name="isResponseComplete">
+    <Operation IsStatic="false" Label="is response complete" Name="isResponseComplete">
       <Input>
         <Data ID="4" Label="response" VariableName="response">
           <Meta>
@@ -55,14 +57,31 @@
         </Data>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java"><![CDATA[
-          String text = response.trim();
-          return text.endsWith("]]]]><![CDATA[>]]]]><![CDATA[>");
-	]]>
-	</CodeSnippet>
+        <CodeSnippet Type="Java">if ("1.1".equals(version)) {
+        String MSG_END = "\n##\n";
+        if (!response.endsWith(MSG_END)) {
+            return false;
+        }
+        java.util.regex.Pattern CHUNK_SIZE_PATTERN = java.util.regex.Pattern.compile("^\\n#(\\d+)\\n.*");
+        java.util.regex.Matcher matcher;
+        int responseIndex = 0;
+        do {
+            matcher = CHUNK_SIZE_PATTERN.matcher(response.substring(responseIndex));
+            if (!matcher.find()) {
+                break;
+            }
+            String group = matcher.group(1);
+            int chunkSize = Integer.valueOf(group);
+            responseIndex += 3 + group.length() + chunkSize; // 3 -&gt; \n# before chunk-size and \n after chunk-size
+        } while (responseIndex &lt;= response.length() - MSG_END.length());
+        return responseIndex == response.length() - MSG_END.length();
+    } else {
+        String text = response.trim();
+        return text.endsWith("]]&gt;]]&gt;");
+    }</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation ID="9" IsStatic="false" Label="partition commands" Name="partitionCommands">
+    <Operation IsStatic="false" Label="partition commands" Name="partitionCommands">
       <Input>
         <Data ID="7" Label="document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
       </Input>
@@ -70,17 +89,22 @@
         <Data ID="8" IsList="true" Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java"><![CDATA[
-	List<? extends Command> commands = super.partitionCommands(document);
-	for (Command c : commands) {
-	  c.setContent(c.getContent() + "]]]]><![CDATA[>]]]]><![CDATA[>");
-	}
-	return commands;
-	]]>
- 	</CodeSnippet>
+        <CodeSnippet Type="Java">List&lt; ? extends Command&gt; commands = super.partitionCommands(document);
+    if ("1.1".equals(version)) {
+      for (Command c : commands) {
+        c.setContent("\n#" + c.getContent().length() + "\n" + c.getContent());
+      }
+      Command lastCommand = commands.get(commands.size()-1);
+      lastCommand.setContent(lastCommand.getContent() + "\n##\n");
+    } else {
+      for (Command c : commands) {
+        c.setContent(c.getContent() + "]]&gt;]]&gt;");
+      }
+    }
+    return commands;</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation ID="12" IsStatic="false" Label="remove document type specifics" Name="removeDocumentTypeSpecifics">
+    <Operation IsStatic="false" Label="remove document type specifics" Name="removeDocumentTypeSpecifics">
       <Input>
         <Data ID="10" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response"/>
       </Input>
@@ -88,14 +112,33 @@
         <Data ID="11" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="response0"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java"><![CDATA[
-        String trimmedResponse = response.getResponse().getContent().trim();
-	if (trimmedResponse.endsWith("]]]]><![CDATA[>]]]]><![CDATA[>")) {
-          response.getResponse().setContent(trimmedResponse.substring(0, trimmedResponse.length() - "]]]]><![CDATA[>]]]]><![CDATA[>".length()));
+        <CodeSnippet Type="Java">if ("1.1".equals(version)) {
+        String MSG_END = "\n##\n";
+        StringBuilder contentBuilder = new StringBuilder();
+        java.util.regex.Pattern CHUNK_SIZE_PATTERN = java.util.regex.Pattern.compile("^\\n#(\\d+)\\n");
+        java.util.regex.Matcher matcher;
+        int responseIndex = 0;
+
+        while (responseIndex &lt; response.getResponse().getContent().length() - MSG_END.length()) {
+            matcher = CHUNK_SIZE_PATTERN.matcher(response.getResponse().getContent().substring(responseIndex));
+            if (!matcher.find()) {
+              throw new RuntimeException("invalid response @" + responseIndex + " , response: " + response.getResponse().getContent());
+            }
+            String group = matcher.group(1);
+            int chunkSize = Integer.valueOf(group);
+            int fromIndex = responseIndex + 3 + group.length();
+            int toIndex = fromIndex + chunkSize;
+            contentBuilder.append(response.getResponse().getContent().substring(fromIndex, toIndex));
+            responseIndex = toIndex;
         }
-        return response;
-	]]>
-        </CodeSnippet>
+        response.getResponse().setContent(contentBuilder.toString());
+    } else {
+        String trimmedResponse = response.getResponse().getContent().trim();
+        if (trimmedResponse.endsWith("]]&gt;]]&gt;")) {
+          response.getResponse().setContent(trimmedResponse.substring(0, trimmedResponse.length() - "]]&gt;]]&gt;".length()));
+        }
+    }
+    return response;</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

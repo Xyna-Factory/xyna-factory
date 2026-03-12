@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,14 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="ActiveMQ" comment="" factoryVersion="" versionName="1.0.6" xmlVersion="1.1">
+<Application applicationName="ActiveMQ" comment="" factoryVersion="" versionName="1.2.0" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">ActiveMQ</Description>
-    <Description Lang="EN">ActiveMQ</Description>
-    <BuildDate>2015.06.25 10:13:00</BuildDate>
+    <Description Lang="DE">Benutzung von JMS-Queues mit (externen) Apache ActiveMQ Servern</Description>
+    <Description Lang="EN">Using JMS-queues with (external) Apache ActiveMQ servers</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Queue</ApplicationName>
-        <VersionName>1.0.2</VersionName>
+        <VersionName>1.0.3</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>

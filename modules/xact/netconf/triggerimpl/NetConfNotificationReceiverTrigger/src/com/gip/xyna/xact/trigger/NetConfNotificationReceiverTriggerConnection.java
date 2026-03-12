@@ -1,0 +1,537 @@
+/*
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ */
+
+package com.gip.xyna.xact.trigger;
+
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.log4j.Logger;
+
+import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.xact.NetConfNotificationReceiverSharedLib.NetConfNotificationReceiverSharedLib;
+import com.gip.xyna.xact.trigger.NetConfConnection.HostKeyAuthMode;
+import com.gip.xyna.xdev.xfractmod.xmdm.TriggerConnection;
+
+
+public class NetConfNotificationReceiverTriggerConnection extends TriggerConnection {
+
+  private static final long serialVersionUID = 1L;
+
+  private static Logger logger = CentralFactoryLogging.getLogger(NetConfNotificationReceiverTriggerConnection.class);
+
+  private String client_hello = ""
+      + "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+      + "<hello xmlns=\"urn:ietf:params:xml:ns:netconf:base:1.0\">\n"
+      + "  <capabilities>\n"
+      + "    <capability>\n"
+      //+ "      urn:ietf:params:netconf:base:1.1\n"
+      + "      urn:ietf:params:netconf:base:1.0\n"
+      + "    </capability>\n"
+      + "  </capabilities>\n"
+      + "</hello>\n"
+      + "]]>]]>";
+
+  private String client_goodbye = ""
+        + "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        + "<rpc message-id=\"104\"\n"
+        + "     xmlns=\"urn:ietf:params:xml:ns:netconf:base:1.0\">\n"
+        + "  <close-session/>\n"
+        + "</rpc>\n"
+        + "]]>]]>";
+
+  private String subscription_notification = ""
+        + "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        + "<rpc xmlns=\"urn:ietf:params:xml:ns:netconf:base:1.0\" message-id=\"102\">\n"
+        + "   <create-subscription xmlns=\"urn:ietf:params:xml:ns:netconf:notification:1.0\"/>\n"
+        + "</rpc>\n"
+        + "]]>]]>";
+
+  private static String subscription_notification_placeholder = ""
+      + "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+      + "<rpc xmlns=\"urn:ietf:params:xml:ns:netconf:base:1.0\" message-id=\"110\">\n"
+      + "   <create-subscription xmlns=\"urn:ietf:params:xml:ns:netconf:notification:1.0\">\n"
+      + "     <startTime>PLACEHOLDER</startTime>\n"
+      + "   </create-subscription>\n"
+      + "</rpc>\n"
+      + "]]>]]>";
+
+  /*
+  private String notification = ""
+        + "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        + "<rpc xmlns=\"urn:ietf:params:xml:ns:netconf:base:1.0\" message-id=\"103\">\n"
+        + "  <action xmlns=\"urn:ietf:params:xml:ns:yang:1\">\n"
+        + "    <alarms xmlns=\"urn:ietf:params:xml:ns:yang:ietf-alarms\">\n"
+        + "      <control><notify-all-raise-and-clear xmlns=\"http://www.adtran.com/ns/yang/adtran-ietf-alarms-ns-test\"/></control>\n"
+        + "    </alarms>\n"
+        + "  </action>\n"
+        + "</rpc>\n"
+        + "]]>]]>";
+*/
+
+  private String get_serial_num = ""
+       + "<nc:rpc xmlns:nc=\"urn:ietf:params:xml:ns:netconf:base:1.0\" message-id=\"201\"><nc:get>\n"
+       + "    <nc:filter>\n"
+       + "      <hardware xmlns=\"urn:ietf:params:xml:ns:yang:ietf-hardware\">\n"
+       + "        <component>\n"
+       + "          <class xmlns:ianahw=\"urn:ietf:params:xml:ns:yang:iana-hardware\">ianahw:chassis</class>\n"
+       + "          <serial-num/>\n"
+       + "        </component>\n"
+       + "        <component>\n"
+       + "          <class xmlns:ianahw=\"urn:ietf:params:xml:ns:yang:iana-hardware\">ianahw:module</class>\n"
+       + "          <parent/>\n"
+       + "          <serial-num/>\n"
+       + "        </component>\n"
+       + "      </hardware>\n"
+       + "    </nc:filter>\n"
+       + "  </nc:get>\n"
+       + "</nc:rpc>\n"
+       + "]]>]]>";
+
+  private String delimiter_regex="([\\w\\W].*?)]]>]]>";
+  private Pattern delimiter_pattern = Pattern.compile(delimiter_regex);
+      
+  private String delimiter_serialnum_1="(<nc:rpc-reply[\\w\\W].*?message-id=\"201\"[\\w\\W].*?<\\/nc:rpc-reply>)";
+  private Pattern pattern_serialnum_1 = Pattern.compile(delimiter_serialnum_1);
+  
+  private String delimiter_serialnum_2="[\\w\\W].*?<serial-num>([\\w\\W].*?)<\\/serial-num>[\\w\\W].*?";
+  private Pattern pattern_serialnum_2 = Pattern.compile(delimiter_serialnum_2);
+  
+  private String delimiter_capinterleave="<hello[\\w\\W].*?(urn:ietf:params:netconf:capability:interleave:1.0)[\\w\\W].*?<\\/hello>";
+  private Pattern pattern_capinterleave = Pattern.compile(delimiter_capinterleave);
+  
+  private String delimiter_neconfhello="<hello[\\w\\W].*?<\\/hello>";
+  private Pattern pattern_netconfhello = Pattern.compile(delimiter_neconfhello);
+
+  private String delimiter_SubscriptionWithStartTime="(<rpc-reply[\\w\\W].*?message-id=\"110\"[\\w\\W].*?<\\/rpc-reply>)";
+  private Pattern pattern_SubscriptionWithStartTime = Pattern.compile(delimiter_SubscriptionWithStartTime);
+      
+  private String delimiter_SubscriptionWithStartTime_Okay="(<rpc-reply[\\w\\W].*?<ok\\/>[\\w\\W].*?rpc-reply>)";
+  private Pattern pattern_SubscriptionWithStartTime_Okay = Pattern.compile(delimiter_SubscriptionWithStartTime_Okay);
+
+  private StringBuilder buffer;
+  private long command_delay_before;
+  private long command_delay_after;
+  private long buffer_maxlength;
+  private LinkedList<String> message;
+  private LinkedList<String> internal_message;
+
+  private NetConfConnection netConfConn;
+
+  private String username;
+  private String password;
+  private String connectionID;
+  private String RD_IP;
+  private HostKeyAuthMode hostKeyAuthenticationMode;
+
+  private long replayinminutes;
+
+  private boolean feature_CapInterleave;
+  private String rdHash;
+  private boolean connectionInit;
+  private boolean replayInit;
+  private ConnectionList connectionList;
+  private ConnectionQueue connectionQueue;
+  
+
+  public NetConfNotificationReceiverTriggerConnection(String newConnectionID, String OldConnectionID,
+                                                      BasicCredentials cred, ConnectionList connectionList,
+                                                      ConnectionQueue connectionQueue) {
+    try {
+      this.cleanupOldConnectionStep1(OldConnectionID);
+      this.connectionList = connectionList;
+      this.connectionID = newConnectionID;
+
+      this.username = cred.getUsername();
+      this.password = cred.getPassword();
+      this.hostKeyAuthenticationMode = cred.getHostKeyAuthenticationMode();
+      this.replayinminutes = cred.getReplayInMinutes();
+
+      this.feature_CapInterleave = true;
+      this.connectionInit = true;
+      this.replayInit = false; //Default-Value before subscription
+      String UUID_Hash = UUID.randomUUID().toString().replace("-", "");
+      this.rdHash = UUID_Hash;
+
+      this.buffer_maxlength = NetConfNotificationReceiverStartParameter.buffer_maxlength;
+
+      this.command_delay_before = NetConfNotificationReceiverStartParameter.command_delay_before;
+      this.command_delay_after = NetConfNotificationReceiverStartParameter.command_delay_after;
+      this.buffer = new StringBuilder("");
+      this.message = new LinkedList<String>();
+      this.internal_message = new LinkedList<String>();
+
+      this.netConfConn = new NetConfConnection(this.connectionID, this.username, this.password, this.hostKeyAuthenticationMode,
+                                               this.connectionList);
+      this.RD_IP = this.netConfConn.getIP();
+      this.open_connection_ssh(cred);
+      connectionList.addConnection(this.connectionID, this);
+
+      NetConfNotificationReceiverSharedLib.addSharedNetConfConnectionID(this.RD_IP, this.connectionID);
+
+      this.cleanupOldConnectionStep2(OldConnectionID);
+
+    } catch (Throwable t) {
+      logger.warn("NetConfNotificationReceiver: Initialization of NetConfNotificationReceiverTriggerConnection failed", t);
+      this.close_connection();
+    }
+
+  }
+
+
+  private void internalMessageProcessing_NetConfHello(String element) {
+    try {
+      Matcher matcher_netconfhello = pattern_netconfhello.matcher(element);
+      if (matcher_netconfhello.matches()) {
+        Matcher matcher = pattern_capinterleave.matcher(element);
+        if (matcher.matches()) {
+          this.feature_CapInterleave = true;
+          NetConfNotificationReceiverSharedLib.addRDHash(this.rdHash, this.RD_IP);
+          if (logger.isDebugEnabled()) {
+            logger.debug("NetConfNotificationReceiver: Feature_CapInterleave: true");
+          }
+        } else {
+          this.feature_CapInterleave = false;
+          this.connectionInit = false;
+          if (logger.isDebugEnabled()) {
+            logger.debug("NetConfNotificationReceiver: Feature_CapInterleave: false");
+          }
+        }
+      }
+    } catch (Throwable t) {
+      logger.warn("NetConfNotificationReceiver: internalMessageProcessing_NetConfHello failed", t);
+    }
+  }
+
+
+  private void internalMessageProcessing_SerialNum(String element) {
+    try {
+      String message_element_hash = this.rdHash;
+      Matcher matcher_serialnum_1 = pattern_serialnum_1.matcher(element);
+      if (matcher_serialnum_1.find()) {
+        Matcher matcher_serialnum_2 = pattern_serialnum_2.matcher(matcher_serialnum_1.group(1));
+        String message_element = "";
+        while (matcher_serialnum_2.find()) {
+          message_element = message_element + matcher_serialnum_2.group(1);
+        }
+        if (NetConfNotificationReceiverSharedLib.containsRDHashfromRDID(this.rdHash)) {
+          NetConfNotificationReceiverSharedLib.removeRDHash(this.rdHash);
+        }
+        message_element_hash = Long.toHexString(message_element.hashCode());
+        this.rdHash = message_element_hash;
+        if (this.feature_CapInterleave) {
+          NetConfNotificationReceiverSharedLib.addRDHash(this.rdHash, this.RD_IP);
+        }
+        this.connectionInit = false;
+        if (logger.isDebugEnabled()) {
+          logger.debug("NetConfNotificationReceiver: " + "SerialString: " + message_element + " HASH: " + message_element_hash);
+        }
+      }
+    } catch (Throwable t) {
+      logger.warn("NetConfNotificationReceiver:  internalMessageProcessing_SerialNum failed", t);
+    }
+  }
+
+
+  private void internalMessageProcessing_NetConfOperationRD(String element) {
+    try {
+      List<String> ListMessageID = NetConfNotificationReceiverSharedLib.listInputQueueMessageID();
+      for (Iterator<String> iter = ListMessageID.iterator(); iter.hasNext();) {
+        String MessageID = iter.next();
+        if (element.contains(MessageID)) {
+          NetConfNotificationReceiverSharedLib.addInputQueueNetConfMessageElement(this.connectionID, this.rdHash, MessageID, element, true);
+          NetConfNotificationReceiverSharedLib.removeInputQueueMessageID(MessageID);
+          if (logger.isDebugEnabled()) {
+            logger.debug("NetConfNotificationReceiver: " + "Received MessageID: " + MessageID);
+          }
+        }
+      }
+
+    } catch (Throwable t) {
+      logger.warn("NetConfNotificationReceiver: internalMessageProcessing_NetConfOperationRD failed", t);
+    }
+  }
+
+  private void internalMessageProcessing_SubscriptionWithStartTime(String element) {
+    try {
+      Matcher matcher_SubscriptionWithStartTime = pattern_SubscriptionWithStartTime.matcher(element);
+      if (matcher_SubscriptionWithStartTime.find()) {
+        Matcher matcher_SubscriptionWithStartTime_Okay = pattern_SubscriptionWithStartTime_Okay.matcher(matcher_SubscriptionWithStartTime.group(1));
+        if (matcher_SubscriptionWithStartTime_Okay.find()) {
+          this.replayInit = false;
+          if (logger.isDebugEnabled()) {
+            logger.debug("NetConfNotificationReceiver: Replay successful");
+          }
+        } else {
+          this.replayInit = false;
+          logger.warn("NetConfNotificationReceiver: Replay failed for "+this.RD_IP+" - Retry without replay");
+          this.command_send(subscription_notification, 0, 0);
+        }
+      }
+    } catch (Throwable t) {
+      logger.warn("NetConfNotificationReceiver:  internalMessageProcessing_SubscriptionWithStartTime failed", t);
+    }
+  }
+
+  private void internalMessageProcessing() {
+    try {
+      for (Iterator<String> iter = this.internal_message.iterator(); iter.hasNext();) {
+        String element = iter.next();
+        if (this.connectionInit) {
+          internalMessageProcessing_NetConfHello(element);
+          internalMessageProcessing_SerialNum(element);
+        }
+        if (this.replayInit) {
+          internalMessageProcessing_SubscriptionWithStartTime(element);
+        }
+        internalMessageProcessing_NetConfOperationRD(element);
+      }
+      this.internal_message.clear();
+    } catch (Throwable t) {
+      logger.warn("NetConfNotificationReceiver: internalMessageProcessing failed", t);
+    }
+  }
+
+
+  private void push_delimiter() {
+    try {
+      Matcher matcher = delimiter_pattern.matcher(this.buffer);
+      while (matcher.find()) {
+        String message_element = matcher.group(1);
+        this.message.add(message_element);
+        connectionQueue.push(this);
+        this.internal_message.add(message_element);
+      }
+      this.buffer.setLength(0);
+      Thread t = new Thread(this::internalMessageProcessing);
+      t.start();
+    } catch (Throwable t) {
+      logger.warn("NetConfNotificationReceiver: push_delimiter failed", t);
+    }
+  }
+
+
+  public String getIP() {
+    String IP = "";
+    try {
+      IP = this.RD_IP;
+    } catch (Throwable t) {
+      logger.warn("NetConfNotificationReceiver: getIP failed", t);
+    }
+    return IP;
+  };
+
+
+  public String getID() {
+    String ID = "";
+    try {
+      ID = this.rdHash;
+    } catch (Throwable t) {
+      logger.warn("NetConfNotificationReceiver: getID failed", t);
+    }
+    return ID;
+  };
+
+
+  public String getConnectionID() {
+    String ID = "";
+    try {
+      ID = this.connectionID;
+    } catch (Throwable t) {
+      logger.warn("NetConfNotificationReceiver: getConnectionID failed", t);
+    }
+    return ID;
+  };
+
+
+  public String getMessage() {
+    String poll_message = "";
+    try {
+      poll_message = message.poll();
+    } catch (Throwable t) {
+      logger.warn("NetConfNotificationReceiver: getMessage failed", t);
+    }
+    return poll_message;
+  };
+
+
+  public int message_size() {
+    int size_message = 0;
+    try {
+      size_message = message.size();
+    } catch (Throwable t) {
+      logger.warn("NetConfNotificationReceiver: message_size failed", t);
+    }
+    return size_message;
+  };
+
+
+  private void listener() {
+    try {
+      int read;
+      MessageEndCursor cursor = new MessageEndCursor();
+      while ((read = this.netConfConn.read()) > -1) {
+        char readChar = (char) read;
+        this.buffer.append(readChar);
+        cursor.registerChar(readChar);
+        if (cursor.isMessageEndTokenFullyMatched()) {
+          push_delimiter();
+        }
+        if (buffer.length() > this.buffer_maxlength) {
+          this.buffer.setLength(0);
+        }
+      }
+    } catch (Throwable t) {
+      logger.warn("NetConfNotificationReceiver: listener failed", t);
+    }
+  }
+
+
+  private void startListener() {
+    try {
+      Thread t = new Thread(this::listener);
+      t.start();
+    } catch (Throwable t) {
+      logger.warn("NetConfNotificationReceiver: startListener failed", t);
+    }
+  };
+
+
+  private void command_send(String NETCONF_Command, long delay_before, long delay_after) {
+    try {
+      if (logger.isDebugEnabled()) {
+        logger.debug("NetConfNotificationReceiver: " + "SENDING: " + NETCONF_Command);
+      }
+      Thread.sleep(delay_before);
+      this.netConfConn.send(NETCONF_Command);
+      Thread.sleep(delay_after);
+    } catch (Throwable t) {
+      logger.warn("NetConfNotificationReceiver: command_send failed", t);
+    }
+  }
+
+
+  public void sendNetConfOperation(String NETCONF_Operation) {
+    try {
+      String NETCONF_Command = NETCONF_Operation + "]]>]]>";
+      this.command_send(NETCONF_Command, 0, 0);
+    } catch (Throwable t) {
+      logger.warn("NetConfNotificationReceiver: sendNetConfOperation failed", t);
+    }
+  }
+
+
+  private void open_connection_ssh(BasicCredentials cred) throws Throwable {
+    this.netConfConn.openNetConfConnection(cred);
+    this.command_send(client_hello, 0, 0);
+    this.startListener();
+    this.command_send(get_serial_num, this.command_delay_before, this.command_delay_after);
+    if (replayinminutes==0) {
+      this.replayInit = false;
+      this.command_send(subscription_notification, 0, 0);
+    } else {
+      this.replayInit = true;
+      String subscription_notification_with_starttime = getSubscriptionNotificationWithStarttime();
+      this.command_send(subscription_notification_with_starttime, 0, 0);
+    }
+  };
+
+  private String getSubscriptionNotificationWithStarttime() throws Throwable {
+    Instant lt = Instant.now();
+    long minutes = replayinminutes;
+    Instant tm = lt.minus(minutes, ChronoUnit.MINUTES);
+    Instant tf = tm.truncatedTo(ChronoUnit.SECONDS);
+    String tstr = tf.toString();
+    String return_subscription_notification = subscription_notification_placeholder.replace("PLACEHOLDER",tstr);
+    return return_subscription_notification;
+  }
+
+  public void close_connection() {
+    try {
+      this.command_send(client_goodbye, 0, this.command_delay_after);
+      this.netConfConn.closeNetconfConnection();
+    } catch (Throwable t) {
+      logger.warn("NetConfNotificationReceiver: close_connection (NETCONF) failed", t);
+    }
+    try {
+      this.netConfConn.closeSocket();
+    } catch (Throwable t) {
+      logger.warn("NetConfNotificationReceiver: close_connection (Socket) failed", t);
+    }
+    try {
+      NetConfNotificationReceiverSharedLib.removeRDHash(this.rdHash);
+      NetConfNotificationReceiverSharedLib.removeSharedNetConfConnectionID(this.RD_IP);
+      connectionList.removeConnection(this.connectionID);
+      connectionList.release(this.connectionID);
+    } catch (Throwable t) {
+      logger.warn("NetConfNotificationReceiver: Remove entries in close_connection failed", t);
+    }
+  };
+
+
+  private void cleanupOldConnectionStep1(String OldConnectionID) {
+    try {
+      if (!OldConnectionID.isEmpty()) {
+        NetConfNotificationReceiverTriggerConnection OldConn = connectionList.getConnection(OldConnectionID);
+        NetConfNotificationReceiverSharedLib.removeRDHash(OldConn.rdHash);
+      }
+    } catch (Throwable t) {
+      logger.warn("NetConfNotificationReceiver: cleanup_oldconnection failed", t);
+    }
+  };
+
+
+  private void cleanupOldConnectionStep2(String OldConnectionID) {
+    try {
+      if (!OldConnectionID.isEmpty()) {
+        NetConfNotificationReceiverTriggerConnection OldConn = connectionList.getConnection(OldConnectionID);
+        OldConn.cleanup_connection();
+      }
+    } catch (Throwable t) {
+      logger.warn("NetConfNotificationReceiver: cleanup_oldconnection failed", t);
+    }
+  };
+
+
+  public void cleanup_connection() {
+    try {
+      this.netConfConn.closeNetconfConnection();
+    } catch (Throwable t) {
+      logger.warn("NetConfNotificationReceiver: cleanup_connection (NETCONF) failed", t);
+    }
+    try {
+      this.netConfConn.closeSocket();
+    } catch (Throwable t) {
+      logger.warn("NetConfNotificationReceiver: cleanup_connection (Socket) failed", t);
+    }
+    try {
+      connectionList.removeConnection(this.connectionID);
+      connectionList.release(this.connectionID);
+    } catch (Throwable t) {
+      logger.warn("NetConfNotificationReceiver: Remove entries in cleanup_connection failed", t);
+    }
+  };
+
+}

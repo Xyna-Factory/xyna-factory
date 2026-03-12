@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import com.gip.xyna.utils.misc.JsonParser.EmptyJsonVisitor;
 import com.gip.xyna.utils.misc.JsonParser.JsonVisitor;
 import com.gip.xyna.utils.misc.JsonParser.UnexpectedJSONContentException;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
+import com.gip.xyna.xdev.xfractmod.xmdm.Container;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObjectList;
 import com.gip.xyna.xfmg.xfctrl.XynaFactoryControl;
@@ -98,9 +99,9 @@ public class XynaObjectVisitor extends EmptyJsonVisitor<GeneralXynaObject> {
 
   //subobject oder komplexes listenelement (und dann ist das label das label der liste)
   public JsonVisitor<?> objectStarts(String label) throws UnexpectedJSONContentException {
-    if (label.equals(META_TAG)) {
+    if (META_TAG.equals(label)) {
       return MetaInfo.getJsonVisitor();
-    } else if (label.equals(WRAPPED_LIST_TAG)) {
+    } else if (WRAPPED_LIST_TAG.equals(label)) {
       this.isComplexListWrapper = true; //wir befinden uns in dem complexlist-fall in dem objekt mit $meta und $list
       return new XynaObjectVisitor(); //ein komplexes listenelement
     } else {
@@ -197,7 +198,7 @@ public class XynaObjectVisitor extends EmptyJsonVisitor<GeneralXynaObject> {
 
 
   public void object(String label, Object value) throws UnexpectedJSONContentException {
-    if (label.equals(META_TAG)) {
+    if (META_TAG.equals(label)) {
       info = (MetaInfo) value;
     } else {
       try {
@@ -263,14 +264,18 @@ public class XynaObjectVisitor extends EmptyJsonVisitor<GeneralXynaObject> {
     if (isComplexListWrapper) {
       object = new XynaObjectList(values, info.getFqName());
     } else {
-      //TODO was ist das für ein fall?
-      try {
-        Field field = oFindField(getObject().getClass(), label);
-        if (field != null) {
-          getObject().set(label, new ArrayList(values));
+      if (label == null) {
+        object = new Container(values.toArray(new GeneralXynaObject[] {}));
+      } else {
+        //TODO was ist das für ein fall?
+        try {
+          Field field = oFindField(getObject().getClass(), label);
+          if (field != null) {
+            getObject().set(label, new ArrayList(values));
+          }
+        } catch (XDEV_PARAMETER_NAME_NOT_FOUND e) {
+          throw new RuntimeException(e);
         }
-      } catch (XDEV_PARAMETER_NAME_NOT_FOUND e) {
-        throw new RuntimeException(e);
       }
     }
   }

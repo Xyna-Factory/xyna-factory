@@ -42,10 +42,10 @@ public class TimeConstraintWindowStorableQueries {
   public void init(ODSConnection defCon) throws PersistenceLayerException {
     loadAllByNameQuery =
         defCon.prepareQuery(new Query<TimeConstraintWindowStorable>(loadAllByNameQuerySqlString,
-            TimeConstraintWindowStorable.reader), true);
+            TimeConstraintWindowStorable.reader, TimeConstraintWindowStorable.TABLE_NAME), true);
     loadAllQuery =
         defCon.prepareQuery(new Query<TimeConstraintWindowStorable>(loadAllQuerySqlString,
-            TimeConstraintWindowStorable.reader), true);
+            TimeConstraintWindowStorable.reader, TimeConstraintWindowStorable.TABLE_NAME), true);
   }
   
   public List<TimeConstraintWindowStorable> loadAllByName(ODSConnection con, String name) throws PersistenceLayerException {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,18 +19,62 @@
   <Meta>
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
+  <Libraries>OasGuiServicesImpl.jar</Libraries>
+  <SharedLibraries>ZetaTools</SharedLibraries>
   <Service Label="Oas Gui Services" TypeName="OasGuiServices">
-    <Operation IsStatic="true" Label="Create Workspace Imput Download Data" Name="createWorkspaceImputDownloadData">
+    <Meta>
+      <AdditionalDependencies/>
+    </Meta>
+    <Operation IsStatic="true" Label="Create Workspace Input Download Data" Name="createWorkspaceInputDownloadData">
       <Input/>
       <Output>
-        <Data ID="1" IsList="true" Label="Key Value" ReferenceName="KeyValue" ReferencePath="base" VariableName="keyValue1"/>
+        <Data ID="2" IsList="true" Label="Key Value" ReferenceName="KeyValue" ReferencePath="base" VariableName="keyValue2"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">List&lt;KeyValue&gt; result = new ArrayList&lt;KeyValue&gt;();
-result.add(new KeyValue.Builder().key("&lt;Application&gt;").value(" ").instance());
-com.gip.xyna.xfmg.xfctrl.workspacemgmt.WorkspaceManagement wsMgmt = com.gip.xyna.XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getWorkspaceManagement();
-wsMgmt.listWorkspaces(false).forEach(ws -&gt; result.add(new KeyValue.Builder().key(ws.getWorkspace().getName()).value(ws.getWorkspace().getName()).instance()));
-return result;</CodeSnippet>
+        <CodeSnippet Type="Java">return xmcp.oas.fman.OasGuiServicesImpl.createWorkspaceInputDownloadData();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Oas Api Endpoints" Name="getOasApiEndpoints">
+      <Input>
+        <Data ID="6399" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo6399"/>
+      </Input>
+      <Output>
+        <Data ID="6400" IsList="true" Label="Oas Api Datatype Info" ReferenceName="OasApiDatatypeInfo" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasApiDatatypeInfo6400"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.oas.fman.OasGuiServicesImpl.getOasApiEndpoints(tableInfo6399);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Endpoint Implementation" Name="endpointImplementation" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="6401" Label="Endpoint Implementation Creation Data" ReferenceName="EndpointImplementationCreationData" ReferencePath="xmcp.oas.fman.datatypes" VariableName="endpointImplementationCreationData6401"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.oas.fman.OasGuiServicesImpl.endpointImplementation(correlatedXynaOrder, endpointImplementationCreationData6401);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Oas Impl Services" Name="getOasImplServices">
+      <Input>
+        <Data ID="6402" Label="Endpoint Implementation Creation Data" ReferenceName="EndpointImplementationCreationData" ReferencePath="xmcp.oas.fman.datatypes" VariableName="endpointImplementationCreationData6402"/>
+      </Input>
+      <Output>
+        <Data ID="6403" IsList="true" Label="Oas Endpoint Service" ReferenceName="OasEndpointService" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasEndpointService6403"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.oas.fman.OasGuiServicesImpl.getOasImplServices(endpointImplementationCreationData6402);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Reference Candidates" Name="getReferenceCandidates" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="6404" Label="Endpoint Implementation Creation Data" ReferenceName="EndpointImplementationCreationData" ReferencePath="xmcp.oas.fman.datatypes" VariableName="endpointImplementationCreationData6404"/>
+        <Data ID="6407" Label="Oas Endpoint Service" ReferenceName="OasEndpointService" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasEndpointService6407"/>
+      </Input>
+      <Output>
+        <Data ID="6405" IsList="true" Label="Key Value" ReferenceName="KeyValue" ReferencePath="base" VariableName="keyValue6405"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.oas.fman.OasGuiServicesImpl.getReferenceCandidates(correlatedXynaOrder, endpointImplementationCreationData6404, oasEndpointService6407);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

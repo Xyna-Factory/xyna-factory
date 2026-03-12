@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Compare Objects" TypeName="CompareObjects" TypePath="base.list.object" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Compare Objects" Name="CompareObjects">
+    <Input>
+      <Data ID="100" Label="Object Comparer" ReferenceName="ObjectComparer" ReferencePath="base.list.object" VariableName="objectComparer100"/>
+      <Data ID="58" Label="First" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType58">
+        <Meta>
+          <Type>GeneralXynaObject</Type>
+        </Meta>
+      </Data>
+      <Data ID="71" Label="Second" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType71">
+        <Meta>
+          <Type>GeneralXynaObject</Type>
+        </Meta>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="18" IsList="true" Label="Simple Compare Result" ReferenceName="SimpleCompareResult" ReferencePath="base.list.object" VariableName="simpleCompareResult18"/>
+    </Output>
+    <ServiceReference ID="115" Label="Compare Children" ReferenceName="CompareChildren.CompareChildren" ReferencePath="base.list.object">
+      <Source RefID="114"/>
+      <Target RefID="114"/>
+    </ServiceReference>
+    <ServiceReference ID="193" Label="Compare Children" ReferenceName="CompareChildren.CompareChildren" ReferencePath="base.list.object">
+      <Source RefID="192"/>
+      <Target RefID="192"/>
+    </ServiceReference>
+    <Function ID="114" Label="Instantiate">
+      <Source RefID="115"/>
+      <Source RefID="166"/>
+      <Source RefID="58"/>
+      <Source RefID="71"/>
+      <Target RefID="115"/>
+      <Target RefID="117"/>
+      <Invoke Operation="instantiate" ServiceID="115">
+        <Source RefID="166">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="58">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="71">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="115">
+        <Target RefID="117"/>
+      </Receive>
+    </Function>
+    <Function ID="192" Label="Compare Recursively">
+      <Source RefID="193"/>
+      <Source RefID="117"/>
+      <Source RefID="100"/>
+      <Target RefID="193"/>
+      <Target RefID="195"/>
+      <Invoke Operation="compareRecursively" ServiceID="193">
+        <Source RefID="117"/>
+        <Source RefID="100"/>
+      </Invoke>
+      <Receive ServiceID="193">
+        <Target RefID="195"/>
+      </Receive>
+    </Function>
+    <Data ID="117" Label="Compare Children" ReferenceName="CompareChildren" ReferencePath="base.list.object" VariableName="compareChildren117">
+      <Source RefID="114"/>
+    </Data>
+    <Data ID="166" Label="Compare Children" ReferenceName="CompareChildren" ReferencePath="base.list.object" VariableName="const_CompareChildren166"/>
+    <Data ID="195" IsList="true" Label="Simple Compare Result" ReferenceName="SimpleCompareResult" ReferencePath="base.list.object" VariableName="simpleCompareResult195">
+      <Source RefID="192"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="195"/>
+      <Target RefID="18"/>
+      <Copy>
+        <Source RefID="195"/>
+        <Target RefID="18"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

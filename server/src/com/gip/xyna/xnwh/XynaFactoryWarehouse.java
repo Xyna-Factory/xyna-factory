@@ -42,6 +42,7 @@ import com.gip.xyna.xnwh.persistence.xmom.XMOMPersistence;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMPersistenceBase;
 import com.gip.xyna.xnwh.pools.ConnectionPoolManagement;
 import com.gip.xyna.xnwh.securestorage.SecureStorage;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceManagement;
 import com.gip.xyna.xnwh.statistics.StatisticsStore;
 import com.gip.xyna.xnwh.xclusteringservices.XynaClusteringServices;
 import com.gip.xyna.xnwh.xwarehousejobs.XynaWarehouseJobManagement;
@@ -72,6 +73,7 @@ public class XynaFactoryWarehouse extends XynaFactoryWarehouseBase {
   private XMOMPersistence xmomPersistence;
   private SecureStorage secureStorage;
   private StatisticsStore statisticsStore;
+  private SharedResourceManagement sharedResourceManagement;
   private ODS ods;
 
   private XynaClusteringServices xClusteringServices;
@@ -107,6 +109,8 @@ public class XynaFactoryWarehouse extends XynaFactoryWarehouseBase {
     
     deploySection(ConnectionPoolManagement.getInstance());
     
+    sharedResourceManagement = new SharedResourceManagement();
+    deploySection(sharedResourceManagement);
     
     FutureExecution fExec = XynaFactory.getInstance().getFutureExecution();
     fExec.addTask(XynaFactoryWarehouse.class,"XynaFactoryWarehouse.initProps").
@@ -229,6 +233,12 @@ public class XynaFactoryWarehouse extends XynaFactoryWarehouseBase {
 
   public ConnectionPoolManagement getConnectionPoolManagement() {
     return ConnectionPoolManagement.getInstance();
+  }
+
+
+  @Override
+  public SharedResourceManagement getSharedResourceManagement() {
+    return sharedResourceManagement;
   }
 
 }

@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Validate Service Against Service Specification JSON" TypeName="ValidateServiceAgainstServiceSpecificationJSON" TypePath="xfmg.tmf640.validation" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Validate Service Against Service Specification JSON" Name="ValidateServiceAgainstServiceSpecificationJSON">
+    <Input>
+      <Data ID="191" Label="Service JSON" ReferenceName="Text" ReferencePath="base" VariableName="text191"/>
+      <Data ID="401" Label="Service Specification JSON" ReferenceName="Text" ReferencePath="base" VariableName="text401"/>
+      <Data ID="611" IsList="true" Label="Constraint Context" ReferenceName="ConstraintContext" ReferencePath="xfmg.tmf.validation" VariableName="constraintContext611"/>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="CharacteristicValueDoesNotMatchRegularExpression" ReferenceName="CharacteristicValueDoesNotMatchRegularExpression" ReferencePath="xfmg.tmf633" VariableName="characteristicValueDoesNotMatchRegularExpression2394"/>
+      <Exception Label="CharacteristicValueNotInEnumeration" ReferenceName="CharacteristicValueNotInEnumeration" ReferencePath="xfmg.tmf640" VariableName="characteristicValueNotInEnumeration2395"/>
+      <Exception Label="DuplicateCharacteristicFound" ReferenceName="DuplicateCharacteristicFound" ReferencePath="xfmg.tmf640" VariableName="duplicateCharacteristicFound2396"/>
+      <Exception Label="ExceededAllowedValueRange" ReferenceName="ExceededAllowedValueRange" ReferencePath="xfmg.tmf640" VariableName="exceededAllowedValueRange2397"/>
+      <Exception Label="InvalidCharacteristicsCardinality" ReferenceName="InvalidCharacteristicsCardinality" ReferencePath="xfmg.tmf640" VariableName="invalidCharacteristicsCardinality2398"/>
+      <Exception Label="Service Characteristic not found" ReferenceName="ServiceCharacteristicNotFound" ReferencePath="xfmg.tmf640" VariableName="serviceCharacteristicNotFound2399"/>
+      <Exception Label="UnexpectedCharacteristicsType" ReferenceName="UnexpectedCharacteristicsType" ReferencePath="xfmg.tmf640" VariableName="unexpectedCharacteristicsType2400"/>
+      <Exception Label="ConstraintValidationError" ReferenceName="ConstraintValidationError" ReferencePath="xfmg.tmf640.validation" VariableName="constraintValidationError2401"/>
+      <Exception Label="ConstraintValidationFailed3" ReferenceName="ConstraintValidationFailed3" ReferencePath="xfmg.tmf640.validation" VariableName="constraintValidationFailed32402"/>
+    </Throws>
+    <ServiceReference ID="11" Label="Validate Service Against Service Specification V3" ReferenceName="ValidateServiceAgainstServiceSpecificationV3" ReferencePath="xfmg.tmf640.validation">
+      <Source RefID="10"/>
+      <Target RefID="10"/>
+    </ServiceReference>
+    <ServiceReference ID="1560" Label="JSON Datamodel Services" ReferenceName="JSONDatamodelServices.JSONDatamodelServices" ReferencePath="xfmg.xfctrl.datamodel.json">
+      <Source RefID="1559"/>
+      <Target RefID="1559"/>
+    </ServiceReference>
+    <ServiceReference ID="1548" Label="JSON Datamodel Services" ReferenceName="JSONDatamodelServices.JSONDatamodelServices" ReferencePath="xfmg.xfctrl.datamodel.json">
+      <Source RefID="1547"/>
+      <Target RefID="1547"/>
+    </ServiceReference>
+    <Parallel>
+      <Serial>
+        <Mappings ID="1543" Label="Mapping">
+          <Input>
+            <Data ID="1545" Label="Service JSON" ReferenceName="Text" ReferencePath="base" VariableName="text1545"/>
+            <Source RefID="191">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="1546" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document1546"/>
+            <Target RefID="1442"/>
+          </Output>
+          <Mapping>%1%.text=%0%.text</Mapping>
+        </Mappings>
+        <Function ID="1547" Label="Parse Object From JSON with Options">
+          <Source RefID="1548"/>
+          <Source RefID="1442"/>
+          <Source RefID="1551"/>
+          <Source RefID="1552"/>
+          <Target RefID="1548"/>
+          <Target RefID="1542"/>
+          <Invoke Operation="parseObjectFromJSONWithOptions" ServiceID="1548">
+            <Source RefID="1442"/>
+            <Source RefID="1551">
+              <Meta>
+                <LinkType>Constant</LinkType>
+                <ExpectedType>internalized.tmf640.datamodel.Service</ExpectedType>
+              </Meta>
+            </Source>
+            <Source RefID="1552">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="1548">
+            <Target RefID="1542">
+              <Meta>
+                <ExpectedType>internalized.tmf640.datamodel.Service</ExpectedType>
+              </Meta>
+            </Target>
+          </Receive>
+        </Function>
+        <Data ID="1542" Label="Service" ReferenceName="Service" ReferencePath="internalized.tmf640.datamodel" VariableName="service1542"/>
+      </Serial>
+      <Serial>
+        <Mappings ID="1555" Label="Mapping">
+          <Input>
+            <Data ID="1557" Label="Service Specification JSON" ReferenceName="Text" ReferencePath="base" VariableName="text1557"/>
+            <Source RefID="401">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="1558" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document1558"/>
+            <Target RefID="1443"/>
+          </Output>
+          <Mapping>%1%.text=%0%.text</Mapping>
+        </Mappings>
+        <Function ID="1559" Label="Parse Object From JSON with Options">
+          <Source RefID="1560"/>
+          <Source RefID="1443"/>
+          <Source RefID="1563"/>
+          <Source RefID="1564"/>
+          <Target RefID="1560"/>
+          <Target RefID="1554"/>
+          <Invoke Operation="parseObjectFromJSONWithOptions" ServiceID="1560">
+            <Source RefID="1443"/>
+            <Source RefID="1563">
+              <Meta>
+                <LinkType>Constant</LinkType>
+                <ExpectedType>internalized.tmf633.datamodel.ServiceSpecification</ExpectedType>
+              </Meta>
+            </Source>
+            <Source RefID="1564">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="1560">
+            <Target RefID="1554">
+              <Meta>
+                <ExpectedType>internalized.tmf633.datamodel.ServiceSpecification</ExpectedType>
+              </Meta>
+            </Target>
+          </Receive>
+        </Function>
+        <Data ID="1554" Label="ServiceSpecification" ReferenceName="ServiceSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="serviceSpecification1554"/>
+      </Serial>
+    </Parallel>
+    <Function ID="10" Label="Validate Service Against Service Specification V3">
+      <Source RefID="11"/>
+      <Source RefID="1542"/>
+      <Source RefID="1554"/>
+      <Source RefID="611"/>
+      <Target RefID="11"/>
+      <Invoke Operation="ValidateServiceAgainstServiceSpecificationV3" ServiceID="11">
+        <Source RefID="1542"/>
+        <Source RefID="1554"/>
+        <Source RefID="611"/>
+      </Invoke>
+      <Receive ServiceID="11"/>
+    </Function>
+    <Data ID="1442" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document1442"/>
+    <Data ID="1443" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document1443"/>
+    <Data ID="1551" ReferenceName="Service" ReferencePath="internalized.tmf640.datamodel" VariableName="service1551">
+      <Data VariableName="id">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data VariableName="href">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data VariableName="category">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data VariableName="description">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data VariableName="endDate">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data VariableName="hasStarted">
+        <Meta>
+          <Type>Boolean</Type>
+        </Meta>
+      </Data>
+      <Data VariableName="isBundle">
+        <Meta>
+          <Type>Boolean</Type>
+        </Meta>
+      </Data>
+      <Data VariableName="isServiceEnabled">
+        <Meta>
+          <Type>Boolean</Type>
+        </Meta>
+      </Data>
+      <Data VariableName="isStateful">
+        <Meta>
+          <Type>Boolean</Type>
+        </Meta>
+      </Data>
+      <Data VariableName="name">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data VariableName="serviceDate">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data VariableName="serviceType">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data VariableName="startDate">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data VariableName="startMode">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data IsList="true" ReferenceName="ExternalIdentifier" ReferencePath="internalized.tmf640.datamodel" VariableName="externalIdentifier"/>
+      <Data IsList="true" ReferenceName="Feature" ReferencePath="internalized.tmf640.datamodel" VariableName="feature"/>
+      <Data IsList="true" ReferenceName="Note" ReferencePath="internalized.tmf640.datamodel" VariableName="note"/>
+      <Data IsList="true" ReferenceName="RelatedPlaceRefOrValue" ReferencePath="internalized.tmf640.datamodel" VariableName="place"/>
+      <Data IsList="true" ReferenceName="RelatedEntityRefOrValue" ReferencePath="internalized.tmf640.datamodel" VariableName="relatedEntity"/>
+      <Data IsList="true" ReferenceName="RelatedParty" ReferencePath="internalized.tmf640.datamodel" VariableName="relatedParty"/>
+      <Data IsList="true" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="serviceCharacteristic"/>
+      <Data IsList="true" ReferenceName="RelatedServiceOrderItem" ReferencePath="internalized.tmf640.datamodel" VariableName="serviceOrderItem"/>
+      <Data IsList="true" ReferenceName="ServiceRelationship" ReferencePath="internalized.tmf640.datamodel" VariableName="serviceRelationship"/>
+      <Data VariableName="state">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data IsList="true" ReferenceName="ResourceRef" ReferencePath="internalized.tmf640.datamodel" VariableName="supportingResource"/>
+      <Data IsList="true" ReferenceName="ServiceRefOrValue" ReferencePath="internalized.tmf640.datamodel" VariableName="supportingService"/>
+      <Data VariableName="atbaseType">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data VariableName="atschemaLocation">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data VariableName="attype">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Data ID="1552" ReferenceName="JSONParsingOptions" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="jSONParsingOptions1552">
+      <Data IsList="true" ReferenceName="ListToMapTransformation" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="listToMapTransformation"/>
+      <Data IsList="true" ReferenceName="MemberSubstitution" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="memberSubstitution"/>
+      <Data VariableName="useLabels">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>true</Value>
+      </Data>
+      <Data ReferenceName="OASDecider" ReferencePath="internalized.tmf640.datamodel.decider" VariableName="objectDecider"/>
+      <Data IsList="true" ReferenceName="ListWrapper" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="listWrapper"/>
+      <Data VariableName="processAllInputGenerically">
+        <Meta>
+          <Type>Boolean</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Data ID="1563" ReferenceName="ServiceSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="serviceSpecification1563">
+      <Data VariableName="id">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data VariableName="href">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data VariableName="description">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data VariableName="isBundle">
+        <Meta>
+          <Type>Boolean</Type>
+        </Meta>
+      </Data>
+      <Data VariableName="lastUpdate">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data VariableName="lifecycleStatus">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data VariableName="name">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data VariableName="version">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data IsList="true" ReferenceName="Constraint" ReferencePath="internalized.tmf633.datamodel" VariableName="constraint"/>
+      <Data IsList="true" ReferenceName="EntitySpecificationRelationship" ReferencePath="internalized.tmf633.datamodel" VariableName="entitySpecRelationship"/>
+      <Data IsList="true" ReferenceName="ExternalIdentifierSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="externalIdentifierSpecification"/>
+      <Data IsList="true" ReferenceName="FeatureSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="featureSpecification"/>
+      <Data IsList="true" ReferenceName="RelatedParty" ReferencePath="internalized.tmf633.datamodel" VariableName="relatedParty"/>
+      <Data IsList="true" ReferenceName="ResourceSpecificationRef" ReferencePath="internalized.tmf633.datamodel" VariableName="resourceSpecification"/>
+      <Data IsList="true" ReferenceName="ServiceLevelSpecificationRef" ReferencePath="internalized.tmf633.datamodel" VariableName="serviceLevelSpecification"/>
+      <Data IsList="true" ReferenceName="ServiceSpecRelationship" ReferencePath="internalized.tmf633.datamodel" VariableName="serviceSpecRelationship"/>
+      <Data IsList="true" ReferenceName="CharacteristicSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="specCharacteristic"/>
+      <Data VariableName="atbaseType">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data VariableName="atschemaLocation">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data VariableName="attype">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Data ID="1564" ReferenceName="JSONParsingOptions" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="jSONParsingOptions1564">
+      <Data IsList="true" ReferenceName="ListToMapTransformation" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="listToMapTransformation"/>
+      <Data IsList="true" ReferenceName="MemberSubstitution" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="memberSubstitution"/>
+      <Data VariableName="useLabels">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>true</Value>
+      </Data>
+      <Data ReferenceName="OASDecider" ReferencePath="internalized.tmf633.datamodel.decider" VariableName="objectDecider"/>
+      <Data IsList="true" ReferenceName="ListWrapper" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="listWrapper"/>
+      <Data VariableName="processAllInputGenerically">
+        <Meta>
+          <Type>Boolean</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Assign ID="1"/>
+  </Operation>
+</Service>

@@ -94,4 +94,35 @@ public class XynaModelUtils {
     }
     return null;
   }
+  
+  
+  public static boolean parentModelHasAdditionalProperties(CodegenModel modelIn) {
+    // Special checks are implemented here to avoid an infinite loop when a model references itself as parent model.
+    // Note: Using a HashSet here instead of a List would then also cause an infinite loop since CodegenModel.hashCode() 
+    // calls the hashCode() of its parent model
+    if (modelIn == null) { return false; }
+    List<CodegenModel> descendantModels = new ArrayList<>();
+    boolean goOn = true;
+    CodegenModel current = modelIn;
+    while (goOn) {
+      if (current.isAdditionalPropertiesTrue) {
+        return true;
+      }
+      CodegenModel parent = current.getParentModel();
+      if (parent == null) {
+        goOn = false;
+      } else {
+        descendantModels.add(current);
+        for (CodegenModel descendant : descendantModels) {
+          if (parent.equals(descendant)) {
+            goOn = false;
+            break;
+          }
+        }
+        current = parent;
+      }
+    }
+    return false;
+  }
+  
 }

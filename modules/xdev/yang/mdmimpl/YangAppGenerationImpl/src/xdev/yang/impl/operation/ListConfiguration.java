@@ -25,10 +25,13 @@ import java.util.function.Function;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Text;
 
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
 import xdev.yang.impl.Constants;
+import xmcp.yang.ListKeyName;
+
 
 public class ListConfiguration {
 
@@ -36,12 +39,18 @@ public class ListConfiguration {
   private String namespaces;
   private String keywords;
   private ListLengthConfig config;
+  private List<String> listKeyNames = new ArrayList<>();
+  
 
-  public ListConfiguration(String yang, String namespaces, String keywords, ListLengthConfig config) {
+  public ListConfiguration(String yang, String namespaces, String keywords, ListLengthConfig config,
+                           List<String> listKeyNames) {
     this.yang = yang;
     this.namespaces = namespaces;
     this.keywords = keywords;
     this.config = config;
+    if (listKeyNames != null) {
+      this.listKeyNames.addAll(listKeyNames);
+    }
   }
   
   public static ListConfiguration loadFromElement(Element element) {
@@ -49,21 +58,49 @@ public class ListConfiguration {
     String namespace = element.getAttribute(Constants.ATT_LIST_CONFIG_NS);
     String keywords = element.getAttribute(Constants.ATT_LIST_CONFIG_KEYWORDS);
     ListLengthConfig config = ListLengthConfig.loadFromElement(element);
-    return new ListConfiguration(yang, namespace, keywords, config);
+    List<String> listKeys = loadListKeyNamesFromXml(element);
+    return new ListConfiguration(yang, namespace, keywords, config, listKeys);
   }
   
-  public void updateNode(Element element) {
+  private static List<String> loadListKeyNamesFromXml(Element element) {
+    List<String> ret = new ArrayList<>();
+    Element child = XMLUtils.getChildElementByName(element, Constants.TAG_LISTKEYS);
+    if (child == null) { return ret; }
+    List<Element> list = XMLUtils.getChildElementsByName(child, Constants.TAG_LISTKEY);
+    if (list == null) { return ret; }
+    for (Element name : list) {
+      if (name == null) { continue; }
+      String val = XMLUtils.getTextContentOrNull(name);
+      if (val != null) {
+        ret.add(val);
+      }
+    }
+    return ret;
+  }
+  
+  public void updateNode(Document document, Element element) {
     element.setAttribute(Constants.ATT_LIST_CONFIG_YANG, yang);
     element.setAttribute(Constants.ATT_LIST_CONFIG_NS, namespaces);
     element.setAttribute(Constants.ATT_LIST_CONFIG_KEYWORDS, keywords);
+    addListKeyNodes(document, element);
     config.updateNode(element);
   }
   
+  private void addListKeyNodes(Document document, Element element) {
+    Element child = document.createElement(Constants.TAG_LISTKEYS);
+    element.appendChild(child);
+    for (String val : listKeyNames) {
+      Element name = document.createElement(Constants.TAG_LISTKEY);
+      child.appendChild(name);
+      Text text = document.createTextNode(val);
+      name.appendChild(text);
+    }
+  }
 
   public void createAndAddElement(Document document) {
     Element listConfigurationsElement = loadListConfigurationsElement(document);
     Element newEntryNode = document.createElement(Constants.TAG_LISTCONFIG);
-    updateNode(newEntryNode);
+    updateNode(document, newEntryNode);
     listConfigurationsElement.appendChild(newEntryNode);
   }
 
@@ -98,11 +135,12 @@ public class ListConfiguration {
     return result;
   }
   
-  public static ListConfiguration fromDatatype(String yang, String ns, String keywords, xmcp.yang.fman.ListConfiguration dtConfig) {
+  public static ListConfiguration fromDatatype(String yang, String ns, String keywords, xmcp.yang.fman.ListConfiguration dtConfig,
+                                               List<? extends ListKeyName> listKeyNames) {
     ListLengthConfig config;
     String configString = dtConfig.getConfig();
     if(configString.isBlank()) {
-      return new ListConfiguration(yang, ns, keywords, new ConstantListLengthConfig(0));
+      return new ListConfiguration(yang, ns, keywords, new ConstantListLengthConfig(0), null);
     }
     if(configString.contains(":")) {
       String variable = configString.substring(0, configString.indexOf(":"));
@@ -111,7 +149,19 @@ public class ListConfiguration {
     } else {
       config = new ConstantListLengthConfig(Integer.valueOf(configString));
     }
-    return new ListConfiguration(yang, ns, keywords, config);
+    return new ListConfiguration(yang, ns, keywords, config, adaptListKeys(listKeyNames));
+  }
+  
+  
+  private static List<String> adaptListKeys(List<? extends ListKeyName> listKeyNames) {
+    List<String> ret = new ArrayList<>();
+    if (listKeyNames == null) { return ret; }
+    for (ListKeyName name : listKeyNames) {
+      if (name == null) { continue; }
+      if (name.getListKeyName() == null) { continue; }
+      ret.add(name.getListKeyName());
+    }
+    return ret;
   }
   
   
@@ -133,6 +183,9 @@ public class ListConfiguration {
     return config;
   }
 
+  public List<String> getListKeyNames() {
+    return listKeyNames;
+  }
   
   public void setConfig(ListLengthConfig config) {
     this.config = config;

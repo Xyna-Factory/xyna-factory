@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2022 Xyna GmbH, Germany
@@ -17,6 +17,6 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <DataType Label="Scheduling Informationen" TypeName="SchedulerBean" TypePath="xprc" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
-	<Data IsList="true" Label="Capacities" ReferenceName="Capacity" ReferencePath="xprc" VariableName="capacities"/> 
+    <Data IsList="true" Label="Capacities" ReferenceName="Capacity" ReferencePath="xprc" VariableName="capacities"/> 
     <Data IsList="true" Label="Vetos" ReferenceName="Veto" ReferencePath="xprc" VariableName="vetos"/>
 </DataType>
