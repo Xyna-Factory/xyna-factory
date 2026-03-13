@@ -133,10 +133,14 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
   public void deployTriggerInstance(DeployTriggerRequest deployTriggerRequest16) {
     try {
       String[] parameter;
-      if (deployTriggerRequest16.getStartParameter() == null) {
+      if (deployTriggerRequest16.getStartParameter() == null && deployTriggerRequest16.getStartParameterArray() == null) {
         parameter = new String[0];
       } else {
-        parameter = deployTriggerRequest16.getStartParameter().split(",");
+        if (deployTriggerRequest16.getStartParameter() != null) {
+          parameter = deployTriggerRequest16.getStartParameter().split(",");
+        } else {
+          parameter = deployTriggerRequest16.getStartParameterArray();
+        }
       }
       activationTrigger.deployTrigger(
         deployTriggerRequest16.getTriggerName(),
