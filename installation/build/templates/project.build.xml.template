@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ -->
+<project name="{{PROJECTNAME}}" basedir=".">
+    <property name="build.type" value="project" />
+    <property name="project.base.dir" value="${basedir}" />
+    <property name="application.dir" value="${basedir}" />
+    <property name="root.dir" value="${project.base.dir}/../xyna-factory" />
+    
+    <property file="${project.base.dir}/server.properties" />
+    <property file="${project.base.dir}/project.properties" />
+    <property file="${application.dir}/workspace.properties" />
+
+    <target name="release" description="create deliverable">
+        <echo message="creating release ${project.name}.${project.version}" />
+        <mkdir dir="${basedir}/release/${project.name}.${project.version}" />
+        <delete includeemptydirs="true" failonerror="false">
+            <fileset dir="${basedir}/release/${project.name}.${project.version}" includes="**/*"/>
+        </delete>
+
+        <antcall target="build-applications" />
+
+        <delete file="${basedir}/release/${project.name}.${project.version}.zip" failonerror="false" />
+        <zip destfile="${basedir}/release/${project.name}.${project.version}.zip" basedir="${basedir}/release/${project.name}.${project.version}"/>
+        <delete directory="${basedir}/release/${project.name}.${project.version}" />
+    </target>
+
+    <target name="build-applications" >
+        <echo message="building applications in ${project.base.dir}/${rtc.path}" />
+        <foreach target="build-release-application" param="build-file">
+            <path>
+                <fileset dir="${project.base.dir}/${rtc.path}" >
+                    <include name="*/build.xml" />
+                </fileset>
+            </path>
+        </foreach>
+    </target>
+
+    <target name="build-release-application">
+        <echo message="building release application: ${build-file}" />
+        <local name="dir.name" />
+        <dirname property="dir.name" file="${build-file}" />
+        <ant antfile="build.xml" target="build" inheritAll="false" dir="${dir.name}" >
+            <property name="target.dir" value="${basedir}/release/${project.name}.${project.version}" />
+        </ant>
+    </target>
+
+    <import file="${root.dir}/installation/build/projectmacros.xml" />
+</project>
