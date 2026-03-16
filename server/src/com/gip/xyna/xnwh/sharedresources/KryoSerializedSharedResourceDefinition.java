@@ -23,36 +23,51 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.ByteBufferOutput;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.util.Pool;
 
 
 
 public class KryoSerializedSharedResourceDefinition<T> extends SharedResourceDefinition<T> {
 
-  private final Kryo kryo;
+  private final Pool<Kryo> kryoPool;
   private final Class<T> clazz;
   private final int bufferSize;
+
 
   public KryoSerializedSharedResourceDefinition(String path, Class<T> clazz, Class<?>... additionalClasses) {
     this(path, clazz, 4096, additionalClasses);
   }
-  
+
+
   public KryoSerializedSharedResourceDefinition(String path, Class<T> clazz, int bufferSize, Class<?>... additionalClasses) {
     super(path);
     this.clazz = clazz;
     this.bufferSize = bufferSize;
-    kryo = new Kryo();
-    kryo.register(clazz);
-    for (Class<?> additioClass : additionalClasses) {
-      kryo.register(additioClass);
-    }
+    kryoPool = new Pool<Kryo>(true, false, 8) {
+
+      protected Kryo create() {
+        Kryo result = new Kryo();
+        result.register(clazz);
+        for (Class<?> additioClass : additionalClasses) {
+          result.register(additioClass);
+        }
+        return result;
+      }
+    };
+
   }
 
 
   @Override
   public byte[] serialize(T value) {
     Output output = new ByteBufferOutput(bufferSize);
-    kryo.writeObjectOrNull(output, value, clazz);
-    output.close();
+    Kryo kryo = kryoPool.obtain();
+    try {
+      kryo.writeObjectOrNull(output, value, clazz);
+      output.close();
+    } finally {
+      kryoPool.free(kryo);
+    }
     return output.toBytes();
   }
 
@@ -60,8 +75,14 @@ public class KryoSerializedSharedResourceDefinition<T> extends SharedResourceDef
   @Override
   public SharedResourceInstance<T> deserialize(byte[] value, String id, Long created) {
     Input input = new Input(value);
-    T val = kryo.readObjectOrNull(input, clazz);
-    input.close();
+    T val;
+    Kryo kryo = kryoPool.obtain();
+    try {
+      val = kryo.readObjectOrNull(input, clazz);
+      input.close();
+    } finally {
+      kryoPool.free(kryo);
+    }
     return new SharedResourceInstance<T>(id, created, val);
   }
 
