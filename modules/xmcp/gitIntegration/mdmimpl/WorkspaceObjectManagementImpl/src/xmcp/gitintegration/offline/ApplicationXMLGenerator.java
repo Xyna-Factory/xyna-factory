@@ -333,13 +333,20 @@ public class ApplicationXMLGenerator {
         ot.setName(ots);
         allOrderTypes.put(ots, ot);
       } else if (ot.getDispatcherDestinations() != null) {
+        boolean foundExecutionDest = false;
         for (DispatcherDestination dd : ot.getDispatcherDestinations()) {
+          if (dd.getDispatcherName().equals(OrderTypeProcessor.DISPATCHERNAME_EXECUTION)) {
+            foundExecutionDest = true;
+          }
           if (dd.getDestinationType().equals(ExecutionType.XYNA_FRACTAL_WORKFLOW.getTypeAsString())) {
             if (!nonWFDestinations.contains(dd.getDestinationValue())) {
               implicitContent.add(WF.getOrCreateInstance(dd.getDestinationValue(), ctx.cache, ctx.revision, ctx.source));
             }
           }
           // FIXME service destination?
+        }
+        if (!foundExecutionDest) {
+          implicitContent.add(WF.getOrCreateInstance(ots, ctx.cache, ctx.revision, ctx.source));
         }
       }
     }
