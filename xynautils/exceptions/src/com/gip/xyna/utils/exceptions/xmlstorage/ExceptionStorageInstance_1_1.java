@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,8 +65,6 @@ public class ExceptionStorageInstance_1_1 extends ExceptionStorageInstance {
 
         JavaClass jc = new JavaClass(entry.getPath(), entry.getName());
         jc.setFqClassNameAdapter(fqClassNameAdapter);
-        
-        jc.addImport(List.class.getName());
         
         baseClassName = jc.setSuperClass(baseClassName);
         if (entry.isAbstract()) {
@@ -145,6 +143,7 @@ public class ExceptionStorageInstance_1_1 extends ExceptionStorageInstance {
         int nParameter = superClassParameter.size() + entry.getParameter().size();
         if (nParameter > 0) {
           CodeBuffer privateEmptyConstructor = new CodeBuffer("Utils");
+          privateEmptyConstructor.addLine("@SuppressWarnings(\"unused\")");
           privateEmptyConstructor.addLine("private ", jc.getSimpleClassName(), "() {");
           String paraString = "";
           for (int i = 0; i<nParameter; i++) {
@@ -237,15 +236,17 @@ public class ExceptionStorageInstance_1_1 extends ExceptionStorageInstance {
         /*
          * getField for typeresistant mappings
          */
-        jc.addImport(Class.class.getName());
         jc.addImport(Field.class.getName());
         jc.addImport(ConcurrentMap.class.getName());
         jc.addImport(ConcurrentHashMap.class.getName());
         jc.addImport(NoSuchFieldException.class.getName());
-        jc.addImport(IllegalArgumentException.class.getName());
+        
+        if(entry.getBaseExceptionName() == null) {
+          jc.addImport(IllegalArgumentException.class.getName());
+        }
         
         jc.addMemberVar("private static " + ConcurrentMap.class.getSimpleName() + "<" + String.class.getSimpleName() + ", " + Field.class.getSimpleName() + "> " + FIELD_MAP_NAME + 
-                          " = new " + ConcurrentHashMap.class.getSimpleName() + "()");
+                          " = new " + ConcurrentHashMap.class.getSimpleName() + "<>()");
         
         CodeBuffer getFieldMethod = new CodeBuffer("Utils");
         generateJavaFieldCache(getFieldMethod, entry);
