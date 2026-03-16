@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Check out the code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
     - name: Prepare central POM
       run: sed -i '/\<\/\?dependencyManagement\>/d' ./installation/build/pom.xml
     - name: Prune POMs
