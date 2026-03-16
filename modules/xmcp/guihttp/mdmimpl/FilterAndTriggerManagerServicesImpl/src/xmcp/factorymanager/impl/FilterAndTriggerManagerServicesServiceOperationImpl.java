@@ -139,7 +139,7 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
         if (deployTriggerRequest16.getStartParameter() != null) {
           parameter = deployTriggerRequest16.getStartParameter().split(",");
         } else {
-          parameter = deployTriggerRequest16.getStartParameterArray();
+          parameter = deployTriggerRequest16.getStartParameterArray().toArray(new String[0]);;
         }
       }
       activationTrigger.deployTrigger(
