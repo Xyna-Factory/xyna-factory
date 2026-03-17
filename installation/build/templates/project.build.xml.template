@@ -37,7 +37,7 @@
 
         <delete file="${basedir}/release/${project.name}.${project.version}.zip" failonerror="false" />
         <zip destfile="${basedir}/release/${project.name}.${project.version}.zip" basedir="${basedir}/release/${project.name}.${project.version}"/>
-        <delete directory="${basedir}/release/${project.name}.${project.version}" />
+        <delete dir="${basedir}/release/${project.name}.${project.version}" />
     </target>
 
     <target name="build-applications" >
