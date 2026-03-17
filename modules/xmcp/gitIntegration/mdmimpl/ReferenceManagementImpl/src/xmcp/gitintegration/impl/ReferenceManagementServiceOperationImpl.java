@@ -42,6 +42,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -66,17 +67,11 @@ import xmcp.gitintegration.ReferenceMethodType;
 public class ReferenceManagementServiceOperationImpl implements ExtendedDeploymentTask, ReferenceManagementServiceOperation {
 
   public void onDeployment() throws XynaException {
-    // TODO do something on deployment, if required
-    // This is executed again on each classloader-reload, that is each
-    // time a dependent object is redeployed, for example a type of an input parameter.
     ReferenceStorage.init();
     OverallInformationProvider.onDeployment();
   }
 
   public void onUndeployment() throws XynaException {
-    // TODO do something on undeployment, if required
-    // This is executed again on each classloader-unload, that is each
-    // time a dependent object is redeployed, for example a type of an input parameter.
     OverallInformationProvider.onUndeployment();
   }
 
@@ -245,6 +240,8 @@ public class ReferenceManagementServiceOperationImpl implements ExtendedDeployme
     List<ObjectWithReferences> objects = loadReferenceObjectNames(revision);
     objects.sort((x,y) -> x.name.compareTo(y.name));
     int idx = 0;
+
+    //references for existing objects
     for(ObjectWithReferences obj : objects) {
       IndexedObjectReference.Builder builder = new IndexedObjectReference.Builder();
       builder.index(idx++);
@@ -260,11 +257,12 @@ public class ReferenceManagementServiceOperationImpl implements ExtendedDeployme
       referenceMap.remove(obj.name);
     }
     
+    //references for objects that do not exist
     for(Entry<String, List<ReferenceStorable>> entry : referenceMap.entrySet()) {
       IndexedObjectReference.Builder builder = new IndexedObjectReference.Builder();
       builder.index(idx++);
       builder.name(entry.getKey());
-      builder.objectType(entry.getValue().get(0).getObjecttype()); //TODO: check if types are consistent
+      builder.objectType(determineObjectType(entry.getValue()));
       List<ReferenceStorable> refs = referenceMap.getOrDefault(entry.getKey(), Collections.emptyList());
       builder.numberOfReferences(refs.size());
       List<Reference> referenceList = refs.stream().map(this::convertToReference).collect(Collectors.toList());
@@ -276,8 +274,20 @@ public class ReferenceManagementServiceOperationImpl implements ExtendedDeployme
     
     return result;
   }
-  
-  
+
+
+  private String determineObjectType(List<ReferenceStorable> storables) {
+    String firstType = storables.get(0).getObjecttype();
+    for (int i = 1; i < storables.size(); i++) {
+      if (!Objects.equals(firstType, storables.get(i).getObjecttype())) {
+        return "INCONSISTENT";
+      }
+    }
+
+    return firstType;
+  }
+
+
   private static class ObjectWithReferences {
     private String name;
     private String type;
