@@ -1,0 +1,10 @@
+*.class
+*.jar
+**/deploy
+**/lib
+**/classes
+**/generated
+**/.classpath
+release
+server.properties
+workspace.properties
