@@ -144,7 +144,7 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     DELETE_TEMPLATE = String.format("DELETE FROM %s WHERE sr_id IN (", tableName);
     INSERT_TEMPLATE = String.format("INSERT INTO %s (sr_path, sr_id, sr_created, sr_data) VALUES\n", tableName);
     SELECT_TEMPLATE = String.format("SELECT * FROM %s WHERE sr_path = ? AND sr_id IN (", tableName);
-    SELECT_ALL_TEMPLATE = String.format("SELECT * FROM %s", tableName);
+    SELECT_ALL_TEMPLATE = String.format("SELECT * FROM %s WHERE sr_path = ?", tableName);
     UPDATE_STATEMENT = String.format("UPDATE %s SET sr_data = ? WHERE sr_path = ? AND sr_id = ?", tableName);
 
     this.tableName = tableName;
