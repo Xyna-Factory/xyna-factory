@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,33 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Deploy Trigger Request" TypeName="DeployTriggerRequest" TypePath="xmcp.factorymanager.filtermanager" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Indexed Repository" TypeName="IndexedRepository" TypePath="xmcp.gitintegration.ui" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Trigger Name" VariableName="triggerName">
+  <Data Label="Index" VariableName="index">
     <Meta>
-      <Type>String</Type>
+      <Type>int</Type>
     </Meta>
   </Data>
-  <Data Label="Trigger Instance Name" VariableName="triggerInstanceName">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="Documentation" VariableName="documentation">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeContext"/>
-  <Data Label="Start Parameter" VariableName="startParameter">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="Start Parameter Array" VariableName="startParameterArray" IsList="true">
+  <Data Label="Repository" VariableName="repository">
     <Meta>
       <Type>String</Type>
     </Meta>

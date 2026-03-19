@@ -48,9 +48,12 @@ import xact.http.enums.httpmethods.HTTPMethod;
 import xact.templates.Document;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import xmcp.factorymanager.filtermanager.DeployFilterRequest;
@@ -112,7 +115,7 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
     if (deployFilterRequest10.getConfigurationParameter() == null) {
       parameter = new String[0];
     } else {
-      parameter = deployFilterRequest10.getConfigurationParameter().split(",");
+      parameter = split(deployFilterRequest10.getConfigurationParameter());
     }
     DeployFilterParameter deployFilterParameter = 
         new DeployFilterParameter.Builder().
@@ -133,10 +136,14 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
   public void deployTriggerInstance(DeployTriggerRequest deployTriggerRequest16) {
     try {
       String[] parameter;
-      if (deployTriggerRequest16.getStartParameter() == null) {
+      if (deployTriggerRequest16.getStartParameter() == null && deployTriggerRequest16.getStartParameterArray() == null) {
         parameter = new String[0];
       } else {
-        parameter = deployTriggerRequest16.getStartParameter().split(",");
+        if (deployTriggerRequest16.getStartParameter() != null) {
+          parameter = split(deployTriggerRequest16.getStartParameter());
+        } else {
+          parameter = deployTriggerRequest16.getStartParameterArray().toArray(new String[0]);;
+        }
       }
       activationTrigger.deployTrigger(
         deployTriggerRequest16.getTriggerName(),
@@ -447,7 +454,7 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
       status(info.getState().serializeToString()).
       description(info.getDescription()).
       runtimeContext(convert(info.getRuntimeContext())).
-      startParameter(info.getStartParameterAsString()).
+      startParameter(separateBySpaces(info.getStartParameter())).
       instance();
   }
 
@@ -467,7 +474,7 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
       status(info.getState().serializeToString()).
       description(info.getDescription()).
       runtimeContext(convert(info.getRuntimeContext())).
-      configurationParameter(String.join(", ", info.getConfiguration())).
+      configurationParameter(separateBySpaces(info.getConfiguration())).
       instance();
   }
   
@@ -575,5 +582,32 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
     } else {
       return "";
     }
+  }
+  
+  private static final Pattern escapedSpaces = Pattern.compile("([^\\s\"']+)|\"([^\"]*)\"|'([^']*)'");
+  
+  private static String[] split(String input) {
+   
+    List<String> ret = new ArrayList<String>();
+    Matcher matcher = escapedSpaces.matcher(input);
+    while (matcher.find()) {
+      for (int i=1; i <= matcher.groupCount(); i++) {
+        if (matcher.group(i) != null) {
+          ret.add(matcher.group(i));
+          break;
+        }
+      }
+    }
+    return ret.toArray(new String[0]);
+  }
+  
+  
+  private static String separateBySpaces(List<String> values) {
+    if (values == null || values.isEmpty()) {
+      return "";
+    }
+    return values.stream().
+        map(value -> value.contains(" ") ? "\"" + value + "\"" : value).
+        reduce("", (w1,w2) -> w1 + " " + w2);
   }
 }
