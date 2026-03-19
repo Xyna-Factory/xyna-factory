@@ -899,6 +899,7 @@ update_xynafactory () {
   replace_dir server/lib ${INSTALL_PREFIX}/server/lib
   replace_child_dirs server/orderinputsourcetypes
   replace_child_dirs server/persistencelayers
+  replace_child_versioned_files server/sharedresourcesynchronizers
   copy_dir server/storage ${INSTALL_PREFIX}/server
   copy_dir server/resources ${INSTALL_PREFIX}/server
   copy_dir server/exceptions ${INSTALL_PREFIX}/server
