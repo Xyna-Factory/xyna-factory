@@ -65,7 +65,7 @@
       <Source RefID="12"/>
       <Target RefID="12"/>
     </ServiceReference>
-    <ServiceReference ID="1571" Label="Build Respose after Error" ReferenceName="BuildResposeAfterError" ReferencePath="xmcp.oas.exception">
+    <ServiceReference ID="1571" Label="OAS Base Api" ReferenceName="OASBaseApi.OASBaseApi" ReferencePath="xmcp.oas.datatype">
       <Source RefID="1570"/>
       <Target RefID="1570"/>
     </ServiceReference>
@@ -255,7 +255,7 @@
         <Source RefID="1975"/>
         <Target RefID="1571"/>
         <Target RefID="1573"/>
-        <Invoke Operation="BuildResposeAfterError" ServiceID="1571">
+        <Invoke Operation="buildResposeAfterError" ServiceID="1571">
           <Source RefID="2"/>
           <Source RefID="1975"/>
         </Invoke>
