@@ -518,6 +518,7 @@ public class RepositoryInteraction {
     builder.repository(data.repository);
     builder.reverts(reverts);
     builder.warnings(data.warnings);
+    builder.newWorkspaces(data.newWorkspaces);
     return builder.instance();
   }
 
@@ -1139,6 +1140,59 @@ public class RepositoryInteraction {
       String diffs = String.join(", ", diff.stream().map(x -> x.toString()).collect(Collectors.toList()));
       logger.debug("added " + diff.size() + " remote diffs. " + diffs);
     }
+    loadNewWorkspaces(git, repository, container, diff);
+  }
+
+  private void loadNewWorkspaces(Git git, Repository repository, GitDataContainer container, List<DiffEntry> diffs) {
+    String path = container.repository;
+    boolean savedInRepo = determineSavedInRepoDefault(container.repository);
+    //find new workspace.xml files - entries are paths relative to repository root
+    List<String> newWorkspaceXmlPaths = new ArrayList<>();
+    for (DiffEntry entry : diffs) {
+      if (entry.getChangeType() == ChangeType.ADD && Path.of(entry.getNewPath()).getFileName().toString().equals("workspace.xml")) {
+        newWorkspaceXmlPaths.add(entry.getNewPath());
+      }
+    }
+
+    List<RepositoryConnection> newConnections = new ArrayList<>();
+    for (String subPath : newWorkspaceXmlPaths) {
+      try {
+        String contentXml = readRemoteFile(repository, subPath, getTrackingBranch(repository));
+        Text contentAsText = new Text.Builder().text(contentXml).instance();
+        WorkspaceContent content = WorkspaceObjectManagement.createWorkspaceContentFromText(List.of(contentAsText));
+        String wsName = content.getWorkspaceName();
+        RepositoryConnection connection = new RepositoryConnection(wsName, path, subPath, savedInRepo, content.getSplit());
+        newConnections.add(connection);
+      } catch (Exception e) {
+        container.warnings.add("Could not read workspace.xml from remote at " + subPath);
+      }
+    }
+
+    Collections.sort(newConnections, (w1, w2) -> w1.getWorkspaceName().compareTo(w2.getWorkspaceName()));
+    container.newWorkspaces = newConnections;
+  }
+
+
+  private boolean determineSavedInRepoDefault(String repository) {
+    //TODO:
+    return false;
+  }
+
+
+  private String readRemoteFile(Repository repository, String file, String revString) throws Exception {
+    try (RevWalk revWalk = new RevWalk(repository)) {
+      ObjectId branchId = repository.resolve(revString);
+      RevCommit commit = revWalk.parseCommit(branchId);
+      try (TreeWalk treeWalk = new TreeWalk(repository)) {
+        treeWalk.addTree(commit.getTree());
+        treeWalk.setRecursive(true);
+        treeWalk.setFilter(PathFilter.create(file));
+        if (!treeWalk.next()) {
+          return null;
+        }
+        return new String(repository.open(treeWalk.getObjectId(0)).getBytes());
+      }
+    }
   }
 
 
@@ -1238,6 +1292,7 @@ public class RepositoryInteraction {
     private List<PullExec> exec = new ArrayList<>();
     private List<String> warnings = new ArrayList<>();
     private List<String> diffListIds = new ArrayList<>();
+    private List<RepositoryConnection> newWorkspaces = new ArrayList<>();
     private XynaRepoCredentials creds; //only used within this class
     private String user;
     private String mail;
