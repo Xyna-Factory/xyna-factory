@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Manage References Definition" TypeName="ManageReferencesDefinition" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Manage References Definition" Name="ManageReferencesDefinition">
+    <Input>
+      <Data ID="110" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection110"/>
+    </Input>
+    <Output>
+      <Data ID="14" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition14"/>
+      <Data ID="600" IsList="true" Label="Indexed Object Reference" ReferenceName="IndexedObjectReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedObjectReference600"/>
+      <Data ID="728" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection728"/>
+    </Output>
+    <ServiceReference ID="299" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="298"/>
+      <Target RefID="298"/>
+    </ServiceReference>
+    <ServiceReference ID="572" Label="Create Reference Panels" ReferenceName="CreateReferencePanels" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="571"/>
+      <Target RefID="571"/>
+    </ServiceReference>
+    <Function ID="298" Label="get Own RuntimeContext">
+      <Source RefID="299"/>
+      <Target RefID="299"/>
+      <Target RefID="301"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="299"/>
+      <Receive ServiceID="299">
+        <Target RefID="301"/>
+      </Receive>
+    </Function>
+    <Function ID="571" Label="Create Reference Panels">
+      <Source RefID="572"/>
+      <Source RefID="110"/>
+      <Target RefID="572"/>
+      <Target RefID="629"/>
+      <Target RefID="630"/>
+      <Invoke Operation="CreateReferencePanels" ServiceID="572">
+        <Source RefID="110"/>
+      </Invoke>
+      <Receive ServiceID="572">
+        <Target RefID="629"/>
+        <Target RefID="630"/>
+      </Receive>
+    </Function>
+    <Mappings ID="757" Label="Mapping">
+      <Output>
+        <Data ID="782" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition782">
+          <Source RefID="757"/>
+        </Data>
+        <Target RefID="783"/>
+      </Output>
+      <Mapping>%0%.dataPath="%1%.workspaceName"</Mapping>
+    </Mappings>
+    <Mappings ID="27" Label="Mapping">
+      <Input>
+        <Data ID="318" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext318">
+          <Source RefID="27"/>
+        </Data>
+        <Source RefID="301"/>
+      </Input>
+      <Input>
+        <Data ID="703" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition703">
+          <Source RefID="27"/>
+        </Data>
+        <Source RefID="629"/>
+      </Input>
+      <Input>
+        <Data ID="856" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition856">
+          <Source RefID="27"/>
+        </Data>
+        <Source RefID="783"/>
+      </Input>
+      <Output>
+        <Data ID="383" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition383">
+          <Source RefID="27"/>
+        </Data>
+        <Target RefID="384"/>
+      </Output>
+      <Mapping>%3%.label="Manage References"</Mapping>
+      <Mapping>%3%.children=%1%</Mapping>
+      <Mapping>%3%.closable="true"</Mapping>
+      <Mapping>%3%.header.leftArea.children["0"]=%2%</Mapping>
+    </Mappings>
+    <Data ID="301" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext301">
+      <Source RefID="298"/>
+    </Data>
+    <Data ID="384" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition384">
+      <Source RefID="27"/>
+    </Data>
+    <Data ID="629" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition629">
+      <Source RefID="571"/>
+    </Data>
+    <Data ID="630" IsList="true" Label="Indexed Object Reference" ReferenceName="IndexedObjectReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedObjectReference630">
+      <Source RefID="571"/>
+    </Data>
+    <Data ID="783" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition783">
+      <Source RefID="757"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="384"/>
+      <Source RefID="630"/>
+      <Source RefID="110"/>
+      <Target RefID="14"/>
+      <Target RefID="600"/>
+      <Target RefID="728"/>
+      <Copy>
+        <Source RefID="384"/>
+        <Target RefID="14"/>
+      </Copy>
+      <Copy>
+        <Source RefID="630"/>
+        <Target RefID="600"/>
+      </Copy>
+      <Copy>
+        <Source RefID="110"/>
+        <Target RefID="728"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

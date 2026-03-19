@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Execute Add Reference" TypeName="ExecuteAddReference" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Execute Add Reference" Name="ExecuteAddReference">
+    <Input>
+      <Data ID="29" Label="Reference Data" ReferenceName="ReferenceData" ReferencePath="xmcp.gitintegration" VariableName="referenceData29"/>
+      <Data ID="153" Label="Indexed Object Reference" ReferenceName="IndexedObjectReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedObjectReference153"/>
+    </Input>
+    <Output>
+      <Data ID="83" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition83"/>
+      <Data ID="112" IsList="true" Label="Indexed Reference" ReferenceName="IndexedReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedReference112"/>
+      <Data ID="254" Label="Indexed Object Reference" ReferenceName="IndexedObjectReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedObjectReference254"/>
+    </Output>
+    <ServiceReference ID="11" Label="Reference Management" ReferenceName="ReferenceManagement.ReferenceManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="10"/>
+      <Target RefID="10"/>
+    </ServiceReference>
+    <ServiceReference ID="57" Label="Create Object References Reference Definition" ReferenceName="CreateObjectReferencesReferenceDefinition" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="56"/>
+      <Target RefID="56"/>
+    </ServiceReference>
+    <Function ID="10" Label="Add Reference">
+      <Source RefID="11"/>
+      <Source RefID="29"/>
+      <Target RefID="11"/>
+      <Invoke Operation="addReference" ServiceID="11">
+        <Source RefID="29"/>
+      </Invoke>
+      <Receive ServiceID="11"/>
+    </Function>
+    <Function ID="56" Label="Create Object References Reference Definition">
+      <Source RefID="57"/>
+      <Source RefID="153"/>
+      <Target RefID="57"/>
+      <Target RefID="54"/>
+      <Target RefID="55"/>
+      <Invoke Operation="CreateObjectReferencesReferenceDefinition" ServiceID="57">
+        <Source RefID="153"/>
+      </Invoke>
+      <Receive ServiceID="57">
+        <Target RefID="54"/>
+        <Target RefID="55"/>
+      </Receive>
+    </Function>
+    <Data ID="54" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition54"/>
+    <Data ID="55" IsList="true" Label="Indexed Reference" ReferenceName="IndexedReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedReference55"/>
+    <Assign ID="1">
+      <Source RefID="54"/>
+      <Source RefID="55"/>
+      <Source RefID="153"/>
+      <Target RefID="83"/>
+      <Target RefID="112"/>
+      <Target RefID="254"/>
+      <Copy>
+        <Source RefID="54"/>
+        <Target RefID="83"/>
+      </Copy>
+      <Copy>
+        <Source RefID="55"/>
+        <Target RefID="112"/>
+      </Copy>
+      <Copy>
+        <Source RefID="153"/>
+        <Target RefID="254"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
