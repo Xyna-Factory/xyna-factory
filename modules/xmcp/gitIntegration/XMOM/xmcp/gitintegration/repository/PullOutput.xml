@@ -80,5 +80,5 @@
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data IsList="true" Label="New Workspaces" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="newWorkspaces"/>
+  <Data IsList="true" Label="New Workspaces" ReferenceName="WorkspaceConnectionData" ReferencePath="xmcp.gitintegration.repository" VariableName="newWorkspaces"/>
 </DataType>

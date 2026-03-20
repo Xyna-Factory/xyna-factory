@@ -114,6 +114,7 @@ import xmcp.gitintegration.repository.PullOutput;
 import xmcp.gitintegration.repository.RepositoryConnection;
 import xmcp.gitintegration.repository.RepositoryStatus;
 import xmcp.gitintegration.repository.RepositoryUser;
+import xmcp.gitintegration.repository.WorkspaceConnectionData;
 import xmcp.gitintegration.storage.ReferenceStorable;
 import xmcp.gitintegration.storage.ReferenceStorage;
 import xmcp.gitintegration.storage.UserManagementStorage;
@@ -1143,9 +1144,9 @@ public class RepositoryInteraction {
     loadNewWorkspaces(git, repository, container, diff);
   }
 
+
   private void loadNewWorkspaces(Git git, Repository repository, GitDataContainer container, List<DiffEntry> diffs) {
     String path = container.repository;
-    boolean savedInRepo = determineSavedInRepoDefault(container.repository);
     //find new workspace.xml files - entries are paths relative to repository root
     List<String> newWorkspaceXmlPaths = new ArrayList<>();
     for (DiffEntry entry : diffs) {
@@ -1154,28 +1155,26 @@ public class RepositoryInteraction {
       }
     }
 
-    List<RepositoryConnection> newConnections = new ArrayList<>();
-    for (String subPath : newWorkspaceXmlPaths) {
+    List<WorkspaceConnectionData> newConnections = new ArrayList<>();
+    for (String workspaceXmlPath : newWorkspaceXmlPaths) {
       try {
-        String contentXml = readRemoteFile(repository, subPath, getTrackingBranch(repository));
+        String contentXml = readRemoteFile(repository, workspaceXmlPath, getTrackingBranch(repository));
         Text contentAsText = new Text.Builder().text(contentXml).instance();
         WorkspaceContent content = WorkspaceObjectManagement.createWorkspaceContentFromText(List.of(contentAsText));
         String wsName = content.getWorkspaceName();
-        RepositoryConnection connection = new RepositoryConnection(wsName, path, subPath, savedInRepo, content.getSplit());
-        newConnections.add(connection);
+        WorkspaceConnectionData.Builder connection = new WorkspaceConnectionData.Builder();
+        connection.full(false);
+        connection.path(path);
+        connection.setup(true);
+        connection.workspace(wsName);
+        newConnections.add(connection.instance());
       } catch (Exception e) {
-        container.warnings.add("Could not read workspace.xml from remote at " + subPath);
+        container.warnings.add("Could not read workspace.xml from remote at " + workspaceXmlPath);
       }
     }
 
-    Collections.sort(newConnections, (w1, w2) -> w1.getWorkspaceName().compareTo(w2.getWorkspaceName()));
+    Collections.sort(newConnections, (w1, w2) -> w1.getWorkspace().compareTo(w2.getWorkspace()));
     container.newWorkspaces = newConnections;
-  }
-
-
-  private boolean determineSavedInRepoDefault(String repository) {
-    //TODO:
-    return false;
   }
 
 
@@ -1292,7 +1291,7 @@ public class RepositoryInteraction {
     private List<PullExec> exec = new ArrayList<>();
     private List<String> warnings = new ArrayList<>();
     private List<String> diffListIds = new ArrayList<>();
-    private List<RepositoryConnection> newWorkspaces = new ArrayList<>();
+    private List<WorkspaceConnectionData> newWorkspaces = new ArrayList<>();
     private XynaRepoCredentials creds; //only used within this class
     private String user;
     private String mail;
