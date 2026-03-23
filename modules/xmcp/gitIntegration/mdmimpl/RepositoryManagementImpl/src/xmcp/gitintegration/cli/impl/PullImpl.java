@@ -21,6 +21,7 @@ package xmcp.gitintegration.cli.impl;
 
 import java.io.OutputStream;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xmcp.xfcli.ReturnCode;
@@ -28,6 +29,7 @@ import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 import xmcp.gitintegration.cli.generated.Pull;
 import xmcp.gitintegration.impl.RepositoryInteraction;
 import xmcp.gitintegration.repository.PullOutput;
+import xmcp.gitintegration.repository.WorkspaceConnectionData;
 import xmcp.gitintegration.storage.UserManagementStorage;
 
 
@@ -58,6 +60,7 @@ public class PullImpl extends XynaCommandImplementation<Pull> {
     List<String> localDiffString = output.getLocalChanges();
     List<String> remoteDiffString = output.getRemoteChanges();
     List<String> diffListIds = output.getOpenedWorkspaceDiffLists();
+    List<? extends WorkspaceConnectionData> newWorkspaces = output.getNewWorkspaces();
     sb.append("Data for repository: ").append(output.getRepository()).append("\n");
     if(output.getException() != null) {
       sb.append("An exception ocurred: ").append(output.getException()).append("\n");
@@ -72,6 +75,10 @@ public class PullImpl extends XynaCommandImplementation<Pull> {
     }
     if(diffListIds != null && !diffListIds.isEmpty()) {
       appendField(sb, "DiffLists", diffListIds);
+    }
+    if(newWorkspaces != null && !newWorkspaces.isEmpty()) {
+      List<String> workspaces = newWorkspaces.stream().map(x -> x.getWorkspace()).collect(Collectors.toList());
+      appendField(sb, "New Workspaces", workspaces);
     }
     return sb.toString();
   }
