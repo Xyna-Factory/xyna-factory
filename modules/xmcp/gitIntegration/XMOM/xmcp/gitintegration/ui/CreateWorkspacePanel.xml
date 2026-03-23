@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -117,7 +117,7 @@
         <Source RefID="3635"/>
       </Input>
       <Output>
-        <Data ID="2013" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition2013">
+        <Data ID="2013" Label="Open Details Button Definition - workspace-xml" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition2013">
           <Source RefID="2004"/>
         </Data>
         <Target RefID="3432"/>
@@ -125,6 +125,50 @@
       <Mapping>%1%.label="Manage workspace-xml..."</Mapping>
       <Mapping>%1%.dataPath=null</Mapping>
       <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%0%</Mapping>
+    </Mappings>
+    <Mappings ID="4749" Label="Mapping">
+      <Input>
+        <Data ID="4897" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext4897">
+          <Source RefID="4749"/>
+        </Data>
+        <Source RefID="2156"/>
+      </Input>
+      <Input>
+        <Data ID="5082" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text5082">
+          <Source RefID="4749"/>
+        </Data>
+        <Source RefID="4150"/>
+      </Input>
+      <Output>
+        <Data ID="4766" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow4766">
+          <Source RefID="4749"/>
+        </Data>
+        <Target RefID="4767"/>
+      </Output>
+      <Mapping>%2%.dataPath=concat(%1%.text, ".repositoryConnection")</Mapping>
+      <Mapping>%2%.rTC=%0%</Mapping>
+      <Mapping>%2%.fQN="xmcp.gitintegration.ui.ManageReferencesDefinition"</Mapping>
+    </Mappings>
+    <Mappings ID="4594" Label="Mapping">
+      <Input>
+        <Data ID="4784" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow4784">
+          <Source RefID="4594"/>
+        </Data>
+        <Source RefID="4767">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="4611" Label="Open Details Button Definition - references" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition4611">
+          <Source RefID="4594"/>
+        </Data>
+        <Target RefID="4612"/>
+      </Output>
+      <Mapping>%1%.label="Manage references..."</Mapping>
+      <Mapping>%1%.dataPath=null</Mapping>
+      <Mapping>%1%.detailsDefinitionReference=%0%</Mapping>
     </Mappings>
     <Mappings ID="11" Label="Mapping">
       <Input>
@@ -136,7 +180,7 @@
         </Source>
       </Input>
       <Input>
-        <Data ID="2023" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition2023">
+        <Data ID="2023" Label="Open Details Button Definition - workspace-xml" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition2023">
           <Source RefID="1886"/>
         </Data>
         <Source RefID="3432">
@@ -153,12 +197,23 @@
           </Meta>
         </Source>
       </Input>
+      <Input>
+        <Data ID="5155" Label="Open Details Button Definition - references" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition5155">
+          <Source RefID="11"/>
+        </Data>
+        <Source RefID="4612">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
       <Output>
         <Data ID="18" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition18"/>
         <Target RefID="10"/>
       </Output>
-      <Mapping>%3%.label=concat(%0%.workspaceName, " (", %0%.subpath, ")")</Mapping>
-      <Mapping>%3%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%1%</Mapping>
+      <Mapping>%4%.label=concat(%0%.workspaceName, " (", %0%.subpath, ")")</Mapping>
+      <Mapping>%4%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%3%</Mapping>
+      <Mapping>%4%.header.rightArea.children["1"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%1%</Mapping>
     </Mappings>
     <Data ID="10" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition10"/>
     <Data ID="1716" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection1716">
@@ -174,6 +229,12 @@
       <Source RefID="3617"/>
     </Data>
     <Data ID="4150" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text4150"/>
+    <Data ID="4612" Label="Open Details Button Definition - workspace.xml" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition4612">
+      <Source RefID="4594"/>
+    </Data>
+    <Data ID="4767" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow4767">
+      <Source RefID="4749"/>
+    </Data>
     <Assign ID="1">
       <Source RefID="10"/>
       <Target RefID="107"/>
