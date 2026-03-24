@@ -464,7 +464,7 @@
 				<arg value="${xyna.version}" />
 				<arg value="${subtype.exclusions}" />
 				<arg value="${application.xml.output.file}" />
-				<arg value="-e" unless:true="application.gen.use.application.definition"/>
+				<arg value="-e" unless:true="${application.gen.use.application.definition}"/>
 				<classpath>
 					<!-- jars to be created by installation/build.sh install_gitintegration_libs -->
 					<fileset dir="${antUtils.dir}lib/gitintegration">
