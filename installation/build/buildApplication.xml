@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
-<project name="buildApplication" basedir=".">
+<project name="buildApplication" basedir="." xmlns:unless="ant:unless">
     <import file="macros.xml" />
     <property name="application.dir" value="${basedir}/../.." />
     <property file="${basedir}/server.properties" />
@@ -455,7 +455,8 @@
 			<!-- as described in documentation of xynaproperty xfmg.xfctrl.appmgmt.excludedsubtypesof -->
 			<property name="subtype.exclusions" value="" />
 			<property name="application.xml.output.file" value="${basedir}/application.xml" />
-
+	    	<!-- if false, ignore application definition and include everything from the workspace -->
+			<property name="application.gen.use.application.definition" value="true" />
 			<java classname="xmcp.gitintegration.offline.ApplicationXMLGenerator" fork="true" failonerror="true">
 				<arg value="${workspacexml.dir}" />
 				<arg value="${xmom.dir}" />
@@ -463,6 +464,7 @@
 				<arg value="${xyna.version}" />
 				<arg value="${subtype.exclusions}" />
 				<arg value="${application.xml.output.file}" />
+				<arg value="-e" unless:true="application.gen.use.application.definition"/>
 				<classpath>
 					<!-- jars to be created by installation/build.sh install_gitintegration_libs -->
 					<fileset dir="${antUtils.dir}lib/gitintegration">
