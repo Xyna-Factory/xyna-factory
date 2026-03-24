@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Create Object References Reference Definition" TypeName="CreateObjectReferencesReferenceDefinition" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Create Object References Reference Definition" Name="CreateObjectReferencesReferenceDefinition">
+    <Input>
+      <Data ID="2" Label="Indexed Object Reference" ReferenceName="IndexedObjectReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedObjectReference2"/>
+    </Input>
+    <Output>
+      <Data ID="7" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition7"/>
+      <Data ID="315" IsList="true" Label="Indexed Reference" ReferenceName="IndexedReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedReference315"/>
+    </Output>
+    <ServiceReference ID="285" Label="Create Single Reference Panel " ReferenceName="CreateSingleReferencePanel" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="284"/>
+      <Target RefID="284"/>
+    </ServiceReference>
+    <ServiceReference ID="240" Label="Reference Management" ReferenceName="ReferenceManagement.ReferenceManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="239"/>
+      <Target RefID="239"/>
+    </ServiceReference>
+    <Function ID="239" Label="Load References of Object">
+      <Source RefID="240"/>
+      <Source RefID="2"/>
+      <Target RefID="240"/>
+      <Target RefID="242"/>
+      <Invoke Operation="loadReferencesOfObject" ServiceID="240">
+        <Source RefID="2"/>
+      </Invoke>
+      <Receive ServiceID="240">
+        <Target RefID="242"/>
+      </Receive>
+    </Function>
+    <Foreach ID="288">
+      <Source RefID="242"/>
+      <Target RefID="290"/>
+      <InputList RefID="242">
+        <Data ID="289" Label="Indexed Reference" ReferenceName="IndexedReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedReference289"/>
+      </InputList>
+      <OutputList RefID="290">
+        <Data ID="287" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition287">
+          <Source RefID="284"/>
+        </Data>
+      </OutputList>
+      <Function ID="284" Label="Create Single Reference Panel ">
+        <Source RefID="285"/>
+        <Source RefID="289"/>
+        <Target RefID="285"/>
+        <Target RefID="287"/>
+        <Invoke Operation="CreateSingleReferencePanel" ServiceID="285">
+          <Source RefID="289"/>
+        </Invoke>
+        <Receive ServiceID="285">
+          <Target RefID="287"/>
+        </Receive>
+      </Function>
+    </Foreach>
+    <Data ID="242" IsList="true" Label="Indexed Reference" ReferenceName="IndexedReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedReference242">
+      <Source RefID="239"/>
+    </Data>
+    <Data ID="290" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition290">
+      <Source RefID="288"/>
+      <Target RefID="290"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="290"/>
+      <Source RefID="242"/>
+      <Target RefID="7"/>
+      <Target RefID="315"/>
+      <Copy>
+        <Source RefID="290"/>
+        <Target RefID="7"/>
+      </Copy>
+      <Copy>
+        <Source RefID="242"/>
+        <Target RefID="315"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Execute Add Local Workspace To Repository" TypeName="ExecuteAddLocalWorkspaceToRepository" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Execute Add Local Workspace To Repository" Name="ExecuteAddLocalWorkspaceToRepository">
+    <Input>
+      <Data ID="26" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection26"/>
+    </Input>
+    <Output>
+      <Data ID="107" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition107"/>
+      <Data ID="136" IsList="true" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui" VariableName="repositoryConnectionGroupGuiData136"/>
+      <Data ID="165" IsList="true" Label="Info Diff Repository" ReferenceName="InfoDiffRepository" ReferencePath="xmcp.gitintegration" VariableName="infoDiffRepository165"/>
+    </Output>
+    <ServiceReference ID="52" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="51"/>
+      <Target RefID="51"/>
+    </ServiceReference>
+    <ServiceReference ID="81" Label="Create Main Panel Child Elements" ReferenceName="CreateMainPanelChildElements" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="80"/>
+      <Target RefID="80"/>
+    </ServiceReference>
+    <Function ID="51" Label="Add Local Workspace to Repository">
+      <Source RefID="52"/>
+      <Source RefID="26"/>
+      <Target RefID="52"/>
+      <Invoke Operation="addLocalWorkspaceToRepository" ServiceID="52">
+        <Source RefID="26"/>
+      </Invoke>
+      <Receive ServiceID="52"/>
+    </Function>
+    <Function ID="80" Label="Create Main Panel Child Elements">
+      <Source RefID="81"/>
+      <Target RefID="81"/>
+      <Target RefID="77"/>
+      <Target RefID="78"/>
+      <Target RefID="79"/>
+      <Invoke Operation="CreateMainPanelChildElements" ServiceID="81"/>
+      <Receive ServiceID="81">
+        <Target RefID="77"/>
+        <Target RefID="78"/>
+        <Target RefID="79"/>
+      </Receive>
+    </Function>
+    <Data ID="77" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition77"/>
+    <Data ID="78" IsList="true" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui" VariableName="repositoryConnectionGroupGuiData78"/>
+    <Data ID="79" IsList="true" Label="Info Diff Repository" ReferenceName="InfoDiffRepository" ReferencePath="xmcp.gitintegration" VariableName="infoDiffRepository79"/>
+    <Assign ID="1">
+      <Source RefID="77"/>
+      <Source RefID="78"/>
+      <Source RefID="79"/>
+      <Target RefID="107"/>
+      <Target RefID="136"/>
+      <Target RefID="165"/>
+      <Copy>
+        <Source RefID="77"/>
+        <Target RefID="107"/>
+      </Copy>
+      <Copy>
+        <Source RefID="78"/>
+        <Target RefID="136"/>
+      </Copy>
+      <Copy>
+        <Source RefID="79"/>
+        <Target RefID="165"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

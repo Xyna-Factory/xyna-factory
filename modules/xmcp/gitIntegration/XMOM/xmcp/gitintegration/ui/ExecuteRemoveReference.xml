@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Execute Remove Reference" TypeName="ExecuteRemoveReference" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Execute Remove Reference" Name="ExecuteRemoveReference">
+    <Input>
+      <Data ID="30" Label="Indexed Object Reference" ReferenceName="IndexedObjectReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedObjectReference30"/>
+      <Data ID="348" Label="Reference" ReferenceName="Reference" ReferencePath="xmcp.gitintegration" VariableName="reference348"/>
+    </Input>
+    <Output>
+      <Data ID="447" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition447"/>
+      <Data ID="476" IsList="true" Label="Indexed Reference" ReferenceName="IndexedReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedReference476"/>
+      <Data ID="589" Label="Indexed Object Reference" ReferenceName="IndexedObjectReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedObjectReference589"/>
+    </Output>
+    <ServiceReference ID="61" Label="Reference Management" ReferenceName="ReferenceManagement.ReferenceManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="60"/>
+      <Target RefID="60"/>
+    </ServiceReference>
+    <ServiceReference ID="421" Label="Create Object References Reference Definition" ReferenceName="CreateObjectReferencesReferenceDefinition" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="420"/>
+      <Target RefID="420"/>
+    </ServiceReference>
+    <Mappings ID="95" Label="Mapping">
+      <Input>
+        <Data ID="226" Label="Indexed Object Reference" ReferenceName="IndexedObjectReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedObjectReference226">
+          <Source RefID="95"/>
+        </Data>
+        <Source RefID="30"/>
+      </Input>
+      <Input>
+        <Data ID="369" Label="Reference" ReferenceName="Reference" ReferencePath="xmcp.gitintegration" VariableName="reference369">
+          <Source RefID="95"/>
+        </Data>
+        <Source RefID="348"/>
+      </Input>
+      <Output>
+        <Data ID="112" Label="Remove Reference Data" ReferenceName="RemoveReferenceData" ReferencePath="xmcp.gitintegration" VariableName="removeReferenceData112">
+          <Source RefID="95"/>
+        </Data>
+        <Target RefID="113"/>
+      </Output>
+      <Mapping>%2%.objectName=%0%.name</Mapping>
+      <Mapping>%2%.path=%1%.path</Mapping>
+      <Mapping>%2%.workspaceName=%0%.workspaceName</Mapping>
+    </Mappings>
+    <Function ID="60" Label="Remove Reference">
+      <Source RefID="61"/>
+      <Source RefID="113"/>
+      <Target RefID="61"/>
+      <Invoke Operation="removeReference" ServiceID="61">
+        <Source RefID="113"/>
+      </Invoke>
+      <Receive ServiceID="61"/>
+    </Function>
+    <Function ID="420" Label="Create Object References Reference Definition">
+      <Source RefID="421"/>
+      <Source RefID="30"/>
+      <Target RefID="421"/>
+      <Target RefID="418"/>
+      <Target RefID="419"/>
+      <Invoke Operation="CreateObjectReferencesReferenceDefinition" ServiceID="421">
+        <Source RefID="30"/>
+      </Invoke>
+      <Receive ServiceID="421">
+        <Target RefID="418"/>
+        <Target RefID="419"/>
+      </Receive>
+    </Function>
+    <Data ID="113" Label="Remove Reference Data" ReferenceName="RemoveReferenceData" ReferencePath="xmcp.gitintegration" VariableName="removeReferenceData113">
+      <Source RefID="95"/>
+    </Data>
+    <Data ID="418" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition418"/>
+    <Data ID="419" IsList="true" Label="Indexed Reference" ReferenceName="IndexedReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedReference419"/>
+    <Assign ID="1">
+      <Source RefID="418"/>
+      <Source RefID="419"/>
+      <Source RefID="30"/>
+      <Target RefID="447"/>
+      <Target RefID="476"/>
+      <Target RefID="589"/>
+      <Copy>
+        <Source RefID="418"/>
+        <Target RefID="447"/>
+      </Copy>
+      <Copy>
+        <Source RefID="419"/>
+        <Target RefID="476"/>
+      </Copy>
+      <Copy>
+        <Source RefID="30"/>
+        <Target RefID="589"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

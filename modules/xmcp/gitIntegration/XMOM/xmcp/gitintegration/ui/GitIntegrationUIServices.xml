@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -135,6 +135,73 @@ return new Container(
     new XynaObjectList&lt;TextItemDefinition&gt;(untracked, TextItemDefinition.class), 
     new XynaObjectList&lt;TextItemDefinition&gt;(changes, TextItemDefinition.class), 
     new XynaObjectList&lt;TextItemDefinition&gt;(missing, TextItemDefinition.class));</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="List Repositories" Name="listRepositories">
+      <Input/>
+      <Output>
+        <Data ID="5339" IsList="true" Label="Indexed Repository" ReferenceName="IndexedRepository" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedRepository5339"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">List&lt;? extends xmcp.gitintegration.repository.RepositoryConnection&gt; connections = xmcp.gitintegration.RepositoryManagement.listRepositoryConnections();
+List&lt;IndexedRepository&gt; result = new ArrayList&lt;&gt;();
+Set&lt;String&gt; repositoryNames = new HashSet&lt;&gt;();
+for(xmcp.gitintegration.repository.RepositoryConnection connection : connections) {
+  repositoryNames.add(connection.getPath());
+}
+
+int index = 0;
+for(String repositoryName : repositoryNames) {
+    result.add(new IndexedRepository.Builder().index(index++).repository(repositoryName).instance());
+}
+
+return result;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create New Workspaces Text Item Definitions" Name="createNewWorkspacesTextItemDefinitions">
+      <Input>
+        <Data ID="5340" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput5340"/>
+      </Input>
+      <Output>
+        <Data ID="5341" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition5341"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">List&lt;String&gt; remoteChanges = pullOutput5340.getNewWorkspaces().stream().map(x -&gt; x.getWorkspace()).collect(java.util.stream.Collectors.toList());
+List&lt;? extends TextItemDefinition&gt; definitions = createTextItemDefinitionsFromStringList(remoteChanges, "newWorkspaces");
+for(TextItemDefinition definition : definitions) {
+    definition.unversionedSetDataPath(definition.getDataPath() + ".workspace");
+}
+
+return definitions;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create Add Workspace Connection Open Details Buttons" Name="createAddWorkspaceConnectionOpenDetailsButtons">
+      <Input>
+        <Data ID="5342" IsList="true" Label="Workspace Connection Data" ReferenceName="WorkspaceConnectionData" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceConnectionData5342"/>
+        <Data ID="7326" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext7326"/>
+      </Input>
+      <Output>
+        <Data ID="5343" IsList="true" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition5343"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">List&lt;OpenDetailsButtonDefinition&gt; result = new ArrayList&lt;&gt;();
+if(workspaceConnectionData5342 == null) {
+    return result;
+}
+
+for(int i=0; i&lt;workspaceConnectionData5342.size(); i++) {
+    WorkspaceConnectionData data = workspaceConnectionData5342.get(i);
+    OpenDetailsButtonDefinition.Builder builder = new OpenDetailsButtonDefinition.Builder();
+    builder.label(String.format("Connect %s ...", data.getWorkspace()));
+    xmcp.forms.datatypes.DefinitionWorkflow.Builder referenceWorkflow = new xmcp.forms.datatypes.DefinitionWorkflow.Builder();
+    referenceWorkflow.rTC(runtimeContext7326);
+    referenceWorkflow.fQN("xmcp.gitintegration.ui.AddWorkspaceConnectionDefinitionFromExistingData");
+    referenceWorkflow.dataPath("%0%.newWorkspaces."+i);
+    builder.detailsDefinitionReference(referenceWorkflow.instance());
+    result.add(builder.instance());
+}
+
+return result;</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,11 +32,13 @@ import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.utils.collections.SerializablePair;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 import com.gip.xyna.xfmg.xopctrl.managedsessions.ManagedSession;
 import com.gip.xyna.xfmg.xopctrl.managedsessions.SessionManagement;
+import com.gip.xyna.xmcp.xguisupport.messagebus.transfer.MessageInputParameter;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.persistence.ODS;
 import com.gip.xyna.xnwh.persistence.ODSConnection;
@@ -49,6 +51,7 @@ import xprc.xpce.Workspace;
 import xmcp.gitintegration.RepositoryManagementServiceOperation;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
 import xmcp.gitintegration.impl.RepositoryManagementImpl.AddRepositoryConnectionResult;
+import xmcp.gitintegration.impl.tracking.CollectingTracker;
 import xmcp.gitintegration.repository.Branch;
 import xmcp.gitintegration.repository.BranchData;
 import xmcp.gitintegration.repository.ChangeSet;
@@ -67,7 +70,7 @@ import xmcp.gitintegration.storage.UserManagementStorage;
 
 public class RepositoryManagementServiceOperationImpl implements ExtendedDeploymentTask, RepositoryManagementServiceOperation {
 
-  private static Logger _logger = CentralFactoryLogging.getLogger(RepositoryManagementServiceOperationImpl.class);
+  private static Logger logger = CentralFactoryLogging.getLogger(RepositoryManagementServiceOperationImpl.class);
 
   public void onDeployment() throws XynaException {
     RepositoryManagementImpl.init();
@@ -265,7 +268,7 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
                              arg2.stream().filter(Objects::nonNull).map(x -> x.getPath()).collect(Collectors.toList());
       new RepositoryInteraction().push(arg0.getPath(), arg1.getText(), false, user, adapted);
     } catch (Exception e) {
-      _logger.warn(e.getMessage(), e);
+      logger.warn(e.getMessage(), e);
       return new Text("Exception during push: " + e.getMessage());
     }
 
@@ -305,4 +308,45 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
     }
   }
 
+
+  @Override
+  public List<? extends Workspace> listUnconnectedWorkspaces() {
+    return new UnconnectedWorkspaceLister().listUnconnectedWorkspaces();
+  }
+
+
+  @Override
+  public void addLocalWorkspaceToRepository(XynaOrderServerExtension order, RepositoryConnection repositoryConnection) {
+    CollectingTracker eventTracker = new CollectingTracker();
+    RepositoryManagementImpl.addLocalWorkspaceToRepository(repositoryConnection, eventTracker);
+
+    String creator = order.getSessionId();
+    List<SerializablePair<String, String>> payload = new ArrayList<>();
+    String msg;
+    if (eventTracker.getErrorMessages().isEmpty()) {
+      msg = "Could not add " + repositoryConnection.getWorkspaceName() + " to repository";
+    } else {
+      msg = "Successfully added " + repositoryConnection.getWorkspaceName() + " to repository";
+    }
+    payload.add(new SerializablePair<>("Message", msg));
+
+    String correlation = "AddLocalWorkspaceToRepository " + repositoryConnection.getWorkspaceName();
+    MessageInputParameter mip = new MessageInputParameter("GuiHttp", "Notification", correlation, creator, payload, false);
+    try {
+      XynaFactory.getInstance().getXynaMultiChannelPortal().getMessageBusManagement().publish(mip);
+    } catch (XynaException e) {
+      if (logger.isWarnEnabled()) {
+        logger.warn("Could not publish addLocalWorkspaceToRepository event.", e);
+      }
+    }
+
+    if (logger.isDebugEnabled()) {
+      String actions = String.join("\n\t", eventTracker.getInfoMessages());
+      logger.debug("Actions taken to add workspace " + repositoryConnection.getWorkspaceName() + " to repository: " + actions);
+      if (!eventTracker.getErrorMessages().isEmpty()) {
+        String errors = String.join("\n\t", eventTracker.getErrorMessages());
+        logger.debug("Errors adding workspace to repository: " + errors);
+      }
+    }
+  }
 }

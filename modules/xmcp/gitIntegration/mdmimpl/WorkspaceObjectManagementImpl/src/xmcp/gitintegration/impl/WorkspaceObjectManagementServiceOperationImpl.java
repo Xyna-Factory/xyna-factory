@@ -21,6 +21,8 @@ package xmcp.gitintegration.impl;
 
 import base.File;
 import base.Text;
+import xact.templates.Document;
+import xact.templates.XML;
 
 import java.util.List;
 
@@ -161,6 +163,13 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
     OutputCreator<WorkspaceContentItem, WorkspaceContentDifference, WorkspaceContentItemDifferenceSelector> creator;
     creator = new OutputCreator<>(new WorkspaceContentItemDifferenceSelector());
     return creator.createOutput(diff, portal);
+  }
+
+
+  @Override
+  public Document createWorkspaceXml(Workspace workspace) {
+    String workspaceXmlString = new CreateWorkspaceXmlTools().createWorkspaceXmlString(workspace.getName());
+    return new Document.Builder().text(workspaceXmlString).documentType(new XML()).instance();
   }
 
 }
