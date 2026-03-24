@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +23,13 @@
       <Data ID="1711" IsList="true" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui" VariableName="repositoryConnectionGroupGuiData1711"/>
       <Data ID="2104" IsList="true" Label="Info Diff Repository" ReferenceName="InfoDiffRepository" ReferencePath="xmcp.gitintegration" VariableName="infoDiffRepository2104"/>
     </Output>
-    <ServiceReference ID="5285" Label="Create Main Panel Child Elements" ReferenceName="CreateMainPanelChildElements" ReferencePath="xmcp.gitintegration.ui">
-      <Source RefID="5284"/>
-      <Target RefID="5284"/>
-    </ServiceReference>
     <ServiceReference ID="3842" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="3841"/>
       <Target RefID="3841"/>
+    </ServiceReference>
+    <ServiceReference ID="5285" Label="Create Main Panel Child Elements" ReferenceName="CreateMainPanelChildElements" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="5284"/>
+      <Target RefID="5284"/>
     </ServiceReference>
     <Function ID="3841" Label="get Own RuntimeContext">
       <Source RefID="3842"/>
@@ -56,6 +56,7 @@
       <Mapping>%1%.label="Add workspace connection..."</Mapping>
       <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%0%</Mapping>
       <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.gitintegration.ui.AddWorkspaceConnectionDefinition"</Mapping>
+      <Mapping>%1%.dataPath="%%"</Mapping>
     </Mappings>
     <Mappings ID="5362" Label="Create Button: Add Local Workspace To Repository">
       <Input>
