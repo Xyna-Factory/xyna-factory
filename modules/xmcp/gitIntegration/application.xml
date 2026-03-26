@@ -204,6 +204,14 @@
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.gitintegration.ui.ListWorkspaceWithLocalChanges</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.gitintegration.ui.ListWorkspacesWithLocalChanges</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
       <DestinationKey>xmcp.gitintegration.ui.LoadGitLog</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
@@ -804,6 +812,18 @@
     <XMOMEntry implicitDependency="true">
       <FqName>xmcp.gitintegration.ui.IndexedRepository</FqName>
       <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.gitintegration.ui.IndexedRepositoryConnection</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.gitintegration.ui.ListWorkspaceWithLocalChanges</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.gitintegration.ui.ListWorkspacesWithLocalChanges</FqName>
+      <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.gitintegration.ui.LoadGitLog</FqName>

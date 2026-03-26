@@ -349,4 +349,15 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
       }
     }
   }
+
+
+  @Override
+  public List<? extends RepositoryConnection> listConnectionsOfRepository(Repository repository) {
+    List<? extends RepositoryConnectionStorable> data = RepositoryManagementImpl.loadConnectionsForSingleRepository(repository.getPath());
+    List<RepositoryConnection> result = new ArrayList<>();
+    for (RepositoryConnectionStorable instance : data) {
+      result.add(RepositoryManagementImpl.convert(instance));
+    }
+    return result;
+  }
 }

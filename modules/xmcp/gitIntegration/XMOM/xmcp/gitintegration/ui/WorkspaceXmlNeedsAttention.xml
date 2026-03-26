@@ -23,10 +23,6 @@
     <Output>
       <Data ID="7" Label="Flag" ReferenceName="Flag" ReferencePath="xmcp.gitintegration" VariableName="flag7"/>
     </Output>
-    <ServiceReference ID="194" Label="Get Workspace Xml Status" ReferenceName="GetWorkspaceXmlStatus" ReferencePath="xmcp.gitintegration.ui">
-      <Source RefID="193"/>
-      <Target RefID="193"/>
-    </ServiceReference>
     <ServiceReference ID="18" Label="Get Workspace List Ids" ReferenceName="GetWorkspaceListIds" ReferencePath="xmcp.gitintegration.ui">
       <Source RefID="17"/>
       <Target RefID="17"/>
@@ -45,7 +41,7 @@
     </Function>
     <Choice ID="53" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="20"/>
-      <Target RefID="486"/>
+      <Target RefID="546"/>
       <Input>
         <Data ID="76" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds76">
           <Source RefID="53"/>
@@ -64,85 +60,29 @@
         </Mappings>
         <Assign ID="57">
           <Source RefID="143"/>
-          <Target RefID="486"/>
+          <Target RefID="546"/>
           <Copy>
             <Source RefID="143"/>
-            <Target RefID="486"/>
+            <Target RefID="546"/>
           </Copy>
         </Assign>
       </Case>
       <Case ID="55" Label="false">
-        <Function ID="193" Label="Get Workspace Xml Status">
-          <Source RefID="194"/>
-          <Source RefID="2"/>
-          <Target RefID="194"/>
-          <Target RefID="196"/>
-          <Invoke Operation="GetWorkspaceXmlStatus" ServiceID="194">
-            <Source RefID="2"/>
-          </Invoke>
-          <Receive ServiceID="194">
-            <Target RefID="196"/>
-          </Receive>
-        </Function>
-        <Choice ID="221" TypeName="BaseChoiceTypeFormula" TypePath="server">
-          <Source RefID="196"/>
-          <Target RefID="460"/>
-          <Meta>
-            <OuterConditionPart>%0%.text==?</OuterConditionPart>
-          </Meta>
-          <Input>
-            <Data ID="249" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text249">
-              <Source RefID="221"/>
-            </Data>
-            <Source RefID="196"/>
-          </Input>
-          <Case ID="375" Label="" Premise="%0%.text==&quot;Local changes&quot;">
-            <Mappings ID="402" Label="Mapping">
-              <Output>
-                <Data ID="403" Label="Flag" ReferenceName="Flag" ReferencePath="xmcp.gitintegration" VariableName="flag403"/>
-                <Target RefID="404"/>
-              </Output>
-              <Mapping>%0%.value="true"</Mapping>
-            </Mappings>
-            <Assign ID="377">
-              <Source RefID="404"/>
-              <Target RefID="460"/>
-              <Copy>
-                <Source RefID="404"/>
-                <Target RefID="460"/>
-              </Copy>
-            </Assign>
-          </Case>
-          <Case Alias="375" ID="458" Label="" Premise="%0%.text==&quot;Out of sync&quot;"/>
-          <Case ID="222" IsDefault="true" Label="default">
-            <Mappings ID="322" Label="Mapping">
-              <Output>
-                <Data ID="323" Label="Flag" ReferenceName="Flag" ReferencePath="xmcp.gitintegration" VariableName="flag323"/>
-                <Target RefID="324"/>
-              </Output>
-              <Mapping>%0%.value="false"</Mapping>
-            </Mappings>
-            <Assign ID="224">
-              <Source RefID="324"/>
-              <Target RefID="460"/>
-              <Copy>
-                <Source RefID="324"/>
-                <Target RefID="460"/>
-              </Copy>
-            </Assign>
-          </Case>
-        </Choice>
+        <Mappings ID="543" Label="Mapping">
+          <Output>
+            <Data ID="544" Label="Flag" ReferenceName="Flag" ReferencePath="xmcp.gitintegration" VariableName="flag544"/>
+            <Target RefID="545"/>
+          </Output>
+          <Mapping>%0%.value="false"</Mapping>
+        </Mappings>
         <Assign ID="59">
-          <Source RefID="460"/>
-          <Target RefID="486"/>
+          <Source RefID="545"/>
+          <Target RefID="546"/>
           <Copy>
-            <Source RefID="460"/>
-            <Target RefID="486"/>
+            <Source RefID="545"/>
+            <Target RefID="546"/>
           </Copy>
         </Assign>
-        <Data ID="196" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text196">
-          <Source RefID="193"/>
-        </Data>
       </Case>
     </Choice>
     <Data ID="20" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds20">
@@ -151,19 +91,15 @@
     <Data ID="143" Label="Flag" ReferenceName="Flag" ReferencePath="xmcp.gitintegration" VariableName="flag143">
       <Source RefID="125"/>
     </Data>
-    <Data ID="324" Label="Flag" ReferenceName="Flag" ReferencePath="xmcp.gitintegration" VariableName="flag324"/>
-    <Data ID="404" Label="Flag" ReferenceName="Flag" ReferencePath="xmcp.gitintegration" VariableName="flag404"/>
-    <Data ID="460" Label="Flag" ReferenceName="Flag" ReferencePath="xmcp.gitintegration" VariableName="flag460">
-      <Source RefID="221"/>
-    </Data>
-    <Data ID="486" Label="Flag" ReferenceName="Flag" ReferencePath="xmcp.gitintegration" VariableName="flag486">
+    <Data ID="545" Label="Flag" ReferenceName="Flag" ReferencePath="xmcp.gitintegration" VariableName="flag545"/>
+    <Data ID="546" Label="Flag" ReferenceName="Flag" ReferencePath="xmcp.gitintegration" VariableName="flag546">
       <Source RefID="53"/>
     </Data>
     <Assign ID="1">
-      <Source RefID="486"/>
+      <Source RefID="546"/>
       <Target RefID="7"/>
       <Copy>
-        <Source RefID="486"/>
+        <Source RefID="546"/>
         <Target RefID="7"/>
       </Copy>
     </Assign>
