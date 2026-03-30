@@ -87,16 +87,21 @@ public class FactorySharedResourceRequestRecorder implements SharedResourceReque
   }
 
 
+  @SuppressWarnings("unchecked")
   private PushStatistics<Long, LongStatisticsValue> getOrCreateRequestStatistics(String resourceType, String requestType,
                                                                                  ResultType resultType) {
     try {
       FactoryRuntimeStatistics runtimestats = getFactoryRuntimeStatistics();
       StatisticsPath path = getStatisticsPath(resourceType, requestType, resultType);
-      @SuppressWarnings("unchecked")
       PushStatistics<Long, LongStatisticsValue> statistics = (PushStatistics<Long, LongStatisticsValue>) runtimestats.getStatistic(path);
       if (statistics == null) {
-        statistics = new SumAggregationPushStatistics<Long, LongStatisticsValue>(path, new LongStatisticsValue(0));
-        runtimestats.registerStatistic(statistics);
+        synchronized (FactorySharedResourceRequestRecorder.class) {
+          statistics = (PushStatistics<Long, LongStatisticsValue>) runtimestats.getStatistic(path);
+          if (statistics == null) {
+            statistics = new SumAggregationPushStatistics<Long, LongStatisticsValue>(path, new LongStatisticsValue(0));
+            runtimestats.registerStatistic(statistics);
+          }
+        }
       }
       return statistics;
     } catch (XFMG_InvalidStatisticsPath | XFMG_StatisticAlreadyRegistered e) {

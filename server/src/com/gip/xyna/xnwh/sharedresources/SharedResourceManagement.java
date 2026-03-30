@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -73,6 +74,8 @@ public class SharedResourceManagement extends Section {
    */
   private final Map<String, String> sharedResourceToSynchronizerMap;
 
+  private final Map<String, List<SharedResourceConfigurationChangeListener>> listeners;
+
 
   private final Set<SharedResourceSynchronizerFactoryClassLoader> synchronizerFactoryClassloaders;
 
@@ -86,6 +89,7 @@ public class SharedResourceManagement extends Section {
     synchronizerInstances = new HashMap<>();
     sharedResourceToSynchronizerMap = new HashMap<>();
     synchronizerFactoryClassloaders = new HashSet<>();
+    listeners = new HashMap<>();
   }
 
 
@@ -325,11 +329,13 @@ public class SharedResourceManagement extends Section {
    * Registers the given type of shared resource. As a result, this type will be listed in the output
    * of listSharedResourceTypes.
    */
-  public void addSharedResource(String type) {
+  public void addSharedResource(String type, SharedResourceConfigurationChangeListener changeListener) {
     if (!sharedResourceToSynchronizerMap.containsKey(type)) {
       sharedResourceToSynchronizerMap.put(type, null);
       sharedResourceTypeStorage.storeType(type, null);
     }
+    listeners.computeIfAbsent(type, (x) -> new ArrayList<>());
+    listeners.get(type).add(changeListener);
   }
 
 
@@ -372,16 +378,16 @@ public class SharedResourceManagement extends Section {
    * Sets the configuration of the given resource. If synchronizerInstanceIdentifier is null, the
    * resource configuration is deleted.
    */
-  public void configureSharedResourceType(String resource, String synchronizerInstanceIdentifier) {
-    if (synchronizerInstanceIdentifier == null) {
-      sharedResourcePortal.configureSharedResource(resource, null);
-    } else {
-      SharedResourceSynchronizer synchronizer = synchronizerInstances.get(synchronizerInstanceIdentifier);
-      if (synchronizer == null) {
-        throw new IllegalArgumentException("No SharedResourceSynchronizer '" + synchronizerInstanceIdentifier + "' configured");
-      }
-      sharedResourcePortal.configureSharedResource(resource, synchronizer);
+  public void configureSharedResourceType(String resource, String synchronizerInstanceIdentifier, boolean copy) {
+    SharedResourceSynchronizer synchronizer = synchronizerInstances.get(synchronizerInstanceIdentifier);
+    if (synchronizerInstanceIdentifier != null && synchronizer == null) {
+      throw new IllegalArgumentException("No SharedResourceSynchronizer '" + synchronizerInstanceIdentifier + "' configured");
     }
+    SharedResourceSynchronizer oldSynchronizer = synchronizerInstances.get(sharedResourceToSynchronizerMap.get(resource));
+    for (SharedResourceConfigurationChangeListener changeListener : listeners.getOrDefault(resource, Collections.emptyList())) {
+      changeListener.configurationChanged(oldSynchronizer, synchronizer, copy);
+    }
+    sharedResourcePortal.configureSharedResource(resource, synchronizer);
     sharedResourceToSynchronizerMap.put(resource, synchronizerInstanceIdentifier);
     sharedResourceTypeStorage.storeType(resource, synchronizerInstanceIdentifier);
   }
