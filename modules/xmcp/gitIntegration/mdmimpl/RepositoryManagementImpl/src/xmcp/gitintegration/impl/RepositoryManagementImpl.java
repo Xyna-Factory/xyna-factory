@@ -730,7 +730,7 @@ public class RepositoryManagementImpl {
   }
 
 
-  private static RepositoryConnection convert(RepositoryConnectionStorable storable) {
+  public static RepositoryConnection convert(RepositoryConnectionStorable storable) {
     RepositoryConnection.Builder result = new RepositoryConnection.Builder();
     result.path(storable.getPath()).savedinrepo(storable.getSavedinrepo()).splittype(storable.getSplittype()).subpath(storable.getSubpath())
         .workspaceName(storable.getWorkspacename());
