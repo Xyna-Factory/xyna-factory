@@ -457,6 +457,7 @@
 			<property name="application.xml.output.file" value="${basedir}/application.xml" />
 	    	<!-- if false, ignore application definition and include everything from the workspace -->
 			<property name="application.gen.use.application.definition" value="true" />
+			<echo message="Generating application.xml in directory ${workspacexml.dir} ..." />
 			<java classname="xmcp.gitintegration.offline.ApplicationXMLGenerator" fork="true" failonerror="true">
 				<arg value="${workspacexml.dir}" />
 				<arg value="${xmom.dir}" />
