@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,17 +85,19 @@ import xmcp.gitintegration.impl.processing.OrderTypeProcessor;
 public class ApplicationXMLGenerator {
 
   public static void main(String[] args) throws Exception {
-    if (args.length < 5 || args.length > 6) {
+    if (args.length < 5 || args.length > 7) {
       // later: Capacities and XynaProperties can be added through a separate main
       // method call (in FactoryObjectManagement Coded Service)
       System.out.println("Creates application.xml from workspace-xml directory");
       System.out.println("Args: <Workspace-XML> <XMOM directory> <Version> <Factory version> <Subtype exclusion> "
-          + "[<Output, default ./application.xml>]");
+          + "[<Output, default ./application.xml>] [-e (everything)]");
       System.out.println("Workspace-XML: The directory containing workspace.xml (typically called \"config\") or the file itself");
       System.out.println("XMOM directory: The directory containing the XMOM files of the application");
       System.out.println("Subtype exclusion (The same as the corresponding Xyna Property): Comma separated"
           + " list of base types whose subtypes are taken into the application only when they"
           + " are needed directly. * to disallow all subtypes.");
+      System.out
+          .println("-e: Ignores application-definition from workspace-xml, includes everything from the workspace into the application.");
       return;
     }
     File workspacexml = new File(args[0]);
@@ -103,16 +105,24 @@ public class ApplicationXMLGenerator {
     String version = args[2];
     String factoryVersion = args[3];
     String subtypeExclusion = args[4];
-    File outputFile;
-    if (args.length == 6) {
-      outputFile = new File(args[5]);
-    } else {
+    File outputFile = null;
+    boolean includeEverything = false;
+    if (args.length > 5) {
+      for (int i = 5; i < args.length; i++) {
+        if (args[i].equals("-e")) {
+          includeEverything = true;
+        } else {
+          outputFile = new File(args[5]);
+        }
+      }
+    }
+    if (outputFile == null) {
       outputFile = new File("application.xml");
     }
     workspacexml = validateWorkspaceXML(workspacexml);
 
     WorkspaceContent content = getWorkspaceContent(workspacexml);
-    buildAppXml(content, xmomdir, version, factoryVersion, subtypeExclusion, outputFile);
+    buildAppXml(content, xmomdir, version, factoryVersion, subtypeExclusion, outputFile, includeEverything);
   }
 
 
@@ -226,7 +236,7 @@ public class ApplicationXMLGenerator {
 
 
   private static void buildAppXml(WorkspaceContent content, File xmomDir, String version, String factoryVersion, String subtypeExclusion,
-                                  File outputFile)
+                                  File outputFile, boolean includeEverything)
       throws Exception {
     ApplicationXmlCompatibilityLayer xml = new ApplicationXmlCompatibilityLayer();
     xml.setAppVersion(version);
@@ -252,11 +262,16 @@ public class ApplicationXMLGenerator {
     Map<String, Trigger> allTriggers = new HashMap<>();
     Map<String, TriggerInstance> allTriggerInstances = new HashMap<>();
     System.out.println("Collecting Workspace-XML entries ...");
+    List<RuntimeContextDependency> deps = new ArrayList<>();
     for (WorkspaceContentItem item : content.getWorkspaceContentItems()) {
       if (item instanceof OrderType) {
         OrderType ot = (OrderType) item;
         allOrderTypes.put(ot.getName(), ot);
-      } else if (item instanceof ApplicationDefinition) {
+        if (includeEverything) {
+          orderTypesInContent.add(ot.getName());
+          explicitOrderTypes.add(ot.getName());
+        }
+      } else if (item instanceof ApplicationDefinition && !includeEverything) {
         ApplicationDefinition ad = (ApplicationDefinition) item;
         xml.setRuntimeContextDependencies(ad.getRuntimeContextDependencies());
         if (ad.getContentEntries() != null) {
@@ -308,18 +323,52 @@ public class ApplicationXMLGenerator {
       } else if (item instanceof Filter) {
         Filter f = (Filter) item;
         allFilters.put(f.getFilterName(), f);
+        if (includeEverything) {
+          filtersInContent.add(f.getFilterName());
+        }
       } else if (item instanceof FilterInstance) {
         FilterInstance fi = (FilterInstance) item;
         allFilterInstances.put(fi.getFilterInstanceName(), fi);
+        if (includeEverything) {
+          filterInstancesInContent.add(fi.getFilterInstanceName());
+        }
       } else if (item instanceof Trigger) {
         Trigger t = (Trigger) item;
         allTriggers.put(t.getTriggerName(), t);
+        if (includeEverything) {
+          triggersInContent.add(t.getTriggerName());
+        }
       } else if (item instanceof TriggerInstance) {
         TriggerInstance ti = (TriggerInstance) item;
         allTriggerInstances.put(ti.getTriggerInstanceName(), ti);
+        if (includeEverything) {
+          triggerInstancesInContent.add(ti.getTriggerInstanceName());
+        }
       } else if (item instanceof SharedLibrary) {
         SharedLibrary sl = (SharedLibrary) item;
         sharedLibsInWorkspace.add(sl.getName());
+        if (includeEverything) {
+          explicitSharedLibs.add(sl.getName());
+        }
+      } else if (item instanceof OrderInputSource) {
+        if (includeEverything) {
+          orderInputSourcesInContent.add(((OrderInputSource) item).getName());
+        }
+      } else if (item instanceof RuntimeContextDependency) {
+        if (includeEverything) {
+          deps.add((RuntimeContextDependency) item);
+        }
+      }
+    }
+    if (includeEverything) {
+      xml.setRuntimeContextDependencies(deps);
+
+      //add all XMOM Objects from XMOM dir
+      explicitContent.addAll(ctx.cache.values(ctx.revision).stream().filter(gb -> gb.exists()).collect(Collectors.toList()));
+      for (GenerationBase gb : explicitContent) {
+        if (gb instanceof WF) {
+          orderTypesInContent.add(gb.getOriginalFqName());
+        }
       }
     }
 
