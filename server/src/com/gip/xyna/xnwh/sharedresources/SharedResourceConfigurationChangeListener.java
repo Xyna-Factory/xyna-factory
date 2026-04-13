@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
+/*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2026 Xyna GmbH, Germany
  *
@@ -15,23 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="RadiusUserData" TypeName="RadiusUserData" TypePath="xact.radius" Version="1.8">
-  <Meta>
-    <IsXynaComponent>true</IsXynaComponent>
-  </Meta>
-  <Data Label="Username" VariableName="username">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="Password" VariableName="password">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="Role" VariableName="role">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-</DataType>
+ */
+package com.gip.xyna.xnwh.sharedresources;
+
+
+public interface SharedResourceConfigurationChangeListener {
+
+  /**
+   * called when the shared resource type configuration changes.
+   * from or to might be null, but not both.
+   */
+  public void configurationChanged(SharedResourceSynchronizer from, SharedResourceSynchronizer to, boolean copyContent);
+}

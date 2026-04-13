@@ -443,11 +443,11 @@ public class DataModelTypeImpl implements DataModelType {
           (boolean)paramMap.get(DataModelManagement.OVERWRITE_PARAMETER_NAME)) {
         return;
       }
-      if (!parameter.isRemoveComplete()) {
+      if (!parameter.isRemoveUsed()) {
         Application app = new Application(dataModel.getType().getName(), dataModel.getVersion());
         Set<RuntimeDependencyContext> users = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement().getParentRuntimeContexts(app);
         if (users.size() > 0) {
-          dataModelResult.fail("DateModel application ist still referenced");
+          dataModelResult.fail("DateModel application is still referenced");
           List<String> readableUsers = CollectionUtils.transform(users, new Transformation<RuntimeDependencyContext, String>() {
             public String transform(RuntimeDependencyContext from) {
               return from.getGUIRepresentation();

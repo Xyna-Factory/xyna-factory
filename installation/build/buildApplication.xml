@@ -464,7 +464,7 @@
 			<!-- as described in documentation of xynaproperty xfmg.xfctrl.appmgmt.excludedsubtypesof -->
 			<property name="subtype.exclusions" value="" />
 			<property name="application.xml.output.file" value="${basedir}/application.xml" />
-
+			<echo message="Generating application.xml in directory ${workspacexml.dir} ..." />
 			<java classname="xmcp.gitintegration.offline.ApplicationXMLGenerator" fork="true" failonerror="true">
 				<arg value="${workspacexml.dir}" />
 				<arg value="${xmom.dir}" />

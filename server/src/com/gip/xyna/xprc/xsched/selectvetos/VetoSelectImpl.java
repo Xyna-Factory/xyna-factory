@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -129,6 +129,14 @@ public class VetoSelectImpl extends WhereClausesContainerImpl implements Selecti
   public VetoSelect selectDocumentation() {
     if(!selected.contains(VetoColumn.DOCUMENTATION)) {
       selected.add(VetoColumn.DOCUMENTATION);
+    }
+    return this;
+  }
+
+
+  public VetoSelect selectCreated() {
+    if(!selected.contains(VetoColumn.CREATED)) {
+      selected.add(VetoColumn.CREATED);
     }
     return this;
   }

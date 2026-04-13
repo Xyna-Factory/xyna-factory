@@ -430,6 +430,7 @@ compose_server() {
   compose_server_exceptions
   compose_server_lib
   compose_server_orderinpoutsourcetypes
+  compose_server_sharedresourcesynchronizers
   compose_server_persistencelayers
   compose_server_repositoryaccess
   compose_server_resources
@@ -499,6 +500,11 @@ compose_server_orderinpoutsourcetypes() {
   cd $SCRIPT_DIR/../release/server
   rm -rf $SCRIPT_DIR/../localbuild/server/orderinputsourcetypes/*/xyna
   cp -r $SCRIPT_DIR/../localbuild/server/orderinputsourcetypes .
+}
+
+compose_server_sharedresourcesynchronizers() {
+  cd $SCRIPT_DIR/../release/server
+  cp -r $SCRIPT_DIR/../localbuild/server/sharedresourcesynchronizers .
 }
 
 compose_server_lib() {

@@ -25,14 +25,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 import com.gip.xyna.FileUtils;
@@ -52,8 +53,10 @@ import com.gip.xyna.xnwh.sharedresources.SharedResourceSynchronizerInstance.Stat
 public class SharedResourceManagement extends Section {
 
   public static final String DEFAULT_NAME = "SharedResourceManagement";
+  public static final int FUTURE_EXECUTION_ID = XynaFactory.getInstance().getFutureExecution().nextId();
   private final SharedResourcePortal sharedResourcePortal;
-  private final SharedResourceSynchronizerStorage sharedResourceSynchronizerStorage;
+  private final SharedResourceSynchronizerInstanceStorage sharedResourceSynchronizerStorage;
+  private final SharedResourceTypeStorage sharedResourceTypeStorage;
 
   /**
    * maps from synchronizerTypeName to factory
@@ -71,6 +74,8 @@ public class SharedResourceManagement extends Section {
    */
   private final Map<String, String> sharedResourceToSynchronizerMap;
 
+  private final Map<String, List<SharedResourceConfigurationChangeListener>> listeners;
+
 
   private final Set<SharedResourceSynchronizerFactoryClassLoader> synchronizerFactoryClassloaders;
 
@@ -78,11 +83,13 @@ public class SharedResourceManagement extends Section {
   public SharedResourceManagement() throws XynaException {
     super();
     sharedResourcePortal = new SharedResourcePortal(() -> new FactorySharedResourceRequestRecorder());
-    sharedResourceSynchronizerStorage = new SharedResourceSynchronizerStorage();
+    sharedResourceSynchronizerStorage = new SharedResourceSynchronizerInstanceStorage();
+    sharedResourceTypeStorage = new SharedResourceTypeStorage();
     synchronizerFactories = new HashMap<>();
     synchronizerInstances = new HashMap<>();
-    sharedResourceToSynchronizerMap = new ConcurrentHashMap<>();
+    sharedResourceToSynchronizerMap = new HashMap<>();
     synchronizerFactoryClassloaders = new HashSet<>();
+    listeners = new HashMap<>();
   }
 
 
@@ -100,7 +107,7 @@ public class SharedResourceManagement extends Section {
         .after(PersistenceLayerInstances.class).execAsync(this::loadSynchronizers);
     fExec.addTask("SharedResourceManagement.instantiateSynchronizers", "SharedResourceManagement.instantiateSynchronizers")
         .after("SharedResourceManagement.loadSynchronizers").execAsync(this::instantiateSynchronizers);
-    fExec.addTask(SharedResourceManagement.class, "configureSharedResourceTypes").after("SharedResourceManagement.instantiateSynchronizers")
+    fExec.addTask(FUTURE_EXECUTION_ID, "configureSharedResourceTypes").after("SharedResourceManagement.instantiateSynchronizers")
         .execAsync(this::configureSRTypes);
   }
 
@@ -109,9 +116,10 @@ public class SharedResourceManagement extends Section {
   protected void shutdown() throws XynaException {
     super.shutdown();
     try {
-      SharedResourceSynchronizerStorage.shutdown();
+      SharedResourceSynchronizerInstanceStorage.shutdown();
+      SharedResourceTypeStorage.shutdown();
     } catch (PersistenceLayerException e) {
-      throw new RuntimeException(String.format("Could not shutdown SharedResourceSynchronizerStorage: %s", e.getMessage()), e);
+      throw new RuntimeException(String.format("Could not shutdown SharedResourceStorage: %s", e.getMessage()), e);
     }
     for (SharedResourceSynchronizerFactoryClassLoader loader : synchronizerFactoryClassloaders) {
       try {
@@ -131,6 +139,8 @@ public class SharedResourceManagement extends Section {
    * SharedResourceSynchronizerFactory implementation class.
    */
   private void loadSynchronizers() {
+    this.logger.info("Initializing SharedResourceManagement...");
+
     Path rootDir = Paths.get(Constants.SHAREDRESOURCESYNCHRONIZERS_BASEDIR);
     if (!Files.isDirectory(rootDir)) {
       this.logger.info(String.format("Directory %s not found. No SharedResourceSynchronizers will be loaded.", rootDir));
@@ -232,7 +242,7 @@ public class SharedResourceManagement extends Section {
 
   private void instantiateSynchronizers() {
     try {
-      SharedResourceSynchronizerStorage.init();
+      SharedResourceSynchronizerInstanceStorage.init();
     } catch (PersistenceLayerException e) {
       throw new RuntimeException(String.format("Could not initialize SharedResourceSynchronizerStorage: %s", e.getMessage()), e);
     }
@@ -264,6 +274,21 @@ public class SharedResourceManagement extends Section {
 
 
   private void configureSRTypes() {
+    try {
+      SharedResourceTypeStorage.init();
+    } catch (PersistenceLayerException e) {
+      throw new RuntimeException(String.format("Could not initialize SharedResourceTypeStorage: %s", e.getMessage()), e);
+    }
+
+    List<SharedResourceTypeStorable> types = sharedResourceTypeStorage.listAllTypes();
+
+    for (SharedResourceTypeStorable type : types) {
+      sharedResourceToSynchronizerMap.put(type.getSharedResourceTypeIdentifier(), type.getSynchronizerInstanceIdentifier());
+      if (type.getSynchronizerInstanceIdentifier() != null) {
+        SharedResourceSynchronizer synchronizer = synchronizerInstances.get(type.getSynchronizerInstanceIdentifier());
+        sharedResourcePortal.configureSharedResource(type.getSharedResourceTypeIdentifier(), synchronizer);
+      }
+    }
   }
 
 
@@ -304,8 +329,13 @@ public class SharedResourceManagement extends Section {
    * Registers the given type of shared resource. As a result, this type will be listed in the output
    * of listSharedResourceTypes.
    */
-  public void addSharedResource(String type) {
-    sharedResourceToSynchronizerMap.putIfAbsent(type, null);
+  public void addSharedResource(String type, SharedResourceConfigurationChangeListener changeListener) {
+    if (!sharedResourceToSynchronizerMap.containsKey(type)) {
+      sharedResourceToSynchronizerMap.put(type, null);
+      sharedResourceTypeStorage.storeType(type, null);
+    }
+    listeners.computeIfAbsent(type, (x) -> new ArrayList<>());
+    listeners.get(type).add(changeListener);
   }
 
 
@@ -337,19 +367,89 @@ public class SharedResourceManagement extends Section {
 
 
   /**
+   * returns true if the given shared resource type has a synchronizer configured, false otherwise
+   */
+  public boolean hasConfiguredSynchronizer(String resourceType) {
+    return sharedResourceToSynchronizerMap.get(resourceType) != null;
+  }
+
+
+  /**
    * Sets the configuration of the given resource. If synchronizerInstanceIdentifier is null, the
    * resource configuration is deleted.
    */
-  public void configureSharedResourceType(String resource, String synchronizerInstanceIdentifier) {
-    if (synchronizerInstanceIdentifier == null) {
-      sharedResourcePortal.configureSharedResource(resource, null);
-      return;
-    }
+  public void configureSharedResourceType(String resource, String synchronizerInstanceIdentifier, boolean copy) {
     SharedResourceSynchronizer synchronizer = synchronizerInstances.get(synchronizerInstanceIdentifier);
-    if (synchronizer == null) {
+    if (synchronizerInstanceIdentifier != null && synchronizer == null) {
       throw new IllegalArgumentException("No SharedResourceSynchronizer '" + synchronizerInstanceIdentifier + "' configured");
     }
+    SharedResourceSynchronizer oldSynchronizer = synchronizerInstances.get(sharedResourceToSynchronizerMap.get(resource));
+    for (SharedResourceConfigurationChangeListener changeListener : listeners.getOrDefault(resource, Collections.emptyList())) {
+      changeListener.configurationChanged(oldSynchronizer, synchronizer, copy);
+    }
     sharedResourcePortal.configureSharedResource(resource, synchronizer);
+    sharedResourceToSynchronizerMap.put(resource, synchronizerInstanceIdentifier);
+    sharedResourceTypeStorage.storeType(resource, synchronizerInstanceIdentifier);
+  }
+
+
+  /**
+   * Deletes the shared resource synchronizer instance. The instance will be stopped. Shared resource types configured to
+   * this synchronizer instance will be reset.
+   * @param synchronizerInstanceIdentifier which shared resource synchronizer should be deleted
+   * @return  list of all shared resource types that were configured to this shared resource synchronizer instance
+   */
+  public List<String> deleteSharedResourceSynchronizer(String synchronizerInstanceIdentifier) {
+    SharedResourceSynchronizer synchronizer = synchronizerInstances.remove(synchronizerInstanceIdentifier);
+    if (synchronizer == null) {
+      throw new IllegalArgumentException("Can not remove unknown synchronizer instance '" + synchronizerInstanceIdentifier + "'");
+    }
+    if (logger.isInfoEnabled()) {
+      logger.info("Deleting shared resource synchronizer instance '" + synchronizerInstanceIdentifier + "' - " + synchronizer);
+    }
+
+    synchronizer.stop();
+
+    List<String> result = new ArrayList<>();
+    Set<Entry<String, String>> entries = new HashSet<>(sharedResourceToSynchronizerMap.entrySet());
+    for (Entry<String, String> entry : entries) {
+      String entrySharedResourceType = entry.getKey();
+      String entrySynchronizerInstanceId = entry.getValue();
+      if (Objects.equals(synchronizerInstanceIdentifier, entrySynchronizerInstanceId)) {
+        sharedResourceToSynchronizerMap.put(entrySharedResourceType, null);
+        sharedResourcePortal.configureSharedResource(entrySharedResourceType, null);
+        result.add(entrySharedResourceType);
+      }
+    }
+
+    sharedResourceTypeStorage.deleteTypes(result);
+    sharedResourceSynchronizerStorage.deleteInstance(synchronizerInstanceIdentifier);
+
+    return result;
+  }
+
+
+  public void startSharedResourceSynchronizerInstance(String synchronizerInstanceIdentifier) {
+    SharedResourceSynchronizer synchronizer = synchronizerInstances.get(synchronizerInstanceIdentifier);
+    if (synchronizer == null) {
+      throw new IllegalArgumentException("Can not start unknown synchronizer instance '" + synchronizerInstanceIdentifier + "'");
+    }
+    if (logger.isInfoEnabled()) {
+      logger.info("Starting shared resource synchronizer instance '" + synchronizerInstanceIdentifier + "' - " + synchronizer);
+    }
+    synchronizer.start();
+  }
+
+
+  public void stopSharedResourceSynchronizerInstance(String synchronizerInstanceIdentifier) {
+    SharedResourceSynchronizer synchronizer = synchronizerInstances.get(synchronizerInstanceIdentifier);
+    if (synchronizer == null) {
+      throw new IllegalArgumentException("Can not stop unknown synchronizer instance '" + synchronizerInstanceIdentifier + "'");
+    }
+    if (logger.isInfoEnabled()) {
+      logger.info("Stopping shared resource synchronizer instance '" + synchronizerInstanceIdentifier + "' - " + synchronizer);
+    }
+    synchronizer.stop();
   }
 
 

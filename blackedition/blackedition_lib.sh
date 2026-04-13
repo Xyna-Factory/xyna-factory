@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Copyright 2025 Xyna GmbH, Germany
+# Copyright 2026 Xyna GmbH, Germany
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ GUIHTTP_APP="GuiHttp"
 #ACHTUNG: Version auch bei addRequirement zu default workspace berücksichtigen
 ALL_APPLICATIONS="Base Processing"; #Default-Applications, die immer installiert sein sollten
 APPMGMTVERSION=1.0.11
-GUIHTTPVERSION=1.3.44
+GUIHTTPVERSION=1.4.0
 SNMPSTATVERSION=1.0.4
 PROCESSINGVERSION=1.0.28
 ALL_REPOSITORYACCESSES=("svn");
@@ -899,6 +899,7 @@ update_xynafactory () {
   replace_dir server/lib ${INSTALL_PREFIX}/server/lib
   replace_child_dirs server/orderinputsourcetypes
   replace_child_dirs server/persistencelayers
+  replace_child_versioned_files server/sharedresourcesynchronizers
   copy_dir server/storage ${INSTALL_PREFIX}/server
   copy_dir server/resources ${INSTALL_PREFIX}/server
   copy_dir server/exceptions ${INSTALL_PREFIX}/server

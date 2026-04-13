@@ -21,6 +21,8 @@ package xmcp.gitintegration.impl;
 
 import base.File;
 import base.Text;
+import xact.templates.Document;
+import xact.templates.XML;
 
 import java.util.List;
 
@@ -31,9 +33,12 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 import xmcp.gitintegration.Flag;
 import xmcp.gitintegration.InfoWorkspaceContentDiffGroupList;
 import xmcp.gitintegration.ListId;
+import xmcp.gitintegration.ResolveWorkspaceContentDifferencesResult;
 import xmcp.gitintegration.WorkspaceContent;
+import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.WorkspaceContentDifferences;
 import xmcp.gitintegration.WorkspaceContentDifferencesResolution;
+import xmcp.gitintegration.WorkspaceContentItem;
 import xprc.xpce.Workspace;
 import xmcp.gitintegration.WorkspaceObjectManagementServiceOperation;
 import xmcp.gitintegration.WorkspaceXmlCreationConfig;
@@ -122,8 +127,8 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
 
 
   @Override
-  public void resolveWorkspaceDifferences(ListId listId, List<? extends WorkspaceContentDifferencesResolution> list) {
-    new ResolveWorkspaceDiffsTools().resolveWorkspaceDifferences(listId, list);
+  public List<ResolveWorkspaceContentDifferencesResult> resolveWorkspaceDifferences(ListId listId, List<? extends WorkspaceContentDifferencesResolution> list) {
+    return new ResolveWorkspaceDiffsTools().resolveWorkspaceDifferences(listId, list);
   }
 
 
@@ -149,6 +154,22 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
   @Override
   public WorkspaceXmlPath getPathToWorkspaceXml(RepositoryConnection conn) {
     return new WorkspaceStatusTools().getPathToWorkspaceXml(conn);
+  }
+
+
+  @Override
+  public String createDifferenceString(WorkspaceContentDifference diff) {
+    WorkspaceContentProcessingPortal portal = new WorkspaceContentProcessingPortal();
+    OutputCreator<WorkspaceContentItem, WorkspaceContentDifference, WorkspaceContentItemDifferenceSelector> creator;
+    creator = new OutputCreator<>(new WorkspaceContentItemDifferenceSelector());
+    return creator.createOutput(diff, portal);
+  }
+
+
+  @Override
+  public Document createWorkspaceXml(Workspace workspace) {
+    String workspaceXmlString = new CreateWorkspaceXmlTools().createWorkspaceXmlString(workspace.getName());
+    return new Document.Builder().text(workspaceXmlString).documentType(new XML()).instance();
   }
 
 }

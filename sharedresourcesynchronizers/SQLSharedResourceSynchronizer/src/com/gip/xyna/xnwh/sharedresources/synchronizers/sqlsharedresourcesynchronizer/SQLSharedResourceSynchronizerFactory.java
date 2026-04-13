@@ -60,6 +60,14 @@ public class SQLSharedResourceSynchronizerFactory implements SharedResourceSynch
           .en("Number of database connections to use").de("Anzahl an Datenbankverbindungen, die gleichzeitig verwendet werden").build())
       .build();
 
+  private static final StringParameter<Integer> CONCURRENT_MODIFICATION_RETRIES =
+      StringParameter.typeInteger("concurrentModificationRetries").label("Concurrent Modification Retries").defaultValue(1000)
+          .documentation(Documentation
+              .en("Number of retries to perferm if a concurrent modification exception is thrown during an update operation")
+              .de("Anzahl an erneuten Versuchen, wenn beim Ausführen eines Updates eine Concurrent Modification Exception geworfen wird")
+              .build())
+          .build();
+
   private static final StringParameter<Duration> CONNECTION_TIMEOUT =
       StringParameter.typeDuration("connectionTimeout").label("Connection Timeout").defaultValue(Duration.valueOf("10 s"))
           .documentation(Documentation.en("Database connection timeout").de("Datenbank-Verbindungstimeout").build()).build();
@@ -93,7 +101,7 @@ public class SQLSharedResourceSynchronizerFactory implements SharedResourceSynch
           .optional().build();
 
   private static final List<StringParameter<?>> importParameters =
-      StringParameter.asList(TABLENAME, URL, USER, PASSWORD, CONNECTIONS, CONNECTION_TIMEOUT, SOCKET_TIMEOUT, URL_ENV, USER_ENV,
+      StringParameter.asList(TABLENAME, URL, USER, PASSWORD, CONNECTIONS, CONCURRENT_MODIFICATION_RETRIES, CONNECTION_TIMEOUT, SOCKET_TIMEOUT, URL_ENV, USER_ENV,
                              PASSWORD_ENV, CONNECTIONS_ENV);
 
 
@@ -107,10 +115,14 @@ public class SQLSharedResourceSynchronizerFactory implements SharedResourceSynch
       throw new IllegalArgumentException(e);
     }
     String tableName = TABLENAME.getFromMap(param);
+    if(tableName.contains(" ")) {
+      errors.add("Tablename must not contain spaces");
+    }
     String url = readPropertyWithEnv(URL, URL_ENV, param, errors);
     String username = readPropertyWithEnv(USER, USER_ENV, param, errors);
     String password = readPropertyWithEnv(PASSWORD, PASSWORD_ENV, param, errors);
     int numConnections = readNumConnections(param, errors);
+    int concurrentModificationRetries = CONCURRENT_MODIFICATION_RETRIES.getFromMap(param);
     Duration connectTimeout = CONNECTION_TIMEOUT.getFromMap(param);
     Duration socketTimeout = SOCKET_TIMEOUT.getFromMap(param);
 
@@ -120,7 +132,8 @@ public class SQLSharedResourceSynchronizerFactory implements SharedResourceSynch
       throw new IllegalArgumentException(msg);
     }
 
-    return new SQLSharedResourceSynchronizer(tableName, url, username, password, numConnections, connectTimeout, socketTimeout);
+    return new SQLSharedResourceSynchronizer(tableName, url, username, password, numConnections, concurrentModificationRetries,
+                                             connectTimeout, socketTimeout);
   }
 
 
@@ -175,7 +188,7 @@ public class SQLSharedResourceSynchronizerFactory implements SharedResourceSynch
   @Override
   public PluginDescription getDescription() {
     PluginDescription.Builder result = PluginDescription.create(PluginType.sharedResourceSynchronizer);
-    result.name("SqlSharedResourceSynchronizer");
+    result.name(getSynchronizerName());
     result.label("Shared Resource Synchronizer: SqlSharedResourceSynchronizer");
     result.description("Connects to an SQL Database to synchronize shared resources.");
     result.parameters(ParameterUsage.Create, importParameters);

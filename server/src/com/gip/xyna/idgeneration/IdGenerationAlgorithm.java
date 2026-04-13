@@ -29,7 +29,7 @@ import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 public interface IdGenerationAlgorithm {
 
   /**
-   * IdGenerationAlgorithm intialisieren
+   * IdGenerationAlgorithm initialisieren
    */
   void init() throws PersistenceLayerException;
 
@@ -48,5 +48,6 @@ public interface IdGenerationAlgorithm {
 
   void storeLastUsed(String realm);
   
+  void setBlockSize(String realm, long blockSize);
 
 }

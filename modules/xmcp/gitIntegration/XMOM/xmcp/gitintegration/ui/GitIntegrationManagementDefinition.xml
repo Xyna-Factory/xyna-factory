@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +23,13 @@
       <Data ID="1711" IsList="true" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui" VariableName="repositoryConnectionGroupGuiData1711"/>
       <Data ID="2104" IsList="true" Label="Info Diff Repository" ReferenceName="InfoDiffRepository" ReferencePath="xmcp.gitintegration" VariableName="infoDiffRepository2104"/>
     </Output>
-    <ServiceReference ID="5285" Label="Create Main Panel Child Elements" ReferenceName="CreateMainPanelChildElements" ReferencePath="xmcp.gitintegration.ui">
-      <Source RefID="5284"/>
-      <Target RefID="5284"/>
-    </ServiceReference>
     <ServiceReference ID="3842" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="3841"/>
       <Target RefID="3841"/>
+    </ServiceReference>
+    <ServiceReference ID="5285" Label="Create Main Panel Child Elements" ReferenceName="CreateMainPanelChildElements" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="5284"/>
+      <Target RefID="5284"/>
     </ServiceReference>
     <Function ID="3841" Label="get Own RuntimeContext">
       <Source RefID="3842"/>
@@ -48,7 +48,7 @@
         <Source RefID="3844"/>
       </Input>
       <Output>
-        <Data ID="4206" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition4206">
+        <Data ID="4206" Label="Open Details Button Definition - Add workspace Connection" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition4206">
           <Source RefID="673"/>
         </Data>
         <Target RefID="4207"/>
@@ -56,20 +56,80 @@
       <Mapping>%1%.label="Add workspace connection..."</Mapping>
       <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%0%</Mapping>
       <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.gitintegration.ui.AddWorkspaceConnectionDefinition"</Mapping>
+      <Mapping>%1%.dataPath="%%"</Mapping>
+    </Mappings>
+    <Mappings ID="5362" Label="Create Button: Add Local Workspace To Repository">
+      <Input>
+        <Data ID="5413" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext5413">
+          <Source RefID="5362"/>
+        </Data>
+        <Source RefID="3844"/>
+      </Input>
+      <Output>
+        <Data ID="5387" Label="Open Details Button Definition - Add workspace to repository" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition5387">
+          <Source RefID="5362"/>
+        </Data>
+        <Target RefID="5388"/>
+      </Output>
+      <Mapping>%1%.label="Add local workspace to repository..."</Mapping>
+      <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%0%</Mapping>
+      <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.gitintegration.ui.AddLocalWorkspaceToRepositoryDefinition"</Mapping>
+    </Mappings>
+    <Mappings ID="5511" Label="Create Button: Refresh">
+      <Input>
+        <Data ID="6550" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext6550">
+          <Source RefID="5511"/>
+        </Data>
+        <Source RefID="3844"/>
+      </Input>
+      <Output>
+        <Data ID="6043" Label="Start Order Button Definition - Refresh" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition6043">
+          <Source RefID="5511"/>
+        </Data>
+        <Target RefID="6044"/>
+      </Output>
+      <Mapping>%1%.label="Refresh"</Mapping>
+      <Mapping>%1%.serviceRTC=%0%</Mapping>
+      <Mapping>%1%.serviceFQN="xmcp.gitintegration.ui.CreateMainPanelChildElements"</Mapping>
+      <Mapping>%1%.synchronously="true"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="gitintegration_add-workspace-connection_update"</Mapping>
+      <Mapping>%1%.dataPath="%%"</Mapping>
     </Mappings>
     <Mappings ID="35" Label="Create Main Panel and Header">
       <Input>
-        <Data ID="4592" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition4592">
+        <Data ID="4592" Label="Open Details Button Definition - Add workspace connection" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition4592">
           <Source RefID="35"/>
         </Data>
-        <Source RefID="4207"/>
+        <Source RefID="4207">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="5486" Label="Open Details Button Definition - Add workspace to repository" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition5486">
+          <Source RefID="35"/>
+        </Data>
+        <Source RefID="5388">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="6189" Label="Start Order Button Definition - Refresh" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition6189">
+          <Source RefID="35"/>
+        </Data>
+        <Source RefID="6044"/>
       </Input>
       <Output>
         <Data ID="22" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition22"/>
         <Target RefID="44"/>
       </Output>
-      <Mapping>%1%.label="Repository Connections"</Mapping>
-      <Mapping>%1%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%0%</Mapping>
+      <Mapping>%3%.label="Repository Connections"</Mapping>
+      <Mapping>%3%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%0%</Mapping>
+      <Mapping>%3%.header.rightArea.children["1"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%1%</Mapping>
+      <Mapping>%3%.header.rightArea.children["2"]=%2%</Mapping>
     </Mappings>
     <Function ID="5284" Label="Create Main Panel Child Elements">
       <Source RefID="5285"/>
@@ -129,6 +189,12 @@
     </Data>
     <Data ID="5289" IsList="true" Label="Info Diff Repository" ReferenceName="InfoDiffRepository" ReferencePath="xmcp.gitintegration" VariableName="infoDiffRepository5289">
       <Source RefID="5284"/>
+    </Data>
+    <Data ID="5388" Label="Open Details Button Definition - Add workspace connection" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition5388">
+      <Source RefID="5362"/>
+    </Data>
+    <Data ID="6044" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition6044">
+      <Source RefID="5511"/>
     </Data>
     <Assign ID="1">
       <Source RefID="298"/>

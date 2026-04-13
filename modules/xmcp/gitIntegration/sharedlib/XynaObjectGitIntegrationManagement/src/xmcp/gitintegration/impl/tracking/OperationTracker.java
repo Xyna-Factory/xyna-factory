@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
+/*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2026 Xyna GmbH, Germany
  *
@@ -15,13 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Radius Add User Result" TypeName="RadiusAddUserResult" TypePath="xact.radius" Version="1.8">
-  <Meta>
-    <IsXynaComponent>true</IsXynaComponent>
-  </Meta>
-  <Data Label="Result" VariableName="result">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-</DataType>
+ */
+package xmcp.gitintegration.impl.tracking;
+
+
+
+public interface OperationTracker {
+
+  public void trackInfo(String message);
+
+
+  public void trackError(String message);
+}

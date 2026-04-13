@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,12 +33,13 @@
         <Data ID="1" Label="Path" ReferenceName="Text" ReferencePath="base" VariableName="text1"/>
         <Data ID="2" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace2"/>
         <Data ID="3" Label="Full" ReferenceName="Flag" ReferencePath="xmcp.gitintegration" VariableName="flag3"/>
+        <Data ID="901" Label="Setup" ReferenceName="Flag" ReferencePath="xmcp.gitintegration" VariableName="flag901"/>
       </Input>
       <Output>
         <Data ID="8" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text8"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.addRepositoryConnection(text1, workspace2, flag3);</CodeSnippet>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.addRepositoryConnection(text1, workspace2, flag3, flag901);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Remove Repository Connection" Name="removeRepositoryConnection">
@@ -222,6 +223,35 @@
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.status(repository899);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="List Unconnected Workspaces" Name="listUnconnectedWorkspaces">
+      <Input/>
+      <Output>
+        <Data ID="902" IsList="true" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace902"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.listUnconnectedWorkspaces();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Add Local Workspace to Repository" Name="addLocalWorkspaceToRepository" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="903" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection903"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.gitintegration.RepositoryManagementImpl.addLocalWorkspaceToRepository(correlatedXynaOrder, repositoryConnection903);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="List Connections of Repository" Name="listConnectionsOfRepository">
+      <Input>
+        <Data ID="904" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository904"/>
+      </Input>
+      <Output>
+        <Data ID="905" IsList="true" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection905"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.listConnectionsOfRepository(repository904);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
