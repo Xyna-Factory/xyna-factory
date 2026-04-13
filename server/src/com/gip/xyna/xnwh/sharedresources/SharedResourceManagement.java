@@ -330,10 +330,7 @@ public class SharedResourceManagement extends Section {
    * of listSharedResourceTypes.
    */
   public void addSharedResource(String type, SharedResourceConfigurationChangeListener changeListener) {
-    if (!sharedResourceToSynchronizerMap.containsKey(type)) {
-      sharedResourceToSynchronizerMap.put(type, null);
-      sharedResourceTypeStorage.storeType(type, null);
-    }
+    sharedResourceToSynchronizerMap.putIfAbsent(type, null);
     listeners.computeIfAbsent(type, (x) -> new ArrayList<>());
     listeners.get(type).add(changeListener);
   }
