@@ -29,6 +29,10 @@
       <Source RefID="2153"/>
       <Target RefID="2153"/>
     </ServiceReference>
+    <ServiceReference ID="5605" Label="Workspace Xml needs Attention" ReferenceName="WorkspaceXmlNeedsAttention" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="5604"/>
+      <Target RefID="5604"/>
+    </ServiceReference>
     <Function ID="2153" Label="get Own RuntimeContext">
       <Source RefID="2154"/>
       <Target RefID="2154"/>
@@ -109,6 +113,68 @@
       <Mapping>%2%.rTC=%0%</Mapping>
       <Mapping>%2%.fQN="xmcp.gitintegration.ui.WorkspaceDiffListsDefinition"</Mapping>
     </Mappings>
+    <Function ID="5604" Label="Workspace Xml needs Attention">
+      <Source RefID="5605"/>
+      <Source RefID="1716"/>
+      <Target RefID="5605"/>
+      <Target RefID="5607"/>
+      <Invoke Operation="WorkspaceXmlNeedsAttention" ServiceID="5605">
+        <Source RefID="1716">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="5605">
+        <Target RefID="5607"/>
+      </Receive>
+    </Function>
+    <Choice ID="5306" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="5607"/>
+      <Target RefID="5482"/>
+      <Input>
+        <Data ID="5329" Label="Flag" ReferenceName="Flag" ReferencePath="xmcp.gitintegration" VariableName="flag5329">
+          <Source RefID="5306"/>
+        </Data>
+        <Source RefID="5607"/>
+      </Input>
+      <Case ID="5307" Label="true" Premise="%0%.value">
+        <Mappings ID="5378" Label="Mapping">
+          <Output>
+            <Data ID="5395" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text5395">
+              <Source RefID="5378"/>
+            </Data>
+            <Target RefID="5396"/>
+          </Output>
+          <Mapping>%0%.text="(!) "</Mapping>
+        </Mappings>
+        <Assign ID="5310">
+          <Source RefID="5396"/>
+          <Target RefID="5482"/>
+          <Copy>
+            <Source RefID="5396"/>
+            <Target RefID="5482"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="5308" Label="false">
+        <Mappings ID="5413" Label="Mapping">
+          <Output>
+            <Data ID="5414" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text5414"/>
+            <Target RefID="5415"/>
+          </Output>
+          <Mapping>%0%.text=""</Mapping>
+        </Mappings>
+        <Assign ID="5312">
+          <Source RefID="5415"/>
+          <Target RefID="5482"/>
+          <Copy>
+            <Source RefID="5415"/>
+            <Target RefID="5482"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
     <Mappings ID="2004" Label="Mapping">
       <Input>
         <Data ID="3950" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow3950">
@@ -116,15 +182,25 @@
         </Data>
         <Source RefID="3635"/>
       </Input>
+      <Input>
+        <Data ID="5433" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text5433">
+          <Source RefID="2004"/>
+        </Data>
+        <Source RefID="5482">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
       <Output>
         <Data ID="2013" Label="Open Details Button Definition - workspace-xml" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition2013">
           <Source RefID="2004"/>
         </Data>
         <Target RefID="3432"/>
       </Output>
-      <Mapping>%1%.label="Manage workspace-xml..."</Mapping>
-      <Mapping>%1%.dataPath=null</Mapping>
-      <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%0%</Mapping>
+      <Mapping>%2%.label=concat(%1%.text, "Manage workspace-xml...")</Mapping>
+      <Mapping>%2%.dataPath=null</Mapping>
+      <Mapping>%2%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%0%</Mapping>
     </Mappings>
     <Mappings ID="4749" Label="Mapping">
       <Input>
@@ -137,7 +213,11 @@
         <Data ID="5082" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text5082">
           <Source RefID="4749"/>
         </Data>
-        <Source RefID="4150"/>
+        <Source RefID="4150">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
       </Input>
       <Output>
         <Data ID="4766" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow4766">
@@ -168,7 +248,7 @@
       </Output>
       <Mapping>%1%.label="Manage references..."</Mapping>
       <Mapping>%1%.dataPath=null</Mapping>
-      <Mapping>%1%.detailsDefinitionReference=%0%</Mapping>
+      <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%0%</Mapping>
     </Mappings>
     <Mappings ID="11" Label="Mapping">
       <Input>
@@ -234,6 +314,16 @@
     </Data>
     <Data ID="4767" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow4767">
       <Source RefID="4749"/>
+    </Data>
+    <Data ID="5396" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text5396">
+      <Source RefID="5378"/>
+    </Data>
+    <Data ID="5415" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text5415"/>
+    <Data ID="5482" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text5482">
+      <Source RefID="5306"/>
+    </Data>
+    <Data ID="5607" Label="Flag" ReferenceName="Flag" ReferencePath="xmcp.gitintegration" VariableName="flag5607">
+      <Source RefID="5604"/>
     </Data>
     <Assign ID="1">
       <Source RefID="10"/>

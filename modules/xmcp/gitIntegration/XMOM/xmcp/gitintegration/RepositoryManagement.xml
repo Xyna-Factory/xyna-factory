@@ -243,5 +243,16 @@
         <CodeSnippet Type="Java">xmcp.gitintegration.RepositoryManagementImpl.addLocalWorkspaceToRepository(correlatedXynaOrder, repositoryConnection903);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="List Connections of Repository" Name="listConnectionsOfRepository">
+      <Input>
+        <Data ID="904" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository904"/>
+      </Input>
+      <Output>
+        <Data ID="905" IsList="true" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection905"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.listConnectionsOfRepository(repository904);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>
