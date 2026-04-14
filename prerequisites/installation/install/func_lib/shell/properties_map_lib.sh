@@ -79,7 +79,6 @@ PRODUCT_PROPERTIES="\
                     jvm.option.gc\
                     jvm.option.log4j\
                     jvm.option.profiling\
-                    jvm.option.rmi\
                     jvm.option.xml.backup\
                     jvm.permgenspace.size\
                     os.locale\
@@ -171,7 +170,6 @@ case ${PROPERTY} in
   jvm.option.gc)                                echo "";;
   jvm.option.log4j)                             echo "-Dlog4j.configurationFile=log4j2.xml";;
   jvm.option.profiling)                         echo "";;
-  jvm.option.rmi)                               echo "-Djava.security.policy=server.policy";;
   jvm.option.xml.backup)                        echo "-Dxnwh.persistence.xml.backup.enabled=false";;
   jvm.permgenspace.size)                        echo "${JAVA_PERMSIZE}m";;
   ntp1.ipAddress)                               echo "192.53.103.108";;    # ptbtime1.ptb.de
@@ -308,8 +306,7 @@ f_map_current_property() {
     jvm.option.gc)                                    GC_OPTIONS="${CURRENT_PROPERTY}";;
     jvm.option.log4j)                                 LOG4J_OPTIONS="${CURRENT_PROPERTY}";;
     jvm.option.profiling)                             PROFILING_OPTIONS="${CURRENT_PROPERTY}";;
-    jvm.option.xml.backup)                            XML_BACKUP_OPTIONS="${CURRENT_PROPERTY}";;
-    jvm.option.rmi)                                   RMI_OPTIONS="${CURRENT_PROPERTY}";;
+    jvm.option.xml.backup)                            XML_BACKUP_OPTIONS="${CURRENT_PROPERTY}";
     ntp1.ipAddress)      f_check_is_ip_address "${i}"; NTP1_SERVER="${CURRENT_PROPERTY}";;
     ntp2.ipAddress)                                   NTP2_SERVER="${CURRENT_PROPERTY}";;
     os.locale)                                        OS_LOCALE="${CURRENT_PROPERTY}";;
