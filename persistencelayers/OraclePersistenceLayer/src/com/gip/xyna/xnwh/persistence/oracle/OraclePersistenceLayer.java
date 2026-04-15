@@ -218,7 +218,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
     NUMBER, FLOAT, TIME, TEXT_ENCODED, BINARY, OTHER;
 
     /**
-     * gibt zurück, ob der übergebene typ größergleich ist. OTHER.isCompatibleTo(TIME) = false
+     * gibt zurÃ¼ck, ob der Ã¼bergebene typ grÃ¶ÃŸergleich ist. OTHER.isCompatibleTo(TIME) = false
      * NUMBER.isCompatibleTo(TEXT_ENCODED) = true
      * @param otherType
      * @return
@@ -303,7 +303,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
 
 
     /**
-     * gibt zu einem typ alle damit kompatiblen typen zurück (die "größer" sind). beispiel: BLOB.getCompatibleTypes =>
+     * gibt zu einem typ alle damit kompatiblen typen zurÃ¼ck (die "grÃ¶ÃŸer" sind). beispiel: BLOB.getCompatibleTypes =>
      * BLOB, MEDIUMBLOB, LONGBLOB
      * @return
      */
@@ -361,7 +361,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
         return OracleSqlType.VARCHAR2;
       }
       try {
-        //TODO konfigurierbares encoding? ist das hier überhaupt das encoding der datenbank?
+        //TODO konfigurierbares encoding? ist das hier Ã¼berhaupt das encoding der datenbank?
         int lbytes = value.getBytes(Constants.DEFAULT_ENCODING).length;
         if (lbytes > OracleSqlType.VARCHAR2.size) {
           return OracleSqlType.CLOB;
@@ -434,14 +434,14 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
     
     final TypedConnectionPoolParameter tcpp = regularPoolDefinition.toCreationParameter();
     final Optional<StringEnvironmentVariable> userEnv = Optional
-        .ofNullable(com.gip.xyna.xnwh.pools.OraclePoolType.USERNAME_ENV.getFromMap(tcpp.getAdditionalParams()));
+        .ofNullable(OraclePoolType.USERNAME_ENV.getFromMap(tcpp.getAdditionalParams()));
     final Optional<StringEnvironmentVariable> connectStringEnv = Optional
-        .ofNullable(com.gip.xyna.xnwh.pools.OraclePoolType.CONNECT_ENV.getFromMap(tcpp.getAdditionalParams()));
+        .ofNullable(OraclePoolType.CONNECT_ENV.getFromMap(tcpp.getAdditionalParams()));
 
-    url = connectStringEnv.flatMap(c -> c.getValue()).filter(s -> !s.isEmpty())
+    url = connectStringEnv.flatMap(c -> c.getValue()).map(String::trim).filter(s -> !s.isEmpty())
         .orElse(regularPoolDefinition.getConnectstring()).trim();
-    username = userEnv.flatMap(u -> u.getValue()).filter(s -> !s.isEmpty()).orElse(regularPoolDefinition.getUser())
-        .trim();
+    username = userEnv.flatMap(u -> u.getValue()).map(String::trim).filter(s -> !s.isEmpty())
+        .orElse(regularPoolDefinition.getUser()).trim();
       
     // catch any RuntimeException or Error to be able to rollback the insertion of the instanceidentifier
     // into the static instanceIdentifiers map
@@ -841,8 +841,8 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
         case Other:  //Ursache nicht entscheidbar
         case NetworkUnreachable:
         case Timeout:
-          //Retries könnten erfolgreich sein
-          //Interconnect checken, da dieser von diesen Fehlern betroffen sein könnte
+          //Retries kÃ¶nnten erfolgreich sein
+          //Interconnect checken, da dieser von diesen Fehlern betroffen sein kÃ¶nnte
           ClusterProvider clusterInstance = getClusterInstance();
           if (clusterInstance != null) {
             clusterInstance.checkInterconnect();
@@ -913,7 +913,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
   }
 
 
-  //die clobstring klasse wird in den database-utils unterstützt, benutzt aber die oracle-jars. weil die utils in ihrem classloader die oracle-jars nicht kennen, ist dies der workaround.
+  //die clobstring klasse wird in den database-utils unterstÃ¼tzt, benutzt aber die oracle-jars. weil die utils in ihrem classloader die oracle-jars nicht kennen, ist dies der workaround.
   private static class ExtendedCLOBString extends CLOBString {
 
     public ExtendedCLOBString(String string) {
@@ -1026,7 +1026,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
     private OracleSqlType type; //uppercase
     private IndexType indexType;
     private String indexName;
-    private OracleSQLColumnInfo next; //verkettete Liste, wenn mehrere Einträge zu einer Tabellenspalte existieren
+    private OracleSQLColumnInfo next; //verkettete Liste, wenn mehrere EintrÃ¤ge zu einer Tabellenspalte existieren
     
     @Override
     public String getTypeAsString() {
@@ -1084,7 +1084,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
   private Map<Column, OracleSQLColumnInfo> columnMap = Collections.synchronizedMap(new IdentityHashMap<Column, OracleSQLColumnInfo>());
 
 
-  // unterstützt nicht mehrere threads die die gleiche connection benutzen
+  // unterstÃ¼tzt nicht mehrere threads die die gleiche connection benutzen
   private class OraclePersistenceLayerConnection
       implements
         PersistenceLayerConnection,
@@ -1148,10 +1148,10 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
         
         OracleSQLColumnInfo colInfo = columnMap.get(collision.getColumn());
         
-        //es gibt mindestens einen Index für diese Spalte, dieser hat einen Namen
+        //es gibt mindestens einen Index fÃ¼r diese Spalte, dieser hat einen Namen
         String indexName = createIndexName(tableName, collision.getColumn().name(), isPk );
         
-        //nun über alle vorgefundenen Indexe zu dieser Spalte iterieren
+        //nun Ã¼ber alle vorgefundenen Indexe zu dieser Spalte iterieren
         boolean foundIndex = false;
         for( OracleSQLColumnInfo ci = colInfo; ci != null; ci = ci.next ) {
           if( alterIndex(collision.getColumn(), ci, javaIndexType, indexName, tableName, collision.getIndexModification()) ) {
@@ -1220,7 +1220,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
             if (columnMap.get(col) == null ||
                 columnMap.get(col).indexType != colInfo.indexType ||
                 columnMap.get(col).type != colInfo.type) {
-              colInfo.next = columnMap.get(col); //evtl. vorherige Einträge aufheben: es kann mehrere Einträge ...
+              colInfo.next = columnMap.get(col); //evtl. vorherige EintrÃ¤ge aufheben: es kann mehrere EintrÃ¤ge ...
               //... in "colInfos" zu einem Eintrag in "cols" geben 
               columnMap.put(col, colInfo);
             }
@@ -1239,7 +1239,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
         
         OracleSQLColumnInfo colInfo = columnMap.get(column);
         if( colInfo == null ) {
-          //keine Daten für den Index bislang, deswegen evtl. neu bauen
+          //keine Daten fÃ¼r den Index bislang, deswegen evtl. neu bauen
           if( javaIndexType != IndexType.NONE ) {
             String indexName = createIndexName(tableName, column.name(), isPk );
             createIndex( indexName, javaIndexType, tableName, column.name() );
@@ -1250,10 +1250,10 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
         if( javaIndexType == IndexType.NONE && colInfo.indexType == IndexType.NONE ) {
           continue; //kein Index
         }
-        //es gibt mindestens einen Index für diese Spalte, dieser hat einen Namen
+        //es gibt mindestens einen Index fÃ¼r diese Spalte, dieser hat einen Namen
         String indexName = createIndexName(tableName, column.name(), isPk );
         
-        //nun über alle vorgefundenen Indexe zu dieser Spalte iterieren
+        //nun Ã¼ber alle vorgefundenen Indexe zu dieser Spalte iterieren
         Pair<Boolean, IndexModification> modification = Pair.of(false, null);
         boolean foundIndex = false;
         for( OracleSQLColumnInfo ci = colInfo; ci != null; ci = ci.next ) {
@@ -1339,7 +1339,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
         int endOfTableName = tableName.length();
         int beginOfCut = tableName.length() - (indexName.length() - MAX_IDENTIFIER_LENGTH);
         indexName = indexName.substring(0, beginOfCut) +indexName.substring(endOfTableName);
-        //TODO  evtl. reicht es nicht aus, nur den Tabellennamen zu kürzen
+        //TODO  evtl. reicht es nicht aus, nur den Tabellennamen zu kÃ¼rzen
       }
       return indexName;
     }
@@ -1368,7 +1368,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
     }
     
     private void executeDDL(String ddl) {
-      //Ausführen des Statements ddl und Warn-Log, falls dies nicht erfolgreich war
+      //AusfÃ¼hren des Statements ddl und Warn-Log, falls dies nicht erfolgreich war
       boolean created = false;
       try {
         sqlUtils.executeDDL(ddl, null);
@@ -1654,7 +1654,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
                 valAsString = valAsString.substring(0, colSize);
               }
               if (getColumnTypeOfStringCol(col, valAsString) == OracleSqlType.CLOB) {
-                //oracle kann nur strings bis zu einer gewissen länge, danach müssen es in der datenbank clobs sein
+                //oracle kann nur strings bis zu einer gewissen lÃ¤nge, danach mÃ¼ssen es in der datenbank clobs sein
                 ExtendedCLOBString clob = new ExtendedCLOBString(valAsString);
                 paras.addParameter(clob);
                 continue;
@@ -1665,7 +1665,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
             try {
               paras.addParameter(val); //erkennt strings, zahlen etc
             } catch (UnexpectedParameterException e) {
-              //toString oder analoge repräsentation verwenden
+              //toString oder analoge reprÃ¤sentation verwenden
               if (val.getClass().isArray()) {
                 Class<?> componentType = val.getClass().getComponentType();
                 if (componentType == byte.class) {
@@ -1750,7 +1750,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
     public <T extends Storable> boolean persistObject(T storable) throws PersistenceLayerException {
       OraclePersistenceLayer.this.throwIfDBNotReachable();
       ensureOpen();
-      //überprüfen, ob objekt bereits in db ist
+      //Ã¼berprÃ¼fen, ob objekt bereits in db ist
       String sqlString =
           new StringBuilder().append("select count(*) from ").append(escape(storable.getTableName())).append(" where ")
               .append(escape(Storable.getPersistable(storable.getClass()).primaryKey())).append(" = ?").toString();
@@ -1786,7 +1786,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
           //solange versuchen, bis insert oder update erfolgreich ist.
           if (updateOrInsert == UpdateInsert.insert) {
             //TODO performance: hier kann man die erstellten parameter und das statement cachen, wenn die whileschleife hier mehrfach vorbei kommt.
-            //                  das passiert aber nicht oft, dass hier die while schleife mehrfach den insert-fall durchläuft.
+            //                  das passiert aber nicht oft, dass hier die while schleife mehrfach den insert-fall durchlÃ¤uft.
             //insert
             Column[] columns = storable.getColumns();
 
@@ -1802,7 +1802,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
                   //  ORA-00001: unique constraint (...) violated
                   cnt = sqlUtils.queryInt(sqlString, new com.gip.xyna.utils.db.Parameter(storable.getPrimaryKey()));
                   if (cnt == 0) {
-                    //entweder bereits wieder gelöscht (unwahrscheinlich) oder die uniqueconstraintverletzung ist von einer anderen spalte bedingt
+                    //entweder bereits wieder gelÃ¶scht (unwahrscheinlich) oder die uniqueconstraintverletzung ist von einer anderen spalte bedingt
                     //updateOrInsert weiterhin auf insert
                     if (++insertRetryCounter > MAX_INSERT_RETRY_COUNTER) {
                       throw e;
@@ -1824,7 +1824,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
 
             String updateStmt = createUpdateStatement(columns, storable);
             com.gip.xyna.utils.db.Parameter paras = createParasForInsertAndUpdate(columns, storable);
-            //parameter für whereclause adden
+            //parameter fÃ¼r whereclause adden
             paras.addParameter(storable.getPrimaryKey());
 
             int modified = sqlUtils.executeDML(updateStmt, paras);
@@ -1899,14 +1899,14 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
       }
       String sqlQuery = query.getQuery().getSqlString();
       if (maxRows > -1 && maxRows < Integer.MAX_VALUE) {
-        //beschränkung des ergebnisses mit oracle hilfsmitteln
+        //beschrÃ¤nkung des ergebnisses mit oracle hilfsmitteln
         sqlQuery = query.getTransformedQueryToUseWithMaxRows(getStorable(query.getQuery().getTable()));
         if (paras == null) {
           paras = new com.gip.xyna.utils.db.Parameter();
         }
         paras.addParameter(maxRows);
       }
-      //für Oracle muss bei Like-Anfragen (mit escapten Zeichen) das verwendete Escape-Zeichen
+      //fÃ¼r Oracle muss bei Like-Anfragen (mit escapten Zeichen) das verwendete Escape-Zeichen
       //angegeben werden
       sqlQuery = sqlQuery.replaceAll("\\s+(?i)LIKE\\s+\\?\\s+", " LIKE ? ESCAPE '\\\\' ");
       try {
@@ -2050,7 +2050,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
 
 
     public void setTransactionProperty(TransactionProperty property) {
-      //nicht unterstützt
+      //nicht unterstÃ¼tzt
     }
 
     
@@ -2148,7 +2148,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
       Class<?> fieldType = f.getType();
       OracleSqlType type = javaTypeToMySQLType.get(fieldType);
       if (type == null) {
-        //Iteration über die Einträge in javaTypeToMySQLType: evtl. ist Storable-Column von einem bekannten Typ abgeleitet
+        //Iteration Ã¼ber die EintrÃ¤ge in javaTypeToMySQLType: evtl. ist Storable-Column von einem bekannten Typ abgeleitet
         for( Class<?> clazz : javaTypeToMySQLType.keySet() ) {
           if( clazz.isAssignableFrom(fieldType) ) {
             type = javaTypeToMySQLType.get(clazz);
