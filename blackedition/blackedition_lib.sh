@@ -1313,7 +1313,6 @@ import_applications () {
         continue;;
       */Radius.*)
         configure_persistence_layer_for_radius_service;;
-        ;;
     esac;
     f_import_applications_internal ${APP_FILE}
   done
