@@ -306,7 +306,7 @@ f_map_current_property() {
     jvm.option.gc)                                    GC_OPTIONS="${CURRENT_PROPERTY}";;
     jvm.option.log4j)                                 LOG4J_OPTIONS="${CURRENT_PROPERTY}";;
     jvm.option.profiling)                             PROFILING_OPTIONS="${CURRENT_PROPERTY}";;
-    jvm.option.xml.backup)                            XML_BACKUP_OPTIONS="${CURRENT_PROPERTY}";
+    jvm.option.xml.backup)                            XML_BACKUP_OPTIONS="${CURRENT_PROPERTY}";;
     ntp1.ipAddress)      f_check_is_ip_address "${i}"; NTP1_SERVER="${CURRENT_PROPERTY}";;
     ntp2.ipAddress)                                   NTP2_SERVER="${CURRENT_PROPERTY}";;
     os.locale)                                        OS_LOCALE="${CURRENT_PROPERTY}";;
