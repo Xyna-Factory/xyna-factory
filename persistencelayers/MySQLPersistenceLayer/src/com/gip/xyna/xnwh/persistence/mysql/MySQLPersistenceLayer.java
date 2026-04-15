@@ -262,10 +262,10 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
       throw new XNWH_GeneralPersistenceLayerException("Pool for pliID " + String.valueOf(this.pliID) + " does not exist!");
     }
     
-    TypedConnectionPoolParameter tcpp = regularPoolDefinition.toCreationParameter();
-    private final Optional<StringEnvironmentVariable> userEnv = Optional
+    final TypedConnectionPoolParameter tcpp = regularPoolDefinition.toCreationParameter();
+    final Optional<StringEnvironmentVariable> userEnv = Optional
         .ofNullable(com.gip.xyna.xnwh.pools.MySQLPoolType.USERNAME_ENV.getFromMap(tcpp.getAdditionalParams()));
-    private final Optional<StringEnvironmentVariable> connectStringEnv = Optional
+    final Optional<StringEnvironmentVariable> connectStringEnv = Optional
         .ofNullable(com.gip.xyna.xnwh.pools.MySQLPoolType.CONNECT_ENV.getFromMap(tcpp.getAdditionalParams()));
 
     url = connectStringEnv.flatMap(c -> c.getValue()).filter(s -> !s.isEmpty())

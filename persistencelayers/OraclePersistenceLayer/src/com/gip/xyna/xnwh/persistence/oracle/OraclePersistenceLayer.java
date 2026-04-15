@@ -432,10 +432,10 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
       throw new XNWH_GeneralPersistenceLayerException("Connection pool <" + poolName + "> not found!");
     }
     
-    TypedConnectionPoolParameter tcpp = regularPoolDefinition.toCreationParameter();
-    private final Optional<StringEnvironmentVariable> userEnv = Optional
+    final TypedConnectionPoolParameter tcpp = regularPoolDefinition.toCreationParameter();
+    final Optional<StringEnvironmentVariable> userEnv = Optional
         .ofNullable(com.gip.xyna.xnwh.pools.OraclePoolType.USERNAME_ENV.getFromMap(tcpp.getAdditionalParams()));
-    private final Optional<StringEnvironmentVariable> connectStringEnv = Optional
+    final Optional<StringEnvironmentVariable> connectStringEnv = Optional
         .ofNullable(com.gip.xyna.xnwh.pools.OraclePoolType.CONNECT_ENV.getFromMap(tcpp.getAdditionalParams()));
 
     url = connectStringEnv.flatMap(c -> c.getValue()).filter(s -> !s.isEmpty())
@@ -1750,7 +1750,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
     public <T extends Storable> boolean persistObject(T storable) throws PersistenceLayerException {
       OraclePersistenceLayer.this.throwIfDBNotReachable();
       ensureOpen();
-      //Überprüfen, ob objekt bereits in db ist
+      //überprüfen, ob objekt bereits in db ist
       String sqlString =
           new StringBuilder().append("select count(*) from ").append(escape(storable.getTableName())).append(" where ")
               .append(escape(Storable.getPersistable(storable.getClass()).primaryKey())).append(" = ?").toString();
