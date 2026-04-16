@@ -193,7 +193,7 @@ class Testgenerator:
     for listIndexKey in self.listIndexKeys:
       valueEsc = re.escape(value)
       listIndexKeyEsc = re.escape(listIndexKey)
-      exp = "\["+ listIndexKeyEsc + "=" + valueEsc + "]/" +  listIndexKeyEsc+ "$"
+      exp = "\\["+ listIndexKeyEsc + "=" + valueEsc + "]/" +  listIndexKeyEsc+ "$"
       if re.search(exp, path):
         #we have to change path.
         oldIndex = gparent.index(parent)
@@ -359,7 +359,7 @@ class Testgenerator:
 
 
   def lateReplaceListIndex(self, path):
-    exp = "(\[(.*?)=([^!]*?)\])"
+    exp = "(\\[(.*?)=([^!]*?)\\])"
     matches = re.findall(exp, path)
     if matches == None:
       return path
@@ -369,7 +369,7 @@ class Testgenerator:
       toReplace = value
       if key in self.listIndexKeyToReplaceValue:
         replaced = self.applySubstitutions(toReplace, self.substitutionFunctions)
-        path = re.sub("="+value, "="+replaced, path, 1)
+        path = re.sub("="+value, "="+replaced, path, count=1)
 
     return path
 
@@ -451,8 +451,8 @@ class Testgenerator:
 
     partEsc = re.escape(part)
 
-    exp1 = "^" + partEsc + "\.[^\.]*$"
-    exp2 = ".*\." + partEsc + "$"
+    exp1 = "^" + partEsc + "\\.[^\\.]*$"
+    exp2 = ".*\\." + partEsc + "$"
 
     for i in range(0, len(self.knowledge)):
       knowledge = self.knowledge[i]
