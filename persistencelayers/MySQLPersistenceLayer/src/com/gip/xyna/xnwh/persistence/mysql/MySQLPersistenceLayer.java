@@ -273,7 +273,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
     username = userEnv.flatMap(u -> u.getValue()).map(String::trim).filter(s -> !s.isEmpty())
         .orElse(regularPoolDefinition.getUser());
 
-    // TODO echtes Pattern fÃ¼r den connect string benutzen
+    // TODO echtes Pattern für den connect string benutzen
     int i = url.lastIndexOf("/");
     if (i < 0 || i + 1 == url.length()) {
       throw new XNWH_GeneralPersistenceLayerException("Connect string '" + url + "' for pliID " + String.valueOf(this.pliID) + " must contain a schema name.");
@@ -379,7 +379,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
       } else if (key.equals(KEY_CONNECT_TIMEOUT)) {
         connectTimeout = Integer.valueOf(keyValue[1]);
         if (connectTimeout <= 0) {
-          connectTimeout = 60 * 60 * 24 * 365; //1 jahr. besser als sonderbehandlung fÃ¼r 0 unten
+          connectTimeout = 60 * 60 * 24 * 365; //1 jahr. besser als sonderbehandlung für 0 unten
         }
         if (logger.isDebugEnabled()) {
           logger.debug("set " + KEY_CONNECT_TIMEOUT + " to " + connectTimeout);
@@ -490,9 +490,9 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
     }
   };
   
-  //basiert auf den inneren (echten) connections. cache rÃ¤umt sich automatisch auf, wenn die connections nicht mehr verwendet werden
+  //basiert auf den inneren (echten) connections. cache räumt sich automatisch auf, wenn die connections nicht mehr verwendet werden
   //auf die pooledconnection kann man den cache nicht basieren, weil dieser innen seine connection austauschen kann
-  //achtung: feature ist fÃ¼r ORACLE nicht einfach zu kopieren.
+  //achtung: feature ist für ORACLE nicht einfach zu kopieren.
   private WeakHashMap<Connection, StatementCache> statementCaches = new WeakHashMap<Connection, StatementCache>();
   private boolean useDurableStatementCache = false;
   private boolean zippedBlobs = false;
@@ -571,7 +571,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
         case Other:  //Ursache nicht entscheidbar //FIXME derzeit immer PoolExhausted oder Other
         case NetworkUnreachable:
         case Timeout:
-          //Retries kÃ¶nnten erfolgreich sein
+          //Retries könnten erfolgreich sein
           throw new XNWH_RetryTransactionException(e);
         case PoolClosed:
         case URLInvalid:
@@ -616,7 +616,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
   
   void closeSQLUtils(SQLUtils sqlUtils) throws PersistenceLayerException {
     if (useDurableStatementCache) {
-      sqlUtils.setStatementCache(null); //cache soll Ã¼berleben (sqlUtils clearen den cache bei closeConnection())
+      sqlUtils.setStatementCache(null); //cache soll überleben (sqlUtils clearen den cache bei closeConnection())
     }
     try {
       sqlUtils.closeConnection();
@@ -796,7 +796,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
   <T extends Storable<?>> int getColumnSize(Column col, Class<T> clazz) {
       MySQLColumnInfo colInfo = getColumnMap().get(col);
       if (colInfo == null) {
-          // TODO cache befÃ¼llen oder sicherstellen, dass dieser fall nicht unerwartet
+          // TODO cache befüllen oder sicherstellen, dass dieser fall nicht unerwartet
           // auftritt.
           if (logger.isTraceEnabled()) {
               logger.trace("Column " + col.name() + " of " + Storable.getPersistable(clazz).tableName()
@@ -907,7 +907,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
       try {
           paras.addParameter(val); // erkennt strings, zahlen etc
       } catch (UnexpectedParameterException e) {
-          // toString oder analoge reprÃ¤sentation verwenden
+          // toString oder analoge repräsentation verwenden
           if (val.getClass().isArray()) {
               Class<?> componentType = val.getClass().getComponentType();
               if (componentType == byte.class) {
