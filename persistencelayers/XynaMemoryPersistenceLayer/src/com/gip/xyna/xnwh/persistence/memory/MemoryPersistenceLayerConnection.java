@@ -23,7 +23,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -38,9 +37,6 @@ import java.util.concurrent.locks.Lock;
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
-import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
-import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
-import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 import com.gip.xyna.xnwh.exceptions.XNWH_ConnectionClosedException;
 import com.gip.xyna.xnwh.exceptions.XNWH_GeneralPersistenceLayerException;
 import com.gip.xyna.xnwh.exceptions.XNWH_IncompatiblePreparedObjectException;
