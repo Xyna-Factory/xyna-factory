@@ -1835,17 +1835,17 @@ public class Updater implements UpdaterInterface {
       updates.add(ud);
 
       // 10.7.0.0
-      Version v478 = new Version(v477).increaseToMajorVersion(2, 1);
+      Version v480 = new Version(v477).increaseToMajorVersion(2, 1);
       ud = new UpdateJustVersion(v477, v478);
       ud.addFollowingBranchVersionsAsAllowedForUpdate(3); //10.6.x.x darf hier drauf updaten
 
       // 10.6.0.1
-      Version v478 = new Version(v477).increaseToMajorVersion(4, 1);
+      Version v479 = new Version(v477).increaseToMajorVersion(4, 1);
       ud = new UpdateJustVersion(v477, v478);
       updates.add(ud);
 
       // 10.6.0.2
-      Version v479 = new Version(v478).increaseToMajorVersion(4, 1);
+      Version v478 = new Version(v478).increaseToMajorVersion(4, 1);
       ud = new UpdateJustVersion(v478, v479);
       updates.add(ud);
 
