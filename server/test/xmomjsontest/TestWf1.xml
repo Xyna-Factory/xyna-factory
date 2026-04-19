@@ -1,0 +1,23 @@
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="TestWf1" TypePath="ztest.us.xmom_json_1" Label="Test Wf 1">
+  <Operation ID="0" Label="Test Wf 1" Name="TestWf1" IsStatic="false">
+    <Input>
+    </Input>
+    <Output>
+    </Output>
+    <Mappings ID="10" Label="Mapping">
+      <Output>
+        <Data ID="29" VariableName="txt29" Label="Txt" ReferenceName="Txt" ReferencePath="ztest.us.xmom_json_1">
+          <Source RefID="10"/>
+        </Data>
+        <Target RefID="30">
+        </Target>
+      </Output>
+      <Mapping>%0%.txt="test ok!"</Mapping>
+    </Mappings>
+    <Data ID="30" VariableName="txt30" Label="Txt" ReferenceName="Txt" ReferencePath="ztest.us.xmom_json_1">
+      <Source RefID="10"/>
+    </Data>
+    <Assign ID="1">
+    </Assign>
+  </Operation>
+</Service>
