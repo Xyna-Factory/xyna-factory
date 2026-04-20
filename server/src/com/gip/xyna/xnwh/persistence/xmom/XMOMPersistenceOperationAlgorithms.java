@@ -721,8 +721,9 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
                Object value = getColumnFromDatatype(columnToUpdate, storable, update.getListIndizesForRootObject());
                unfinishedUpdateStatement.setParam(columnToUpdate, value);
               }
+              String tableName = update.getUnfinishedUpdateStatement().getTableName();
               Pair<String, Parameter> finishedStatement = update.getUnfinishedUpdateStatement().finish(primaryKeyOfPossessingXMOMStorable);
-              PreparedCommand cmd = con.prepareCommand(new Command(finishedStatement.getFirst()));
+              PreparedCommand cmd = con.prepareCommand(new Command(finishedStatement.getFirst(), tableName));
               int modifiedRows = con.executeDML(cmd, finishedStatement.getSecond());
               if (modifiedRows <= 0) {
                 ResultSetReader<Long> reader = new ResultSetReader<Long>() {
@@ -730,14 +731,13 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
                     return rs.getLong(1);
                   }
                 };
-                String tableName = update.getUnfinishedUpdateStatement().getQualifiedColumn().get(0).getColumn().getParentStorableInfo().getTableName();
                 Pair<String, Parameter> existenceVerification = update.getUnfinishedUpdateStatement().getExistenceVerificationRequest(primaryKeyOfPossessingXMOMStorable);
                 PreparedQuery<Long> query = con.prepareQuery(new Query<Long>(existenceVerification.getFirst(), reader, tableName));
                 Long count = con.queryOneRow(query, existenceVerification.getSecond());
                 if (count <= 0) {
                   String typename = determineTypeName(storable, update.getListIndizesForRootObject(), update.getUnfinishedUpdateStatement().getQualifiedColumn().get(0));
                   Pair<String, Parameter> finishedInsertStatement = update.getUnfinishedUpdateStatement().finishInsert(primaryKeyOfPossessingXMOMStorable, typename);
-                  PreparedCommand insertCmd = con.prepareCommand(new Command(finishedInsertStatement.getFirst()));
+                  PreparedCommand insertCmd = con.prepareCommand(new Command(finishedInsertStatement.getFirst(), tableName));
                   modifiedRows = con.executeDML(insertCmd, finishedInsertStatement.getSecond());
                   if (modifiedRows <= 0) {
                     throw new RuntimeException(new XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY(String.valueOf(existenceVerification.getSecond().get(0)),
@@ -1544,7 +1544,7 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
       updateBuilder.append("UPDATE ").append(escTableName)
                   .append(" SET ").append(escColumnName).append(" = NULL")
                   .append(" WHERE ").append(escColumnName).append(" = ?");
-      Command cmd = new Command(updateBuilder.toString());
+      Command cmd = new Command(updateBuilder.toString(), columnReferencedBy.getParentStorableInfo().getTableName());
       con.executeDML(con.prepareCommand(cmd), new Parameter(pk));
     }
   }

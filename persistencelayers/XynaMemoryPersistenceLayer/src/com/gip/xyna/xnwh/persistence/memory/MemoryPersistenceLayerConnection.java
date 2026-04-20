@@ -305,7 +305,7 @@ public abstract class MemoryPersistenceLayerConnection implements PersistenceLay
     synchronized (deleteAllCommandCache) {
       pc = deleteAllCommandCache.get(klass);
       if (pc == null) {
-        pc = prepareCommand(new Command("delete from " + t.getName()));
+        pc = prepareCommand(new Command("delete from " + t.getName(), t.getName()));
         deleteAllCommandCache.put(klass, pc);
       }
     }
