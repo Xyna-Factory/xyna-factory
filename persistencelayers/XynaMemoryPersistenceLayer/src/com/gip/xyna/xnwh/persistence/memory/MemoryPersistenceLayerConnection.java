@@ -18,6 +18,10 @@
 
 package com.gip.xyna.xnwh.persistence.memory;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -569,9 +573,35 @@ public abstract class MemoryPersistenceLayerConnection implements PersistenceLay
     }
     List<T> clonedResults = new ArrayList<T>();
     for( T r : resultList ) {
+      if(!r.getClass().getClassLoader().equals(klass.getClassLoader())) {
+        T updated = convert(klass, r);
+        clonedResults.add(updated);
+        continue;
+      }
       clonedResults.add( Storable.clone( r ) );
     }
     return clonedResults;
+  }
+
+
+  @SuppressWarnings("unchecked")
+  private <T extends Storable<?>> T convert(Class<T> klass, T toConvert) {
+    T updated = null;
+    try {
+      try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {
+          oos.writeObject(toConvert);
+          oos.flush();
+          oos.close();
+          try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()))) {
+            updated = (T) ois.readObject();
+          }
+        }
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    return updated;
   }
 
 
