@@ -731,7 +731,7 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
                     return rs.getLong(1);
                   }
                 };
-                       Pair<String, Parameter> existenceVerification = update.getUnfinishedUpdateStatement().getExistenceVerificationRequest(primaryKeyOfPossessingXMOMStorable);
+                Pair<String, Parameter> existenceVerification = update.getUnfinishedUpdateStatement().getExistenceVerificationRequest(primaryKeyOfPossessingXMOMStorable);
                 PreparedQuery<Long> query = con.prepareQuery(new Query<Long>(existenceVerification.getFirst(), reader, tableName));
                 Long count = con.queryOneRow(query, existenceVerification.getSecond());
                 if (count <= 0) {
