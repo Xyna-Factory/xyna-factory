@@ -70,7 +70,7 @@ public class UpdateSynchronizationEntries extends UpdateJustVersion {
     boolean canUpdateOrderbackup = true; //evtl. kann Orderbackup nicht geupdated werden
     PreparedCommand pcUpdateOrderBackup = null;
     try {
-      pcUpdateOrderBackup = conDef.prepareCommand(new Command(updateOrderInstanceBackup));
+      pcUpdateOrderBackup = conDef.prepareCommand(new Command(updateOrderInstanceBackup, OrderInstanceBackup.TABLE_NAME));
     } catch( PersistenceLayerException e ) {
       logger.warn("Cannot update OrderBackup. This is normal when using the XynaMemoryPersistenceLayer.", e);
       canUpdateOrderbackup = false;

@@ -215,7 +215,8 @@ public class DispatcherDestinationStorable extends Storable<DispatcherDestinatio
      }
      result = connection.prepareCommand(new Command("delete from " + DispatcherDestinationStorable.TABLE_NAME 
                                                     + " where " + DispatcherDestinationStorable.COL_DESTINATION_KEY 
-                                                    + " = ? and " + COL_APPLICATIONNAME + " = ? and " + COL_VERSIONNAME + " = ?"),
+                                                    + " = ? and " + COL_APPLICATIONNAME + " = ? and " + COL_VERSIONNAME + " = ?",
+                                                    DispatcherDestinationStorable.TABLE_NAME),
              true);
      deleteDestinationkeyByApplicationNameCommandByConnectionType.put(connectionType, result);
      return result;
