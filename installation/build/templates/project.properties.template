@@ -1,0 +1,5 @@
+project.name={{PROJECTNAME}}
+project.version={{PROJECTVERSION}}
+xyna.version={{XYNAVERSION}}
+rtc.path=rtcs
+xyna.repository=https://github.com/Xyna-Factory/xyna-factory.git
