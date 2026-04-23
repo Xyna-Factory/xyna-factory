@@ -137,27 +137,6 @@ return new Container(
     new XynaObjectList&lt;TextItemDefinition&gt;(missing, TextItemDefinition.class));</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="List Repositories" Name="listRepositories">
-      <Input/>
-      <Output>
-        <Data ID="5339" IsList="true" Label="Indexed Repository" ReferenceName="IndexedRepository" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedRepository5339"/>
-      </Output>
-      <SourceCode>
-        <CodeSnippet Type="Java">List&lt;? extends xmcp.gitintegration.repository.RepositoryConnection&gt; connections = xmcp.gitintegration.RepositoryManagement.listRepositoryConnections();
-List&lt;IndexedRepository&gt; result = new ArrayList&lt;&gt;();
-Set&lt;String&gt; repositoryNames = new HashSet&lt;&gt;();
-for(xmcp.gitintegration.repository.RepositoryConnection connection : connections) {
-  repositoryNames.add(connection.getPath());
-}
-
-int index = 0;
-for(String repositoryName : repositoryNames) {
-    result.add(new IndexedRepository.Builder().index(index++).repository(repositoryName).instance());
-}
-
-return result;</CodeSnippet>
-      </SourceCode>
-    </Operation>
     <Operation IsStatic="true" Label="Create New Workspaces Text Item Definitions" Name="createNewWorkspacesTextItemDefinitions">
       <Input>
         <Data ID="5340" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput5340"/>

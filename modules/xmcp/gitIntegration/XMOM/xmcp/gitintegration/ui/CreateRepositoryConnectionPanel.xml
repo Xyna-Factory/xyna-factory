@@ -23,13 +23,17 @@
     <Output>
       <Data ID="10" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition10"/>
     </Output>
-    <ServiceReference ID="1731" Label="Create Workspace Panel" ReferenceName="CreateWorkspacePanel" ReferencePath="xmcp.gitintegration.ui">
-      <Source RefID="1730"/>
-      <Target RefID="1730"/>
-    </ServiceReference>
     <ServiceReference ID="3408" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="3407"/>
       <Target RefID="3407"/>
+    </ServiceReference>
+    <ServiceReference ID="4034" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="4033"/>
+      <Target RefID="4033"/>
+    </ServiceReference>
+    <ServiceReference ID="1731" Label="Create Workspace Panel" ReferenceName="CreateWorkspacePanel" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="1730"/>
+      <Target RefID="1730"/>
     </ServiceReference>
     <Function ID="3407" Label="get Own RuntimeContext">
       <Source RefID="3408"/>
@@ -83,6 +87,22 @@
       <Mapping>%4%=%0%.repositoryConnectionGroup.repository</Mapping>
       <Mapping>%5%.value=%0%.groupIndex</Mapping>
     </Mappings>
+    <Function ID="4033" Label="Normalize Path">
+      <Source RefID="4034"/>
+      <Source RefID="106"/>
+      <Target RefID="4034"/>
+      <Target RefID="4036"/>
+      <Invoke Operation="normalizePath" ServiceID="4034">
+        <Source RefID="106">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="4034">
+        <Target RefID="4036"/>
+      </Receive>
+    </Function>
     <Mappings ID="2562" Label="Mapping">
       <Input>
         <Data ID="2629" Label="Group Index - IntegerNumber" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber2629">
@@ -304,7 +324,7 @@
         <Data ID="155" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection155">
           <Source RefID="23"/>
         </Data>
-        <Source RefID="106">
+        <Source RefID="4036">
           <Meta>
             <LinkType>UserConnected</LinkType>
           </Meta>
@@ -382,6 +402,9 @@
     <Data ID="3739" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text3739"/>
     <Data ID="3934" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition3934">
       <Source RefID="1817"/>
+    </Data>
+    <Data ID="4036" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection4036">
+      <Source RefID="4033"/>
     </Data>
     <Assign ID="1">
       <Source RefID="33"/>

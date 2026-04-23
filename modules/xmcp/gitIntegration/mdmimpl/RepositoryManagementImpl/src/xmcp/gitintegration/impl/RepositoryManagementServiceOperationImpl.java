@@ -23,9 +23,14 @@ import base.File;
 import base.Text;
 import base.math.IntegerNumber;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -36,6 +41,9 @@ import com.gip.xyna.utils.collections.SerializablePair;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
+import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.UserType;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyString;
 import com.gip.xyna.xfmg.xopctrl.managedsessions.ManagedSession;
 import com.gip.xyna.xfmg.xopctrl.managedsessions.SessionManagement;
 import com.gip.xyna.xmcp.xguisupport.messagebus.transfer.MessageInputParameter;
@@ -65,6 +73,7 @@ import xmcp.gitintegration.repository.RepositoryStatus;
 import xmcp.gitintegration.repository.RepositoryUser;
 import xmcp.gitintegration.repository.RepositoryUserCreationData;
 import xmcp.gitintegration.storage.UserManagementStorage;
+import xmcp.gitintegration.ui.IndexedRepository;
 
 
 
@@ -72,11 +81,18 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
 
   private static Logger logger = CentralFactoryLogging.getLogger(RepositoryManagementServiceOperationImpl.class);
 
+  public static final XynaPropertyString DEFAULT_REPO_LOCATION =
+      new XynaPropertyString("xmcp.gitintegration.default_repository_path", "../git")
+          .setDefaultDocumentation(DocumentationLanguage.EN, "Default location for git repositories.")
+          .setDefaultDocumentation(DocumentationLanguage.DE, "Standardverzeichnis für git repositories.");
+
+
   public void onDeployment() throws XynaException {
     RepositoryManagementImpl.init();
     UserManagementStorage.init();
     OverallInformationProvider.onDeployment();
     PluginManagement.registerPlugin(this.getClass());
+    DEFAULT_REPO_LOCATION.registerDependency(UserType.Service, "GitIntegation");
   }
 
 
@@ -85,6 +101,7 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
     UserManagementStorage.shutdown();
     OverallInformationProvider.onUndeployment();
     PluginManagement.unregisterPlugin(this.getClass());
+    DEFAULT_REPO_LOCATION.unregister();
   }
 
 
@@ -357,6 +374,47 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
     List<RepositoryConnection> result = new ArrayList<>();
     for (RepositoryConnectionStorable instance : data) {
       result.add(RepositoryManagementImpl.convert(instance));
+    }
+    return result;
+  }
+
+
+  @Override
+  public RepositoryConnection normalizePath(RepositoryConnection connection) {
+    RepositoryConnection result = connection.clone();
+    Path absoluteDefault = Path.of(DEFAULT_REPO_LOCATION.get()).toAbsolutePath();
+    Path repoPath = Path.of(result.getPath());
+    Path repoDir = repoPath.getParent();
+    try {
+      if (Files.isSameFile(repoDir, absoluteDefault)) {
+        result.unversionedSetPath(repoPath.getFileName().toString());
+      }
+    } catch (IOException e) {
+      //ignore exception and keep old path
+    }
+    return result;
+  }
+
+
+  @Override
+  public List<? extends IndexedRepository> listKnownRepositories() {
+    List<IndexedRepository> result = new ArrayList<>();
+
+    List<? extends RepositoryConnection> existingConnections = listRepositoryConnections();
+    Set<String> repositoryNames = new HashSet<>();
+    for (RepositoryConnection connection : existingConnections) {
+      repositoryNames.add(connection.getPath());
+    }
+
+    Path absoluteDefault = Path.of(DEFAULT_REPO_LOCATION.get()).toAbsolutePath();
+    List<String> repositoriesInDefaulLocation = RepositoryManagementImpl.listRepositories(absoluteDefault);
+    for (String repo : repositoriesInDefaulLocation) {
+      repositoryNames.add(repo);
+    }
+    List<String> ordered = repositoryNames.stream().sorted().collect(Collectors.toList());
+    int index = 0;
+    for (String repoPath : ordered) {
+      result.add(new IndexedRepository.Builder().index(index++).repository(repoPath).instance());
     }
     return result;
   }
