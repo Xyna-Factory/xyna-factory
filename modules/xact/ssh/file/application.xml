@@ -24,7 +24,7 @@
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>SSH</ApplicationName>
-        <VersionName>2.0.38</VersionName>
+        <VersionName>2.0.39</VersionName>
       </RuntimeContextRequirement>
      <RuntimeContextRequirement>
         <ApplicationName>FileMgmt</ApplicationName>
