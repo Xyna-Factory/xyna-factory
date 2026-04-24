@@ -293,7 +293,7 @@ public class DualConnectionSynchronizationManagementAlgorithm implements Synchro
 
       if (preparedDeleteCommand == null && !useFallbackMemoryDelete) {
         try {
-          preparedDeleteCommand = historyConnection.prepareCommand(new Command(deleteSqlString));
+          preparedDeleteCommand = historyConnection.prepareCommand(new Command(deleteSqlString, SynchronizationEntry.TABLE_NAME));
         } catch (PersistenceLayerException e) {
           useFallbackMemoryDelete = true;
           logger.warn("Could not create prepared statement for synchronization managament cleanup thread,"

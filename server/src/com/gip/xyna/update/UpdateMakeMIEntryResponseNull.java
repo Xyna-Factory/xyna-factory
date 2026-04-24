@@ -90,7 +90,7 @@ public class UpdateMakeMIEntryResponseNull extends Update {
               new StringBuilder("update " + ManualInteractionEntry.TABLE_NAME + " set "
                   + ManualInteractionEntry.MI_COL_RESULT + "=null");
   
-          PreparedCommand updateMIArchiveSQL = defaultCon.prepareCommand(new Command(updateSqlCmd1.toString()));
+          PreparedCommand updateMIArchiveSQL = defaultCon.prepareCommand(new Command(updateSqlCmd1.toString(), ManualInteractionEntry.TABLE_NAME));
           defaultCon.executeDML(updateMIArchiveSQL, new Parameter());
           defaultCon.commit();
         }

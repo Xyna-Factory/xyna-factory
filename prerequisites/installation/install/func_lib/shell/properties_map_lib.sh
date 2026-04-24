@@ -171,7 +171,7 @@ case ${PROPERTY} in
   jvm.option.gc)                                echo "";;
   jvm.option.log4j)                             echo "-Dlog4j.configurationFile=log4j2.xml";;
   jvm.option.profiling)                         echo "";;
-  jvm.option.rmi)                               echo "-Djava.security.policy=server.policy";;
+  jvm.option.rmi)                               echo "";;
   jvm.option.xml.backup)                        echo "-Dxnwh.persistence.xml.backup.enabled=false";;
   jvm.permgenspace.size)                        echo "${JAVA_PERMSIZE}m";;
   ntp1.ipAddress)                               echo "192.53.103.108";;    # ptbtime1.ptb.de
