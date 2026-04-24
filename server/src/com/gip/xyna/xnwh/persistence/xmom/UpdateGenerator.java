@@ -312,6 +312,11 @@ public class UpdateGenerator {
     public int hashCode() {
       return columns.hashCode();
     }
+
+
+    public String getTableName() {
+      return parentInfo.getTableName();
+    }
   }
 
   //if there are multiple updates for the same row, combine them
@@ -326,6 +331,4 @@ public class UpdateGenerator {
       }
     }
   }
-  
-  
 }
