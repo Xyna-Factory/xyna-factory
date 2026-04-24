@@ -88,7 +88,12 @@ public class VariableMap {
         }
         break;
       case step:
-        identifiedVariables.get(objectId.getBaseId()).identify();
+        IdentifiedVariables vars = identifiedVariables.get(objectId.getBaseId());
+        if(vars instanceof IdentifiedVariablesStepChoice) {
+          ((IdentifiedVariablesStepChoice)vars).identifyInputVariables();
+        } else {
+          vars.identify();
+        }
         break;
       default:
         break;
