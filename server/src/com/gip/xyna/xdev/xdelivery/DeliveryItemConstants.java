@@ -33,7 +33,6 @@ public class DeliveryItemConstants {
   public static final String BASEDIR = "..";
 
   public static final String LOG4J_PROPERTIES = "log4j2.xml";
-  public static final String SERVER_POLICY = "server.policy";
 
   // xml delivery item element name
 

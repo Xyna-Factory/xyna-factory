@@ -442,7 +442,6 @@ compose_server_files() {
   cd $SCRIPT_DIR/../release
   cp ../server/log4j2.xml ./server
   cp ../server/product_lib.sh ./server
-  cp ../server/server.policy ./server
   cp ../server/deploy/TemplateImpl.zip ./server
   cp ../server/deploy/TemplateImplNew.zip ./server
   cp ../server/xynafactory.sh ./server
