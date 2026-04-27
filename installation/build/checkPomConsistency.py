@@ -45,6 +45,7 @@ class MavenArtifact:
     version: str
     file_path: Path
 
+
 @dataclass(frozen=True)
 class ParsePomResult:
     managed_dependencies: list[MavenArtifact]
