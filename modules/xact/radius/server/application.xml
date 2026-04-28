@@ -24,7 +24,7 @@
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>Crypto</ApplicationName>
-        <VersionName>1.0.11</VersionName>
+        <VersionName>1.0.12</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>XynaPropertyMgmt</ApplicationName>

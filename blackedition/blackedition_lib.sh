@@ -31,7 +31,7 @@ GUIHTTP_APP="GuiHttp"
 #ACHTUNG: Version auch bei addRequirement zu default workspace berücksichtigen
 ALL_APPLICATIONS="Base Processing"; #Default-Applications, die immer installiert sein sollten
 APPMGMTVERSION=1.0.11
-GUIHTTPVERSION=1.4.0
+GUIHTTPVERSION=1.4.2
 SNMPSTATVERSION=1.0.4
 PROCESSINGVERSION=1.0.28
 ALL_REPOSITORYACCESSES=("svn");
@@ -332,7 +332,7 @@ display_usage () {
 -n    dry-run, display the evaluated commandline parameters
 -v    verbose mode, display factory commands
 -i    specify instancenumber; default is 1
--m    specify merge-mode for merging configuration files, e.g. server.policy, log4j2.xml
+-m    specify merge-mode for merging configuration files, e.g. log4j2.xml
       possible values are merge, customized, new, abort; default is merge
 -3    specify check-mode for checking third party licenses
       possible values are server, revision, delivery, none
@@ -658,10 +658,6 @@ deploy_trigger () {
     f_xynafactory deploysharedlib snmplibs
     f_xynafactory addtrigger SNMP com.gip.xyna.xact.trigger.SNMPTrigger snmplibs ../revisions/rev_workingset/saved/trigger/SNMPTrigger/SNMPTrigger.jar
     f_xynafactory deploytrigger SNMP SNMP${SNMP_NSNHIX_PORT} ${CHOOSEN_INTERFACE_NAME} ${SNMP_NSNHIX_PORT} 10 30 200 600 3
-
-    add_to_server_policy \
-      '//SocketPermission for SNMPTrigger '${SNMP_NSNHIX_PORT} \
-      'permission java.net.SocketPermission "*:'${SNMP_NSNHIX_PORT}'", "accept, listen, connect, resolve";'
   fi
 
   if [[ "x${TRIGGER_DHCP_V4}" == "xtrue" ]] && [[ -d revisions/rev_workingset/saved/trigger/DHCPTrigger ]]; then
@@ -857,7 +853,7 @@ install_xynafactory () {
   configure_xynafactory_sh "${INSTALL_PREFIX}/server/xynafactory.sh"
   
   ${VOLATILE_MKDIR} -p ${INSTALL_PREFIX}/server/installDefaults/
-  ${VOLATILE_CP} ${INSTALL_PREFIX}/server/{log4j2.xml,server.policy,xynafactory.sh} ${INSTALL_PREFIX}/server/installDefaults
+  ${VOLATILE_CP} ${INSTALL_PREFIX}/server/{log4j2.xml,xynafactory.sh} ${INSTALL_PREFIX}/server/installDefaults
   
   #Anpassen des RMI-Ports, damit Factory korrekt starten kann
   set_rmi_port
@@ -917,14 +913,13 @@ update_xynafactory () {
   #Lizenzen
   install_license ${INSTALL_PREFIX}/server/lib
   
-  #Konfigurieren und Mergen von log4j2.xml, server.policy, xynafactory.sh
+  #Konfigurieren und Mergen von log4j2.xml, xynafactory.sh
   NEW_FILE_DIR="$(basename $HOSTNAME)"
   if f_selected ${LOG4J2_MERGE} ; then
     ${VOLATILE_CP} server/log4j2.xml "$NEW_FILE_DIR/log4j2.xml"
     configure_log4j2_xml "$NEW_FILE_DIR/log4j2.xml" "$NEW_FILE_DIR/log4j2.xml_configured"
     merge_files ${INSTALL_PREFIX}/server log4j2.xml "$NEW_FILE_DIR" log4j2.xml_configured
   fi;
-  merge_files ${INSTALL_PREFIX}/server server.policy server server.policy
   ${VOLATILE_CP} server/xynafactory.sh "$NEW_FILE_DIR/xynafactory.sh"
   configure_xynafactory_sh   "$NEW_FILE_DIR/xynafactory.sh"   "$NEW_FILE_DIR/xynafactory.sh_configured"
   merge_files ${INSTALL_PREFIX}/server xynafactory.sh "$NEW_FILE_DIR" xynafactory.sh_configured
@@ -1314,18 +1309,10 @@ import_applications () {
         continue;;
       */SNMPStatistics.*)
         f_adjust_snmpstatistics_app
-        add_to_server_policy \
-          '//SocketPermission for SNMPTrigger '${SNMP_TRIGGER_PORT} \
-          'permission java.net.SocketPermission "*:'${SNMP_TRIGGER_PORT}'", "accept, listen, connect, resolve";'
         f_import_applications_internal "../$HOSTNAME/SNMPStatistics.${SNMPSTATVERSION}.app"
         continue;;
       */Radius.*)
         configure_persistence_layer_for_radius_service;;
-      */LDAP.*)
-        add_to_server_policy \
-          '//required for LDAP bind SSL' \
-          'permission java.lang.RuntimePermission "setFactory";'
-        ;;
     esac;
     f_import_applications_internal ${APP_FILE}
   done
@@ -1584,38 +1571,6 @@ merge_files () {
         exit 1;
         ;;
     esac
-  fi;
-}
-
-#
-# Trägt die übergebenen Zeilen in server.policy ein, falls die erste Zeile noch nicht eingetragen ist.
-# Falls die Datei server.policy geändert wurde, wird XYNAFACTORY_NEEDS_RESTART auf true gesetzt
-# Aufruf : add_to_server_policy "Zeile 1" "Zeile 2" ...
-add_to_server_policy () {
-  FILE_TO_EDIT="${INSTALL_PREFIX}/server/server.policy"
-  if [[ $# < 1 ]] ; then return; fi; 
-  #Ist erste Zeile bereits in server.policy eingetragen?
-  local MATCH=$(${VOLATILE_AWK} -vfirstline="$1" \
-                  'BEGIN { matchStr="none"; } \
-                   { if( match($0,firstline) != 0) { matchStr=NR; } } \
-                   END {print matchStr;}' \
-                  ${FILE_TO_EDIT});
-  if [[ ${MATCH} = "none" ]] ; then
-    #server.policy ergänzen
-    backup_file ${FILE_TO_EDIT}
-    local LINES;
-    for line in "$@"; do 
-      LINES="${LINES}\t${line}\n";
-    done;
-    ${VOLATILE_RM} -f ${TMP_FILE}
-    ${VOLATILE_AWK} -vbefore="//this should always be the last permission in this file to guarantee it having no syntax errors." \
-                    -vlines="${LINES}" \
-                    '{ if( match($0,before) != 0) { print lines; }; print $0; }' \
-                    ${FILE_TO_EDIT} > ${TMP_FILE}
-    ${VOLATILE_MV} ${TMP_FILE} ${FILE_TO_EDIT}
-    ${VOLATILE_RM} -f ${TMP_FILE}
-    #Damit server.policy wirksam wird, ist ein Neustart erforderlich
-    XYNAFACTORY_NEEDS_RESTART="true";
   fi;
 }
 

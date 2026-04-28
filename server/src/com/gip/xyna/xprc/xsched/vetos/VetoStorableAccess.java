@@ -125,7 +125,7 @@ public class VetoStorableAccess implements VetoManagementInterface {
     try {
       if (preparedDeletionByOrderId == null) {
         try {
-          preparedDeletionByOrderId = con.prepareCommand(new Command(deleteByOrderIdSqlString), true);
+          preparedDeletionByOrderId = con.prepareCommand(new Command(deleteByOrderIdSqlString, VetoInformationStorable.TABLE_NAME), true);
         } catch (XNWH_UnsupportedPersistenceLayerFeatureException e) {
           logger.warn("Vetos are not configured on a PersistenceLayer with support for PreparedCommands.");
           useMemoryFallbackForPreparedStatements = true;
@@ -148,7 +148,7 @@ public class VetoStorableAccess implements VetoManagementInterface {
       if (preparedDeletionByOrderIdAndBinding == null) {
         try {
           preparedDeletionByOrderIdAndBinding =
-              con.prepareCommand(new Command(deleteByOrderIdAndBindingSqlString), true);
+              con.prepareCommand(new Command(deleteByOrderIdAndBindingSqlString, VetoInformationStorable.TABLE_NAME), true);
         } catch (XNWH_UnsupportedPersistenceLayerFeatureException e) {
           logger.warn("Vetos are not configured on a PersistenceLayer with support for PreparedCommands.");
           useMemoryFallbackForPreparedStatements = true;

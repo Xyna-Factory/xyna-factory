@@ -2170,6 +2170,11 @@ public class Dataflow {
     if (currentStep instanceof StepFunction && ((StepFunction) currentStep).getOrderInputSourceRef() != null) 
       return false;
     
+    // no ForEach for queries
+    if(currentStep instanceof StepMapping && ((StepMapping)currentStep).isConditionMapping()) {
+      return false;
+    }
+    
     boolean reresolveInputVars = false;
     boolean createdForeach = false;
     

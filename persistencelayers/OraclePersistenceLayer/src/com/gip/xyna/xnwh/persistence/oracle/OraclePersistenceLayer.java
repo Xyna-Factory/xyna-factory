@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -66,6 +67,7 @@ import com.gip.xyna.utils.db.types.BLOB;
 import com.gip.xyna.utils.db.types.BooleanWrapper;
 import com.gip.xyna.utils.db.types.CLOBString;
 import com.gip.xyna.utils.db.types.StringSerializable;
+import com.gip.xyna.utils.misc.EnvironmentVariable.StringEnvironmentVariable;
 import com.gip.xyna.utils.misc.StringParameter;
 import com.gip.xyna.utils.timing.Duration;
 import com.gip.xyna.xfmg.Constants;
@@ -430,8 +432,16 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
       throw new XNWH_GeneralPersistenceLayerException("Connection pool <" + poolName + "> not found!");
     }
     
-    url = regularPoolDefinition.getConnectstring();
-    username = regularPoolDefinition.getUser();
+    final TypedConnectionPoolParameter tcpp = regularPoolDefinition.toCreationParameter();
+    final Optional<StringEnvironmentVariable> userEnv = Optional
+        .ofNullable(OraclePoolType.USERNAME_ENV.getFromMap(tcpp.getAdditionalParams()));
+    final Optional<StringEnvironmentVariable> connectStringEnv = Optional
+        .ofNullable(OraclePoolType.CONNECT_ENV.getFromMap(tcpp.getAdditionalParams()));
+
+    url = connectStringEnv.flatMap(c -> c.getValue()).map(String::trim).filter(s -> !s.isEmpty())
+        .orElse(regularPoolDefinition.getConnectstring()).trim();
+    username = userEnv.flatMap(u -> u.getValue()).map(String::trim).filter(s -> !s.isEmpty())
+        .orElse(regularPoolDefinition.getUser()).trim();
       
     // catch any RuntimeException or Error to be able to rollback the insertion of the instanceidentifier
     // into the static instanceIdentifiers map
