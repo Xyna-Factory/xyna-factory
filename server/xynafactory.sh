@@ -83,7 +83,7 @@ fast_factory_call () {
   ) & 
 
   # per netcat mit factory kommunizieren. input fuer netcat sind die befehlsparameter und die pipe, die am ende die beendigung von netcat das eof enthaelt
-  CALLRESULT=$( { cat "$NAMEDPIPE" | ${NETCAT} localhost ${FACTORY_CLI_PORT} | filter_output 1>&3 ; } 2>&1  );
+  CALLRESULT=$( { ${NETCAT} localhost ${FACTORY_CLI_PORT} < "$NAMEDPIPE" | filter_output 1>&3 ; } 2>&1 );
   local RC=$?
 
   # aufraeumenA
