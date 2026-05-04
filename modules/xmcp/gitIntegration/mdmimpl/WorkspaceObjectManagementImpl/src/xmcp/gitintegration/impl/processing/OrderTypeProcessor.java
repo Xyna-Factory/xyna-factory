@@ -944,7 +944,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
   public void delete(OrderType item, long revision) {
     try {
       OrdertypeParameter orderTypeParameter = createOrdertypeParameter(item, revision);
-      if (orderTypeParameter.getOrdertypeName().equals(orderTypeParameter.getExecutionDestinationValue().getFullQualifiedName())) {
+      if (!orderTypeParameter.isCustomExecutionDestinationValue()) {
         // set default order type for workflow
         OrdertypeParameter newPara = new OrdertypeParameter();
         newPara.setOrdertypeName(orderTypeParameter.getOrdertypeName());

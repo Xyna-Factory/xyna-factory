@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -120,10 +121,6 @@ public class IdentifiedVariablesStepChoice extends IdentifiedVariablesStep imple
     loadCreatedVariables();
   }
   
-  public void identifyInputVariables() {
-    inputVarIdentifications = fillDirectVars(VarUsageType.input, stepChoice.getInputVars(), this);
-  }
-  
   public void loadCreatedVariables() {
     // load created variables
     createdVariables = new HashMap<Integer, AVariableIdentification>();
@@ -137,6 +134,11 @@ public class IdentifiedVariablesStepChoice extends IdentifiedVariablesStep imple
       }
     }
   }
+
+  public void identifyInputVariables() {
+    inputVarIdentifications = fillDirectVars(VarUsageType.input, stepChoice.getInputVars(), this);
+  }
+  
   
   public void createOutputsAndAssigns() {
     createChoiceOutput();
@@ -200,9 +202,56 @@ public class IdentifiedVariablesStepChoice extends IdentifiedVariablesStep imple
       list.add(var);
     }
 
+    sortOutputs(list);
     outputVarIdentifications = list;
   }
 
+
+  //compare order of IDs in list with assign step (output)
+  private void sortOutputs(List<AVariableIdentification> list) {
+
+    //find a lane with implementation (not merged)
+    Optional<Step> s = stepChoice.getChildSteps().stream().filter(x -> x.getChildSteps() != null && x.getChildSteps().size() > 0).findAny();
+    if (s.isEmpty()) {
+      return;
+    }
+
+    List<Step> steps = s.get().getChildSteps();
+    String[] idsOrdered = steps.get(steps.size() - 1).getOutputVarIds();
+
+    for (int i = commonOutput.size(); i < idsOrdered.length; i++) {
+      String id = idsOrdered[i];
+      Optional<AVariableIdentification> match = list.stream()
+          .filter(x -> x instanceof GlobalChoiceVarIdentification 
+              && ((GlobalChoiceVarIdentification) x).idprovider != null
+              && ((GlobalChoiceVarIdentification) x).idprovider.getId() != null
+              && ((GlobalChoiceVarIdentification) x).idprovider.getId().equals(id))
+          .findAny();
+      
+      if (match.isPresent()) {
+        replaceInList(list, match.get(), i);
+      }
+    }
+  }
+
+
+  private void replaceInList(List<AVariableIdentification> list, AVariableIdentification item, int index) {
+    int itemIndex = list.indexOf(item);
+    if (itemIndex == index) {
+      return;
+    } else if (itemIndex < index) {
+      if (index > list.size()) {
+        list.add(item);
+      } else {
+        list.add(index, item);
+      }
+      list.remove(itemIndex);
+    } else {
+      list.add(index, item);
+      list.remove(itemIndex + 1); //toRemove was pushed back by item
+    }
+    
+  }
 
   private AVariable getPreviousCommonOutput(VarType commonOutputType) {
     //suche die choice outputvariable im workflow, die auf diesen typ passt
