@@ -697,7 +697,6 @@ class Testgenerator:
       self.writeknowledge()
 
     result =  json.dumps(self.result, indent=2, sort_keys=True)
-    #result = result.decode('unicode-escape')
 
     return result
 
@@ -818,8 +817,7 @@ class Testgenerator:
     #create result
     self.createResult()
 
-    json.dumps(self.result, indent=2, sort_keys=True)
-    result = result.decode('unicode-escape')
+    result = json.dumps(self.result, indent=2, sort_keys=True)
 
     return result
 

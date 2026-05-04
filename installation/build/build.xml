@@ -227,7 +227,6 @@
 			<include name="exceptions/**" />
 			<include name="Exceptions.xml" />
 			<include name="log4j2.xml" />
-			<include name="server.policy" />
 			<include name="xynafactory.sh" />
 			<include name="product_lib.sh" />
 			<include name="mysql.properties" />
