@@ -653,7 +653,18 @@ public class ApplicationXMLGenerator {
         return ad.getName();
       }
     }
-    throw new RuntimeException();
+    String wsName = content.getWorkspaceName();
+    if (wsName.endsWith("_WS") || wsName.endsWith(" WS")) {
+      return wsName.substring(0, wsName.length() - 3).trim();
+    }
+    if (wsName.endsWith("orkspace")) {
+      wsName = wsName.substring(0, wsName.length() - "workspace".length());
+      if (wsName.endsWith("_")) {
+        return wsName.substring(0, wsName.length() - 1).trim();
+      }
+      return wsName.trim();
+    }
+    return wsName;
   }
 
 
