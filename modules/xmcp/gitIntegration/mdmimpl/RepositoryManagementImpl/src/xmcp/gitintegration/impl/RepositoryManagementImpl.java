@@ -21,6 +21,7 @@ package xmcp.gitintegration.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -821,7 +822,7 @@ public class RepositoryManagementImpl {
     @Override
     public List<RepositoryConnectionStorable> executeAndCommit(ODSConnection con) throws PersistenceLayerException {
       ResultSetReader<? extends RepositoryConnectionStorable> reader = new RepositoryConnectionStorable().getReader();
-      PreparedQuery<? extends RepositoryConnectionStorable> query = queryCache.getQueryFromCache(QUERY_ENTRIES_FOR_LIST, con, reader);
+      PreparedQuery<? extends RepositoryConnectionStorable> query = queryCache.getQueryFromCache(QUERY_ENTRIES_FOR_LIST, con, reader, RepositoryConnectionStorable.TABLE_NAME);
       List<? extends RepositoryConnectionStorable> result = con.query(query, new Parameter(repo), -1);
       return new ArrayList<RepositoryConnectionStorable>(result);
     }
@@ -1248,6 +1249,24 @@ public class RepositoryManagementImpl {
     }
 
     return null;
+  }
+
+
+  /**
+   * checks all directories directly under path for git repositories and returns all matches as absolute paths
+   */
+  public static List<String> listRepositories(Path path) {
+    List<String> result = new ArrayList<>();
+    try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, (p) -> p.toFile().isDirectory())) {
+      for (Path p : stream) {
+        if (RepositoryCache.FileKey.isGitRepository(new File(p.normalize().toString(), ".git"), FS.DETECTED)) {
+          result.add(p.toAbsolutePath().normalize().toString());
+        }
+      }
+    } catch (IOException e) {
+      logger.warn("Exception during listRepositories.", e);
+    }
+    return result;
   }
 
 

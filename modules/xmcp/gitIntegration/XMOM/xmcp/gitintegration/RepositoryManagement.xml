@@ -254,5 +254,28 @@
         <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.listConnectionsOfRepository(repository904);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="Normalize Path" Name="normalizePath">
+      <Input>
+        <Data ID="906" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection906"/>
+      </Input>
+      <Output>
+        <Data ID="907" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection907"/>
+      </Output>
+      <Meta>
+        <Documentation>If the repository path matches the default location, the path is shortened to the repository name</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.normalizePath(repositoryConnection906);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="List Known Repositories" Name="listKnownRepositories">
+      <Input/>
+      <Output>
+        <Data ID="4037" IsList="true" Label="Indexed Repository" ReferenceName="IndexedRepository" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedRepository4037"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.listKnownRepositories();</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>

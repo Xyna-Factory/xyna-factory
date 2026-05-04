@@ -28,21 +28,21 @@
       <Data ID="2715" IsList="true" Label="Indexed Repository" ReferenceName="IndexedRepository" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedRepository2715"/>
       <Data ID="2128" IsList="true" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace2128"/>
     </Output>
-    <ServiceReference ID="2476" Label="GitIntegration UI Services" ReferenceName="GitIntegrationUIServices.GitIntegrationUIServices" ReferencePath="xmcp.gitintegration.ui">
-      <Source RefID="2475"/>
-      <Target RefID="2475"/>
-    </ServiceReference>
-    <ServiceReference ID="1262" Label="Workspace Split Type" ReferenceName="WorkspaceSplitType.WorkspaceSplitType" ReferencePath="xmcp.gitintegration.repository">
-      <Source RefID="1261"/>
-      <Target RefID="1261"/>
+    <ServiceReference ID="2183" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="2182"/>
+      <Target RefID="2182"/>
     </ServiceReference>
     <ServiceReference ID="3170" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="3169"/>
       <Target RefID="3169"/>
     </ServiceReference>
-    <ServiceReference ID="2183" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
-      <Source RefID="2182"/>
-      <Target RefID="2182"/>
+    <ServiceReference ID="3396" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="3395"/>
+      <Target RefID="3395"/>
+    </ServiceReference>
+    <ServiceReference ID="1262" Label="Workspace Split Type" ReferenceName="WorkspaceSplitType.WorkspaceSplitType" ReferencePath="xmcp.gitintegration.repository">
+      <Source RefID="1261"/>
+      <Target RefID="1261"/>
     </ServiceReference>
     <Function ID="3169" Label="get Own RuntimeContext">
       <Source RefID="3170"/>
@@ -82,22 +82,22 @@
       <Mapping>%0%.possibleValues.listItemLabelPath="name"</Mapping>
       <Mapping>%0%.possibleValues.listItemValuePath="name"</Mapping>
     </Mappings>
-    <Function ID="2475" Label="List Repositories">
-      <Source RefID="2476"/>
-      <Target RefID="2476"/>
-      <Target RefID="2478"/>
-      <Invoke Operation="listRepositories" ServiceID="2476"/>
-      <Receive ServiceID="2476">
-        <Target RefID="2478"/>
+    <Function ID="3395" Label="List Known Repositories">
+      <Source RefID="3396"/>
+      <Target RefID="3396"/>
+      <Target RefID="3398"/>
+      <Invoke Operation="listKnownRepositories" ServiceID="3396"/>
+      <Receive ServiceID="3396">
+        <Target RefID="3398"/>
       </Receive>
     </Function>
-    <Foreach ID="2584">
-      <Source RefID="2478"/>
-      <Target RefID="2586"/>
-      <InputList RefID="2478">
-        <Data ID="2585" Label="Indexed Repository" ReferenceName="IndexedRepository" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedRepository2585"/>
+    <Foreach ID="3447">
+      <Source RefID="3398"/>
+      <Target RefID="3449"/>
+      <InputList RefID="3398">
+        <Data ID="3448" Label="Indexed Repository" ReferenceName="IndexedRepository" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedRepository3448"/>
       </InputList>
-      <OutputList RefID="2586">
+      <OutputList RefID="3449">
         <Data ID="1702" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition1702">
           <Source RefID="1676"/>
         </Data>
@@ -107,7 +107,7 @@
           <Data ID="2551" Label="Indexed Repository" ReferenceName="IndexedRepository" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedRepository2551">
             <Source RefID="1676"/>
           </Data>
-          <Source RefID="2585"/>
+          <Source RefID="3448"/>
         </Input>
         <Output>
           <Data ID="1701" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition1701">
@@ -123,7 +123,7 @@
         <Data ID="1122" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition1122">
           <Source RefID="264"/>
         </Data>
-        <Source RefID="2586"/>
+        <Source RefID="3449"/>
       </Input>
       <Output>
         <Data ID="273" Label="Form Panel Definition - known repositories" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition273">
@@ -284,10 +284,10 @@
         </Data>
         <Target RefID="45"/>
       </Output>
-      <Mapping>%7%.children["0"]#cast("xmcp.forms.datatypes.DropdownDefinition")=%0%</Mapping>
-      <Mapping>%7%.children["1"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%1%</Mapping>
-      <Mapping>%7%.children["2"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%2%</Mapping>
-      <Mapping>%7%.children["3"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%3%</Mapping>
+      <Mapping>%7%.children["0"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%1%</Mapping>
+      <Mapping>%7%.children["1"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%2%</Mapping>
+      <Mapping>%7%.children["2"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%3%</Mapping>
+      <Mapping>%7%.children["3"]#cast("xmcp.forms.datatypes.DropdownDefinition")=%0%</Mapping>
       <Mapping>%7%.children["4"]#cast("xmcp.forms.datatypes.DropdownDefinition")=%5%</Mapping>
       <Mapping>%7%.children["5"]#cast("xmcp.forms.datatypes.CheckboxDefinition")=%4%</Mapping>
       <Mapping>%7%.children["6"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%6%</Mapping>
@@ -326,21 +326,21 @@
     <Data ID="2185" IsList="true" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace2185">
       <Source RefID="2182"/>
     </Data>
-    <Data ID="2478" IsList="true" Label="Indexed Repository" ReferenceName="IndexedRepository" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedRepository2478">
-      <Source RefID="2475"/>
-    </Data>
-    <Data ID="2586" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition2586">
-      <Source RefID="2584"/>
-      <Target RefID="2586"/>
-    </Data>
     <Data ID="3172" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext3172">
       <Source RefID="3169"/>
+    </Data>
+    <Data ID="3398" IsList="true" Label="Indexed Repository" ReferenceName="IndexedRepository" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedRepository3398">
+      <Source RefID="3395"/>
+    </Data>
+    <Data ID="3449" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition3449">
+      <Source RefID="3447"/>
+      <Target RefID="3449"/>
     </Data>
     <Assign ID="1">
       <Source RefID="45"/>
       <Source RefID="1448"/>
       <Source RefID="1264"/>
-      <Source RefID="2478"/>
+      <Source RefID="3398"/>
       <Source RefID="2185"/>
       <Target RefID="14"/>
       <Target RefID="1426"/>
@@ -364,7 +364,7 @@
         <Target RefID="1211"/>
       </Copy>
       <Copy>
-        <Source RefID="2478"/>
+        <Source RefID="3398"/>
         <Target RefID="2715"/>
       </Copy>
       <Copy>

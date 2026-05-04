@@ -21,6 +21,7 @@
     <Output>
       <Data ID="708" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition708"/>
       <Data ID="1687" Label="Workspace Connection Data" ReferenceName="WorkspaceConnectionData" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceConnectionData1687"/>
+      <Data ID="1899" IsList="true" Label="Indexed Repository" ReferenceName="IndexedRepository" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedRepository1899"/>
     </Output>
     <ServiceReference ID="1878" Label="Add Workspace Connection Definition From Existing Data" ReferenceName="AddWorkspaceConnectionDefinitionFromExistingData" ReferencePath="xmcp.gitintegration.ui">
       <Source RefID="1877"/>
@@ -40,12 +41,14 @@
       <Target RefID="1878"/>
       <Target RefID="1880"/>
       <Target RefID="1881"/>
+      <Target RefID="1882"/>
       <Invoke Operation="AddWorkspaceConnectionDefinitionFromExistingData" ServiceID="1878">
         <Source RefID="1726"/>
       </Invoke>
       <Receive ServiceID="1878">
         <Target RefID="1880"/>
         <Target RefID="1881"/>
+        <Target RefID="1882"/>
       </Receive>
     </Function>
     <Data ID="1726" Label="Workspace Connection Data" ReferenceName="WorkspaceConnectionData" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceConnectionData1726">
@@ -57,11 +60,14 @@
     <Data ID="1881" Label="Workspace Connection Data" ReferenceName="WorkspaceConnectionData" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceConnectionData1881">
       <Source RefID="1877"/>
     </Data>
+    <Data ID="1882" IsList="true" Label="Indexed Repository" ReferenceName="IndexedRepository" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedRepository1882"/>
     <Assign ID="1">
       <Source RefID="1880"/>
       <Source RefID="1881"/>
+      <Source RefID="1882"/>
       <Target RefID="708"/>
       <Target RefID="1687"/>
+      <Target RefID="1899"/>
       <Copy>
         <Source RefID="1880"/>
         <Target RefID="708"/>
@@ -73,6 +79,10 @@
           </Meta>
         </Source>
         <Target RefID="1687"/>
+      </Copy>
+      <Copy>
+        <Source RefID="1882"/>
+        <Target RefID="1899"/>
       </Copy>
     </Assign>
   </Operation>

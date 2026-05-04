@@ -23,7 +23,12 @@
     <Output>
       <Data ID="708" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition708"/>
       <Data ID="1687" Label="Workspace Connection Data" ReferenceName="WorkspaceConnectionData" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceConnectionData1687"/>
+      <Data ID="2674" IsList="true" Label="Indexed Repository" ReferenceName="IndexedRepository" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedRepository2674"/>
     </Output>
+    <ServiceReference ID="2145" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="2144"/>
+      <Target RefID="2144"/>
+    </ServiceReference>
     <ServiceReference ID="986" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="985"/>
       <Target RefID="985"/>
@@ -37,6 +42,59 @@
         <Target RefID="988"/>
       </Receive>
     </Function>
+    <Function ID="2144" Label="List Known Repositories">
+      <Source RefID="2145"/>
+      <Target RefID="2145"/>
+      <Target RefID="2147"/>
+      <Invoke Operation="listKnownRepositories" ServiceID="2145"/>
+      <Receive ServiceID="2145">
+        <Target RefID="2147"/>
+      </Receive>
+    </Function>
+    <Foreach ID="2352">
+      <Source RefID="2147"/>
+      <Target RefID="2354"/>
+      <InputList RefID="2147">
+        <Data ID="2353" Label="Indexed Repository" ReferenceName="IndexedRepository" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedRepository2353"/>
+      </InputList>
+      <OutputList RefID="2354">
+        <Data ID="2327" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition2327">
+          <Source RefID="2252"/>
+        </Data>
+      </OutputList>
+      <Mappings ID="2252" Label="Mapping">
+        <Input>
+          <Data ID="2301" Label="Indexed Repository" ReferenceName="IndexedRepository" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedRepository2301">
+            <Source RefID="2252"/>
+          </Data>
+          <Source RefID="2353"/>
+        </Input>
+        <Output>
+          <Data ID="2326" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition2326">
+            <Source RefID="2252"/>
+          </Data>
+          <Target RefID="2327"/>
+        </Output>
+        <Mapping>%1%.dataPath=concat("%1%.", %0%.index, ".repository")</Mapping>
+      </Mappings>
+    </Foreach>
+    <Mappings ID="2027" Label="Mapping">
+      <Input>
+        <Data ID="2379" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition2379">
+          <Source RefID="2027"/>
+        </Data>
+        <Source RefID="2354"/>
+      </Input>
+      <Output>
+        <Data ID="2044" Label="Form Panel Definition - known repositories" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition2044">
+          <Source RefID="2027"/>
+        </Data>
+        <Target RefID="2045"/>
+      </Output>
+      <Mapping>%1%.label="Known Repositories"</Mapping>
+      <Mapping>%1%.hideIfEmpty="true"</Mapping>
+      <Mapping>%1%.children=%0%</Mapping>
+    </Mappings>
     <Mappings ID="160" Label="Path Input">
       <Output>
         <Data ID="169" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition169">
@@ -95,6 +153,12 @@
     </Mappings>
     <Mappings ID="48" Label="Create Details Panel">
       <Input>
+        <Data ID="2078" Label="Form Panel Definition - known repositories" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition2078">
+          <Source RefID="48"/>
+        </Data>
+        <Source RefID="2045"/>
+      </Input>
+      <Input>
         <Data ID="211" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition211">
           <Source RefID="48"/>
         </Data>
@@ -146,15 +210,16 @@
         </Data>
         <Target RefID="860"/>
       </Output>
-      <Mapping>%5%.label="New Workspace Connection"</Mapping>
-      <Mapping>%5%.dataPath="%0%"</Mapping>
-      <Mapping>%5%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
-      <Mapping>%5%.children["1"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%1%</Mapping>
-      <Mapping>%5%.children["2"]#cast("xmcp.forms.datatypes.CheckboxDefinition")=%2%</Mapping>
-      <Mapping>%5%.children["3"]#cast("xmcp.forms.datatypes.CheckboxDefinition")=%3%</Mapping>
-      <Mapping>%5%.children["4"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%4%</Mapping>
-      <Mapping>%5%.triggerClearDataChangeState.eventId="gitintegration_add-workspace-connection_clean"</Mapping>
-      <Mapping>%5%.closable="true"</Mapping>
+      <Mapping>%6%.label="New Workspace Connection"</Mapping>
+      <Mapping>%6%.dataPath="%0%"</Mapping>
+      <Mapping>%6%.children["0"]=%0%</Mapping>
+      <Mapping>%6%.children["1"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%1%</Mapping>
+      <Mapping>%6%.children["2"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%2%</Mapping>
+      <Mapping>%6%.children["3"]#cast("xmcp.forms.datatypes.CheckboxDefinition")=%3%</Mapping>
+      <Mapping>%6%.children["4"]#cast("xmcp.forms.datatypes.CheckboxDefinition")=%4%</Mapping>
+      <Mapping>%6%.children["5"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%5%</Mapping>
+      <Mapping>%6%.triggerClearDataChangeState.eventId="gitintegration_add-workspace-connection_clean"</Mapping>
+      <Mapping>%6%.closable="true"</Mapping>
     </Mappings>
     <Data ID="170" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition170">
       <Source RefID="160"/>
@@ -163,9 +228,6 @@
     <Data ID="825" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition825">
       <Source RefID="764"/>
     </Data>
-    <Data ID="860" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition860">
-      <Source RefID="48"/>
-    </Data>
     <Data ID="943" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition943">
       <Source RefID="933"/>
     </Data>
@@ -173,18 +235,41 @@
       <Source RefID="985"/>
     </Data>
     <Data ID="1761" Label="Checkbox Definition - Full" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition1761"/>
+    <Data ID="2147" IsList="true" Label="Indexed Repository" ReferenceName="IndexedRepository" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedRepository2147">
+      <Source RefID="2144"/>
+    </Data>
+    <Data ID="2354" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition2354">
+      <Source RefID="2352"/>
+      <Target RefID="2354"/>
+    </Data>
+    <Data ID="2045" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition2045">
+      <Source RefID="2027"/>
+    </Data>
+    <Data ID="860" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition860">
+      <Source RefID="48"/>
+    </Data>
     <Assign ID="1">
       <Source RefID="860"/>
       <Source RefID="1725"/>
+      <Source RefID="2147"/>
       <Target RefID="708"/>
       <Target RefID="1687"/>
+      <Target RefID="2674"/>
       <Copy>
-        <Source RefID="860"/>
+        <Source RefID="860">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
         <Target RefID="708"/>
       </Copy>
       <Copy>
         <Source RefID="1725"/>
         <Target RefID="1687"/>
+      </Copy>
+      <Copy>
+        <Source RefID="2147"/>
+        <Target RefID="2674"/>
       </Copy>
     </Assign>
   </Operation>
