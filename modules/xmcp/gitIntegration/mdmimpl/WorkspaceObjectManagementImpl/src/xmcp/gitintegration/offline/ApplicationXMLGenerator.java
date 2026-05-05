@@ -654,10 +654,10 @@ public class ApplicationXMLGenerator {
       }
     }
     String wsName = content.getWorkspaceName();
-    if (wsName.endsWith("_WS") || wsName.endsWith(" WS")) {
+    if ((wsName.endsWith("_WS") || wsName.endsWith(" WS")) && wsName.length() > 3) {
       return wsName.substring(0, wsName.length() - 3).trim();
     }
-    if (wsName.endsWith("orkspace")) {
+    if (wsName.toLowerCase().endsWith("workspace") && wsName.length() > "workspace".length()) {
       wsName = wsName.substring(0, wsName.length() - "workspace".length());
       if (wsName.endsWith("_")) {
         return wsName.substring(0, wsName.length() - 1).trim();
