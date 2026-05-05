@@ -83,8 +83,8 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
 
   public static final XynaPropertyString DEFAULT_REPO_LOCATION =
       new XynaPropertyString("xmcp.gitintegration.default_repository_path", "../git")
-          .setDefaultDocumentation(DocumentationLanguage.EN, "Default location for git repositories.")
-          .setDefaultDocumentation(DocumentationLanguage.DE, "Standardverzeichnis für git repositories.");
+          .setDefaultDocumentation(DocumentationLanguage.EN, "Default location for git repositories. Repositories in this directory are added to the list of suggestions.")
+          .setDefaultDocumentation(DocumentationLanguage.DE, "Standardverzeichnis für Git Repositories. Repositories in diesem Verzeichnins werden in die Liste der Vorschläge aufgenommen.");
 
 
   public void onDeployment() throws XynaException {
