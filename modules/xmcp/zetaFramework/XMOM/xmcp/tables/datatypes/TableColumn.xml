@@ -86,6 +86,13 @@ Example: "testObject.id"</Documentation>
       <Type>boolean</Type>
     </Meta>
   </Data>
+  <Data Label="align" VariableName="align">
+      <Meta>
+        <Type>String</Type>
+        <Documentation>Alignment of content and header of table column.
+  Values: left, right, center (if empty or undefined, default is left)</Documentation>
+    </Meta>
+  </Data>
   <Service Label="Table Column" TypeName="TableColumn">
     <Operation Label="Get Transformed Filter" Name="getTransformedFilter" IsStatic="false">
       <Input>
