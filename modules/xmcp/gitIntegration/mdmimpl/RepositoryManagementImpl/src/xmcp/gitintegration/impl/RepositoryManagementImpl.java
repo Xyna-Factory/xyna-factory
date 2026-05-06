@@ -673,15 +673,14 @@ public class RepositoryManagementImpl {
     for (Entry<String, Path> entry : workspaceXmlPathMap.entrySet()) {
       String workspaceName = entry.getKey();
       Path pathToWorkspaceXml = entry.getValue();
-      boolean savedInRepo = pathToWorkspaceXml.getParent().resolve(SAVED).resolve(XMOM).toFile().isDirectory();
       boolean isSplit = pathToWorkspaceXml.getParent().endsWith(CONFIG);
-      Path subPath = isSplit ? pathToWorkspaceXml.getParent() : pathToWorkspaceXml;
-      String subPathString = subPath.getParent().toAbsolutePath().toString().substring(basePathStr.length() + 1); //+1 for "/"
+      Path subPath = isSplit ? pathToWorkspaceXml.getParent().getParent() : pathToWorkspaceXml.getParent();
+      boolean savedInRepo = subPath.resolve(SAVED).resolve(XMOM).toFile().isDirectory();
+      String subPathString = subPath.toAbsolutePath().toString().substring(basePathStr.length() + 1); //+1 for "/"
       String workspaceXmlBasePath = pathToWorkspaceXml.toAbsolutePath().normalize().toString();
       String splitStr = determineSplitType(workspaceXmlBasePath);
       RepositoryConnectionStorable storable;
-      storable = new RepositoryConnectionStorable(workspaceName, Path.of(basePathStr).normalize().toString(), subPathString, savedInRepo,
-                                                  splitStr);
+      storable = new RepositoryConnectionStorable(workspaceName, basePath.normalize().toString(), subPathString, savedInRepo, splitStr);
       result.add(storable);
     }
     return result;
