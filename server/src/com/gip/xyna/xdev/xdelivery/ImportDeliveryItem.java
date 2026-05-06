@@ -1109,8 +1109,7 @@ public class ImportDeliveryItem {
 
       logStream.println("Restore/package installation completed");
       if (restoredServerFiles > 0) {
-        logStream
-            .println("Changes in the files log4j2.xml and server.policy require a server restart to become effective.");
+        logStream.println("Changes in the file log4j2.xml requires a server restart to become effective.");
       }
 
     } finally {
@@ -1296,7 +1295,7 @@ public class ImportDeliveryItem {
   
 
   /**
-   * @return true, if the zip file contained log4j.property and server.policy or false otherwise
+   * @return true, if the zip file contained log4j.property or false otherwise
    */
   private int doUnzip(File tempDir, Map<File, File> inOutFileMap) throws Ex_FileAccessException, IOException {
     int serverBaseFilesRestored = 0;
@@ -1349,8 +1348,6 @@ public class ImportDeliveryItem {
         }
 
         if (f.getName().equals("log4j2.xml")) {
-          serverBaseFilesRestored++;
-        } else if (f.getName().equals("server.policy")) {
           serverBaseFilesRestored++;
         }
 

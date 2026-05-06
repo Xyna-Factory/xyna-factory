@@ -21,6 +21,7 @@ package xmcp.gitintegration.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -672,15 +673,14 @@ public class RepositoryManagementImpl {
     for (Entry<String, Path> entry : workspaceXmlPathMap.entrySet()) {
       String workspaceName = entry.getKey();
       Path pathToWorkspaceXml = entry.getValue();
-      boolean savedInRepo = pathToWorkspaceXml.getParent().resolve(SAVED).resolve(XMOM).toFile().isDirectory();
       boolean isSplit = pathToWorkspaceXml.getParent().endsWith(CONFIG);
-      Path subPath = isSplit ? pathToWorkspaceXml.getParent() : pathToWorkspaceXml;
-      String subPathString = subPath.getParent().toAbsolutePath().toString().substring(basePathStr.length() + 1); //+1 for "/"
+      Path subPath = isSplit ? pathToWorkspaceXml.getParent().getParent() : pathToWorkspaceXml.getParent();
+      boolean savedInRepo = subPath.resolve(SAVED).resolve(XMOM).toFile().isDirectory();
+      String subPathString = subPath.toAbsolutePath().toString().substring(basePathStr.length() + 1); //+1 for "/"
       String workspaceXmlBasePath = pathToWorkspaceXml.toAbsolutePath().normalize().toString();
       String splitStr = determineSplitType(workspaceXmlBasePath);
       RepositoryConnectionStorable storable;
-      storable = new RepositoryConnectionStorable(workspaceName, Path.of(basePathStr).normalize().toString(), subPathString, savedInRepo,
-                                                  splitStr);
+      storable = new RepositoryConnectionStorable(workspaceName, basePath.normalize().toString(), subPathString, savedInRepo, splitStr);
       result.add(storable);
     }
     return result;
@@ -821,7 +821,7 @@ public class RepositoryManagementImpl {
     @Override
     public List<RepositoryConnectionStorable> executeAndCommit(ODSConnection con) throws PersistenceLayerException {
       ResultSetReader<? extends RepositoryConnectionStorable> reader = new RepositoryConnectionStorable().getReader();
-      PreparedQuery<? extends RepositoryConnectionStorable> query = queryCache.getQueryFromCache(QUERY_ENTRIES_FOR_LIST, con, reader);
+      PreparedQuery<? extends RepositoryConnectionStorable> query = queryCache.getQueryFromCache(QUERY_ENTRIES_FOR_LIST, con, reader, RepositoryConnectionStorable.TABLE_NAME);
       List<? extends RepositoryConnectionStorable> result = con.query(query, new Parameter(repo), -1);
       return new ArrayList<RepositoryConnectionStorable>(result);
     }
@@ -1248,6 +1248,24 @@ public class RepositoryManagementImpl {
     }
 
     return null;
+  }
+
+
+  /**
+   * checks all directories directly under path for git repositories and returns all matches as absolute paths
+   */
+  public static List<String> listRepositories(Path path) {
+    List<String> result = new ArrayList<>();
+    try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, (p) -> p.toFile().isDirectory())) {
+      for (Path p : stream) {
+        if (RepositoryCache.FileKey.isGitRepository(new File(p.normalize().toString(), ".git"), FS.DETECTED)) {
+          result.add(p.toAbsolutePath().normalize().toString());
+        }
+      }
+    } catch (IOException e) {
+      logger.warn("Exception during listRepositories.", e);
+    }
+    return result;
   }
 
 
