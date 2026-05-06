@@ -22,9 +22,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.HashSet;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -39,6 +42,8 @@ import com.gip.xyna.xfmg.xopctrl.usermanagement.Role;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.Action;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.ScopedRight;
 import com.gip.xyna.xmcp.XynaMultiChannelPortal;
+import com.gip.xyna.xmcp.xfcli.impl.ExportpropertiesImpl;
+import com.gip.xyna.xmcp.xfcli.impl.ImportpropertiesImpl;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 
@@ -46,7 +51,10 @@ import xfmg.xopctrl.UserAuthenticationRight;
 import xmcp.Documentation;
 import xmcp.factorymanager.XynaPropertiesServicesServiceOperation;
 import xmcp.factorymanager.shared.InsufficientRights;
+import xmcp.factorymanager.xynaproperties.ExportSettings;
+import xmcp.factorymanager.xynaproperties.ImportSettings;
 import xmcp.factorymanager.xynaproperties.XynaProperty;
+import xmcp.factorymanager.xynaproperties.XynaPropertyExport;
 import xmcp.factorymanager.xynaproperties.XynaPropertyKey;
 import xmcp.factorymanager.xynaproperties.exceptions.PropertyCreateException;
 import xmcp.factorymanager.xynaproperties.exceptions.PropertyDeleteException;
@@ -338,5 +346,60 @@ public class XynaPropertiesServicesServiceOperationImpl implements ExtendedDeplo
     } catch (PersistenceLayerException e) {
       throw new PropertyDeleteException(e.toString(), e);
     }
+  }
+
+  public XynaPropertyExport exportProperties(ExportSettings exportSettings4) {
+    ExportSettings settings = (exportSettings4 != null) ? exportSettings4 : (new ExportSettings.Builder()).instance();
+    ExportpropertiesImpl.OutputFormat outputFormat = resolveOutputFormat(settings.getFormat());
+    String exportData = ExportpropertiesImpl.export(outputFormat, 
+        
+        convertFactoryManagerFilterToRegex(settings.getFilter()), false, settings
+        
+        .getIncludeDocumentation());
+    XynaPropertyExport result = (new XynaPropertyExport.Builder()).instance();
+    result.setData(exportData);
+    result.setExportSettings(settings);
+    return result;
+  }
+  
+  public void importProperties(XynaPropertyExport xynaPropertyExport2, ImportSettings importSettings6) {
+    if (xynaPropertyExport2 == null || xynaPropertyExport2.getData() == null)
+      return; 
+    ExportSettings exportSettings = xynaPropertyExport2.getExportSettings();
+    String format = (exportSettings != null) ? exportSettings.getFormat() : null;
+    boolean overwrite = (importSettings6 != null && importSettings6.getOverwriteExising());
+    ExportpropertiesImpl.OutputFormat importFormat = resolveOutputFormat(format);
+    try {
+      ImportpropertiesImpl.importProperties(xynaPropertyExport2.getData(), importFormat, overwrite);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    } catch (XynaException e) {
+      throw new RuntimeException(e);
+    } 
+  }
+  
+  private static ExportpropertiesImpl.OutputFormat resolveOutputFormat(String format) {
+    if (format == null || format.isEmpty())
+      return ExportpropertiesImpl.OutputFormat.CSV; 
+    try {
+      return ExportpropertiesImpl.OutputFormat.valueOf(format.trim().toUpperCase());
+    } catch (IllegalArgumentException e) {
+      throw new IllegalArgumentException("Unsupported format '" + format + "'. Allowed values: CSV, YAML.", e);
+    } 
+  }
+  
+  private String convertFactoryManagerFilterToRegex(String filter) {
+    if (filter == null)
+      return null; 
+    String trimmed = filter.trim();
+    if (trimmed.isEmpty())
+      return null; 
+    int len = trimmed.length();
+    if (len > 1 && trimmed.charAt(0) == '/' && trimmed.charAt(len - 1) == '/')
+      return trimmed.substring(1, len - 1); 
+    String quoted = Pattern.quote(trimmed).replace("\\*", ".*").replace("\\?", ".");
+    if (trimmed.indexOf('*') < 0 && trimmed.indexOf('?') < 0)
+      return ".*" + quoted + ".*"; 
+    return quoted;
   }
 }
