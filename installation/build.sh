@@ -26,8 +26,7 @@ print_help() {
   echo "Usage: $0 plugins"
   echo "Usage: $0 clusterproviders"
   echo "Usage: $0 conpooltypes"
-  # custom url useful for trusted/cached maven registry besides the official urls
-  echo "Usage: $0 install_libs [custom mvn base url]"
+  echo "Usage: $0 install_libs"
   #creates necessary libs for generating application xmls from workspace-xml (from gitintegration)
   # (invoked by buildApplication.xml generate-application-xml)
   echo "Usage: $0 install_gitintegration_libs (depends on build)"
@@ -64,17 +63,9 @@ install_libs() {
     exit 1
   fi
   HTTP_CODE_OK=200
-
-  # handle custom provided mvn url
-  MVN_BASE_URL=https://repo1.maven.org/maven2
-  if [ -n "${1}" ]; then
-    echo "Custom maven base URL provided: ${1}"
-    echo "Using custom URL for lib installation!"
-    MVN_BASE_URL=${1}
-  fi
   
   mkdir -p ${HOME}/.ant/lib
-  URL=${MVN_BASE_URL}/org/apache/maven/resolver/maven-resolver-ant-tasks/${MAVEN_RESOLVER_ANT_TASKS_VERSION}/maven-resolver-ant-tasks-${MAVEN_RESOLVER_ANT_TASKS_VERSION}-uber.jar
+  URL=https://repo1.maven.org/maven2/org/apache/maven/resolver/maven-resolver-ant-tasks/${MAVEN_RESOLVER_ANT_TASKS_VERSION}/maven-resolver-ant-tasks-${MAVEN_RESOLVER_ANT_TASKS_VERSION}-uber.jar
   TARGET_FILE=${HOME}/.ant/lib/maven-resolver-ant-tasks-${MAVEN_RESOLVER_ANT_TASKS_VERSION}-uber.jar
   HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" ${URL})
   if [ "$HTTP_CODE" != "$HTTP_CODE_OK" ]; then 
@@ -83,7 +74,7 @@ install_libs() {
   fi
   curl -s ${URL} -o "${TARGET_FILE}"
   
-  URL=${MVN_BASE_URL}/ant-contrib/ant-contrib/${ANT_CONTRIB_TASKS_VERSION}/ant-contrib-${ANT_CONTRIB_TASKS_VERSION}.jar
+  URL=https://repo1.maven.org/maven2/ant-contrib/ant-contrib/${ANT_CONTRIB_TASKS_VERSION}/ant-contrib-${ANT_CONTRIB_TASKS_VERSION}.jar
   TARGET_FILE="${HOME}/.ant/lib/ant-contrib-${ANT_CONTRIB_TASKS_VERSION}.jar"
   HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" ${URL})
   if [ "$HTTP_CODE" != "$HTTP_CODE_OK" ]; then 
@@ -660,7 +651,7 @@ case $1 in
     build_conpooltypes
     ;;
   "install_libs")
-    install_libs ${2}
+    install_libs
     ;;
   "cleanup_lib")
     cleanup_lib
