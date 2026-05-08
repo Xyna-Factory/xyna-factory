@@ -18,8 +18,11 @@
 package com.gip.xyna.xnwh.sharedresources;
 
 
+
 public interface SharedResourceRequestRecorder {
 
   public void recordStartRequest(String requestType, String resourceType, String synchronizerName);
-  public <T> void recordEndRequest(SharedResourceRequestResult<T> result);
+
+
+  public <T> void recordEndRequest(String requestType, String resourceType, SharedResourceRequestResult<T> result);
 }

@@ -164,7 +164,7 @@ public class UpdateOrderInstanceBackupWithRootOrderID extends UpdateJustVersion 
 
     // update order archive
     try {
-      Command cmd = new Command(sqlUpdateOrderArchive);
+      Command cmd = new Command(sqlUpdateOrderArchive, OrderInstance.TABLE_NAME);
       PreparedCommand pcmd = conHis.prepareCommand(cmd);
 
       for ( Map.Entry<Long,Long> entry: rootMap.entrySet() ) {

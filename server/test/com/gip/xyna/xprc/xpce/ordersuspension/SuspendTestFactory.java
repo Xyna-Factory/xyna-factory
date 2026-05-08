@@ -359,9 +359,7 @@ public class SuspendTestFactory {
     final String namePrefix;
 
     NamedThreadFactory(String namePrefix) {
-      SecurityManager s = System.getSecurityManager();
-      group = (s != null)? s.getThreadGroup() :
-        Thread.currentThread().getThreadGroup();
+      group = Thread.currentThread().getThreadGroup();
       this.namePrefix = namePrefix;
     }
 

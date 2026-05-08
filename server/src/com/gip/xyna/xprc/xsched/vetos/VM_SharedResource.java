@@ -230,12 +230,24 @@ public class VM_SharedResource implements VetoManagementInterface {
   }
 
 
-  private static class SharedResourceVeto {
+  public static class SharedResourceVeto {
 
     public Long usingOrderId;
     public Long usingRootOrderId;
     public String usingOrderType;
     public String documentation;
+
+
+    public SharedResourceVeto() {
+    }
+
+
+    public SharedResourceVeto(Long usingOrderId, Long usingRootOrderId, String usingOrderType, String documentation) {
+      this.usingOrderId = usingOrderId;
+      this.usingRootOrderId = usingRootOrderId;
+      this.usingOrderType = usingOrderType;
+      this.documentation = documentation;
+    }
   }
 
   private static class DocumentationContainer {

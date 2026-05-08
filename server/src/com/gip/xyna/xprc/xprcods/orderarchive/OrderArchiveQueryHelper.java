@@ -100,7 +100,7 @@ public final class OrderArchiveQueryHelper {
   public static PreparedCommand getDeleteOldArchived(OrderArchive oa, ODSConnection con) throws PersistenceLayerException {
     OrderInstance backingClass = oa.auditAccess.getQueryBackingClass(con);
     return con.prepareCommand(new Command("delete from " + backingClass.getTableName() + " where "
-        + OrderInstanceColumn.C_LAST_UPDATE.getColumnName() + " < ?"));
+        + OrderInstanceColumn.C_LAST_UPDATE.getColumnName() + " < ?", backingClass.getTableName()));
   }
 
 
@@ -167,7 +167,8 @@ public final class OrderArchiveQueryHelper {
   public static PreparedCommand getUpdateOrderInstanceBackupCause(ODSConnection defaultCon)
       throws PersistenceLayerException {
     return defaultCon.prepareCommand(new Command("update " + OrderInstanceBackup.TABLE_NAME + " set "
-        + OrderInstanceBackup.COL_BACKUP_CAUSE + "=? where " + OrderInstanceBackup.COL_ID + "=?"), true);
+        + OrderInstanceBackup.COL_BACKUP_CAUSE + "=? where " + OrderInstanceBackup.COL_ID + "=?",
+        OrderInstanceBackup.TABLE_NAME), true);
   }
 
 

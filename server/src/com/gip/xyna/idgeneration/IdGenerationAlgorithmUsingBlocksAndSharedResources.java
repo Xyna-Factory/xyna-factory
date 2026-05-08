@@ -42,7 +42,7 @@ public class IdGenerationAlgorithmUsingBlocksAndSharedResources implements IdGen
 
   private static final long DEFAULT_BLOCK_SIZE = 1000;
 
-  private static final SharedResourceDefinition<Long> resource = new KryoSerializedSharedResourceDefinition<Long>(
+  public static final SharedResourceDefinition<Long> resource = new KryoSerializedSharedResourceDefinition<Long>(
       IDGenerator.XYNA_IDGENERATION_SR, Long.class);
 
   private class IdBlock {

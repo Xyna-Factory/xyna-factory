@@ -194,7 +194,7 @@ public class UserManagementStorage {
 
     @Override
     public RepositoryUser executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-      PreparedQuery<RepositoryUserStorable> query = queryCache.getQueryFromCache(QUERY_REPO_USER, con, RepositoryUserStorable.reader);
+      PreparedQuery<RepositoryUserStorable> query = queryCache.getQueryFromCache(QUERY_REPO_USER, con, RepositoryUserStorable.reader, RepositoryUserStorable.TABLE_NAME);
       RepositoryUserStorable storable = con.queryOneRow(query, new Parameter(factoryUser, repository));
       return convert(storable);
     }
@@ -246,7 +246,7 @@ public class UserManagementStorage {
 
     @Override
     public List<RepositoryUser> executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-      PreparedQuery<RepositoryUserStorable> query = queryCache.getQueryFromCache(QUERY_USERS_OF_REPO, con, RepositoryUserStorable.reader);
+      PreparedQuery<RepositoryUserStorable> query = queryCache.getQueryFromCache(QUERY_USERS_OF_REPO, con, RepositoryUserStorable.reader, RepositoryUserStorable.TABLE_NAME);
       List<RepositoryUserStorable> storableCollection = con.query(query, new Parameter(repository), -1);
       return storableCollection.stream().map(x -> convert(x)).collect(Collectors.toList());
     }
@@ -264,7 +264,7 @@ public class UserManagementStorage {
 
     @Override
     public List<String> executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-      PreparedQuery<RepositoryUserStorable> query = queryCache.getQueryFromCache(QUERY_REPOS_OF_USER, con, RepositoryUserStorable.reader);
+      PreparedQuery<RepositoryUserStorable> query = queryCache.getQueryFromCache(QUERY_REPOS_OF_USER, con, RepositoryUserStorable.reader, RepositoryUserStorable.TABLE_NAME);
       List<RepositoryUserStorable> storableCollection = con.query(query, new Parameter(user), -1);
       return storableCollection.stream().map(x -> x.getRepopath()).collect(Collectors.toList());
     }
@@ -301,7 +301,7 @@ public class UserManagementStorage {
 
     @Override
     public void executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-      PreparedQuery<RepositoryUserStorable> query = queryCache.getQueryFromCache(QUERY_USERS_OF_REPO, con, RepositoryUserStorable.reader);
+      PreparedQuery<RepositoryUserStorable> query = queryCache.getQueryFromCache(QUERY_USERS_OF_REPO, con, RepositoryUserStorable.reader, RepositoryUserStorable.TABLE_NAME);
       List<RepositoryUserStorable> storableCollection = con.query(query, new Parameter(repository), -1);
       con.delete(storableCollection);
 
@@ -320,7 +320,7 @@ public class UserManagementStorage {
 
     @Override
     public void executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-      PreparedQuery<RepositoryUserStorable> query = queryCache.getQueryFromCache(QUERY_REPOS_OF_USER, con, RepositoryUserStorable.reader);
+      PreparedQuery<RepositoryUserStorable> query = queryCache.getQueryFromCache(QUERY_REPOS_OF_USER, con, RepositoryUserStorable.reader, RepositoryUserStorable.TABLE_NAME);
       List<RepositoryUserStorable> storableCollection = con.query(query, new Parameter(user), -1);
       con.delete(storableCollection);
     }

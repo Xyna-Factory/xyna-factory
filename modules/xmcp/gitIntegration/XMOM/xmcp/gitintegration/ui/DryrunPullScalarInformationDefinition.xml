@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +23,17 @@
     <Output>
       <Data ID="806" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition806"/>
     </Output>
+    <ServiceReference ID="1099" Label="GitIntegration UI Services" ReferenceName="GitIntegrationUIServices.GitIntegrationUIServices" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="1098"/>
+      <Target RefID="1098"/>
+    </ServiceReference>
     <ServiceReference ID="897" Label="GitIntegration UI Services" ReferenceName="GitIntegrationUIServices.GitIntegrationUIServices" ReferencePath="xmcp.gitintegration.ui">
       <Source RefID="896"/>
       <Target RefID="896"/>
     </ServiceReference>
-    <ServiceReference ID="1099" Label="GitIntegration UI Services" ReferenceName="GitIntegrationUIServices.GitIntegrationUIServices" ReferencePath="xmcp.gitintegration.ui">
-      <Source RefID="1098"/>
-      <Target RefID="1098"/>
+    <ServiceReference ID="1309" Label="GitIntegration UI Services" ReferenceName="GitIntegrationUIServices.GitIntegrationUIServices" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="1308"/>
+      <Target RefID="1308"/>
     </ServiceReference>
     <Mappings ID="35" Label="Mapping">
       <Output>
@@ -98,7 +102,7 @@
         <Target RefID="373"/>
       </Output>
       <Mapping>%2%.label=concat("Show ", length(%0%.localChanges), " local changes...")</Mapping>
-      <Mapping>%2%.detailsDefinitionReference=%1%</Mapping>
+      <Mapping>%2%.detailsDefinitionReference#cast("xmcp.forms.datatypes.FormPanelDefinition")=%1%</Mapping>
     </Mappings>
     <Function ID="1098" Label="Create Remote Changes Text Item Definitions">
       <Source RefID="1099"/>
@@ -149,6 +153,66 @@
         <Target RefID="716"/>
       </Output>
       <Mapping>%2%.label=concat("Show ", length(%0%.remoteChanges), " remote changes...")</Mapping>
+      <Mapping>%2%.detailsDefinitionReference#cast("xmcp.forms.datatypes.FormPanelDefinition")=%1%</Mapping>
+    </Mappings>
+    <Function ID="1308" Label="Create New Workspaces Text Item Definitions">
+      <Source RefID="1309"/>
+      <Source RefID="279"/>
+      <Target RefID="1309"/>
+      <Target RefID="1311"/>
+      <Invoke Operation="createNewWorkspacesTextItemDefinitions" ServiceID="1309">
+        <Source RefID="279"/>
+      </Invoke>
+      <Receive ServiceID="1309">
+        <Target RefID="1311"/>
+      </Receive>
+    </Function>
+    <Mappings ID="1344" Label="Mapping">
+      <Input>
+        <Data ID="1393" IsList="true" Label="New Workspaces -Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition1393">
+          <Source RefID="1344"/>
+        </Data>
+        <Source RefID="1311">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="1490" Label="NewWorkspaces - Details - FPD" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1490">
+          <Source RefID="1344"/>
+        </Data>
+        <Target RefID="1491"/>
+      </Output>
+      <Mapping>%1%.label="New Workspaces"</Mapping>
+      <Mapping>%1%.children=%0%</Mapping>
+      <Mapping>%1%.hideIfEmpty="true"</Mapping>
+      <Mapping>%1%.closable="true"</Mapping>
+    </Mappings>
+    <Mappings ID="1780" Label="Mapping">
+      <Input>
+        <Data ID="1813" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput1813">
+          <Source RefID="1780"/>
+        </Data>
+        <Source RefID="279"/>
+      </Input>
+      <Input>
+        <Data ID="1846" Label="NewWorkspaces - Details - FPD" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1846">
+          <Source RefID="1780"/>
+        </Data>
+        <Source RefID="1491">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="1879" Label="New Workspaces - ODBD" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition1879">
+          <Source RefID="1780"/>
+        </Data>
+        <Target RefID="1880"/>
+      </Output>
+      <Mapping>%2%.label=concat("Show ", length(%0%.newWorkspaces), " new workspaces...")</Mapping>
       <Mapping>%2%.detailsDefinitionReference=%1%</Mapping>
     </Mappings>
     <Mappings ID="211" Label="Mapping">
@@ -192,17 +256,28 @@
           </Meta>
         </Source>
       </Input>
+      <Input>
+        <Data ID="1945" Label="New Workspaces - ODBD" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition1945">
+          <Source RefID="211"/>
+        </Data>
+        <Source RefID="1880">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
       <Output>
         <Data ID="220" Label="TIDs - FPD" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition220">
           <Source RefID="211"/>
         </Data>
         <Target RefID="221"/>
       </Output>
-      <Mapping>%4%.children["0"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%0%</Mapping>
-      <Mapping>%4%.children["1"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%1%</Mapping>
-      <Mapping>%4%.children["2"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%2%</Mapping>
-      <Mapping>%4%.children["3"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%3%</Mapping>
-      <Mapping>%4%.label="Pre-Pull information"</Mapping>
+      <Mapping>%5%.children["0"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%0%</Mapping>
+      <Mapping>%5%.children["1"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%1%</Mapping>
+      <Mapping>%5%.children["2"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%2%</Mapping>
+      <Mapping>%5%.children["3"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%3%</Mapping>
+      <Mapping>%5%.children["4"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%4%</Mapping>
+      <Mapping>%5%.label="Pre-Pull information"</Mapping>
     </Mappings>
     <Data ID="45" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition45">
       <Source RefID="35"/>
@@ -224,6 +299,15 @@
     <Data ID="1064" Label="LocalChanges - Details - FPD" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1064"/>
     <Data ID="1101" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition1101">
       <Source RefID="1098"/>
+    </Data>
+    <Data ID="1311" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition1311">
+      <Source RefID="1308"/>
+    </Data>
+    <Data ID="1491" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1491">
+      <Source RefID="1344"/>
+    </Data>
+    <Data ID="1880" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition1880">
+      <Source RefID="1780"/>
     </Data>
     <Assign ID="1">
       <Source RefID="221"/>

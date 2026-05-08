@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="List Workspace With Local Changes" TypeName="ListWorkspaceWithLocalChanges" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="List Workspace With Local Changes" Name="ListWorkspaceWithLocalChanges">
+    <Input>
+      <Data ID="2733" Label="Indexed Repository Connection" ReferenceName="IndexedRepositoryConnection" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedRepositoryConnection2733"/>
+    </Input>
+    <Output>
+      <Data ID="35" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition35"/>
+      <Data ID="56" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text56"/>
+    </Output>
+    <ServiceReference ID="329" Label="Get Workspace Xml Status" ReferenceName="GetWorkspaceXmlStatus" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="328"/>
+      <Target RefID="328"/>
+    </ServiceReference>
+    <Mappings ID="1741" Label="Mapping">
+      <Input>
+        <Data ID="2041" Label="Indexed Repository Connection" ReferenceName="IndexedRepositoryConnection" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedRepositoryConnection2041">
+          <Source RefID="1741"/>
+        </Data>
+        <Source RefID="2733"/>
+      </Input>
+      <Output>
+        <Data ID="161" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection161">
+          <Source RefID="152"/>
+        </Data>
+        <Target RefID="2826"/>
+      </Output>
+      <Mapping>%1%=%0%.repositoryConnection</Mapping>
+    </Mappings>
+    <Function ID="328" Label="Get Workspace Xml Status">
+      <Source RefID="329"/>
+      <Source RefID="2826"/>
+      <Target RefID="329"/>
+      <Target RefID="2843"/>
+      <Invoke Operation="GetWorkspaceXmlStatus" ServiceID="329">
+        <Source RefID="2826">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="329">
+        <Target RefID="2843"/>
+      </Receive>
+    </Function>
+    <Choice ID="3373" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="2843"/>
+      <Target RefID="3600"/>
+      <Meta>
+        <OuterConditionPart>%0%.text==?</OuterConditionPart>
+      </Meta>
+      <Input>
+        <Data ID="3412" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text3412">
+          <Source RefID="3373"/>
+        </Data>
+        <Source RefID="2843"/>
+      </Input>
+      <Case ID="3393" Premise="%0%.text==&quot;Local changes&quot;">
+        <Mappings ID="3546" Label="Mapping">
+          <Input>
+            <Data ID="3649" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text3649">
+              <Source RefID="3546"/>
+            </Data>
+            <Source RefID="2843"/>
+          </Input>
+          <Output>
+            <Data ID="3598" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text3598">
+              <Source RefID="3546"/>
+            </Data>
+            <Target RefID="3599"/>
+          </Output>
+          <Mapping>%1%~=%0%</Mapping>
+        </Mappings>
+        <Assign ID="3395">
+          <Source RefID="3599"/>
+          <Target RefID="3600"/>
+          <Copy>
+            <Source RefID="3599"/>
+            <Target RefID="3600"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case Alias="3393" ID="3528" Premise="%0%.text==&quot;Out of sync&quot;"/>
+      <Case ID="3374" IsDefault="true" Label="default">
+        <Mappings ID="3563" Label="Mapping">
+          <Output>
+            <Data ID="3580" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text3580">
+              <Source RefID="3563"/>
+            </Data>
+            <Target RefID="3581"/>
+          </Output>
+          <Mapping>%0%.text=""</Mapping>
+        </Mappings>
+        <Assign ID="3376">
+          <Source RefID="3581"/>
+          <Target RefID="3600"/>
+          <Copy>
+            <Source RefID="3581"/>
+            <Target RefID="3600"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Choice ID="473" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="3600"/>
+      <Target RefID="3243"/>
+      <Input>
+        <Data ID="500" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text500">
+          <Source RefID="473"/>
+        </Data>
+        <Source RefID="3600">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="474" Label="true" Premise="%0%.text==&quot;&quot;">
+        <Mappings ID="595" Label="no entry">
+          <Output>
+            <Data ID="629" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition629">
+              <Source RefID="595"/>
+            </Data>
+            <Target RefID="630"/>
+          </Output>
+          <Mapping>%0%.hidden="true"</Mapping>
+        </Mappings>
+        <Assign ID="477">
+          <Source RefID="630"/>
+          <Target RefID="3243"/>
+          <Copy>
+            <Source RefID="630"/>
+            <Target RefID="3243"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="475" Label="false">
+        <Mappings ID="886" Label="Mapping">
+          <Input>
+            <Data ID="2684" Label="Indexed Repository Connection" ReferenceName="IndexedRepositoryConnection" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedRepositoryConnection2684">
+              <Source RefID="886"/>
+            </Data>
+            <Source RefID="2733"/>
+          </Input>
+          <Output>
+            <Data ID="952" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition952">
+              <Source RefID="886"/>
+            </Data>
+            <Target RefID="953"/>
+          </Output>
+          <Mapping>%1%.label=%0%.repositoryConnection.workspaceName</Mapping>
+          <Mapping>%1%.dataPath=concat("%0%.", %0%.index, ".text")</Mapping>
+        </Mappings>
+        <Assign ID="479">
+          <Source RefID="953"/>
+          <Target RefID="3243"/>
+          <Copy>
+            <Source RefID="953"/>
+            <Target RefID="3243"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="630" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition630">
+      <Source RefID="595"/>
+    </Data>
+    <Data ID="953" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition953">
+      <Source RefID="886"/>
+    </Data>
+    <Data ID="2826" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection2826">
+      <Source RefID="152"/>
+    </Data>
+    <Data ID="2843" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text2843">
+      <Source RefID="328"/>
+    </Data>
+    <Data ID="3243" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition3243">
+      <Source RefID="473"/>
+    </Data>
+    <Data ID="3581" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text3581">
+      <Source RefID="3563"/>
+    </Data>
+    <Data ID="3599" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text3599">
+      <Source RefID="3546"/>
+    </Data>
+    <Data ID="3600" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text3600">
+      <Source RefID="3373"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="3243"/>
+      <Source RefID="3600"/>
+      <Target RefID="35"/>
+      <Target RefID="56"/>
+      <Copy>
+        <Source RefID="3243"/>
+        <Target RefID="35"/>
+      </Copy>
+      <Copy>
+        <Source RefID="3600">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="56"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

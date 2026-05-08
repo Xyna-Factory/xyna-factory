@@ -55,7 +55,8 @@ public class UpdateOrderArchiveSetWorkspace extends UpdateJustVersion {
         try {
           PreparedCommand cmd =
               con.prepareCommand(new Command("update " + OrderInstance.TABLE_NAME + " set " + OrderInstance.COL_WORKSPACENAME + " = '"
-                  + RevisionManagement.DEFAULT_WORKSPACE.getName() + "' where " + OrderInstance.COL_WORKSPACENAME + " IS NULL"));
+                  + RevisionManagement.DEFAULT_WORKSPACE.getName() + "' where " + OrderInstance.COL_WORKSPACENAME + " IS NULL",
+                  OrderInstance.TABLE_NAME));
           con.executeDML(cmd, new Parameter());
           con.commit();
         } catch (PersistenceLayerException e) {

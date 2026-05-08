@@ -139,6 +139,7 @@ public class CreateWorkspaceXmlTools {
   public String createWorkspaceXmlString(String workspaceName) {
     WorkspaceContentCreator contentCreator = new WorkspaceContentCreator();
     WorkspaceContent content = contentCreator.createWorkspaceContentForWorkspace(workspaceName);
+    content.setSplit(WorkspaceConfigSplit.NONE.getId());
     WorkspaceContentXmlConverter converter = new WorkspaceContentXmlConverter();
     return converter.convertToXml(content);
   }

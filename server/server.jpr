@@ -113,7 +113,7 @@
       <hash n="runConfigurationDefinitions">
          <hash n="Default">
             <value n="custom" v="false"/>
-            <value n="javaOptions" v="-Djava.security.policy=server.policy -Dlog4j.debug=true -Dlog4j.configuration=file:log4j.properties"/>
+            <value n="javaOptions" v="-Dlog4j.debug=true -Dlog4j.configuration=file:log4j.properties"/>
             <value n="name" v="Default"/>
             <hash n="oracle.jdevimpl.runner.debug.DebugConfiguration">
                <value n="promptForRemoteDebugging" v="false"/>

@@ -52,7 +52,10 @@ import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.UserType;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyEnum;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.persistence.ODSImpl.PersistenceLayerInstances;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceConfigurationChangeListener;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceInstance;
 import com.gip.xyna.xnwh.sharedresources.SharedResourceManagement;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceSynchronizer;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 import com.gip.xyna.xprc.XynaProcessing;
@@ -65,6 +68,7 @@ import com.gip.xyna.xprc.xsched.selectvetos.VetoSearchResult;
 import com.gip.xyna.xprc.xsched.selectvetos.VetoSelectImpl;
 import com.gip.xyna.xprc.xsched.vetos.AdministrativeVeto;
 import com.gip.xyna.xprc.xsched.vetos.VM_SharedResource;
+import com.gip.xyna.xprc.xsched.vetos.VM_SharedResource.SharedResourceVeto;
 import com.gip.xyna.xprc.xsched.vetos.VetoAllocationResult;
 import com.gip.xyna.xprc.xsched.vetos.VetoInformation;
 import com.gip.xyna.xprc.xsched.vetos.VetoManagementAlgorithmType;
@@ -85,6 +89,9 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
   private ClusterContext rmiClusterContext;
   private RMIClusterStateChangeHandler rmiClusterStateChangeHandler;
   private final AtomicBoolean initializing;
+  
+  private final SharedResourceConfigurationChangeListener changeListener = new VetoSharedResourceChangeListener();
+  private VetoManagementInterface nonSharedResourceAlgorithm;
   
   static {
     ArrayList<XynaFactoryPath> dependencies = new ArrayList<XynaFactoryPath>();
@@ -206,7 +213,7 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
       VM_ALGORITHM_TYPE.registerDependency(UserType.XynaFactory, DEFAULT_NAME);
       VetoHistory.HISTORY_SIZE.registerDependency(UserType.XynaFactory, DEFAULT_NAME);
       SharedResourceManagement srm = XynaFactory.getInstance().getXynaNetworkWarehouse().getSharedResourceManagement();
-      srm.addSharedResource(XYNA_VETO_SR);
+      srm.addSharedResource(XYNA_VETO_SR, changeListener);
       if(srm.hasConfiguredSynchronizer(XYNA_VETO_SR)) {
         vmAlgorithm = new VM_SharedResource();
       } else {
@@ -214,6 +221,7 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
           VetoManagementAlgorithmType vmat = VM_ALGORITHM_TYPE.get();
           vmAlgorithm = vmat.instantiate( isClustered() ? ClusterMode.Unsupported : ClusterMode.Local);
           rmiClusterStateChangeHandler.setVetoManagementAlgorithmType( vmat );
+          nonSharedResourceAlgorithm = vmAlgorithm;
         } catch (XynaException e) {
           throw new RuntimeException(e);
         }
@@ -366,5 +374,65 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
     return vmAlgorithm.showInformation();
   }
 
+  
+  private class VetoSharedResourceChangeListener implements SharedResourceConfigurationChangeListener {
+
+    @Override
+    public void configurationChanged(SharedResourceSynchronizer from, SharedResourceSynchronizer to, boolean copyContent) {
+      if (!copyContent) {
+        changeAlgorithm(to != null);
+        return;
+      }
+
+      Collection<VetoInformation> vetos = vmAlgorithm.listVetos();
+      changeAlgorithm(to != null);
+      long now = System.currentTimeMillis();
+      if (to == null) {
+        for (VetoInformation veto : vetos) {
+          try {
+            if (veto.isAdministrative()) {
+              vmAlgorithm.allocateAdministrativeVeto(new AdministrativeVeto(veto.getName(), veto.getDocumentation(), now));
+            } else {
+              OrderInformation orderInfo;
+              orderInfo = new OrderInformation(veto.getUsingOrderId(), veto.getUsingRootOrderId(), veto.getUsingOrderType());
+              vmAlgorithm.allocateVetos(orderInfo, List.of(veto.getName()), now);
+              vmAlgorithm.finalizeAllocation(orderInfo, List.of(veto.getName()));
+            }
+          } catch (Exception e) {
+            throw new RuntimeException(e);
+          }
+        }
+      } else {
+        List<SharedResourceInstance<SharedResourceVeto>> instances = new ArrayList<>();
+        for (VetoInformation veto : vetos) {
+          SharedResourceVeto instance =
+              new SharedResourceVeto(veto.getUsingOrderId(), veto.getUsingRootOrderId(), veto.getUsingOrderType(), veto.getDocumentation());
+          instances.add(new SharedResourceInstance<>(veto.getName(), now, instance));
+        }
+        to.create(VM_SharedResource.XYNA_VETO_SR_DEF, instances);
+      }
+    }
+
+
+    private void changeAlgorithm(boolean toSharedResource) {
+      if (toSharedResource) {
+        vmAlgorithm = new VM_SharedResource();
+        return;
+      }
+
+      if (nonSharedResourceAlgorithm != null) {
+        vmAlgorithm = nonSharedResourceAlgorithm;
+      } else {
+        try {
+          VetoManagementAlgorithmType vmat = VM_ALGORITHM_TYPE.get();
+          vmAlgorithm = vmat.instantiate(isClustered() ? ClusterMode.Unsupported : ClusterMode.Local);
+          rmiClusterStateChangeHandler.setVetoManagementAlgorithmType(vmat);
+          nonSharedResourceAlgorithm = vmAlgorithm;
+        } catch (Exception e) {
+          throw new RuntimeException(e);
+        }
+      }
+    }
+  }
 
 }

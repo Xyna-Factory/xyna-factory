@@ -1380,7 +1380,6 @@ public class CreateDeliveryItem {
 
     if (saveEverything) {
       files.add(new File(DeliveryItemConstants.LOG4J_PROPERTIES));
-      files.add(new File(DeliveryItemConstants.SERVER_POLICY));
     }
 
     ZipOutputStream zos = new ZipOutputStream(packageOutputStream);

@@ -41,4 +41,9 @@
       <Type>String</Type>
     </Meta>
   </Data>
+  <Data Label="Start Parameter Array" VariableName="startParameterArray" IsList="true">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
 </DataType>

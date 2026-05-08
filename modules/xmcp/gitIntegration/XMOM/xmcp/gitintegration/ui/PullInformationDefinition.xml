@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,21 +23,25 @@
     <Output>
       <Data ID="2" IsList="true" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition2"/>
     </Output>
+    <ServiceReference ID="6975" Label="Execution Pull Scalar Information Definition" ReferenceName="ExecutionPullScalarInformationDefinition" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="6974"/>
+      <Target RefID="6974"/>
+    </ServiceReference>
     <ServiceReference ID="5196" Label="Pull Conflicts Definition" ReferenceName="PullConflictsDefinition" ReferencePath="xmcp.gitintegration.ui">
       <Source RefID="5195"/>
       <Target RefID="5195"/>
+    </ServiceReference>
+    <ServiceReference ID="6881" Label="Dryrun Pull Scalar Information Definition" ReferenceName="DryrunPullScalarInformationDefinition" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="6880"/>
+      <Target RefID="6880"/>
     </ServiceReference>
     <ServiceReference ID="4958" Label="Pull - Revert Definition" ReferenceName="PullRevertDefinition" ReferencePath="xmcp.gitintegration.ui">
       <Source RefID="4957"/>
       <Target RefID="4957"/>
     </ServiceReference>
-    <ServiceReference ID="6975" Label="Execution Pull Scalar Information Definition" ReferenceName="ExecutionPullScalarInformationDefinition" ReferencePath="xmcp.gitintegration.ui">
-      <Source RefID="6974"/>
-      <Target RefID="6974"/>
-    </ServiceReference>
-    <ServiceReference ID="6881" Label="Dryrun Pull Scalar Information Definition" ReferenceName="DryrunPullScalarInformationDefinition" ReferencePath="xmcp.gitintegration.ui">
-      <Source RefID="6880"/>
-      <Target RefID="6880"/>
+    <ServiceReference ID="7085" Label="Pull Result Add New Workspaces Definition" ReferenceName="PullResultAddNewWorkspacesDefinition" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="7084"/>
+      <Target RefID="7084"/>
     </ServiceReference>
     <Choice ID="3403" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="4553"/>
@@ -150,6 +154,60 @@
       <Mapping>%1%.hideIfEmpty="true"</Mapping>
       <Mapping>%1%.label="An exception occurred"</Mapping>
     </Mappings>
+    <Choice ID="7761" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="4553"/>
+      <Target RefID="8160"/>
+      <Input>
+        <Data ID="8062" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput8062">
+          <Source RefID="7761"/>
+        </Data>
+        <Source RefID="4553"/>
+      </Input>
+      <Case ID="7762" Label="true" Premise="%0%.dryrun">
+        <Mappings ID="7914" Label="Mapping">
+          <Output>
+            <Data ID="7963" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition7963">
+              <Source RefID="7914"/>
+            </Data>
+            <Target RefID="7964"/>
+          </Output>
+          <Mapping>%0%.hideIfEmpty="true"</Mapping>
+        </Mappings>
+        <Assign ID="7765">
+          <Source RefID="7964"/>
+          <Target RefID="8160"/>
+          <Copy>
+            <Source RefID="7964"/>
+            <Target RefID="8160"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="7763" Label="false">
+        <Function ID="7084" Label="Pull Result Add New Workspaces Definition">
+          <Source RefID="7085"/>
+          <Source RefID="4553"/>
+          <Target RefID="7085"/>
+          <Target RefID="7865"/>
+          <Invoke Operation="PullResultAddNewWorkspacesDefinition" ServiceID="7085">
+            <Source RefID="4553"/>
+          </Invoke>
+          <Receive ServiceID="7085">
+            <Target RefID="7865"/>
+          </Receive>
+        </Function>
+        <Assign ID="7767">
+          <Source RefID="7865"/>
+          <Target RefID="8160"/>
+          <Copy>
+            <Source RefID="7865"/>
+            <Target RefID="8160"/>
+          </Copy>
+        </Assign>
+        <Data ID="7865" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition7865">
+          <Source RefID="7084"/>
+        </Data>
+      </Case>
+    </Choice>
     <Mappings ID="3772" Label="Mapping">
       <Input>
         <Data ID="3823" Label="Scalar - Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition3823">
@@ -191,16 +249,27 @@
           </Meta>
         </Source>
       </Input>
+      <Input>
+        <Data ID="7136" Label="New Workspaces - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition7136">
+          <Source RefID="3772"/>
+        </Data>
+        <Source RefID="8160">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
       <Output>
         <Data ID="3797" IsList="true" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition3797">
           <Source RefID="3772"/>
         </Data>
         <Target RefID="3798"/>
       </Output>
-      <Mapping>%4%["0"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%3%</Mapping>
-      <Mapping>%4%["1"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%0%</Mapping>
-      <Mapping>%4%["2"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%1%</Mapping>
-      <Mapping>%4%["3"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%2%</Mapping>
+      <Mapping>%5%["0"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%3%</Mapping>
+      <Mapping>%5%["1"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%0%</Mapping>
+      <Mapping>%5%["2"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%1%</Mapping>
+      <Mapping>%5%["3"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%4%</Mapping>
+      <Mapping>%5%["4"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%2%</Mapping>
     </Mappings>
     <Data ID="3798" IsList="true" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition3798">
       <Source RefID="3772"/>
@@ -219,6 +288,12 @@
     </Data>
     <Data ID="7002" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition7002">
       <Source RefID="3403"/>
+    </Data>
+    <Data ID="7964" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition7964">
+      <Source RefID="7914"/>
+    </Data>
+    <Data ID="8160" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition8160">
+      <Source RefID="7761"/>
     </Data>
     <Assign ID="1">
       <Source RefID="3798"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,13 +24,13 @@
       <Data ID="10" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition10"/>
       <Data ID="1879" Label="Push Input" ReferenceName="PushInput" ReferencePath="xmcp.gitintegration.repository" VariableName="pushInput1879"/>
     </Output>
-    <ServiceReference ID="5022" Label="Create Workspace File Change Panel List" ReferenceName="CreateWorkspaceFileChangePanelList" ReferencePath="xmcp.gitintegration.ui">
-      <Source RefID="5021"/>
-      <Target RefID="5021"/>
-    </ServiceReference>
     <ServiceReference ID="696" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="695"/>
       <Target RefID="695"/>
+    </ServiceReference>
+    <ServiceReference ID="5022" Label="Create Workspace File Change Panel List" ReferenceName="CreateWorkspaceFileChangePanelList" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="5021"/>
+      <Target RefID="5021"/>
     </ServiceReference>
     <ServiceReference ID="70" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
       <Source RefID="69"/>
@@ -264,6 +264,47 @@
       <Mapping>%1%.serviceFQN="xmcp.gitintegration.ui.ExecutePushAll"</Mapping>
       <Mapping>%1%.serviceRTC=%0%</Mapping>
     </Mappings>
+    <Mappings ID="8590" Label="Mapping">
+      <Input>
+        <Data ID="9202" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext9202">
+          <Source RefID="8590"/>
+        </Data>
+        <Source RefID="698"/>
+      </Input>
+      <Output>
+        <Data ID="8623" Label="Start Order Button Definition - Load Local Workspace Changes" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition8623">
+          <Source RefID="8590"/>
+        </Data>
+        <Target RefID="8624"/>
+      </Output>
+      <Mapping>%1%.label="Load changes"</Mapping>
+      <Mapping>%1%.synchronously="true"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="git_int_push_local_workspace_changes"</Mapping>
+      <Mapping>%1%.serviceRTC=%0%</Mapping>
+      <Mapping>%1%.serviceFQN="xmcp.gitintegration.ui.ListWorkspacesWithLocalChanges"</Mapping>
+      <Mapping>%1%.dataPath="%0%.repository"</Mapping>
+    </Mappings>
+    <Mappings ID="8266" Label="Mapping">
+      <Input>
+        <Data ID="8689" Label="Start Order Button Definition - Load Local Workspace Changes" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition8689">
+          <Source RefID="8266"/>
+        </Data>
+        <Source RefID="8624">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="8299" Label="Form Panel Definition - Local Workspace Changes" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition8299">
+          <Source RefID="8266"/>
+        </Data>
+        <Target RefID="8300"/>
+      </Output>
+      <Mapping>%1%.label="Local workspace config changes"</Mapping>
+      <Mapping>%1%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%0%</Mapping>
+      <Mapping>%1%.triggerChangeChildren.eventId="git_int_push_local_workspace_changes"</Mapping>
+    </Mappings>
     <Mappings ID="1172" Label="Mapping">
       <Input>
         <Data ID="1174" Label="Start Order Button Definition 1" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1174"/>
@@ -284,10 +325,20 @@
         </Source>
       </Input>
       <Input>
-        <Data ID="1346" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1346">
+        <Data ID="1346" Label="Form Panel Definition - Changes" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1346">
           <Source RefID="1172"/>
         </Data>
         <Source RefID="46">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="8365" Label="Form Panel Definition - Local Workspace Changes" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition8365">
+          <Source RefID="1172"/>
+        </Data>
+        <Source RefID="8300">
           <Meta>
             <LinkType>UserConnected</LinkType>
           </Meta>
@@ -297,13 +348,14 @@
         <Data ID="1176" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1176"/>
         <Target RefID="1177"/>
       </Output>
-      <Mapping>%3%.label="Push"</Mapping>
-      <Mapping>%3%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%0%</Mapping>
-      <Mapping>%3%.children["0"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%2%</Mapping>
-      <Mapping>%3%.header.rightArea.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
-      <Mapping>%3%.closable="true"</Mapping>
-      <Mapping>%3%.triggerClose.eventId="git_int_push_close"</Mapping>
-      <Mapping>%3%.triggerClearDataChangeState.eventId="git_int_push_clear"</Mapping>
+      <Mapping>%4%.label="Push"</Mapping>
+      <Mapping>%4%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%0%</Mapping>
+      <Mapping>%4%.children["0"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%3%</Mapping>
+      <Mapping>%4%.children["1"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%2%</Mapping>
+      <Mapping>%4%.header.rightArea.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
+      <Mapping>%4%.closable="true"</Mapping>
+      <Mapping>%4%.triggerClose.eventId="git_int_push_close"</Mapping>
+      <Mapping>%4%.triggerClearDataChangeState.eventId="git_int_push_clear"</Mapping>
     </Mappings>
     <Mappings ID="1611" Label="Mapping">
       <Input>
@@ -360,6 +412,12 @@
     </Data>
     <Data ID="8105" IsList="true" Label="Workspace Selected File Change List" ReferenceName="WorkspaceSelectedFileChangeList" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceSelectedFileChangeList8105">
       <Source RefID="3567"/>
+    </Data>
+    <Data ID="8300" Label="Form Panel Definition - Changes" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition8300">
+      <Source RefID="8266"/>
+    </Data>
+    <Data ID="8624" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition8624">
+      <Source RefID="8590"/>
     </Data>
     <Assign ID="1">
       <Source RefID="1177"/>

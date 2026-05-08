@@ -269,7 +269,7 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
             PreparedCommand updateCommand = null;
             try {
               updateCommand = con.prepareCommand(new Command("update " + CronLikeOrder.TABLE_NAME + " set " + CronLikeOrder.COL_ENABLED 
-                                           + " = ? where " + CronLikeOrder.COL_ID + " = ?"));
+                                           + " = ? where " + CronLikeOrder.COL_ID + " = ?", CronLikeOrder.TABLE_NAME));
             } catch(PersistenceLayerException e) {
               // ignore
             }

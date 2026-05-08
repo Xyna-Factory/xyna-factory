@@ -74,7 +74,7 @@ public class SharedResourcePortal {
     } catch (Exception e) {
       result = new SharedResourceRequestResult<T>(false, e, null);
     } finally {
-      recorder.recordEndRequest(result);
+      recorder.recordEndRequest(type, path, result);
     }
     return result;
   }

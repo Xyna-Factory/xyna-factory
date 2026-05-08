@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Manage Object References Definition" TypeName="ManageObjectReferencesDefinition" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Manage Object References Definition" Name="ManageObjectReferencesDefinition">
+    <Input>
+      <Data ID="74" Label="Indexed Object Reference" ReferenceName="IndexedObjectReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedObjectReference74"/>
+    </Input>
+    <Output>
+      <Data ID="10" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition10"/>
+      <Data ID="628" IsList="true" Label="Indexed Reference" ReferenceName="IndexedReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedReference628"/>
+      <Data ID="987" Label="Indexed Object Reference" ReferenceName="IndexedObjectReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedObjectReference987"/>
+    </Output>
+    <ServiceReference ID="608" Label="Create Object References Reference Definition" ReferenceName="CreateObjectReferencesReferenceDefinition" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="607"/>
+      <Target RefID="607"/>
+    </ServiceReference>
+    <ServiceReference ID="803" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="802"/>
+      <Target RefID="802"/>
+    </ServiceReference>
+    <Function ID="802" Label="get Own RuntimeContext">
+      <Source RefID="803"/>
+      <Target RefID="803"/>
+      <Target RefID="805"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="803"/>
+      <Receive ServiceID="803">
+        <Target RefID="805"/>
+      </Receive>
+    </Function>
+    <Mappings ID="230" Label="Mapping">
+      <Input>
+        <Data ID="830" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext830">
+          <Source RefID="230"/>
+        </Data>
+        <Source RefID="805"/>
+      </Input>
+      <Output>
+        <Data ID="274" Label="Open Details Button Definition - Add Reference" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition274">
+          <Source RefID="230"/>
+        </Data>
+        <Target RefID="275"/>
+      </Output>
+      <Mapping>%1%.label="Add reference..."</Mapping>
+      <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%0%</Mapping>
+      <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.gitintegration.ui.AddReferenceDefinition"</Mapping>
+      <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").dataPath="%1%"</Mapping>
+    </Mappings>
+    <Function ID="607" Label="Create Object References Reference Definition">
+      <Source RefID="608"/>
+      <Source RefID="74"/>
+      <Target RefID="608"/>
+      <Target RefID="610"/>
+      <Target RefID="611"/>
+      <Invoke Operation="CreateObjectReferencesReferenceDefinition" ServiceID="608">
+        <Source RefID="74"/>
+      </Invoke>
+      <Receive ServiceID="608">
+        <Target RefID="610"/>
+        <Target RefID="611"/>
+      </Receive>
+    </Function>
+    <Mappings ID="23" Label="Mapping">
+      <Input>
+        <Data ID="87" Label="Indexed Object Reference" ReferenceName="IndexedObjectReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedObjectReference87">
+          <Source RefID="23"/>
+        </Data>
+        <Source RefID="74"/>
+      </Input>
+      <Input>
+        <Data ID="301" Label="Open Details Button Definition - Add Reference" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition301">
+          <Source RefID="23"/>
+        </Data>
+        <Source RefID="275"/>
+      </Input>
+      <Input>
+        <Data ID="486" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition486">
+          <Source RefID="23"/>
+        </Data>
+        <Source RefID="610"/>
+      </Input>
+      <Output>
+        <Data ID="156" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition156">
+          <Source RefID="23"/>
+        </Data>
+        <Target RefID="157"/>
+      </Output>
+      <Mapping>%3%.label=%0%.name</Mapping>
+      <Mapping>%3%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%1%</Mapping>
+      <Mapping>%3%.closable="true"</Mapping>
+      <Mapping>%3%.children=%2%</Mapping>
+      <Mapping>%3%.triggerChangeChildren.eventId="gitintegration_reference_update"</Mapping>
+      <Mapping>%3%.triggerClearDataChangeState.eventId="gitintegration_reference_clean"</Mapping>
+    </Mappings>
+    <Data ID="157" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition157">
+      <Source RefID="23"/>
+    </Data>
+    <Data ID="275" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition275">
+      <Source RefID="230"/>
+    </Data>
+    <Data ID="610" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition610">
+      <Source RefID="607"/>
+    </Data>
+    <Data ID="611" IsList="true" Label="Indexed Reference" ReferenceName="IndexedReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedReference611">
+      <Source RefID="607"/>
+    </Data>
+    <Data ID="805" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext805">
+      <Source RefID="802"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="157"/>
+      <Source RefID="611"/>
+      <Source RefID="74"/>
+      <Target RefID="10"/>
+      <Target RefID="628"/>
+      <Target RefID="987"/>
+      <Copy>
+        <Source RefID="157"/>
+        <Target RefID="10"/>
+      </Copy>
+      <Copy>
+        <Source RefID="611"/>
+        <Target RefID="628"/>
+      </Copy>
+      <Copy>
+        <Source RefID="74"/>
+        <Target RefID="987"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
