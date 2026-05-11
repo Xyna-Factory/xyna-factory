@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="XynaPropertyExport" TypePath="xmcp.factorymanager.xynaproperties" Label="XynaPropertyExport" IsAbstract="false">
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="XynaPropertyExport" TypePath="xmcp.factorymanager.xynaproperties" Label="Xyna Property Export" IsAbstract="false">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>

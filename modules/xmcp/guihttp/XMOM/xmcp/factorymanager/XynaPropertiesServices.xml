@@ -91,7 +91,7 @@
     <Operation IsStatic="true" Label="Import Properties" Name="importProperties">
       <Input>
         <Data ID="2" Label="Import Data" ReferenceName="XynaPropertyExport" ReferencePath="xmcp.factorymanager.xynaproperties" VariableName="xynaPropertyExport2"/>
-        <Data ID="6" Label="ImportSettings" ReferenceName="ImportSettings" ReferencePath="xmcp.factorymanager.xynaproperties" VariableName="importSettings6"/>
+        <Data ID="6" Label="Import Settings" ReferenceName="ImportSettings" ReferencePath="xmcp.factorymanager.xynaproperties" VariableName="importSettings6"/>
       </Input>
       <Output/>
       <SourceCode>
@@ -100,10 +100,10 @@
     </Operation>
     <Operation IsStatic="true" Label="Export Properties" Name="exportProperties">
       <Input>
-        <Data ID="4" Label="ExportSettings" ReferenceName="ExportSettings" ReferencePath="xmcp.factorymanager.xynaproperties" VariableName="exportSettings4"/>
+        <Data ID="4" Label="Export Settings" ReferenceName="ExportSettings" ReferencePath="xmcp.factorymanager.xynaproperties" VariableName="exportSettings4"/>
       </Input>
       <Output>
-        <Data ID="5" Label="XynaPropertyExport" ReferenceName="XynaPropertyExport" ReferencePath="xmcp.factorymanager.xynaproperties" VariableName="xynaPropertyExport5"/>
+        <Data ID="5" Label="Xyna Property Export" ReferenceName="XynaPropertyExport" ReferencePath="xmcp.factorymanager.xynaproperties" VariableName="xynaPropertyExport5"/>
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return xmcp.factorymanager.XynaPropertiesServicesImpl.exportProperties(exportSettings4);</CodeSnippet>

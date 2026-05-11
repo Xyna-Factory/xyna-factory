@@ -27,7 +27,6 @@ import java.io.UncheckedIOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -351,11 +350,11 @@ public class XynaPropertiesServicesServiceOperationImpl implements ExtendedDeplo
   public XynaPropertyExport exportProperties(ExportSettings exportSettings4) {
     ExportSettings settings = (exportSettings4 != null) ? exportSettings4 : (new ExportSettings.Builder()).instance();
     ExportpropertiesImpl.OutputFormat outputFormat = resolveOutputFormat(settings.getFormat());
-    String exportData = ExportpropertiesImpl.export(outputFormat, 
-        
-        convertFactoryManagerFilterToRegex(settings.getFilter()), false, settings
-        
-        .getIncludeDocumentation());
+    String exportData = ExportpropertiesImpl.export(
+        outputFormat,
+        settings.getFilter(),
+        false,
+        settings.getIncludeDocumentation());
     XynaPropertyExport result = (new XynaPropertyExport.Builder()).instance();
     result.setData(exportData);
     result.setExportSettings(settings);
@@ -386,20 +385,5 @@ public class XynaPropertiesServicesServiceOperationImpl implements ExtendedDeplo
     } catch (IllegalArgumentException e) {
       throw new IllegalArgumentException("Unsupported format '" + format + "'. Allowed values: CSV, YAML.", e);
     } 
-  }
-  
-  private String convertFactoryManagerFilterToRegex(String filter) {
-    if (filter == null)
-      return null; 
-    String trimmed = filter.trim();
-    if (trimmed.isEmpty())
-      return null; 
-    int len = trimmed.length();
-    if (len > 1 && trimmed.charAt(0) == '/' && trimmed.charAt(len - 1) == '/')
-      return trimmed.substring(1, len - 1); 
-    String quoted = Pattern.quote(trimmed).replace("\\*", ".*").replace("\\?", ".");
-    if (trimmed.indexOf('*') < 0 && trimmed.indexOf('?') < 0)
-      return ".*" + quoted + ".*"; 
-    return quoted;
   }
 }
