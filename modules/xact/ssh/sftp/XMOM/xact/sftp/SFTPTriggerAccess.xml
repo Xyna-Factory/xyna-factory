@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Xyna 7.0 (Black Edition)
+ * Xyna Development
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright GIP AG 2016
+ * (http://www.gip.com)
+ * Hechtsheimer Str. 35-37
+ * 55131 Mainz
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * $Revision: 207991 $
+ * $Date: 2017-12-20 12:54:39 +0100 (Mi, 20. Dez 2017) $
+ --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="SFTP Trigger Access" TypeName="SFTPTriggerAccess" TypePath="xact.sftp" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>SFTPTriggerAccessImpl.jar</Libraries>
+  <Service Label="SFTP Trigger Access" TypeName="SFTPTriggerAccess">
+    <Operation IsStatic="true" Label="add one time credentials" Name="addOneTimeCredentials">
+      <Input>
+        <Data Label="Username" ReferenceName="Username" ReferencePath="xact.sftp" VariableName="username"/>
+        <Data Label="Password" ReferenceName="Password" ReferencePath="xact.sftp" VariableName="password"/>
+        <Data Label="IP" ReferenceName="IP" ReferencePath="base" VariableName="iP"/>
+        <Data Label="Port" ReferenceName="Port" ReferencePath="base" VariableName="port"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Server Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException"/>
+        <Exception Label="One Time Credential Collision" ReferenceName="OneTimeCredentialCollision" ReferencePath="xact.sftp" VariableName="oneTimeCredentialCollision"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xact.sftp.SFTPTriggerAccessImpl.addOneTimeCredentials(username, password, iP, port);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+-->
+<Application applicationName="SFTPServer" comment="" factoryVersion="" versionName="2.0.0" xmlVersion="1.1">
+  <ApplicationInfo>
+    <RuntimeContextRequirements>
+      <RuntimeContextRequirement>
+        <ApplicationName>Base</ApplicationName>
+        <VersionName>1.1.4</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>SSHServer</ApplicationName>
+        <VersionName>2.0.0</VersionName>
+      </RuntimeContextRequirement>
+    </RuntimeContextRequirements>
+  </ApplicationInfo>
+  <SharedLibs>
+    <SharedLib implicitDependency="false">
+      <SharedLib>sshserver</SharedLib>
+    </SharedLib>
+  </SharedLibs>
+  <Filters>
+    <Filter implicitDependency="true">
+      <Name>SFTPFilter</Name>
+      <JarFiles>SFTPFilter/SFTPFilter.jar:</JarFiles>
+      <FqFilterClassname>com.gip.xyna.xact.filter.SFTPFilter</FqFilterClassname>
+      <TriggerName>SSHTrigger</TriggerName>
+      <SharedLibs/>
+    </Filter>
+  </Filters>
+  <Triggers>
+    <Trigger implicitDependency="false">
+      <Name>SSHTrigger</Name>
+      <JarFiles>SSHTrigger/SSHTrigger.jar:</JarFiles>
+      <FqTriggerClassname>com.gip.xyna.xact.trigger.SSHTrigger</FqTriggerClassname>
+      <SharedLibs>sshserver:</SharedLibs>
+    </Trigger>
+  </Triggers>
+  <XMOMEntries>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.sftp.CacheParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.sftp.Content</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.sftp.None</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.sftp.OneTimeCredentialCollision</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.sftp.Password</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.sftp.Path</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.sftp.SFTPTriggerAccess</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.sftp.SessionIsolated</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.sftp.SourceIP</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.sftp.Timed</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.sftp.Username</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.sftp.demo.ProcessSFTPRequest</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+  </XMOMEntries>
+</Application>

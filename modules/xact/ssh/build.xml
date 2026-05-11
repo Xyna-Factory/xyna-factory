@@ -30,6 +30,9 @@
         <ant antfile="build.xml" target="build" inheritAll="false" dir="server">
             <property name="target.dir" value="${target.dir}" />
         </ant>
+        <ant antfile="build.xml" target="build" inheritAll="false" dir="sftp">
+            <property name="target.dir" value="${target.dir}" />
+        </ant>
     </target>
 
 </project>

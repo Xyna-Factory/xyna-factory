@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *
+ * Xyna 6.1 (Black Edition)
+ * Xyna Activation
+ * ____________________________________________________
+ * 
+ * Copyright GIP AG 2015
+ * (http://www.gip.com)
+ * Hechtsheimer Str. 35-37
+ * 55131 Mainz
+ * ___________________________________________________
+ *
+ *  $Revision: 164488 $
+ *  $Date: 2015-02-24 09:03:56 +0100 (Di, 24 Feb 2015) $
+ *
+ -->
+
+<Filter>
+
+	<AdditionalDependencies>
+		<!-- <Datatype>fullyQualifiedMdmType</Datatype>
+		<XynaProperty>propertyName</XynaProperty>
+		<Workflow>workflow</Workflow> -->
+		<Datatype>xact.sftp.Path</Datatype>
+		<Datatype>xact.sftp.Username</Datatype>
+		<Datatype>xact.sftp.Password</Datatype>
+		<Datatype>xact.sftp.SourceIP</Datatype>
+	</AdditionalDependencies>
+</Filter>

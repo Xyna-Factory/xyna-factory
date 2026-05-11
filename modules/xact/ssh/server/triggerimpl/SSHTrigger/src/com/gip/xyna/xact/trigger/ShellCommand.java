@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,12 @@ import org.apache.sshd.server.session.ServerSessionAware;
 import org.apache.sshd.server.session.ServerSession;
 
 import com.gip.xyna.CentralFactoryLogging;
-import com.gip.xyna.xact.trigger.SSHTriggerConnection.RequestType;
+import com.gip.xyna.xact.trigger.SSHConnectionParameter;
+import com.gip.xyna.xact.trigger.SSHCustomizationParameter;
+import com.gip.xyna.xact.trigger.SSHDTriggerConnection;
+import com.gip.xyna.xact.trigger.SSHShellTriggerConnection;
+import com.gip.xyna.xact.trigger.SSHShellTriggerConnection.RequestType;
+import com.gip.xyna.xact.trigger.SSHStartParameter;
 
 import xact.ssh.server.HostKey;
 import xact.ssh.server.SSHSessionStore;
@@ -58,14 +63,14 @@ public class ShellCommand implements Command, ServerSessionAware, SSHConnection 
   private IOException lastException;
   private boolean invisible;
   private ServerSession session;
-  private Queue<SSHTriggerConnection> requests;
+  private Queue<SSHDTriggerConnection> requests;
   private boolean closed = false;
   private boolean clientExit = false;
   private SSHStartParameter startParameter;
   private SSHConnectionParameter connectionParameter;
   private SSHCustomizationParameter customization = SSHCustomizationParameter.buildDefault();
   
-  public ShellCommand(XynaSSHServer sshd, Queue<SSHTriggerConnection> requests, SSHStartParameter startParameter) {
+  public ShellCommand(XynaSSHServer sshd, Queue<SSHDTriggerConnection> requests, SSHStartParameter startParameter) {
     this.sshd = sshd;
     this.requests = requests;
     this.startParameter = startParameter;
@@ -118,7 +123,7 @@ public class ShellCommand implements Command, ServerSessionAware, SSHConnection 
     
     SSHSessionStore.store( connectionParameter.getUniqueId(), this );
     
-    SSHTriggerConnection sshCon = new SSHTriggerConnection(this, RequestType.Init);
+    SSHShellTriggerConnection sshCon = new SSHShellTriggerConnection(this, RequestType.Init);
     requests.offer( sshCon );
   }
 
@@ -134,7 +139,7 @@ public class ShellCommand implements Command, ServerSessionAware, SSHConnection 
     
     closed = true;
     
-    SSHTriggerConnection sshCon = new SSHTriggerConnection(this, RequestType.Close);
+    SSHShellTriggerConnection sshCon = new SSHShellTriggerConnection(this, RequestType.Close);
     requests.offer( sshCon );
   }
   
@@ -203,7 +208,7 @@ public class ShellCommand implements Command, ServerSessionAware, SSHConnection 
         try {
           Thread.sleep(10);
         } catch (InterruptedException e) {
-          //dann halt sofort zurück
+          //dann halt sofort zurï¿½ck
           return sb.toString();
         }
       }
@@ -222,7 +227,7 @@ public class ShellCommand implements Command, ServerSessionAware, SSHConnection 
         try {
           Thread.sleep(10);
         } catch (InterruptedException e) {
-          //dann halt sofort zurück
+          //dann halt sofort zurï¿½ck
           return sb.toString();
         }
       }
@@ -269,7 +274,7 @@ public class ShellCommand implements Command, ServerSessionAware, SSHConnection 
       }
       break;
     case 127: //Delete
-      outWriter.write("\u0008 \u0008");//Backspace, mit Leerzeichen überschreiben und nochmal Backspace
+      outWriter.write("\u0008 \u0008");//Backspace, mit Leerzeichen ï¿½berschreiben und nochmal Backspace
       outWriter.flush();
       if( sb.length() > 0 ) {
         sb.deleteCharAt(sb.length()-1);
@@ -309,7 +314,7 @@ public class ShellCommand implements Command, ServerSessionAware, SSHConnection 
   }
 
   public void nextRequest() {
-    SSHTriggerConnection sshCon = new SSHTriggerConnection(this, RequestType.Exec);
+    SSHShellTriggerConnection sshCon = new SSHShellTriggerConnection(this, RequestType.Exec);
     requests.offer( sshCon );
   }
 

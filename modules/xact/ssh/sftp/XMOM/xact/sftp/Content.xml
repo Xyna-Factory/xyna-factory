@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Xyna 7.0 (Black Edition)
+ * Xyna Development
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright GIP AG 2016
+ * (http://www.gip.com)
+ * Hechtsheimer Str. 35-37
+ * 55131 Mainz
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * $Revision: 207991 $
+ * $Date: 2017-12-20 12:54:39 +0100 (Mi, 20. Dez 2017) $
+ --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Content" TypeName="Content" TypePath="xact.sftp" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>ContentImpl.jar</Libraries>
+  <Data Label="Content" VariableName="content">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Type" VariableName="type">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Either String or Bytes depending on contained content.</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Size" VariableName="size">
+    <Meta>
+      <Type>long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Does exist" VariableName="doesExist">
+    <Meta>
+      <Type>Boolean</Type>
+    </Meta>
+  </Data>
+  <Data Label="Cache Parameter" ReferenceName="CacheParameter" ReferencePath="xact.sftp" VariableName="cacheParameter"/>
+  <Service Label="Content" TypeName="Content">
+    <Operation IsStatic="false" Label="calculate Size" Name="calculateSize">
+      <Input/>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().calculateSize();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="get raw Content" Name="getRawContent">
+      <Meta>
+        <FixedDetailOptions>openDocumentation</FixedDetailOptions>
+      </Meta>
+      <Input/>
+      <Output>
+        <Data IsList="true" Label="raw" VariableName="raw">
+          <Meta>
+            <Type>Integer</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getRawContent();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="set raw Content" Name="setRawContent">
+      <Input>
+        <Data IsList="true" Label="raw" VariableName="raw">
+          <Meta>
+            <Type>Integer</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().setRawContent(raw);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Xyna 4.0 (Black Edition)
+ * Xyna Development
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright GIP AG 2012
+ * (http://www.gip.com)
+ * Hechtsheimer Str. 35-37
+ * 55131 Mainz
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * $Revision: 122127 $
+ * $Date: 2012-09-24 13:31:48 +0200 (Mo, 24. Sep 2012) $
+ --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Username" TypeName="Username" TypePath="xact.sftp" Version="1.8">
+  <Meta>
+        
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+      
+  </Meta>
+  <Data Label="Username" VariableName="username">
+        
+    <Meta>
+            
+      <Type>String</Type>
+          
+    </Meta>
+      
+  </Data>
+</DataType>

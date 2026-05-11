@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Xyna 7.0 (Black Edition)
+ * Xyna Development
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright GIP AG 2016
+ * (http://www.gip.com)
+ * Hechtsheimer Str. 35-37
+ * 55131 Mainz
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * $Revision: 207991 $
+ * $Date: 2017-12-20 12:54:39 +0100 (Mi, 20. Dez 2017) $
+ --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="true" Label="CacheParameter" TypeName="CacheParameter" TypePath="xact.sftp" Version="1.8">
+  <Meta>
+        
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+      
+  </Meta>
+</DataType>
