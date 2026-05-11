@@ -332,7 +332,7 @@ public class SingleConnectionSynchronizationManagementAlgorithm implements Synch
       // try to use a prepared statement to be more efficient
       if (preparedDeleteCommand == null && !useFallbackMemoryDelete) {
         try {
-          preparedDeleteCommand = cleanupConnection.prepareCommand(new Command(deleteSqlString));
+          preparedDeleteCommand = cleanupConnection.prepareCommand(new Command(deleteSqlString, SynchronizationEntry.TABLE_NAME));
         } catch (PersistenceLayerException e) {
           useFallbackMemoryDelete = true;
           logger.warn("Could not create prepared statement for synchronization managament cleanup thread,"

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="List Workspaces With Local Changes" TypeName="ListWorkspacesWithLocalChanges" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="List Workspaces With Local Changes" Name="ListWorkspacesWithLocalChanges">
+    <Input>
+      <Data ID="22" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository22"/>
+    </Input>
+    <Output>
+      <Data ID="35" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition35"/>
+      <Data ID="56" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text56"/>
+    </Output>
+    <ServiceReference ID="2712" Label="List Workspace With Local Changes" ReferenceName="ListWorkspaceWithLocalChanges" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="2711"/>
+      <Target RefID="2711"/>
+    </ServiceReference>
+    <ServiceReference ID="2746" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="2745"/>
+      <Target RefID="2745"/>
+    </ServiceReference>
+    <ServiceReference ID="1592" Label="Indexed Repository Connection" ReferenceName="IndexedRepositoryConnection.IndexedRepositoryConnection" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="1591"/>
+      <Target RefID="1591"/>
+    </ServiceReference>
+    <Function ID="2745" Label="List Connections of Repository">
+      <Source RefID="2746"/>
+      <Source RefID="22"/>
+      <Target RefID="2746"/>
+      <Target RefID="2748"/>
+      <Invoke Operation="listConnectionsOfRepository" ServiceID="2746">
+        <Source RefID="22"/>
+      </Invoke>
+      <Receive ServiceID="2746">
+        <Target RefID="2748"/>
+      </Receive>
+    </Function>
+    <Function ID="1591" Label="Create">
+      <Source RefID="1592"/>
+      <Source RefID="2748"/>
+      <Target RefID="1592"/>
+      <Target RefID="1594"/>
+      <Invoke Operation="create" ServiceID="1592">
+        <Source RefID="2748"/>
+      </Invoke>
+      <Receive ServiceID="1592">
+        <Target RefID="1594"/>
+      </Receive>
+    </Function>
+    <Foreach ID="2716">
+      <Source RefID="1594"/>
+      <Target RefID="2718"/>
+      <Target RefID="2719"/>
+      <InputList RefID="1594">
+        <Data ID="2717" Label="Indexed Repository Connection" ReferenceName="IndexedRepositoryConnection" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedRepositoryConnection2717"/>
+      </InputList>
+      <OutputList RefID="2718">
+        <Data ID="2714" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition2714">
+          <Source RefID="2711"/>
+        </Data>
+      </OutputList>
+      <OutputList RefID="2719">
+        <Data ID="2715" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text2715">
+          <Source RefID="2711"/>
+        </Data>
+      </OutputList>
+      <Function ID="2711" Label="List Workspace With Local Changes">
+        <Source RefID="2712"/>
+        <Source RefID="2717"/>
+        <Target RefID="2712"/>
+        <Target RefID="2714"/>
+        <Target RefID="2715"/>
+        <Invoke Operation="ListWorkspaceWithLocalChanges" ServiceID="2712">
+          <Source RefID="2717"/>
+        </Invoke>
+        <Receive ServiceID="2712">
+          <Target RefID="2714"/>
+          <Target RefID="2715"/>
+        </Receive>
+      </Function>
+    </Foreach>
+    <Data ID="1594" IsList="true" Label="Indexed Repository Connection" ReferenceName="IndexedRepositoryConnection" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedRepositoryConnection1594">
+      <Source RefID="1591"/>
+    </Data>
+    <Data ID="2718" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition2718">
+      <Source RefID="2716"/>
+      <Target RefID="2718"/>
+    </Data>
+    <Data ID="2719" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text2719">
+      <Source RefID="2716"/>
+      <Target RefID="2719"/>
+    </Data>
+    <Data ID="2748" IsList="true" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection2748">
+      <Source RefID="2745"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="2718"/>
+      <Source RefID="2719"/>
+      <Target RefID="35"/>
+      <Target RefID="56"/>
+      <Copy>
+        <Source RefID="2718"/>
+        <Target RefID="35"/>
+      </Copy>
+      <Copy>
+        <Source RefID="2719"/>
+        <Target RefID="56"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

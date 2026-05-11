@@ -43,7 +43,7 @@ public class ConfiguresharedresourcetypeImpl extends XynaCommandImplementation<C
 
     try {
       XynaFactory.getInstance().getXynaNetworkWarehouse().getSharedResourceManagement()
-          .configureSharedResourceType(resourceType, synchronizerInstanceName);
+          .configureSharedResourceType(resourceType, synchronizerInstanceName, payload.getCopy());
       if (payload.getDelete()) {
         writeLineToCommandLine(statusOutputStream,
                                String.format("Successfully deleted configuration of shared resource type %s", resourceType));

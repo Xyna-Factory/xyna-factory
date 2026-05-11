@@ -43,7 +43,7 @@ public class UpdateGenerator {
     List<UpdateGeneration> updateStatements = new ArrayList<UpdateGeneration>(); 
     for (String updatePath : updates) {
       PersistenceExpressionVisitors.UpdateParsingResult upr = PersistenceExpressionVisitors.parseUpdatePath(updatePath, info);
-      UnfinishedUpdateStatement updateStatement = buildUpdate(upr.getPrimaryKeyListSuffix(), upr.getColumn(), upr.needsLike());
+      UnfinishedUpdateStatement updateStatement = buildUpdate(upr.getPrimaryKeyListSuffix(), upr.getColumn(), upr.needsLike(), upr.isListUpdate());
       UpdateGeneration update = new UpdateGeneration(updateStatement, upr.getListIndizesForRootObject());
       updateStatements.add(update);
     }
@@ -51,7 +51,7 @@ public class UpdateGenerator {
   }
   
   
-  protected static UnfinishedUpdateStatement buildUpdate(String primaryKeySuffix, QualifiedStorableColumnInformation column, boolean needsLike) {
+  protected static UnfinishedUpdateStatement buildUpdate(String primaryKeySuffix, QualifiedStorableColumnInformation column, boolean needsLike, boolean listUpdate) {
     StorableColumnInformation relevantDBStorableColumn = column.getColumn();
     if (relevantDBStorableColumn.getDefinitionSite() == VarDefinitionSite.DATATYPE &&
         relevantDBStorableColumn.isStorableVariable()) {
@@ -60,7 +60,7 @@ public class UpdateGenerator {
     if (relevantDBStorableColumn.isList() && relevantDBStorableColumn.getPrimitiveType() != null) {
       relevantDBStorableColumn = column.getColumn().getStorableVariableInformation().getColumnInfo(column.getColumn().getVariableName());
     } 
-    return new UnfinishedUpdateStatement(needsLike, primaryKeySuffix, relevantDBStorableColumn, column);
+    return new UnfinishedUpdateStatement(needsLike, primaryKeySuffix, relevantDBStorableColumn, column, listUpdate);
   }
   
   
@@ -165,7 +165,52 @@ public class UpdateGenerator {
     }
   }
 
-  
+
+  protected static class DeleteInfo {
+
+    private final String sql;
+    private final String tableName;
+    private final String primaryKey;
+
+
+    public DeleteInfo(String sql, String tableName, String primaryKey) {
+      this.sql = sql;
+      this.tableName = tableName;
+      this.primaryKey = primaryKey;
+    }
+
+
+    public String getSql() {
+      return sql;
+    }
+
+
+    public String getTableName() {
+      return tableName;
+    }
+
+
+    public String getPrimaryKey() {
+      return primaryKey;
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+      if (obj == null) {
+        return false;
+      }
+      if (this == obj) {
+        return true;
+      }
+      if (!(obj instanceof DeleteInfo)) {
+        return false;
+      }
+      DeleteInfo other = (DeleteInfo) obj;
+      return sql.equals(other.sql) && tableName.equals(other.tableName) && primaryKey.equals(other.primaryKey);
+    }
+  }
+
   protected static class UnfinishedUpdateStatement {
     // UPDATE <table> SET <column=value - pairs> WHERE <primaryKey> <LIKE OR => ?
     private static final String updateTemplate = "UPDATE %s SET %s WHERE %s %s ?";
@@ -174,13 +219,19 @@ public class UpdateGenerator {
     private final List<QualifiedStorableColumnInformation> columns;
     private final HashMap<Integer, Object> values;
     private final StorableStructureInformation parentInfo;
+    private final boolean listUpdate;
     
-    UnfinishedUpdateStatement(boolean needsLike, String primaryKeySuffix, StorableColumnInformation relevantDBStorableColumn, QualifiedStorableColumnInformation column) {
+    UnfinishedUpdateStatement(boolean needsLike, String primaryKeySuffix, StorableColumnInformation relevantDBStorableColumn, QualifiedStorableColumnInformation column, boolean listUpdate) {
+      this(needsLike, primaryKeySuffix, relevantDBStorableColumn.getParentStorableInfo(), column, listUpdate);
+    }
+
+    UnfinishedUpdateStatement(boolean needsLike, String primaryKeySuffix, StorableStructureInformation parentInfo, QualifiedStorableColumnInformation column, boolean listUpdate) {
       this.needsLike = needsLike;
       this.primaryKeySuffix = primaryKeySuffix;
       this.columns = new ArrayList<>();
       this.values = new HashMap<>();
-      this.parentInfo = relevantDBStorableColumn.getParentStorableInfo();
+      this.parentInfo = parentInfo;
+      this.listUpdate = listUpdate;
       addColumn(column);
     }
     
@@ -222,7 +273,11 @@ public class UpdateGenerator {
       String parentIdColName = getColName(VarType.EXPANSION_PARENT_FK);
       if (parentIdColName != null) {
         sb.append(", ").append(parentIdColName);
-        params.add(primaryKey);
+        if(XMOMPersistenceOperationAlgorithms.LEGACY_LIST_UPDATES.get()) {
+          params.add(primaryKey);
+        } else {
+          params.add(primaryKey + primaryKeySuffix.substring(0, primaryKeySuffix.lastIndexOf("#")));
+        }
       }
       String listIdxColName = getColName(VarType.LIST_IDX);
       if (listIdxColName != null) {
@@ -234,6 +289,19 @@ public class UpdateGenerator {
       sb.append(", ?".repeat(params.size() - 1));
       sb.append(")");
       return Pair.of(sb.toString(), params);
+    }
+
+
+    public DeleteInfo finishDelete(int size, String primaryKeyOfPossessingXMOMStorable) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("delete from ");
+      sb.append(getTableName());
+      sb.append(" where ");
+      String parentIdColName = getColName(VarType.EXPANSION_PARENT_FK);
+      sb.append(parentIdColName);
+      sb.append(" = ? and idx > ");
+      sb.append(size);
+      return new DeleteInfo(sb.toString(), getTableName(), primaryKeyOfPossessingXMOMStorable + primaryKeySuffix);
     }
 
  
@@ -312,6 +380,23 @@ public class UpdateGenerator {
     public int hashCode() {
       return columns.hashCode();
     }
+
+
+    public String getTableName() {
+      return parentInfo.getTableName();
+    }
+
+    public boolean isListUpdate() {
+      return listUpdate;
+    }
+
+    public String getPrimaryKeySuffix() {
+      return primaryKeySuffix;
+    }
+
+    public StorableStructureInformation getParentInfo() {
+      return parentInfo;
+    }
   }
 
   //if there are multiple updates for the same row, combine them
@@ -326,6 +411,4 @@ public class UpdateGenerator {
       }
     }
   }
-  
-  
 }

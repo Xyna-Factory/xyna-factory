@@ -132,6 +132,11 @@ public class InfrastructureAlgorithmExecutionManagement extends FunctionGroup {
     return managedAlgorithms.putIfAbsent(algo.getName(), algo) == null;
   }
 
+
+  public ManagedAlgorithm unregisterAlgorithm(String name) {
+    return managedAlgorithms.remove(name);
+  }
+
   
   public Collection<ManagedAlgorithmInfo> listManagedAlgorithms() {
     return managedAlgorithms.values().stream().map(t -> t.getInfo()).collect(Collectors.toList());

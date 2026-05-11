@@ -91,8 +91,8 @@ public class UpdateCreateInternalOrderColumn extends Update {
           "update " + OrderInstance.TABLE_NAME + " set " + OrderInstance.COL_INTERNAL_ORDER + "=? where "
               + OrderInstance.COL_INTERNAL_ORDER + " is null";
       try {
-        PreparedCommand updateHistoryArchive = hisCon.prepareCommand(new Command(updateSqlCmd1.toString()));
-        PreparedCommand updateHistoryArchive2 = hisCon.prepareCommand(new Command(updateSqlCmd2));
+        PreparedCommand updateHistoryArchive = hisCon.prepareCommand(new Command(updateSqlCmd1.toString(), OrderInstance.TABLE_NAME));
+        PreparedCommand updateHistoryArchive2 = hisCon.prepareCommand(new Command(updateSqlCmd2, OrderInstance.TABLE_NAME));
         hisCon.executeDML(updateHistoryArchive, param);
         hisCon.executeDML(updateHistoryArchive2, new Parameter(false));
         hisCon.commit();

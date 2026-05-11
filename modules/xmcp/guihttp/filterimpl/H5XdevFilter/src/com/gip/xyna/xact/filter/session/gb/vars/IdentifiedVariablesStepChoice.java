@@ -134,6 +134,11 @@ public class IdentifiedVariablesStepChoice extends IdentifiedVariablesStep imple
       }
     }
   }
+
+  public void identifyInputVariables() {
+    inputVarIdentifications = fillDirectVars(VarUsageType.input, stepChoice.getInputVars(), this);
+  }
+  
   
   public void createOutputsAndAssigns() {
     createChoiceOutput();
@@ -198,7 +203,6 @@ public class IdentifiedVariablesStepChoice extends IdentifiedVariablesStep imple
     }
 
     sortOutputs(list);
-
     outputVarIdentifications = list;
   }
 
@@ -215,7 +219,7 @@ public class IdentifiedVariablesStepChoice extends IdentifiedVariablesStep imple
     List<Step> steps = s.get().getChildSteps();
     String[] idsOrdered = steps.get(steps.size() - 1).getOutputVarIds();
 
-    for (int i = 0; i < idsOrdered.length; i++) {
+    for (int i = commonOutput.size(); i < idsOrdered.length; i++) {
       String id = idsOrdered[i];
       Optional<AVariableIdentification> match = list.stream()
           .filter(x -> x instanceof GlobalChoiceVarIdentification 

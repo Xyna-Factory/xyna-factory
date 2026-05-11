@@ -191,6 +191,7 @@ public class IdGenerationAlgorithmUsingBlocksAndClusteredStorable implements IdG
 
     InfrastructureAlgorithmExecutionManagement tm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getInfrastructureAlgorithmExecutionManagement();
     tm.stopAlgorithm(executor.getName());
+    tm.unregisterAlgorithm(executor.getName());
 
     ODSConnection con = CentralComponentConnectionCache.getConnectionFor(DedicatedConnection.IDGenerator);
     if (con != null &&

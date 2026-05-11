@@ -1,0 +1,8 @@
+{
+  "tests":
+  [
+    "output_order.json",
+    "keep_input_connections.json",
+    "keep_output_connections.json"
+  ]
+}

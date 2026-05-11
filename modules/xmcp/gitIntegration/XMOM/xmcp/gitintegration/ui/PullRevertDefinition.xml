@@ -63,7 +63,7 @@
             </Data>
             <Target RefID="5058"/>
           </Output>
-          <Mapping>%0%.text="Xmom Objects that were reverted - cinoare with deployed state after pull"</Mapping>
+          <Mapping>%0%.text="Xmom Objects that were reverted - compare with deployed state after pull"</Mapping>
         </Mappings>
         <Assign ID="4995">
           <Source RefID="5058"/>

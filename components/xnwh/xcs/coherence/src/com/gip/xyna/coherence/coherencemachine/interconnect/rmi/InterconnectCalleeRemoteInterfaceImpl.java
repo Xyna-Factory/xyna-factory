@@ -20,7 +20,6 @@ package com.gip.xyna.coherence.coherencemachine.interconnect.rmi;
 
 
 import java.rmi.NotBoundException;
-import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -62,11 +61,6 @@ public class InterconnectCalleeRemoteInterfaceImpl implements InterconnectProtoc
 
 
   public void init() {
-
-    //FIXME extrahieren in rmi utils klasse, weil nochmal in cachecotrnollerremote.... benutzt
-    if (System.getSecurityManager() == null) {
-      System.setSecurityManager(new RMISecurityManager());
-    }
     Registry registry = null;
     try {
       registry = LocateRegistry.createRegistry(port);

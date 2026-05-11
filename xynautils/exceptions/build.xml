@@ -19,7 +19,7 @@
 <project name="xynautils-exceptions" basedir=".">
 	
 	<!--Next release version for the archive file-->
-	<property name="release.number" value="3.3.0.1"/>
+	<property name="release.number" value="4.0.2"/>
 	<!--Name of the utils project-->
 	<property name="utils.name" value="exceptions"/>
 	

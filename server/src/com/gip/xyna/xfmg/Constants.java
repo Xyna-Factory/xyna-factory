@@ -147,7 +147,6 @@ public class Constants {
   public static final long DEFAULT_CANCEL_TIMEOUT = (long) 5000;
   public static final String STORAGE_PATH = "storage";
   public static final int DELETE_FILE_RETRIES = 20;
-  public static final String SERVER_POLICY = "server.policy";
 
   
   public static final String LOG4J_CONFIGURATION_KEY = "log4j.configurationFile";

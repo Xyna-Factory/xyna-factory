@@ -25,10 +25,13 @@ import java.util.regex.Pattern;
 
 public class Command {
 
+  @Deprecated
   private static final Pattern deletePattern = Pattern.compile("^delete from (.*?)( where .*?)?$",
                                                                Pattern.CASE_INSENSITIVE);
+  @Deprecated
   private static final Pattern updatePattern = Pattern
       .compile("^update (.*?) set (\\w+\\s*=.*?)(,\\s*\\w+\\s*=.*?)*( where .*?)?$", Pattern.CASE_INSENSITIVE);
+  @Deprecated
   private static final Pattern insertPattern = Pattern.compile("^insert into (.*?) \\(.*?\\) values \\(.*?\\)$",
                                                                Pattern.CASE_INSENSITIVE);
 
@@ -36,6 +39,7 @@ public class Command {
   private String tableName;
 
 
+  @Deprecated
   public Command(String sqlString) throws PersistenceLayerException {
     this(sqlString, Command.parseSqlStringFindTable(sqlString).toLowerCase());
   }
@@ -46,6 +50,7 @@ public class Command {
   }
 
 
+  @Deprecated
   public static String parseSqlStringFindTable(String sqlString) {
     Matcher m = updatePattern.matcher(sqlString);
     if (m.matches()) {

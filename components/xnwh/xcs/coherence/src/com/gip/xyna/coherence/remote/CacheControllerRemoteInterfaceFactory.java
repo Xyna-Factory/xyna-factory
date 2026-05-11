@@ -18,8 +18,6 @@
 
 package com.gip.xyna.coherence.remote;
 
-import java.rmi.RMISecurityManager;
-
 import com.gip.xyna.coherence.CacheController;
 import com.gip.xyna.coherence.CacheControllerFactory;
 
@@ -33,32 +31,6 @@ public class CacheControllerRemoteInterfaceFactory {
 
   public static CacheControllerRemoteInterfaceWithInit getCacheControllerRemoteInterface(CacheController controller,
                                                                                          int port) {
-
-    synchronized (CacheControllerRemoteInterfaceFactory.class) {
-      if (System.getSecurityManager() == null) {
-        System.setSecurityManager(new RMISecurityManager());
-      }
-    }
-//
-//    try {
-//      Class<?> bla = RMIClassLoader.loadClass(CacheControllerRemoteInterfaceImpl.class.getName());
-//      Constructor<?> con = bla.getConstructors()[0];//(CacheController.class, Integer.class);
-//      return (CacheControllerRemoteInterfaceWithInit) con.newInstance(controller, port);
-//    } catch (MalformedURLException e) {
-//      throw new RuntimeException(e);
-//    } catch (ClassNotFoundException e) {
-//      throw new RuntimeException(e);
-//    } catch (InstantiationException e) {
-//      throw new RuntimeException(e);
-//    } catch (IllegalAccessException e) {
-//      throw new RuntimeException(e);
-//    } catch (SecurityException e) {
-//      throw new RuntimeException(e);
-//    } catch (IllegalArgumentException e) {
-//      throw new RuntimeException(e);
-//    } catch (InvocationTargetException e) {
-//      throw new RuntimeException(e);
-//    }
     return new CacheControllerRemoteInterfaceImpl(controller, port);
 
   }

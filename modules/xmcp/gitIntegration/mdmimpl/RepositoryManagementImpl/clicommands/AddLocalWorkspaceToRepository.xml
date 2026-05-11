@@ -1,0 +1,25 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Groups="Git Repository Management" Name="addlocalworkspacetorepository" Description="Add a local workspace to a repository" />
+  <Argument Name="path" Description="Path to the repository" />
+  <Argument Name="subPath" Description="Path inside the repository to where the workspace should be" />
+  <Argument Name="workspace" Description="Workspace to to add to the repository" />
+  <Argument Name="split" Description="Decides how workspace config is stored. Possible values:\nnone: write everything into workspace.xml\nbytype: create a config folder and one file per config type\nfine: create a config folder, a folder for ervery config type and a file for every configuration entry\nIf not specified the existing config is reused. If there is no existing config, none is used." Optional="true"/>
+  <BoolOption Name="e" LongName="entireRevision" Description="add the entire revision folder to repository instead of just saved/XMOM and workspace-xml" Optional="true"/>
+</XynaCommandLineCommand>

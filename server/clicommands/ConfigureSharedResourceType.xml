@@ -20,4 +20,5 @@
   <BoolOption Name="d" LongName="delete" Description="Delete the configuration" Optional="true"/>
   <Argument Name="resourceType" Description="Type of the shared resource to configure."/>
   <Argument Name="synchronizerInstanceName" Description="Name of the shared resource synchronizer instance." Optional="true"/>
+  <BoolOption Name="c" LongName="copy" Description="Copy content to new configuration" Optional="true"/>
 </XynaCommandLineCommand>

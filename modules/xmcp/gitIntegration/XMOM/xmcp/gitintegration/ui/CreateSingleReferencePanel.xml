@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Create Single Reference Panel " TypeName="CreateSingleReferencePanel" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Create Single Reference Panel " Name="CreateSingleReferencePanel">
+    <Input>
+      <Data ID="34" Label="Indexed Reference" ReferenceName="IndexedReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedReference34"/>
+    </Input>
+    <Output>
+      <Data ID="47" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition47"/>
+    </Output>
+    <ServiceReference ID="429" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="428"/>
+      <Target RefID="428"/>
+    </ServiceReference>
+    <Function ID="428" Label="get Own RuntimeContext">
+      <Source RefID="429"/>
+      <Target RefID="429"/>
+      <Target RefID="431"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="429"/>
+      <Receive ServiceID="429">
+        <Target RefID="431"/>
+      </Receive>
+    </Function>
+    <Mappings ID="79" Label="Mapping">
+      <Input>
+        <Data ID="88" Label="Indexed Reference" ReferenceName="IndexedReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedReference88">
+          <Source RefID="79"/>
+        </Data>
+        <Source RefID="34"/>
+      </Input>
+      <Output>
+        <Data ID="97" Label="Text Item Definition - Type" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition97">
+          <Source RefID="79"/>
+        </Data>
+        <Target RefID="107"/>
+      </Output>
+      <Mapping>%1%.label="Type"</Mapping>
+      <Mapping>%1%.dataPath=concat("%0%.", %0%.index, ".reference.type")</Mapping>
+    </Mappings>
+    <Mappings ID="116" Label="Mapping">
+      <Input>
+        <Data ID="117" Label="Indexed Reference" ReferenceName="IndexedReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedReference117"/>
+        <Source RefID="34"/>
+      </Input>
+      <Output>
+        <Data ID="118" Label="Text Item Definition - Path" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition118"/>
+        <Target RefID="119"/>
+      </Output>
+      <Mapping>%1%.label="Path"</Mapping>
+      <Mapping>%1%.dataPath=concat("%0%.", %0%.index, ".reference.path")</Mapping>
+    </Mappings>
+    <Mappings ID="144" Label="Mapping">
+      <Input>
+        <Data ID="266" Label="Indexed Reference" ReferenceName="IndexedReference" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedReference266">
+          <Source RefID="144"/>
+        </Data>
+        <Source RefID="34"/>
+      </Input>
+      <Input>
+        <Data ID="448" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext448">
+          <Source RefID="144"/>
+        </Data>
+        <Source RefID="431"/>
+      </Input>
+      <Output>
+        <Data ID="153" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition153">
+          <Source RefID="144"/>
+        </Data>
+        <Target RefID="154"/>
+      </Output>
+      <Mapping>%2%.label="Delete"</Mapping>
+      <Mapping>%2%.dataPath=concat("%1%,%0%.", %0%.index, ".reference")</Mapping>
+      <Mapping>%2%.serviceRTC=%1%</Mapping>
+      <Mapping>%2%.serviceFQN="xmcp.gitintegration.ui.ExecuteRemoveReference"</Mapping>
+      <Mapping>%2%.synchronously="true"</Mapping>
+      <Mapping>%2%.onStartorderResultEvent["0"].eventId="gitintegration_reference_clean"</Mapping>
+      <Mapping>%2%.onStartorderResultEvent["1"].eventId="gitintegration_reference_update"</Mapping>
+    </Mappings>
+    <Mappings ID="60" Label="Mapping">
+      <Input>
+        <Data ID="179" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition179">
+          <Source RefID="60"/>
+        </Data>
+        <Source RefID="154"/>
+      </Input>
+      <Input>
+        <Data ID="228" Label="Text Item Definition - Type" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition228">
+          <Source RefID="60"/>
+        </Data>
+        <Source RefID="107">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="237" Label="Text Item Definition - Path" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition237">
+          <Source RefID="60"/>
+        </Data>
+        <Source RefID="119">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="69" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition69">
+          <Source RefID="60"/>
+        </Data>
+        <Target RefID="70"/>
+      </Output>
+      <Mapping>%3%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%0%</Mapping>
+      <Mapping>%3%.children["0"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%1%</Mapping>
+      <Mapping>%3%.children["1"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%2%</Mapping>
+    </Mappings>
+    <Data ID="70" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition70">
+      <Source RefID="60"/>
+    </Data>
+    <Data ID="107" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition107">
+      <Source RefID="79"/>
+    </Data>
+    <Data ID="119" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition119"/>
+    <Data ID="154" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition154">
+      <Source RefID="144"/>
+    </Data>
+    <Data ID="431" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext431">
+      <Source RefID="428"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="70"/>
+      <Target RefID="47"/>
+      <Copy>
+        <Source RefID="70"/>
+        <Target RefID="47"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
