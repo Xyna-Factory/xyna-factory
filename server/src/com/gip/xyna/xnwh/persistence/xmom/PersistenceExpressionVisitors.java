@@ -783,6 +783,7 @@ public class PersistenceExpressionVisitors {
     private boolean needsLike;
     private List<Integer> idxs = new ArrayList<Integer>();
     private boolean expectingIndex = false;
+    private boolean listUpdate = false;
     
     protected UpdateBuildingVisitor(XMOMStorableStructureInformation info) {
       super(info);
@@ -807,7 +808,12 @@ public class PersistenceExpressionVisitors {
     public List<Integer> getIdxs() {
       return idxs;
     }
-    
+
+
+    public boolean isListUpdate() {
+      return listUpdate;
+    }
+
 
     @Override
     public void indexDefStarts() {
@@ -856,9 +862,14 @@ public class PersistenceExpressionVisitors {
       if (!variableIdentification.isEmpty()) {
         StorableColumnInformation column = variableIdentification.peek();
         if (column.isList() && part.getIndexDef() == null) {
-          primaryKeyListSuffix.append("#%");
           needsLike = true;
-          idxs.add(0); // TODO should be documented 
+          if (!XMOMPersistenceOperationAlgorithms.LEGACY_LIST_UPDATES.get()) {
+            idxs.add(-1);
+          } else {
+            primaryKeyListSuffix.append("#%");
+            idxs.add(0);
+          }
+          listUpdate = true;
         }
       }
     }
@@ -1363,12 +1374,14 @@ private static class StorableStructureType implements ModelledType {
     private final String primaryKeyListSuffix;
     private final boolean needsLike;
     private List<Integer> idx;
+    private final boolean listUpdate;
     
-    UpdateParsingResult(QualifiedStorableColumnInformation column, String primaryKeyListSuffix, boolean needsLike, List<Integer> idx) {
+    UpdateParsingResult(QualifiedStorableColumnInformation column, String primaryKeyListSuffix, boolean needsLike, List<Integer> idx, boolean listUpdate) {
       this.column = column;
       this.primaryKeyListSuffix = primaryKeyListSuffix;
       this.needsLike = needsLike;
       this.idx = idx;
+      this.listUpdate = listUpdate;
     }
 
     
@@ -1393,6 +1406,11 @@ private static class StorableStructureType implements ModelledType {
      */
     public List<Integer> getListIndizesForRootObject() {
       return idx;
+    }
+    
+    
+    public boolean isListUpdate() {
+      return listUpdate;
     }
     
   }
@@ -1483,7 +1501,7 @@ private static class StorableStructureType implements ModelledType {
   protected static UpdateParsingResult parseUpdatePath(String updatePath, XMOMStorableStructureInformation info) {
     PersistenceExpressionVisitors.UpdateBuildingVisitor ubv = new PersistenceExpressionVisitors.UpdateBuildingVisitor(info);
     visitAfterDefaultVisitorStack(ubv, updatePath, info);
-    return new UpdateParsingResult(ubv.getColumns(), ubv.getPrimaryKeyListSuffix(), ubv.needsLike(), ubv.getIdxs());
+    return new UpdateParsingResult(ubv.getColumns(), ubv.getPrimaryKeyListSuffix(), ubv.needsLike(), ubv.getIdxs(), ubv.isListUpdate());
   }
 
 }
