@@ -86,6 +86,7 @@ import com.gip.xyna.xnwh.persistence.xmom.PersistenceAccessControl.PersistenceAc
 import com.gip.xyna.xnwh.persistence.xmom.PersistenceExpressionVisitors.CastCondition;
 import com.gip.xyna.xnwh.persistence.xmom.QueryGenerator.QualifiedStorableColumnInformation;
 import com.gip.xyna.xnwh.persistence.xmom.QueryGenerator.QueryPiplineElement;
+import com.gip.xyna.xnwh.persistence.xmom.UpdateGenerator.DeleteInfo;
 import com.gip.xyna.xnwh.persistence.xmom.UpdateGenerator.UnfinishedUpdateStatement;
 import com.gip.xyna.xnwh.persistence.xmom.UpdateGenerator.UpdateGeneration;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache.StorableColumnInformation;
@@ -692,7 +693,7 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
       updates.addAll(UpdateGenerator.pruneDuplicatedUpdates(historizationUpdates));
     }
 
-    Set<Pair<String, String>> deleteStatements = new HashSet<>();
+    Set<DeleteInfo> deleteStatements = new HashSet<>();
     
     if (!LEGACY_LIST_UPDATES.get()) {
       //expand each list update -> one for each index
@@ -767,9 +768,9 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
                 }
               }
             }
-            for(Pair<String, String> deleteData : deleteStatements) {
-              PreparedCommand deleteCommand = con.prepareCommand(new Command(deleteData.getFirst(), deleteData.getSecond()));
-              con.executeDML(deleteCommand, new Parameter());
+            for(DeleteInfo deleteData : deleteStatements) {
+              PreparedCommand deleteCommand = con.prepareCommand(new Command(deleteData.getSql(), deleteData.getTableName()));
+              con.executeDML(deleteCommand, new Parameter(deleteData.getPrimaryKey()));
             }
             perConCon.commit(con);
           } catch (XNWH_RetryTransactionException e) {

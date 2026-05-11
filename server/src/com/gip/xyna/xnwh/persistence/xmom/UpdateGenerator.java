@@ -165,7 +165,52 @@ public class UpdateGenerator {
     }
   }
 
-  
+
+  protected static class DeleteInfo {
+
+    private final String sql;
+    private final String tableName;
+    private final String primaryKey;
+
+
+    public DeleteInfo(String sql, String tableName, String primaryKey) {
+      this.sql = sql;
+      this.tableName = tableName;
+      this.primaryKey = primaryKey;
+    }
+
+
+    public String getSql() {
+      return sql;
+    }
+
+
+    public String getTableName() {
+      return tableName;
+    }
+
+
+    public String getPrimaryKey() {
+      return primaryKey;
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+      if (obj == null) {
+        return false;
+      }
+      if (this == obj) {
+        return true;
+      }
+      if (!(obj instanceof DeleteInfo)) {
+        return false;
+      }
+      DeleteInfo other = (DeleteInfo) obj;
+      return sql.equals(other.sql) && tableName.equals(other.tableName) && primaryKey.equals(other.primaryKey);
+    }
+  }
+
   protected static class UnfinishedUpdateStatement {
     // UPDATE <table> SET <column=value - pairs> WHERE <primaryKey> <LIKE OR => ?
     private static final String updateTemplate = "UPDATE %s SET %s WHERE %s %s ?";
@@ -247,18 +292,16 @@ public class UpdateGenerator {
     }
 
 
-    public Pair<String, String> finishDelete(int size, String primaryKeyOfPossessingXMOMStorable) {
+    public DeleteInfo finishDelete(int size, String primaryKeyOfPossessingXMOMStorable) {
       StringBuilder sb = new StringBuilder();
       sb.append("delete from ");
       sb.append(getTableName());
       sb.append(" where ");
       String parentIdColName = getColName(VarType.EXPANSION_PARENT_FK);
       sb.append(parentIdColName);
-      sb.append(" = ");
-      sb.append(primaryKeyOfPossessingXMOMStorable);
-      sb.append(" and idx > ");
+      sb.append(" = ? and idx > ");
       sb.append(size);
-      return new Pair<>(sb.toString(), getTableName());
+      return new DeleteInfo(sb.toString(), getTableName(), primaryKeyOfPossessingXMOMStorable + primaryKeySuffix);
     }
 
  
