@@ -1080,7 +1080,7 @@ public class RepositoryManagementImpl {
       Path savedXmomRevPath = revisionPath.resolve(SAVED).resolve(XMOM);
       Path xmomRepoPath = workspacePathInRepo.resolve(XMOM);
       try {
-        Files.deleteIfExists(savedXmomRevPath);
+        FileUtils.deleteDirectoryRecursively(savedXmomRevPath.toFile());
         tracker.trackInfo("Deleted xmom content at " + savedXmomRevPath);
         if(!createSymbolicLink(savedXmomRevPath, xmomRepoPath)) {
           tracker.trackError("Could not create symbolic link from " +savedXmomRevPath + " to " + xmomRepoPath);
@@ -1094,7 +1094,7 @@ public class RepositoryManagementImpl {
         } else {
           tracker.trackInfo("Created symbolic link from " + savedXmomRevPath + " to " + workspacePathInRepo.resolve(XMOM));
         }
-      } catch (IOException e) {
+      } catch (Exception e) {
         tracker.trackError("Error deleting revision content: " + e.getMessage());
         logger.error("Error deleting revision content: " + e.getMessage(), e);
         try {

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,15 +87,15 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
         wcd.setContentType(TAG_XMOMSTORABLE);
         wcd.setExistingItem(fromEntry);
         if (toEntry != null) {
-          boolean fqPathEmpty = (fromEntry.getFQPath() == null) || (fromEntry.getFQPath().isBlank());
+          boolean isColumnEntry = isColumnEntry(fromEntry);
           boolean modified = false;
-          if (fqPathEmpty) {
-            modified = !Objects.equals(fromEntry.getODSName(), toEntry.getODSName());
+          if (isColumnEntry) {
+            modified = !Objects.equals(fromEntry.getColumnName(), toEntry.getColumnName());
           } else {
-            modified = !Objects.equals(fromEntry.getColumnName(), toEntry.getColumnName()); 
+            modified = !Objects.equals(fromEntry.getODSName(), toEntry.getODSName());
           }
           if (modified) {
-            if (!fqPathEmpty) {
+            if (isColumnEntry) {
               // ignore possible tablename change in entries for column change
               toEntry.setODSName(fromEntry.getODSName());
             }
@@ -188,13 +188,13 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
 
     if (!Objects.equals(from.getODSName(), to.getODSName())) {
       ds.append("\n");
-      ds.append("    " + TAG_ODSNAME + " ");
-      ds.append(MODIFY.class.getSimpleName() + " \"" + from.getODSName() + "\"=>\"" + to.getODSName() + "\"");
+      ds.append(TAG_ODSNAME);
+      ds.append(" \"").append(from.getODSName()).append("\"=>\"").append(to.getODSName()).append("\"");
     }
     if (!Objects.equals(from.getColumnName(), to.getColumnName())) {
       ds.append("\n");
-      ds.append("    " + TAG_COLUMNNAME + " ");
-      ds.append(MODIFY.class.getSimpleName() + " \"" + from.getColumnName() + "\"=>\"" + to.getColumnName() + "\"");
+      ds.append(TAG_COLUMNNAME);
+      ds.append(" \"").append(from.getColumnName()).append("\"=>\"").append(to.getColumnName()).append("\"");
     }
     return ds.toString();
   }
@@ -249,7 +249,7 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
 
   @Override
   public void modify(XMOMStorable from, XMOMStorable to, long revision) {
-    if ((to.getFQPath() != null) && !to.getFQPath().isBlank()) {
+    if (isColumnEntry(to)) {
       modifySingleColumnEntry(from, to, revision);
     }
     else {
@@ -276,12 +276,17 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
       throw new RuntimeException(e);
     }
   }
-  
-  
+
+
+  private boolean isColumnEntry(XMOMStorable storable) {
+    return storable.getColumnName() != null && !storable.getColumnName().isBlank();
+  }
+
+
   private Optional<XMOMStorable> getOptionalExistingEntry(XMOMStorable to, long revision) {
     try {
       Collection<XMOMODSMapping> entries = XMOMODSMappingUtils.getAllMappingsForRootType(to.getXMLName(), revision);
-      boolean isColEntry = ((to.getFQPath() != null) && !to.getFQPath().isBlank());
+      boolean isColEntry = isColumnEntry(to);
       for (XMOMODSMapping item : entries) {
         boolean matches = false;
         if (isColEntry) {
