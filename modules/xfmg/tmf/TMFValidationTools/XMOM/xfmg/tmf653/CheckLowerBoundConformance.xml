@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Check lower bound conformance" TypeName="CheckLowerBoundConformance" TypePath="xfmg.tmf653" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Check lower bound conformance" Name="CheckLowerBoundConformance">
+    <Input>
+      <Data ID="7" Label="MetricDefMeasureThresholdRule" ReferenceName="MetricDefMeasureThresholdRule" ReferencePath="internalized.tmf653.datamodel" VariableName="metricDefMeasureThresholdRule7"/>
+      <Data ID="890" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf653.datamodel" VariableName="characteristic890"/>
+      <Data ID="46" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation46"/>
+    </Input>
+    <Output>
+      <Data ID="12" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation12"/>
+    </Output>
+    <ServiceReference ID="5692" Label="Check lower bound conformance int" ReferenceName="CheckLowerBoundConformanceInt" ReferencePath="xfmg.tmf653">
+      <Source RefID="5691"/>
+      <Target RefID="5691"/>
+    </ServiceReference>
+    <ServiceReference ID="5780" Label="Check lower bound conformance float" ReferenceName="CheckLowerBoundConformanceFloat" ReferencePath="xfmg.tmf653">
+      <Source RefID="5779"/>
+      <Target RefID="5779"/>
+    </ServiceReference>
+    <ServiceReference ID="6296" Label="Check lower bound conformance String" ReferenceName="CheckLowerBoundConformanceString" ReferencePath="xfmg.tmf653">
+      <Source RefID="6295"/>
+      <Target RefID="6295"/>
+    </ServiceReference>
+    <Choice ID="2315" TypeName="BaseChoiceTypeSubclasses" TypePath="server">
+      <Source RefID="890"/>
+      <Target RefID="6300"/>
+      <Input>
+        <Data ID="2329" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf653.datamodel" VariableName="characteristic2329">
+          <Source RefID="2315"/>
+        </Data>
+        <Source RefID="890"/>
+      </Input>
+      <Case ID="2330" Label="Characteristic" Premise="internalized.tmf653.datamodel.Characteristic">
+        <Mappings ID="6205" Label="Mapping">
+          <Output>
+            <Data ID="6230" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6230">
+              <Source RefID="6205"/>
+            </Data>
+            <Target RefID="6231"/>
+          </Output>
+        </Mappings>
+        <Assign ID="2343">
+          <Source RefID="6231"/>
+          <Target RefID="6300"/>
+          <Copy>
+            <Source RefID="6231"/>
+            <Target RefID="6300"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case Alias="internalized.tmf653.datamodel.Characteristic" ID="2404" Label="NumberArrayCharacteristic" Premise="internalized.tmf653.datamodel.NumberArrayCharacteristic"/>
+      <Case Alias="internalized.tmf653.datamodel.Characteristic" ID="2432" Label="ObjectArrayCharacteristic" Premise="internalized.tmf653.datamodel.ObjectArrayCharacteristic"/>
+      <Case Alias="internalized.tmf653.datamodel.Characteristic" ID="2458" Label="BooleanCharacteristic" Premise="internalized.tmf653.datamodel.BooleanCharacteristic"/>
+      <Case Alias="internalized.tmf653.datamodel.Characteristic" ID="2482" Label="IntegerArrayCharacteristic" Premise="internalized.tmf653.datamodel.IntegerArrayCharacteristic"/>
+      <Case Alias="internalized.tmf653.datamodel.Characteristic" ID="2504" Label="ObjectCharacteristic" Premise="internalized.tmf653.datamodel.ObjectCharacteristic"/>
+      <Case Alias="internalized.tmf653.datamodel.Characteristic" ID="2524" Label="StringArrayCharacteristic" Premise="internalized.tmf653.datamodel.StringArrayCharacteristic"/>
+      <Case Alias="internalized.tmf653.datamodel.Characteristic" ID="2542" Label="BooleanArrayCharacteristic" Premise="internalized.tmf653.datamodel.BooleanArrayCharacteristic"/>
+      <Case ID="2335" Label="IntegerCharacteristic" Premise="internalized.tmf653.datamodel.IntegerCharacteristic">
+        <Assign ID="4081">
+          <Source RefID="890"/>
+          <Target RefID="5872"/>
+          <Copy>
+            <Source RefID="890"/>
+            <Target RefID="5872"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="5811" Label="Mapping">
+          <Input>
+            <Data ID="5871" Label="IntegerCharacteristic" ReferenceName="IntegerCharacteristic" ReferencePath="internalized.tmf653.datamodel" VariableName="integerCharacteristic5871">
+              <Source RefID="5811"/>
+            </Data>
+            <Source RefID="5872"/>
+          </Input>
+          <Output>
+            <Data ID="5840" Label="IntegerNumber" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber5840">
+              <Source RefID="5811"/>
+            </Data>
+            <Target RefID="5841"/>
+          </Output>
+          <Mapping>%1%.value=%0%.value</Mapping>
+        </Mappings>
+        <Function ID="5691" Label="check lower bound conformance int">
+          <Source RefID="5692"/>
+          <Source RefID="5841"/>
+          <Source RefID="7"/>
+          <Source RefID="46"/>
+          <Target RefID="5692"/>
+          <Target RefID="5694"/>
+          <Invoke Operation="CheckLowerBoundConformanceInt" ServiceID="5692">
+            <Source RefID="5841"/>
+            <Source RefID="7"/>
+            <Source RefID="46"/>
+          </Invoke>
+          <Receive ServiceID="5692">
+            <Target RefID="5694"/>
+          </Receive>
+        </Function>
+        <Assign ID="2358">
+          <Source RefID="5694"/>
+          <Target RefID="6300"/>
+          <Copy>
+            <Source RefID="5694"/>
+            <Target RefID="6300"/>
+          </Copy>
+        </Assign>
+        <Data ID="5694" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation5694">
+          <Source RefID="5691"/>
+        </Data>
+      </Case>
+      <Case ID="4082" Label="NumberCharacteristic" Premise="internalized.tmf653.datamodel.NumberCharacteristic">
+        <Assign ID="4084">
+          <Source RefID="890"/>
+          <Target RefID="6060"/>
+          <Copy>
+            <Source RefID="890"/>
+            <Target RefID="6060"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="6003" Label="Mapping">
+          <Input>
+            <Data ID="6059" Label="NumberCharacteristic" ReferenceName="NumberCharacteristic" ReferencePath="internalized.tmf653.datamodel" VariableName="numberCharacteristic6059">
+              <Source RefID="6003"/>
+            </Data>
+            <Source RefID="6060"/>
+          </Input>
+          <Output>
+            <Data ID="6030" Label="DoubleNumber" ReferenceName="DoubleNumber" ReferencePath="base.math" VariableName="doubleNumber6030">
+              <Source RefID="6003"/>
+            </Data>
+            <Target RefID="6031"/>
+          </Output>
+          <Mapping>%1%.value=%0%.value</Mapping>
+        </Mappings>
+        <Function ID="5779" Label="Check lower bound conformance float">
+          <Source RefID="5780"/>
+          <Source RefID="6031"/>
+          <Source RefID="7"/>
+          <Source RefID="46"/>
+          <Target RefID="5780"/>
+          <Target RefID="5782"/>
+          <Invoke Operation="CheckLowerBoundConformanceFloat" ServiceID="5780">
+            <Source RefID="6031"/>
+            <Source RefID="7"/>
+            <Source RefID="46"/>
+          </Invoke>
+          <Receive ServiceID="5780">
+            <Target RefID="5782"/>
+          </Receive>
+        </Function>
+        <Assign ID="4085">
+          <Source RefID="5782"/>
+          <Target RefID="6300"/>
+          <Copy>
+            <Source RefID="5782"/>
+            <Target RefID="6300"/>
+          </Copy>
+        </Assign>
+        <Data ID="5782" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation5782">
+          <Source RefID="5779"/>
+        </Data>
+      </Case>
+      <Case ID="4067" Label="StringCharacteristic" Premise="internalized.tmf653.datamodel.StringCharacteristic">
+        <Assign ID="4069">
+          <Source RefID="890"/>
+          <Target RefID="6407"/>
+          <Copy>
+            <Source RefID="890"/>
+            <Target RefID="6407"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="6334" Label="Mapping">
+          <Input>
+            <Data ID="6406" Label="StringCharacteristic" ReferenceName="StringCharacteristic" ReferencePath="internalized.tmf653.datamodel" VariableName="stringCharacteristic6406">
+              <Source RefID="6334"/>
+            </Data>
+            <Source RefID="6407"/>
+          </Input>
+          <Output>
+            <Data ID="6369" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text6369">
+              <Source RefID="6334"/>
+            </Data>
+            <Target RefID="6370"/>
+          </Output>
+          <Mapping>%1%.text=%0%.value</Mapping>
+        </Mappings>
+        <Function ID="6295" Label="Check lower bound conformance String">
+          <Source RefID="6296"/>
+          <Source RefID="6370"/>
+          <Source RefID="7"/>
+          <Source RefID="46"/>
+          <Target RefID="6296"/>
+          <Target RefID="6298"/>
+          <Invoke Operation="CheckLowerBoundConformanceString" ServiceID="6296">
+            <Source RefID="6370"/>
+            <Source RefID="7"/>
+            <Source RefID="46"/>
+          </Invoke>
+          <Receive ServiceID="6296">
+            <Target RefID="6298"/>
+          </Receive>
+        </Function>
+        <Assign ID="4070">
+          <Source RefID="6298"/>
+          <Target RefID="6300"/>
+          <Copy>
+            <Source RefID="6298"/>
+            <Target RefID="6300"/>
+          </Copy>
+        </Assign>
+        <Data ID="6298" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6298">
+          <Source RefID="6295"/>
+        </Data>
+      </Case>
+    </Choice>
+    <Data ID="5841" Label="IntegerNumber" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber5841">
+      <Source RefID="5811"/>
+    </Data>
+    <Data ID="5872" Label="IntegerCharacteristic" ReferenceName="IntegerCharacteristic" ReferencePath="internalized.tmf653.datamodel" VariableName="integerCharacteristic5872">
+      <Source RefID="4081"/>
+    </Data>
+    <Data ID="6031" Label="DoubleNumber" ReferenceName="DoubleNumber" ReferencePath="base.math" VariableName="doubleNumber6031">
+      <Source RefID="6003"/>
+    </Data>
+    <Data ID="6060" Label="NumberCharacteristic" ReferenceName="NumberCharacteristic" ReferencePath="internalized.tmf653.datamodel" VariableName="numberCharacteristic6060">
+      <Source RefID="4084"/>
+    </Data>
+    <Data ID="6231" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6231">
+      <Source RefID="6205"/>
+    </Data>
+    <Data ID="6300" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6300">
+      <Source RefID="2315"/>
+    </Data>
+    <Data ID="6370" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text6370">
+      <Source RefID="6334"/>
+    </Data>
+    <Data ID="6407" Label="StringCharacteristic" ReferenceName="StringCharacteristic" ReferencePath="internalized.tmf653.datamodel" VariableName="stringCharacteristic6407">
+      <Source RefID="4069"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="6300"/>
+      <Target RefID="12"/>
+      <Copy>
+        <Source RefID="6300"/>
+        <Target RefID="12"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="ServiceTest_Update" TypeName="ServiceTestUpdate" TypePath="internalized.tmf653.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>A service test is an entity that exists for a controlled test invocation on a service. The service  test is executed according to a schedule and contains service test configuration parameters that are to be  applied at execution time, and service test measures that result. Skipped properties: id,href,@type,@schemaLocation,@baseType
+        </Documentation>
+  </Meta>
+  <Data Label="id" VariableName="id">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>unique identifier
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="description" VariableName="description">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Description of the service test
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="endDateTime" VariableName="endDateTime">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>The end date and time of the service test
+format: date-time
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="mode" VariableName="mode">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>An indication of whether the service test is running in  \"PROACTIVE\" or \"ONDEMAND\" mode
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="name" VariableName="name">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>The name of the service test
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="startDateTime" VariableName="startDateTime">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>The start date and time of the service test.
+format: date-time
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="state" VariableName="state">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>The actual state the service test is in. Recommended states are found in ExecutionStateType schema possible values include acknowledged, rejected, pending, inProgress, cancelled, completed and failed
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf653.datamodel" VariableName="characteristic">
+    <Meta>
+      <Documentation>List of characteristics with values that define the test run
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="relatedParty" ReferenceName="RelatedParty" ReferencePath="internalized.tmf653.datamodel" VariableName="relatedParty">
+    <Meta>
+      <Documentation>Party related to the test
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="relatedService" ReferenceName="ServiceRef" ReferencePath="internalized.tmf653.datamodel" VariableName="relatedService">
+    <Meta>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="testMeasure" ReferenceName="TestMeasure" ReferencePath="internalized.tmf653.datamodel" VariableName="testMeasure">
+    <Meta>
+      <Documentation>The results of the test in terms of the measured metrics
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="testSpecification" ReferenceName="ServiceTestSpecificationRef" ReferencePath="internalized.tmf653.datamodel" VariableName="testSpecification">
+    <Meta>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Data Label="validFor" ReferenceName="TimePeriod" ReferencePath="internalized.tmf653.datamodel" VariableName="validFor">
+    <Meta>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Service Label="ServiceTest_Update" TypeName="ServiceTestUpdate">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+// validate ServiceTestUpdate.id of type String
+try {
+    var validator_id = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_id.setName("id");
+    validator_id.setValue(getId());
+    result.getErrorMessages().addAll(validator_id.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceTestUpdate.id");
+}
+
+// validate ServiceTestUpdate.description of type String
+try {
+    var validator_description = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_description.setName("description");
+    validator_description.setValue(getDescription());
+    result.getErrorMessages().addAll(validator_description.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceTestUpdate.description");
+}
+
+// validate ServiceTestUpdate.endDateTime of type String
+try {
+    var validator_endDateTime = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_endDateTime.setName("endDateTime");
+    validator_endDateTime.setValue(getEndDateTime());
+    validator_endDateTime.setFormat("date-time");
+    result.getErrorMessages().addAll(validator_endDateTime.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceTestUpdate.endDateTime");
+}
+
+// validate ServiceTestUpdate.mode of type String
+try {
+    var validator_mode = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_mode.setName("mode");
+    validator_mode.setValue(getMode());
+    result.getErrorMessages().addAll(validator_mode.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceTestUpdate.mode");
+}
+
+// validate ServiceTestUpdate.name of type String
+try {
+    var validator_name = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_name.setName("name");
+    validator_name.setValue(getName());
+    result.getErrorMessages().addAll(validator_name.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceTestUpdate.name");
+}
+
+// validate ServiceTestUpdate.startDateTime of type String
+try {
+    var validator_startDateTime = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_startDateTime.setName("startDateTime");
+    validator_startDateTime.setValue(getStartDateTime());
+    validator_startDateTime.setFormat("date-time");
+    result.getErrorMessages().addAll(validator_startDateTime.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceTestUpdate.startDateTime");
+}
+
+// validate ServiceTestUpdate.state of type String
+try {
+    var validator_state = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_state.setName("state");
+    validator_state.setValue(getState());
+    result.getErrorMessages().addAll(validator_state.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceTestUpdate.state");
+}
+
+// validate ServiceTestUpdate.characteristic of type Characteristic
+try {
+    if (getCharacteristic() != null) {
+        for (internalized.tmf653.datamodel.Characteristic obj : getCharacteristic()) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceTestUpdate.characteristic");
+}
+
+// validate ServiceTestUpdate.relatedParty of type RelatedParty
+try {
+    if (getRelatedParty() != null) {
+        for (internalized.tmf653.datamodel.RelatedParty obj : getRelatedParty()) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceTestUpdate.relatedParty");
+}
+
+// validate ServiceTestUpdate.relatedService of type ServiceRef
+try {
+    if (getRelatedService() != null) {
+        result.getErrorMessages().addAll(getRelatedService().validate().getErrorMessages());
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceTestUpdate.relatedService");
+}
+
+// validate ServiceTestUpdate.testMeasure of type TestMeasure
+try {
+    if (getTestMeasure() != null) {
+        for (internalized.tmf653.datamodel.TestMeasure obj : getTestMeasure()) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceTestUpdate.testMeasure");
+}
+
+// validate ServiceTestUpdate.testSpecification of type ServiceTestSpecificationRef
+try {
+    if (getTestSpecification() != null) {
+        result.getErrorMessages().addAll(getTestSpecification().validate().getErrorMessages());
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceTestUpdate.testSpecification");
+}
+
+// validate ServiceTestUpdate.validFor of type TimePeriod
+try {
+    if (getValidFor() != null) {
+        result.getErrorMessages().addAll(getValidFor().validate().getErrorMessages());
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceTestUpdate.validFor");
+}
+
+return result.getResult();
+                </CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
