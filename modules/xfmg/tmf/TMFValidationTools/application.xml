@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="TMF_Validation_Tools" factoryVersion="" versionName="1.0.2" xmlVersion="1.1">
+<Application applicationName="TMF_Validation_Tools" comment="" factoryVersion="" versionName="1.1" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
@@ -128,6 +128,30 @@
     </Ordertype>
     <Ordertype implicitDependency="true">
       <DestinationKey>xfmg.tmf640.validation.ValidateSingleCharacteristic</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xfmg.tmf653.CheckLowerBoundConformance</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xfmg.tmf653.CheckLowerBoundConformanceFloat</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xfmg.tmf653.CheckLowerBoundConformanceInt</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xfmg.tmf653.CheckLowerBoundConformanceString</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xfmg.tmf653.CheckSingleTestMeasureThresholdRule</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xfmg.tmf653.CheckTestMeasureConformance</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
   </Ordertypes>
@@ -641,6 +665,242 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.AppliedConsequence</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.AssociationSpecificationRef</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.Attachment</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.AttachmentRef</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.AttachmentRefOrValue</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.BooleanArrayCharacteristic</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.BooleanArrayCharacteristicValueSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.BooleanCharacteristic</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.BooleanCharacteristicValueSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.Characteristic</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.CharacteristicRelationship</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.CharacteristicSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.CharacteristicSpecificationBase</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.CharacteristicSpecificationRelationship</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.CharacteristicValueSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.ConstraintRef</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.Duration</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.Entity</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.EntityRef</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.EntitySpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.EntitySpecificationRelationship</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.Error</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.Extensible</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.IntegerArrayCharacteristic</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.IntegerArrayCharacteristicValueSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.IntegerCharacteristic</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.IntegerCharacteristicValueSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.MeasureThresholdRuleViolation</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.MetricDefMeasureConsequence</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.MetricDefMeasureThresholdRule</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.NumberArrayCharacteristic</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.NumberArrayCharacteristicValueSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.NumberCharacteristic</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.NumberCharacteristicValueSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.ObjectArrayCharacteristic</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.ObjectArrayCharacteristicValueSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.ObjectCharacteristic</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.ObjectCharacteristicValueSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.Quantity</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.RelatedParty</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.ServiceRef</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.ServiceSpecificationRef</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.ServiceTest</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.ServiceTestCreate</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.ServiceTestSpecRelationship</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.ServiceTestSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.ServiceTestSpecificationCreate</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.ServiceTestSpecificationRef</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.ServiceTestSpecificationUpdate</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.ServiceTestStateType</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.ServiceTestUpdate</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.StringArrayCharacteristic</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.StringArrayCharacteristicValueSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.StringCharacteristic</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.StringCharacteristicValueSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.TargetEntitySchema</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.TestMeasure</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.TestMeasureDefinition</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf653.datamodel.TimePeriod</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
       <FqName>xfmg.tmf.inspect.FilterByServiceRelationshipType</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
@@ -654,6 +914,14 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
       <FqName>xfmg.tmf.util.FilterServiceSpecRelationshipByType</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.tmf.util.FilterTestMeasureDefinitionByName</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.tmf.util.Helper</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
@@ -846,6 +1114,30 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
       <FqName>xfmg.tmf640.validation.ValidateSingleCharacteristic</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.tmf653.CheckLowerBoundConformance</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.tmf653.CheckLowerBoundConformanceFloat</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.tmf653.CheckLowerBoundConformanceInt</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.tmf653.CheckLowerBoundConformanceString</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.tmf653.CheckSingleTestMeasureThresholdRule</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xfmg.tmf653.CheckTestMeasureConformance</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
   </XMOMEntries>
