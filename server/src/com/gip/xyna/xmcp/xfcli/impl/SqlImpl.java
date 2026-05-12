@@ -57,7 +57,7 @@ public class SqlImpl extends XynaCommandImplementation<Sql> {
                                                                   Pattern.CASE_INSENSITIVE);
   private static final Pattern IS_COUNT_QUERY_PATTERN = Pattern.compile(".*count\\(\\*\\).*", Pattern.CASE_INSENSITIVE);
 
-  private static final Pattern FIND_TABLE_PATTERN = Pattern.compile(".*\\s+from\\s+[^\\s\\w]?(\\w+)[^\\s\\w]?\\s*", Pattern.CASE_INSENSITIVE);
+  private static final Pattern FIND_TABLE_PATTERN = Pattern.compile(".*\\s+from\\s+[^\\s\\w]?(\\w+)[^\\s\\w]?.*", Pattern.CASE_INSENSITIVE);
 
   enum RequestType {
     Describe, Count, Select;
