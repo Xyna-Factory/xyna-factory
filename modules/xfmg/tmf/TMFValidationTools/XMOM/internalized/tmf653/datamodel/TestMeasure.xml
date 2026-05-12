@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="TestMeasure" TypeName="TestMeasure" TypePath="internalized.tmf653.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>A TestMeasure specifies a measure of a specific aspect of a product, service, or resource test, such as lost packets or connectivity status
+        </Documentation>
+  </Meta>
+  <Data Label="accuracy" VariableName="accuracy">
+    <Meta>
+      <Type>Double</Type>
+      <Documentation>The number of digits of accuracy captured for associated Metrics
+format: float
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="captureDateTime" VariableName="captureDateTime">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>The date and time that the metric was captured
+format: date-time
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="captureMethod" VariableName="captureMethod">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>The method used to capture the Metrics (This may be replaced by a set of entities similar to the Performance Monitoring Ref)
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="metricDescription" VariableName="metricDescription">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Brief description of the metric
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="metricHref" VariableName="metricHref">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Hyperlink to access a metric for detail information
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="metricName" VariableName="metricName">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>The name of the metric
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="unitOfMeasure" VariableName="unitOfMeasure">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>The unit of measure for the metric values, such as meters, cubic yards, kilograms [ISO 1000].
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="ruleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="ruleViolation">
+    <Meta>
+      <Documentation>A list of rules that were violated in this test measure
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="value" ReferenceName="Characteristic" ReferencePath="internalized.tmf653.datamodel" VariableName="value">
+    <Meta>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Data Label="@baseType" VariableName="atbaseType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the super-class
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@schemaLocation" VariableName="atschemaLocation">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>A URI to a JSON-Schema file that defines additional attributes and relationships
+format: uri
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@type" VariableName="attype">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the sub-class Extensible name
+        </Documentation>
+    </Meta>
+  </Data>
+  <Service Label="TestMeasure" TypeName="TestMeasure">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+// validate TestMeasure.accuracy of type Double
+try {
+    var validator_accuracy = new com.gip.xyna.openapi.NumberTypeValidator&lt;Double&gt;();
+    validator_accuracy.setName("accuracy");
+    validator_accuracy.setValue(getAccuracy());
+    validator_accuracy.setFormat("float");
+    result.getErrorMessages().addAll(validator_accuracy.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate TestMeasure.accuracy");
+}
+
+// validate TestMeasure.captureDateTime of type String
+try {
+    var validator_captureDateTime = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_captureDateTime.setName("captureDateTime");
+    validator_captureDateTime.setValue(getCaptureDateTime());
+    validator_captureDateTime.setFormat("date-time");
+    result.getErrorMessages().addAll(validator_captureDateTime.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate TestMeasure.captureDateTime");
+}
+
+// validate TestMeasure.captureMethod of type String
+try {
+    var validator_captureMethod = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_captureMethod.setName("captureMethod");
+    validator_captureMethod.setValue(getCaptureMethod());
+    result.getErrorMessages().addAll(validator_captureMethod.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate TestMeasure.captureMethod");
+}
+
+// validate TestMeasure.metricDescription of type String
+try {
+    var validator_metricDescription = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_metricDescription.setName("metricDescription");
+    validator_metricDescription.setValue(getMetricDescription());
+    result.getErrorMessages().addAll(validator_metricDescription.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate TestMeasure.metricDescription");
+}
+
+// validate TestMeasure.metricHref of type String
+try {
+    var validator_metricHref = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_metricHref.setName("metricHref");
+    validator_metricHref.setValue(getMetricHref());
+    result.getErrorMessages().addAll(validator_metricHref.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate TestMeasure.metricHref");
+}
+
+// validate TestMeasure.metricName of type String
+try {
+    var validator_metricName = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_metricName.setName("metricName");
+    validator_metricName.setValue(getMetricName());
+    result.getErrorMessages().addAll(validator_metricName.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate TestMeasure.metricName");
+}
+
+// validate TestMeasure.unitOfMeasure of type String
+try {
+    var validator_unitOfMeasure = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_unitOfMeasure.setName("unitOfMeasure");
+    validator_unitOfMeasure.setValue(getUnitOfMeasure());
+    result.getErrorMessages().addAll(validator_unitOfMeasure.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate TestMeasure.unitOfMeasure");
+}
+
+// validate TestMeasure.ruleViolation of type MeasureThresholdRuleViolation
+try {
+    if (getRuleViolation() != null) {
+        for (internalized.tmf653.datamodel.MeasureThresholdRuleViolation obj : getRuleViolation()) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate TestMeasure.ruleViolation");
+}
+
+// validate TestMeasure.value of type Characteristic
+try {
+    if (getValue() != null) {
+        result.getErrorMessages().addAll(getValue().validate().getErrorMessages());
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate TestMeasure.value");
+}
+
+// validate TestMeasure.atbaseType of type String
+try {
+    var validator_atbaseType = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atbaseType.setName("@baseType");
+    validator_atbaseType.setValue(getAtbaseType());
+    result.getErrorMessages().addAll(validator_atbaseType.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate TestMeasure.atbaseType");
+}
+
+// validate TestMeasure.atschemaLocation of type String
+try {
+    var validator_atschemaLocation = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atschemaLocation.setName("@schemaLocation");
+    validator_atschemaLocation.setValue(getAtschemaLocation());
+    validator_atschemaLocation.setFormat("uri");
+    result.getErrorMessages().addAll(validator_atschemaLocation.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate TestMeasure.atschemaLocation");
+}
+
+// validate TestMeasure.attype of type String
+try {
+    var validator_attype = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_attype.setName("@type");
+    validator_attype.setValue(getAttype());
+    result.getErrorMessages().addAll(validator_attype.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate TestMeasure.attype");
+}
+
+return result.getResult();
+                </CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="MetricDefMeasureThresholdRule" TypeName="MetricDefMeasureThresholdRule" TypePath="internalized.tmf653.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>A MetricDefMeasureThresholdRule is a rule that defines the condition (raise or clear) to achieve to apply  consequences when a threshold is crossed or ceased to be crossed. It also defines the severity of the  raise or clear of the threshold.
+        </Documentation>
+  </Meta>
+  <Data Label="conformanceComparatorExact" VariableName="conformanceComparatorExact">
+    <Meta>
+      <Type>Boolean</Type>
+      <Documentation>An operator that when applied on a value specifies whether the  value is the same or not. This operator is used to compare with the conformanceTargetExact if used.
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="conformanceComparatorLower" VariableName="conformanceComparatorLower">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>An operator that when applied on a value specifies whether a  threshold is crossed or ceased to be crossed. This operator is used to Service Test Management API REST Specification compare with the conformanceTargetLower if used.
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="conformanceComparatorUpper" VariableName="conformanceComparatorUpper">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>An operator that when applied on a value specifies whether a  threshold is crossed or ceased to be crossed. This operator is used to compare with the conformanceTargetUpper if used.
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="conformanceTargetExact" VariableName="conformanceTargetExact">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>To cater for values that are not numerical test metrics (e.g. a DSL line can be Synchronised or Unsynchronised. If the latter, the test should result in a rule violation). The allowed value can contain a REGEX expression.
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="conformanceTargetLower" VariableName="conformanceTargetLower">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>A value used to determine if the threshold is crossed or ceases  to be crossed. It represents the lower limit. The value should be less than the conformanceTargetUpper if used. The conformance comparators should also be logically defined so as to not lead to a logically impossible condition.
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="conformanceTargetUpper" VariableName="conformanceTargetUpper">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>A value used to determine if the threshold is crossed or ceases  to be crossed. It represents the Upper limit. The value should be greater than the conformanceTargetLower if used. The conformance comparators should also be logically defined so as to not lead to a logically impossible condition.
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="description" VariableName="description">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Description for the MetricDefMeasureThresholdRule .
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="name" VariableName="name">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Name for the MetricDefMeasureThresholdRule .
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="numberOfAllowedCrossing" VariableName="numberOfAllowedCrossing">
+    <Meta>
+      <Type>Long</Type>
+      <Documentation>The number of allowed crossing occurrences in reference to the  tolerancePeriod without a consequence being initiated.
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="thresholdRuleSeverity" VariableName="thresholdRuleSeverity">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>A threshold can be generated in different severity levels. A  crossing for each level may require a different condition and possibly trigger a different consequence.
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="consequence" ReferenceName="MetricDefMeasureConsequence" ReferencePath="internalized.tmf653.datamodel" VariableName="consequence">
+    <Meta>
+      <Documentation>A list of consequences (actions, notifications) that will arise if the threshold is crossed
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="tolerancePeriod" ReferenceName="Duration" ReferencePath="internalized.tmf653.datamodel" VariableName="tolerancePeriod">
+    <Meta>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Data Label="@baseType" VariableName="atbaseType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the super-class
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@schemaLocation" VariableName="atschemaLocation">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>A URI to a JSON-Schema file that defines additional attributes and relationships
+format: uri
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@type" VariableName="attype">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the sub-class Extensible name
+        </Documentation>
+    </Meta>
+  </Data>
+  <Service Label="MetricDefMeasureThresholdRule" TypeName="MetricDefMeasureThresholdRule">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+// validate MetricDefMeasureThresholdRule.conformanceComparatorExact of type Boolean
+try {
+    var validator_conformanceComparatorExact = new com.gip.xyna.openapi.BooleanTypeValidator();
+    validator_conformanceComparatorExact.setName("conformanceComparatorExact");
+    validator_conformanceComparatorExact.setValue(getConformanceComparatorExact());
+    result.getErrorMessages().addAll(validator_conformanceComparatorExact.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate MetricDefMeasureThresholdRule.conformanceComparatorExact");
+}
+
+// validate MetricDefMeasureThresholdRule.conformanceComparatorLower of type String
+try {
+    var validator_conformanceComparatorLower = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_conformanceComparatorLower.setName("conformanceComparatorLower");
+    validator_conformanceComparatorLower.setValue(getConformanceComparatorLower());
+    result.getErrorMessages().addAll(validator_conformanceComparatorLower.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate MetricDefMeasureThresholdRule.conformanceComparatorLower");
+}
+
+// validate MetricDefMeasureThresholdRule.conformanceComparatorUpper of type String
+try {
+    var validator_conformanceComparatorUpper = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_conformanceComparatorUpper.setName("conformanceComparatorUpper");
+    validator_conformanceComparatorUpper.setValue(getConformanceComparatorUpper());
+    result.getErrorMessages().addAll(validator_conformanceComparatorUpper.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate MetricDefMeasureThresholdRule.conformanceComparatorUpper");
+}
+
+// validate MetricDefMeasureThresholdRule.conformanceTargetExact of type String
+try {
+    var validator_conformanceTargetExact = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_conformanceTargetExact.setName("conformanceTargetExact");
+    validator_conformanceTargetExact.setValue(getConformanceTargetExact());
+    result.getErrorMessages().addAll(validator_conformanceTargetExact.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate MetricDefMeasureThresholdRule.conformanceTargetExact");
+}
+
+// validate MetricDefMeasureThresholdRule.conformanceTargetLower of type String
+try {
+    var validator_conformanceTargetLower = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_conformanceTargetLower.setName("conformanceTargetLower");
+    validator_conformanceTargetLower.setValue(getConformanceTargetLower());
+    result.getErrorMessages().addAll(validator_conformanceTargetLower.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate MetricDefMeasureThresholdRule.conformanceTargetLower");
+}
+
+// validate MetricDefMeasureThresholdRule.conformanceTargetUpper of type String
+try {
+    var validator_conformanceTargetUpper = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_conformanceTargetUpper.setName("conformanceTargetUpper");
+    validator_conformanceTargetUpper.setValue(getConformanceTargetUpper());
+    result.getErrorMessages().addAll(validator_conformanceTargetUpper.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate MetricDefMeasureThresholdRule.conformanceTargetUpper");
+}
+
+// validate MetricDefMeasureThresholdRule.description of type String
+try {
+    var validator_description = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_description.setName("description");
+    validator_description.setValue(getDescription());
+    result.getErrorMessages().addAll(validator_description.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate MetricDefMeasureThresholdRule.description");
+}
+
+// validate MetricDefMeasureThresholdRule.name of type String
+try {
+    var validator_name = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_name.setName("name");
+    validator_name.setValue(getName());
+    result.getErrorMessages().addAll(validator_name.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate MetricDefMeasureThresholdRule.name");
+}
+
+// validate MetricDefMeasureThresholdRule.numberOfAllowedCrossing of type Long
+try {
+    var validator_numberOfAllowedCrossing = new com.gip.xyna.openapi.NumberTypeValidator&lt;Long&gt;();
+    validator_numberOfAllowedCrossing.setName("numberOfAllowedCrossing");
+    validator_numberOfAllowedCrossing.setValue(getNumberOfAllowedCrossing());
+    result.getErrorMessages().addAll(validator_numberOfAllowedCrossing.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate MetricDefMeasureThresholdRule.numberOfAllowedCrossing");
+}
+
+// validate MetricDefMeasureThresholdRule.thresholdRuleSeverity of type String
+try {
+    var validator_thresholdRuleSeverity = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_thresholdRuleSeverity.setName("thresholdRuleSeverity");
+    validator_thresholdRuleSeverity.setValue(getThresholdRuleSeverity());
+    result.getErrorMessages().addAll(validator_thresholdRuleSeverity.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate MetricDefMeasureThresholdRule.thresholdRuleSeverity");
+}
+
+// validate MetricDefMeasureThresholdRule.consequence of type MetricDefMeasureConsequence
+try {
+    if (getConsequence() != null) {
+        for (internalized.tmf653.datamodel.MetricDefMeasureConsequence obj : getConsequence()) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate MetricDefMeasureThresholdRule.consequence");
+}
+
+// validate MetricDefMeasureThresholdRule.tolerancePeriod of type Duration
+try {
+    if (getTolerancePeriod() != null) {
+        result.getErrorMessages().addAll(getTolerancePeriod().validate().getErrorMessages());
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate MetricDefMeasureThresholdRule.tolerancePeriod");
+}
+
+// validate MetricDefMeasureThresholdRule.atbaseType of type String
+try {
+    var validator_atbaseType = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atbaseType.setName("@baseType");
+    validator_atbaseType.setValue(getAtbaseType());
+    result.getErrorMessages().addAll(validator_atbaseType.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate MetricDefMeasureThresholdRule.atbaseType");
+}
+
+// validate MetricDefMeasureThresholdRule.atschemaLocation of type String
+try {
+    var validator_atschemaLocation = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atschemaLocation.setName("@schemaLocation");
+    validator_atschemaLocation.setValue(getAtschemaLocation());
+    validator_atschemaLocation.setFormat("uri");
+    result.getErrorMessages().addAll(validator_atschemaLocation.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate MetricDefMeasureThresholdRule.atschemaLocation");
+}
+
+// validate MetricDefMeasureThresholdRule.attype of type String
+try {
+    var validator_attype = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_attype.setName("@type");
+    validator_attype.setValue(getAttype());
+    result.getErrorMessages().addAll(validator_attype.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate MetricDefMeasureThresholdRule.attype");
+}
+
+return result.getResult();
+                </CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

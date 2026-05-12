@@ -1,0 +1,766 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Check single test measure threshold rule" TypeName="CheckSingleTestMeasureThresholdRule" TypePath="xfmg.tmf653" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Check single test measure threshold rule" Name="CheckSingleTestMeasureThresholdRule">
+    <Input>
+      <Data ID="2" Label="TestMeasure" ReferenceName="TestMeasure" ReferencePath="internalized.tmf653.datamodel" VariableName="testMeasure2"/>
+      <Data ID="7" Label="MetricDefMeasureThresholdRule" ReferenceName="MetricDefMeasureThresholdRule" ReferencePath="internalized.tmf653.datamodel" VariableName="metricDefMeasureThresholdRule7"/>
+      <Data ID="1808" Label="TestMeasureDefinition" ReferenceName="TestMeasureDefinition" ReferencePath="internalized.tmf653.datamodel" VariableName="testMeasureDefinition1808"/>
+    </Input>
+    <Output>
+      <Data ID="12" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation12"/>
+    </Output>
+    <ServiceReference ID="5406" Label="Check lower bound conformance" ReferenceName="CheckLowerBoundConformance" ReferencePath="xfmg.tmf653">
+      <Source RefID="5405"/>
+      <Target RefID="5405"/>
+    </ServiceReference>
+    <ServiceReference ID="5435" Label="Check lower bound conformance" ReferenceName="CheckLowerBoundConformance" ReferencePath="xfmg.tmf653">
+      <Source RefID="5434"/>
+      <Target RefID="5434"/>
+    </ServiceReference>
+    <Mappings ID="37" Label="Mapping">
+      <Input>
+        <Data ID="108" Label="MetricDefMeasureThresholdRule" ReferenceName="MetricDefMeasureThresholdRule" ReferencePath="internalized.tmf653.datamodel" VariableName="metricDefMeasureThresholdRule108">
+          <Source RefID="37"/>
+        </Data>
+        <Source RefID="7"/>
+      </Input>
+      <Output>
+        <Data ID="46" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation46">
+          <Source RefID="37"/>
+        </Data>
+        <Target RefID="157"/>
+      </Output>
+      <Mapping>%1%.conformanceComparatorExact=%0%.conformanceComparatorExact</Mapping>
+      <Mapping>%1%.conformanceComparatorLower=%0%.conformanceComparatorLower</Mapping>
+      <Mapping>%1%.conformanceComparatorUpper=%0%.conformanceComparatorUpper</Mapping>
+      <Mapping>%1%.conformanceTargetExact=%0%.conformanceTargetExact</Mapping>
+      <Mapping>%1%.conformanceTargetLower=%0%.conformanceTargetLower</Mapping>
+      <Mapping>%1%.conformanceTargetUpper=%0%.conformanceTargetUpper</Mapping>
+      <Mapping>%1%.description=%0%.description</Mapping>
+      <Mapping>%1%.name=%0%.name</Mapping>
+      <Mapping>%1%.numberOfAllowedCrossing=%0%.numberOfAllowedCrossing</Mapping>
+      <Mapping>%1%.thresholdRuleSeverity=%0%.thresholdRuleSeverity</Mapping>
+      <Mapping>%1%.tolerancePeriod=%0%.tolerancePeriod</Mapping>
+    </Mappings>
+    <Mappings ID="872" Label="Mapping">
+      <Input>
+        <Data ID="881" Label="TestMeasure" ReferenceName="TestMeasure" ReferencePath="internalized.tmf653.datamodel" VariableName="testMeasure881">
+          <Source RefID="872"/>
+        </Data>
+        <Source RefID="2"/>
+      </Input>
+      <Output>
+        <Data ID="890" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf653.datamodel" VariableName="characteristic890">
+          <Source RefID="872"/>
+        </Data>
+        <Target RefID="891"/>
+      </Output>
+      <Mapping>%1%=%0%.value</Mapping>
+    </Mappings>
+    <Choice ID="5181" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="7"/>
+      <Target RefID="6431"/>
+      <Input>
+        <Data ID="5198" Label="MetricDefMeasureThresholdRule" ReferenceName="MetricDefMeasureThresholdRule" ReferencePath="internalized.tmf653.datamodel" VariableName="metricDefMeasureThresholdRule5198">
+          <Source RefID="5181"/>
+        </Data>
+        <Source RefID="7"/>
+      </Input>
+      <Case ID="5182" Label="true" Premise="%0%.conformanceComparatorExact!=null&amp;&amp;%0%.conformanceComparatorExact">
+        <Choice ID="952" TypeName="BaseChoiceTypeSubclasses" TypePath="server">
+          <Source RefID="891"/>
+          <Target RefID="6060"/>
+          <Input>
+            <Data ID="966" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf653.datamodel" VariableName="characteristic966">
+              <Source RefID="952"/>
+            </Data>
+            <Source RefID="891"/>
+          </Input>
+          <Case ID="967" Label="Characteristic" Premise="internalized.tmf653.datamodel.Characteristic">
+            <Mappings ID="2222" Label="Mapping">
+              <Output>
+                <Data ID="1572" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation1572">
+                  <Source RefID="1557"/>
+                </Data>
+                <Target RefID="2231"/>
+              </Output>
+            </Mappings>
+            <Assign ID="980">
+              <Source RefID="2231"/>
+              <Target RefID="6060"/>
+              <Copy>
+                <Source RefID="2231"/>
+                <Target RefID="6060"/>
+              </Copy>
+            </Assign>
+          </Case>
+          <Case Alias="internalized.tmf653.datamodel.Characteristic" ID="1041" Label="NumberArrayCharacteristic" Premise="internalized.tmf653.datamodel.NumberArrayCharacteristic"/>
+          <Case Alias="internalized.tmf653.datamodel.Characteristic" ID="1069" Label="IntegerArrayCharacteristic" Premise="internalized.tmf653.datamodel.IntegerArrayCharacteristic"/>
+          <Case Alias="internalized.tmf653.datamodel.Characteristic" ID="1095" Label="ObjectCharacteristic" Premise="internalized.tmf653.datamodel.ObjectCharacteristic"/>
+          <Case Alias="internalized.tmf653.datamodel.Characteristic" ID="1119" Label="StringArrayCharacteristic" Premise="internalized.tmf653.datamodel.StringArrayCharacteristic"/>
+          <Case Alias="internalized.tmf653.datamodel.Characteristic" ID="1141" Label="BooleanArrayCharacteristic" Premise="internalized.tmf653.datamodel.BooleanArrayCharacteristic"/>
+          <Case Alias="internalized.tmf653.datamodel.Characteristic" ID="1161" Label="ObjectArrayCharacteristic" Premise="internalized.tmf653.datamodel.ObjectArrayCharacteristic"/>
+          <Case ID="970" Label="BooleanCharacteristic" Premise="internalized.tmf653.datamodel.BooleanCharacteristic">
+            <Assign ID="988">
+              <Source RefID="891"/>
+              <Target RefID="1457"/>
+              <Copy>
+                <Source RefID="891"/>
+                <Target RefID="1457"/>
+              </Copy>
+            </Assign>
+            <Choice ID="1433" TypeName="BaseChoiceTypeFormula" TypePath="server">
+              <Source RefID="1457"/>
+              <Source RefID="7"/>
+              <Target RefID="2253"/>
+              <Input>
+                <Data ID="1456" Label="BooleanCharacteristic" ReferenceName="BooleanCharacteristic" ReferencePath="internalized.tmf653.datamodel" VariableName="booleanCharacteristic1456">
+                  <Source RefID="1433"/>
+                </Data>
+                <Source RefID="1457"/>
+              </Input>
+              <Input>
+                <Data ID="1500" Label="MetricDefMeasureThresholdRule" ReferenceName="MetricDefMeasureThresholdRule" ReferencePath="internalized.tmf653.datamodel" VariableName="metricDefMeasureThresholdRule1500">
+                  <Source RefID="1433"/>
+                </Data>
+                <Source RefID="7"/>
+              </Input>
+              <Case ID="1434" Label="true" Premise="tolowercase(%0%.value)==tolowercase(%1%.conformanceTargetExact)">
+                <Mappings ID="2250" Label="Mapping">
+                  <Output>
+                    <Data ID="2251" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation2251"/>
+                    <Target RefID="2252"/>
+                  </Output>
+                </Mappings>
+                <Assign ID="1437">
+                  <Source RefID="2252"/>
+                  <Target RefID="2253"/>
+                  <Copy>
+                    <Source RefID="2252"/>
+                    <Target RefID="2253"/>
+                  </Copy>
+                </Assign>
+              </Case>
+              <Case ID="1435" Label="false">
+                <Mappings ID="1557" Label="Mapping">
+                  <Input>
+                    <Data ID="1602" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation1602">
+                      <Source RefID="1557"/>
+                    </Data>
+                    <Source RefID="157"/>
+                  </Input>
+                  <Output>
+                    <Data ID="2240" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation2240">
+                      <Source RefID="1557"/>
+                    </Data>
+                    <Target RefID="2241"/>
+                  </Output>
+                  <Mapping>%1%["0"]=%0%</Mapping>
+                </Mappings>
+                <Assign ID="1439">
+                  <Source RefID="2241"/>
+                  <Target RefID="2253"/>
+                  <Copy>
+                    <Source RefID="2241"/>
+                    <Target RefID="2253"/>
+                  </Copy>
+                </Assign>
+              </Case>
+            </Choice>
+            <Assign ID="989">
+              <Source RefID="2253"/>
+              <Target RefID="6060"/>
+              <Copy>
+                <Source RefID="2253"/>
+                <Target RefID="6060"/>
+              </Copy>
+            </Assign>
+          </Case>
+          <Case ID="972" Label="IntegerCharacteristic" Premise="internalized.tmf653.datamodel.IntegerCharacteristic">
+            <Assign ID="994">
+              <Source RefID="891"/>
+              <Target RefID="1928"/>
+              <Copy>
+                <Source RefID="891"/>
+                <Target RefID="1928"/>
+              </Copy>
+            </Assign>
+            <Choice ID="1769" TypeName="BaseChoiceTypeFormula" TypePath="server">
+              <Source RefID="1928"/>
+              <Source RefID="7"/>
+              <Target RefID="6031"/>
+              <Input>
+                <Data ID="1927" Label="IntegerCharacteristic" ReferenceName="IntegerCharacteristic" ReferencePath="internalized.tmf653.datamodel" VariableName="integerCharacteristic1927">
+                  <Source RefID="1769"/>
+                </Data>
+                <Source RefID="1928"/>
+              </Input>
+              <Input>
+                <Data ID="1965" Label="MetricDefMeasureThresholdRule" ReferenceName="MetricDefMeasureThresholdRule" ReferencePath="internalized.tmf653.datamodel" VariableName="metricDefMeasureThresholdRule1965">
+                  <Source RefID="1769"/>
+                </Data>
+                <Source RefID="7"/>
+              </Input>
+              <Case ID="1770" Label="true" Premise="%0%.value==%1%.conformanceTargetExact">
+                <Mappings ID="2270" Label="Mapping">
+                  <Output>
+                    <Data ID="2271" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation2271"/>
+                    <Target RefID="2272"/>
+                  </Output>
+                </Mappings>
+                <Assign ID="1773">
+                  <Source RefID="2272"/>
+                  <Target RefID="6031"/>
+                  <Copy>
+                    <Source RefID="2272"/>
+                    <Target RefID="6031"/>
+                  </Copy>
+                </Assign>
+              </Case>
+              <Case ID="1771" Label="false">
+                <Mappings ID="6027" Label="Mapping">
+                  <Input>
+                    <Data ID="6028" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6028"/>
+                    <Source RefID="157"/>
+                  </Input>
+                  <Output>
+                    <Data ID="6029" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6029"/>
+                    <Target RefID="6030"/>
+                  </Output>
+                  <Mapping>%1%["0"]=%0%</Mapping>
+                </Mappings>
+                <Assign ID="1775">
+                  <Source RefID="6030"/>
+                  <Target RefID="6031"/>
+                  <Copy>
+                    <Source RefID="6030"/>
+                    <Target RefID="6031"/>
+                  </Copy>
+                </Assign>
+              </Case>
+            </Choice>
+            <Assign ID="995">
+              <Source RefID="6031"/>
+              <Target RefID="6060"/>
+              <Copy>
+                <Source RefID="6031"/>
+                <Target RefID="6060"/>
+              </Copy>
+            </Assign>
+          </Case>
+          <Case ID="973" Label="NumberCharacteristic" Premise="internalized.tmf653.datamodel.NumberCharacteristic">
+            <Assign ID="997">
+              <Source RefID="891"/>
+              <Target RefID="2058"/>
+              <Copy>
+                <Source RefID="891"/>
+                <Target RefID="2058"/>
+              </Copy>
+            </Assign>
+            <Choice ID="2038" TypeName="BaseChoiceTypeFormula" TypePath="server">
+              <Source RefID="2058"/>
+              <Source RefID="7"/>
+              <Target RefID="6059"/>
+              <Input>
+                <Data ID="2057" Label="NumberCharacteristic" ReferenceName="NumberCharacteristic" ReferencePath="internalized.tmf653.datamodel" VariableName="numberCharacteristic2057">
+                  <Source RefID="2038"/>
+                </Data>
+                <Source RefID="2058"/>
+              </Input>
+              <Input>
+                <Data ID="2089" Label="MetricDefMeasureThresholdRule" ReferenceName="MetricDefMeasureThresholdRule" ReferencePath="internalized.tmf653.datamodel" VariableName="metricDefMeasureThresholdRule2089">
+                  <Source RefID="2038"/>
+                </Data>
+                <Source RefID="7"/>
+              </Input>
+              <Case ID="2039" Label="true" Premise="%0%.value==%1%.conformanceTargetExact">
+                <Mappings ID="6056" Label="Mapping">
+                  <Output>
+                    <Data ID="6057" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6057"/>
+                    <Target RefID="6058"/>
+                  </Output>
+                </Mappings>
+                <Assign ID="2042">
+                  <Source RefID="6058"/>
+                  <Target RefID="6059"/>
+                  <Copy>
+                    <Source RefID="6058"/>
+                    <Target RefID="6059"/>
+                  </Copy>
+                </Assign>
+              </Case>
+              <Case ID="2040" Label="false">
+                <Mappings ID="2120" Label="Mapping">
+                  <Input>
+                    <Data ID="2121" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation2121"/>
+                    <Source RefID="157"/>
+                  </Input>
+                  <Output>
+                    <Data ID="2122" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation2122"/>
+                    <Target RefID="2123"/>
+                  </Output>
+                  <Mapping>%1%["0"]=%0%</Mapping>
+                </Mappings>
+                <Assign ID="2044">
+                  <Source RefID="2123"/>
+                  <Target RefID="6059"/>
+                  <Copy>
+                    <Source RefID="2123"/>
+                    <Target RefID="6059"/>
+                  </Copy>
+                </Assign>
+              </Case>
+            </Choice>
+            <Assign ID="998">
+              <Source RefID="6059"/>
+              <Target RefID="6060"/>
+              <Copy>
+                <Source RefID="6059"/>
+                <Target RefID="6060"/>
+              </Copy>
+            </Assign>
+          </Case>
+          <Case ID="977" Label="StringCharacteristic" Premise="internalized.tmf653.datamodel.StringCharacteristic">
+            <Assign ID="1009">
+              <Source RefID="891"/>
+              <Target RefID="2152"/>
+              <Copy>
+                <Source RefID="891"/>
+                <Target RefID="2152"/>
+              </Copy>
+            </Assign>
+            <Choice ID="2134" TypeName="BaseChoiceTypeFormula" TypePath="server">
+              <Source RefID="2152"/>
+              <Source RefID="7"/>
+              <Target RefID="2297"/>
+              <Input>
+                <Data ID="2151" Label="StringCharacteristic" ReferenceName="StringCharacteristic" ReferencePath="internalized.tmf653.datamodel" VariableName="stringCharacteristic2151">
+                  <Source RefID="2134"/>
+                </Data>
+                <Source RefID="2152"/>
+              </Input>
+              <Input>
+                <Data ID="2177" Label="MetricDefMeasureThresholdRule" ReferenceName="MetricDefMeasureThresholdRule" ReferencePath="internalized.tmf653.datamodel" VariableName="metricDefMeasureThresholdRule2177">
+                  <Source RefID="2134"/>
+                </Data>
+                <Source RefID="7"/>
+              </Input>
+              <Case ID="2135" Label="true" Premise="%0%.value==%1%.conformanceTargetExact">
+                <Mappings ID="2294" Label="Mapping">
+                  <Output>
+                    <Data ID="2295" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation2295"/>
+                    <Target RefID="2296"/>
+                  </Output>
+                </Mappings>
+                <Assign ID="2138">
+                  <Source RefID="2296"/>
+                  <Target RefID="2297"/>
+                  <Copy>
+                    <Source RefID="2296"/>
+                    <Target RefID="2297"/>
+                  </Copy>
+                </Assign>
+              </Case>
+              <Case ID="2136" Label="false">
+                <Mappings ID="2202" Label="Mapping">
+                  <Input>
+                    <Data ID="2203" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation2203"/>
+                    <Source RefID="157"/>
+                  </Input>
+                  <Output>
+                    <Data ID="2204" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation2204"/>
+                    <Target RefID="2205"/>
+                  </Output>
+                  <Mapping>%1%["0"]=%0%</Mapping>
+                </Mappings>
+                <Assign ID="2140">
+                  <Source RefID="2205"/>
+                  <Target RefID="2297"/>
+                  <Copy>
+                    <Source RefID="2205"/>
+                    <Target RefID="2297"/>
+                  </Copy>
+                </Assign>
+              </Case>
+            </Choice>
+            <Assign ID="1010">
+              <Source RefID="2297"/>
+              <Target RefID="6060"/>
+              <Copy>
+                <Source RefID="2297"/>
+                <Target RefID="6060"/>
+              </Copy>
+            </Assign>
+          </Case>
+        </Choice>
+        <Assign ID="5185">
+          <Source RefID="6060"/>
+          <Target RefID="6431"/>
+          <Copy>
+            <Source RefID="6060"/>
+            <Target RefID="6431"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="5183" Label="false">
+        <Mappings ID="6085" Label="Mapping">
+          <Output>
+            <Data ID="6086" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6086"/>
+            <Target RefID="6087"/>
+          </Output>
+        </Mappings>
+        <Assign ID="5187">
+          <Source RefID="6087"/>
+          <Target RefID="6431"/>
+          <Copy>
+            <Source RefID="6087"/>
+            <Target RefID="6431"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Choice ID="5283" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="7"/>
+      <Target RefID="5977"/>
+      <Input>
+        <Data ID="5306" Label="MetricDefMeasureThresholdRule" ReferenceName="MetricDefMeasureThresholdRule" ReferencePath="internalized.tmf653.datamodel" VariableName="metricDefMeasureThresholdRule5306">
+          <Source RefID="5283"/>
+        </Data>
+        <Source RefID="7"/>
+      </Input>
+      <Case ID="5284" Label="true" Premise="%0%.conformanceComparatorLower!=null">
+        <Function ID="5405" Label="Check lower bound conformance">
+          <Source RefID="5406"/>
+          <Source RefID="7"/>
+          <Source RefID="891"/>
+          <Source RefID="157"/>
+          <Target RefID="5406"/>
+          <Target RefID="5408"/>
+          <Invoke Operation="CheckLowerBoundConformance" ServiceID="5406">
+            <Source RefID="7"/>
+            <Source RefID="891"/>
+            <Source RefID="157">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="5406">
+            <Target RefID="5408"/>
+          </Receive>
+        </Function>
+        <Assign ID="5287">
+          <Source RefID="5408"/>
+          <Target RefID="5977"/>
+          <Copy>
+            <Source RefID="5408"/>
+            <Target RefID="5977"/>
+          </Copy>
+        </Assign>
+        <Data ID="5408" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation5408">
+          <Source RefID="5405"/>
+        </Data>
+      </Case>
+      <Case ID="5285" Label="false">
+        <Mappings ID="5950" Label="Mapping">
+          <Output>
+            <Data ID="5975" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation5975">
+              <Source RefID="5950"/>
+            </Data>
+            <Target RefID="5976"/>
+          </Output>
+        </Mappings>
+        <Assign ID="5289">
+          <Source RefID="5976"/>
+          <Target RefID="5977"/>
+          <Copy>
+            <Source RefID="5976"/>
+            <Target RefID="5977"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Choice ID="5425" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="7"/>
+      <Target RefID="5925"/>
+      <Input>
+        <Data ID="5432" Label="MetricDefMeasureThresholdRule" ReferenceName="MetricDefMeasureThresholdRule" ReferencePath="internalized.tmf653.datamodel" VariableName="metricDefMeasureThresholdRule5432"/>
+        <Source RefID="7"/>
+      </Input>
+      <Case ID="5426" Label="true" Premise="%0%.conformanceComparatorUpper!=null">
+        <Mappings ID="5486" Label="Mapping">
+          <Input>
+            <Data ID="5537" Label="MetricDefMeasureThresholdRule" ReferenceName="MetricDefMeasureThresholdRule" ReferencePath="internalized.tmf653.datamodel" VariableName="metricDefMeasureThresholdRule5537">
+              <Source RefID="5486"/>
+            </Data>
+            <Source RefID="7"/>
+          </Input>
+          <Output>
+            <Data ID="5511" Label="MetricDefMeasureThresholdRule" ReferenceName="MetricDefMeasureThresholdRule" ReferencePath="internalized.tmf653.datamodel" VariableName="metricDefMeasureThresholdRule5511">
+              <Source RefID="5486"/>
+            </Data>
+            <Target RefID="5512"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+          <Mapping>%1%.conformanceComparatorLower=%0%.conformanceComparatorUpper</Mapping>
+          <Mapping>%1%.conformanceTargetLower=%0%.conformanceTargetUpper</Mapping>
+        </Mappings>
+        <Function ID="5434" Label="Check lower bound conformance">
+          <Source RefID="5435"/>
+          <Source RefID="5512"/>
+          <Source RefID="891"/>
+          <Source RefID="157"/>
+          <Target RefID="5435"/>
+          <Target RefID="5437"/>
+          <Invoke Operation="CheckLowerBoundConformance" ServiceID="5435">
+            <Source RefID="5512">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+            <Source RefID="891"/>
+            <Source RefID="157">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="5435">
+            <Target RefID="5437"/>
+          </Receive>
+        </Function>
+        <Assign ID="5429">
+          <Source RefID="5437"/>
+          <Target RefID="5925"/>
+          <Copy>
+            <Source RefID="5437"/>
+            <Target RefID="5925"/>
+          </Copy>
+        </Assign>
+        <Data ID="5437" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation5437">
+          <Source RefID="5434"/>
+        </Data>
+      </Case>
+      <Case ID="5427" Label="false">
+        <Mappings ID="5898" Label="Mapping">
+          <Output>
+            <Data ID="5923" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation5923">
+              <Source RefID="5898"/>
+            </Data>
+            <Target RefID="5924"/>
+          </Output>
+        </Mappings>
+        <Assign ID="5431">
+          <Source RefID="5924"/>
+          <Target RefID="5925"/>
+          <Copy>
+            <Source RefID="5924"/>
+            <Target RefID="5925"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Mappings ID="6002" Label="Mapping">
+      <Input>
+        <Data ID="6137" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6137">
+          <Source RefID="6002"/>
+        </Data>
+        <Source RefID="6431">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="6162" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6162">
+          <Source RefID="6002"/>
+        </Data>
+        <Source RefID="5977">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="6187" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6187">
+          <Source RefID="6002"/>
+        </Data>
+        <Source RefID="5925">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="6284" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6284">
+          <Source RefID="6002"/>
+        </Data>
+        <Target RefID="6285"/>
+      </Output>
+      <Mapping>%3%=concatlists(concatlists(%0%, %1%), %2%)</Mapping>
+    </Mappings>
+    <Choice ID="6588" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="6285"/>
+      <Target RefID="6794"/>
+      <Input>
+        <Data ID="6643" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6643">
+          <Source RefID="6588"/>
+        </Data>
+        <Source RefID="6285">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="6589" Label="true" Premise="length(%0%)&gt;&quot;0&quot;">
+        <Mappings ID="6716" Label="Mapping">
+          <Input>
+            <Data ID="6819" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6819">
+              <Source RefID="6716"/>
+            </Data>
+            <Source RefID="6285">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="6765" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6765">
+              <Source RefID="6716"/>
+            </Data>
+            <Target RefID="6766"/>
+          </Output>
+          <Mapping>%1%["0"]=%0%["0"]</Mapping>
+        </Mappings>
+        <Assign ID="6592">
+          <Source RefID="6766"/>
+          <Target RefID="6794"/>
+          <Copy>
+            <Source RefID="6766"/>
+            <Target RefID="6794"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="6590" Label="false">
+        <Mappings ID="6791" Label="Mapping">
+          <Output>
+            <Data ID="6792" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6792"/>
+            <Target RefID="6793"/>
+          </Output>
+        </Mappings>
+        <Assign ID="6594">
+          <Source RefID="6793"/>
+          <Target RefID="6794"/>
+          <Copy>
+            <Source RefID="6793"/>
+            <Target RefID="6794"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="157" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation157">
+      <Source RefID="37"/>
+    </Data>
+    <Data ID="891" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf653.datamodel" VariableName="characteristic891">
+      <Source RefID="872"/>
+    </Data>
+    <Data ID="1457" Label="BooleanCharacteristic" ReferenceName="BooleanCharacteristic" ReferencePath="internalized.tmf653.datamodel" VariableName="booleanCharacteristic1457">
+      <Source RefID="988"/>
+    </Data>
+    <Data ID="1928" Label="IntegerCharacteristic" ReferenceName="IntegerCharacteristic" ReferencePath="internalized.tmf653.datamodel" VariableName="integerCharacteristic1928">
+      <Source RefID="994"/>
+    </Data>
+    <Data ID="2058" Label="NumberCharacteristic" ReferenceName="NumberCharacteristic" ReferencePath="internalized.tmf653.datamodel" VariableName="numberCharacteristic2058">
+      <Source RefID="997"/>
+    </Data>
+    <Data ID="2123" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation2123"/>
+    <Data ID="2152" Label="StringCharacteristic" ReferenceName="StringCharacteristic" ReferencePath="internalized.tmf653.datamodel" VariableName="stringCharacteristic2152">
+      <Source RefID="1009"/>
+    </Data>
+    <Data ID="2205" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation2205"/>
+    <Data ID="2231" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation2231">
+      <Source RefID="1557"/>
+    </Data>
+    <Data ID="2241" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation2241">
+      <Source RefID="1557"/>
+    </Data>
+    <Data ID="2252" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation2252"/>
+    <Data ID="2253" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation2253">
+      <Source RefID="1433"/>
+    </Data>
+    <Data ID="2272" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation2272"/>
+    <Data ID="2296" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation2296"/>
+    <Data ID="2297" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation2297">
+      <Source RefID="2134"/>
+    </Data>
+    <Data ID="5512" Label="MetricDefMeasureThresholdRule" ReferenceName="MetricDefMeasureThresholdRule" ReferencePath="internalized.tmf653.datamodel" VariableName="metricDefMeasureThresholdRule5512">
+      <Source RefID="5486"/>
+    </Data>
+    <Data ID="5924" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation5924">
+      <Source RefID="5898"/>
+    </Data>
+    <Data ID="5925" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation5925">
+      <Source RefID="5425"/>
+    </Data>
+    <Data ID="5976" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation5976">
+      <Source RefID="5950"/>
+    </Data>
+    <Data ID="5977" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation5977">
+      <Source RefID="5283"/>
+    </Data>
+    <Data ID="6030" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6030"/>
+    <Data ID="6031" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6031">
+      <Source RefID="1769"/>
+    </Data>
+    <Data ID="6058" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6058"/>
+    <Data ID="6059" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6059">
+      <Source RefID="2038"/>
+    </Data>
+    <Data ID="6060" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6060">
+      <Source RefID="952"/>
+    </Data>
+    <Data ID="6087" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6087"/>
+    <Data ID="6285" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6285">
+      <Source RefID="6002"/>
+    </Data>
+    <Data ID="6431" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6431">
+      <Source RefID="5181"/>
+    </Data>
+    <Data ID="6766" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6766">
+      <Source RefID="6716"/>
+    </Data>
+    <Data ID="6793" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6793"/>
+    <Data ID="6794" IsList="true" Label="MeasureThresholdRuleViolation" ReferenceName="MeasureThresholdRuleViolation" ReferencePath="internalized.tmf653.datamodel" VariableName="measureThresholdRuleViolation6794">
+      <Source RefID="6588"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="6794"/>
+      <Target RefID="12"/>
+      <Copy>
+        <Source RefID="6794">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="12"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
