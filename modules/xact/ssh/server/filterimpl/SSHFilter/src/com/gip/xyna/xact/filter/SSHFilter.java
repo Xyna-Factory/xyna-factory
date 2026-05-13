@@ -29,6 +29,7 @@ import com.gip.xyna.xact.trigger.SSHConnectionParameter;
 import com.gip.xyna.xact.trigger.SSHCustomizationParameter;
 import com.gip.xyna.xact.trigger.SSHCustomizationParameter.NewLine;
 import com.gip.xyna.xact.trigger.SSHStartParameter.ErrorHandling;
+import com.gip.xyna.xact.trigger.SSHDTriggerConnection;
 import com.gip.xyna.xact.trigger.SSHShellTriggerConnection;
 import com.gip.xyna.xdev.xfractmod.xmdm.ConnectionFilter;
 import com.gip.xyna.xdev.xfractmod.xmdm.Container;
@@ -46,7 +47,7 @@ import xact.ssh.server.enums.NewlineAuto;
 import xact.ssh.server.enums.NewlineCRLF;
 import xact.ssh.server.enums.NewlineLF;
 
-public class SSHFilter extends ConnectionFilter<SSHShellTriggerConnection> {
+public class SSHFilter extends ConnectionFilter<SSHDTriggerConnection> {
 
   private static final long serialVersionUID = 1L;
   
@@ -66,8 +67,13 @@ public class SSHFilter extends ConnectionFilter<SSHShellTriggerConnection> {
    * @throws XynaException caused by errors reading data from triggerconnection or having an internal error.
    *         Results in onError() being called by Xyna Processing.
    */
-  public FilterResponse createXynaOrder(SSHShellTriggerConnection tc) throws XynaException {
+  public FilterResponse createXynaOrder(SSHDTriggerConnection _tc) throws XynaException {
+
+    if (!(_tc instanceof SSHShellTriggerConnection))
+      return FilterResponse.notResponsible();
     
+    SSHShellTriggerConnection tc = (SSHShellTriggerConnection)_tc;
+
     DestinationKey dk = null;
     String orderType = tc.getOrderType();
     if( orderType != null ) {
@@ -142,7 +148,12 @@ public class SSHFilter extends ConnectionFilter<SSHShellTriggerConnection> {
    * @param response by XynaOrder returned GeneralXynaObject
    * @param tc corresponding triggerconnection
    */
-  public void onResponse(GeneralXynaObject gxo, SSHShellTriggerConnection tc) {
+  public void onResponse(GeneralXynaObject gxo, SSHDTriggerConnection _tc) {
+    if (!(_tc instanceof SSHShellTriggerConnection))
+      return;
+    
+    SSHShellTriggerConnection tc = (SSHShellTriggerConnection)_tc;
+
     try {
       switch( tc.getRequestType() ) {
       case Init:
@@ -205,7 +216,12 @@ public class SSHFilter extends ConnectionFilter<SSHShellTriggerConnection> {
    * @param xes
    * @param tc corresponding triggerconnection
    */
-  public void onError(XynaException[] xes, SSHShellTriggerConnection tc) {
+  public void onError(XynaException[] xes, SSHDTriggerConnection _tc) {
+    if (!(_tc instanceof SSHShellTriggerConnection))
+      return;
+    
+    SSHShellTriggerConnection tc = (SSHShellTriggerConnection)_tc;
+
     tc.sendLineQuietly( errorsToString(xes, tc.getErrorHandling(), tc.getCustomization().getErrorPrefix() ) );
   }
   

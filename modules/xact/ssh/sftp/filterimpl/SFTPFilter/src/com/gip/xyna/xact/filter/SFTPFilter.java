@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.utils.timing.Duration;
+import com.gip.xyna.xact.trigger.SSHDTriggerConnection;
 import com.gip.xyna.xact.trigger.SFTPTriggerConnection;
 import xact.ssh.sftp.filesystem.FileSystemCacheParameter;
 import com.gip.xyna.xdev.xfractmod.xmdm.ConnectionFilter;
@@ -43,7 +44,7 @@ import xact.sftp.None;
 import xact.sftp.SessionIsolated;
 import xact.sftp.Timed;
 
-public class SFTPFilter extends ConnectionFilter<SFTPTriggerConnection> {
+public class SFTPFilter extends ConnectionFilter<SSHDTriggerConnection> {
 
   private final static long serialVersionUID = 8784549483133615178L;
   private final static Logger logger = CentralFactoryLogging.getLogger(SFTPFilter.class);
@@ -62,8 +63,14 @@ public class SFTPFilter extends ConnectionFilter<SFTPTriggerConnection> {
    * zurückgeliefert.
    * 
    */
-  public FilterResponse createXynaOrder(SFTPTriggerConnection tc, FilterConfigurationParameter config)
+  public FilterResponse createXynaOrder(SSHDTriggerConnection _tc, FilterConfigurationParameter config)
       throws XynaException {
+
+    if (!(_tc instanceof SFTPTriggerConnection))
+      return FilterResponse.notResponsible();
+
+    SFTPTriggerConnection tc = (SFTPTriggerConnection)_tc;
+
     try {
       logger.debug("createXynaOrder");
       logger.debug("Path:" + tc.getPath());
@@ -120,7 +127,13 @@ public class SFTPFilter extends ConnectionFilter<SFTPTriggerConnection> {
    * @param response by XynaOrder returned XynaObject
    * @param tc       corresponding triggerconnection
    */
-  public void onResponse(XynaObject response, SFTPTriggerConnection tc) {
+  public void onResponse(XynaObject response, SSHDTriggerConnection _tc) {
+
+    if (!(_tc instanceof SFTPTriggerConnection))
+      return;
+
+    SFTPTriggerConnection tc = (SFTPTriggerConnection)_tc;
+
     xact.sftp.Content content = null;
     if (response instanceof xact.sftp.Content) {
       content = (xact.sftp.Content) response;
@@ -152,7 +165,12 @@ public class SFTPFilter extends ConnectionFilter<SFTPTriggerConnection> {
    * @param e
    * @param tc corresponding triggerconnection
    */
-  public void onError(XynaException[] e, SFTPTriggerConnection tc) {
+  public void onError(XynaException[] e, SSHDTriggerConnection _tc) {
+    if (!(_tc instanceof SFTPTriggerConnection))
+      return;
+
+    SFTPTriggerConnection tc = (SFTPTriggerConnection)_tc;
+
     for (XynaException xynaException : e) {
       logger.debug("", xynaException);
     }
