@@ -1,3 +1,20 @@
+/*
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ */
 package com.gip.xyna.xact.filter;
 
 import java.util.Arrays;
@@ -15,13 +32,17 @@ public class SFTPFilterConfigurationParameter extends FilterConfigurationParamet
 
     public static final StringParameter<String> FILTER_PREFIX = StringParameter.typeString("filterPrefix")
             .documentation(
-                    Documentation.de("Präfix für Zuständigkeit des Filters").en("Prefix for this filter").build())
+                    Documentation
+                        .de("Präfix für Zuständigkeit des Filters")
+                        .en("Prefix for this filter").build())
             .optional()
             .build();
 
     public static final StringParameter<String> ORDERTYPE = StringParameter.typeString("ordertype")
             .documentation(
-                    Documentation.de("Ordertype für den Filter").en("Ordertype to run.").build())
+                    Documentation
+                        .de("Ordertype für den Filter. Signatur: (xact.sftp.Path, xact.sftp.Username, xact.sftp.SourceIP) -> (xact.sftp.Content)")
+                        .en("Ordertype to run. Signature: (xact.sftp.Path, xact.sftp.Username, xact.sftp.SourceIP) -> (xact.sftp.Content)").build())
             .defaultValue(PROCESS_SFTP_ORDERTYPE)
             .build();
 

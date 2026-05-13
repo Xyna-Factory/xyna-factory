@@ -65,7 +65,7 @@ public class SSHTrigger extends EventListener<SSHDTriggerConnection, SSHStartPar
   public void start(SSHStartParameter sp) throws XACT_TriggerCouldNotBeStartedException {
     this.startParameter = sp;
 
-    requests = new LinkedBlockingQueue<SSHDTriggerConnection>();
+    requests = new LinkedBlockingQueue<SSHDTriggerConnection>(10);
 
     sshd = new XynaSSHServer();
     try {

@@ -30,6 +30,9 @@
     <property name="mdm.xml.filename" value="SFTPTriggerAccess.xml" />
     <property name="mdm.service.path" value="xact.sftp.SFTPTriggerAccess" />
 
+    <property name="cli.command.java.path" value="xact.sftp.cli" />
+    <property name="cli.command.path" value="xact/sftp.cli" />
+    
     <import file="${root.dir}/installation/build/buildService.xml" />
 
     <target name="prepareLibs" description="Prepare Libs">
