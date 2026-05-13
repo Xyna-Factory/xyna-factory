@@ -127,7 +127,7 @@ public class XynaAuthenticator implements PublickeyAuthenticator, PasswordAuthen
   }
 
   public boolean authenticate(String username, String password, ServerSession session) {
-    if (alwaysauthenticate && useOTC) {
+    if (useOTC) {
       UserData ud = otcc.get(username);
       if (ud == null) {
         return false;
@@ -141,8 +141,8 @@ public class XynaAuthenticator implements PublickeyAuthenticator, PasswordAuthen
       }
     }
 
-    if (alwaysauthenticate && !useOTC) {
-      logInfo("Skipping Authentication, setting Password ...");
+    if (alwaysauthenticate) {
+      logInfo("Skipping Authentication ...");
       logInfo("UserName: " + username);
       return true;
     }

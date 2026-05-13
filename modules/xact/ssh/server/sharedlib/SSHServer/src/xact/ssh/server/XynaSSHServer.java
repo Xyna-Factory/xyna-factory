@@ -114,7 +114,7 @@ public class XynaSSHServer {
 
       // sshd.setNioWorkers(2); //FIXME
 
-      boolean alwaysAuthenticated = false;
+      boolean alwaysAuthenticated = sp.getAlwaysAuth();
       boolean useOTC = sp.getOTCAuth();
 
       List<UserAuthFactory> userAuthFactories = new ArrayList<>();

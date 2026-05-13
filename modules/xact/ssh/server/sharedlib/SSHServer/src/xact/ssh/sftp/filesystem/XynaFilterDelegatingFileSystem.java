@@ -227,8 +227,8 @@ public class XynaFilterDelegatingFileSystem extends BaseFileSystem<XynaFilterDel
                 file = oFile.get();
             } else {
                 if (logger.isDebugEnabled()) {
-                    logger.debug("starting filter delegation for file: " + normalPath.toString() + " "
-                            + System.currentTimeMillis());
+                    logger.debug("starting filter delegation for file: " + normalPath.toString() + " at "
+                            + System.currentTimeMillis() + " with timeout (ms) " + this.trigger.getRequestTimeout().getDurationInMillis());
                 }
                 file = this.trigger.requestFile(context)
                         .get(this.trigger.getRequestTimeout().getDurationInMillis(),

@@ -189,7 +189,7 @@ public class SSHTrigger extends EventListener<SSHDTriggerConnection, SSHStartPar
 
   public Future<XynaBackedFile> requestFile(RequestContext info) {
     FakedFuture<XynaBackedFile> response = new FakedFuture<XynaBackedFile>();
-    logger.debug("Requesting file:" + info.getPath());
+    logger.debug("Requesting file:" + info.getPath() + " with timeout (ms) " + startParameter.getSftpTimeout().getDurationInMillis());
     try {
       SFTPTriggerConnection newConnection = new SFTPTriggerConnection(response, info);
       if (!requests.offer(newConnection, startParameter.getSftpTimeout().getDurationInMillis(), TimeUnit.MILLISECONDS)) {

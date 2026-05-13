@@ -50,7 +50,7 @@ public class SFTPFilterConfigurationParameter extends FilterConfigurationParamet
             FILTER_PREFIX, ORDERTYPE);
 
     private Optional<String> filterPrefix = Optional.empty();
-    private String ordertype = PROCESS_SFTP_ORDERTYPE;
+    private String ordertype = ORDERTYPE.getDefaultValue();
 
     public Optional<String> getFilterPrefix() {
         return filterPrefix.map(f -> f.endsWith("/") ? f : f + "/");
@@ -64,8 +64,8 @@ public class SFTPFilterConfigurationParameter extends FilterConfigurationParamet
             throws XACT_InvalidFilterConfigurationParameterValueException {
         SFTPFilterConfigurationParameter result = new SFTPFilterConfigurationParameter();
 
-        filterPrefix = Optional.ofNullable(FILTER_PREFIX.getFromMap(paramMap));
-        ordertype = ORDERTYPE.getFromMap(paramMap);
+        result.filterPrefix = Optional.ofNullable(FILTER_PREFIX.getFromMap(paramMap));
+        result.ordertype = ORDERTYPE.getFromMap(paramMap);
 
         return result;
     }

@@ -38,14 +38,6 @@
       <SharedLibs/>
     </Filter>
   </Filters>
-  <Triggers>
-    <Trigger implicitDependency="false">
-      <Name>SSHTrigger</Name>
-      <JarFiles>SSHTrigger/SSHTrigger.jar:</JarFiles>
-      <FqTriggerClassname>com.gip.xyna.xact.trigger.SSHTrigger</FqTriggerClassname>
-      <SharedLibs>sshserver:</SharedLibs>
-    </Trigger>
-  </Triggers>
   <XMOMEntries>
     <XMOMEntry implicitDependency="false">
       <FqName>xact.sftp.CacheParameter</FqName>
