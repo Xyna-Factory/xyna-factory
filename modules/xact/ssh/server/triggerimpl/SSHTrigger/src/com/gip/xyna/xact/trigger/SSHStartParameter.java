@@ -109,7 +109,7 @@ public class SSHStartParameter extends EnhancedStartParameter implements SSHServ
       .build();
 
   public static final StringParameter<Boolean> OTC = StringParameter.typeBoolean("otc")
-      .documentation(Documentation.de("Benutze einmal PasswÃ¶rter").en("One Time Credentials").build())
+      .documentation(Documentation.de("Benutze einmal Passwörter").en("One Time Credentials").build())
       .defaultValue(false)
       .build();
 
@@ -130,19 +130,19 @@ public class SSHStartParameter extends EnhancedStartParameter implements SSHServ
 
   public static final StringParameter<String> NATIVE_FILE_ROOT = StringParameter.typeString("fileRoot")
       .documentation(
-          Documentation.de("Basis Verzeichnis fÃ¼r Dateizugriff").en("Root directory for filesystem access").build())
+          Documentation.de("Basis Verzeichnis für Dateizugriff").en("Root directory for filesystem access").build())
       .optional()
       .build();
 
   public static final StringParameter<String> NATIVE_FILE_ROOT_PROP = StringParameter.typeString("fileRootProperty")
       .documentation(
-          Documentation.de("Property fÃ¼r Basis Verzeichnis fÃ¼r Dateizugriff. Falls fileRoot nicht gesetzt.")
+          Documentation.de("Property für Basis Verzeichnis für Dateizugriff. Falls fileRoot nicht gesetzt.")
               .en("Property for root directory for filesystem access. Used if fileRoot not set.").build())
       .defaultValue("xact.sftp.localSftpRoot")
       .build();
 
   public static final StringParameter<String> NATIVE_FILE_PREFIX = StringParameter.typeString("filePrefix")
-      .documentation(Documentation.de("PrÃ¤fix fÃ¼r Zugriff auf Dateisystem").en("Prefix for filesystem access").build())
+      .documentation(Documentation.de("Präfix für Zugriff auf Dateisystem").en("Prefix for filesystem access").build())
       .defaultValue("/StaticXfc/")
       .build();
 
@@ -205,7 +205,7 @@ public class SSHStartParameter extends EnhancedStartParameter implements SSHServ
       .typeList(String.class, "cipher",
           com.gip.xyna.utils.misc.StringParameter.ListSeparator.COMMA_WHITESPACE)
       .documentation(Documentation
-          .de("VerschlÃ¼sselungs Algorithmen, Werte:\n         (" + String.join(",",
+          .de("Verschlüsselungs Algorithmen, Werte:\n         (" + String.join(",",
               BuiltinCiphers.VALUES.stream().map(BuiltinCiphers::getName).collect(Collectors.toSet()))
               + ")\n         ")
           .en("Cipher algorithms, values:\n         (" + String.join(",",

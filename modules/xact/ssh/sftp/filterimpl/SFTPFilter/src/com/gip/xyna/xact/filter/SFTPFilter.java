@@ -57,10 +57,10 @@ public class SFTPFilter extends ConnectionFilter<SSHDTriggerConnection> {
    * Wird vom Processing in einem eigenen Thread aufgerufen, sobald etwas
    * empfangen wurde und ein Workerthread zur
    * Verarbeitung aufgerufen wurde.
-   * Wenn der Filter nicht zustÃ¤ndig ist, wird ein FilterResponse-Objekt mit
+   * Wenn der Filter nicht zuständig ist, wird ein FilterResponse-Objekt mit
    * leerer XynaOrder
    * und NOT_RESPONSIBLE oder RESPONSIBLE_BUT_TO_NEW als FilterResponsibility
-   * zurÃ¼ckgeliefert.
+   * zurückgeliefert.
    * 
    */
   public FilterResponse createXynaOrder(SSHDTriggerConnection _tc, FilterConfigurationParameter config)

@@ -33,7 +33,7 @@ public class SFTPFilterConfigurationParameter extends FilterConfigurationParamet
     public static final StringParameter<String> FILTER_PREFIX = StringParameter.typeString("filterPrefix")
             .documentation(
                     Documentation
-                        .de("Pr√§fix f√ºr Zust√§ndigkeit des Filters")
+                        .de("Pr‰fix f¸r Zust‰ndigkeit des Filters")
                         .en("Prefix for this filter").build())
             .optional()
             .build();
@@ -41,7 +41,7 @@ public class SFTPFilterConfigurationParameter extends FilterConfigurationParamet
     public static final StringParameter<String> ORDERTYPE = StringParameter.typeString("ordertype")
             .documentation(
                     Documentation
-                        .de("Ordertype f√ºr den Filter. Signatur: (xact.sftp.Path, xact.sftp.Username, xact.sftp.SourceIP) -> (xact.sftp.Content)")
+                        .de("Ordertype f¸r den Filter. Signatur: (xact.sftp.Path, xact.sftp.Username, xact.sftp.SourceIP) -> (xact.sftp.Content)")
                         .en("Ordertype to run. Signature: (xact.sftp.Path, xact.sftp.Username, xact.sftp.SourceIP) -> (xact.sftp.Content)").build())
             .defaultValue(PROCESS_SFTP_ORDERTYPE)
             .build();

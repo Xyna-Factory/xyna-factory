@@ -116,7 +116,7 @@ public class SSHTrigger extends EventListener<SSHDTriggerConnection, SSHStartPar
           logger.debug("New SSHDTriggerConnection " + sshCon.getClass().getSimpleName());
         if (sshCon instanceof SSHShellTriggerConnection
             && ((SSHShellTriggerConnection)sshCon).getRequestType() == null) {
-          return null; // ungÃ¼ltiger Eintrag nach Aufruf stop()
+          return null; // ungültiger Eintrag nach Aufruf stop()
         }
         return sshCon;
       }
@@ -138,7 +138,7 @@ public class SSHTrigger extends EventListener<SSHDTriggerConnection, SSHStartPar
       sshd.stop(true);
       requests.clear();
 
-      // laufendes Receive darf keinen gÃ¼ltigen Eintrag finden, daher Dummy-Eintrag
+      // laufendes Receive darf keinen gültigen Eintrag finden, daher Dummy-Eintrag
       // zum Wecken
       requests.offer(new SSHShellTriggerConnection(null, null));
 
