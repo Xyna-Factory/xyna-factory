@@ -31,9 +31,6 @@ import com.gip.xyna.utils.collections.LruCache;
 
 public class XynaAuthenticator implements PublickeyAuthenticator, PasswordAuthenticator {
 
-  private final static LruCache<ServerSession, String> SESSION_PASSWORD_CACHE = new LruCache<ServerSession, String>(
-      200);
-
   private Map<String, String> userkeys = new HashMap<String, String>();
   private Map<String, String> userpasswords = new HashMap<String, String>();
   private boolean alwaysauthenticate = false;
@@ -137,7 +134,6 @@ public class XynaAuthenticator implements PublickeyAuthenticator, PasswordAuthen
       } else {
         if (ud.getPassword().equals(password)) {
           otcc.remove(username);
-          SESSION_PASSWORD_CACHE.put(session, password);
           return true;
         } else {
           return false;
@@ -148,7 +144,6 @@ public class XynaAuthenticator implements PublickeyAuthenticator, PasswordAuthen
     if (alwaysauthenticate && !useOTC) {
       logInfo("Skipping Authentication, setting Password ...");
       logInfo("UserName: " + username);
-      SESSION_PASSWORD_CACHE.put(session, password);
       return true;
     }
 
@@ -178,16 +173,8 @@ public class XynaAuthenticator implements PublickeyAuthenticator, PasswordAuthen
     }
 
     logInfo("Authentication successful!");
-    SESSION_PASSWORD_CACHE.put(session, password);
     return true;
   }
-
-  public static String getPassword(ServerSession session) {
-    return SESSION_PASSWORD_CACHE.get(session);
-  }
-
-  // TODO and a remove and call it together with RequestContext removal
-  // they're one time passwords after all...
 
   OneTimeCredentialsCache otcc = new OneTimeCredentialsCache(500);
 
