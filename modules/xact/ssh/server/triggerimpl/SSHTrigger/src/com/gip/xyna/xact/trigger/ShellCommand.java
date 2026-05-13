@@ -208,7 +208,7 @@ public class ShellCommand implements Command, ServerSessionAware, SSHConnection 
         try {
           Thread.sleep(10);
         } catch (InterruptedException e) {
-          //dann halt sofort zur�ck
+          //dann halt sofort zurück
           return sb.toString();
         }
       }
@@ -227,7 +227,7 @@ public class ShellCommand implements Command, ServerSessionAware, SSHConnection 
         try {
           Thread.sleep(10);
         } catch (InterruptedException e) {
-          //dann halt sofort zur�ck
+          //dann halt sofort zurück
           return sb.toString();
         }
       }
@@ -274,7 +274,7 @@ public class ShellCommand implements Command, ServerSessionAware, SSHConnection 
       }
       break;
     case 127: //Delete
-      outWriter.write("\u0008 \u0008");//Backspace, mit Leerzeichen �berschreiben und nochmal Backspace
+      outWriter.write("\u0008 \u0008");//Backspace, mit Leerzeichen überschreiben und nochmal Backspace
       outWriter.flush();
       if( sb.length() > 0 ) {
         sb.deleteCharAt(sb.length()-1);
