@@ -93,6 +93,11 @@ Example: "testObject.id"</Documentation>
   Values: left, right, center (if empty or undefined, default is left)</Documentation>
     </Meta>
   </Data>
+  <Data Label="pronunciation lang" VariableName="pronunciationLang">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
   <Service Label="Table Column" TypeName="TableColumn">
     <Operation Label="Get Transformed Filter" Name="getTransformedFilter" IsStatic="false">
       <Input>
