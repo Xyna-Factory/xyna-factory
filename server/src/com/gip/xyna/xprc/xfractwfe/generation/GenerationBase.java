@@ -26,6 +26,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
@@ -56,7 +57,10 @@ import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaFileObject;
 import javax.tools.ToolProvider;
 import javax.xml.stream.XMLStreamException;
 
@@ -5952,49 +5956,39 @@ public abstract class GenerationBase {
   }
 
   /**
-   * @param packagesOrFiles packages müssen "a.b.c" angegeben werden, files als relativ oder absolute fileaddresse (a/b/c) zum aktuellen verzeichnis (nicht sourcepath!)
+   * @param files (fqClassName, code)
    * @param targetDir wohin wird javadoc erzeugt
    * @param sourcePath optional. nur für packages relevant
    * @param classPath auflösen von verwendeten klassen
    */
-  public static void createJavaDoc(String[] packagesOrFiles, String targetDir, String sourcePath, String classPath) {
+  public static void createJavaDoc(List<Pair<String, String>> files, String targetDir, String sourcePath, String classPath) {
     String[] args;
     if (sourcePath != null) {
       args = new String[] {"-d", targetDir, "-sourcepath", sourcePath, "-classpath", classPath};
     } else {
       args = new String[] {"-d", targetDir, "-classpath", classPath};
     }
-    String[] argsNew = new String[args.length + packagesOrFiles.length];
-    System.arraycopy(args, 0, argsNew, 0, args.length);
-    System.arraycopy(packagesOrFiles, 0, argsNew, args.length, packagesOrFiles.length);
 
-    ByteArrayOutputStream baosOut = new ByteArrayOutputStream();
-    ByteArrayOutputStream baosErr = new ByteArrayOutputStream();
-    int errCode = ToolProvider.getSystemDocumentationTool().run(null, baosOut, baosErr, argsNew);
-    String err;
-    try {
-      err = baosErr.toString(Constants.DEFAULT_ENCODING);
-    } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e);
+    Writer writer = new StringWriter();
+    DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
+    List<String> options = List.of(args);
+    List<JavaFileObject> compilationUnits = new ArrayList<>();
+
+    for (Pair<String, String> file : files) {
+      JavaSourceFromString unit = new JavaSourceFromString(file.getFirst(), file.getSecond());
+      compilationUnits.add(unit);
     }
-    if (err != null && err.trim().length() > 0) {
-      logger.warn("error generating javadoc: " + err);
-    }
-    if (logger.isDebugEnabled()) {
-      String out;
-      try {
-        out = baosOut.toString(Constants.DEFAULT_ENCODING);
-      } catch (UnsupportedEncodingException e) {
-        throw new RuntimeException(e);
+
+    boolean result = ToolProvider.getSystemDocumentationTool().getTask(writer, null, diagnostics, null, options, compilationUnits).call();
+    if (result) {
+      if (logger.isDebugEnabled()) {
+        logger.debug("generated javadoc." + writer.toString());
+        logger.debug(String.join("\n", diagnostics.getDiagnostics().stream().map(x -> x.toString()).collect(Collectors.toList())));
       }
-      if (out != null && out.trim().length() > 0) {
-        logger.debug("output generating javadoc: " + out);
-      }
-    }
-    if (errCode == 0) {
-      //ok
     } else {
-      logger.warn("javadoc generation not successful for packages: " + Arrays.toString(packagesOrFiles));
+      if (logger.isWarnEnabled()) {
+        logger.warn("error generating javadoc: " + writer.toString());
+      }
     }
   }
 

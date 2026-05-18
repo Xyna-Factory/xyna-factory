@@ -294,7 +294,7 @@ public class ServiceImplementationTemplate extends ImplementationTemplate {
         File javadocDir = new File(targetDir, "javadoc");
         String sourcePath = GenerationBase.getRelativeJavaFileLocation("a.B", false, revision);
         sourcePath = sourcePath.substring(0, sourcePath.length() - "a.B.java".length());
-        GenerationBase.createJavaDoc(files.toArray(new String[files.size()]), javadocDir.getAbsolutePath(), sourcePath, classPath);
+        GenerationBase.createJavaDoc(result.getFilesForGeneratedAdditionalLib(), javadocDir.getAbsolutePath(), sourcePath, classPath);
         Manifest manifest = new Manifest();
         Support4Eclipse.createJarFile(manifest, new File(targetDir, SERVICE_DEFINITION_JAVADOC_JAR), javadocDir, true);
         FileUtils.deleteDirectoryRecursively(javadocDir);
