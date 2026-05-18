@@ -23,7 +23,6 @@ import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xact.trigger.SSHStartParameter.ErrorHandling;
-import com.gip.xyna.xdev.xfractmod.xmdm.TriggerConnection;
 
 public class SSHShellTriggerConnection extends SSHDTriggerConnection {
 
@@ -126,7 +125,7 @@ public class SSHShellTriggerConnection extends SSHDTriggerConnection {
   public void handleProcessingRejected(String cause) {
     this.sendLineQuietly(this.getCustomization().getErrorPrefix() + "processing rejected: " + cause);
     this.close();
-  };
+  }
 
   @Override
   public void handleNoFilterFound() {

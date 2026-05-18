@@ -17,10 +17,16 @@
  */
 package com.gip.xyna.xact.trigger;
 
+
+
 import com.gip.xyna.xdev.xfractmod.xmdm.TriggerConnection;
+
+
 
 public abstract class SSHDTriggerConnection extends TriggerConnection {
 
     public abstract void handleProcessingRejected(String cause);
+
+
     public abstract void handleNoFilterFound();
 }

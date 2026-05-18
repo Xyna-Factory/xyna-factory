@@ -18,39 +18,15 @@
 package xact.sftp.impl;
 
 
-import com.gip.xyna.CentralFactoryLogging;
-import com.gip.xyna.utils.exceptions.XynaException;
-import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
-import com.gip.xyna.xdev.xfractmod.xmdm.Container;
-import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObjectList;
-import com.gip.xyna.xdev.xfractmod.xmdm.XOUtils;
-import com.gip.xyna.xdev.xfractmod.xmdm.XynaExceptionBase;
-import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
-import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.DeploymentTask;
-import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
-import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.XMLHelper;
-import com.gip.xyna.xdev.xfractmod.xmdm.XynaObjectList;
-import com.gip.xyna.xfmg.Constants;
-import com.gip.xyna.xfmg.xfctrl.classloading.persistence.SerializableClassloadedException;
-import com.gip.xyna.xfmg.xfctrl.classloading.persistence.SerializableClassloadedObject;
-import com.gip.xyna.xfmg.xfctrl.classloading.persistence.SerializableClassloadedXynaObject;
-import com.gip.xyna.xprc.XynaOrderServerExtension;
-import com.gip.xyna.xprc.exceptions.XPRC_MDMDeploymentException;
-import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
-import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
-import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.ServiceStepEventHandling;
-import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.ServiceStepEventSource;
-
 import java.io.UnsupportedEncodingException;
-import java.lang.ClassNotFoundException;
-import java.lang.IllegalArgumentException;
 import java.util.Arrays;
 import java.util.List;
 
+import com.gip.xyna.xfmg.Constants;
 
-import xact.sftp.ContentSuperProxy;
-import xact.sftp.ContentInstanceOperation;
 import xact.sftp.Content;
+import xact.sftp.ContentInstanceOperation;
+import xact.sftp.ContentSuperProxy;
 
 
 public class ContentInstanceOperationImpl extends ContentSuperProxy implements ContentInstanceOperation {
@@ -94,13 +70,14 @@ public class ContentInstanceOperationImpl extends ContentSuperProxy implements C
       default :
         throw new IllegalArgumentException("Illegal type identifier: " + String.valueOf(instanceVar.getType()));
     }
-    List container = Arrays.asList(rawContent);
+    @SuppressWarnings("unchecked")
+    var container = (List<Integer>) (List<?>) Arrays.asList(rawContent);
     return container;
   }
 
   
   public void setRawContent(List<Integer> list) {
-    Object untyped = ((List)list).get(0);
+    Object untyped = ((List<?>)list).get(0);
     if (untyped instanceof byte[]) {
       raw = (byte[]) untyped;
     } else if (untyped != null) {

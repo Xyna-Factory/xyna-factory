@@ -92,7 +92,7 @@ public class SFTPTriggerAccessServiceOperationImpl implements ExtendedDeployment
   
   public static void addOneTimeCredentials(String username, String password, String ip, String port) throws XynaException, OneTimeCredentialCollision {
     try {
-      EventListener el = getFirstEnabledTriggerInstanceInSameRevisionOrAbove();
+      EventListener<?,?> el = getFirstEnabledTriggerInstanceInSameRevisionOrAbove();
       java.lang.reflect.Method m = el.getClass().getDeclaredMethod(ADD_CREDENTIALS_METHOD_NAME, String.class, String.class, String.class, String.class);
       Boolean success = (Boolean) m.invoke(el, username, password, ip, port);
       if (!success) {
@@ -103,7 +103,7 @@ public class SFTPTriggerAccessServiceOperationImpl implements ExtendedDeployment
     }
   }
   
-  public static EventListener getFirstEnabledTriggerInstanceInSameRevisionOrAbove() throws PersistenceLayerException, XACT_TriggerNotFound {
+  public static EventListener<?,?> getFirstEnabledTriggerInstanceInSameRevisionOrAbove() throws PersistenceLayerException, XACT_TriggerNotFound {
     Long revision = ((ClassLoaderBase)SFTPTriggerAccessServiceOperationImpl.class.getClassLoader()).getRevision();
     Set<Long> allRelevantRevisions = new HashSet<Long>();
     allRelevantRevisions.add(revision);

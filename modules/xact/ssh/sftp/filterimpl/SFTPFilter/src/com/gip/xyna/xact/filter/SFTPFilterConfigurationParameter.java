@@ -22,10 +22,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.gip.xyna.xdev.xfractmod.xmdm.FilterConfigurationParameter;
-import com.gip.xyna.utils.misc.StringParameter;
 import com.gip.xyna.utils.misc.Documentation;
+import com.gip.xyna.utils.misc.StringParameter;
 import com.gip.xyna.xact.exceptions.XACT_InvalidFilterConfigurationParameterValueException;
+import com.gip.xyna.xdev.xfractmod.xmdm.FilterConfigurationParameter;
 
 public class SFTPFilterConfigurationParameter extends FilterConfigurationParameter {
     public final static String PROCESS_SFTP_ORDERTYPE = "xact.sftp.ProcessSFTPRequest";

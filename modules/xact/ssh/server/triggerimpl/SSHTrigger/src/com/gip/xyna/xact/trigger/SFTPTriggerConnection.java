@@ -17,14 +17,11 @@
  */
 package com.gip.xyna.xact.trigger;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.channels.FileChannel;
-
 import com.gip.xyna.utils.concurrent.FakedFuture;
+
 import xact.ssh.sftp.filesystem.FileSystemCacheParameter;
 import xact.ssh.sftp.filesystem.RequestContext;
 import xact.ssh.sftp.filesystem.XynaBackedFile;
-import com.gip.xyna.xfmg.Constants;
 
 public class SFTPTriggerConnection extends SSHDTriggerConnection {
 

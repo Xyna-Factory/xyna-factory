@@ -17,8 +17,6 @@
  */
 package com.gip.xyna.xact.filter;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -26,23 +24,21 @@ import org.apache.log4j.Logger;
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.utils.timing.Duration;
-import com.gip.xyna.xact.trigger.SSHDTriggerConnection;
 import com.gip.xyna.xact.trigger.SFTPTriggerConnection;
-import xact.ssh.sftp.filesystem.FileSystemCacheParameter;
+import com.gip.xyna.xact.trigger.SSHDTriggerConnection;
 import com.gip.xyna.xdev.xfractmod.xmdm.ConnectionFilter;
+import com.gip.xyna.xdev.xfractmod.xmdm.FilterConfigurationParameter;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
-import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
-import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyString;
 import com.gip.xyna.xprc.XynaOrder;
 import com.gip.xyna.xprc.XynaOrderCreationParameter;
 import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
 import com.gip.xyna.xprc.xsched.xynaobjects.RelativeDate;
-import com.gip.xyna.xdev.xfractmod.xmdm.FilterConfigurationParameter;
 
 import xact.sftp.CacheParameter;
 import xact.sftp.None;
 import xact.sftp.SessionIsolated;
 import xact.sftp.Timed;
+import xact.ssh.sftp.filesystem.FileSystemCacheParameter;
 
 public class SFTPFilter extends ConnectionFilter<SSHDTriggerConnection> {
 
@@ -66,10 +62,11 @@ public class SFTPFilter extends ConnectionFilter<SSHDTriggerConnection> {
   public FilterResponse createXynaOrder(SSHDTriggerConnection _tc, FilterConfigurationParameter config)
       throws XynaException {
 
-    if (!(_tc instanceof SFTPTriggerConnection))
+    if (!(_tc instanceof SFTPTriggerConnection) || _tc == null) {
       return FilterResponse.notResponsible();
+    }
 
-    SFTPTriggerConnection tc = (SFTPTriggerConnection)_tc;
+    SFTPTriggerConnection tc = (SFTPTriggerConnection) _tc;
 
     try {
       logger.debug("createXynaOrder");
@@ -108,12 +105,8 @@ public class SFTPFilter extends ConnectionFilter<SSHDTriggerConnection> {
 
       return FilterResponse.responsible(new XynaOrder(xocp));
     } catch (RuntimeException | Error e) {
-      if (null != tc) {
-        logger.debug("RuntimeException during request on '" + tc.getPath() + "'", e);
-        tc.fileNotFound();
-      } else {
-        logger.debug("RuntimeException during request");
-      }
+      logger.debug("RuntimeException during request on '" + tc.getPath() + "'", e);
+      tc.fileNotFound();
       throw e;
     } catch (Throwable t) {
       logger.error("Unexpected Error", t);
@@ -132,7 +125,7 @@ public class SFTPFilter extends ConnectionFilter<SSHDTriggerConnection> {
     if (!(_tc instanceof SFTPTriggerConnection))
       return;
 
-    SFTPTriggerConnection tc = (SFTPTriggerConnection)_tc;
+    SFTPTriggerConnection tc = (SFTPTriggerConnection) _tc;
 
     xact.sftp.Content content = null;
     if (response instanceof xact.sftp.Content) {
@@ -151,6 +144,7 @@ public class SFTPFilter extends ConnectionFilter<SSHDTriggerConnection> {
     } else if (content.getDoesExist() != null && !content.getDoesExist()) {
       tc.fileNotFound();
     } else {
+      @SuppressWarnings("rawtypes")
       byte[] rawContent = (byte[]) ((List) content.getRawContent()).get(0);
       tc.reply(rawContent);
 
@@ -169,7 +163,7 @@ public class SFTPFilter extends ConnectionFilter<SSHDTriggerConnection> {
     if (!(_tc instanceof SFTPTriggerConnection))
       return;
 
-    SFTPTriggerConnection tc = (SFTPTriggerConnection)_tc;
+    SFTPTriggerConnection tc = (SFTPTriggerConnection) _tc;
 
     for (XynaException xynaException : e) {
       logger.debug("", xynaException);

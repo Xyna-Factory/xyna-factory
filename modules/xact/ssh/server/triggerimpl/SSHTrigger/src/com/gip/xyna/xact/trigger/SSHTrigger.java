@@ -18,35 +18,29 @@
 package com.gip.xyna.xact.trigger;
 
 import java.io.IOException;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.apache.sshd.server.shell.ShellFactory;
 import org.apache.sshd.server.channel.ChannelSession;
 import org.apache.sshd.server.command.Command;
+import org.apache.sshd.server.shell.ShellFactory;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.concurrent.FakedFuture;
-import com.gip.xyna.utils.timing.Duration;
 import com.gip.xyna.utils.misc.TableFormatter;
+import com.gip.xyna.utils.timing.Duration;
 import com.gip.xyna.xact.exceptions.XACT_TriggerCouldNotBeStartedException;
 import com.gip.xyna.xact.exceptions.XACT_TriggerCouldNotBeStoppedException;
-import com.gip.xyna.xact.trigger.SFTPTriggerConnection;
-import com.gip.xyna.xact.trigger.SSHStartParameter;
-import com.gip.xyna.xact.trigger.SSHDTriggerConnection;
-import com.gip.xyna.xact.trigger.SSHShellTriggerConnection;
 import com.gip.xyna.xdev.xfractmod.xmdm.EventListener;
 
+import xact.ssh.server.XynaSSHServer;
+import xact.ssh.sftp.XynaBackedFileProvider;
 import xact.ssh.sftp.filesystem.RequestContext;
 import xact.ssh.sftp.filesystem.XynaBackedFile;
-import xact.ssh.sftp.filesystem.XynaFilterDelegatingFileSystem;
 import xact.ssh.sftp.filesystem.cache.FileCache;
-import xact.ssh.sftp.XynaBackedFileProvider;
-import xact.ssh.server.XynaSSHServer;
 
 public class SSHTrigger extends EventListener<SSHDTriggerConnection, SSHStartParameter>
     implements ShellFactory, XynaBackedFileProvider {
@@ -116,7 +110,7 @@ public class SSHTrigger extends EventListener<SSHDTriggerConnection, SSHStartPar
           logger.debug("New SSHDTriggerConnection " + sshCon.getClass().getSimpleName());
         if (sshCon instanceof SSHShellTriggerConnection
             && ((SSHShellTriggerConnection)sshCon).getRequestType() == null) {
-          return null; // ungültiger Eintrag nach Aufruf stop()
+          return null; // ung?ltiger Eintrag nach Aufruf stop()
         }
         return sshCon;
       }
@@ -138,7 +132,7 @@ public class SSHTrigger extends EventListener<SSHDTriggerConnection, SSHStartPar
       sshd.stop(true);
       requests.clear();
 
-      // laufendes Receive darf keinen gültigen Eintrag finden, daher Dummy-Eintrag
+      // laufendes Receive darf keinen g?ltigen Eintrag finden, daher Dummy-Eintrag
       // zum Wecken
       requests.offer(new SSHShellTriggerConnection(null, null));
 
