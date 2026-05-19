@@ -621,7 +621,7 @@ public class TableHelper<T, I> {
         sb.append(".*");
       sb.append("$");
       filter = sb.toString();
-    } else if (filter.startsWith("'") && filter.endsWith("'") || filter.startsWith("\"") && filter.endsWith("\"")) {
+    } else if (filter.length() > 1 && (filter.startsWith("'") && filter.endsWith("'") || filter.startsWith("\"") && filter.endsWith("\""))) {
       filter = Pattern.quote(filter.substring(1, filter.length()-1));
     } else {
       filter = Pattern.quote(filter);
