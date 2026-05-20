@@ -158,18 +158,9 @@ public class RepositoryInteraction {
   }
 
 
-  private Repository loadRepo(String repository, boolean checkDifferenceLists) throws IOException {
+  private Repository loadRepo(String repository) throws IOException {
     String repositoryAndPostfix = repository + "/.git";
     validateRepository(repositoryAndPostfix);
-
-    if (checkDifferenceLists) {
-      List<String> openDifferenceListIds = findOpenDifferenceListIds(repository);
-      if (!openDifferenceListIds.isEmpty()) {
-        throw new RuntimeException("There are open Differences Lists: " + String.join(", ", openDifferenceListIds));
-      } else if (logger.isDebugEnabled()) {
-        logger.debug("No differences Lists found for connected workspaces");
-      }
-    }
 
     Repository repo = new FileRepositoryBuilder().setGitDir(new File(repositoryAndPostfix)).build();
 
@@ -182,7 +173,7 @@ public class RepositoryInteraction {
 
   public List<? extends Text> getFileContentInCurrentOriginBranch(String repository, String file) throws Exception {
     List<Text> ret = new ArrayList<>();
-    Repository repo = loadRepo(repository, false);
+    Repository repo = loadRepo(repository);
     try (Git git = new Git(repo)) {
       BranchTrackingStatus tracking = BranchTrackingStatus.of(repo, repo.getFullBranch());
       String remoteBranch = tracking.getRemoteTrackingBranch();
@@ -221,7 +212,7 @@ public class RepositoryInteraction {
   public BranchData listBranches(String repository) throws Exception {
     BranchData.Builder result = new BranchData.Builder();
     List<Branch> resultBranches = new ArrayList<>();
-    Repository repo = loadRepo(repository, false);
+    Repository repo = loadRepo(repository);
     try (Git git = new Git(repo)) {
       String currentBranchName = repo.getFullBranch();
       List<Ref> branches = git.branchList().setListMode(ListMode.ALL).call();
@@ -251,7 +242,7 @@ public class RepositoryInteraction {
 
   public List<Commit> listCommits(String repository, String branch, int length) throws Exception {
     List<Commit> result = new ArrayList<>();
-    Repository repo = loadRepo(repository, false);
+    Repository repo = loadRepo(repository);
     try (Git git = new Git(repo)) {
       Iterable<RevCommit> commits = git.log().setMaxCount(length).add(repo.resolve(branch)).call();
       for (RevCommit commit : commits) {
@@ -270,14 +261,14 @@ public class RepositoryInteraction {
 
   public ChangeSet loadChanges(String repository) throws Exception {
     if (repository == null) { throw new IllegalArgumentException("Parameter repository is empty."); }
-    Repository repo = loadRepo(repository, true);
+    Repository repo = loadRepo(repository);
     return new LoadChangesTools().loadChanges(repository, repo);
   }
 
 
   public void push(String repository, String message, boolean dryrun, String user, List<String> filePatterns) throws Exception {
     if (message == null) { throw new IllegalArgumentException("Commit message is empty"); }
-    Repository repo = loadRepo(repository, true);
+    Repository repo = loadRepo(repository);
     GitDataContainer container;
 
     try (Git git = new Git(repo)) {
@@ -296,7 +287,7 @@ public class RepositoryInteraction {
 
 
   public void checkout(String branch, String repository) throws Exception {
-    Repository repo = loadRepo(repository, true);
+    Repository repo = loadRepo(repository);
 
     try (Git git = new Git(repo)) {
       CanonicalTreeParser oldTreeParser = new CanonicalTreeParser();
@@ -413,7 +404,7 @@ public class RepositoryInteraction {
   }
 
   public PullOutput pull(String repository, boolean dryrun, String user) throws Exception {
-    Repository repo = loadRepo(repository, false);
+    Repository repo = loadRepo(repository);
     GitDataContainer container = null;
 
     try (Git git = new Git(repo)) {
@@ -1367,7 +1358,7 @@ public class RepositoryInteraction {
 
   public RepositoryStatus getStatus(String repository) throws Exception {
     RepositoryStatus.Builder builder = new RepositoryStatus.Builder();
-    Repository repo = loadRepo(repository, false);
+    Repository repo = loadRepo(repository);
 
     try (Git git = new Git(repo)) {
       Status status = git.status().call();

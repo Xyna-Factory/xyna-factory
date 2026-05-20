@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,27 +15,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Create Diff List Id Panel" TypeName="CreateDiffListIdPanel" TypePath="xmcp.gitintegration.ui" Version="1.8">
-  <Operation ID="0" IsStatic="false" Label="Create Diff List Id Panel" Name="CreateDiffListIdPanel">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Create Diff List Id Panel for Repository Panel" TypeName="CreateDiffListIdPanelForRepositoryPanel" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Create Diff List Id Panel for Repository Panel" Name="CreateDiffListIdPanelForRepositoryPanel">
     <Input>
+      <Data ID="5487" Label="Numerated Workspace Diffs List" ReferenceName="NumeratedWorkspaceDiffsList" ReferencePath="xmcp.gitintegration" VariableName="numeratedWorkspaceDiffsList5487"/>
       <Data ID="4618" Label="Workspace Diff List Id" ReferenceName="WorkspaceDiffListId" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffListId4618"/>
       <Data ID="5197" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext5197"/>
     </Input>
     <Output>
       <Data ID="107" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition107"/>
     </Output>
-    <Mappings ID="4167" Label="Mapping">
+    <Mappings ID="5670" Label="Mapping">
       <Input>
-        <Data ID="4727" Label="Workspace Diff List Id" ReferenceName="WorkspaceDiffListId" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffListId4727">
+        <Data ID="5573" Label="Numerated Workspace Diffs List" ReferenceName="NumeratedWorkspaceDiffsList" ReferencePath="xmcp.gitintegration" VariableName="numeratedWorkspaceDiffsList5573">
           <Source RefID="4167"/>
         </Data>
-        <Source RefID="4618"/>
+        <Source RefID="5487"/>
       </Input>
       <Output>
-        <Data ID="4173" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text4173"/>
-        <Target RefID="4174"/>
+        <Data ID="5679" Label="Base Path" ReferenceName="Text" ReferencePath="base" VariableName="text5679">
+          <Source RefID="5670"/>
+        </Data>
+        <Target RefID="5680"/>
       </Output>
-      <Mapping>%1%.text=concat("%0%,%1%.workspaceListIds.", %0%.index)</Mapping>
+      <Mapping>%1%.text=concat("%1%.", %0%.index, ".workspaceDiffsListIds")</Mapping>
     </Mappings>
     <Mappings ID="3617" Label="Mapping">
       <Input>
@@ -45,10 +48,20 @@
         <Source RefID="5197"/>
       </Input>
       <Input>
-        <Data ID="3869" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text3869">
+        <Data ID="3869" Label="Base Path" ReferenceName="Text" ReferencePath="base" VariableName="text3869">
           <Source RefID="3617"/>
         </Data>
-        <Source RefID="4174"/>
+        <Source RefID="5680">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="5762" Label="Workspace Diff List Id" ReferenceName="WorkspaceDiffListId" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffListId5762">
+          <Source RefID="3617"/>
+        </Data>
+        <Source RefID="4618"/>
       </Input>
       <Output>
         <Data ID="3634" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow3634">
@@ -56,9 +69,9 @@
         </Data>
         <Target RefID="3635"/>
       </Output>
-      <Mapping>%2%.dataPath=%1%.text</Mapping>
-      <Mapping>%2%.rTC=%0%</Mapping>
-      <Mapping>%2%.fQN="xmcp.gitintegration.ui.WorkspaceDiffDetailsDefinition"</Mapping>
+      <Mapping>%3%.dataPath=concat(%1%.text, ".repositoryConnection,", %1%.text, ".workspaceListIds.", %2%.index)</Mapping>
+      <Mapping>%3%.rTC=%0%</Mapping>
+      <Mapping>%3%.fQN="xmcp.gitintegration.ui.WorkspaceDiffDetailsDefinition"</Mapping>
     </Mappings>
     <Mappings ID="2004" Label="Mapping">
       <Input>
@@ -104,12 +117,18 @@
           </Meta>
         </Source>
       </Input>
+      <Input>
+        <Data ID="5508" Label="Numerated Workspace Diffs List" ReferenceName="NumeratedWorkspaceDiffsList" ReferencePath="xmcp.gitintegration" VariableName="numeratedWorkspaceDiffsList5508">
+          <Source RefID="11"/>
+        </Data>
+        <Source RefID="5487"/>
+      </Input>
       <Output>
         <Data ID="18" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition18"/>
         <Target RefID="10"/>
       </Output>
-      <Mapping>%3%.label=concat("Difference list id = ", %1%.listId)</Mapping>
-      <Mapping>%3%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%0%</Mapping>
+      <Mapping>%4%.label=concat(%3%.workspaceDiffsListIds.workspaceName, ": Difference list id = ", %1%.listId)</Mapping>
+      <Mapping>%4%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%0%</Mapping>
     </Mappings>
     <Data ID="3432" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition3432">
       <Source RefID="2004"/>
@@ -117,7 +136,6 @@
     <Data ID="3635" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow3635">
       <Source RefID="3617"/>
     </Data>
-    <Data ID="4174" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text4174"/>
     <Data ID="10" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition10"/>
     <Data ID="5408" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="const_FormPanelDefinition5408">
       <Data VariableName="hideIfEmpty">
@@ -187,6 +205,9 @@
         <Value/>
       </Data>
       <Data IsList="true" Label="Base Definition" ReferenceName="BaseDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="children"/>
+    </Data>
+    <Data ID="5680" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text5680">
+      <Source RefID="5670"/>
     </Data>
     <Assign ID="1">
       <Source RefID="10"/>
