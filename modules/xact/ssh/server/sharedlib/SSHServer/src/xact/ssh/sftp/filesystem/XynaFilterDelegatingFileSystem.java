@@ -293,7 +293,6 @@ public class XynaFilterDelegatingFileSystem extends BaseFileSystem<XynaFilterDel
         if (logger.isDebugEnabled()) {
             logger.debug("isOpen@" + uri);
         }
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'isOpen'");
     }
 
@@ -311,7 +310,6 @@ public class XynaFilterDelegatingFileSystem extends BaseFileSystem<XynaFilterDel
         if (logger.isDebugEnabled()) {
             logger.debug("getUserPrincipalLookupService@" + uri);
         }
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getUserPrincipalLookupService'");
     }
 

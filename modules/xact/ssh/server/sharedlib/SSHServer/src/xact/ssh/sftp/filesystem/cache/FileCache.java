@@ -34,6 +34,7 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.misc.TableFormatter;
 import com.gip.xyna.utils.timing.Duration;
 import com.gip.xyna.xfmg.Constants;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.UserType;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyInt;
 
 import xact.ssh.sftp.filesystem.XynaBackedFile;
@@ -67,6 +68,7 @@ public class FileCache {
     }
 
     private FileCache() {
+        EVENT_LOG_MAX_SIZE.registerDependency(UserType.Trigger, "SSH Trigger - SFTP Subsystem");
     }
 
     public static void clear() {

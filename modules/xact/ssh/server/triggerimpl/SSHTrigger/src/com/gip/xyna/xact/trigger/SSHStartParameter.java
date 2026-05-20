@@ -117,8 +117,8 @@ public class SSHStartParameter extends EnhancedStartParameter implements SSHServ
       .build();
 
   public static final StringParameter<String> NATIVE_FILE_ROOT_PROP = StringParameter.typeString("fileRootProperty")
-      .documentation(Documentation.de("Property für Basis Verzeichnis für Dateizugriff. Falls fileRoot nicht gesetzt.")
-          .en("Property for root directory for filesystem access. Used if fileRoot not set.").build())
+      .documentation(Documentation.de("Xyna Property für Basis Verzeichnis für Dateizugriff. Falls fileRoot nicht gesetzt.")
+          .en("Xyna Property for root directory for filesystem access. Used if fileRoot not set.").build())
       .defaultValue("xact.sftp.localSftpRoot").build();
 
   public static final StringParameter<String> NATIVE_FILE_PREFIX = StringParameter.typeString("filePrefix")
