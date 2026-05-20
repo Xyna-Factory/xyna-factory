@@ -27,16 +27,17 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+
+import org.apache.log4j.Logger;
+
+import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.utils.misc.TableFormatter;
 import com.gip.xyna.utils.timing.Duration;
-import xact.ssh.sftp.filesystem.RequestContext;
+import com.gip.xyna.xfmg.Constants;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyInt;
+
 import xact.ssh.sftp.filesystem.XynaBackedFile;
 import xact.ssh.sftp.filesystem.XynaFilterDelegatingPath;
-import xact.ssh.sftp.filesystem.FileSystemCacheParameter.CacheType;
-import com.gip.xyna.utils.misc.TableFormatter;
-import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyInt;
-import com.gip.xyna.xfmg.Constants;
-import com.gip.xyna.CentralFactoryLogging;
-import org.apache.log4j.Logger;
 
 public class FileCache {
 

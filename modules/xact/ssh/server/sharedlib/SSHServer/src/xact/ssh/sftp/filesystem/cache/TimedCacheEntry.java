@@ -40,7 +40,7 @@ public class TimedCacheEntry<T> extends CacheEntry<T> {
     private ScheduledExecutorService ses;
     private ScheduledFuture<Void> cleaner;
 
-    public TimedCacheEntry(TimedCacheEntry other) {
+    public TimedCacheEntry(TimedCacheEntry<T> other) {
         super(other);
         this.timeout = other.timeout;
         this.ses = other.ses;

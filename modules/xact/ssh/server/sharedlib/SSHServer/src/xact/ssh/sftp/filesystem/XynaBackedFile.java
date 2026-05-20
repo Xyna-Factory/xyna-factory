@@ -95,7 +95,7 @@ public class XynaBackedFile {
     public void setCreationFinishedTime(long lastAccessTime) {
         this.creationFinishedTime = lastAccessTime;
         this.lastAccessTime = lastAccessTime;
-    };
+    }
 
     public long getLastAccessTime() {
         return this.lastAccessTime;
@@ -103,7 +103,7 @@ public class XynaBackedFile {
 
     public FileSystemCacheParameter getCacheParameter() {
         return this.cacheParameter;
-    };
+    }
 
     public long size() {
         return this.content != null ? this.content.length : 0L;

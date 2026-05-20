@@ -17,61 +17,69 @@
  */
 package xact.ssh.sftp.filesystem;
 
+
+
 import com.gip.xyna.utils.timing.Duration;
 
+
+
 public abstract class FileSystemCacheParameter {
-  
+
   private final CacheType type;
-  
+
+
   FileSystemCacheParameter(CacheType type) {
     this.type = type;
   }
-  
+
+
   public CacheType getType() {
     return type;
   }
-  
+
+
   public static enum CacheType {
-    NONE,
-    TIMED,
-    SESSION_ISOLATION;
+    NONE, TIMED, SESSION_ISOLATION;
   }
-  
+
   public static class SimpleCacheParameter extends FileSystemCacheParameter {
 
     SimpleCacheParameter(CacheType type) {
       super(type);
     }
-    
+
   }
-  
-  
-  
+
+
   public static class TimeBasedCacheParameter extends FileSystemCacheParameter {
 
     private final Duration duration;
-    
+
+
     TimeBasedCacheParameter(Duration duration) {
       super(CacheType.TIMED);
       this.duration = duration;
     }
-    
+
+
     public Duration getDuration() {
       return duration;
     }
   }
-  
-  
+
+
   public static FileSystemCacheParameter noCaching() {
     return new SimpleCacheParameter(CacheType.NONE);
   }
-  
+
+
   public static FileSystemCacheParameter sessionIsolated() {
     return new SimpleCacheParameter(CacheType.SESSION_ISOLATION);
   }
-  
+
+
   public static FileSystemCacheParameter timed(Duration duration) {
     return new TimeBasedCacheParameter(duration);
   }
-  
+
 }

@@ -28,9 +28,9 @@ import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.trigger.SSHConnectionParameter;
 import com.gip.xyna.xact.trigger.SSHCustomizationParameter;
 import com.gip.xyna.xact.trigger.SSHCustomizationParameter.NewLine;
-import com.gip.xyna.xact.trigger.SSHStartParameter.ErrorHandling;
 import com.gip.xyna.xact.trigger.SSHDTriggerConnection;
 import com.gip.xyna.xact.trigger.SSHShellTriggerConnection;
+import com.gip.xyna.xact.trigger.SSHStartParameter.ErrorHandling;
 import com.gip.xyna.xdev.xfractmod.xmdm.ConnectionFilter;
 import com.gip.xyna.xdev.xfractmod.xmdm.Container;
 import com.gip.xyna.xdev.xfractmod.xmdm.EventListener;
@@ -69,8 +69,9 @@ public class SSHFilter extends ConnectionFilter<SSHDTriggerConnection> {
    */
   public FilterResponse createXynaOrder(SSHDTriggerConnection _tc) throws XynaException {
 
-    if (!(_tc instanceof SSHShellTriggerConnection))
+    if (!(_tc instanceof SSHShellTriggerConnection)) {
       return FilterResponse.notResponsible();
+    }
     
     SSHShellTriggerConnection tc = (SSHShellTriggerConnection)_tc;
 
@@ -149,8 +150,9 @@ public class SSHFilter extends ConnectionFilter<SSHDTriggerConnection> {
    * @param tc corresponding triggerconnection
    */
   public void onResponse(GeneralXynaObject gxo, SSHDTriggerConnection _tc) {
-    if (!(_tc instanceof SSHShellTriggerConnection))
+    if (!(_tc instanceof SSHShellTriggerConnection)) {
       return;
+    }
     
     SSHShellTriggerConnection tc = (SSHShellTriggerConnection)_tc;
 
@@ -217,8 +219,9 @@ public class SSHFilter extends ConnectionFilter<SSHDTriggerConnection> {
    * @param tc corresponding triggerconnection
    */
   public void onError(XynaException[] xes, SSHDTriggerConnection _tc) {
-    if (!(_tc instanceof SSHShellTriggerConnection))
+    if (!(_tc instanceof SSHShellTriggerConnection)) {
       return;
+    }
     
     SSHShellTriggerConnection tc = (SSHShellTriggerConnection)_tc;
 

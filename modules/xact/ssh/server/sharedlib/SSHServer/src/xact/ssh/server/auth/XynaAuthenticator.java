@@ -22,25 +22,27 @@ import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.apache.sshd.server.auth.password.PasswordAuthenticator;
 import org.apache.sshd.server.auth.pubkey.PublickeyAuthenticator;
 import org.apache.sshd.server.session.ServerSession;
 
 import com.gip.xyna.utils.ByteUtils;
-import com.gip.xyna.utils.collections.LruCache;
 
 public class XynaAuthenticator implements PublickeyAuthenticator, PasswordAuthenticator {
+
+  private Logger logger = null;
 
   private Map<String, String> userkeys = new HashMap<String, String>();
   private Map<String, String> userpasswords = new HashMap<String, String>();
   private boolean alwaysauthenticate = false;
   private boolean useOTC = false;
 
-  private org.apache.log4j.Logger logger = null;
+  private OneTimeCredentialsCache otcc = new OneTimeCredentialsCache(500);
 
-  public XynaAuthenticator(HashMap<String, String> publickeys, HashMap<String, String> passwords, boolean alwaysauth,
-      boolean useOTC,
-      org.apache.log4j.Logger log) {
+
+  public XynaAuthenticator(HashMap<String, String> publickeys, HashMap<String, String> passwords, boolean alwaysauth, boolean useOTC,
+                           Logger log) {
     this.userpasswords = passwords;
     this.userkeys = publickeys;
     this.alwaysauthenticate = alwaysauth;
@@ -175,8 +177,6 @@ public class XynaAuthenticator implements PublickeyAuthenticator, PasswordAuthen
     logInfo("Authentication successful!");
     return true;
   }
-
-  OneTimeCredentialsCache otcc = new OneTimeCredentialsCache(500);
 
   public boolean addOneTimeCredentials(String user, String password, String expectedIp, String expectedPort) {
     return otcc.add(new UserData(user, password, expectedIp, expectedPort));

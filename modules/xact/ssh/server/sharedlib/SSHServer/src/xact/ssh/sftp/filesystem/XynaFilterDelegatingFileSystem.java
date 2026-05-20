@@ -22,9 +22,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.channels.FileChannel;
 import java.nio.file.FileSystem;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.attribute.UserPrincipalLookupService;
 import java.util.Arrays;
@@ -32,25 +30,24 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.apache.sshd.common.file.FileSystemFactory;
-import org.apache.sshd.common.file.root.RootedFileSystemProvider;
 import org.apache.sshd.common.file.root.RootedFileSystem;
+import org.apache.sshd.common.file.root.RootedFileSystemProvider;
 import org.apache.sshd.common.file.util.BaseFileSystem;
 import org.apache.sshd.common.session.SessionContext;
 
 import com.gip.xyna.CentralFactoryLogging;
+
 import xact.ssh.sftp.XynaBackedFileProvider;
 import xact.ssh.sftp.filesystem.FileSystemCacheParameter.TimeBasedCacheParameter;
 import xact.ssh.sftp.filesystem.cache.CacheEntry;
 import xact.ssh.sftp.filesystem.cache.CacheKey;
 import xact.ssh.sftp.filesystem.cache.FileCache;
-import xact.ssh.sftp.filesystem.cache.TimedCacheEntry;
 
 public class XynaFilterDelegatingFileSystem extends BaseFileSystem<XynaFilterDelegatingPath> {
 
@@ -219,7 +216,7 @@ public class XynaFilterDelegatingFileSystem extends BaseFileSystem<XynaFilterDel
             logger.debug("Context:" + context);
 
         try {
-            java.util.Optional<XynaBackedFile> oFile = FileCache.INSTANCE.lookup(normalPath)
+            Optional<XynaBackedFile> oFile = FileCache.INSTANCE.lookup(normalPath)
                     .map(e -> e.getFile());
 
             XynaBackedFile file = null;

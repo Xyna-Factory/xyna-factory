@@ -48,8 +48,6 @@ public class ClientKeyStorable extends Storable<ClientKeyStorable> {
   @Column(name = COL_ID)
   private long id;
   
-  // FIXME reintroduce indizes when testing on live machine
-  
   //@Column(name = COL_NAME, index = IndexType.MULTIPLE)
   @Column(name = COL_NAME)
   private String name;
@@ -79,7 +77,6 @@ public class ClientKeyStorable extends Storable<ClientKeyStorable> {
   }
   
   
-  // TODO ensure not to waste id's check call hierarchy
   public ClientKeyStorable(String name, String type, String publickey, boolean hashed) { // overload with byte[] key ?
     this();
     this.name = name;

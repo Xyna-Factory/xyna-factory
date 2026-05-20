@@ -22,19 +22,15 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
-import java.nio.file.AccessDeniedException;
 import java.nio.file.AccessMode;
 import java.nio.file.CopyOption;
 import java.nio.file.DirectoryStream;
 import java.nio.file.DirectoryStream.Filter;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileStore;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystemException;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.LinkOption;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.NotDirectoryException;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributeView;
@@ -52,22 +48,16 @@ import java.nio.file.spi.FileSystemProvider;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
+
 import xact.ssh.sftp.XynaBackedFileProvider;
-import xact.ssh.sftp.filesystem.cache.FileCache;
 
 public class XynaFilterDelegatingFileSystemProvider extends FileSystemProvider {
 
@@ -240,7 +230,6 @@ public class XynaFilterDelegatingFileSystemProvider extends FileSystemProvider {
         if (logger.isDebugEnabled()) {
             logger.debug("copy from " + source + " to " + target);
         }
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'copy'");
     }
 
@@ -249,8 +238,6 @@ public class XynaFilterDelegatingFileSystemProvider extends FileSystemProvider {
         if (logger.isDebugEnabled()) {
             logger.debug("move from " + source + " to " + target);
         }
-
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'move'");
     }
 
@@ -337,11 +324,17 @@ public class XynaFilterDelegatingFileSystemProvider extends FileSystemProvider {
                     }
                 }
             }
-            if (BasicFileAttributeView.class.equals(type))
-                return (V) getBasicFileAttributeView((XynaFilterDelegatingPath) path);
+            if (BasicFileAttributeView.class.equals(type)){
+                @SuppressWarnings("unchecked")
+                V view = (V) getBasicFileAttributeView((XynaFilterDelegatingPath) path);
+                return view;
+            }
 
-            if (PosixFileAttributeView.class.equals(type))
-                return (V) getPosixFileAttributeView((XynaFilterDelegatingPath) path);
+            if (PosixFileAttributeView.class.equals(type)) {
+                @SuppressWarnings("unchecked")
+                V view = (V) getPosixFileAttributeView((XynaFilterDelegatingPath) path);
+                return view;
+            }
 
         }
 
@@ -387,7 +380,7 @@ public class XynaFilterDelegatingFileSystemProvider extends FileSystemProvider {
                     throw f;
                 } catch (Exception e) {
                     if (logger.isWarnEnabled()) {
-                        logger.warn("Native FS returned exception. " + xfPath , e);
+                        logger.warn("Native FS returned exception for readAttributes@" + xfPath + ". Ignoring ...", e);
                     }
                 }
 
@@ -403,14 +396,14 @@ public class XynaFilterDelegatingFileSystemProvider extends FileSystemProvider {
                 if (logger.isDebugEnabled()) {
                     logger.debug("Returning virtual BasicFileAttributes for " + path);
                 }
-                return (A) getBasicFileAttributes(xfPath);
+                return type.cast(getBasicFileAttributes(xfPath));
             }
 
             if (PosixFileAttributes.class.equals(type)) {
                 if (logger.isDebugEnabled()) {
                     logger.debug("Returning virtual PosixFileAttributes for " + path);
                 }
-                return (A) getPosixFileAttributes(xfPath);
+                return type.cast(getPosixFileAttributes(xfPath));
             }
 
             if (logger.isDebugEnabled()) {
@@ -441,7 +434,7 @@ public class XynaFilterDelegatingFileSystemProvider extends FileSystemProvider {
             logger.debug("  path           = " + path);
             logger.debug("  class of path  = " + path.getClass().getName());
             logger.debug("  attributes     = " + attributes);
-            logger.debug("  options        = " + java.util.Arrays.toString(options));
+            logger.debug("  options        = " + Arrays.toString(options));
         }
 
         if (path instanceof XynaFilterDelegatingPath) {
@@ -630,14 +623,6 @@ public class XynaFilterDelegatingFileSystemProvider extends FileSystemProvider {
 
     private Map<String, Object> getBasicFileAttributesAsMap(XynaFilterDelegatingPath xp) throws IOException {
         return basicAttributesToMap(getBasicFileAttributes(xp));
-    }
-
-    private Map<String, Object> getPosixFileAttributesAsMap(XynaBackedFile file) {
-        return posixAttributesToMap(getPosixFileAttributes(file));
-    }
-
-    private Map<String, Object> getBasicFileAttributesAsMap(XynaBackedFile file) {
-        return basicAttributesToMap(getBasicFileAttributes(file));
     }
 
     private PosixFileAttributes getPosixFileAttributes(XynaBackedFile file) {

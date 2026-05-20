@@ -18,9 +18,9 @@
 package xact.ssh.server;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -28,12 +28,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.apache.sshd.common.Factory;
+import org.apache.sshd.common.NamedFactory;
+import org.apache.sshd.common.cipher.Cipher;
 import org.apache.sshd.common.keyprovider.KeyPairProvider;
+import org.apache.sshd.common.mac.Mac;
+import org.apache.sshd.common.signature.Signature;
 import org.apache.sshd.core.CoreModuleProperties;
-import org.apache.sshd.server.command.Command;
+import org.apache.sshd.server.ServerBuilder;
 import org.apache.sshd.server.SshServer;
-import org.apache.sshd.server.auth.UserAuth;
 import org.apache.sshd.server.auth.UserAuthFactory;
 import org.apache.sshd.server.auth.UserAuthNoneFactory;
 import org.apache.sshd.server.auth.password.UserAuthPasswordFactory;
@@ -55,15 +57,11 @@ import com.gip.xyna.xnwh.persistence.ODSConnectionType;
 import com.gip.xyna.xnwh.persistence.ODSImpl;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 
-import xact.ssh.server.HostKey;
-import xact.ssh.sftp.SFTPSubsystemParameter;
-import xact.ssh.sftp.XynaBackedFileProvider;
-import xact.ssh.server.SSHServerParameter;
-
 import xact.ssh.server.auth.ClientKeyStorable;
 import xact.ssh.server.auth.ClientPasswordStorable;
 import xact.ssh.server.auth.XynaAuthenticator;
-
+import xact.ssh.sftp.SFTPSubsystemParameter;
+import xact.ssh.sftp.XynaBackedFileProvider;
 import xact.ssh.sftp.filesystem.XynaFilterDelegatingFileSystem;
 
 public class XynaSSHServer {
@@ -84,6 +82,7 @@ public class XynaSSHServer {
   public XynaSSHServer() {
   }
 
+  @SuppressWarnings("unchecked")
   public void init(SSHServerParameter sp, SFTPSubsystemParameter sftp, XynaBackedFileProvider xbfp) {
 
     this.xbfp = xbfp;
@@ -93,13 +92,13 @@ public class XynaSSHServer {
     sshd = SshServer.setUpDefaultServer();
 
     sshd.setSignatureFactories(
-        (List) org.apache.sshd.common.NamedFactory.setUpBuiltinFactories(true, sp.getAuthAlgoFactories()));
-    sshd.setKeyExchangeFactories(org.apache.sshd.common.NamedFactory.setUpTransformedFactories(true,
-        sp.getKexFactories(), org.apache.sshd.server.ServerBuilder.DH2KEX));
+        (List<NamedFactory<Signature>>) (List<?>) NamedFactory.setUpBuiltinFactories(true, sp.getAuthAlgoFactories()));
+    sshd.setKeyExchangeFactories(NamedFactory.setUpTransformedFactories(true,
+        sp.getKexFactories(), ServerBuilder.DH2KEX));
 
-    sshd.setMacFactories((List) org.apache.sshd.common.NamedFactory.setUpBuiltinFactories(true, sp.getMacFactories()));
+    sshd.setMacFactories((List<NamedFactory<Mac>>) (List<?>) NamedFactory.setUpBuiltinFactories(true, sp.getMacFactories()));
     sshd.setCipherFactories(
-        (List) org.apache.sshd.common.NamedFactory.setUpBuiltinFactories(true, sp.getCipherFactories()));
+        (List<NamedFactory<Cipher>>) (List<?>) NamedFactory.setUpBuiltinFactories(true, sp.getCipherFactories()));
 
     boolean success = false;
 
@@ -111,8 +110,6 @@ public class XynaSSHServer {
       sshd.setPort(sp.getPort());
       sshd.setHost(sp.getHost());
       sshd.setKeyPairProvider(hkp);
-
-      // sshd.setNioWorkers(2); //FIXME
 
       boolean alwaysAuthenticated = sp.getAlwaysAuth();
       boolean useOTC = sp.getOTCAuth();

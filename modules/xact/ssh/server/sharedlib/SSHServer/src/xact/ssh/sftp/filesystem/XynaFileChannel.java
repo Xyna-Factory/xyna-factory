@@ -17,17 +17,17 @@
  */
 package xact.ssh.sftp.filesystem;
 
-import com.gip.xyna.CentralFactoryLogging;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.channels.ReadableByteChannel;
-import java.nio.channels.SeekableByteChannel;
 import java.nio.channels.WritableByteChannel;
-import java.util.Arrays;
+
 import org.apache.log4j.Logger;
+
+import com.gip.xyna.CentralFactoryLogging;
 
 public class XynaFileChannel extends FileChannel {
   static final Logger logger = CentralFactoryLogging.getLogger(XynaFileChannel.class);

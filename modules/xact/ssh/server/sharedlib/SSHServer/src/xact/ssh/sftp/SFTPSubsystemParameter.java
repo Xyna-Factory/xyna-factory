@@ -17,20 +17,6 @@
  */
 package xact.ssh.sftp;
 
-import java.io.File;
-import java.net.InetAddress;
-import java.security.Signature;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.apache.log4j.Logger;
-
 import com.gip.xyna.utils.timing.Duration;
 
 public interface SFTPSubsystemParameter {

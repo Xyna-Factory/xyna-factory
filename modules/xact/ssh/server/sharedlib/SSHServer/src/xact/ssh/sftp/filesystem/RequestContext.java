@@ -17,19 +17,8 @@
  */
 package xact.ssh.sftp.filesystem;
 
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-
-import org.apache.log4j.Logger;
-
-import com.gip.xyna.CentralFactoryLogging;
-
 public class RequestContext {
-  private static final Logger logger = CentralFactoryLogging.getLogger(RequestContext.class);
+
   private XynaFilterDelegatingPath path;
 
   public long getCreationTime() {
