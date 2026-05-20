@@ -72,10 +72,6 @@
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.gitintegration.ui.CreateNumeratedWorkspaceDiffsListLoop</DestinationKey>
-      <OrderContextMapping>false</OrderContextMapping>
-    </Ordertype>
-    <Ordertype implicitDependency="true">
       <DestinationKey>xmcp.gitintegration.ui.CreateObjectReferencesReferenceDefinition</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
@@ -679,10 +675,6 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.gitintegration.ui.CreateMainPanelChildElements</FqName>
-      <Type>WORKFLOW</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="true">
-      <FqName>xmcp.gitintegration.ui.CreateNumeratedWorkspaceDiffsListLoop</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">

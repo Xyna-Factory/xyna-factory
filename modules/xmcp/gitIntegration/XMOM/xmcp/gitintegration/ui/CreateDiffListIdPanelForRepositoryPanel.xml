@@ -108,16 +108,6 @@
         <Source RefID="4618"/>
       </Input>
       <Input>
-        <Data ID="5318" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition5318">
-          <Source RefID="11"/>
-        </Data>
-        <Source RefID="5408">
-          <Meta>
-            <LinkType>Constant</LinkType>
-          </Meta>
-        </Source>
-      </Input>
-      <Input>
         <Data ID="5508" Label="Numerated Workspace Diffs List" ReferenceName="NumeratedWorkspaceDiffsList" ReferencePath="xmcp.gitintegration" VariableName="numeratedWorkspaceDiffsList5508">
           <Source RefID="11"/>
         </Data>
@@ -127,8 +117,8 @@
         <Data ID="18" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition18"/>
         <Target RefID="10"/>
       </Output>
-      <Mapping>%4%.label=concat(%3%.workspaceDiffsListIds.workspaceName, ": Difference list id = ", %1%.listId)</Mapping>
-      <Mapping>%4%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%0%</Mapping>
+      <Mapping>%3%.label=concat(%2%.workspaceDiffsListIds.workspaceName, ": Difference list id = ", %1%.listId)</Mapping>
+      <Mapping>%3%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%0%</Mapping>
     </Mappings>
     <Data ID="3432" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition3432">
       <Source RefID="2004"/>
@@ -137,75 +127,6 @@
       <Source RefID="3617"/>
     </Data>
     <Data ID="10" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition10"/>
-    <Data ID="5408" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="const_FormPanelDefinition5408">
-      <Data VariableName="hideIfEmpty">
-        <Meta>
-          <Type>boolean</Type>
-        </Meta>
-        <Value>false</Value>
-      </Data>
-      <Data VariableName="hidden">
-        <Meta>
-          <Type>boolean</Type>
-        </Meta>
-        <Value>false</Value>
-      </Data>
-      <Data VariableName="compact">
-        <Meta>
-          <Type>boolean</Type>
-        </Meta>
-        <Value>false</Value>
-      </Data>
-      <Data VariableName="collapsable">
-        <Meta>
-          <Type>boolean</Type>
-        </Meta>
-        <Value>false</Value>
-      </Data>
-      <Data VariableName="collapsed">
-        <Meta>
-          <Type>boolean</Type>
-        </Meta>
-        <Value>false</Value>
-      </Data>
-      <Data VariableName="closable">
-        <Meta>
-          <Type>boolean</Type>
-        </Meta>
-        <Value>false</Value>
-      </Data>
-      <Data VariableName="disabled">
-        <Meta>
-          <Type>boolean</Type>
-        </Meta>
-        <Value>false</Value>
-      </Data>
-      <Data VariableName="hideIfUndefined">
-        <Meta>
-          <Type>boolean</Type>
-        </Meta>
-        <Value>false</Value>
-      </Data>
-      <Data VariableName="style">
-        <Meta>
-          <Type>String</Type>
-        </Meta>
-        <Value/>
-      </Data>
-      <Data VariableName="label">
-        <Meta>
-          <Type>String</Type>
-        </Meta>
-        <Value>ASFDS</Value>
-      </Data>
-      <Data VariableName="dataPath">
-        <Meta>
-          <Type>String</Type>
-        </Meta>
-        <Value/>
-      </Data>
-      <Data IsList="true" Label="Base Definition" ReferenceName="BaseDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="children"/>
-    </Data>
     <Data ID="5680" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text5680">
       <Source RefID="5670"/>
     </Data>

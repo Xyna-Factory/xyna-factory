@@ -25,4 +25,25 @@
       <Type>int</Type>
     </Meta>
   </Data>
+  <Service Label="Numerated Workspace Diffs List" TypeName="NumeratedWorkspaceDiffsList">
+    <Operation IsStatic="true" Label="Numerate Workspace Diff List Ids" Name="numerateWorkspaceDiffListIds">
+      <Input>
+        <Data ID="1" IsList="true" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds1"/>
+      </Input>
+      <Output>
+        <Data ID="2" IsList="true" Label="Numerated Workspace Diffs List" ReferenceName="NumeratedWorkspaceDiffsList" ReferencePath="xmcp.gitintegration" VariableName="numeratedWorkspaceDiffsList2"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">List&lt;NumeratedWorkspaceDiffsList&gt; ret = new ArrayList&lt;NumeratedWorkspaceDiffsList&gt;();
+for(int i=0; i &lt; workspaceDiffsListIds1.size(); i++) {
+    NumeratedWorkspaceDiffsList entry = new NumeratedWorkspaceDiffsList.Builder()
+      .workspaceDiffsListIds(workspaceDiffsListIds1.get(i))
+      .index(i)
+      .instance();
+    ret.add(entry);
+}
+return ret;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>
