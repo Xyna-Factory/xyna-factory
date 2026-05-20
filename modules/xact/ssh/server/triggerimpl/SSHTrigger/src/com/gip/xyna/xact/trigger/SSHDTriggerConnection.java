@@ -25,6 +25,9 @@ import com.gip.xyna.xdev.xfractmod.xmdm.TriggerConnection;
 
 public abstract class SSHDTriggerConnection extends TriggerConnection {
 
+    private static final long serialVersionUID = 1L;
+
+
     public abstract void handleProcessingRejected(String cause);
 
 
