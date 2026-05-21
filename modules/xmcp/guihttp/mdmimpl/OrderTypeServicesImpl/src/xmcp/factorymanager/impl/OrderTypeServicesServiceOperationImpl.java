@@ -139,6 +139,10 @@ public class OrderTypeServicesServiceOperationImpl implements ExtendedDeployment
     orderType.setName(orderType.getFullQualifiedName());
     try {
       ordertypeManagement.modifyOrdertype(createOrderTypeParameter(orderType));
+      if (orderType.getPlanningDestination() == null || orderType.getPlanningDestination().getName() == null || !orderType.getPlanningDestinationIsCustom()) {
+        var dk = new DestinationKey(orderType.getFullQualifiedName(), convertRTC(orderType.getRuntimeContext()));
+        XynaFactory.getInstance().getProcessing().removeDestination(DispatcherIdentification.Planning, dk);
+      }
     } catch (PersistenceLayerException | XFMG_InvalidModificationOfUnexistingOrdertype | XFMG_InvalidCapacityCardinality | XPRC_INVALID_MONITORING_TYPE e) {
       throw new UpdateOrderTypeException(e.getMessage(), e);
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
@@ -151,7 +155,7 @@ public class OrderTypeServicesServiceOperationImpl implements ExtendedDeployment
     orderType.setName(orderType.getFullQualifiedName());
     try {
       ordertypeManagement.createOrdertype(createOrderTypeParameter(orderType));
-    } catch (PersistenceLayerException | XFMG_InvalidCreationOfExistingOrdertype | XFMG_FailedToAddObjectToApplication | XPRC_INVALID_MONITORING_TYPE | UpdateOrderTypeException e) {
+    } catch (PersistenceLayerException | XFMG_InvalidCreationOfExistingOrdertype | XFMG_FailedToAddObjectToApplication | XPRC_INVALID_MONITORING_TYPE e) {
       throw new CreateNewOderTypeException(e.getMessage(), e);
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       throw new CreateNewOderTypeException("RuntimeContext not found: " + e.getMessage(), e);
@@ -164,10 +168,8 @@ public class OrderTypeServicesServiceOperationImpl implements ExtendedDeployment
    * @return
    * @throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY
    * @throws XPRC_INVALID_MONITORING_TYPE
-   * @throws UpdateOrderTypeException 
-   * @throws PersistenceLayerException 
    */
-  private OrdertypeParameter createOrderTypeParameter(OrderType orderType) throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY, XPRC_INVALID_MONITORING_TYPE, UpdateOrderTypeException, PersistenceLayerException {
+  private OrdertypeParameter createOrderTypeParameter(OrderType orderType) throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY, XPRC_INVALID_MONITORING_TYPE {
     
     Integer priority = null;
     if (orderType.getPriority() != null &&
@@ -208,14 +210,12 @@ public class OrderTypeServicesServiceOperationImpl implements ExtendedDeployment
 
     OrdertypeParameter ordertypeParameter = new OrdertypeParameter();
     ordertypeParameter.setOrdertypeName(orderType.getName());
-
-    if (orderType.getPlanningDestination() != null && orderType.getPlanningDestination().getName() != null && orderType.getPlanningDestinationIsCustom()) {
+    
+    if(orderType.getPlanningDestination() != null && orderType.getPlanningDestination().getName() != null && orderType.getPlanningDestinationIsCustom())
       ordertypeParameter.setCustomPlanningDestinationValue(createDestinationValueParameter(orderType.getPlanningDestination()));
-    } else {
-      var dk = new DestinationKey(orderType.getFullQualifiedName(), convertRTC(orderType.getRuntimeContext()));
-      XynaFactory.getInstance().getProcessing().removeDestination(DispatcherIdentification.Planning, dk);
-    }
-
+    else
+      ordertypeParameter.setCustomPlanningDestinationValue(new DestinationValueParameter("DefaultPlanning", XynaOrderServerExtension.ExecutionType.XYNA_FRACTAL_WORKFLOW.getTypeAsString()));
+    
     ordertypeParameter.setCustomExecutionDestinationValue(createDestinationValueParameter(orderType.getExecutionDestination()));
 
     if(orderType.getCleanupDestination() != null && orderType.getCleanupDestination().getName() != null)
