@@ -22,7 +22,7 @@
   </Meta>
   <Libraries>QueueManagementImpl.jar</Libraries>
   <Service Label="QueueManagement" TypeName="QueueManagement">
-    <Operation IsStatic="true" Label="get Queue" Name="getQueue">
+    <Operation IsStatic="true" Label="get Queue" Name="getQueue" RequiresXynaOrder="true">
       <Input>
         <Data Label="QueueName" ReferenceName="QueueName" ReferencePath="xact.queue" VariableName="queue"/>
       </Input>
@@ -33,7 +33,7 @@
         <Exception Label="No Such Queue Exception" ReferenceName="NoSuchQueueException" ReferencePath="xact.queue" VariableName="noSuchQueueException"/>
       </Throws>
       <SourceCode>
-        <CodeSnippet Type="Java">return xact.queue.QueueManagementImpl.getQueue(queue);</CodeSnippet>
+        <CodeSnippet Type="Java">return xact.queue.QueueManagementImpl.getQueue(correlatedXynaOrder, queue);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="list QueueNames" Name="listQueueNames">

@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Check out the code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v6
     - name: Prepare central POM
       run: sed -i '/\<\/\?dependencyManagement\>/d' ./installation/build/pom.xml
     - name: Prune POMs
@@ -42,13 +42,13 @@ jobs:
         cd installation/build
         ./cleanupPoms.py
     - name: Run the Anchore Grype scan action
-      uses: anchore/scan-action@v3
+      uses: anchore/scan-action@v7
       id: scan
       with:
         path: "."
         fail-build: false
         # severity-cutoff: critical
     - name: Upload vulnerability report
-      uses: github/codeql-action/upload-sarif@v2
+      uses: github/codeql-action/upload-sarif@v4
       with:
         sarif_file: ${{ steps.scan.outputs.sarif }}

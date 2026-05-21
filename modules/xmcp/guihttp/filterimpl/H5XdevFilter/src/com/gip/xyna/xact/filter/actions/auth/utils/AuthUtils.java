@@ -61,12 +61,6 @@ public class AuthUtils {
   public final static String COOKIE_FIELD_SESSION_ID = "sessionId";
   public final static String COOKIE_FIELD_SESSION_ID_STS = "__Secure-sessionId";
   
-  /**
-   * @deprecated
-   * deprecated with v9.0.3.0
-   * XynaProperty: xmcp.guihttp.csrf
-   */
-  @Deprecated
   public final static String COOKIE_FIELD_TOKEN = "token";
   public final static String HEADER_FILED_CSRF_TOKEN = "xyna-csrf-token";
   public final static String COOKIE_MARKER_SECURE = "Secure";
@@ -80,9 +74,9 @@ public class AuthUtils {
   private static Object factoryVersionlock = new Object();
   
   
-  public static final XynaPropertyBoolean USE_CSRF_TOKEN = new XynaPropertyBoolean("xmcp.guihttp.csrf", false)
-      .setDefaultDocumentation(DocumentationLanguage.EN, "Add csrf token to login response and validate " + HEADER_FILED_CSRF_TOKEN + " header.")
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Füge csrf token zur login response hinzu und validiere " + HEADER_FILED_CSRF_TOKEN + " heder.");
+  public static final XynaPropertyBoolean USE_CSRF_TOKEN = new XynaPropertyBoolean("xmcp.guihttp.csrf", true)
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Add CSRF token to login response and validate " + HEADER_FILED_CSRF_TOKEN + " header. Requires an HTTPS Trigger.")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "CSRF-Token zur Login-Response hinzufügen und " + HEADER_FILED_CSRF_TOKEN + " Header validieren. Benötigt einen HTTPS-Trigger.");
 
 
   public static void replyModellerLoginRequiredError(HTTPTriggerConnection tc, JsonFilterActionInstance jfai) throws SocketNotAvailableException {

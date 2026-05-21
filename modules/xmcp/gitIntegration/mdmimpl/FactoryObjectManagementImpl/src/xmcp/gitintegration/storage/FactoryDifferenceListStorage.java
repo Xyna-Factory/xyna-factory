@@ -83,7 +83,7 @@ public class FactoryDifferenceListStorage {
     builder.contentType(entry.getContenttype());
     builder.differenceType(FactoryContentProcessingPortal.differenceTypes.get(entry.getDifferencetype()));
     builder.existingItem(portal.parseWorkspaceContentItem(convertToXMLNode(entry.getExistingitem())));
-    builder.id(entry.getEntryid());
+    builder.entryId(entry.getEntryid());
     builder.newItem(portal.parseWorkspaceContentItem(convertToXMLNode(entry.getNewitem())));
     return builder.instance();
   }
@@ -106,9 +106,9 @@ public class FactoryDifferenceListStorage {
     FactoryContentDifferenceStorable result = new FactoryContentDifferenceStorable();
     result.setContenttype(entry.getContentType());
     result.setDifferencetype(entry.getDifferenceType().getClass().getSimpleName());
-    result.setEntryid(entry.getId());
+    result.setEntryid(entry.getEntryId());
     result.setListid(listId);
-    result.setListentryindex(FactoryContentDifferenceStorable.createListentryindex(listId, entry.getId()));
+    result.setListentryindex(FactoryContentDifferenceStorable.createListentryindex(listId, entry.getEntryId()));
 
     XmlBuilder builder = new XmlBuilder();
     portal.writeItem(builder, entry.getExistingItem());

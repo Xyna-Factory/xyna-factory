@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,7 +75,7 @@ public class StatisticsAction implements FilterAction {
     DefaultFilterActionInstance dfai = new DefaultFilterActionInstance();
     StatisticsType type = null;
     try {
-      type = StatisticsType.valueOf( (String)tc.getParas().get("type") );
+      type = StatisticsType.valueOf( (String)tc.getParameters().get("type").get(0) );
     } catch( Exception e ) {
       type = StatisticsType.all;
     }

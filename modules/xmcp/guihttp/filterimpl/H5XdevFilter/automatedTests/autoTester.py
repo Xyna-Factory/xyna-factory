@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Copyright 2023 Xyna GmbH, Germany
+# Copyright 2024 Xyna GmbH, Germany
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -81,6 +81,7 @@ class Factory:
   usename = ""
   password = ""
   cookieFile = ""
+  csrfToken = None
   tags = {}
 
 class RequestTester:
@@ -272,7 +273,7 @@ class RequestTester:
 
 
   def createSubprocessArguments(self, requestType, rdyUrl, rdyPayload, factoryIndexTranslated, writeCookies):
-    result = ['curl', '-k', '-X', requestType, rdyUrl]
+    result = ['curl', '-H', 'Expect:', '-k', '-X', requestType, rdyUrl]
 
     if requestType == "POST" or requestType == "PUT":
       result.append('-d')
@@ -327,13 +328,19 @@ class RequestTester:
       arguments.append(cookieFile)
     arguments.append('--cookie')
     arguments.append(cookieFile)
+    
+    token = self.factories[factoryIndexTranslated].csrfToken
+    if token != None:
+      arguments.append("-H")
+      arguments.append(f"xyna-csrf-token:{token}")
+
 
   # expects factoryIndex as defined by test. Not translated using self.factoryIndexMap
   def createUploadArguments(self, filepath, factoryIndex):
     factoryIndexTranslated = self.factoryIndexMap[factoryIndex]
     self.urlExtension = "/upload"
     rdyUrl = self.formatUrl(factoryIndexTranslated)
-    result = ['curl', "-k", "-F", "file=@" + filepath, rdyUrl]
+    result = ['curl', '-H', 'Expect:', '-k', '-F', "file=@" + filepath, rdyUrl]
 
     self.addCookiesToArguments(result, factoryIndexTranslated, False)
 
@@ -398,7 +405,7 @@ class RequestTester:
       listKeyName = listKeyName[0:listKeyName.index("[")]
     result = 0
     #path step is <something>[ <something> ] ... care: something and /
-    regex = re.compile('\[(.*[^\]])\]', re.IGNORECASE)
+    regex = re.compile(r"\[(.*[^\]])\]", re.IGNORECASE)
     indexDescription = re.search(regex, pathStep)
     try:
       indexDescription = indexDescription.group(0)
@@ -439,6 +446,8 @@ class RequestTester:
     parts = indexDescriptionString.split("&")
     for part in parts:
       data = part.split("=")
+      if len(data) != 2:
+        raise Exception("Failed to split index description. Equal sign not found. indexDescriptionString: " + str(indexDescriptionString))
       tuple = (str(data[0]), str(data[1])) # TODO: trim?
       result.append(tuple)
     return result
@@ -1550,10 +1559,17 @@ class RequestTester:
     payload = '{"username": "' + username + '", "password": "' + password + '", "path": "/"}'
     response = self.executeRequest("/auth/login", 'POST', payload, factoryIndex, True)
     self.checkNoException(response, "/auth/login", [], payload)
+    self.factories[factoryIndexTranslated].csrfToken = self.extractToken(response)
+
+
+  def extractToken(self, loginResponse):
+    data = json.loads(loginResponse)
+    return data["sessionToken"] if "sessionToken" in data else None
 
 
   def logout(self, factoryIndex):
     self.executeRequest("/auth/logout", 'POST', '', factoryIndex, True)
+    self.token = None
 
 
   def logoutForTest(self, testJson):
@@ -1561,9 +1577,6 @@ class RequestTester:
       self.logout(0)
     else:
       requiredFactories = int(testJson["factoryCount"])
-      if len(self.factories) < requiredFactories:
-        raise Exception("Insufficient factories configured. Test requires " + str(requiredFactories) + " factories, but only " + str(len(self.factories)) + " are configured!")
-
       for i in range(0,requiredFactories,1):
         self.logout(i)
 
@@ -1573,8 +1586,6 @@ class RequestTester:
       self.login(0)
     else:
       requiredFactories = int(testJson["factoryCount"])
-      if len(self.factories) < requiredFactories:
-        raise Exception("Insufficient factories configured. Test requires " + str(requiredFactories) + " factories, but only " + str(len(self.factories)) + " are configured!")
       for i in range(0,requiredFactories,1):
         self.login(i)
 
@@ -1590,6 +1601,12 @@ class RequestTester:
   def resolveFactoryConstraints(self, testJson):
     if self.debug:
       print("resolving constraints")
+
+    if "factoryCount" in testJson:
+      requiredFactories = int(testJson["factoryCount"])
+      if len(self.factories) < requiredFactories:
+        raise NoValidFactoryConfigException(f"Insufficient factories configured. Test requires {requiredFactories} factories, but only {len(self.factories)} are configured!")
+
     self.factoryIndexMap = {}
     self.testHasConstraints = False
     factoryCount = int(testJson["factoryCount"]) if "factoryCount" in testJson else 1
@@ -1703,7 +1720,7 @@ class RequestTester:
           self.resolveFactoryConstraints(testcontent)
         except NoValidFactoryConfigException as e:
           self.fails = self.fails + 1
-          self.failedList.append(path + test + "(from "+ path + seriesFile + ") - no valid factory configuration found.")
+          self.failedList.append(f"{path}{test} (from {path}{seriesFile}) - {e}")
           continue
 
         self.loginForTest(testcontent)

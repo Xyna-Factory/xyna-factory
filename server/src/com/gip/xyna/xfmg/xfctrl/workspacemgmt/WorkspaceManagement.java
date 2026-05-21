@@ -279,12 +279,16 @@ public class WorkspaceManagement extends FunctionGroup{
     return createWorkspace(workspace, null);
   }
   
+  public CreateWorkspaceResult createWorkspace(Workspace workspace, String user) throws XFMG_CouldNotBuildNewWorkspace{
+    return createWorkspace(workspace, user, null);
+  }
+  
   /**
    * Legt einen neuen Workspace an und kopiert dabei die Factory Komponenten aus dem
    * Default-Workspace. Falls user ungleich null, wird ein Multi-User-Event geschickt.
    * @throws XFMG_CouldNotBuildNewWorkspace
    */
-  public CreateWorkspaceResult createWorkspace(Workspace workspace, String user) throws XFMG_CouldNotBuildNewWorkspace{
+  public CreateWorkspaceResult createWorkspace(Workspace workspace, String user, Long preferredRevision) throws XFMG_CouldNotBuildNewWorkspace{
     CreateWorkspaceResult result = new CreateWorkspaceResult();
     
     if (illegalWorkspaceNames.contains(workspace.getName())) {
@@ -302,7 +306,7 @@ public class WorkspaceManagement extends FunctionGroup{
     try {
       //neue Revision anfordern
       RevisionManagement revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
-      revision = revisionManagement.buildNewRevisionForNewWorkspace(workspace);
+      revision = revisionManagement.buildNewRevisionForNewWorkspace(workspace, preferredRevision);
       
       //neues Revision-Verzeichnis anlegen
       RevisionManagement.createNewRevisionDirectory(revision);

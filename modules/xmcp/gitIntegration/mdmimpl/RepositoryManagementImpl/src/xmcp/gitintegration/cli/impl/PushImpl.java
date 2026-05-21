@@ -20,6 +20,10 @@ package xmcp.gitintegration.cli.impl;
 
 
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 import xmcp.gitintegration.cli.generated.Push;
@@ -33,7 +37,10 @@ public class PushImpl extends XynaCommandImplementation<Push> {
   public void execute(OutputStream statusOutputStream, Push payload) throws XynaException {
     RepositoryInteraction repoInteraction = new RepositoryInteraction();
     try {
-      repoInteraction.push(payload.getRepository(), payload.getMessage(), payload.getDryrun(), UserManagementStorage.CLI_USERNAME);
+      List<String> list = (payload.getFilePatterns() == null) ? new ArrayList<String>() : 
+                                                                Arrays.asList(payload.getFilePatterns());
+      repoInteraction.push(payload.getRepository(), payload.getMessage(), payload.getDryrun(), 
+                           UserManagementStorage.CLI_USERNAME, list);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

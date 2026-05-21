@@ -81,6 +81,23 @@ Example: "testObject.id"</Documentation>
     </Meta>
   </Data>
   <Data Label="Transformation" VariableName="transformation" ReferenceName="ColumnTransformation" ReferencePath="xmcp.tables.datatypes.transformation"/>
+  <Data Label="filter multiselect" VariableName="filterMultiselect">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
+  <Data Label="align" VariableName="align">
+      <Meta>
+        <Type>String</Type>
+        <Documentation>Alignment of content and header of table column.
+  Values: left, right, center (if empty or undefined, default is left)</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="pronunciation lang" VariableName="pronunciationLang">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
   <Service Label="Table Column" TypeName="TableColumn">
     <Operation Label="Get Transformed Filter" Name="getTransformedFilter" IsStatic="false">
       <Input>

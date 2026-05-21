@@ -23,7 +23,6 @@ import com.gip.xyna.xact.filter.XmomGuiAction;
 import com.gip.xyna.xact.filter.json.ObjectIdentifierJson.Type;
 import com.gip.xyna.xact.filter.session.XMOMGui;
 import com.gip.xyna.xact.filter.session.XMOMGuiRequest.Operation;
-import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
 
 
@@ -63,7 +62,7 @@ public class ServiceGroupsPathNameCloseAction extends XmomGuiAction {
   }
 
   @Override
-  protected boolean isEditAction(HTTPTriggerConnection tc) {
+  protected boolean isEditAction(Method method) {
     return false;
   }
 

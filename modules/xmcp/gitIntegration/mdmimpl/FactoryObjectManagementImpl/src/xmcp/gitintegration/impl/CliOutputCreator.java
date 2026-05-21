@@ -80,7 +80,7 @@ public class CliOutputCreator {
 
   public String createOutput(FactoryContentDifference diff, FactoryContentProcessingPortal portal) {
     StringBuilder sb = new StringBuilder();
-    sb.append(diff.getId()).append(" ");
+    sb.append(diff.getEntryId()).append(" ");
     sb.append(diff.getContentType().toString()).append(" ");
     sb.append(diff.getDifferenceType().getClass().getSimpleName()).append(" ");
     String differenceString = createDifferenceString(diff, portal);

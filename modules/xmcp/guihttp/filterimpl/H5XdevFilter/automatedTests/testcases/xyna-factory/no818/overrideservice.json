@@ -1,0 +1,298 @@
+{
+  "meta": {
+    "Test Reference": "https://github.com/Xyna-Factory/xyna-factory/issues/818",
+    "created": "23.4.2024",
+    "updated": "23.4.2024"
+  },
+  "operations": [
+    {
+      "operation": "setRandom",
+      "variable": "!rnd!"
+    },
+    {
+      "data": [
+        {
+          "!default%20workspace!": "default%20workspace"
+        },
+        {
+          "!New_Data_Type!": "New Data Type"
+        },
+        {
+          "!ParentDT!": "ParentDT"
+        },
+        {
+          "!Service1!": "Service1"
+        },
+        {
+          "!Service2!": "Service2"
+        },
+        {
+          "!Text!": "Text"
+        },
+        {
+          "!base.Text!": "base.Text"
+        },
+        {
+          "!abstract!": "abstract"
+        },
+        {
+          "!autoTest.generated!": "autoTest.generated.!rnd!"
+        }
+      ],
+      "operation": "multiSet"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Data_Type!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1713881364055.NewDataType!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1713881364055!",
+      "variable": "!new_1713881364055.NewDataType!"
+    },
+    {
+      "modification": {
+        "divider": ".",
+        "keep": "after",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!NewDataType!",
+      "variable": "!new_1713881364055.NewDataType!"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=memberMethods]/id",
+      "targetVariable": "!memberMethodsArea!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/id",
+      "targetVariable": "!dt!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=overriddenMethods]/id",
+      "targetVariable": "!overriddenMethodsArea!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!ParentDT!",
+        "revision": 0
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1713881364055!/!NewDataType!/objects/typeInfoArea/change"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "content": {
+          "label": "Service",
+          "type": "memberMethod"
+        },
+        "index": -1,
+        "revision": 1
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1713881364055!/!NewDataType!/objects/!memberMethodsArea!/insert"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!dt!]/areas/$list[name=memberMethods]/items/$list[name=service]/id",
+      "targetVariable": "!memberMethod0!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!dt!]/areas/$list[name=memberMethods]/items/$list[name=service]/implementationType",
+      "targetVariable": "!codedService!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!Service1!",
+        "revision": 2
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1713881364055!/!NewDataType!/objects/!memberMethod0!/change"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "content": {
+          "label": "Service",
+          "type": "memberMethod"
+        },
+        "index": -1,
+        "revision": 3
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1713881364055!/!NewDataType!/objects/!memberMethodsArea!/insert"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!dt!]/areas/$list[name=memberMethods]/items/$list[name=service1]/areas/$list[name=input]/id",
+      "targetVariable": "!methodVarArea1_input!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!dt!]/areas/$list[name=memberMethods]/items/$list[name=service1]/id",
+      "targetVariable": "!memberMethod1!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!Service2!",
+        "revision": 4
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1713881364055!/!NewDataType!/objects/!memberMethod0!/change"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "content": {
+          "fqn": "!base.Text!",
+          "isList": false,
+          "label": "!Text!",
+          "type": "variable"
+        },
+        "index": -1,
+        "revision": 5
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1713881364055!/!NewDataType!/objects/!methodVarArea1_input!/insert"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "implementationType": "!abstract!",
+        "revision": 6
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1713881364055!/!NewDataType!/objects/!memberMethod1!/change"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "implementationType": "!abstract!",
+        "revision": 7
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1713881364055!/!NewDataType!/objects/!memberMethod0!/change"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "force": false,
+        "label": "!ParentDT!",
+        "path": "!autoTest.generated!",
+        "revision": 8
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1713881364055!/!NewDataType!/save"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "updates/$list[id=!dt!]/fqn",
+      "targetVariable": "!autoTest.generated.ParentDT!",
+      "unquoteResult": true
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": 8
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!autoTest.generated!/!ParentDT!/deploy"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "label": "!New_Data_Type!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes"
+    },
+    {
+      "operation": "read",
+      "pathInResponse": "xmomItem/fqn",
+      "targetVariable": "!new_1713881404520.NewDataType!",
+      "unquoteResult": true
+    },
+    {
+      "modification": {
+        "direction": "inversed",
+        "divider": ".",
+        "keep": "before",
+        "operation": "substring"
+      },
+      "operation": "modification",
+      "targetVariable": "!new_1713881404520!",
+      "variable": "!new_1713881404520.NewDataType!"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "baseType": "!autoTest.generated.ParentDT!",
+        "revision": 0
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1713881404520!/!NewDataType!/objects/typeInfoArea/change"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "index": -1,
+        "relativePosition": "inside",
+        "revision": 1,
+        "targetId": "!overriddenMethodsArea!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1713881404520!/!NewDataType!/objects/!memberMethod0!/move"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "implementationType": "!codedService!",
+        "revision": 2
+      },
+      "requestType": "PUT",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1713881404520!/!NewDataType!/objects/!memberMethod0!/change"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "index": -1,
+        "relativePosition": "inside",
+        "revision": 3,
+        "targetId": "!overriddenMethodsArea!"
+      },
+      "requestType": "POST",
+      "url": "/runtimeContext/!default%20workspace!/xmom/datatypes/!new_1713881404520!/!NewDataType!/objects/!memberMethod1!/move"
+    }
+  ]
+}

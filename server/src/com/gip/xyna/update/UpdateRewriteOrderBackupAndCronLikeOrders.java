@@ -123,7 +123,8 @@ public class UpdateRewriteOrderBackupAndCronLikeOrders {
   private void updateCronLikeOrder(ODSConnection conHis) throws PersistenceLayerException {
     try {
       FactoryWarehouseCursor<CronLikeOrderIgnoringSerialVersionUID> cursorCrons =
-          conHis.getCursor(sqlGetAllCronLikeOrders, new Parameter(), CronLikeOrderIgnoringSerialVersionUID.reader, 100);
+          conHis.getCursor(sqlGetAllCronLikeOrders, CronLikeOrder.TABLE_NAME, new Parameter(), 
+                           CronLikeOrderIgnoringSerialVersionUID.reader, 100);
       for (List<CronLikeOrderIgnoringSerialVersionUID> nextOBs : cursorCrons.batched(100)) {
         // FIXME catch the exception and continue with the next batch? reduce batch size to decrease impact of broken entries?
         cursorCrons.checkForExceptions();
@@ -144,7 +145,7 @@ public class UpdateRewriteOrderBackupAndCronLikeOrders {
   private void updateOrderBackup(ODSConnection conDef) throws PersistenceLayerException {
     try {
       FactoryWarehouseCursor<OrderInstanceBackupIgnoringSerialVersionUID> cursorOIB =
-          conDef.getCursor(sqlGetAllOrderBackups, new Parameter(),
+          conDef.getCursor(sqlGetAllOrderBackups, OrderInstanceBackup.TABLE_NAME, new Parameter(),
                            OrderInstanceBackupIgnoringSerialVersionUID.reader, 100);
       for (List<OrderInstanceBackupIgnoringSerialVersionUID> nextOBs : cursorOIB.batched(100)) {
         // FIXME catch the exception and continue with the next batch? reduce batch size to decrease impact of broken entries?

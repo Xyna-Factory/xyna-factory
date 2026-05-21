@@ -20,11 +20,16 @@ package xmcp.gitintegration.cli.impl;
 
 
 import java.io.OutputStream;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xmcp.xfcli.ReturnCode;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 import xmcp.gitintegration.cli.generated.Pull;
 import xmcp.gitintegration.impl.RepositoryInteraction;
-import xmcp.gitintegration.impl.RepositoryInteraction.GitDataContainer;
+import xmcp.gitintegration.repository.PullOutput;
+import xmcp.gitintegration.repository.WorkspaceConnectionData;
 import xmcp.gitintegration.storage.UserManagementStorage;
 
 
@@ -34,11 +39,53 @@ public class PullImpl extends XynaCommandImplementation<Pull> {
   public void execute(OutputStream statusOutputStream, Pull payload) throws XynaException {
     RepositoryInteraction repoInteraction = new RepositoryInteraction();
     try {
-      GitDataContainer result = repoInteraction.pull(payload.getRepository(), payload.getDryrun(), UserManagementStorage.CLI_USERNAME);
-      writeToCommandLine(statusOutputStream, result);
+      PullOutput result = repoInteraction.pull(payload.getRepository(), payload.getDryrun(), UserManagementStorage.CLI_USERNAME);
+      writeToCommandLine(statusOutputStream, pullOutputToString(result));
+      if (result.getException() != null && !result.getException().isEmpty()) {
+        writeEndToCommandLine(statusOutputStream, ReturnCode.GENERAL_ERROR);
+      } else if (result.getWarnings() != null && !result.getWarnings().isEmpty()) {
+        writeEndToCommandLine(statusOutputStream, ReturnCode.SUCCESS_WITH_PROBLEM);
+      } else {
+        writeEndToCommandLine(statusOutputStream, ReturnCode.SUCCESS);
+      }
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+  }
+
+
+  private String pullOutputToString(PullOutput output) {
+    StringBuilder sb = new StringBuilder();
+    List<String> execString = output.getExecutions();
+    List<String> localDiffString = output.getLocalChanges();
+    List<String> remoteDiffString = output.getRemoteChanges();
+    List<String> diffListIds = output.getOpenedWorkspaceDiffLists();
+    List<? extends WorkspaceConnectionData> newWorkspaces = output.getNewWorkspaces();
+    sb.append("Data for repository: ").append(output.getRepository()).append("\n");
+    if(output.getException() != null) {
+      sb.append("An exception ocurred: ").append(output.getException()).append("\n");
+    }
+    appendField(sb, "Ldif", localDiffString);
+    appendField(sb, "Rdif", remoteDiffString);
+    appendField(sb, "Exec", execString);
+    appendField(sb, "Conf", output.getConflicts());
+    appendField(sb, "Revt", output.getReverts());
+    if (output.getWarnings() != null && !output.getWarnings().isEmpty()) {
+      appendField(sb, "Warn", output.getWarnings());
+    }
+    if(diffListIds != null && !diffListIds.isEmpty()) {
+      appendField(sb, "DiffLists", diffListIds);
+    }
+    if(newWorkspaces != null && !newWorkspaces.isEmpty()) {
+      List<String> workspaces = newWorkspaces.stream().map(x -> x.getWorkspace()).collect(Collectors.toList());
+      appendField(sb, "New Workspaces", workspaces);
+    }
+    return sb.toString();
+  }
+  
+  
+  private void appendField(StringBuilder sb, String name, List<String> data) {
+    sb.append("  ").append(name).append(": ").append(data.size()).append(": ").append(String.join(", ", data)).append("\n");
   }
 
 }

@@ -27,7 +27,9 @@
 
     <target name="build">
 
-        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/QueueImpl">
+      <antcall target="prepare-mdm-jar-if-missing" />
+
+      <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/QueueImpl">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/QueueManagementImpl">
@@ -35,6 +37,13 @@
         </ant>
          
         <antcall target="build-application" />
+    </target>
+
+    <target name="prepare-mdm-jar">
+        <antcall target="create-mdm-jar" />
+        <supply-mdm-jar type="mdmimpl" name="QueueImpl" />
+        <supply-mdm-jar type="mdmimpl" name="QueueManagementImpl" />
+        <delete file="${basedir}/mdm.jar" />
     </target>
 
     <import file="${root.dir}/installation/build/buildApplication.xml" />

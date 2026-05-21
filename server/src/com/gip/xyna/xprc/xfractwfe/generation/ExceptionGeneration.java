@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -390,6 +391,9 @@ public class ExceptionGeneration extends DomOrExceptionGenerationBase {
     try {
       parser = ExceptionStorageParserFactory.getParser(rootElement.getOwnerDocument());
       exceptionStorage = parser.parse(false, 0);
+      if (exceptionStorage instanceof ExceptionStorageInstance_1_1) {
+        ((ExceptionStorageInstance_1_1) exceptionStorage).setFqClassNameAdapter(new ExceptionGenFqClassNameAdapter());
+      }
     } catch (XSDNotFoundException e) {
       throw new RuntimeException(e);
     }
@@ -431,6 +435,9 @@ public class ExceptionGeneration extends DomOrExceptionGenerationBase {
       if (documentationElement != null) {
         setDocumentation(XMLUtils.getTextContent(documentationElement));
       }
+      
+      List<String> knownMetaTags = Arrays.asList(GenerationBase.EL.DOCUMENTATION);
+      unknownMetaTagsComponent.parseUnknownMetaTags(rootElement, knownMetaTags);
     }
   }
 
@@ -499,9 +506,17 @@ public class ExceptionGeneration extends DomOrExceptionGenerationBase {
     boolean simpleListRequired = false;
     boolean xynaObjectListRequired = false;
     
+    Set<String> importedSimpleClasseNames = new HashSet<String>();
+    importedSimpleClasseNames.add(getSimpleClassName());
+
     for (AVariable v : memberVariables) {
       if (!v.isJavaBaseType()) {
-        imports.add(v.getFQClassName());
+        String fqClassName = v.getFQClassName();
+        String currentSimpleClassName = fqClassName.substring(fqClassName.lastIndexOf(".") + 1);
+        if (!importedSimpleClasseNames.contains(currentSimpleClassName)) {
+          imports.add(fqClassName);
+          importedSimpleClasseNames.add(currentSimpleClassName);
+        }
         if(v.isList) {
           xynaObjectListRequired = true;
         }
@@ -693,6 +708,7 @@ public class ExceptionGeneration extends DomOrExceptionGenerationBase {
     setLabel(label);
 
     exceptionStorage = new ExceptionStorageInstance_1_1();
+    ((ExceptionStorageInstance_1_1) exceptionStorage).setFqClassNameAdapter(new ExceptionGenFqClassNameAdapter());
     exceptionEntry = new ExceptionEntry_1_1(new HashMap<String, String>(), getOriginalSimpleName(), getOriginalPath(), null);
     exceptionStorage.addEntry(exceptionEntry);
 

@@ -18,6 +18,10 @@
 
 package com.gip.xyna.xnwh.persistence.memory;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -301,7 +305,7 @@ public abstract class MemoryPersistenceLayerConnection implements PersistenceLay
     synchronized (deleteAllCommandCache) {
       pc = deleteAllCommandCache.get(klass);
       if (pc == null) {
-        pc = prepareCommand(new Command("delete from " + t.getName()));
+        pc = prepareCommand(new Command("delete from " + t.getName(), t.getName()));
         deleteAllCommandCache.put(klass, pc);
       }
     }
@@ -569,9 +573,35 @@ public abstract class MemoryPersistenceLayerConnection implements PersistenceLay
     }
     List<T> clonedResults = new ArrayList<T>();
     for( T r : resultList ) {
+      if(!r.getClass().getClassLoader().equals(klass.getClassLoader())) {
+        T updated = convert(klass, r);
+        clonedResults.add(updated);
+        continue;
+      }
       clonedResults.add( Storable.clone( r ) );
     }
     return clonedResults;
+  }
+
+
+  @SuppressWarnings("unchecked")
+  private <T extends Storable<?>> T convert(Class<T> klass, T toConvert) {
+    T updated = null;
+    try {
+      try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {
+          oos.writeObject(toConvert);
+          oos.flush();
+          oos.close();
+          try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()))) {
+            updated = (T) ois.readObject();
+          }
+        }
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    return updated;
   }
 
 
@@ -766,11 +796,11 @@ public abstract class MemoryPersistenceLayerConnection implements PersistenceLay
     }
 
     TableObject<Storable, MemoryRowData<Storable>> t = checkTable(table);
-    // FIXME "forUpdate" korrekt ermitteln und berï¿½cksichtigen
+    // FIXME "forUpdate" korrekt ermitteln und berücksichtigen
     E result = t.queryOneRow(getContainingPersistenceLayer(), queryForMemory, parameter, false);
 
     if (queryForMemory instanceof PreparedCountQueryForMemory) {
-      // FIXME count result unter Berï¿½cksichtigung der Transaktions-Daten updaten
+      // FIXME count result unter Berücksichtigung der Transaktions-Daten updaten
     }
     return result;
 

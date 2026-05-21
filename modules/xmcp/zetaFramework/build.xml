@@ -31,15 +31,15 @@
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
 
-        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="TableServiceGroupImpl">
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/TableServiceGroupImpl">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
 
-        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="TableUtilsImpl">
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/TableUtilsImpl">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
 
-        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="ISO8601ToUnixTimestampTransformationImpl">
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/ISO8601ToUnixTimestampTransformationImpl">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
 
@@ -52,9 +52,9 @@
 
     <target name="prepare-mdm-jar">
         <antcall target="create-mdm-jar" />
-        <supply-mdm-jar type="." name="ISO8601ToUnixTimestampTransformationImpl" />
-        <supply-mdm-jar type="." name="TableServiceGroupImpl" />
-        <supply-mdm-jar type="." name="TableUtilsImpl" />
+        <supply-mdm-jar type="." name="mdmimpl/ISO8601ToUnixTimestampTransformationImpl" />
+        <supply-mdm-jar type="." name="mdmimpl/TableServiceGroupImpl" />
+        <supply-mdm-jar type="." name="mdmimpl/TableUtilsImpl" />
         <supply-mdm-jar type="." name="mdmimpl/PluginManagementImpl" />
         <delete file="${basedir}/mdm.jar" />
     </target>

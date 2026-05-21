@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -591,6 +590,7 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
   protected String label;
   protected String documentation;
   protected boolean isList = false;
+  protected boolean isNull = false;
   // if this data element is child of another one
   private AVariable parentVariableInXml;
 
@@ -631,7 +631,7 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
   
   private boolean isUserOutput = false;
 
-  private List<Element> unknownMetaTags;
+  private UnknownMetaTagsComponent unknownMetaTagsComponent = new UnknownMetaTagsComponent();
   
   private final Set<String> sourceIds = new HashSet<>();
   private String targetId = null;
@@ -658,6 +658,7 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
     this.label = original.label;
     this.documentation = original.documentation;
     this.isList = original.isList;
+    this.isNull = original.isNull;
     this.parentVariableInXml = original.parentVariableInXml;
     this.className = original.className;
     this.fqClassName = original.fqClassName;
@@ -872,9 +873,10 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
     label = e.getAttribute(GenerationBase.ATT.LABEL);
     this.parentVariableInXml = parent;
     isList = XMLUtils.isTrue(e, GenerationBase.ATT.ISLIST);
+    isNull = XMLUtils.isTrue(e, GenerationBase.ATT.ISNULL);
     prototype = XMLUtils.isTrue(e, GenerationBase.ATT.ABSTRACT);
 
-    parseUnknownMetaTags(e, Arrays.asList(EL.PERSISTENCE, EL.USEROUTPUT));
+    parseUnknownMetaTags(e, Arrays.asList(EL.PERSISTENCE, EL.USEROUTPUT, GenerationBase.EL.DOCUMENTATION));
     Element meta = XMLUtils.getChildElementByName(e, GenerationBase.EL.META);
     if (meta != null) {
       persistenceTypes = PersistenceTypeInformation.parse(meta);
@@ -939,41 +941,38 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
   public final boolean isList() {
     return isList;
   }
-  
+
+  public final boolean isNull() {
+    return isNull;
+  }
+
   public final boolean isPrototype() {
     return prototype;
   }
 
   @Override
   public void parseUnknownMetaTags(Element element, List<String> knownMetaTags) {
-    Element meta = XMLUtils.getChildElementByName(element, GenerationBase.EL.META);
-    unknownMetaTags = XMLUtils.getFilteredSubElements(meta, knownMetaTags);
+    unknownMetaTagsComponent.parseUnknownMetaTags(element, knownMetaTags);
   }
 
   @Override
-  public List<Element> getUnknownMetaTags() {
-    return unknownMetaTags;
+  public List<String> getUnknownMetaTags() {
+    return unknownMetaTagsComponent.getUnknownMetaTags();
   }
 
   @Override
-  public void setUnknownMetaTags(List<Element> unknownMetaTags) {
-    this.unknownMetaTags = unknownMetaTags;
+  public void setUnknownMetaTags(List<String> unknownMetaTags) {
+    unknownMetaTagsComponent.setUnknownMetaTags(unknownMetaTags);
   }
 
   @Override
   public boolean hasUnknownMetaTags() {
-    return ( (unknownMetaTags != null) && (unknownMetaTags.size() > 0) );
+    return unknownMetaTagsComponent.hasUnknownMetaTags();
   }
 
   @Override
   public void appendUnknownMetaTags(XmlBuilder xml) {
-    if (unknownMetaTags == null) {
-      return;
-    }
-
-    for (Element tag : unknownMetaTags) {
-      xml.append(tag);
-    }
+    unknownMetaTagsComponent.appendUnknownMetaTags(xml);
   }
 
   public final String getFQClassName() {
@@ -1735,9 +1734,13 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
     }
     this.isList = isList;
   }
-  
+
   public void setIsList(boolean isList) {
     this.isList = isList;
+  }
+
+  public void setIsNull(boolean isNull) {
+    this.isNull = isNull;
   }
 
   public void setLabel(String label) {

@@ -597,17 +597,20 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
     return ChangeResult.Succeeded;
   }
 
-  
-  public ChangeResult removeDependency(RuntimeDependencyContext owner, RuntimeDependencyContext dependency, String user) throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
+  public ChangeResult removeDependency(RuntimeDependencyContext owner, RuntimeDependencyContext dependency, String user, boolean force) throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
     List<RuntimeDependencyContext> newDependencies = new ArrayList<RuntimeDependencyContext>(getDependencies(owner));
     if (!newDependencies.contains(dependency)) {
       return ChangeResult.NoChange;
     }
     
     newDependencies.remove(dependency);
-    modifyDependencies(owner, newDependencies, user);
+    modifyDependencies(owner, newDependencies, user, force, true);
     
     return ChangeResult.Succeeded;
+  }
+  
+  public ChangeResult removeDependency(RuntimeDependencyContext owner, RuntimeDependencyContext dependency, String user) throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
+    return removeDependency(owner, dependency, user, false);
   }
   
   
@@ -865,6 +868,9 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
 
         //invalidate serialization for changed revisions (owner + parents)
         XynaFactory.getInstance().getProcessing().getXmomSerialization().invalidateRevisions(parentRevs);
+        
+        //invalidate pythonCodeSnippetManagement for changed revisions (owner + parents)
+        XynaFactory.getInstance().getProcessing().getXynaPythonSnippetManagement().invalidateRevisions(parentRevs);
       } else { 
         if (owner instanceof ApplicationDefinition) {
           addDependenciesToParentWorkspace((ApplicationDefinition)owner, newDependencies, user, force, publishChanges);
@@ -1121,6 +1127,9 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
       
       //invalidate serialization for changed revisions (owner + parents)
       XynaFactory.getInstance().getProcessing().getXmomSerialization().invalidateRevisions(parentRevisions);
+      
+      //invalidate pythonCodeSnippetManagement for changed revisions (owner + parents)
+      XynaFactory.getInstance().getProcessing().getXynaPythonSnippetManagement().invalidateRevisions(parentRevisions);
 
         if (publishChanges) {
           for (RuntimeContextDependencyChange change : changes) {

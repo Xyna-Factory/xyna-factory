@@ -30,7 +30,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.w3c.dom.Element;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.collections.Pair;
@@ -193,7 +192,7 @@ public class CopyOperation extends ModifyOperationBase<CopyJson> {
 
     cpyAVar.setLabel(orgAVar.getLabel());
     if (orgAVar.getUnknownMetaTags() != null) {
-      List<Element> unknownMetaTags = new ArrayList<Element>(orgAVar.getUnknownMetaTags());
+      List<String> unknownMetaTags = new ArrayList<String>(orgAVar.getUnknownMetaTags());
       cpyAVar.setUnknownMetaTags(unknownMetaTags);
     }
     if (orgAVar.getPersistenceTypes() != null) {
@@ -667,9 +666,9 @@ public class CopyOperation extends ModifyOperationBase<CopyJson> {
   }
 
   public static void copyUnknownMetaTags(HasMetaTags source, HasMetaTags target) {
-    List<Element> sourceUnknownMetaTags = source.getUnknownMetaTags();
+    List<String> sourceUnknownMetaTags = source.getUnknownMetaTags();
     if(sourceUnknownMetaTags != null) {
-      List<Element> targetUnknownMetaTags = new ArrayList<>(sourceUnknownMetaTags.size());
+      List<String> targetUnknownMetaTags = new ArrayList<>(sourceUnknownMetaTags.size());
       targetUnknownMetaTags.addAll(sourceUnknownMetaTags);
       target.setUnknownMetaTags(targetUnknownMetaTags);
     }

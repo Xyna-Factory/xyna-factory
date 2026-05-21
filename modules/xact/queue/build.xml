@@ -21,9 +21,9 @@
     <property name="target.dir" value="${basedir}/deploy/" />
 
     <target name="build-all">
+        <ant antfile="build.xml" target="build" dir="queue" />
         <ant antfile="build.xml" target="build" dir="activemq" />
         <ant antfile="build.xml" target="build" dir="oracleaq" />
-        <ant antfile="build.xml" target="build" dir="queue" />
         <ant antfile="build.xml" target="build" dir="webspheremq" />
     </target>
 

@@ -41,12 +41,24 @@ public interface ODSConnection extends Connection {
       throws PersistenceLayerException;
 
 
+  @Deprecated
   public <T extends Storable<?>> FactoryWarehouseCursor<T> getCursor(String sqlQuery, Parameter parameters, ResultSetReader<T> rsr, int cacheSize)
       throws PersistenceLayerException;
 
+  public default <T extends Storable<?>> FactoryWarehouseCursor<T> getCursor(String sqlQuery, String tableName, Parameter parameters, ResultSetReader<T> rsr, int cacheSize)
+      throws PersistenceLayerException {
+    return getCursor(sqlQuery, tableName, parameters, rsr, cacheSize);
+  }
+
+  
+  @Deprecated
   public <T extends Storable<?>> FactoryWarehouseCursor<T> getCursor(String sqlQuery, Parameter parameters, ResultSetReader<T> rsr,
                                                                      int cacheSize, PreparedQueryCache cache) throws PersistenceLayerException;
 
+  public default <T extends Storable<?>> FactoryWarehouseCursor<T> getCursor(String sqlQuery, String tableName, Parameter parameters, ResultSetReader<T> rsr,
+                                                                     int cacheSize, PreparedQueryCache cache) throws PersistenceLayerException {
+    return getCursor(sqlQuery, parameters, rsr, cacheSize, cache);
+  }
 
   public ODSConnectionType getConnectionType();
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.gip.xyna</groupId>
 	<artifactId>xynafactory</artifactId>
-	<version>9.1.0.0</version>
+	<version>10.8.0.0</version>
 	<packaging>jar</packaging>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -36,6 +36,10 @@
 		<maven.compiler.target>11</maven.compiler.target>
 	</properties>
 	<dependencies>
+		<dependency>
+			<groupId>com.gip.xyna</groupId>
+			<artifactId>cligenerator</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>commons-cli</groupId>
 			<artifactId>commons-cli</artifactId>
@@ -47,17 +51,12 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.jdt</groupId>
-			<artifactId>ecj</artifactId>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.mindrot</groupId>
 			<artifactId>jbcrypt</artifactId>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.jcraft</groupId>
+			<groupId>com.github.mwiede</groupId>
 			<artifactId>jsch</artifactId>
 			<scope>compile</scope>
 		</dependency>
@@ -116,11 +115,6 @@
 		</dependency>
 		<dependency>
 			<groupId>com.gip.xyna</groupId>
-			<artifactId>XynaJavaSerializationPersistenceLayer</artifactId>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.gip.xyna</groupId>
 			<artifactId>xynautils-database</artifactId>
 			<scope>compile</scope>
 		</dependency>
@@ -140,8 +134,8 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.gip.xyna</groupId>
-			<artifactId>xynafactoryCLIGenerator</artifactId>
+			<groupId>black.ninia</groupId>
+			<artifactId>jep</artifactId>
 			<scope>compile</scope>
 		</dependency>
 		<!-- Test -->
@@ -176,24 +170,12 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.gip.xyna</groupId>
-			<artifactId>OraclePersistenceLayer</artifactId>
-			<scope>test</scope>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.gip.xyna</groupId>
-			<artifactId>XynaLocalMemoryPersistenceLayer</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.gip.xyna</groupId>
-			<artifactId>XynaMemoryPersistenceLayer</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.gip.xyna</groupId>
-			<artifactId>XynaXMLShellPersistenceLayer</artifactId>
-			<scope>test</scope>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-nop</artifactId>
 		</dependency>
 	</dependencies>
 </project>

@@ -22,4 +22,29 @@
   <Data IsList="true" Label="URL-Queries" ReferenceName="URLPathQuery" ReferencePath="xact.http" VariableName="uRLQueries"/>
   <Data Label="Header" ReferenceName="Header" ReferencePath="xact.http" VariableName="header"/>
   <Data Label="Body" ReferenceName="Document" ReferencePath="xact.templates" VariableName="body"/>
+  <Data Label="Request Path" VariableName="requestPath">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="HTTP Method" VariableName="hTTPMethod">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="Custom Preprocessing Parameters" VariableName="customPreprocessingParameters">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Trigger Port" VariableName="triggerPort">
+    <Meta>
+      <Type>int</Type>
+    </Meta>
+  </Data>
+  <Data Label="Sender Ip" VariableName="senderIp">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
 </DataType>

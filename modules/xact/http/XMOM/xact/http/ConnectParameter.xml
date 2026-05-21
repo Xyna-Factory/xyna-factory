@@ -27,4 +27,9 @@
       <Type>String</Type>
     </Meta>
   </Data>
+  <Data Label="Retries" VariableName="retries">
+    <Meta>
+      <Type>int</Type>
+    </Meta>
+  </Data>
 </DataType>

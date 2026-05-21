@@ -27,7 +27,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gip.xyna</groupId>
     <artifactId>PGPSharedLib</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -42,7 +42,12 @@
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-ext-jdk18on</artifactId>
+            <artifactId>bcprov-jdk18on</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcutil-jdk18on</artifactId>
             <scope>runtime</scope>
         </dependency>
         <dependency>

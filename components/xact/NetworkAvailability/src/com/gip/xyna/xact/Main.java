@@ -54,7 +54,6 @@ public class Main implements DemonWorker {
   public static final OID OID_STATE = new OID(".1.3.6.1.4.1.28747.1.11.4.1.2.1");
   
   private static final String PROPERTY_FILENAME = "networkAvailability.properties";
-  private static final String LOGFILE_DEFAULT = PROPERTY_FILENAME;
   private static final String DEMON_PREFIX = "demon";
   static Logger logger = Logger.getLogger(NetworkAvailability.class.getName());
 
@@ -82,8 +81,6 @@ public class Main implements DemonWorker {
   public static void main(String[] args) throws IOException {
     String pathToProperties = (args.length > 0 ? args[0] : "./config") + "/";
 
-    PropertyConfigurator.configure(pathToProperties + LOGFILE_DEFAULT);
-
     propertiesPath = pathToProperties + PROPERTY_FILENAME;
     DemonProperties.readProperties(propertiesPath);
 
@@ -100,7 +97,7 @@ public class Main implements DemonWorker {
       demon.startDemonWorker();
 
     } catch (Exception e) {
-      logger.error("Exception while initializing DhcpAdapterDemon", e);
+      logger.error("Exception while initializing NetworkAvailabilityDemon", e);
       logger.error("Demon will be stopped now");
       main.terminate();
     }
@@ -136,7 +133,7 @@ public class Main implements DemonWorker {
 
 
   public void logStatus(Logger logger2) {
-    logger.info(na.getState());
+    logger.info("NAD: State is:"+na.getState());
   }
 
 
@@ -217,6 +214,7 @@ public class Main implements DemonWorker {
             pu.killProcess(p);     
             throw (IOException) new IOException("exception waiting for process").initCause(e);
           } catch (TimeoutException e) {
+            logger.info("Check command tooks longer than "+timeoutFactoryCheck+" milliseconds, now killing it");
             pu.killProcess(p);            
             return false;
           }
@@ -250,6 +248,7 @@ public class Main implements DemonWorker {
             logger.warn("command to be execute after state change could not be executed successfully.", e);
             return false;
           } catch (InterruptedException e) {
+        	logger.warn("command to be execute after state change could not be executed successfully.", e);
             return false;
           } finally {
             if (p != null) {

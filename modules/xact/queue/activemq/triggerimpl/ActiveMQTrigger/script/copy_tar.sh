@@ -26,7 +26,7 @@ TARFILENAME=activeMQTrigger.tar
 echo "SERVER=$SERVER"
 echo "target directory = $COPYTARTARGETPATH"
 
-tar --exclude ".svn*" --exclude ".project" --exclude "*.tar.gz" --exclude "*.tar"  -cvf ${TARFILENAME}  ${BASEDIR}/script
+tar --exclude ".project" --exclude "*.tar.gz" --exclude "*.tar"  -cvf ${TARFILENAME}  ${BASEDIR}/script
 
 scp ${TARFILENAME} ${COPYTARTARGETPATH}
 

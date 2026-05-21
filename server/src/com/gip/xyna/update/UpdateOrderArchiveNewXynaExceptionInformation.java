@@ -179,11 +179,11 @@ public class UpdateOrderArchiveNewXynaExceptionInformation extends Update {
 
         }
 
-      }));
+      }, OrderInstance.TABLE_NAME));
 
       PreparedCommand pc =
           con.prepareCommand(new Command("update " + p.tableName() + " set " + OrderInstance.COL_EXCEPTIONS
-              + " = ? where " + p.primaryKey() + " = ?"));
+              + " = ? where " + p.primaryKey() + " = ?", p.tableName()));
 
       int numberPerRoundTrip = 50;
       boolean finished = false;

@@ -20,7 +20,6 @@ package com.gip.xyna.coherence.remote;
 
 import java.rmi.ConnectException;
 import java.rmi.NotBoundException;
-import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -54,11 +53,6 @@ public class CacheControllerRemoteInterfaceImpl implements CacheControllerRemote
 
 
   public void init() {
-
-    if (System.getSecurityManager() == null) {
-      System.setSecurityManager(new RMISecurityManager());
-    }
-
     Registry registry = null;
     try {
       registry = LocateRegistry.createRegistry(getRMIPortForRegistry());

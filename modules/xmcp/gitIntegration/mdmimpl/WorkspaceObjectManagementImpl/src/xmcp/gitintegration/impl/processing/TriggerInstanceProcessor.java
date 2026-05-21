@@ -21,6 +21,7 @@ package xmcp.gitintegration.impl.processing;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -230,6 +231,7 @@ public class TriggerInstanceProcessor implements WorkspaceContentProcessor<Trigg
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+    Collections.sort(tiList, (x, y) -> x.getTriggerInstanceName().compareTo(y.getTriggerInstanceName()));
     return tiList;
   }
 

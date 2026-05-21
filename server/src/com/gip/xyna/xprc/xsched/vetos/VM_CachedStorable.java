@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -140,7 +140,7 @@ public class VM_CachedStorable implements VetoManagementInterface {
     } finally {
       if( ! success ) {
         try {
-          AdministrativeVeto av = new AdministrativeVeto(administrativeVeto.getName(), oldDok);
+          AdministrativeVeto av = new AdministrativeVeto(administrativeVeto.getName(), oldDok, System.currentTimeMillis());
           vetoCache.setDocumentationOfAdministrativeVeto(av);
         } catch( XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e ) {
           //sollte nicht auftreten, da ja gerade zuvor eingetragen

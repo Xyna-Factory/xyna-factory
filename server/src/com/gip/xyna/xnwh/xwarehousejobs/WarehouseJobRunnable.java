@@ -272,7 +272,7 @@ public class WarehouseJobRunnable extends JavaDestination {
           ODSConnection con = ods.openConnection(conType);
           try {
             FactoryWarehouseCursor<? extends S> cursor = 
-              con.getCursor(sqlString, Parameter.EMPTY_PARAMETER, getReader(clazz), XynaProperty.WAREHOUSE_JOB_BATCH_SIZE.get());
+              con.getCursor(sqlString, Storable.getPersistable(clazz).tableName(), Parameter.EMPTY_PARAMETER, getReader(clazz), XynaProperty.WAREHOUSE_JOB_BATCH_SIZE.get());
             Collection<? extends S> batch = cursor.getRemainingCacheOrNextIfEmpty();
             while (!batch.isEmpty()) {
               executeForBatch(con, batch);

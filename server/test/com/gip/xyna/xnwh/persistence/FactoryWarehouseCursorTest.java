@@ -166,7 +166,7 @@ public class FactoryWarehouseCursorTest extends TestCase {
     MockODSConnection con = new MockODSConnection();
     
     FactoryWarehouseCursor<MockStorable> fwc = new FactoryWarehouseCursor<MockStorable>(
-                    con, "Select * from dual", new Parameter(), MockStorable.reader, 5   );
+                    con, "Select * from dual", new Parameter(), MockStorable.reader, 5, "dual");
     
     
     MockODSConnection.maxData = 7;
@@ -184,7 +184,7 @@ public class FactoryWarehouseCursorTest extends TestCase {
     MockODSConnection con = new MockODSConnection();
     
     FactoryWarehouseCursor<MockStorable> fwc = new FactoryWarehouseCursor<MockStorable>(
-                    con, "Select * from dual", new Parameter(), MockStorable.reader, 5   );
+                    con, "Select * from dual", new Parameter(), MockStorable.reader, 5, "dual");
     
     
     MockODSConnection.maxData = 7;
@@ -206,7 +206,7 @@ public class FactoryWarehouseCursorTest extends TestCase {
     MockODSConnection con = new MockODSConnection();
     
     FactoryWarehouseCursor<MockStorable> fwc = new FactoryWarehouseCursor<MockStorable>(
-                    con, "Select * from dual", new Parameter(), MockStorable.reader, 5   );
+                    con, "Select * from dual", new Parameter(), MockStorable.reader, 5, "dual");
     
     
     MockODSConnection.maxData = 7;
@@ -226,7 +226,7 @@ public class FactoryWarehouseCursorTest extends TestCase {
     MockODSConnection con = new MockODSConnection();
     
     FactoryWarehouseCursor<MockStorable> fwc = new FactoryWarehouseCursor<MockStorable>(
-                    con, "Select * from dual", new Parameter(), MockStorable.reader );
+                    con, "Select * from dual", new Parameter(), MockStorable.reader, "dual");
     
     
     MockODSConnection.maxData = 7;
@@ -251,7 +251,7 @@ public class FactoryWarehouseCursorTest extends TestCase {
     MockODSConnection con = new MockODSConnection();
     
     FactoryWarehouseCursor<MockStorable> fwc = new FactoryWarehouseCursor<MockStorable>(
-                    con, "Select * from dual", new Parameter(), MockStorable.reader );
+                    con, "Select * from dual", new Parameter(), MockStorable.reader, "dual");
     
     
     MockODSConnection.maxData = 7;
@@ -276,7 +276,7 @@ public class FactoryWarehouseCursorTest extends TestCase {
     MockODSConnection con = new MockODSConnection();
     
     FactoryWarehouseCursor<MockStorable> fwc = new FactoryWarehouseCursor<MockStorable>(
-                    con, "Select * from dual", new Parameter(), MockStorable.reader );
+                    con, "Select * from dual", new Parameter(), MockStorable.reader, "dual");
     
     
     MockODSConnection.maxData = 7;

@@ -70,7 +70,7 @@ public class NextOID {
     }
     
     if( start ) {
-      //OID war noch nicht komplett, ist nun ergï¿½nzt und daher fertig
+      //OID war noch nicht komplett, ist nun ergänzt und daher fertig
       return new OID(current);
     }
     

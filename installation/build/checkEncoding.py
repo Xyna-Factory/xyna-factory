@@ -37,6 +37,8 @@ ENCODING_WITNESSES: dict[str, list[str]] = {
       "\xc3\x9c", #Ü
       "\xc3\x96", #Ö
       "\xc3\x9f", #ß
+      
+      "\xEF\xBF\xBD"
     ],
     UTF_8: [
         "\uFFFD"
@@ -108,7 +110,6 @@ def encoding_ok(file: Path) -> bool:
         if VERBOSE > 2:
             print(f"  Ignoring file {file}")
         return True
-
     try:
         encoding = get_expected_encoding(file)
         witnesses = get_witnesses(encoding)

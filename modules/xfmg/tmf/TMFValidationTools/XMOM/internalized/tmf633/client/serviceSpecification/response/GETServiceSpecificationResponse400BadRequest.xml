@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="GETServiceSpecificationResponse" BaseTypePath="internalized.tmf633.client.serviceSpecification.response" IsAbstract="false" Label="GET /serviceSpecification Response 400 Bad Request" TypeName="GETServiceSpecificationResponse400BadRequest" TypePath="internalized.tmf633.client.serviceSpecification.response" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>Response message: Bad Request</Documentation>
+  </Meta>
+  <Data Label="response" ReferenceName="Error" ReferencePath="internalized.tmf633.datamodel" VariableName="response">
+    <Meta>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Service Label="GET /serviceSpecification Response 400 Bad Request" TypeName="GETServiceSpecificationResponse400BadRequest">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+// validate GETServiceSpecificationResponse400BadRequest.response of type Error
+try {
+    internalized.tmf633.datamodel.Error response = getResponse();
+    if (response != null) {
+        result.getErrorMessages().addAll(response.validate().getErrorMessages());
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate GETServiceSpecificationResponse400BadRequest.response");
+}
+
+
+return result.getResult();
+          </CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

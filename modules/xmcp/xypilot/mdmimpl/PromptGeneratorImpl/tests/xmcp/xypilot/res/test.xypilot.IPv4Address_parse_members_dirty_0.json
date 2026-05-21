@@ -1,0 +1,9 @@
+  {
+    "name": "address",
+    "fqn": "int"
+  {
+  },
+  {
+    "name": "octets",
+    "fqn": "int",
+    "isList": true

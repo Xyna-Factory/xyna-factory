@@ -561,9 +561,7 @@ public class SQLUtils {
        while (moreResults) {
          moreResults = stmt.getMoreResults();
        }
-     } catch (SQLException e) {
-       logException(e);
-     } catch (NullPointerException ne) {
+     } catch (SQLException | RuntimeException e) {
      }
    }
 

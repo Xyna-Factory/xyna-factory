@@ -53,51 +53,52 @@ public final class FactoryWarehouseCursor<T> {
 
   /**
    * Anlegen des FactoryWarehouseCursor mit batchSize=1 für foreach-Aufruf
-   * @param connection
-   * @param sqlStatement
-   * @param parameter
-   * @param resultSetReader
-   * @throws PersistenceLayerException
    */
+  @Deprecated
   public FactoryWarehouseCursor(ODSConnection connection, String sqlStatement, Parameter parameter,
                                 ResultSetReader<T> resultSetReader) throws PersistenceLayerException {
     this(connection, sqlStatement, parameter, resultSetReader, 1, new PreparedQueryCache());
+  }
+  
+  public FactoryWarehouseCursor(ODSConnection connection, String sqlStatement, Parameter parameter,
+                                ResultSetReader<T> resultSetReader, String tableName) throws PersistenceLayerException {
+    this(connection, sqlStatement, parameter, resultSetReader, 1, new PreparedQueryCache(), tableName);
   }
 
 
   /**
    * Anlegen des FactoryWarehouseCursor
-   * @param connection
-   * @param sqlStatement
-   * @param parameter
-   * @param resultSetReader
-   * @param batchSize
-   * @throws PersistenceLayerException
    */
+  @Deprecated
   public FactoryWarehouseCursor(ODSConnection connection, String sqlStatement, Parameter parameter,
                                 ResultSetReader<T> resultSetReader, int batchSize) throws PersistenceLayerException {
     this(connection, sqlStatement, parameter, resultSetReader, batchSize, new PreparedQueryCache());
   }
 
+  public FactoryWarehouseCursor(ODSConnection connection, String sqlStatement, Parameter parameter,
+                                ResultSetReader<T> resultSetReader, int batchSize, String tableName) throws PersistenceLayerException {
+    this(connection, sqlStatement, parameter, resultSetReader, batchSize, new PreparedQueryCache(), tableName);
+  }
+  
+  @Deprecated
+  public FactoryWarehouseCursor(ODSConnection connection, String sqlStatement, Parameter parameter,
+                                ResultSetReader<T> resultSetReader, int batchSize, PreparedQueryCache queryCache) 
+                                    throws PersistenceLayerException {
+    this(connection, sqlStatement, parameter, resultSetReader, batchSize, queryCache, Query.parseSqlStringFindTable(sqlStatement));
+  }
 
   /**
    * Anlegen des FactoryWarehouseCursor
-   * @param connection
-   * @param sqlStatement
-   * @param parameter
-   * @param resultSetReader
-   * @param batchSize
-   * @throws PersistenceLayerException
    */
   public FactoryWarehouseCursor(ODSConnection connection, String sqlStatement, Parameter parameter,
-                                ResultSetReader<T> resultSetReader, int batchSize, PreparedQueryCache queryCache)
-      throws PersistenceLayerException {
+                                ResultSetReader<T> resultSetReader, int batchSize, PreparedQueryCache queryCache,
+                                String tableName) throws PersistenceLayerException {
     String creator = Thread.currentThread().getName();
     if (queryCache == null) {
       queryCache = new PreparedQueryCache();
     }
     this.queryExecutor =
-        new QueryExecutor<T>(creator, sqlStatement, connection, parameter, resultSetReader, queryCache);
+        new QueryExecutor<T>(creator, sqlStatement, connection, parameter, resultSetReader, queryCache, tableName);
     this.queue = queryExecutor.getQueue();
     this.batchSize = batchSize;
   }
@@ -335,14 +336,14 @@ public final class FactoryWarehouseCursor<T> {
 
 
     public QueryExecutor(String creator, String sqlStatement, ODSConnection connection, Parameter parameter,
-                         ResultSetReader<T> resultSetReader, PreparedQueryCache queryCache)
+                         ResultSetReader<T> resultSetReader, PreparedQueryCache queryCache, String tableName)
         throws PersistenceLayerException {
       this.threadName = "FactoryWarehouseCursorThread (created by: " + creator + ")";
       this.queryCache = queryCache;
       this.connection = connection;
       this.parameter = parameter;
       this.resultSetReader = resultSetReader;
-      this.preparedQuery = this.queryCache.getQueryFromCache(sqlStatement, connection, this);  // actually "this" makes no sense as we are not reusing it because it is an old instance and passing the real current "this" on .query() instead
+      this.preparedQuery = this.queryCache.getQueryFromCache(sqlStatement, connection, this, tableName);  // actually "this" makes no sense as we are not reusing it because it is an old instance and passing the real current "this" on .query() instead
       this.queue = new SynchronousQueue<T>();
     }
     

@@ -1,0 +1,23 @@
+  {
+    "name": "octets",
+    "fqn": "int",
+    "isList": true,
+    {
+        "some_invalid_key": "some_value"
+    },
+    [
+        {
+            "some_invalid_key": "some_value"
+        }
+    ]
+    "some_invalid_array": [
+        {
+            "some_invalid_key": "some_value"
+        }
+    ],
+    "some_invalid_object": {
+        "some_invalid_key": "some_value"
+    }
+  }
+# extra bracket
+}

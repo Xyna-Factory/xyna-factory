@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Iteration Index Builder" TypeName="IterationIndexBuilder" TypePath="xmcp.xypilot" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="Iteration Index Builder" TypeName="IterationIndexBuilder">
+    <Operation IsStatic="true" Label="Build Suggestion iterable" Name="buildSuggestionIterable">
+      <Input>
+        <Data ID="6" IsList="true" Label="Gui Suggestion" ReferenceName="GuiSuggestion" ReferencePath="xmcp.xypilot" VariableName="guiSuggestion6"/>
+      </Input>
+      <Output>
+        <Data ID="3" IsList="true" Label="Suggestion Iteration" ReferenceName="SuggestionIteration" ReferencePath="xmcp.xypilot" VariableName="suggestionIteration3"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">List&lt;SuggestionIteration&gt; ret = new ArrayList&lt;&gt;();
+for (int i=0; i&lt;guiSuggestion6.size(); i++) {
+    ret.add(new SuggestionIteration.Builder().suggestion(guiSuggestion6.get(i)).index(i).instance());
+}
+return ret;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Build Metric iterable" Name="buildMetricIterable">
+      <Input>
+        <Data ID="5" IsList="true" Label="GUI Metric" ReferenceName="GUIMetric" ReferencePath="xmcp.xypilot" VariableName="gUIMetric5"/>
+      </Input>
+      <Output>
+        <Data ID="1" IsList="true" Label="Metric Iteration" ReferenceName="MetricIteration" ReferencePath="xmcp.xypilot" VariableName="metricIteration1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">List&lt;MetricIteration&gt; ret = new ArrayList&lt;&gt;();
+for (int i=0; i&lt;gUIMetric5.size(); i++) {
+    ret.add(new MetricIteration.Builder().guiMetric(gUIMetric5.get(i)).index(i).instance());
+}
+return ret;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

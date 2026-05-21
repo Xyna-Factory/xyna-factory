@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Set Value For Related Party" TypeName="SetValueForRelatedParty" TypePath="xfmg.tmf640" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Set Value For Related Party" Name="SetValueForRelatedParty">
+    <Input>
+      <Data ID="2" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember2"/>
+      <Data ID="7" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable7"/>
+      <Data ID="41" IsList="true" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf640.datamodel" VariableName="relatedParty41"/>
+    </Input>
+    <Output/>
+    <ServiceReference ID="696" Label="Named Variable Member" ReferenceName="NamedVariableMember.NamedVariableMember" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="695"/>
+      <Target RefID="695"/>
+    </ServiceReference>
+    <ServiceReference ID="634" Label="Named Variable Member" ReferenceName="NamedVariableMember.NamedVariableMember" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="633"/>
+      <Target RefID="633"/>
+    </ServiceReference>
+    <ServiceReference ID="100" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
+      <Source RefID="99"/>
+      <Target RefID="99"/>
+    </ServiceReference>
+    <Mappings ID="26" Label="Mapping">
+      <Input>
+        <Data ID="27" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember27"/>
+        <Source RefID="2"/>
+      </Input>
+      <Output>
+        <Data ID="28" Label="Filter Related Party by Role" ReferenceName="FilterRelatedPartyByRole" ReferencePath="xfmg.tmf.inspect" VariableName="filterRelatedPartyByRole28"/>
+        <Target RefID="25"/>
+      </Output>
+      <Mapping>%1%.role=%0%.label</Mapping>
+    </Mappings>
+    <Function ID="99" Label="Filter">
+      <Source RefID="100"/>
+      <Source RefID="41"/>
+      <Source RefID="25"/>
+      <Target RefID="100"/>
+      <Target RefID="102"/>
+      <Invoke Operation="filter" ServiceID="100">
+        <Source RefID="41">
+          <Meta>
+            <ExpectedType>tmf640.datamodel.RelatedParty</ExpectedType>
+          </Meta>
+        </Source>
+        <Source RefID="25"/>
+      </Invoke>
+      <Receive ServiceID="100">
+        <Target RefID="102">
+          <Meta>
+            <ExpectedType>tmf640.datamodel.RelatedParty</ExpectedType>
+          </Meta>
+        </Target>
+      </Receive>
+    </Function>
+    <Choice ID="184" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="102"/>
+      <Input>
+        <Data ID="247" IsList="true" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf640.datamodel" VariableName="relatedParty247">
+          <Source RefID="184"/>
+        </Data>
+        <Source RefID="102">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="185" Label="true" Premise="length(%0%)==&quot;0&quot;">
+        <Assign ID="188"/>
+      </Case>
+      <Case ID="186" Label="false">
+        <Choice ID="470" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="2"/>
+          <Input>
+            <Data ID="513" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember513">
+              <Source RefID="470"/>
+            </Data>
+            <Source RefID="2"/>
+          </Input>
+          <Case ID="471" Label="true" Premise="%0%.isList">
+            <Foreach ID="1292">
+              <Source RefID="102"/>
+              <Target RefID="1294"/>
+              <InputList RefID="102">
+                <Data ID="1293" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf640.datamodel" VariableName="relatedParty1293"/>
+              </InputList>
+              <OutputList RefID="1294">
+                <Data ID="893" Label="Wrapper" ReferenceName="Text" ReferencePath="base" VariableName="text893">
+                  <Source RefID="768"/>
+                </Data>
+              </OutputList>
+              <Mappings ID="768" Label="Mapping">
+                <Input>
+                  <Data ID="821" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf640.datamodel" VariableName="relatedParty821">
+                    <Source RefID="768"/>
+                  </Data>
+                  <Source RefID="1293">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                </Input>
+                <Output>
+                  <Data ID="892" Label="Wrapper" ReferenceName="Text" ReferencePath="base" VariableName="text892">
+                    <Source RefID="768"/>
+                  </Data>
+                  <Target RefID="893"/>
+                </Output>
+                <Mapping>%1%.text=%0%.id</Mapping>
+              </Mappings>
+            </Foreach>
+            <Function ID="633" Label="Set Member Value List Wrapped">
+              <Source RefID="634"/>
+              <Source RefID="2"/>
+              <Source RefID="1294"/>
+              <Target RefID="634"/>
+              <Invoke Operation="setMemberValueListWrapped" ServiceID="634">
+                <Source RefID="2"/>
+                <Source RefID="1294"/>
+              </Invoke>
+              <Receive ServiceID="634"/>
+            </Function>
+            <Assign ID="474"/>
+          </Case>
+          <Case ID="472" Label="false">
+            <Mappings ID="1423" Label="Mapping">
+              <Input>
+                <Data ID="1424" IsList="true" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf640.datamodel" VariableName="relatedParty1424"/>
+                <Source RefID="102">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Output>
+                <Data ID="1425" Label="Wrapper" ReferenceName="Text" ReferencePath="base" VariableName="text1425"/>
+                <Target RefID="1478"/>
+              </Output>
+              <Mapping>%1%.text=%0%["0"].id</Mapping>
+            </Mappings>
+            <Function ID="695" Label="Set Member Value Wrapped">
+              <Source RefID="696"/>
+              <Source RefID="2"/>
+              <Source RefID="1478"/>
+              <Target RefID="696"/>
+              <Invoke Operation="setMemberValueWrapped" ServiceID="696">
+                <Source RefID="2"/>
+                <Source RefID="1478"/>
+              </Invoke>
+              <Receive ServiceID="696"/>
+            </Function>
+            <Assign ID="476"/>
+            <Data ID="1478" Label="Wrapper" ReferenceName="Text" ReferencePath="base" VariableName="text1478"/>
+          </Case>
+        </Choice>
+        <Assign ID="190"/>
+      </Case>
+    </Choice>
+    <Data ID="25" Label="Filter Related Party by Role" ReferenceName="FilterRelatedPartyByRole" ReferencePath="xfmg.tmf.inspect" VariableName="filterRelatedPartyByRole25"/>
+    <Data ID="102" IsList="true" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf640.datamodel" VariableName="relatedParty102"/>
+    <Data ID="1294" IsList="true" Label="Wrapper" ReferenceName="Text" ReferencePath="base" VariableName="text1294">
+      <Source RefID="1292"/>
+      <Target RefID="1294"/>
+    </Data>
+    <Assign ID="1"/>
+  </Operation>
+</Service>

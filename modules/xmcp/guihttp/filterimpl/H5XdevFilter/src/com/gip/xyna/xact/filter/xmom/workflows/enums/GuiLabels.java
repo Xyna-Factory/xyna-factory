@@ -26,8 +26,9 @@ public class GuiLabels {
   public static final String DT_LABEL_UNIQUE_IDENTIFIER       = "uniqueIdentifier";
   public static final String DT_LABEL_CURRENTVERSION_FLAG     = "currentVersionFlag";
 
-  public static final String DT_LABEL_IMPL_TYPE_ABSTRACT      = "abstract";
-  public static final String DT_LABEL_IMPL_TYPE_CODED_SERVICE = "codedService";
-  public static final String DT_LABEL_IMPL_TYPE_REFERENCE     = "reference";
+  public static final String DT_LABEL_IMPL_TYPE_ABSTRACT             = "abstract";
+  public static final String DT_LABEL_IMPL_TYPE_CODED_SERVICE        = "codedService";
+  public static final String DT_LABEL_IMPL_TYPE_CODED_SERVICE_PYTHON = "codedServicePython";
+  public static final String DT_LABEL_IMPL_TYPE_REFERENCE            = "reference";
 
 }

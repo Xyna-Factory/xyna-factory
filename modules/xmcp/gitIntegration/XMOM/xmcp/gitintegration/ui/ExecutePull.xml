@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Execute Pull" TypeName="ExecutePull" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Execute Pull" Name="ExecutePull">
+    <Input>
+      <Data ID="10" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository10"/>
+    </Input>
+    <Output>
+      <Data ID="173" IsList="true" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition173"/>
+      <Data ID="942" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput942"/>
+    </Output>
+    <ServiceReference ID="719" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="718"/>
+      <Target RefID="718"/>
+    </ServiceReference>
+    <ServiceReference ID="1468" Label="Pull Information Definition" ReferenceName="PullInformationDefinition" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="1467"/>
+      <Target RefID="1467"/>
+    </ServiceReference>
+    <Mappings ID="738" Label="Mapping">
+      <Input>
+        <Data ID="755" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository755">
+          <Source RefID="738"/>
+        </Data>
+        <Source RefID="10"/>
+      </Input>
+      <Output>
+        <Data ID="772" Label="Pull Input" ReferenceName="PullInput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullInput772">
+          <Source RefID="738"/>
+        </Data>
+        <Target RefID="773"/>
+      </Output>
+      <Mapping>%1%.repository~=%0%</Mapping>
+      <Mapping>%1%.dryrun="false"</Mapping>
+    </Mappings>
+    <Function ID="718" Label="Pull">
+      <Source RefID="719"/>
+      <Source RefID="773"/>
+      <Target RefID="719"/>
+      <Target RefID="721"/>
+      <Invoke Operation="pull" ServiceID="719">
+        <Source RefID="773"/>
+      </Invoke>
+      <Receive ServiceID="719">
+        <Target RefID="721"/>
+      </Receive>
+    </Function>
+    <Function ID="1467" Label="Pull Information Definition">
+      <Source RefID="1468"/>
+      <Source RefID="721"/>
+      <Target RefID="1468"/>
+      <Target RefID="1470"/>
+      <Invoke Operation="PullInformationDefinition" ServiceID="1468">
+        <Source RefID="721"/>
+      </Invoke>
+      <Receive ServiceID="1468">
+        <Target RefID="1470"/>
+      </Receive>
+    </Function>
+    <Data ID="721" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput721">
+      <Source RefID="718"/>
+    </Data>
+    <Data ID="773" Label="Pull Input" ReferenceName="PullInput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullInput773">
+      <Source RefID="738"/>
+    </Data>
+    <Data ID="1470" IsList="true" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition1470">
+      <Source RefID="1467"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="1470"/>
+      <Source RefID="721"/>
+      <Target RefID="173"/>
+      <Target RefID="942"/>
+      <Copy>
+        <Source RefID="1470"/>
+        <Target RefID="173"/>
+      </Copy>
+      <Copy>
+        <Source RefID="721"/>
+        <Target RefID="942"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

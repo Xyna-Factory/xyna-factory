@@ -59,9 +59,6 @@
           "!ZetaFramework!": "ZetaFramework"
         }, 
         {
-          "!0.6.36!": "0.6.36"
-        }, 
-        {
           "!xmcp.factorymanager.rtcmanager.ReferenceDirectio!": "xmcp.factorymanager.rtcmanager.ReferenceDirectionForward"
         }, 
         {
@@ -83,7 +80,7 @@
           "!xmcp.factorymanager.rtcmanager.GetIssues!": "xmcp.factorymanager.rtcmanager.GetIssues"
         }, 
         {
-          "!10.0.10.61!": "10.0.10.61"
+          "!remoteNode!": "remoteNode"
         }
       ], 
       "operation": "multiSet"
@@ -441,7 +438,7 @@
                 "application": "!GuiHttp!" 
               }
             }, 
-            "factoryNode": "!10.0.10.61!", 
+            "factoryNode": "!remoteNode!", 
             "isLocal": false, 
             "name": "!RegressionTestDependentApp!", 
             "version": "!applicationVersion!"
@@ -530,7 +527,7 @@
                 }
               }, 
               "documentation": "", 
-              "factoryNode": "!10.0.10.61!", 
+              "factoryNode": "!remoteNode!", 
               "isLocal": false, 
               "name": "!RegressionTestDependentApp!", 
               "state": "!STOPPED!", 
@@ -621,7 +618,7 @@
                 }
               }, 
               "documentation": "", 
-              "factoryNode": "!10.0.10.61!", 
+              "factoryNode": "!remoteNode!", 
               "isLocal": false, 
               "name": "!RegressionTestDependentApp!", 
               "state": "!STOPPED!", 
@@ -699,7 +696,7 @@
                 }
               }, 
               "documentation": "", 
-              "factoryNode": "!10.0.10.61!", 
+              "factoryNode": "!remoteNode!", 
               "isLocal": false, 
               "name": "!RegressionTestDependentApp!", 
               "state": "!STOPPED!", 
@@ -728,7 +725,7 @@
               }
             }, 
             "documentation": "", 
-            "factoryNode": "!10.0.10.61!", 
+            "factoryNode": "!remoteNode!", 
             "isLocal": false, 
             "name": "!RegressionTestDependentApp!", 
             "state": "!STOPPED!", 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,9 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
-<project name="buildApplication" basedir=".">
+<project name="buildApplication" basedir="." xmlns:unless="ant:unless">
     <import file="macros.xml" />
+    <property name="application.dir" value="${basedir}" />
     <property file="${basedir}/server.properties" />
     <property file="${root.dir}/server.properties" />
     <property file="${application.dir}/workspace.properties" />
@@ -25,11 +26,9 @@
     <property name="antUtils.dir" value="${root.dir}/installation/build/" />
     <property name="common.lib.dir" value="${root.dir}/common/lib" />
     <property name="common.xyna.lib.dir" value="${common.lib.dir}/xyna" />
-	<property name="xyna.modules.dir" value="${root.dir}/modules" />
-	<!-- github supports svn: tag would be: https://github.com/Xyna-Factory/xyna-factory/tags/9.0.1.0/modules -->
-	<!-- location of xyna modules -->
-	<property name="xyna.modules.svn" value="https://github.com/Xyna-Factory/xyna-factory/trunk/modules" />
-	
+    <property name="xyna.modules.dir" value="${root.dir}/modules" />
+    <property name="xyna.module.checkout.branch" value="main" />
+
     <taskdef resource="net/sf/antcontrib/antcontrib.properties">
         <classpath>
             <pathelement location="${root.dir}/installation/build/lib/ant-contrib.jar" />
@@ -158,7 +157,8 @@
     <target name="check" 
         description="check that all XMOM-files exists" >
 
-        <exec executable="${antUtils.dir}/checkApplicationFiles.sh" inputstring="" outputproperty="errors">
+        <exec executable="python3" inputstring="" outputproperty="errors">
+            <arg value="${antUtils.dir}/checkApplicationFiles.py"/>
             <arg value="application.xml"/>
         </exec>
 
@@ -220,6 +220,7 @@
         <xmlproperty file="application.xml" collapseAttributes="true" />
         <property name="applicationname" value="${Application.applicationName}" />
         <property name="applicationversion" value="${Application.versionName}" />
+        <property name="apps.paths" value="${root.dir}" />
 
         <!-- create application.xml -->
        <if>
@@ -233,10 +234,19 @@
 	   </if>
 
         <!-- copy application.xml from xyna server-->
-        <custom-scp-from-remote fromfile="${server.userid}@${server.host}:/tmp/application.xml" todir="${basedir}" />
+        <default-scp-from-remote fromfile="/tmp/application.xml" todir="${basedir}" />
 
+        <antcall target="postprocess-application-xml" />
     </target>
-	
+
+
+    <!-- ================================= 
+         target: postprocess-application-xml             
+         ================================= -->
+    <target name="postprocess-application-xml" description="postprocess-application-xml">
+        <!-- leer, überschreibbar im build.xml -->
+    </target>
+
 
     <!-- ================================= 
          target: update-stub        
@@ -257,7 +267,7 @@
 		</if>
 
         <!-- copy application-stub.xml from xyna server-->
-        <custom-scp-from-remote fromfile="${server.userid}@${server.host}:/tmp/application-stub.xml" todir="${basedir}" />
+        <default-scp-from-remote fromfile="/tmp/application-stub.xml" todir="${basedir}" />
     </target>
 	
 	<!-- ================================= 
@@ -273,41 +283,25 @@
 		<if>
 			<equals arg1="${workspacename}" arg2="$${workspacename}"/>
 			<then>
-				<property name="where" value="application='${applicationname}' and workspace is null and versionName='${applicationversion}'" />
+				<property name="where" value="-applicationName '${applicationname}'  -versionName='${applicationversion}'" />
                         <property name="saved" value="" />
 			</then>
 			<else> 
-				<property name="where" value="workspace = '${workspacename}'" />    
+				<property name="where" value="-workspaceName '${workspacename}'" />    
 				<property name="saved" value="saved/" />
 			</else>
 		</if>
 		<local name="command" />
-		<property name="command" value="cd ${server.path}; ./xynafactory.sh sql &quot;select * from xmomversion where ${where}&quot; |grep revision |awk '{print $3}';"/>
-		<echo message="${server.userid}@:${server.host}${command}" />
-		<if>
-			<isset property="server.keyfile" />
-			<then>
-				<sshexec host="${server.host}" username="${server.userid}" keyfile="${server.keyfile}"
-				command="${command}" outputproperty="revision" trust="true" />
-			</then>
-			<else>
-				<sshexec host="${server.host}" username="${server.userid}" password="${server.password}"
-                                command="${command}" outputproperty="revision" trust="true" />
-			</else>
-		</if>
-		<!-- ersetze zeilenumbruch am ende -->
-		<script language="javascript">
-            var revision = project.getProperty("revision").trim();
-            project.setProperty("revision", revision);
-		</script>
+		<property name="command" value="cd ${server.path}; ./xynafactory.sh printrevision ${where} | xargs echo -n" />
+		<echo message="executing command: ${command}" />
+		<custom-ssh-exec host="${server.host}" username="${server.userid}" command="${command}" outputproperty="revision" />
 		<echo message="got revision=${revision}" />
 		<mkdir dir="XMOM" />
 		<delete verbose="true">
 			<fileset dir="XMOM" includes="**/*.xml" />
 		</delete>
-		<echo message="copying ${server.userid}@${server.host}:${server.path}/../revisions/rev_${revision}/${saved}XMOM/*" />
-		<custom-scp-from-remote fromfile="${server.userid}@${server.host}:${server.path}/../revisions/rev_${revision}/${saved}XMOM/*" todir="XMOM/" />
-
+		<echo message="copying ${server.userid}@${server.host}:${server.path}/../revisions/rev_${revision}/${saved}XMOM/" />
+		<default-scp-from-remote fromfile="${server.path}/../revisions/rev_${revision}/${saved}XMOM/*" todir="XMOM" />
     </target>
 	
 	<!-- =================================
@@ -323,7 +317,7 @@
 		<custom-ssh-exec host="${server.host}" username="${server.userid}" command="${server.path}/xynafactory.sh exportdatamodels -datamodelfqname ${dollar}(${server.path}/xynafactory.sh sql &quot;select * from datamodel where label='${applicationname}' and version='${applicationversion}'&quot; HISTORY | grep -e '\sfqname =' | awk '{print $3}' | tr -d &quot;'&quot; ) -filename /tmp/datamodelarchive.zip" />
 
         <!-- copy datamodelarchive from xyna server-->
-        <custom-scp-from-remote fromfile="${server.userid}@${server.host}:/tmp/datamodelarchive.zip" todir="${basedir}" />
+        <default-scp-from-remote fromfile="/tmp/datamodelarchive.zip" todir="${basedir}" />
 
 		<mkdir dir="${basedir}/datamodel" />
 		<unzip src="${basedir}/datamodelarchive.zip" dest="${basedir}/datamodel"/>
@@ -363,6 +357,9 @@
 
     </target>
 
+    <!-- =================================
+         target: get-xyna-modules
+         ================================= -->
 	<target name="get-xyna-modules" >
 		<if>
 			<not>
@@ -373,7 +370,7 @@
 				<local name="script.absolute" />
 				<property name="script.absolute" location="${antUtils.dir}/module_checkout.sh"/>
 				<exec executable="${script.absolute}" dir="${xyna.modules.dir}/..">
-					<arg value="${xyna.modules.svn}"/>
+					<arg value="${xyna.module.checkout.branch}"/>
 				</exec>
 			</then>
 		</if>
@@ -410,4 +407,81 @@
         </java>
 
     </target>
+
+    <!-- ================================= 
+         target: add-service         
+         ================================= -->
+    <target name="add-service" description="Load service from server and add it to a project. Call with -DServiceFqn">
+        <fail message="ServiceFqn required">
+            <condition>
+                <not>
+                    <isset property="ServiceFqn" />
+                </not>
+            </condition>
+        </fail>
+        <fail message="workspacename required">
+            <condition>
+                <not>
+                    <isset property="workspacename" />
+                </not>
+            </condition>
+        </fail>
+        <local name="command" />
+        <property name="command" value="${server.path}/xynafactory.sh buildserviceprojectjava -fqDatatypeName ${ServiceFqn} -targetDirectory /tmp -workspaceName '${workspacename}'" />
+        <custom-ssh-exec host="${server.host}" username="${server.userid}" command="${command}" />
+        <mkdir dir="${basedir}/mdmimpl/tmp" />
+        <default-scp-from-remote fromfile="/tmp/${ServiceFqn}.zip" todir="${basedir}/mdmimpl/tmp" />
+        <unzip src="${basedir}/mdmimpl/tmp/${ServiceFqn}.zip" dest="${basedir}/mdmimpl/tmp/" />
+        
+        <dirset id="tmp_service_name" dir="${basedir}/mdmimpl/tmp">
+            <include name="${ServiceFqn}*/mdmimpl"/>
+        </dirset>
+        <pathconvert property="tmp_service" refid="tmp_service_name" pathsep=","/>
+
+        <move file="${tmp_service}" tofile="${basedir}/mdmimpl" />
+        <delete dir="${basedir}/mdmimpl/tmp" />
+
+    </target>
+
+    <!-- =================================
+         target: cleanup-lib
+         ================================= -->
+    <target name="cleanup-lib">
+        <delete>
+             <fileset dir="${basedir}" includes="**/*.jar"/>
+        </delete>
+    </target>
+
+    <!-- =================================
+         target: generate-application-xml
+         ================================= -->
+	<target name="generate-application-xml" description="generate application.xml from workspace-xml">
+			<!-- directory or file of workspace-xml config, or its parent directory -->
+			<property name="workspacexml.dir" value="${basedir}/.." />
+			<property name="xmom.dir" value="${basedir}/XMOM" />
+			<property name="application.version" value="1.0" />
+			<property name="xyna.version" value="" />
+			<!-- as described in documentation of xynaproperty xfmg.xfctrl.appmgmt.excludedsubtypesof -->
+			<property name="subtype.exclusions" value="" />
+			<property name="application.xml.output.file" value="${basedir}/application.xml" />
+	    	<!-- if false, ignore application definition and include everything from the workspace -->
+			<property name="application.gen.use.application.definition" value="true" />
+			<echo message="Generating application.xml in directory ${workspacexml.dir} ..." />
+			<java classname="xmcp.gitintegration.offline.ApplicationXMLGenerator" fork="true" failonerror="true">
+				<arg value="${workspacexml.dir}" />
+				<arg value="${xmom.dir}" />
+				<arg value="${application.version}" />
+				<arg value="${xyna.version}" />
+				<arg value="${subtype.exclusions}" />
+				<arg value="${application.xml.output.file}" />
+				<arg value="-e" unless:true="${application.gen.use.application.definition}"/>
+				<classpath>
+					<!-- jars to be created by installation/build.sh install_gitintegration_libs -->
+					<fileset dir="${antUtils.dir}lib/gitintegration">
+						<include name="*.jar" />
+					</fileset>
+				</classpath>
+			</java>
+		</target>
+
 </project>

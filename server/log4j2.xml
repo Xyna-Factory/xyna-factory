@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Configuration packages="com.gip.xyna.utils.logging" status="warn">
+<Configuration status="warn">
   <Appenders>
     <!-- config appender stdout -->
     <Console name="STDOUT" target="SYSTEM_OUT">

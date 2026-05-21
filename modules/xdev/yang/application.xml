@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Application applicationName="YangAppGenerator" factoryVersion="" versionName="1.2.1" xmlVersion="1.1">
+  <ApplicationInfo>
+    <Description Lang="DE">Benutzeroberfläche und Funktionalität zum Einlesen und Arbeiten mit Datenmodellen im YANG Format</Description>
+    <Description Lang="EN">Graphic User interface and functionality for parsing and working with datamodels in the YANG format</Description>
+    <RuntimeContextRequirements>
+      <RuntimeContextRequirement>
+        <ApplicationName>GuiHttp</ApplicationName>
+        <VersionName>1.4.5</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>YangBase</ApplicationName>
+        <VersionName>1.1.8</VersionName>
+      </RuntimeContextRequirement>
+    </RuntimeContextRequirements>
+  </ApplicationInfo>
+  <Ordertypes>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.AddOperation</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.AddVariableToOperationSignature</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.ConfigureAnyXml</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.ConfigureAnyXmlDialogDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.ConfigureList</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.ConfigureListDialogDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.CreateSetEmptyPanelDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.DefineAddOperationDialog</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.DefineAddToOperationSignatureDialog</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.DefineImportModuleCollectionDialog</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.DefineImportYangDeviceDialog</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.DeleteOperationAssignment</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.DeleteVariableFromOperationSignature</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.FixSignature</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.ImportYangDeviceApplication</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.ImportYangModuleCollectionApplication</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xmcp.yang.fman.ModuleExplorerAppDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xmcp.yang.fman.ModuleExplorerAppTableInfo</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xmcp.yang.fman.ModuleExplorerModuleDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xmcp.yang.fman.ModuleExplorerModuleTableInfo</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xmcp.yang.fman.ModuleExplorerRtcDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xmcp.yang.fman.ModuleExplorerWorkspaceDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xmcp.yang.fman.ModuleExplorerWorkspaceTableInfo</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.OperationAssignmentTableInfo</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.OperationAssignmentsDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.OperationAssignmentsDefinitionAnyXml</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.OperationAssignmentsDefinitionContainer</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.OperationAssignmentsDefinitionLeaf</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.OperationAssignmentsDefinitionList</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.OperationDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.OperationRootAssignmentsDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.OperationSignatureDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.OperationSignatureDetailsDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.OperationSignatureInputTableInfo</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.OperationTableInfo</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.SaveOperationAssignment</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xmcp.yang.fman.UpdateVariableInOperationSignature</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.YangImportDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+  </Ordertypes>
+  <SharedLibs>
+    <SharedLib implicitDependency="false">
+      <SharedLib>yangkit</SharedLib>
+    </SharedLib>
+  </SharedLibs>
+  <XMOMEntries>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.yang.OperationCreationParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.yang.YangAppGeneration</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.yang.YangAppGenerationInputParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.yang.datatypes.YangModuleDetails</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.yang.exceptions.ApplicationImportException</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.yang.exceptions.OperationCreationException</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.ListKeyName</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.LoadYangAssignmentsData</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.OperationAssignmentTableData</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.OperationTableData</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.YangImportTableData</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.AddOperation</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.AddVariableToOperationSignature</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.fman.AnyXmlSubstatementConfiguration</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.ConfigureAnyXml</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.ConfigureAnyXmlDialogDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.ConfigureList</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.ConfigureListDialogDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.fman.CreateSetEmptyPanelDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.DefineAddOperationDialog</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.DefineAddToOperationSignatureDialog</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.DefineImportModuleCollectionDialog</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.DefineImportYangDeviceDialog</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.DeleteOperationAssignment</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.DeleteVariableFromOperationSignature</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.FixSignature</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.ImportYangDeviceApplication</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.ImportYangModuleCollectionApplication</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.ListConfiguration</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.fman.ModuleExplorerAppDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.fman.ModuleExplorerAppTableInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.fman.ModuleExplorerModuleDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.fman.ModuleExplorerModuleTableInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.fman.ModuleExplorerRtcDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.fman.ModuleExplorerWorkspaceDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.fman.ModuleExplorerWorkspaceTableInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.OperationAssignmentTableInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.OperationAssignmentsDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.fman.OperationAssignmentsDefinitionAnyXml</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.OperationAssignmentsDefinitionContainer</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.OperationAssignmentsDefinitionLeaf</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.OperationAssignmentsDefinitionList</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.fman.OperationDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.OperationRootAssignmentsDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.OperationSignatureDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.OperationSignatureDetailsDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.OperationSignatureEntry</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.OperationSignatureInputTableInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.fman.OperationSignatureProblem</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.OperationTableInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.SaveOperationAssignment</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.fman.UpdateVariableInOperationSignature</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.YangImportDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+  </XMOMEntries>
+</Application>

@@ -20,6 +20,7 @@ package com.gip.xyna.xact.filter.session.workflowissues;
 
 
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,6 +63,7 @@ import com.gip.xyna.xprc.xfractwfe.formula.Variable;
 import com.gip.xyna.xprc.xfractwfe.formula.VariableAccessPart;
 import com.gip.xyna.xprc.xfractwfe.formula.VariableInstanceFunctionIncovation;
 import com.gip.xyna.xprc.xfractwfe.generation.DomOrExceptionGenerationBase;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.ModelledExpression;
 import com.gip.xyna.xprc.xfractwfe.generation.ModelledExpression.EmptyVisitor;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
@@ -514,10 +516,13 @@ public class ModelledExpressionManagement {
       TypeInfo ti;
       try {
         ti = var.getFollowedVariable().getTypeInfo(true);
+        boolean isList = var.getFollowedVariable().getTypeInfo(false).isList();
+        if (isList && lastPartHasIndexDev(var.getParts())) {
+          isList = false;
+        }
         if (ti.isBaseType()) {
-          return ti;
+          return new TypeInfo(ti.getBaseType(), isList);
         } else if (ti.isModelledType()) {
-          boolean isList = var.getFollowedVariable().getTypeInfo(false).isList();
           if(isList && var.lastPartOfVariableHasListAccess()) {
             isList = false;
           }
@@ -529,6 +534,12 @@ public class ModelledExpressionManagement {
       }
     }
 
+    private boolean lastPartHasIndexDev(List<VariableAccessPart> list) {
+      if (list == null || list.isEmpty()) {
+        return false;
+      }
+      return list.get(list.size() - 1).getIndexDef() != null;
+    }
 
     private TypeInfo determineTypeOfExpression(Expression ex) {
       if (ex instanceof SingleVarExpression) {
@@ -657,12 +668,33 @@ public class ModelledExpressionManagement {
       
       DOM dom = (DOM)doe;
       try {
-        result = dom.getOperationByName(operationName).getInputVars();
+        if (GenerationBase.isReservedServerObjectByFqClassName(dom.getFqClassName())) {
+          result = getInputOfReservedOperation(dom, GenerationBase.getReservedClass(dom.getOriginalFqName()), operationName);
+        } else {
+          result = dom.getOperationByName(operationName).getInputVars();
+        }
       } catch (XPRC_OperationUnknownException e) {
         throw new InvalidFunctionException();
       }
       
       return result;
+    }
+    
+    private List<AVariable> getInputOfReservedOperation(DOM dom, Class<?> clazz, String operationName) throws XPRC_OperationUnknownException {
+      Method[] methods = clazz.getMethods();
+      for (int i = 0; i < methods.length; i++) {
+        Method method = methods[i];
+        if (method.getName().equals(operationName)) {
+          List<AVariable> result = new ArrayList<AVariable>();
+          Class<?>[] inputs = method.getParameterTypes();
+          for (Class<?> input : inputs) {
+            AVariable var = TypeToAVariableConverter.convert(dom, input);
+            result.add(var);
+          }
+          return result;
+        }
+      }
+      throw new XPRC_OperationUnknownException(operationName);
     }
     
     @Override
@@ -691,6 +723,15 @@ public class ModelledExpressionManagement {
       //loosely type parameters
       //-> should they be a list
       List<Expression> subs = fe.getSubExpressions();
+      
+      if(function.getName().equals("concat")) {
+        if(subs.size() < 1) {
+          throw new InvalidFunctionException();
+        } else {
+          return; //everything will be converted to string
+        }
+      }
+      
       for(int i=0; i<subs.size(); i++) {
         TypeInfo is = determineTypeOfExpression(subs.get(i));
         TypeInfo should = fe.getParameterTypeDef(i);

@@ -171,7 +171,7 @@ public class WebSphereMQTrigger extends EventListener<WebSphereMQTriggerConnecti
             failedToReconnect = false;
           }
           catch (XynaException e1) {
-            logger.debug("could not restart connection to queue " + startParameter.getQueueName() + " after error.", e1);
+            logger.error("could not restart connection to queue " + startParameter.getQueueName() + " after error.", e1);
           }
         }
       }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ import com.gip.xyna.xact.filter.util.DirectVarIdentification;
 import com.gip.xyna.xact.filter.util.ReferencedVarIdentification;
 import com.gip.xyna.xact.filter.util.ServiceVarIdentification;
 import com.gip.xyna.xact.filter.util.Utils;
+import com.gip.xyna.xact.filter.xmom.workflows.json.Workflow;
 import com.gip.xyna.xprc.exceptions.XPRC_InvalidPackageNameException;
 import com.gip.xyna.xprc.exceptions.XPRC_InvalidServiceIdException;
 import com.gip.xyna.xprc.exceptions.XPRC_InvalidVariableIdException;
@@ -48,7 +49,6 @@ import com.gip.xyna.xprc.xfractwfe.generation.ForEachScopeStep;
 import com.gip.xyna.xprc.xfractwfe.generation.InputConnections;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.ScopeStep.ServiceIdentification;
-import com.gip.xyna.xprc.xfractwfe.generation.ScopeStep.VariableIdentification;
 import com.gip.xyna.xprc.xfractwfe.generation.Service;
 import com.gip.xyna.xprc.xfractwfe.generation.ServiceVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.Step;
@@ -113,9 +113,20 @@ public class IdentifiedVariablesStepFunction extends IdentifiedVariablesStepWith
         outputVars = getConcreteVars(operationOutputs, getReceiveVarCastToFqns());
         thrownExceptionVars = operation.getThrownExceptions();
       } else {
-        inputVars = stepFunction.getOrderInputSourceRef() != null && stepFunction.getOrderInputSourceRef().length() > 0 ?
-            service.getWF().getInputVars() :
-            getConcreteVars(service.getWF().getInputVars(), getInputVarCastToFqns());
+        if(!service.getWF().parsingFinished()) {
+          // happens for recursive calls in audits - if parsing is not finished, input variables are not set
+          try {
+            service.getWF().parseGeneration(false, false, false);
+          } catch (Exception e) { 
+            if(logger.isDebugEnabled()) {
+              logger.debug("exception during parseGeneration of " + service.getWF(), e );
+            }
+          }
+        }
+        inputVars = service.getWF().getInputVars();
+        if(stepFunction.getOrderInputSourceRef() == null || stepFunction.getOrderInputSourceRef().isEmpty()) {
+          inputVars = getConcreteVars(inputVars, getInputVarCastToFqns());
+        }
         outputVars = getConcreteVars(service.getWF().getOutputVars(), getReceiveVarCastToFqns());
         thrownExceptionVars = service.getWF().getAllThrownExceptions();
       }
@@ -222,8 +233,23 @@ public class IdentifiedVariablesStepFunction extends IdentifiedVariablesStepWith
         return null;
     }
 
-    AVariable var = vars.get(index);
+    AVariable var;
+    if (!Workflow.isAudit.get()) {
+      var = vars.get(index);
+    } else {
+      // missing variables may occur in audits when the called workflow is missing in the XMOM repository
+      // in this case, use fake variables to still be able to show the call with prototypes and runtime information
+      var = (vars.size() > index) ? vars.get(index) : createPrototypeVar();
+    }
+
     return new Pair<String, String>(var.getOriginalPath(), var.getOriginalName());
+  }
+
+  private AVariable createPrototypeVar() {
+    AVariable var = new ServiceVariable(service.getWF());
+    var.createPrototype("<Unknown>");
+
+    return var;
   }
 
   public String getVarCastToFqn(VarUsageType usage, int index) {
@@ -295,21 +321,25 @@ public class IdentifiedVariablesStepFunction extends IdentifiedVariablesStepWith
     if(stepSerial.getParentScope() instanceof ForEachScopeStep) {
       StepForeach foreachHoldingVariable = (StepForeach) stepSerial.getParentScope().getParentStep();
       int index = foreachHoldingVariable.getOutputVarsSingle(false).indexOf(oldVariable);
-      
-      //replace single variable
-      AVariable[] vars = foreachHoldingVariable.getOutputVarsSingle();
-      vars[index] = newVariable;
-      
-      //replace list variable
-      try {
-        AVariable listVar = stepSerial.getParentScope().identifyVariable(foreachHoldingVariable.getOutputListRefs()[index]).getVariable();
-        AVariable newListVar =  createVariable(newOutputVarFqn, newVariable.getLabel(), listVar.isList(), listVar instanceof ExceptionVariable);
-        StepSerial foreachSerial = (StepSerial) foreachHoldingVariable.getParentStep();
-        newListVar.setId(listVar.getId());
-        
-        replaceCastedVariable(listVar, newListVar, foreachSerial, newOutputVarFqn);
-      } catch (XPRC_InvalidVariableIdException | XPRC_InvalidPackageNameException e) {
-        throw new RuntimeException(e);
+      if(index != -1) {
+        //replace single variable
+        AVariable[] vars = foreachHoldingVariable.getOutputVarsSingle();
+        vars[index] = newVariable;
+
+        //replace list variable
+        try {
+          AVariable listVar = stepSerial.getParentScope().identifyVariable(foreachHoldingVariable.getOutputListRefs()[index]).getVariable();
+          AVariable newListVar = createVariable(newOutputVarFqn, newVariable.getLabel(), listVar.isList(), listVar instanceof ExceptionVariable);
+          StepSerial foreachSerial = (StepSerial) foreachHoldingVariable.getParentStep();
+          newListVar.setId(listVar.getId());
+
+          replaceCastedVariable(listVar, newListVar, foreachSerial, newOutputVarFqn);
+        } catch (XPRC_InvalidVariableIdException | XPRC_InvalidPackageNameException e) {
+          throw new RuntimeException(e);
+        }
+      } else {
+        //variable does not participate in stepForeach output
+        stepSerial.replaceVar(oldVariable, newVariable);
       }
     } else {
     //regular StepSerial - not inside
@@ -399,7 +429,15 @@ public class IdentifiedVariablesStepFunction extends IdentifiedVariablesStepWith
   private List<AVariableIdentification> fillServiceVars(final VarUsageType usage, String[] varIds, List<AVariable> vars) {
     final List<AVariableIdentification> list = new ArrayList<AVariableIdentification>();
     if( stepFunction.getOrderInputSourceRef() == null && varIds.length != vars.size() ) { // bei orderinputsources Verwendung sind varIds leer
-      throw new IllegalStateException("varIds.length=" + varIds.length + ", serviceVars.size()=" + vars.size() + " for " + stepFunction);
+      if (Workflow.isAudit.get()) {
+        // missing variables may occur in audits when the called workflow is missing in the XMOM repository
+        // in this case, use fake variables to still be able to show the call with prototype variables and runtime information 
+        for( int idx = 0; idx < varIds.length; ++idx ) {
+          vars.add(createPrototypeVar());
+        }
+      } else {
+        throw new IllegalStateException("varIds.length=" + varIds.length + ", serviceVars.size()=" + vars.size() + " for " + stepFunction);
+      }
     }
 
     for( int idx = 0; idx < vars.size(); ++idx ) {

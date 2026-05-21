@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,10 @@ package com.gip.xyna.xprc.xfractwfe.generation.xml;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -28,7 +31,8 @@ import org.apache.log4j.Logger;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.update.Updater;
 import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
-import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
+import com.gip.xyna.xprc.xfractwfe.generation.AdditionalDependencyContainer;
+import com.gip.xyna.xprc.xfractwfe.generation.AdditionalDependencyContainer.AdditionalDependencyType;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.ATT;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.EL;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
@@ -55,6 +59,8 @@ public class Datatype extends HierarchyTypeWithVariables {
   protected List<Operation> operations;
   protected String[] sharedLibs;
   protected Set<String> additionalLibNames;
+  protected List<String> pythonLibNames;
+  protected Map<AdditionalDependencyType, List<String>> additionalDependencies;
 
   private Datatype() {
   }
@@ -87,8 +93,21 @@ public class Datatype extends HierarchyTypeWithVariables {
     this.meta = datatype.meta;
     this.sharedLibs = datatype.sharedLibs;
     this.additionalLibNames = datatype.additionalLibNames;
+    this.pythonLibNames = datatype.pythonLibNames;
     this.variables = clone(datatype.variables);
     this.operations = clone(datatype.operations);
+    additionalDependencies = cloneAdditionalDependencies(datatype.additionalDependencies);
+  }
+  
+  private Map<AdditionalDependencyType, List<String>> cloneAdditionalDependencies(Map<AdditionalDependencyType, List<String>> input) {
+    if (input == null) {
+      return null;
+    }
+    Map<AdditionalDependencyType, List<String>> result = new HashMap<>();
+    for(Entry<AdditionalDependencyType, List<String>> entry : input.entrySet()) {
+      result.put(entry.getKey(), new ArrayList<String>(entry.getValue()));
+    }
+    return result;
   }
 
   private <T> List<T> clone(List<T> list) {
@@ -104,9 +123,11 @@ public class Datatype extends HierarchyTypeWithVariables {
   
   public String toXML() {
     XmlBuilder xml = new XmlBuilder();
-    xml.append("<!--");
-    xml.append(XynaProperty.XML_HEADER_COMMENT.get());
-    xml.append("-->");
+    if(!XynaProperty.XML_HEADER_COMMENT.get().isBlank()) {
+      xml.append("<!--");
+      xml.append(XynaProperty.XML_HEADER_COMMENT.get());
+      xml.append("-->");
+    }
     xml.startElementWithAttributes(EL.DATATYPE);
     xml.addAttribute(ATT.XMLNS, NAMESPACE );
     xml.addAttribute(ATT.MDM_VERSION, XMOM_VERSION);
@@ -135,6 +156,13 @@ public class Datatype extends HierarchyTypeWithVariables {
           xml.element(EL.LIBRARIES, libName);
         }
       }
+      
+      // python libraries
+      if (pythonLibNames != null) {
+        for (String libName : pythonLibNames) {
+          xml.element(EL.PYTHONLIBRARIES, libName);
+        }
+      }
 
       // java shared libraries
       if (sharedLibs != null) {
@@ -144,7 +172,8 @@ public class Datatype extends HierarchyTypeWithVariables {
       }
 
       if ( (!operations.isEmpty()) ||
-           (meta != null && meta.isServiceGroupOnly() != null && meta.isServiceGroupOnly()) ) { // service groups need an service-tag - even when it doesn't contain any operations
+           (meta != null && meta.isServiceGroupOnly() != null && meta.isServiceGroupOnly()) || // service groups need an service-tag - even when it doesn't contain any operations
+           (additionalDependencies != null && !additionalDependencies.isEmpty())) { 
         appendService(xml);
       }
       xml.endElement(EL.DATATYPE);
@@ -158,6 +187,19 @@ public class Datatype extends HierarchyTypeWithVariables {
     xml.addAttribute(ATT.LABEL, XMLUtils.escapeXMLValue(type.getLabel(), true, false) );
     xml.addAttribute(ATT.TYPENAME, type.getName() );
     xml.endAttributes();
+    if (additionalDependencies != null && !additionalDependencies.isEmpty()) {
+      xml.startElement(EL.META);
+      xml.startElement(EL.ADDITIONALDEPENDENCIES);
+      List<AdditionalDependencyType> keys = new ArrayList<>(additionalDependencies.keySet());
+      Collections.sort(keys);
+      for (AdditionalDependencyType type : keys) {
+        for (String value : additionalDependencies.get(type)) {
+          xml.element(type.getXmlElementName(), value);
+        }
+      }
+      xml.endElement(EL.ADDITIONALDEPENDENCIES);
+      xml.endElement(EL.META);
+    }
     for( Operation operation : operations ) {
       operation.appendXML(xml);
     }
@@ -232,6 +274,11 @@ public class Datatype extends HierarchyTypeWithVariables {
       datatype.additionalLibNames = additionalLibNames;
       return this;
     }
+    
+    public DatatypeBuilder pythonLibNames(List<String> pythonLibNames) {
+      datatype.pythonLibNames = pythonLibNames;
+      return this;
+    }
 
     public DatatypeBuilder variable(Variable variable) {
       getOrCreateVariables().add(variable);
@@ -240,6 +287,25 @@ public class Datatype extends HierarchyTypeWithVariables {
     
     public DatatypeBuilder variable(VariableBuilder variable) {
       getOrCreateVariables().add(variable.build());
+      return this;
+    }
+    
+    public DatatypeBuilder additionalDependencies(AdditionalDependencyContainer container, String[] sharedLibs) {
+      datatype.additionalDependencies = new HashMap<>();
+      List<String> sharedLibsList = List.of(sharedLibs);
+      for(AdditionalDependencyType type : AdditionalDependencyType.values()) {
+        Set<String> content = container.getAdditionalDependencies(type);
+        if(!content.isEmpty()) {
+          List<String> contentSorted = new ArrayList<String>(content);
+          Collections.sort(contentSorted);
+          //all used shared libraries are added to the additional dependencies set, but thry should not
+          //be persisted as additional dependency.
+          if(type == AdditionalDependencyType.SHARED_LIB) {
+            contentSorted.removeIf(x -> sharedLibsList.contains(x));
+          }
+          datatype.additionalDependencies.put(type, contentSorted);
+        }
+      }
       return this;
     }
     

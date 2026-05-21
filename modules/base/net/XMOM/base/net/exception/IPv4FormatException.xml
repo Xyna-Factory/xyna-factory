@@ -17,7 +17,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
-  <ExceptionType BaseTypeName="FormatException" BaseTypePath="base.net.exception" Code="XXYNA-BASE-00007" Label="IPv4 Format Exception" TypeName="IPv4FormatException" TypePath="base.net.exception">
+  <ExceptionType BaseTypeName="FormatException" BaseTypePath="base.net.exception" Code="XYNA-BASE-00007" Label="IPv4 Format Exception" TypeName="IPv4FormatException" TypePath="base.net.exception">
     <MessageText Language="EN">Cannot parse IPv4 Address: %0%</MessageText>
   </ExceptionType>
 </ExceptionStore>

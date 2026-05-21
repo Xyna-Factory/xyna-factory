@@ -28,7 +28,9 @@ import com.gip.xyna.xact.filter.HTMLBuilder.HTMLPart;
 import com.gip.xyna.xact.filter.JsonFilterActionInstance;
 import com.gip.xyna.xact.filter.actions.PathElements;
 import com.gip.xyna.xact.filter.actions.auth.utils.AuthUtils;
+import com.gip.xyna.xact.filter.session.XMOMGui;
 import com.gip.xyna.xact.filter.session.XMOMGuiReply.Status;
+import com.gip.xyna.xact.filter.session.XmomGuiSession;
 import com.gip.xyna.xact.filter.util.Utils;
 import com.gip.xyna.xact.filter.URLPath;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
@@ -44,6 +46,11 @@ import xmcp.auth.LoginRequest;
 
 public class LoginAction implements FilterAction {
 
+  protected XMOMGui xmomgui;
+  
+  public LoginAction(XMOMGui xmomgui) {
+    this.xmomgui = xmomgui;
+  }
 
   public boolean match(URLPath url, Method method) {
     return url.getPath().startsWith("/" + PathElements.AUTH + "/" + PathElements.LOGIN) && Method.POST == method;
@@ -77,16 +84,17 @@ public class LoginAction implements FilterAction {
     }
     
 
-    return createLoginResponse(jfai, tc, creds, path);
+    return createLoginResponse(jfai, tc, creds, path, xmomgui);
   }
 
 
-  public static FilterActionInstance createLoginResponse(JsonFilterActionInstance jfai, HTTPTriggerConnection tc, SessionCredentials creds, String path)
+  public static FilterActionInstance createLoginResponse(JsonFilterActionInstance jfai, HTTPTriggerConnection tc, SessionCredentials creds, String path, XMOMGui xmomgui)
       throws XynaException {
 
     String sdj = AuthUtils.getSessionDetailsJson(creds.getSessionId(), creds.getToken());
     String sessionId = H5XdevFilter.STRICT_TRANSPORT_SECURITY.get() ? AuthUtils.COOKIE_FIELD_SESSION_ID_STS : AuthUtils.COOKIE_FIELD_SESSION_ID;
-    
+
+    xmomgui.getOrCreateSessionBasedData(new XmomGuiSession(creds.getSessionId(), creds.getToken()));
     List<String> list = new ArrayList<>();
     list.add(AuthUtils.generateCookie(sessionId, creds.getSessionId(), path, tc, true));
     if(!AuthUtils.USE_CSRF_TOKEN.get()) {

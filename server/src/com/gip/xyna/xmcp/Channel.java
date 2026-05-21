@@ -164,6 +164,10 @@ public interface Channel
       throws XynaException;
 
 
+  public InputStream getPythonServiceImplTemplate(String fqClassNameDOM, Long revision, boolean deleteServiceImplAfterStreamClose)
+          throws XynaException;
+
+
   public InputStream getTriggerImplTemplate(String triggerName, boolean deleteTriggerImplAfterStreamClose)
       throws XynaException;
 

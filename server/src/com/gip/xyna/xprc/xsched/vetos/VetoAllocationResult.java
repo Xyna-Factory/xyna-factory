@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ public class VetoAllocationResult {
   public static final VetoAllocationResult SUCCESS = new VetoAllocationResult(true,null);
   public static final VetoAllocationResult FAILED = new VetoAllocationResult(false,OrderInstanceStatus.WAITING_FOR_VETO);
   public static final VetoAllocationResult UNSUPPORTED = new 
-      VetoAllocationResult( new VetoInformation(new AdministrativeVeto("vetos currently unsupported","vetos currently unsupported"),0));
+      VetoAllocationResult( new VetoInformation(new AdministrativeVeto("vetos currently unsupported","vetos currently unsupported", null), null, 0));
   
   private boolean allocated;
 

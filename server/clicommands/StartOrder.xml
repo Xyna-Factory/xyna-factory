@@ -95,4 +95,5 @@ A sample input XML-file might look like this:
   <BoolOption Name="s" LongName="synchronous" Description="Command blocks until order is executed. Prints exception if thrown." Optional="true"/>
   <BoolOption Name="p" LongName="print" Description="Prints the workflow output" Optional="true"/>
   <Argument Name="workspaceName" Description="The workspace, which the ordertype belongs." Optional="true"/>
+  <Argument Name="role" Description="The role executing the order" Optional="true"/>
 </XynaCommandLineCommand>

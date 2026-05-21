@@ -57,7 +57,7 @@ public class RemovexmomobjectImpl extends XynaCommandImplementation<Removexmomob
       DeploymentItemState deploymentItemState = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl()
           .getDeploymentItemStateManagement().get(fqn, revision);
       if (deploymentItemState == null) {
-        throw new IllegalArgumentException("Object unknown.");
+        throw new IllegalArgumentException("Object '" + fqn +"' in revision " + revision + " unknown.");
       }
       XMOMType type = deploymentItemState.getType();
 

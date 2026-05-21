@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Metric" BaseTypePath="xmcp.xypilot.metrics" IsAbstract="false" Label="LoC Metric" TypeName="LoCMetric" TypePath="xmcp.xypilot.metrics.defaults" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>A Metric counting the lines of code (LoC) in a snippet.</Documentation>
+  </Meta>
+  <Service Label="LoC Metric" TypeName="LoCMetric">
+    <Operation IsStatic="false" Label="Compute Score" Name="computeScore">
+      <Input>
+        <Data ID="54" Label="Code" ReferenceName="Code" ReferencePath="xmcp.xypilot.metrics" VariableName="code54"/>
+      </Input>
+      <Output>
+        <Data ID="56" Label="Score" ReferenceName="Score" ReferencePath="xmcp.xypilot.metrics" VariableName="score56"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new Score(code54.getText().split("\n").length);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Init" Name="init">
+      <Input/>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">this.setName("Lines of Code");
+this.setDescription("Computes a score corresponding to the relative number of lines of code.");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Normalize Scores" Name="normalizeScores">
+      <Input>
+        <Data ID="101" IsList="true" Label="Score" ReferenceName="Score" ReferencePath="xmcp.xypilot.metrics" VariableName="score101"/>
+      </Input>
+      <Output>
+        <Data ID="109" IsList="true" Label="Score" ReferenceName="Score" ReferencePath="xmcp.xypilot.metrics" VariableName="score109"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.xypilot.metrics.NormalizationFunctions.linear(score101);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

@@ -150,7 +150,7 @@ public class SessionManagement extends FunctionGroup implements IPropertyChangeL
     try {
       selectTimedoutSessions =
           defaultConnection.prepareQuery(new Query<ManagedSession>("select * from " + ManagedSession.TABLE_NAME + " where "
-              + ManagedSession.COL_ABSOLUTE_SESSION_TIMEOUT + " < ?", new ManagedSession().getReader()), true);
+              + ManagedSession.COL_ABSOLUTE_SESSION_TIMEOUT + " < ?", new ManagedSession().getReader(), ManagedSession.TABLE_NAME), true);
     } finally {
       defaultConnection.closeConnection();
     }
@@ -276,8 +276,8 @@ public class SessionManagement extends FunctionGroup implements IPropertyChangeL
       }
       sessionUserMap.addSession(randomId, credentials.getUserName());
     } catch (XFMG_UserIsLockedException e) {
-      if (logger.isDebugEnabled()) {
-        logger.debug("could not create session ", e);
+      if (logger.isWarnEnabled()) {
+        logger.warn("could not create session ", e);
       }
       //sollte nur vorkommen, wenn sich ein Benutzer gerade einloggt, während er gesperrt wird
       quitSession(randomId);
@@ -778,15 +778,10 @@ public class SessionManagement extends FunctionGroup implements IPropertyChangeL
   private String getRandomSessionIdString() {
     StringBuilder temp = new StringBuilder();
     StringBuilder idBuffer = new StringBuilder();
-    //10.15 | 10: random int with leading zeros; 15 SystemTime with leading zeros  
-    int randomInt = random.nextInt();
-    if (randomInt < 0) {
-      randomInt = Math.abs(randomInt);
-    }
-    temp.append(randomInt);
-    //add leading zeros
-    while (temp.length() < 10) {
-      temp.insert(0, "0");
+    //36.15 | 36: random int ; 15 SystemTime with leading zeros 
+    for (int i = 0; i < 36; i++) {
+       int randomNumber = random.nextInt(10); // creates a Number between 0 and 9
+       temp.append(randomNumber);
     }
     idBuffer.append(temp.toString());
     idBuffer.append(".");

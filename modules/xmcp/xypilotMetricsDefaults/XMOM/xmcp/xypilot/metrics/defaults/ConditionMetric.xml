@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Metric" BaseTypePath="xmcp.xypilot.metrics" IsAbstract="false" Label="Condition Metric" TypeName="ConditionMetric" TypePath="xmcp.xypilot.metrics.defaults" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>A Metric that counts the number of condotions in a code snippet, i.e. the number of "if" and "case" statements.</Documentation>
+  </Meta>
+  <Service Label="Condition Metric" TypeName="ConditionMetric">
+    <Operation IsStatic="false" Label="Compute Score" Name="computeScore">
+      <Input>
+        <Data ID="1" Label="Code" ReferenceName="Code" ReferencePath="xmcp.xypilot.metrics" VariableName="code1"/>
+      </Input>
+      <Output>
+        <Data ID="3" Label="Score" ReferenceName="Score" ReferencePath="xmcp.xypilot.metrics" VariableName="score3"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">String code = code1.getText();
+
+final String regex = "([\\{\\s;\\}]if[\\s(])|(\\Wcase\\s)"; // matches if and case keywords
+final java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(regex, java.util.regex.Pattern.MULTILINE);
+final java.util.regex.Matcher matcher = pattern.matcher(code);
+
+return new Score(matcher.results().count());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Init" Name="init">
+      <Input/>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">this.setName("Number of Conditions");
+this.setDescription("Computes a score corresponding to the relative number of conditions, i.e. if and case statements");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Normalize Scores" Name="normalizeScores">
+      <Input>
+        <Data ID="101" IsList="true" Label="Score" ReferenceName="Score" ReferencePath="xmcp.xypilot.metrics" VariableName="score101"/>
+      </Input>
+      <Output>
+        <Data ID="151" IsList="true" Label="Score" ReferenceName="Score" ReferencePath="xmcp.xypilot.metrics" VariableName="score151"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.xypilot.metrics.NormalizationFunctions.linear(score101);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

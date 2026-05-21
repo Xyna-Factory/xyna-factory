@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Filter Plugins by paths" TypeName="FilterPluginsByPaths" TypePath="xmcp.forms.plugin" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Filter Plugins by paths" Name="FilterPluginsByPaths">
+    <Input>
+      <Data ID="84" IsList="true" Label="Plugin Path" ReferenceName="PluginPath" ReferencePath="xmcp.forms.plugin" VariableName="pluginPath84"/>
+    </Input>
+    <Output>
+      <Data ID="18" IsList="true" Label="Plugin" ReferenceName="Plugin" ReferencePath="xmcp.forms.plugin" VariableName="plugin18"/>
+    </Output>
+    <ServiceReference ID="41" Label="Plugin Management" ReferenceName="PluginManagement.PluginManagement" ReferencePath="xmcp.forms.plugin">
+      <Source RefID="40"/>
+      <Target RefID="40"/>
+    </ServiceReference>
+    <Function ID="40" Label="List Plugins">
+      <Source RefID="41"/>
+      <Target RefID="41"/>
+      <Target RefID="43"/>
+      <Invoke Operation="listPlugins" ServiceID="41"/>
+      <Receive ServiceID="41">
+        <Target RefID="43"/>
+      </Receive>
+    </Function>
+    <Foreach ID="215">
+      <Source RefID="84"/>
+      <Target RefID="672"/>
+      <InputList RefID="84">
+        <Data ID="216" Label="Plugin Path" ReferenceName="PluginPath" ReferencePath="xmcp.forms.plugin" VariableName="pluginPath216"/>
+      </InputList>
+      <OutputList RefID="672">
+        <Data ID="557" IsList="true" Label="Plugin" ReferenceName="Plugin" ReferencePath="xmcp.forms.plugin" VariableName="plugin557">
+          <Source RefID="420"/>
+          <Target RefID="557"/>
+        </Data>
+      </OutputList>
+      <Foreach ID="420">
+        <Source RefID="43"/>
+        <Target RefID="557"/>
+        <InputList RefID="43">
+          <Data ID="421" Label="Plugin" ReferenceName="Plugin" ReferencePath="xmcp.forms.plugin" VariableName="plugin421"/>
+        </InputList>
+        <OutputList RefID="557">
+          <Data ID="556" IsList="true" Label="Plugin" ReferenceName="Plugin" ReferencePath="xmcp.forms.plugin" VariableName="plugin556">
+            <Source RefID="159"/>
+          </Data>
+        </OutputList>
+        <Choice ID="159" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="216"/>
+          <Source RefID="421"/>
+          <Target RefID="556"/>
+          <Input>
+            <Data ID="182" Label="Plugin Path" ReferenceName="PluginPath" ReferencePath="xmcp.forms.plugin" VariableName="pluginPath182">
+              <Source RefID="159"/>
+            </Data>
+            <Source RefID="216"/>
+          </Input>
+          <Input>
+            <Data ID="387" Label="Plugin" ReferenceName="Plugin" ReferencePath="xmcp.forms.plugin" VariableName="plugin387">
+              <Source RefID="159"/>
+            </Data>
+            <Source RefID="421"/>
+          </Input>
+          <Case ID="160" Label="true" Premise="(length(%0%.path)&lt;&quot;1&quot;&amp;&amp;length(%1%.path)&lt;&quot;1&quot;)||%0%.path==%1%.path">
+            <Mappings ID="518" Label="List with one entry">
+              <Input>
+                <Data ID="689" Label="Plugin" ReferenceName="Plugin" ReferencePath="xmcp.forms.plugin" VariableName="plugin689">
+                  <Source RefID="518"/>
+                </Data>
+                <Source RefID="421">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Output>
+                <Data ID="535" IsList="true" Label="Plugin" ReferenceName="Plugin" ReferencePath="xmcp.forms.plugin" VariableName="plugin535">
+                  <Source RefID="518"/>
+                </Data>
+                <Target RefID="536"/>
+              </Output>
+              <Mapping>%1%["0"]=%0%</Mapping>
+            </Mappings>
+            <Assign ID="163">
+              <Source RefID="536"/>
+              <Target RefID="556"/>
+              <Copy>
+                <Source RefID="536"/>
+                <Target RefID="556"/>
+              </Copy>
+            </Assign>
+          </Case>
+          <Case ID="161" Label="false">
+            <Mappings ID="553" Label="Empty List">
+              <Output>
+                <Data ID="554" IsList="true" Label="Plugin" ReferenceName="Plugin" ReferencePath="xmcp.forms.plugin" VariableName="plugin554"/>
+                <Target RefID="555"/>
+              </Output>
+            </Mappings>
+            <Assign ID="165">
+              <Source RefID="555"/>
+              <Target RefID="556"/>
+              <Copy>
+                <Source RefID="555"/>
+                <Target RefID="556"/>
+              </Copy>
+            </Assign>
+          </Case>
+        </Choice>
+        <Data ID="536" IsList="true" Label="Plugin" ReferenceName="Plugin" ReferencePath="xmcp.forms.plugin" VariableName="plugin536">
+          <Source RefID="518"/>
+        </Data>
+        <Data ID="555" IsList="true" Label="Plugin" ReferenceName="Plugin" ReferencePath="xmcp.forms.plugin" VariableName="plugin555"/>
+      </Foreach>
+    </Foreach>
+    <Data ID="43" IsList="true" Label="Plugin" ReferenceName="Plugin" ReferencePath="xmcp.forms.plugin" VariableName="plugin43">
+      <Source RefID="40"/>
+    </Data>
+    <Data ID="672" IsList="true" Label="Plugin" ReferenceName="Plugin" ReferencePath="xmcp.forms.plugin" VariableName="plugin672">
+      <Source RefID="215"/>
+      <Target RefID="558"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="672"/>
+      <Target RefID="18"/>
+      <Copy>
+        <Source RefID="672">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="18"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

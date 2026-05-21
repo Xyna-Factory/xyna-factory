@@ -319,14 +319,7 @@ f_add_syslog_facility_syslog_ng () {
 f_restart_rsyslog () {
   case ${INSTALLATION_PLATFORM} in
     rhel|oracle)
-      case ${INSTALLATION_PLATFORM_VERSION} in
-        7.*)
-          systemctl restart rsyslog.service
-          ;;
-        *)
-          /etc/init.d/rsyslog restart
-          ;;
-      esac
+      systemctl restart rsyslog.service
       ;;
    ubuntu|centos)
      systemctl restart rsyslog.service
@@ -382,7 +375,7 @@ f_add_syslog_facility_rsyslogv8 () {
        echo -e "\n${FACILITY_NAME}.* action(type=\"omfile\" \n\
                 file=\"${FULL_PATH_TO_LOG_FILE}\"\n\
                 fileOwner=\"${LOGFILE_OWNER}\" fileGroup=\"${XYNA_GROUP}\"\n\
-                fileCreateMode=\"0640\" dirCreateMode=\"0755\")\n\
+                fileCreateMode=\"0640\" dirCreateMode=\"0755\" dirOwner=\"${LOGFILE_OWNER}\")\n\
          & stop\n" >> "${TARGET_FILE}"
        f_restart_rsyslog
        ;;
@@ -449,15 +442,8 @@ f_configure_logrotation () {
     elif [[ -f "/etc/rsyslog.conf" ]]; then
       case ${INSTALLATION_PLATFORM} in
         rhel|oracle)
-          case ${INSTALLATION_PLATFORM_VERSION} in
-            7.*)
-              RESTART_CMD="systemctl restart rsyslog.service"
-              ;;
-            *)
-              RESTART_CMD="/etc/init.d/rsyslog restart"
-              ;;
-          esac
-          ;;
+         RESTART_CMD="systemctl restart rsyslog.service"
+         ;;
         centos)
          RESTART_CMD="systemctl restart rsyslog.service"
          ;;

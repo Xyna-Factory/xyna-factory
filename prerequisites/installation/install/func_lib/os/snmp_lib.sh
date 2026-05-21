@@ -76,7 +76,7 @@ A_HERE_DOCUMENT
   local SNMP_TRIGGER_PORT
   local SNMP_TRIGGER_IP
   let i=0
-  while [[ ${i} -le ${BLACK_EDITION_INSTANCES} ]]; do
+  while [[ ${i} -lt ${BLACK_EDITION_INSTANCES} ]]; do
     let i=i+1
     local PROP_FILE=$(get_properties_filename product "${i}")
     if [ ! -e ${PROP_FILE} ] ; then

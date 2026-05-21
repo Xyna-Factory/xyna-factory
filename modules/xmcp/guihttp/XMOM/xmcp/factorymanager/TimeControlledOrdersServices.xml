@@ -22,6 +22,7 @@
   </Meta>
   <Libraries>TimeControlledOrdersServicesImpl.jar</Libraries>
   <SharedLibraries>ZetaTools</SharedLibraries>
+  <SharedLibraries>XynaObjectJsonBuilder</SharedLibraries>
   <Service Label="Time Controlled Orders Services" TypeName="TimeControlledOrdersServices">
     <Operation IsStatic="true" Label="Create TCO" Name="createTCO">
       <Input>

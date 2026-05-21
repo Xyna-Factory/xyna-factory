@@ -19,9 +19,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>com.gip.xyna</groupId>
-        <artifactId>bom</artifactId>
+        <artifactId>userlib-bom</artifactId>
         <version>1.0.0</version>
-        <relativePath>../../../../../../installation/build/pom.xml</relativePath>
+        <relativePath>../../../../../../installation/build/userlib.bom.xml</relativePath>
     </parent>
     
     <modelVersion>4.0.0</modelVersion>
@@ -35,6 +35,10 @@
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>com.ibm.mq</groupId>
+            <artifactId>com.ibm.mq.allclient</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-1.2-api</artifactId>

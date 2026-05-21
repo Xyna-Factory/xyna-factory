@@ -1,0 +1,64 @@
+/*
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ */
+
+package xmcp.zeta.storage.generic.filter.shared;
+
+import java.util.Optional;
+
+public class Enums {
+
+  public static enum OpMultiplicity {
+    UNARY, BINARY, UNKNOWN
+  }
+  
+  
+  public static enum LexedOperatorCategory {
+    WILDCARD("*"),
+    AND("&"),
+    OR("|"),
+    NOT("!"),
+    LESS_THAN("<"),
+    GREATER_THAN(">"),
+    EQUALS("="),
+    OPEN("("),
+    CLOSE(")"),
+    SINGLE_QUOTE("'"),
+    DOUBLE_QUOTE("\"");
+    
+    private final String _token;
+    
+    private LexedOperatorCategory(String token) {
+      this._token = token;
+    }
+
+    public String getToken() {
+      return _token;
+    }
+    
+    public static Optional<LexedOperatorCategory> build(String input) {
+      for (LexedOperatorCategory item : values()) {
+        if (item.getToken().equals(input)) {
+          return Optional.of(item);
+        }
+      }
+      return Optional.empty();
+    }
+    
+  }
+  
+}

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Pull Result Add New Workspaces Definition" TypeName="PullResultAddNewWorkspacesDefinition" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Pull Result Add New Workspaces Definition" Name="PullResultAddNewWorkspacesDefinition">
+    <Input>
+      <Data ID="10" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput10"/>
+    </Input>
+    <Output>
+      <Data ID="23" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition23"/>
+    </Output>
+    <ServiceReference ID="7455" Label="GitIntegration UI Services" ReferenceName="GitIntegrationUIServices.GitIntegrationUIServices" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="7454"/>
+      <Target RefID="7454"/>
+    </ServiceReference>
+    <ServiceReference ID="7434" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="7433"/>
+      <Target RefID="7433"/>
+    </ServiceReference>
+    <Function ID="7433" Label="get Own RuntimeContext">
+      <Source RefID="7434"/>
+      <Target RefID="7434"/>
+      <Target RefID="7436"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="7434"/>
+      <Receive ServiceID="7434">
+        <Target RefID="7436"/>
+      </Receive>
+    </Function>
+    <Choice ID="103" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="10"/>
+      <Target RefID="7556"/>
+      <Input>
+        <Data ID="118" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput118">
+          <Source RefID="103"/>
+        </Data>
+        <Source RefID="10"/>
+      </Input>
+      <Input>
+        <Data ID="151" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput151">
+          <Source RefID="103"/>
+        </Data>
+        <Source RefID="10"/>
+      </Input>
+      <Case ID="104" Label="true" Premise="%0%.exception!=null||length(%1%.exception)&gt;&quot;0&quot;">
+        <Mappings ID="192" Label="Empty">
+          <Output>
+            <Data ID="7287" IsList="true" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition7287">
+              <Source RefID="192"/>
+            </Data>
+            <Target RefID="7288"/>
+          </Output>
+        </Mappings>
+        <Assign ID="107">
+          <Source RefID="7288"/>
+          <Target RefID="7556"/>
+          <Copy>
+            <Source RefID="7288"/>
+            <Target RefID="7556"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="105" Label="false">
+        <Mappings ID="235" Label="Mapping">
+          <Input>
+            <Data ID="297" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput297">
+              <Source RefID="235"/>
+            </Data>
+            <Source RefID="10"/>
+          </Input>
+          <Output>
+            <Data ID="7127" IsList="true" Label="Workspace Connection Data" ReferenceName="WorkspaceConnectionData" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceConnectionData7127">
+              <Source RefID="235"/>
+            </Data>
+            <Target RefID="7128"/>
+          </Output>
+          <Mapping>%1%=%0%.newWorkspaces</Mapping>
+        </Mappings>
+        <Function ID="7454" Label="Create Add Workspace Connection Open Details Buttons">
+          <Source RefID="7455"/>
+          <Source RefID="7128"/>
+          <Source RefID="7436"/>
+          <Target RefID="7455"/>
+          <Target RefID="7457"/>
+          <Invoke Operation="createAddWorkspaceConnectionOpenDetailsButtons" ServiceID="7455">
+            <Source RefID="7128"/>
+            <Source RefID="7436"/>
+          </Invoke>
+          <Receive ServiceID="7455">
+            <Target RefID="7457"/>
+          </Receive>
+        </Function>
+        <Assign ID="109">
+          <Source RefID="7457"/>
+          <Target RefID="7556"/>
+          <Copy>
+            <Source RefID="7457"/>
+            <Target RefID="7556"/>
+          </Copy>
+        </Assign>
+        <Data ID="7457" IsList="true" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition7457">
+          <Source RefID="7454"/>
+        </Data>
+      </Case>
+    </Choice>
+    <Mappings ID="36" Label="Mapping">
+      <Input>
+        <Data ID="7343" IsList="true" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition7343">
+          <Source RefID="36"/>
+        </Data>
+        <Source RefID="7556"/>
+      </Input>
+      <Output>
+        <Data ID="61" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition61">
+          <Source RefID="36"/>
+        </Data>
+        <Target RefID="62"/>
+      </Output>
+      <Mapping>%1%.label="New Workspaces"</Mapping>
+      <Mapping>%1%.hideIfEmpty="true"</Mapping>
+      <Mapping>%1%.children=%0%</Mapping>
+    </Mappings>
+    <Data ID="62" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition62">
+      <Source RefID="36"/>
+    </Data>
+    <Data ID="7128" IsList="true" Label="Workspace Connection Data" ReferenceName="WorkspaceConnectionData" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceConnectionData7128">
+      <Source RefID="235"/>
+    </Data>
+    <Data ID="7288" IsList="true" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition7288">
+      <Source RefID="192"/>
+    </Data>
+    <Data ID="7436" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext7436">
+      <Source RefID="7433"/>
+    </Data>
+    <Data ID="7556" IsList="true" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition7556">
+      <Source RefID="103"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="62"/>
+      <Target RefID="23"/>
+      <Copy>
+        <Source RefID="62"/>
+        <Target RefID="23"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

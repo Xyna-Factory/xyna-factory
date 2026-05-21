@@ -104,7 +104,6 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.AssumedDeadlockExce
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.DeploymentMode;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.EL;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
-import com.gip.xyna.xprc.xfractwfe.generation.JavaOperation;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.WF;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
@@ -1795,7 +1794,7 @@ public class XMOMDatabase extends FunctionGroup {
       ResultSetReader<? extends XMOMDatabaseEntry> reader = getReaderForArchive(archive, select.getSelection());
       ODSConnection con = ods.openConnection(ODSConnectionType.HISTORY);
       try {
-        PreparedQuery<? extends XMOMDatabaseEntry> query = cache.getQueryFromCache(selectString, con, reader);
+        PreparedQuery<? extends XMOMDatabaseEntry> query = cache.getQueryFromCache(selectString, con, reader, archive.getArchiveIdentifier());
         Parameter paras;
         if (substituteRevisionParameter) {
           //letzter parameter ist revision und muss ausgetauscht werden, damit in allen runtimecontexten gesucht wird

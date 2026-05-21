@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -292,8 +292,10 @@ public class ApplicationXmlEntry {
   public Document buildXmlDocument() throws ParserConfigurationException {
       DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
       Document doc = builder.newDocument();
-      Comment headerComment = doc.createComment(XynaProperty.XML_HEADER_COMMENT.get().replace("_FACTORY_VERSION_", factoryVersion));
-      doc.appendChild(headerComment);
+      if(!XynaProperty.XML_HEADER_COMMENT.get().isBlank()) {
+        Comment headerComment = doc.createComment(XynaProperty.XML_HEADER_COMMENT.get().replace("_FACTORY_VERSION_", factoryVersion));
+        doc.appendChild(headerComment);
+      }
       Element rootElement = doc.createElement(ApplicationXmlHandler.TAG_APPLICATION);
       doc.appendChild(rootElement);
       rootElement.setAttribute(ApplicationXmlHandler.ATTRIBUTE_APPLICATIONNAME, applicationName);

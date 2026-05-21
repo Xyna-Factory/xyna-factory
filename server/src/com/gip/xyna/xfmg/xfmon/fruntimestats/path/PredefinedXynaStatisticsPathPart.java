@@ -19,7 +19,6 @@ package com.gip.xyna.xfmg.xfmon.fruntimestats.path;
 
 import com.gip.xyna.xfmg.xfmon.fruntimestats.path.StatisticsPath.StatisticsNodeTraversal;
 import com.gip.xyna.xfmg.xfmon.fruntimestats.path.StatisticsPath.StatisticsPathPart;
-import com.gip.xyna.xfmg.xfmon.fruntimestats.path.StatisticsPath.UnknownPathOnTraversalHandling;
 
 
 public enum PredefinedXynaStatisticsPathPart implements StatisticsPathPart {
@@ -42,7 +41,8 @@ public enum PredefinedXynaStatisticsPathPart implements StatisticsPathPart {
   XFWH("XFWH"), XSTOI("XStoI"), CONNECTIONPOOLS("ConnectionPools"),
   XACT("XACT"), XTRIG("XTrig"), IMPLS("Impls"), DHCP("DHCP")
                                               , HTTP("HTTP")
-                                              , ORACLEAQ("OracleAQ");
+                                              , ORACLEAQ("OracleAQ"),
+  XNWH("XNWH"), SHAREDRESOURCES("SharedResources");
   
   private final String name;
   

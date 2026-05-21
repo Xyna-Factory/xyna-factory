@@ -26,7 +26,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gip.xyna</groupId>
     <artifactId>SSHJUtils_third_parties</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -37,6 +37,18 @@
        <dependency>
             <groupId>com.hierynomus</groupId>
             <artifactId>sshj</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk18on</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk18on</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcutil-jdk18on</artifactId>
         </dependency>
     </dependencies>
 </project>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,11 +45,15 @@
                         <artifactId>commons-logging</artifactId>
                 </dependency>
                 <dependency>
+                        <groupId>black.ninia</groupId>
+                        <artifactId>jep</artifactId>
+                </dependency>
+                <dependency>
                         <groupId>org.mindrot</groupId>
                         <artifactId>jbcrypt</artifactId>
                 </dependency>
                 <dependency>
-                        <groupId>com.jcraft</groupId>
+                        <groupId>com.github.mwiede</groupId>
                         <artifactId>jsch</artifactId>
                 </dependency>
                 <dependency>
@@ -137,6 +141,14 @@
                                         <artifactId>*</artifactId>
                                 </exclusion>
                         </exclusions>
+                </dependency>
+                <dependency>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-api</artifactId>
+                </dependency>
+                <dependency>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-nop</artifactId>
                 </dependency>
         </dependencies>
 </project>

@@ -62,6 +62,3 @@ for app in ${APPLIST} ; do
   ' $app > dummy.xml
   mv dummy.xml $app
 done;
-
-echo "SVN Checkin durch: "
-echo "svn ci -m \"Neue RequiredRuntimeContext-Version ${REQUIRED_APP} ${NEW_VERSION}\"" ${APPLIST}

@@ -154,11 +154,10 @@ public class BatchProcessSearch {
     }
     
     ResultSetReader<Long> idReader = table.getIdReader();
-    PreparedQuery<Long> archiveQuery = cache.getQueryFromCache(selectString, con, idReader);
+    PreparedQuery<Long> archiveQuery = cache.getQueryFromCache(selectString, con, idReader, table.getTableName());
     Parameter params = select.getParameter(table);
     
     List<Long> result = con.query(archiveQuery, params, -1);
-    //logger.debug("Select for "+table+": " + selectString+" -> "+result.size()+" "+result );
     return result;
   }
   

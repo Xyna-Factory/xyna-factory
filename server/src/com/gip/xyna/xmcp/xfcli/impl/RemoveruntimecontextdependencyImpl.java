@@ -47,7 +47,7 @@ public class RemoveruntimecontextdependencyImpl extends XynaCommandImplementatio
     
     ChangeResult result;
     RuntimeContextDependencyManagement rcdMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
-    result = rcdMgmt.removeDependency(owner, requirement, TemporarySessionAuthentication.TEMPORARY_CLI_USER_NAME);
+    result = rcdMgmt.removeDependency(owner, requirement, TemporarySessionAuthentication.TEMPORARY_CLI_USER_NAME, payload.getForce());
     
     switch(result) {
       case Succeeded:

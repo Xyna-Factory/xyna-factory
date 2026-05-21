@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package com.gip.xyna.xact.filter.util.xo;
 
 
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +30,10 @@ import com.gip.xyna.utils.misc.JsonParser.EmptyJsonVisitor;
 import com.gip.xyna.utils.misc.JsonParser.JsonVisitor;
 import com.gip.xyna.utils.misc.JsonParser.UnexpectedJSONContentException;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
+import com.gip.xyna.xdev.xfractmod.xmdm.Container;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObjectList;
+import com.gip.xyna.xfmg.xfctrl.XynaFactoryControl;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderDispatcher;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderType;
@@ -96,9 +99,9 @@ public class XynaObjectVisitor extends EmptyJsonVisitor<GeneralXynaObject> {
 
   //subobject oder komplexes listenelement (und dann ist das label das label der liste)
   public JsonVisitor<?> objectStarts(String label) throws UnexpectedJSONContentException {
-    if (label.equals(META_TAG)) {
+    if (META_TAG.equals(label)) {
       return MetaInfo.getJsonVisitor();
-    } else if (label.equals(WRAPPED_LIST_TAG)) {
+    } else if (WRAPPED_LIST_TAG.equals(label)) {
       this.isComplexListWrapper = true; //wir befinden uns in dem complexlist-fall in dem objekt mit $meta und $list
       return new XynaObjectVisitor(); //ein komplexes listenelement
     } else {
@@ -195,7 +198,7 @@ public class XynaObjectVisitor extends EmptyJsonVisitor<GeneralXynaObject> {
 
 
   public void object(String label, Object value) throws UnexpectedJSONContentException {
-    if (label.equals(META_TAG)) {
+    if (META_TAG.equals(label)) {
       info = (MetaInfo) value;
     } else {
       try {
@@ -227,12 +230,11 @@ public class XynaObjectVisitor extends EmptyJsonVisitor<GeneralXynaObject> {
       Class<?> clazz = null;
       try {
         clazz = deriveClassFromInfo();
-        object = (GeneralXynaObject) clazz.newInstance();
-      } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY | Ex_FileAccessException | XPRC_XmlParsingException | ClassNotFoundException
-          | InstantiationException | IllegalAccessException | XPRC_InvalidPackageNameException e) {
+        object = (GeneralXynaObject) clazz.getConstructor().newInstance();
+      } catch (Exception e) {
         
         try{
-          java.lang.reflect.Constructor c = getConstructor(clazz);
+          Constructor<?> c = getConstructor(clazz);
           c.setAccessible(true);
           object = (GeneralXynaObject)c.newInstance();
         }
@@ -244,8 +246,8 @@ public class XynaObjectVisitor extends EmptyJsonVisitor<GeneralXynaObject> {
     return object;
   }
   
-  private java.lang.reflect.Constructor getConstructor(Class<?> clazz){
-    java.lang.reflect.Constructor[] candidates = clazz.getDeclaredConstructors();
+  private Constructor<?> getConstructor(Class<?> clazz){
+    Constructor<?>[] candidates = clazz.getDeclaredConstructors();
     
     for(int i=0; i<candidates.length; i++){
       if(candidates[i].getParameterCount() == 0)
@@ -262,14 +264,18 @@ public class XynaObjectVisitor extends EmptyJsonVisitor<GeneralXynaObject> {
     if (isComplexListWrapper) {
       object = new XynaObjectList(values, info.getFqName());
     } else {
-      //TODO was ist das für ein fall?
-      try {
-        Field field = oFindField(getObject().getClass(), label);
-        if (field != null) {
-          getObject().set(label, new ArrayList(values));
+      if (label == null) {
+        object = new Container(values.toArray(new GeneralXynaObject[] {}));
+      } else {
+        //TODO was ist das für ein fall?
+        try {
+          Field field = oFindField(getObject().getClass(), label);
+          if (field != null) {
+            getObject().set(label, new ArrayList(values));
+          }
+        } catch (XDEV_PARAMETER_NAME_NOT_FOUND e) {
+          throw new RuntimeException(e);
         }
-      } catch (XDEV_PARAMETER_NAME_NOT_FOUND e) {
-        throw new RuntimeException(e);
       }
     }
   }
@@ -313,10 +319,9 @@ public class XynaObjectVisitor extends EmptyJsonVisitor<GeneralXynaObject> {
     if (GenerationBase.isReservedServerObjectByFqClassName(fqClassName)) {
       return GenerationBase.getReservedClass(info.getFqName());
     }
-    Long revision = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement()
-        .getRevision(info.getRuntimeContext());
-    revision = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()
-        .getRevisionDefiningXMOMObjectOrParent(info.getFqName(), revision);
+    XynaFactoryControl factryCtl = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl();
+    Long revision = factryCtl.getRevisionManagement().getRevision(info.getRuntimeContext());
+    revision = factryCtl.getRuntimeContextDependencyManagement().getRevisionDefiningXMOMObjectOrParent(info.getFqName(), revision);
     XMOMType type = XMOMType.getXMOMTypeByRootTag(GenerationBase.retrieveRootTag(info.getFqName(), revision));
     ClassLoaderDispatcher cld = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getClassLoaderDispatcher();
     ClassLoaderBase cl = cld.getClassLoaderByType(deriveClassLoader(type), fqClassName, revision);

@@ -35,7 +35,7 @@ public class FactoryContentItemDifferenceSelector implements XynaObjectDifferenc
 
   @Override
   public String selectId(FactoryContentDifference item) {
-    return String.valueOf(item.getId());
+    return String.valueOf(item.getEntryId());
   }
 
   @Override

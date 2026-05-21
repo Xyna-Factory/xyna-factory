@@ -25,6 +25,7 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.utils.misc.JsonBuilder;
+import com.gip.xyna.xact.filter.H5XdevFilter;
 import com.gip.xyna.xact.filter.JsonFilterActionInstance;
 import com.gip.xyna.xact.filter.util.Utils;
 import com.gip.xyna.xact.filter.util.xo.XynaObjectJsonBuilder;
@@ -111,7 +112,7 @@ class StartOrderActionInstance extends JsonFilterActionInstance {
     long revision;
     long backupRevision = -1L;
     try {
-      revision = Utils.getGuiHttpApplicationRevision();
+      revision = Utils.getGuiHttpRevision();
       backupRevision = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().getRevision(rtc);
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       throw new RuntimeException(e);
@@ -164,55 +165,67 @@ class StartOrderActionInstance extends JsonFilterActionInstance {
 
 
   private String modelledErrorResponse(XynaException[] xynaExceptions, HTTPTriggerConnection tc) {
-
     StartOrderExceptionResponse response = new StartOrderExceptionResponse();
     response.setOrderId(Long.toString(orderId));
+    long orderRtc = -1;
+    long guiHttpRevision = -1;
+    try {
+      orderRtc = Utils.getRtcRevision(rtc);
+      guiHttpRevision = Utils.getGuiHttpRevision();
+    } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
+    }
 
+    if(xynaExceptions == null) {
+      response.setErrorMessage("Exception information missing.");
+      return Utils.xoToJson(response, orderRtc, new long[] {guiHttpRevision});
+    }
+    
     Throwable t;
     boolean first;
     boolean multipleStackTraces = xynaExceptions.length > 1;
-    
     if (xynaExceptions.length == 1 && xynaExceptions[0] != null) {
       response.setErrorMessage(xynaExceptions[0].getMessage());
     } else if (xynaExceptions.length > 1) {
       response.setErrorMessage("Multiple errors occurred.");
     }
     
-    for (int i = 0; i < xynaExceptions.length; i++) {
-      
+    for (int i = 0; i < xynaExceptions.length; i++) {     
       XynaException xe = xynaExceptions[i];
+      if(xe == null) {
+        if(logger.isWarnEnabled()) {
+          logger.warn("An Exception was null in order " + orderId);
+        }
+        continue;
+      }
       t = xe;
       first = true;
 
-      if (multipleStackTraces) {
-        response.addToStackTrace("--- This is Stacktrace " + i + " of " + xynaExceptions.length + " ---");
-      }
+      if (!H5XdevFilter.SUPPRESS_STACKTRACES.get()) {
+        if (multipleStackTraces) {
+          response.addToStackTrace("--- This is Stacktrace " + i + " of " + xynaExceptions.length + " ---");
+        }
 
-      while (t != null) {
-        if (first) {
-          first = false;
-        } else {
-          response.addToStackTrace("Caused by: " + t.getMessage());
+        while (t != null) {
+          if (first) {
+            first = false;
+          } else {
+            response.addToStackTrace("Caused by: " + t.getMessage());
+          }
+          StackTraceElement[] ste = t.getStackTrace();
+          if (ste == null) {
+            response.addToStackTrace("NO STACKTRACE INFORMATION AVAILABLE!");
+            continue;
+          }
+          for (StackTraceElement s : ste) {
+            response.addToStackTrace(s == null ? "NULL" : s.toString());
+          }
+          t = t.getCause();
         }
-        StackTraceElement[] ste = t.getStackTrace();
-        for (StackTraceElement s : ste) {
-          response.addToStackTrace(s.toString());
-        }
-        t = t.getCause();
       }
 
       if (xe instanceof XynaExceptionBase) {
         response.addToExceptions((XynaExceptionBase) xe);
       }
-    }
-
-    long orderRtc = -1;
-    long guiHttpRevision = -1;
-
-    try {
-      orderRtc = Utils.getRtcRevision(rtc);
-      guiHttpRevision = Utils.getGuiHttpApplicationRevision();
-    } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
     }
 
     return Utils.xoToJson(response, orderRtc, new long[] {guiHttpRevision});
@@ -228,25 +241,25 @@ class StartOrderActionInstance extends JsonFilterActionInstance {
       t = xynaExceptions[0]; //TODO multiple fehler weitergeben?
     }
     jb.addStringAttribute("errorMessage", t.getMessage());
-    jb.addAttribute("stackTrace");
-    jb.startList();
-
-    boolean first = true;
-    while (t != null) {
-      if (first) {
-        first = false;
-      } else {
-        jb.addStringListElement("Caused by: " + t.getMessage());
+    if (!H5XdevFilter.SUPPRESS_STACKTRACES.get()) {
+      jb.addAttribute("stackTrace");
+      jb.startList();
+  
+      boolean first = true;
+      while (t != null) {
+        if (first) {
+          first = false;
+        } else {
+          jb.addStringListElement("Caused by: " + t.getMessage());
+        }
+        StackTraceElement[] ste = t.getStackTrace();
+        for (StackTraceElement s : ste) {
+          jb.addStringListElement(s.toString());
+        }
+        t = t.getCause();
       }
-      StackTraceElement[] ste = t.getStackTrace();
-      for (StackTraceElement s : ste) {
-        jb.addStringListElement(s.toString());
-      }
-
-      t = t.getCause();
+      jb.endList();
     }
-
-    jb.endList();
     jb.endObject();
     return jb.toString();
   }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.misc.DataRangeCollection;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
+import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 
 
@@ -158,7 +159,22 @@ public class Container extends XynaObject {
 
   public String toXml(String varName, boolean onlyContent, long version, XMLReferenceCache cache) {
     StringBuilder xml = new StringBuilder();
-    // TODO we should provide a valid XML by enclosing the sum of the substrings by an XML tag
+    boolean createEnclosingTag = XynaProperty.CONTAINER_XML_WRAP.get();
+    if(createEnclosingTag) {
+      xml.append("<container>");
+    }
+
+    xml.append(writeMemberXml(version, cache));
+
+    if(createEnclosingTag) {
+      xml.append("</container>");
+    }
+
+    return xml.toString();
+  }
+
+  public String writeMemberXml(long version, XMLReferenceCache cache) {
+    StringBuilder xml = new StringBuilder();
     for (GeneralXynaObject xo : params) {
       if (xo != null) {
         // TODO this has to be passed because when parsing the XML again we can't not expect the variable name to be
@@ -174,7 +190,6 @@ public class Container extends XynaObject {
     }
     return xml.toString();
   }
-
 
   public boolean supportsObjectVersioning() {
     for (GeneralXynaObject xo : params) {

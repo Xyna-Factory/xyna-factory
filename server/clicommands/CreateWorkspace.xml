@@ -18,4 +18,5 @@
 <XynaCommandLineCommand>
   <CommandDefinition Name="createworkspace" Groups="Workspace Management" Description="Create a new workspace and copy XMOM xmls and workspace dependent XynaProperties from default workspace."/>
   <Argument Name="workspaceName" Description="The name of the new workspace"/>
+  <Argument Name="revision" Description="Revision number to use for the new workspace."  Optional="true"/>
 </XynaCommandLineCommand>

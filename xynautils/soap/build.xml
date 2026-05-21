@@ -19,13 +19,13 @@
 <project name="xynautils-soap" basedir=".">
 
 	<!--Next release version for the archive file-->
-	<property name="release.number" value="2.3.0.0"/>
+	<property name="release.number" value="3.0.0.0"/>
 	<!--Name of the utils project-->
 	<property name="utils.name" value="soap"/>
 
 	<!--Master build file-->
 	<property name="build.file"
-	          value="${basedir}/../install/xynautils/masterbuild.xml" />
+	          value="${basedir}/../../installation/build/buildXynaUtils.xml" />
 
 	<!--Import all targets from master build file-->
 	<import file="${build.file}"/>

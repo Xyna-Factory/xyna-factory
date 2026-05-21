@@ -25,6 +25,9 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
+import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyInt;
+
 import xmcp.gitintegration.impl.processing.XynaContentProcessingPortal;
 import xmcp.gitintegration.impl.processing.XynaObjectDifferenceSelector;
 
@@ -32,7 +35,12 @@ import xmcp.gitintegration.impl.processing.XynaObjectDifferenceSelector;
 
 public class OutputCreator <ITEM, DIFFERENCE, SELECTOR extends XynaObjectDifferenceSelector<ITEM, DIFFERENCE>>{
 
-  public static final int TABLE_LIMIT = 5;
+  public static final XynaPropertyInt TABLE_LIMIT = new XynaPropertyInt("xmcp.gitintegration.table.limit", 5)
+    .setDefaultDocumentation(DocumentationLanguage.EN,
+    "GitIntegration: Number of displayed lines in a text block with differences")
+    .setDefaultDocumentation(DocumentationLanguage.DE,
+    "GitIntegration: Anzahl angezeigter Zeilen in einem Textblock mit Differenzen");
+
   protected XynaObjectDifferenceSelector<ITEM, DIFFERENCE> selector;
   
   public OutputCreator(XynaObjectDifferenceSelector<ITEM, DIFFERENCE> selector) {
@@ -108,7 +116,7 @@ public class OutputCreator <ITEM, DIFFERENCE, SELECTOR extends XynaObjectDiffere
     int tableCount = 0;
     for (ItemDifference<C> difference : diffs) {
       tableCount++;
-      if (tableCount > TABLE_LIMIT) {
+      if (tableCount > TABLE_LIMIT.get()) {
         appendTruncatedList(ds);
         break;
       }

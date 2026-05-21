@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="XMOM Item Reference" TypeName="XMOMItemReference" TypePath="xmcp.xypilot" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>Represents a reference to a XMOM item.
+The XMOMItemReference is made of a fully qualified name and workspace.
+
+The fqn is a string made of several parts separated by a dot.
+The Workspace is the name of the Workspace containign the item.</Documentation>
+  </Meta>
+  <Data Label="fqName" VariableName="fqName">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Fully qualified name of the XMOM Item</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Workspace" VariableName="workspace">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Workspace containing XMOM item</Documentation>
+    </Meta>
+  </Data>
+</DataType>

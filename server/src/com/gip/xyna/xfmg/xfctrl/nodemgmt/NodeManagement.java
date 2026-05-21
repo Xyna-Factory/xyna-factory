@@ -26,6 +26,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import com.gip.xyna.FunctionGroup;
 import com.gip.xyna.FutureExecution;
@@ -50,6 +56,7 @@ import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyString
 import com.gip.xyna.xnwh.persistence.ODSImpl;
 import com.gip.xyna.xnwh.persistence.ODSImpl.PersistenceLayerInstances;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
+import java.util.UUID;
 
 
 public class NodeManagement extends FunctionGroup {
@@ -136,7 +143,7 @@ public class NodeManagement extends FunctionGroup {
       
       String identifier = ownNodeNameProperty.get();
       if( identifier.length() == 0 ) {
-        identifier = "FactoryNode-" +System.currentTimeMillis();
+        identifier = "FactoryNode-" + UUID.randomUUID().toString();
         ownNodeNameProperty.set(identifier);
       }
       
@@ -149,13 +156,14 @@ public class NodeManagement extends FunctionGroup {
   @Override
   protected void shutdown() throws XynaException {
     logger.debug("shutdown");
-    
+    long timeoutMillis = XynaProperty.SHUTDOWN_ABORT_COMMUNICATION_TIMEOUT.get().getDurationInMillis();
     for (FactoryNodeCaller factoryNode : factoryNodeCaller.values()) {
+      AbortCommunicationCaller caller = new AbortCommunicationCaller();
       try {
-        factoryNode.getRemoteOrderExecution().abortCommunication();
-      } catch (XFMG_NodeConnectException e) {
+        caller.abortCommunication(factoryNode).get(timeoutMillis, TimeUnit.MILLISECONDS);
+      } catch (Exception e) {
         if (logger.isWarnEnabled()) {
-          logger.warn("Exception during shutdown of communication with " + factoryNode.getNodeName() + ". " + e.getMessage());
+          logger.warn("Exception during shutdown of communication with " + factoryNode.getNodeName() + ". ", e);
         }
       }
     }
@@ -163,6 +171,25 @@ public class NodeManagement extends FunctionGroup {
     factoryNodes.clear();
     clusterNodes.clear();
     interlinkSearchDispatcher.shutDownInternally();
+  }
+  
+  
+  private class AbortCommunicationCaller {
+    private ExecutorService executor = Executors.newSingleThreadExecutor();
+    
+    public Future<Void> abortCommunication(FactoryNodeCaller factoryNode) {
+      return executor.submit(() -> {
+        try {
+          factoryNode.getRemoteOrderExecution().abortCommunication();
+          return null;
+        } catch(XFMG_NodeConnectException e) {
+          if (logger.isWarnEnabled()) {
+            logger.warn("Exception during shutdown of communication with " + factoryNode.getNodeName() + ". " + e.getMessage());
+          }
+          return null;
+        }
+      });
+    }
   }
 
   /**

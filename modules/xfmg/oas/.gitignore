@@ -1,3 +1,6 @@
 xyna-openapi/**/target/
 sharedlib/xyna-openapi/test/
 sharedlib/xyna-openapi/generators/xmom-data-model/src/main/resources/xmom-data-model/application.mustache
+sharedlib/xyna-openapi/generators/xmom-data-model/src/test/java/com/gip/xyna/openapi/codegen/XmomDataModelGeneratorTest.java
+sharedlib/xyna-openapi/generators/xmom-client/src/test/java/com/gip/xyna/openapi/codegen/XmomClientGeneratorTest.java
+sharedlib/xyna-openapi/generators/xmom-server/src/test/java/com/gip/xyna/openapi/codegen/XmomServerGeneratorTest.java

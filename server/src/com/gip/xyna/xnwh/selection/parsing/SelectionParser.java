@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,6 @@ import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.misc.StringSplitter;
 import com.gip.xyna.xfmg.xfctrl.datamodelmgmt.selectdatamodel.DataModelSelectParser;
 import com.gip.xyna.xfmg.xfctrl.deploystate.selectdeploymentitem.DeploymentItemSelectParser;
-import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
 import com.gip.xyna.xfmg.xods.orderinputsourcemgmt.selectorderinputsource.OrderInputSourceSelectParser;
 import com.gip.xyna.xnwh.exceptions.XNWH_NoSelectGivenException;
 import com.gip.xyna.xnwh.exceptions.XNWH_SelectParserException;
@@ -73,13 +72,6 @@ public abstract class SelectionParser<P extends WhereClausesContainerBase<P>> {
 
   //Splits string at % and _
   private final static StringSplitter SPLITTER_WILDCARD = new StringSplitter(String.join("|", CHARACTER_WILDCARD, CHARACTER_SINGLE_CHARACTER_WILDCARD));
-
-  /**
-   * @deprecated
-   * https://github.com/Xyna-Factory/xyna-factory/wiki/Breaking-Change:-Single-Character-Wildcard-Support
-   */
-  @Deprecated
-  private final static StringSplitter DEPRECATED_WILCARD_SPLITTER = new StringSplitter(CHARACTER_WILDCARD);
 
   public static enum Copula {
     AND, OR;
@@ -994,10 +986,9 @@ public abstract class SelectionParser<P extends WhereClausesContainerBase<P>> {
       if (ep.getState() == EscapeState.UNESCAPED) {
         //replace % and _ in unescaped-parts with PersistenceLayer-specific wildcards
         if (isLike) {
-          StringSplitter splitter = XynaProperty.BC_SINGLE_CHARACTER_WILDCARD.get() ? SPLITTER_WILDCARD : DEPRECATED_WILCARD_SPLITTER;
-          List<String> parts =  splitter.split(ep.getValue(), true);
+          List<String> parts =  SPLITTER_WILDCARD.split(ep.getValue(), true);
           for (String p : parts) {
-            if (splitter.isSeparator(p)) {
+            if (SPLITTER_WILDCARD.isSeparator(p)) {
               sb.append(e.escapeForLike(part.toString()));
               sb.append(p.equals(CHARACTER_WILDCARD) ? e.getMultiCharacterWildcard() : e.getSingleCharacterWildcard());
               part.setLength(0);

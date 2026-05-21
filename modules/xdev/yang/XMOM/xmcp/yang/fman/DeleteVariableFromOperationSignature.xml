@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Delete Variable From Operation Signature" TypeName="DeleteVariableFromOperationSignature" TypePath="xmcp.yang.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Delete Variable From Operation Signature" Name="DeleteVariableFromOperationSignature">
+    <Input>
+      <Data ID="515" Label="Operation Table Data" ReferenceName="OperationTableData" ReferencePath="xmcp.yang" VariableName="operationTableData515"/>
+      <Data ID="18" Label="OperationSignatureEntry" ReferenceName="OperationSignatureEntry" ReferencePath="xmcp.yang.fman" VariableName="operationSignatureEntry18"/>
+    </Input>
+    <Output/>
+    <ServiceReference ID="525" Label="Yang App Generation" ReferenceName="YangAppGeneration.YangAppGeneration" ReferencePath="xdev.yang">
+      <Source RefID="524"/>
+      <Target RefID="524"/>
+    </ServiceReference>
+    <Function ID="524" Label="Remove Variable From Operation Signature">
+      <Source RefID="525"/>
+      <Source RefID="515"/>
+      <Source RefID="18"/>
+      <Target RefID="525"/>
+      <Invoke Operation="removeVariableFromOperationSignature" ServiceID="525">
+        <Source RefID="515"/>
+        <Source RefID="18"/>
+      </Invoke>
+      <Receive ServiceID="525"/>
+    </Function>
+    <Assign ID="1"/>
+  </Operation>
+</Service>

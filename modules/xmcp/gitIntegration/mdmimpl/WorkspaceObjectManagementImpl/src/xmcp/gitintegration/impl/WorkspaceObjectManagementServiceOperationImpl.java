@@ -21,6 +21,8 @@ package xmcp.gitintegration.impl;
 
 import base.File;
 import base.Text;
+import xact.templates.Document;
+import xact.templates.XML;
 
 import java.util.List;
 
@@ -29,11 +31,24 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTi
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 
 import xmcp.gitintegration.Flag;
+import xmcp.gitintegration.InfoWorkspaceContentDiffGroupList;
+import xmcp.gitintegration.ListId;
+import xmcp.gitintegration.ResolveWorkspaceContentDifferencesResult;
 import xmcp.gitintegration.WorkspaceContent;
+import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.WorkspaceContentDifferences;
+import xmcp.gitintegration.WorkspaceContentDifferencesResolution;
+import xmcp.gitintegration.WorkspaceContentItem;
 import xprc.xpce.Workspace;
 import xmcp.gitintegration.WorkspaceObjectManagementServiceOperation;
+import xmcp.gitintegration.WorkspaceXmlCreationConfig;
+import xmcp.gitintegration.WorkspaceXmlPath;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
+import xmcp.gitintegration.tools.CreateWorkspaceXmlTools;
+import xmcp.gitintegration.tools.ResolveWorkspaceDiffsTools;
+import xmcp.gitintegration.tools.WorkspaceStatusTools;
+import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
+import xmcp.gitintegration.repository.RepositoryConnection;
 import xmcp.gitintegration.storage.WorkspaceDifferenceListStorage;
 
 
@@ -75,15 +90,16 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
   }
 
 
-  public WorkspaceContentDifferences compareWorkspaceContent(WorkspaceContent workspaceContent3, WorkspaceContent workspaceContent4) {
+  @Override
+  public WorkspaceContentDifferences compareWorkspaceContent(WorkspaceContent from, WorkspaceContent to) {
+    //  from => XML;  to => current configuration
     WorkspaceContentComparator comparator = new WorkspaceContentComparator();
-    // first parameter: from => XML
-    // second parameter: to => current configuration
-    WorkspaceContentDifferences result = comparator.compareWorkspaceContent(workspaceContent3, workspaceContent4, true);
+    WorkspaceContentDifferences result = comparator.compareWorkspaceContent(from, to, true);
     return result;
   }
 
 
+  @Override
   public WorkspaceContent createWorkspaceContent(Workspace workspace) {
     WorkspaceContentCreator contentCreator = new WorkspaceContentCreator();
     WorkspaceContent result = contentCreator.createWorkspaceContentForWorkspace(workspace.getName());
@@ -91,15 +107,15 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
   }
 
 
+  @Override
   public WorkspaceContent createWorkspaceContentFromFile(File file8) {
-    // Implemented as code snippet!
-    return null;
+    return new WorkspaceStatusTools().createWorkspaceContentFromFile(file8);
   }
 
 
-  public WorkspaceContent createWorkspaceContentFromText(Text text9) {
-    // Implemented as code snippet!
-    return null;
+  @Override
+  public WorkspaceContent createWorkspaceContentFromText(List<? extends Text> list) {
+    return new WorkspaceStatusTools().createWorkspaceContentFromText(list);
   }
 
 
@@ -107,6 +123,53 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
   public List<? extends WorkspaceContentDifferences> listOpenWorkspaceDifferencesLists(Workspace arg0, Flag arg1) {
     WorkspaceDifferenceListStorage storage = new WorkspaceDifferenceListStorage();
     return storage.loadDifferencesLists(arg0.getName(), arg1.getValue());
+  }
+
+
+  @Override
+  public List<ResolveWorkspaceContentDifferencesResult> resolveWorkspaceDifferences(ListId listId, List<? extends WorkspaceContentDifferencesResolution> list) {
+    return new ResolveWorkspaceDiffsTools().resolveWorkspaceDifferences(listId, list);
+  }
+
+
+  @Override
+  public void closeWorkspaceDifferencesList(ListId listId) {
+    WorkspaceContentProcessingPortal portal = new WorkspaceContentProcessingPortal();
+    portal.closeDifferenceList(listId.getListId());
+  }
+
+
+  @Override
+  public void updateWorkspaceContent(WorkspaceXmlCreationConfig conf) {
+    new CreateWorkspaceXmlTools().execute(conf.getWorkspaceName());
+  }
+
+
+  @Override
+  public InfoWorkspaceContentDiffGroupList adaptWorkspaceDifferenceList(ListId listid) {
+    return new WorkspaceStatusTools().adaptWorkspaceDifferenceList(listid);
+  }
+
+
+  @Override
+  public WorkspaceXmlPath getPathToWorkspaceXml(RepositoryConnection conn) {
+    return new WorkspaceStatusTools().getPathToWorkspaceXml(conn);
+  }
+
+
+  @Override
+  public String createDifferenceString(WorkspaceContentDifference diff) {
+    WorkspaceContentProcessingPortal portal = new WorkspaceContentProcessingPortal();
+    OutputCreator<WorkspaceContentItem, WorkspaceContentDifference, WorkspaceContentItemDifferenceSelector> creator;
+    creator = new OutputCreator<>(new WorkspaceContentItemDifferenceSelector());
+    return creator.createOutput(diff, portal);
+  }
+
+
+  @Override
+  public Document createWorkspaceXml(Workspace workspace) {
+    String workspaceXmlString = new CreateWorkspaceXmlTools().createWorkspaceXmlString(workspace.getName());
+    return new Document.Builder().text(workspaceXmlString).documentType(new XML()).instance();
   }
 
 }

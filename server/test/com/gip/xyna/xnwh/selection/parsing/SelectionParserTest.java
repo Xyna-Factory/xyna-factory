@@ -21,16 +21,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.junit.Before;
-
 import junit.framework.TestCase;
 
-import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
 import com.gip.xyna.xnwh.exceptions.XNWH_InvalidSelectStatementException;
 import com.gip.xyna.xnwh.exceptions.XNWH_NoSelectGivenException;
 import com.gip.xyna.xnwh.exceptions.XNWH_SelectParserException;
 import com.gip.xyna.xnwh.exceptions.XNWH_WhereClauseBuildException;
-import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.selection.parsing.SelectionParser.EscapeParameters;
 import com.gip.xyna.xprc.xsched.selectvetos.VetoSelectImpl;
 
@@ -76,14 +72,6 @@ public class SelectionParserTest extends TestCase {
       return "_";
     }
     
-  }
-  
-  
-  public void setUp() {
-    try {
-      XynaProperty.BC_SINGLE_CHARACTER_WILDCARD.set(true);
-    } catch (PersistenceLayerException e) {
-    }
   }
   
   

@@ -649,6 +649,11 @@ public abstract class StringParameter<T> implements Serializable {
     return spb.name(name);
   }
 
+  public static <E extends EnvironmentVariable<?>> StringParameterBuilder<E> typeEnvironmentVariable(Class<E> type, String name) {
+    StringParameterBuilder<E> spb = new StringParameterBuilder<E>( new StringParameterEnvironmentVariable<E>(type) );
+    return spb.name(name);
+  }
+
   public static <E extends Enum<E>> StringParameterBuilder<E> typeEnum(Class<E> enumClass, String name) {
     StringParameterBuilder<E> spb = new StringParameterBuilder<E>( new StringParameterEnum<E>(enumClass) );
     return spb.name(name);
@@ -1095,6 +1100,36 @@ public abstract class StringParameter<T> implements Serializable {
     }
     public Class<Boolean> getTypeClass() {
       return Boolean.class;
+    }
+  }
+
+  public static class StringParameterEnvironmentVariable<E extends EnvironmentVariable<?>> extends StringParameter<E> {
+    private static final long serialVersionUID = 1L;
+
+    private final Class<E> baseType;
+
+    StringParameterEnvironmentVariable(Class<E> baseType) {
+      this.baseType = baseType;
+    }
+
+    public E parseString(String string) {
+      try {
+        return baseType.getDeclaredConstructor(String.class).newInstance(string);
+      } catch (ReflectiveOperationException e) {
+        throw new RuntimeException("Error creating instance of " + baseType.getName(), e);
+      }
+    }
+
+    public E parseObject(Object object) {
+      return (E) object;
+    }
+
+    public String asString(E value) {
+      return value.getVarName();
+    }
+
+    public Class<E> getTypeClass() {
+      return baseType;
     }
   }
   

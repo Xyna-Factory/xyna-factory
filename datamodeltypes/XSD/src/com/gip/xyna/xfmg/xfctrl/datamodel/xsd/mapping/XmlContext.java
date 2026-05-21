@@ -37,6 +37,10 @@ public class XmlContext {
     this.createXmlOptions = createXmlOptions;
     this.namespacePrefixCache = createXmlOptions.getNamespacePrefixCache();
   }
+  
+  public Node createCDATASection(String data) {
+    return doc.createCDATASection(data);
+  }
 
   public Element createElement(boolean qualified, FQName name) {
     if( qualified ) {

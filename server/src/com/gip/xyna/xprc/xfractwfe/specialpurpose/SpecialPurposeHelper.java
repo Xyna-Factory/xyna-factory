@@ -71,12 +71,12 @@ public class SpecialPurposeHelper extends FunctionGroup {
     try {
       getCountOfCronLikeOrdersWithRootOrderId =
           con.prepareQuery(new Query<OrderCount>("select count(*) from " + CronLikeOrder.TABLE_NAME + " where "
-              + CronLikeOrder.COL_ASSIGNED_ROOT_ORDER_ID + "=?", OrderCount.getCountReader()), true);
+              + CronLikeOrder.COL_ASSIGNED_ROOT_ORDER_ID + "=?", OrderCount.getCountReader(), CronLikeOrder.TABLE_NAME), true);
 
       getCountOfManualInteractionEntriesWithRootOrderId =
           con.prepareQuery(new Query<OrderCount>("select count(*) from " + ManualInteractionEntry.TABLE_NAME
                                + " where " + ManualInteractionEntry.MI_COL_XYNAORDER_ROOT_ID + "=?", OrderCount
-                               .getCountReader()), true);
+                               .getCountReader(), ManualInteractionEntry.TABLE_NAME), true);
 
     } catch (PersistenceLayerException e) {
       logger.error("Failed to prepare query.", e);

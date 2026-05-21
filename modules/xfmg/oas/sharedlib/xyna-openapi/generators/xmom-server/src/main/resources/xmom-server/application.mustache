@@ -22,10 +22,6 @@
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
-        <ApplicationName>Processing</ApplicationName>
-        <VersionName>1.0.18</VersionName>
-      </RuntimeContextRequirement>
-      <RuntimeContextRequirement>
         <ApplicationName>{{openAPI.info.title}}_Data_Model</ApplicationName>
         <VersionName>{{openAPI.info.version}}</VersionName>
       </RuntimeContextRequirement>
@@ -33,9 +29,9 @@
   </ApplicationInfo>
   <Filters>
     <Filter implicitDependency="false">
-      <Name>OASFilter</Name>
-      <JarFiles>OASFilter/OASFilter.jar:</JarFiles>
-      <FqFilterClassname>com.gip.xyna.xact.filter.OASFilter</FqFilterClassname>
+      <Name>{{filterName}}</Name>
+      <JarFiles>{{filterName}}/{{filterName}}.jar:</JarFiles>
+      <FqFilterClassname>com.gip.xyna.xact.filter.{{filterName}}</FqFilterClassname>
       <TriggerName>Http</TriggerName>
       <SharedLibs/>
     </Filter>
@@ -46,28 +42,24 @@
   </SharedLibs>
   <XMOMEntries>{{#apiInfo.apis}}{{#operations}}
     <XMOMEntry implicitDependency="false">
-      <FqName>{{apiPackage}}.{{classFilename}}</FqName>
+      <FqName>{{apiRefPath}}.{{apiRefName}}</FqName>
       <Type>DATATYPE</Type>
-    </XMOMEntry>{{#operation}}
+    </XMOMEntry>{{#xynaOperation}}
     <XMOMEntry implicitDependency="false">
-      <FqName>{{apiPackage}}.{{pathPrefix}}.wf.{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Endpoint</FqName>
+      <FqName>{{endpointWorkflowFQN}}</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>{{apiPackage}}.{{pathPrefix}}.request.{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Parameter</FqName>
+      <FqName>{{parameterFQN}}</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>{{apiPackage}}.{{pathPrefix}}.response.{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response</FqName>
+      <FqName>{{responseFQN}}</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>{{#responses}}
     <XMOMEntry implicitDependency="false">
-      <FqName>{{apiPackage}}.{{pathPrefix}}.response.{{#lambda.pascalcase}}{{httpMethod}}{{path}}Response{{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}{{/lambda.pascalcase}}</FqName>
+      <FqName>{{respFQN}}</FqName>
       <Type>DATATYPE</Type>
-    </XMOMEntry>{{/responses}}{{/operation}}{{/operations}}{{/apiInfo.apis}}
-    <XMOMEntry implicitDependency="false">
-      <FqName>{{apiPackage}}.decider.OASDecider</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
+    </XMOMEntry>{{/responses}}{{/xynaOperation}}{{/operations}}{{/apiInfo.apis}}
   </XMOMEntries>
 </Application>

@@ -60,8 +60,14 @@ public class XynaLocalMemoryPersistenceLayerConcurrencyTest extends MemoryPersis
 
 
   @Override
-  public int getCountForConcurrentQueryForUpdate() {
+  public int getCountForConcurrentQueryForUpdateEQ() {
     return 100;
+  }
+
+
+  @Override
+  public int getCountForConcurrentQueryForUpdateGEQ() {
+    return 0;
   }
 
 }

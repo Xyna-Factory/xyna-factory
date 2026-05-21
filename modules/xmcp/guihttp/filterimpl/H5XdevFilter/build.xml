@@ -22,9 +22,6 @@
     <pathconvert property="root.dir">
         <path location="${basedir}/../../../../../" />
     </pathconvert>
-    <property name="application.dir" value="${basedir}/../../" />
-
-    <property file="${application.dir}/workspace.properties" />
 
     <property name="project.name" value="H5XdevFilter" />
     <property name="fqclassname" value="com.gip.xyna.xact.filter.H5XdevFilter" />
@@ -34,6 +31,8 @@
 
     <property name="trigger.name" value="Http" />
     <property name="filter.name" value="H5XdevFilter" />
+
+    <property name="deploy.sharedlibs" value="XynaObjectJsonBuilder" />
       
     <target name="prepareLibs" description="Prepare Libs">
         <ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/../../commonlib/HttpUtils">

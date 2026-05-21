@@ -19,14 +19,19 @@ package com.gip.xyna.xnwh.persistence.xmom;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.xnwh.persistence.Parameter;
 import com.gip.xyna.xnwh.persistence.xmom.QueryGenerator.QualifiedStorableColumnInformation;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache.StorableColumnInformation;
+import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache.StorableStructureInformation;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache.VarDefinitionSite;
+import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache.VarType;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache.XMOMStorableStructureInformation;
 
 
@@ -38,7 +43,7 @@ public class UpdateGenerator {
     List<UpdateGeneration> updateStatements = new ArrayList<UpdateGeneration>(); 
     for (String updatePath : updates) {
       PersistenceExpressionVisitors.UpdateParsingResult upr = PersistenceExpressionVisitors.parseUpdatePath(updatePath, info);
-      UnfinishedUpdateStatement updateStatement = buildUpdate(upr.getPrimaryKeyListSuffix(), upr.getColumn(), upr.needsLike());
+      UnfinishedUpdateStatement updateStatement = buildUpdate(upr.getPrimaryKeyListSuffix(), upr.getColumn(), upr.needsLike(), upr.isListUpdate());
       UpdateGeneration update = new UpdateGeneration(updateStatement, upr.getListIndizesForRootObject());
       updateStatements.add(update);
     }
@@ -46,7 +51,7 @@ public class UpdateGenerator {
   }
   
   
-  protected static UnfinishedUpdateStatement buildUpdate(String primaryKeySuffix, QualifiedStorableColumnInformation column, boolean needsLike) {
+  protected static UnfinishedUpdateStatement buildUpdate(String primaryKeySuffix, QualifiedStorableColumnInformation column, boolean needsLike, boolean listUpdate) {
     StorableColumnInformation relevantDBStorableColumn = column.getColumn();
     if (relevantDBStorableColumn.getDefinitionSite() == VarDefinitionSite.DATATYPE &&
         relevantDBStorableColumn.isStorableVariable()) {
@@ -55,21 +60,7 @@ public class UpdateGenerator {
     if (relevantDBStorableColumn.isList() && relevantDBStorableColumn.getPrimitiveType() != null) {
       relevantDBStorableColumn = column.getColumn().getStorableVariableInformation().getColumnInfo(column.getColumn().getVariableName());
     } 
-    StringBuilder updateBuilder = new StringBuilder();    
-    updateBuilder.append("UPDATE ")
-                 .append(relevantDBStorableColumn.getParentStorableInfo().getTableName())
-                 .append(" SET ").append(relevantDBStorableColumn.getColumnName()).append(" = ");
-    String beforeUpdateValue = updateBuilder.toString();
-    updateBuilder = new StringBuilder();
-    updateBuilder.append(" WHERE ").append(relevantDBStorableColumn.getParentStorableInfo().getPrimaryKeyName());
-    if (needsLike) {
-      updateBuilder.append(" LIKE ");
-    } else {
-      updateBuilder.append(" = ");
-    }
-    updateBuilder.append("?");
-    String afterUpdateValue = updateBuilder.toString();
-    return new UnfinishedUpdateStatement(beforeUpdateValue, afterUpdateValue, primaryKeySuffix, column);
+    return new UnfinishedUpdateStatement(needsLike, primaryKeySuffix, relevantDBStorableColumn, column, listUpdate);
   }
   
   
@@ -78,10 +69,10 @@ public class UpdateGenerator {
   }
   
   
-  protected static class UpdateGeneration {
+  protected static class UpdateGeneration implements Comparable<UpdateGeneration> {
     
     private final UnfinishedUpdateStatement updateStatement;
-    private final List<Integer> listIdxs;
+    private final List<Integer> listIdxs; //not null
     
     public UpdateGeneration(UnfinishedUpdateStatement updateStatement, List<Integer> listIdxs) {
       this.updateStatement = updateStatement;
@@ -126,53 +117,242 @@ public class UpdateGenerator {
     
     @Override
     public int hashCode() {
-      return updateStatement.getQualifiedColumn().hashCode();
+      int hash = 0;
+      for (QualifiedStorableColumnInformation column : updateStatement.getQualifiedColumn()) {
+        hash += column.hashCode();
+      }
+      return hash;
+    }
+
+
+    @Override
+    public int compareTo(UpdateGeneration o) {
+      return compare(this, o);
     }
     
+
+    private static int compare(UpdateGeneration u1, UpdateGeneration u2) {
+      if (u1.listIdxs.size() != u2.listIdxs.size()) {
+        return u1.listIdxs.size() - u2.listIdxs.size();
+      }
+
+      for (int i = 0; i < u1.listIdxs.size(); i++) {
+        if (!u1.listIdxs.get(i).equals(u2.listIdxs.get(i))) {
+          return u1.listIdxs.get(i) - u2.listIdxs.get(i);
+        }
+      }
+
+      if (u1.getUnfinishedUpdateStatement().needsLike != u2.getUnfinishedUpdateStatement().needsLike) {
+        return u1.getUnfinishedUpdateStatement().needsLike ? 1 : -1;
+      }
+
+      if (u1.getUnfinishedUpdateStatement().parentInfo.tableName != u2.getUnfinishedUpdateStatement().parentInfo.tableName) {
+        return u1.getUnfinishedUpdateStatement().parentInfo.tableName.compareTo(u2.getUnfinishedUpdateStatement().parentInfo.tableName);
+      }
+
+      return 0;
+    }
+    
+    
+    public static boolean canCombine(UpdateGeneration u1, UpdateGeneration u2) {
+      return compare(u1, u2) == 0;
+    }
+    
+    
+    public void combine(UpdateGeneration other) {
+      updateStatement.columns.addAll(other.updateStatement.columns);
+      updateStatement.values.putAll(other.getUnfinishedUpdateStatement().values);
+    }
   }
 
-  
-  protected static class UnfinishedUpdateStatement {
-    
-    private final String beforeUpdateValue;
-    private final String afterUpdateValue;
-    private final String primaryKeySuffix;
-    private final QualifiedStorableColumnInformation column;
-    
-    UnfinishedUpdateStatement(String beforeUpdateValue, String afterUpdateValue, String primaryKeySuffix, QualifiedStorableColumnInformation column) {
-      this.beforeUpdateValue = beforeUpdateValue;
-      this.afterUpdateValue = afterUpdateValue;
-      this.primaryKeySuffix = primaryKeySuffix;
-      this.column = column;
+
+  protected static class DeleteInfo {
+
+    private final String sql;
+    private final String tableName;
+    private final String primaryKey;
+
+
+    public DeleteInfo(String sql, String tableName, String primaryKey) {
+      this.sql = sql;
+      this.tableName = tableName;
+      this.primaryKey = primaryKey;
     }
-    
-    
-    public Pair<String, Parameter> finish(String primaryKey, Object value) {
-      Parameter params = new Parameter();
-      StringBuilder updateBuilder = new StringBuilder();
-      updateBuilder.append(beforeUpdateValue);
-      if (value == null) {
-        updateBuilder.append("NULL");
-      } else {
-        updateBuilder.append("?");
-        params.add(value);
+
+
+    public String getSql() {
+      return sql;
+    }
+
+
+    public String getTableName() {
+      return tableName;
+    }
+
+
+    public String getPrimaryKey() {
+      return primaryKey;
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+      if (obj == null) {
+        return false;
       }
-      updateBuilder.append(afterUpdateValue);
-      params.add(primaryKey + primaryKeySuffix);
-      return Pair.of(updateBuilder.toString(), params);
+      if (this == obj) {
+        return true;
+      }
+      if (!(obj instanceof DeleteInfo)) {
+        return false;
+      }
+      DeleteInfo other = (DeleteInfo) obj;
+      return sql.equals(other.sql) && tableName.equals(other.tableName) && primaryKey.equals(other.primaryKey);
+    }
+  }
+
+  protected static class UnfinishedUpdateStatement {
+    // UPDATE <table> SET <column=value - pairs> WHERE <primaryKey> <LIKE OR => ?
+    private static final String updateTemplate = "UPDATE %s SET %s WHERE %s %s ?";
+    private final boolean needsLike;
+    private final String primaryKeySuffix;
+    private final List<QualifiedStorableColumnInformation> columns;
+    private final HashMap<Integer, Object> values;
+    private final StorableStructureInformation parentInfo;
+    private final boolean listUpdate;
+    
+    UnfinishedUpdateStatement(boolean needsLike, String primaryKeySuffix, StorableColumnInformation relevantDBStorableColumn, QualifiedStorableColumnInformation column, boolean listUpdate) {
+      this(needsLike, primaryKeySuffix, relevantDBStorableColumn.getParentStorableInfo(), column, listUpdate);
+    }
+
+    UnfinishedUpdateStatement(boolean needsLike, String primaryKeySuffix, StorableStructureInformation parentInfo, QualifiedStorableColumnInformation column, boolean listUpdate) {
+      this.needsLike = needsLike;
+      this.primaryKeySuffix = primaryKeySuffix;
+      this.columns = new ArrayList<>();
+      this.values = new HashMap<>();
+      this.parentInfo = parentInfo;
+      this.listUpdate = listUpdate;
+      addColumn(column);
     }
     
-    public QualifiedStorableColumnInformation getQualifiedColumn() {
-      return column;
+    public void addColumn(QualifiedStorableColumnInformation column) {
+      columns.add(column);
+    }
+    
+    public void setParam(QualifiedStorableColumnInformation column, Object value) {
+      if(value != null) {
+        values.put(columns.indexOf(column), value);
+      }
+    }
+    
+    public Pair<String, Parameter> finish(String primaryKey) {
+      Parameter params = fillParameter();
+      String comparison = needsLike ? "LIKE" : "=";
+      String columnInfo = createColumnUpdateSql();
+      String updateSql = String.format(updateTemplate, parentInfo.getTableName(), columnInfo, parentInfo.getPrimaryKeyName(), comparison);
+      params.add(primaryKey + primaryKeySuffix);
+      return Pair.of(updateSql, params);
+    }
+
+
+    public Pair<String, Parameter> finishInsert(String primaryKey, String typename) {
+      Parameter params = fillParameter();
+      List<String> columnNames = columns.stream().map(c -> c.getColumn().getColumnName()).collect(Collectors.toList());
+
+      StringBuilder sb = new StringBuilder();
+      sb.append("insert into ").append(parentInfo.getTableName()).append(" (");
+      sb.append(String.join(", ", columnNames));
+
+      sb.append(", ").append(parentInfo.getPrimaryKeyName());
+      params.add(primaryKey + primaryKeySuffix);
+      String typeColName = getColName(VarType.TYPENAME);
+      if (typeColName != null) {
+        sb.append(", ").append(typeColName);
+        params.add(typename);
+      }
+      String parentIdColName = getColName(VarType.EXPANSION_PARENT_FK);
+      if (parentIdColName != null) {
+        sb.append(", ").append(parentIdColName);
+        if(XMOMPersistenceOperationAlgorithms.LEGACY_LIST_UPDATES.get()) {
+          params.add(primaryKey);
+        } else {
+          params.add(primaryKey + primaryKeySuffix.substring(0, primaryKeySuffix.lastIndexOf("#")));
+        }
+      }
+      String listIdxColName = getColName(VarType.LIST_IDX);
+      if (listIdxColName != null) {
+        sb.append(", ").append(listIdxColName);
+        params.add(primaryKeySuffix.substring(primaryKeySuffix.lastIndexOf("#") + 1));
+      }
+
+      sb.append(") values (? ");
+      sb.append(", ?".repeat(params.size() - 1));
+      sb.append(")");
+      return Pair.of(sb.toString(), params);
+    }
+
+
+    public DeleteInfo finishDelete(int size, String primaryKeyOfPossessingXMOMStorable) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("delete from ");
+      sb.append(getTableName());
+      sb.append(" where ");
+      String parentIdColName = getColName(VarType.EXPANSION_PARENT_FK);
+      sb.append(parentIdColName);
+      sb.append(" = ? and idx > ");
+      sb.append(size);
+      return new DeleteInfo(sb.toString(), getTableName(), primaryKeyOfPossessingXMOMStorable + primaryKeySuffix);
+    }
+
+ 
+    private String getColName(VarType type) {
+      StorableColumnInformation colInfo = parentInfo.getColInfoByVarType(type);
+      if (colInfo != null) {
+        return colInfo.getColumnName();
+      }
+      return null;
+    }
+
+
+    private Parameter fillParameter() {
+      Parameter params = new Parameter();
+      for (int i = 0; i < columns.size(); i++) {
+        Object value = values.get(i);
+        if (value != null) {
+          params.add(value);
+        }
+      }
+      return params;
+    }
+    
+    private String createColumnUpdateSql() {
+      StringBuilder sb = new StringBuilder();
+      for(int i=0; i< columns.size()-1; i++) {
+        appendSingleColumnUpdateSql(sb, columns.get(i));
+        sb.append(", ");
+      }
+      appendSingleColumnUpdateSql(sb, columns.get(columns.size()-1));
+      
+      return sb.toString();
+    }
+    
+    private void appendSingleColumnUpdateSql(StringBuilder sb, QualifiedStorableColumnInformation column) {
+      sb.append(column.getColumn().getColumnName());
+      sb.append(" = ");
+      sb.append(values.containsKey(columns.indexOf(column))? "?" : "NULL");
+    }
+    
+    public List<QualifiedStorableColumnInformation> getQualifiedColumn() {
+      return columns;
     }
     
     
     public Pair<String, Parameter> getExistenceVerificationRequest(String primaryKey) {
       StringBuilder existenceVerificationBuilder = new StringBuilder()
         .append("SELECT count(*) FROM ")
-        .append(column.getColumn().getParentStorableInfo().getTableName())
+        .append(parentInfo.getTableName())
         .append(" WHERE ")
-        .append(column.getColumn().getParentStorableInfo().getPrimaryKeyName())
+        .append(parentInfo.getPrimaryKeyName())
         .append(" = ?");
       return Pair.of(existenceVerificationBuilder.toString(), new Parameter(primaryKey + primaryKeySuffix));
     }
@@ -190,23 +370,45 @@ public class UpdateGenerator {
         return false;
       }
       UnfinishedUpdateStatement other = (UnfinishedUpdateStatement) obj;
-      if (!beforeUpdateValue.equals(other.beforeUpdateValue)) {
-        return false;
-      }
-      if (!afterUpdateValue.equals(other.afterUpdateValue)) {
-        return false;
-      }
       if (!primaryKeySuffix.equals(other.primaryKeySuffix)) {
         return false;
       }
-      return column.equals(other.column);
+      return columns.equals(other.columns);
     }
     
     @Override
     public int hashCode() {
-      return column.hashCode();
+      return columns.hashCode();
+    }
+
+
+    public String getTableName() {
+      return parentInfo.getTableName();
+    }
+
+    public boolean isListUpdate() {
+      return listUpdate;
+    }
+
+    public String getPrimaryKeySuffix() {
+      return primaryKeySuffix;
+    }
+
+    public StorableStructureInformation getParentInfo() {
+      return parentInfo;
     }
   }
-  
-  
+
+  //if there are multiple updates for the same row, combine them
+  public static void combineUpdates(List<UpdateGeneration> updates) {
+    Collections.sort(updates);
+    for (int i = updates.size() - 1; i >= 1; i--) {
+      UpdateGeneration u1 = updates.get(i);
+      UpdateGeneration u2 = updates.get(i - 1);
+      if (UpdateGeneration.canCombine(u1, u2)) {
+        u2.combine(u1);
+        updates.remove(u1);
+      }
+    }
+  }
 }

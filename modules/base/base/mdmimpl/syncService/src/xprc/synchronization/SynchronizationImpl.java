@@ -59,12 +59,23 @@ public class SynchronizationImpl {
   }
 
 
-  private static XynaObject createAnswer(String resultingAnswerString, Long rootRevision) {
+  private static XynaObject createAnswer(String resultingAnswerString, Long rootRevision) throws XynaException {
     if (resultingAnswerString == null) {
       return null;
     }
     if (resultingAnswerString.equals(NULL_VALUE)) {
       return null;
+    }
+    if (resultingAnswerString.startsWith("<Exception ")) {
+      try {
+        GeneralXynaObject obj = XynaObject.generalFromXml(resultingAnswerString, rootRevision);
+        if (obj instanceof XynaException) {
+          ((XynaException) obj).setStackTrace(new StackTraceElement[0]);
+          throw (XynaException) obj;
+        }
+      } catch (XPRC_XmlParsingException | XPRC_InvalidXMLForObjectCreationException | XPRC_MDMObjectCreationException e) {
+        throw e;
+      }
     }
     if (resultingAnswerString.startsWith("<Data ")) {
       try {

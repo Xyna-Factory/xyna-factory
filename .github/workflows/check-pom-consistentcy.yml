@@ -1,0 +1,16 @@
+name: PomConsistencyCheck
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Checks encodings
+        run: installation/build/checkPomConsistency.py .

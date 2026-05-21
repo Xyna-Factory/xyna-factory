@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="RADIUSAccessRequest" TypeName="RADIUSAccessRequest" TypePath="xact.radius" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" IsStatic="false" Label="RADIUSAccessRequest" Name="RADIUSAccessRequest">
+    <Input>
+      <Data ID="15" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code15"/>
+      <Data ID="230" Label="Identifier" ReferenceName="Identifier" ReferencePath="xact.radius" VariableName="identifier230"/>
+      <Data ID="19" Label="Request Authenticator" ReferenceName="RequestAuthenticator" ReferencePath="xact.radius" VariableName="requestAuthenticator"/>
+      <Data ID="20" Label="Source IP" ReferenceName="SourceIP" ReferencePath="xact.radius" VariableName="sourceIP"/>
+      <Data ID="231" Label="Source Port" ReferenceName="SourcePort" ReferencePath="xact.radius" VariableName="sourcePort"/>
+      <Data ID="18" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node"/>
+      <Data ID="232" Label="Radius Message" ReferenceName="RadiusMessage" ReferencePath="xact.radius" VariableName="radiusMessage"/>
+    </Input>
+    <Output>
+      <Data ID="1538" Label="Access Response Parameter" ReferenceName="AccessResponseParameter" ReferencePath="xact.radius" VariableName="accessResponseParameter1538"/>
+    </Output>
+    <Throws>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException1845"/>
+    </Throws>
+    <ServiceReference ID="236" Label="Add RADIUS Attributes" ReferenceName="AddRADIUSAttributes" ReferencePath="xact.radius">
+      <Source RefID="237"/>
+      <Target RefID="237"/>
+    </ServiceReference>
+    <ServiceReference ID="158" Label="Determine Functional Role" ReferenceName="DetermineFunctionalRole" ReferencePath="xact.radius">
+      <Source RefID="184"/>
+      <Target RefID="184"/>
+    </ServiceReference>
+    <ServiceReference ID="345" Label="Authenticate Radius User" ReferenceName="AuthenticateRadiusUser" ReferencePath="xact.radius">
+      <Source RefID="344"/>
+      <Target RefID="344"/>
+    </ServiceReference>
+    <Function ID="344" Label="Authenticate Radius User">
+      <Source RefID="345"/>
+      <Source RefID="18"/>
+      <Source RefID="19"/>
+      <Source RefID="20"/>
+      <Target RefID="345"/>
+      <Target RefID="347"/>
+      <Target RefID="348"/>
+      <Invoke Operation="AuthenticateRadiusUser" ServiceID="345">
+        <Source RefID="18"/>
+        <Source RefID="19"/>
+        <Source RefID="20"/>
+      </Invoke>
+      <Receive ServiceID="345">
+        <Target RefID="347"/>
+        <Target RefID="348"/>
+      </Receive>
+    </Function>
+    <Choice ID="238" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="347"/>
+      <Target RefID="269"/>
+      <Target RefID="279"/>
+      <Input>
+        <Data ID="239" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code239"/>
+        <Source RefID="347">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="241" Label="true" Premise="%0%.value==&quot;2&quot;">
+        <Mappings ID="546" Label="Get User Role and NAS-Identifier">
+          <Input>
+            <Data ID="799" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser799">
+              <Source RefID="546"/>
+            </Data>
+            <Source RefID="348"/>
+          </Input>
+          <Output>
+            <Data ID="900" Label="User Role" ReferenceName="UserRole" ReferencePath="xact.radius" VariableName="userRole900">
+              <Source RefID="546"/>
+            </Data>
+            <Target RefID="901"/>
+          </Output>
+          <Output>
+            <Data ID="1244" Label="NAS-Identifier" ReferenceName="NASIdentifier" ReferencePath="xact.radius" VariableName="nASIdentifier1244">
+              <Source RefID="546"/>
+            </Data>
+            <Target RefID="1245"/>
+          </Output>
+          <Mapping>%1%.role=%0%.role</Mapping>
+          <Mapping>%2%.nASIdentifier=%0%.iPAddress</Mapping>
+        </Mappings>
+        <Function ID="184" Label="Determine Functional Role">
+          <Source RefID="158"/>
+          <Source RefID="901"/>
+          <Target RefID="158"/>
+          <Target RefID="185"/>
+          <Invoke Operation="DetermineFunctionalRole" ServiceID="158">
+            <Source RefID="901"/>
+          </Invoke>
+          <Receive ServiceID="158">
+            <Target RefID="185"/>
+          </Receive>
+        </Function>
+        <Choice ID="197" TypeName="BaseChoiceTypeSubclasses" TypePath="server">
+          <Source RefID="185"/>
+          <Target RefID="208"/>
+          <Target RefID="278"/>
+          <Input>
+            <Data ID="216" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole"/>
+            <Source RefID="185"/>
+          </Input>
+          <Case Alias="xact.radius.ReadOnlyUser" ID="217" Label="Super User" Premise="xact.radius.SuperUser"/>
+          <Case Alias="xact.radius.ReadOnlyUser" ID="218" Label="Read Write User" Premise="xact.radius.ReadWriteUser"/>
+          <Case ID="219" Label="Read Only User" Premise="xact.radius.ReadOnlyUser">
+            <Mappings ID="283" Label="Copy Reply Code">
+              <Input>
+                <Data ID="280" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code280"/>
+                <Source RefID="347">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Output>
+                <Data ID="281" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code281"/>
+                <Target RefID="282"/>
+              </Output>
+              <Mapping>%1%.value=%0%.value</Mapping>
+            </Mappings>
+            <Function ID="237" Label="Add RADIUS Attributes">
+              <Source RefID="236"/>
+              <Source RefID="1245"/>
+              <Source RefID="185"/>
+              <Target RefID="236"/>
+              <Target RefID="255"/>
+              <Invoke Operation="AddRADIUSAttributes" ServiceID="236">
+                <Source RefID="1245"/>
+                <Source RefID="185"/>
+              </Invoke>
+              <Receive ServiceID="236">
+                <Target RefID="255"/>
+              </Receive>
+            </Function>
+            <Assign ID="211">
+              <Source RefID="282"/>
+              <Source RefID="255"/>
+              <Target RefID="208"/>
+              <Target RefID="278"/>
+              <Copy>
+                <Source RefID="282"/>
+                <Target RefID="208"/>
+              </Copy>
+              <Copy>
+                <Source RefID="255"/>
+                <Target RefID="278"/>
+              </Copy>
+            </Assign>
+          </Case>
+          <Case Alias="xact.radius.FunctionalRole" ID="220" Label="Unknown Role" Premise="xact.radius.UnknownRole"/>
+          <Case ID="221" Label="Functional Role" Premise="xact.radius.FunctionalRole">
+            <Mappings ID="207" Label="Set Reply Code Access Reject">
+              <Output>
+                <Data ID="205" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code205"/>
+                <Target RefID="206"/>
+              </Output>
+              <Mapping>%0%.value="3"</Mapping>
+            </Mappings>
+            <Mappings ID="276" Label="Retrun no Nodes">
+              <Input>
+                <Data ID="274" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node274"/>
+                <Source RefID="1339">
+                  <Meta>
+                    <LinkType>Constant</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Output>
+                <Data ID="275" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node275"/>
+                <Target RefID="277"/>
+              </Output>
+              <Mapping>%1%=%0%</Mapping>
+            </Mappings>
+            <Assign ID="213">
+              <Source RefID="206"/>
+              <Source RefID="277"/>
+              <Target RefID="208"/>
+              <Target RefID="278"/>
+              <Copy>
+                <Source RefID="206"/>
+                <Target RefID="208"/>
+              </Copy>
+              <Copy>
+                <Source RefID="277"/>
+                <Target RefID="278"/>
+              </Copy>
+            </Assign>
+          </Case>
+        </Choice>
+        <Assign ID="240">
+          <Source RefID="208"/>
+          <Source RefID="278"/>
+          <Target RefID="269"/>
+          <Target RefID="279"/>
+          <Copy>
+            <Source RefID="208"/>
+            <Target RefID="269"/>
+          </Copy>
+          <Copy>
+            <Source RefID="278"/>
+            <Target RefID="279"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="243" Label="false">
+        <Mappings ID="251" Label="Retrun no Nodes">
+          <Meta>
+            <FixedWidth>110</FixedWidth>
+            <FixedHeight>32</FixedHeight>
+          </Meta>
+          <Input>
+            <Data ID="260" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node260"/>
+            <Source RefID="261">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="250" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node250"/>
+            <Target RefID="249"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Mappings ID="268" Label="Copy Reply Code">
+          <Input>
+            <Data ID="265" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code265"/>
+            <Source RefID="347">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="266" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code266"/>
+            <Target RefID="267"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Assign ID="242">
+          <Source RefID="267"/>
+          <Source RefID="249"/>
+          <Target RefID="269"/>
+          <Target RefID="279"/>
+          <Copy>
+            <Source RefID="267"/>
+            <Target RefID="269"/>
+          </Copy>
+          <Copy>
+            <Source RefID="249"/>
+            <Target RefID="279"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Mappings ID="1392" Label="Set Response Parameter">
+      <Input>
+        <Data ID="1394" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code1394"/>
+        <Source RefID="269">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="1396" Label="Identifier" ReferenceName="Identifier" ReferencePath="xact.radius" VariableName="identifier1396"/>
+        <Source RefID="230"/>
+      </Input>
+      <Input>
+        <Data ID="1398" Label="Request Authenticator" ReferenceName="RequestAuthenticator" ReferencePath="xact.radius" VariableName="requestAuthenticator1398"/>
+        <Source RefID="19"/>
+      </Input>
+      <Input>
+        <Data ID="1400" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node1400"/>
+        <Source RefID="279">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="1402" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser1402"/>
+        <Source RefID="348"/>
+      </Input>
+      <Output>
+        <Data ID="1403" Label="Access Response Parameter" ReferenceName="AccessResponseParameter" ReferencePath="xact.radius" VariableName="accessResponseParameter1403"/>
+        <Target RefID="1391"/>
+      </Output>
+      <Mapping>%5%.code=%0%</Mapping>
+      <Mapping>%5%.identifier=%1%</Mapping>
+      <Mapping>%5%.requestAuthenticator=%2%</Mapping>
+      <Mapping>%5%.node=%3%</Mapping>
+      <Mapping>%5%.sharedSecret=%4%.sharedSecret</Mapping>
+    </Mappings>
+    <Data ID="185" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole99">
+      <Source RefID="184"/>
+      <Target RefID="237"/>
+    </Data>
+    <Data ID="206" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code206">
+      <Source RefID="207"/>
+      <Target RefID="213"/>
+    </Data>
+    <Data ID="208" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code208">
+      <Source RefID="211"/>
+      <Source RefID="213"/>
+      <Source RefID="197"/>
+      <Target RefID="240"/>
+    </Data>
+    <Data ID="249" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node249">
+      <Source RefID="251"/>
+      <Target RefID="242"/>
+    </Data>
+    <Data ID="255" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node48">
+      <Source RefID="237"/>
+      <Target RefID="211"/>
+    </Data>
+    <Data ID="261" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node261">
+      <Target RefID="251"/>
+    </Data>
+    <Data ID="267" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code267">
+      <Source RefID="268"/>
+      <Target RefID="242"/>
+    </Data>
+    <Data ID="269" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code269">
+      <Source RefID="242"/>
+      <Source RefID="238"/>
+      <Source RefID="240"/>
+      <Target RefID="3"/>
+    </Data>
+    <Data ID="277" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node277">
+      <Source RefID="276"/>
+      <Target RefID="213"/>
+    </Data>
+    <Data ID="278" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node278">
+      <Source RefID="211"/>
+      <Source RefID="213"/>
+      <Source RefID="197"/>
+      <Target RefID="240"/>
+    </Data>
+    <Data ID="279" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="node279">
+      <Source RefID="242"/>
+      <Source RefID="238"/>
+      <Source RefID="240"/>
+      <Target RefID="3"/>
+    </Data>
+    <Data ID="282" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code282">
+      <Source RefID="283"/>
+      <Target RefID="211"/>
+    </Data>
+    <Data ID="347" Label="Code" ReferenceName="Code" ReferencePath="xact.radius" VariableName="code347">
+      <Source RefID="344"/>
+    </Data>
+    <Data ID="348" Label="Radius User" ReferenceName="RadiusUser" ReferencePath="xact.radius" VariableName="radiusUser348">
+      <Source RefID="344"/>
+    </Data>
+    <Data ID="901" Label="User Role" ReferenceName="UserRole" ReferencePath="xact.radius" VariableName="userRole901">
+      <Source RefID="546"/>
+    </Data>
+    <Data ID="1245" Label="NAS-Identifier" ReferenceName="NASIdentifier" ReferencePath="xact.radius" VariableName="nASIdentifier1245">
+      <Source RefID="546"/>
+    </Data>
+    <Data ID="1339" IsList="true" Label="Node" ReferenceName="Node" ReferencePath="xact.radius" VariableName="const_Node1339"/>
+    <Data ID="1391" Label="Access Response Parameter" ReferenceName="AccessResponseParameter" ReferencePath="xact.radius" VariableName="accessResponseParameter1391"/>
+    <Assign ID="3">
+      <Source RefID="1391"/>
+      <Target RefID="1538"/>
+      <Copy>
+        <Source RefID="1391"/>
+        <Target RefID="1538"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

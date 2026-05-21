@@ -59,8 +59,8 @@ public class UpdateOrderInstanceBackupToNewBackupCauses extends UpdateJustVersio
       try {
   
         FactoryWarehouseCursor<OrderInstanceBackup> cursor = con
-                        .getCursor("select * from " + OrderInstanceBackup.TABLE_NAME, new Parameter(),
-                                   OrderInstanceBackup.getReaderWarnIfNotDeserializable(), 100);
+                        .getCursor("select * from " + OrderInstanceBackup.TABLE_NAME, OrderInstanceBackup.TABLE_NAME,
+                                   new Parameter(), OrderInstanceBackup.getReaderWarnIfNotDeserializable(), 100);
   
   
         List<OrderInstanceBackup> orderList = cursor.getRemainingCacheOrNextIfEmpty();

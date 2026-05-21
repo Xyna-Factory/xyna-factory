@@ -80,7 +80,7 @@ public class UpdateMakeMIEntryResponseNull extends Update {
   
         PreparedQuery<OrderCount> q =
             defaultCon.prepareQuery(new Query<OrderCount>("select count(*) from " + ManualInteractionEntry.TABLE_NAME,
-                                                          OrderCount.getCountReader()));
+                                                          OrderCount.getCountReader(), ManualInteractionEntry.TABLE_NAME));
         OrderCount existingEntries = defaultCon.queryOneRow(q, new Parameter());
   
         if (existingEntries.getCount() > 0) {
@@ -90,7 +90,7 @@ public class UpdateMakeMIEntryResponseNull extends Update {
               new StringBuilder("update " + ManualInteractionEntry.TABLE_NAME + " set "
                   + ManualInteractionEntry.MI_COL_RESULT + "=null");
   
-          PreparedCommand updateMIArchiveSQL = defaultCon.prepareCommand(new Command(updateSqlCmd1.toString()));
+          PreparedCommand updateMIArchiveSQL = defaultCon.prepareCommand(new Command(updateSqlCmd1.toString(), ManualInteractionEntry.TABLE_NAME));
           defaultCon.executeDML(updateMIArchiveSQL, new Parameter());
           defaultCon.commit();
         }

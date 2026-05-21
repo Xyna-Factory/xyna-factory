@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="true" Label="Workspace Content Difference Type" TypeName="WorkspaceContentDifferenceType" TypePath="xmcp.gitintegration" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="true" Label="Workspace Content Difference Type" TypeName="WorkspaceContentDifferenceType" TypePath="xmcp.gitintegration" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>

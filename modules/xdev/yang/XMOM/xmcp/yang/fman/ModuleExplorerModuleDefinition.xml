@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Module Explorer Module Definition" TypeName="ModuleExplorerModuleDefinition" TypePath="xmcp.yang.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Module Explorer Module Definition" Name="ModuleExplorerModuleDefinition">
+    <Input>
+      <Data ID="709" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext709"/>
+    </Input>
+    <Output>
+      <Data ID="10" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition10"/>
+      <Data ID="447" Label="Yang Module Details" ReferenceName="YangModuleDetails" ReferencePath="xdev.yang.datatypes" VariableName="yangModuleDetails447"/>
+    </Output>
+    <ServiceReference ID="100" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="99"/>
+      <Target RefID="99"/>
+    </ServiceReference>
+    <Function ID="99" Label="get Own RuntimeContext">
+      <Source RefID="100"/>
+      <Target RefID="100"/>
+      <Target RefID="102"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="100"/>
+      <Receive ServiceID="100">
+        <Target RefID="102"/>
+      </Receive>
+    </Function>
+    <Mappings ID="23" Label="Mapping">
+      <Input>
+        <Data ID="119" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext119">
+          <Source RefID="23"/>
+        </Data>
+        <Source RefID="102">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="32" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition32">
+          <Source RefID="23"/>
+        </Data>
+        <Target RefID="33"/>
+      </Output>
+      <Mapping>%1%.label="Modules"</Mapping>
+      <Mapping>%1%.tableWorkflowFQN="xmcp.yang.fman.ModuleExplorerModuleTableInfo"</Mapping>
+      <Mapping>%1%.tableWorkflowRTC=%0%</Mapping>
+      <Mapping>%1%.dataPath="%0%"</Mapping>
+      <Mapping>%1%.closable="true"</Mapping>
+    </Mappings>
+    <Mappings ID="593" Label="Mapping">
+      <Input>
+        <Data ID="778" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext778">
+          <Source RefID="593"/>
+        </Data>
+        <Source RefID="709">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="610" Label="Yang Module Details" ReferenceName="YangModuleDetails" ReferencePath="xdev.yang.datatypes" VariableName="yangModuleDetails610">
+          <Source RefID="593"/>
+        </Data>
+        <Target RefID="611"/>
+      </Output>
+      <Mapping>%1%.runtimeContext=%0%</Mapping>
+    </Mappings>
+    <Data ID="33" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition33">
+      <Source RefID="23"/>
+    </Data>
+    <Data ID="102" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext102">
+      <Source RefID="99"/>
+    </Data>
+    <Data ID="611" Label="Yang Module Details" ReferenceName="YangModuleDetails" ReferencePath="xdev.yang.datatypes" VariableName="yangModuleDetails611">
+      <Source RefID="593"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="33"/>
+      <Source RefID="611"/>
+      <Target RefID="10"/>
+      <Target RefID="447"/>
+      <Copy>
+        <Source RefID="33"/>
+        <Target RefID="10"/>
+      </Copy>
+      <Copy>
+        <Source RefID="611"/>
+        <Target RefID="447"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

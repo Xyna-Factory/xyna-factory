@@ -259,13 +259,13 @@
     },
     {
       "operation": "read",
-      "pathInResponse": "xmomItem/areas/$list[3]/items/$list[0]/areas/$list[1]/items/$list[0]/label",
+      "pathInResponse": "xmomItem/areas/$list[name=methodsArea]/items/$list[0]/areas/$list[name=input]/items/$list[0]/label",
       "targetVariable": "!readNameInput!",
       "unquoteResult": true
     },
     {
       "operation": "read",
-      "pathInResponse": "xmomItem/areas/$list[3]/items/$list[0]/areas/$list[2]/items/$list[0]/label",
+      "pathInResponse": "xmomItem/areas/$list[name=methodsArea]/items/$list[0]/areas/$list[name=output]/items/$list[0]/label",
       "targetVariable": "!readNameOutput!",
       "unquoteResult": true
     },

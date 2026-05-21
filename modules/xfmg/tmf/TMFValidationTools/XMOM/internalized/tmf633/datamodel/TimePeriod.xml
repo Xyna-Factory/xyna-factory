@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="TimePeriod" TypeName="TimePeriod" TypePath="internalized.tmf633.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>A period of time, either as a deadline (endDateTime only) a startDateTime only, or both
+        </Documentation>
+  </Meta>
+  <Data Label="endDateTime" VariableName="endDateTime">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>End of the time period, using IETC-RFC-3339 format
+format: date-time
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="startDateTime" VariableName="startDateTime">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Start of the time period, using IETC-RFC-3339 format
+format: date-time
+        </Documentation>
+    </Meta>
+  </Data>
+  <Service Label="TimePeriod" TypeName="TimePeriod">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+// validate TimePeriod.endDateTime of type String
+try {
+    var validator_endDateTime = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_endDateTime.setName("endDateTime");
+    validator_endDateTime.setValue(getEndDateTime());
+    validator_endDateTime.setFormat("date-time");
+    result.getErrorMessages().addAll(validator_endDateTime.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate TimePeriod.endDateTime");
+}
+
+// validate TimePeriod.startDateTime of type String
+try {
+    var validator_startDateTime = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_startDateTime.setName("startDateTime");
+    validator_startDateTime.setValue(getStartDateTime());
+    validator_startDateTime.setFormat("date-time");
+    result.getErrorMessages().addAll(validator_startDateTime.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate TimePeriod.startDateTime");
+}
+
+return result.getResult();
+                </CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

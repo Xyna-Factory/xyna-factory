@@ -284,7 +284,8 @@ public class AbandonedOrdersManagement extends FunctionGroup {
         PreparedQuery<AbandonedOrderInformationStorable> entriesForOrderID =
             (PreparedQuery<AbandonedOrderInformationStorable>) queryCache
                 .getQueryFromCache(sqlGetAbandonedInformationByOrderIdQuery, defaultCon,
-                                   new AbandonedOrderInformationStorable().getReader());
+                                   new AbandonedOrderInformationStorable().getReader(),
+                                   AbandonedOrderInformationStorable.TABLE_NAME);
         List<AbandonedOrderInformationStorable> affectedEntries =
             defaultCon.query(entriesForOrderID, new Parameter(order.getDetails().getOrderID()), -1);
         defaultCon.delete(affectedEntries);
@@ -319,7 +320,8 @@ public class AbandonedOrdersManagement extends FunctionGroup {
       PreparedQuery<AbandonedOrderInformationStorable> entriesForOrderID =
           (PreparedQuery<AbandonedOrderInformationStorable>) queryCache
               .getQueryFromCache(sqlGetAbandonedInformationByRootOrderIdQuery, defaultCon,
-                                 new AbandonedOrderInformationStorable().getReader());
+                                 new AbandonedOrderInformationStorable().getReader(),
+                                 AbandonedOrderInformationStorable.TABLE_NAME);
       List<AbandonedOrderInformationStorable> affectedEntries =
           defaultCon.query(entriesForOrderID, new Parameter(order.getDetails().getRootOrderID()), -1);
       defaultCon.delete(affectedEntries);
@@ -596,7 +598,8 @@ public class AbandonedOrdersManagement extends FunctionGroup {
         PreparedQuery<AbandonedOrderInformationStorable> duplicateDetectionQuery =
             (PreparedQuery<AbandonedOrderInformationStorable>) queryCache
                 .getQueryFromCache(sqlGetAbandonedInformationByOrderIdQuery, historyCon,
-                                   new AbandonedOrderInformationStorable().getReader());
+                                   new AbandonedOrderInformationStorable().getReader(),
+                                   AbandonedOrderInformationStorable.TABLE_NAME);
         if (historyCon.query(duplicateDetectionQuery, new Parameter(abandonedRootOrder.getId()), 1).size() > 0) {
           logger.info("Abandoned order information for order <" + abandonedRootOrder.getId()
               + " already present. Nothing to be done.");
@@ -652,7 +655,8 @@ public class AbandonedOrdersManagement extends FunctionGroup {
       PreparedQuery<OrderInstanceDetails> allDetailsByRootIdQuery =
           (PreparedQuery<OrderInstanceDetails>) queryCache.getQueryFromCache(sqlGetAllDetailsByRootIdQuery,
                                                                              defaultConnection,
-                                                                             new OrderInstanceDetails().getReader());
+                                                                             new OrderInstanceDetails().getReader(),
+                                                                             OrderInstanceDetails.TABLE_NAME);
       List<OrderInstanceDetails> orderDetailsFamily =
           defaultConnection.query(allDetailsByRootIdQuery, new Parameter(rootOrderId), -1);
       Map<Long, OrderInstanceDetails> orderDetailsById = new HashMap<Long, OrderInstanceDetails>();
@@ -664,7 +668,8 @@ public class AbandonedOrdersManagement extends FunctionGroup {
           defaultConnection.prepareQuery(new Query<OrderInstanceBackup>("select * from "
                                              + OrderInstanceBackup.TABLE_NAME + " where "
                                              + OrderInstanceBackup.COL_ROOT_ID + "=?", OrderInstanceBackup
-                                             .getReaderWarnIfNotDeserializable()), false);
+                                             .getReaderWarnIfNotDeserializable(),
+                                             OrderInstanceBackup.TABLE_NAME), false);
       List<OrderInstanceBackup> orderBackupsFamily =
           defaultConnection.query(allBackupsByRootIdQuery, new Parameter(rootOrderId), -1);
 

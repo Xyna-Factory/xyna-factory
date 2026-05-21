@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ --><Application applicationName="XyPilot" comment="" factoryVersion="" versionName="1.1.14" xmlVersion="1.1">
+  <ApplicationInfo>
+    <Description Lang="DE">Graphische Benutzeroberfläche und Funktionalität zum Generieren von Xyna Factory Quellcode mit künstlicher Intelligenz (KI)</Description>
+    <Description Lang="EN">Graphical user interface and functionality to generate Xyna Factory source code with artificial intelligence (AI)</Description>
+    <RuntimeContextRequirements>
+      <RuntimeContextRequirement>
+        <ApplicationName>GuiHttp</ApplicationName>
+        <VersionName>1.4.5</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>XyPilotMetricsDefaults</ApplicationName>
+        <VersionName>1.0.9</VersionName>
+      </RuntimeContextRequirement>
+    </RuntimeContextRequirements>
+  </ApplicationInfo>
+  <Ordertypes>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.xypilot.DefineCodeSuggestionGenerationButton</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.xypilot.DefineCodeSuggestionsPanel</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.xypilot.DefineMethodImplementationPanel</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xmcp.xypilot.Generate</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.xypilot.GenerateMappingAssignments</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.xypilot.GenerateMappingLabel</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xmcp.xypilot.GetGenerateButtonDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xmcp.xypilot.GetManageXyPilotConfigDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xmcp.xypilot.SetXyPilotConfig</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+  </Ordertypes>
+  <XMOMEntries>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.CodeAnalysisResult</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.CodeSuggestion</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.DefineCodeSuggestionGenerationButton</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.DefineCodeSuggestionsPanel</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.DefineMethodImplementationPanel</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.Documentation</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.ExceptionMessage</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.GUIMetric</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.Generate</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.GenerateMappingAssignments</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.GenerateMappingLabel</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.GetGenerateButtonDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.GetManageXyPilotConfigDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.GuiSuggestion</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.IterationIndexBuilder</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.Mapping</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.MappingAssignment</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.MemberReference</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.MemberVariable</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.MethodDefinition</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.MetricEvaluationResult</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.MetricIteration</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.MetricScore</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.NoXyPilotUserConfigException</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.Parameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.PromptGenerator</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.SetXyPilotConfig</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.SuggestionIteration</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.XMOMItemReference</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.GetGenerateButtonDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.Generate</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.GetManageXyPilotConfigDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.GenerateMappingAssignments</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.GenerateMappingLabel</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.SetXyPilotConfig</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.XypilotUserConfig</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+  </XMOMEntries>
+</Application>

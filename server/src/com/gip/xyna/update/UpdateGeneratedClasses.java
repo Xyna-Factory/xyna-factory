@@ -150,6 +150,7 @@ import com.gip.xyna.xnwh.persistence.xmom.XMOMPersistenceBase;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMPersistenceManagement;
 import com.gip.xyna.xnwh.pools.ConnectionPoolManagement;
 import com.gip.xyna.xnwh.securestorage.SecureStorage;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceManagement;
 import com.gip.xyna.xnwh.statistics.StatisticsStore;
 import com.gip.xyna.xnwh.xclusteringservices.XynaClusteringServices;
 import com.gip.xyna.xnwh.xwarehousejobs.XynaWarehouseJobManagement;
@@ -190,6 +191,7 @@ import com.gip.xyna.xprc.xfqctrl.FrequencyControlledTask;
 import com.gip.xyna.xprc.xfqctrl.FrequencyControlledTaskCreationParameter;
 import com.gip.xyna.xprc.xfqctrl.FrequencyControlledTaskInformation;
 import com.gip.xyna.xprc.xfqctrl.XynaFrequencyControl;
+import com.gip.xyna.xprc.xfractwfe.XynaPythonSnippetManagement;
 import com.gip.xyna.xprc.xfractwfe.base.DeploymentHandling;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
@@ -2299,6 +2301,11 @@ public class UpdateGeneratedClasses {
                   public XynaXmomSerialization getXmomSerialization() {
                     return null;
                   }
+                  
+                  @Override
+                  public XynaPythonSnippetManagement getXynaPythonSnippetManagement() {
+                    return null;
+                  }
                 };
               } catch (XynaException e) {
                 logger.warn(null, e);
@@ -2503,6 +2510,12 @@ public class UpdateGeneratedClasses {
 
                   @Override
                   public StatisticsStore getStatisticsStore() {
+                    return null;
+                  }
+
+
+                  @Override
+                  public SharedResourceManagement getSharedResourceManagement() {
                     return null;
                   }
                 };

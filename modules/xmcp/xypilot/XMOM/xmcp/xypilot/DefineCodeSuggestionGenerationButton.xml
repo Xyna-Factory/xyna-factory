@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Define Code Suggestion Generation Button" TypeName="DefineCodeSuggestionGenerationButton" TypePath="xmcp.xypilot" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Define Code Suggestion Generation Button" Name="DefineCodeSuggestionGenerationButton">
+    <Input/>
+    <Output>
+      <Data ID="18" Label="Definition" ReferenceName="Definition" ReferencePath="xmcp.forms.datatypes" VariableName="definition18"/>
+    </Output>
+    <ServiceReference ID="199" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="198"/>
+      <Target RefID="198"/>
+    </ServiceReference>
+    <Function ID="198" Label="get Own RuntimeContext">
+      <Source RefID="199"/>
+      <Target RefID="199"/>
+      <Target RefID="201"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="199"/>
+      <Receive ServiceID="199">
+        <Target RefID="201"/>
+      </Receive>
+    </Function>
+    <Mappings ID="35" Label="Mapping">
+      <Input>
+        <Data ID="218" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext218">
+          <Source RefID="35"/>
+        </Data>
+        <Source RefID="201"/>
+      </Input>
+      <Output>
+        <Data ID="131" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition131">
+          <Source RefID="35"/>
+        </Data>
+        <Target RefID="132"/>
+      </Output>
+      <Mapping>%1%.label="AI"</Mapping>
+      <Mapping>%1%.serviceRTC=%0%</Mapping>
+      <Mapping>%1%.serviceFQN="xmcp.xypilot.DefineCodeSuggestionsPanel"</Mapping>
+      <Mapping>%1%.synchronously="true"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="xypilot_update_method_implementation"</Mapping>
+    </Mappings>
+    <Data ID="132" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition132">
+      <Source RefID="35"/>
+    </Data>
+    <Data ID="201" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext201">
+      <Source RefID="198"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="132"/>
+      <Target RefID="18"/>
+      <Copy>
+        <Source RefID="132"/>
+        <Target RefID="18"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

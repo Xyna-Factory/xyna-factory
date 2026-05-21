@@ -22,6 +22,7 @@
   </Meta>
   <Libraries>OrderInputSourcesServicesImpl.jar</Libraries>
   <SharedLibraries>ZetaTools</SharedLibraries>
+  <SharedLibraries>XynaObjectJsonBuilder</SharedLibraries>
   <Service Label="Order input sources Services" TypeName="OrderInputSourcesServices">
     <Operation IsStatic="true" Label="Change order input source" Name="changeOrderInputSource">
       <Input>

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import java.net.Socket;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.SynchronousQueue;
@@ -38,11 +39,13 @@ import com.gip.xyna.utils.db.ConnectionPool;
 import com.gip.xyna.utils.db.ConnectionPool.NoConnectionAvailableException.Reason;
 import com.gip.xyna.utils.db.ConnectionPool.NoConnectionAvailableReasonDetector;
 import com.gip.xyna.utils.db.DBConnectionData;
+import com.gip.xyna.utils.db.DBConnectionData.DBConnectionDataBuilder;
 import com.gip.xyna.utils.db.pool.ConnectionBuildStrategy;
 import com.gip.xyna.utils.db.pool.DefaultValidationStrategy;
 import com.gip.xyna.utils.db.pool.ValidationStrategy;
 import com.gip.xyna.utils.misc.Documentation;
 import com.gip.xyna.utils.misc.StringParameter;
+import com.gip.xyna.utils.misc.EnvironmentVariable.StringEnvironmentVariable;
 import com.gip.xyna.utils.timing.Duration;
 import com.gip.xyna.xmcp.PluginDescription;
 import com.gip.xyna.xmcp.PluginDescription.ParameterUsage;
@@ -64,7 +67,7 @@ public class MySQLPoolType extends ConnectionPoolType {
                     en("timeout until connection must be established").
                     de("Timeout, bis zu dem Verbindung hergestellt sein muss").
                     build()).
-      defaultValue(Duration.valueOf("365 d")). //1 jahr. besser als sonderbehandlung fï¿½r 0
+      defaultValue(Duration.valueOf("365 d")). //1 jahr. besser als sonderbehandlung für 0
       optional().build();
 
   public static final StringParameter<Duration> SOCKET_TIMEOUT = 
@@ -87,8 +90,29 @@ public class MySQLPoolType extends ConnectionPoolType {
       defaultValue(Duration.valueOf("10 s")).
       build();
 
-  public static final List<StringParameter<?>> additionalParameters = 
-      StringParameter.asList( CONNECT_TIMEOUT, SOCKET_TIMEOUT, VALIDATION_TIMEOUT );
+  public static final StringParameter<StringEnvironmentVariable> USERNAME_ENV = StringParameter
+      .typeEnvironmentVariable(StringEnvironmentVariable.class, "usernameEnv")
+      .label("Username environment variable.")
+      .documentation(Documentation.en("Name of the environment variable containing the db username.")
+          .de("Name der Umgebungsvariable, die den DB Nutzernamen enthält.").build())
+      .optional().build();
+
+  public static final StringParameter<StringEnvironmentVariable> PASSWORD_ENV = StringParameter
+      .typeEnvironmentVariable(StringEnvironmentVariable.class, "passwordEnv")
+      .label("Password environment variable.")
+      .documentation(Documentation.en("Name of the environment variable containing the db password.")
+          .de("Name der Umgebungsvariable, die das DB Passwort enthält.").build())
+      .optional().build();
+
+  public static final StringParameter<StringEnvironmentVariable> CONNECT_ENV = StringParameter
+      .typeEnvironmentVariable(StringEnvironmentVariable.class, "connectStringEnv")
+      .label("Connectstring environment variable.")
+      .documentation(Documentation.en("Name of the environment variable containing the JDBC connect string.")
+          .de("Name der Umgebungsvariable mit den JDBC Verbindungsdaten.").build())
+      .optional().build();
+
+  public static final List<StringParameter<?>> additionalParameters = StringParameter.asList(CONNECT_TIMEOUT,
+      SOCKET_TIMEOUT, VALIDATION_TIMEOUT, USERNAME_ENV, PASSWORD_ENV, CONNECT_ENV);
 
   private PluginDescription pluginDescription;
 
@@ -168,16 +192,7 @@ public class MySQLPoolType extends ConnectionPoolType {
   public ConnectionBuildStrategy createConnectionBuildStrategy(TypedConnectionPoolParameter cpp) {
     Duration connectTimeout = CONNECT_TIMEOUT.getFromMap(cpp.getAdditionalParams());
     Duration socketTimeout = SOCKET_TIMEOUT.getFromMap(cpp.getAdditionalParams());
-    DBConnectionData dbdata =
-        DBConnectionData.newDBConnectionData().
-            user(cpp.getUser()).password(cpp.getPassword()).url(cpp.getConnectString())
-            .connectTimeoutInSeconds((int)connectTimeout.getDuration(TimeUnit.SECONDS))
-            .socketTimeoutInSeconds((int)socketTimeout.getDuration(TimeUnit.SECONDS))
-            .classLoaderToLoadDriver(MySQLPoolType.class.getClassLoader()) // enforcing the connector jar to be stored in userlib
-            .property("rewriteBatchedStatements", "true")
-            .build();
-
-    return new MySQLConnectionBuildStrategy(dbdata, (int)connectTimeout.getDuration(TimeUnit.SECONDS) );
+    return new MySQLConnectionBuildStrategy(cpp, (int)connectTimeout.getDuration(TimeUnit.SECONDS), (int)socketTimeout.getDuration(TimeUnit.SECONDS) );
   }
 
 
@@ -191,16 +206,55 @@ public class MySQLPoolType extends ConnectionPoolType {
   public static class MySQLConnectionBuildStrategy implements ConnectionBuildStrategy {
     
     private static ThreadPoolExecutor threadpool = new ThreadPoolExecutor(1, 1000, 10, TimeUnit.SECONDS, new SynchronousQueue<Runnable>());
+    private TypedConnectionPoolParameter tcpp;
     private DBConnectionData dbdata;
     private int connectTimeout;
+    private int socketTimeout;
     private String poolId;
 
-    public MySQLConnectionBuildStrategy(DBConnectionData dbdata, int connectTimeout) {
-      this.dbdata = dbdata;
+    private final Optional<StringEnvironmentVariable> userEnv;
+    private final Optional<StringEnvironmentVariable> pwdEnv;
+    private final Optional<StringEnvironmentVariable> connectStringEnv;
+
+    public MySQLConnectionBuildStrategy(TypedConnectionPoolParameter tcpp, int connectTimeout, int socketTimeout) {
+      this.tcpp = tcpp;
+      this.dbdata = null;
       this.connectTimeout = connectTimeout;
+      this.socketTimeout = socketTimeout;
+
+      userEnv = Optional
+          .ofNullable(USERNAME_ENV.getFromMap(tcpp.getAdditionalParams()));
+      pwdEnv = Optional
+          .ofNullable(PASSWORD_ENV.getFromMap(tcpp.getAdditionalParams()));
+      connectStringEnv = Optional
+          .ofNullable(CONNECT_ENV.getFromMap(tcpp.getAdditionalParams()));
+    }
+
+    private void updateDBConnectData() {
+      String user = userEnv.flatMap(u -> u.getValue()).filter(s -> !s.isEmpty()).orElse(tcpp.getUser()).trim();
+      String pwd = pwdEnv.flatMap(p -> p.getValue()).filter(s -> !s.isEmpty()).orElse(tcpp.getPassword()).trim();
+      String connString = connectStringEnv.flatMap(c -> c.getValue()).filter(s -> !s.isEmpty())
+          .orElse(tcpp.getConnectString()).trim();
+
+      if (dbdata == null) {
+        dbdata = DBConnectionData.newDBConnectionData().user(user).password(pwd).url(connString)
+            .connectTimeoutInSeconds(connectTimeout)
+            .socketTimeoutInSeconds(socketTimeout)
+            .classLoaderToLoadDriver(MySQLPoolType.class.getClassLoader()) // enforcing the connector jar to be stored
+                                                                           // in userlib
+            .property("rewriteBatchedStatements", "true")
+            .build();
+      } else {
+        if (dbdata.getUrl().equals(connString) && dbdata.getUser().equals(user) && dbdata.getPassword().equals(pwd))
+          return;
+
+        dbdata = (new DBConnectionDataBuilder(dbdata)).user(user).password(pwd).url(connString).build();
+      }
     }
 
     public Connection createNewConnection() {
+      updateDBConnectData();
+
       Connection con = createNewConnectionInternal();
       if (con == null) {
         throw new RuntimeException("Could not create connection but returned null.");
@@ -225,8 +279,8 @@ public class MySQLPoolType extends ConnectionPoolType {
       final CountDownLatch latch = new CountDownLatch(1);
       ConnectionCreator cc = new ConnectionCreator(latch, dbdata);
 
-      //in eigenem thread ausfï¿½hren, damit timeouts ordentlich behandelt werden kï¿½nnen. 
-      //jdbc hat dafï¿½r zwar auch properties, aber wenn diese versagen, bleibt der thread nicht hï¿½ngen.
+      //in eigenem thread ausführen, damit timeouts ordentlich behandelt werden können. 
+      //jdbc hat dafür zwar auch properties, aber wenn diese versagen, bleibt der thread nicht hängen.
       boolean executed = false;
       int cnt = 0;
       while (!executed) {

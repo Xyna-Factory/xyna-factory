@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build" default="build" basedir=".">
+
+    <pathconvert property="project.base.dir">
+        <path location="{{PROJECTBASEPATH}}" />
+    </pathconvert>
+
+    <property name="build.type" value="application" />
+    <property name="application.dir" value="${basedir}" />
+    <property name="target.dir" value="${basedir}/deploy/" />
+ 
+    <target name="build">
+        <antcall target="prepare-mdm-jar-if-missing" />
+
+        <antcall target="build-application" />
+    </target>
+
+    <target name="prepare-mdm-jar">
+        <antcall target="create-mdm-jar" />
+        <delete file="${basedir}/mdm.jar" />
+    </target>
+
+    <import file="${project.base.dir}/build.xml" />
+
+</project>

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ import xact.connection.DeviceType;
 import xact.connection.ManagedConnection;
 import xact.connection.ReadTimeout;
 import xact.connection.SendParameter;
+import xact.connection.netconf.NetConfDeviceType;
 import xact.ssh.SSHMessagePayload;
 import xact.ssh.SSHNETCONFConnection;
 import xact.ssh.SSHNETCONFConnectionInstanceOperation;
@@ -65,9 +66,12 @@ public class SSHNETCONFConnectionInstanceOperationImpl extends SSHNETCONFConnect
   private static final String NETCONF_BASE_1_0_MESSAGE_SEPERATOR = "]]>]]>";
 
   private String localHello = "<hello xmlns=\"urn:ietf:params:xml:ns:netconf:base:1.0\">" + "<capabilities>"
-      + "<capability>urn:ietf:params:netconf:base:1.0</capability>" + "</capabilities>" + "</hello>";
+      + "<capability>urn:ietf:params:netconf:base:1.0</capability>" 
+      + "<capability>urn:ietf:params:netconf:base:1.1</capability>"
+      + "</capabilities>" + "</hello>";
   private final Map<String, String> capabilities = new HashMap<>();
   private String remoteHello;
+  private NETCONF documentType;
 
 
   public SSHNETCONFConnectionInstanceOperationImpl(SSHNETCONFConnection instanceVar) {
@@ -190,54 +194,9 @@ public class SSHNETCONFConnectionInstanceOperationImpl extends SSHNETCONFConnect
   private void lazyPrepare() {
     if (!prepared) {
       reconnectIfNecessary();
-      initChannelAndStreams(getInstanceVar().getConnectionParameter().getDefaultSendParameter(), new NETCONF(), new DeviceType() {
-
-        @Override
-        public Boolean checkInteraction(CommandResponseTuple arg0, DocumentType arg1) {
-          return false;
-        }
-
-
-        @Override
-        public void cleanupAfterError(CommandResponseTuple arg0, DocumentType arg1, ManagedConnection arg2) {
-        }
-
-
-        @Override
-        public DeviceType clone() {
-          throw new RuntimeException();
-        }
-
-
-        @Override
-        public DeviceType clone(boolean arg0) {
-          throw new RuntimeException();
-        }
-
-
-        @Override
-        public void detectCriticalError(CommandResponseTuple arg0, DocumentType arg1) throws DetectedError {
-        }
-
-
-        @Override
-        public Command enrichCommand(Command c) {
-          return c;
-        }
-
-
-        @Override
-        public Boolean isResponseComplete(String response, DocumentType docType, ManagedConnection con, Command cmd) {
-          return response.endsWith(NETCONF_BASE_1_0_MESSAGE_SEPERATOR);
-        }
-
-
-        @Override
-        public CommandResponseTuple removeDeviceSpecifics(CommandResponseTuple c) {
-          return c;
-        }
-
-      }, new Command(""));
+      initChannelAndStreams(getInstanceVar().getConnectionParameter().getDefaultSendParameter(), new NETCONF(),
+                            new NetConfDeviceType(), new Command(""));
+      documentType = new NETCONF(capabilities.containsKey("urn:ietf:params:netconf:base:1.1") ? "1.1" : "1.0");
       prepared = true;
     }
   }
@@ -256,6 +215,7 @@ public class SSHNETCONFConnectionInstanceOperationImpl extends SSHNETCONFConnect
     if (cs != null) {
       return new Capability(cs);
     }
+    
     return null;
   }
 
@@ -270,6 +230,13 @@ public class SSHNETCONFConnectionInstanceOperationImpl extends SSHNETCONFConnect
   public boolean hasCapabilityFromString(String ck) {
     lazyPrepare();
     return capabilities.containsKey(ck);
+  }
+
+
+  @Override
+  public NETCONF getDocumentType() {
+    lazyPrepare();
+    return documentType;
   }
 
 }

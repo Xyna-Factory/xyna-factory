@@ -22,6 +22,7 @@
   </Meta>
   <Libraries>CronLikeOrderServicesImpl.jar</Libraries>
   <SharedLibraries>ZetaTools</SharedLibraries>
+  <SharedLibraries>XynaObjectJsonBuilder</SharedLibraries>
   <Service Label="Cron-like Order Services" TypeName="CronLikeOrderServices">
     <Operation IsStatic="true" Label="Create cron-like order" Name="createCronLikeOrder">
       <Input>

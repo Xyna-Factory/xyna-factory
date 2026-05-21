@@ -17,7 +17,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
 <!-- CAUTION: Do not attempt to launch any target from here. Launch them from build.xml instead. -->
-<project name="buildService" default="deploy" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
+<project name="buildService" default="deploy" basedir="." >
 
     <property name="common.lib.dir" value="${root.dir}/installation/build/lib/factory" />
     <property name="common.xyna.lib.dir" value="${common.lib.dir}/xyna" />
@@ -25,6 +25,7 @@
     <import file="./macros.xml" />
     <import file="${root.dir}/installation/build/ant-xyna.xml" />
 
+    <property name="application.dir" value="${basedir}/../.." />
     <property name="exception.xml.dir" value="${root.dir}/server" />
     <property name="base.lib.dir" value="${basedir}/lib" />
     <property name="mdm.lib.dir" value="${base.lib.dir}" />
@@ -33,27 +34,24 @@
     <property name="target.dir" value="${basedir}/deploy" />
     <property name="module.dir" value="${root.dir}/modules/${mdm.xml.path}" />
 
-
     <property file="${basedir}/server.properties" />
     <property file="${root.dir}/server.properties" />
     <property file="${application.dir}/workspace.properties" />
 
-    <property name="workspacename" value="default workspace" />
-    <property name="revision.dir" value="../revisions/rev_workingset" />
-
     <!-- depends on server make use of server variable -->
-    <property name="server.mdm.path" value="${server.path}/${revision.dir}/saved/services/${fqclassname}" />
-    <property name="server.mdm.xml.path" value="${server.path}/${revision.dir}/saved/XMOM/${mdm.xml.path}" />
     <property name="local.xml.dir" value="${xmom.dir}/${mdm.xml.path}" />
 
     <property name="deploy.sharedlibs" value=":" />
     <property name="deploy.template" value="deploydatatype -fqDatatypeName ${fqclassname} -workspaceName '${workspacename}' -protectionMode TRY -registerWithXMOM true" />
 
-    <resolver:pom file="${basedir}/pom.xml" id="pom"/>
 
     <property name="third_parties.pom" value="${basedir}/third_parties.pom.xml" />
 
     <checkServerProperties />
+
+    <condition property="workspacename.available">
+        <isset property="workspacename" />
+    </condition>
 
     <condition property="cli.commands.available">
         <isset property="cli.command.java.path" />
@@ -89,14 +87,8 @@
                 <loadLicenses targetDir="${base.lib.dir}" pom="${third_parties.pom}" />
             </then>
         </if>
-
-        <resolver:resolve>
-          <resolver:dependencies pomRef="pom"/>
-          <resolver:remoterepos refid="xyna.repository"/>
-          <resolver:files refid="files" dir="${base.lib.dir}/xyna" layout="{artifactId}-{classifier}-{version}.{extension}"/>
-          <resolver:files refid="files" dir="${base.lib.dir}" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/>
-        </resolver:resolve>
-        <!-- delete generated-resources ? -->
+        <resolve pomFile="${basedir}/pom.xml" dir="${base.lib.dir}/xyna" />
+        <resolve pomFile="${basedir}/pom.xml" dir="${base.lib.dir}" scopes="runtime" />
       </target>
 
     <!-- ================================= 
@@ -107,13 +99,27 @@
     </target>
 
     <!-- ================================= 
+         target: post-build-src             
+         ================================= -->
+    <target name="post-build-src" description="post-build-src">
+        <!-- leer, überschreibbar im build.xml -->
+    </target>
+	
+    <!-- ================================= 
          target: deploy             
          ================================= -->
     <!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
     <target name="deploy" depends="updateServiceDefinition, build" description="Deploy jar file to xyna server.">
         <fail message="No server properties specified. Unable to deploy." unless="server.available" />
-        <!-- clean directory on xyna server -->
-        <!--<custom-ssh-exec host="${server.host}" username="${server.userid}" command="rm -rf ${server.mdm.path}" /> -->
+        <fail message="No workspace specified." unless="workspacename.available" />
+        <local name ="revision" />
+        <local name = "revision.dir" />
+        <local name = "server.mdm.xml.path" />
+        <determine-revision workspacename="${workspacename}" outputproperty="revision" />
+        <property name="revision.dir" value="../revisions/rev_${revision}" />
+        <property name="server.mdm.path" value="${server.path}/${revision.dir}/saved/services/${fqclassname}" />
+        <property name="server.mdm.xml.path" value="${server.path}/${revision.dir}/saved/XMOM/${mdm.xml.path}" />
+
         <!-- create directory on xyna server -->
         <custom-ssh-exec host="${server.host}" username="${server.userid}" command="mkdir -p ${server.mdm.path}" />
         <!-- copy xml file to server -->
@@ -121,11 +127,11 @@
             <equals arg1="${server.transmitXml}" arg2="yes" />
             <then>
                 <echo message="Copying XML file ${local.xml.dir}/${mdm.xml.filename} to server" />
-                <custom-scp-to-remote fromdir="${local.xml.dir}" frominclude="${mdm.xml.filename}" todir="${server.userid}@${server.host}:${server.mdm.xml.path}" />
+                <default-scp-to-remote fromdir="${local.xml.dir}" frominclude="${mdm.xml.filename}" todir="${server.mdm.xml.path}" />
             </then>
         </if>
         <!-- copy libraries and licences to xyna server -->
-        <custom-scp-to-remote fromdir="${target.dir}" frominclude="**/*" todir="${server.userid}@${server.host}:${server.mdm.path}" />
+        <replace-jars-in-remote-dir source.dir="${target.dir}" remote.target.dir="${server.mdm.path}" xyna.server.path="${server.path}" />
 
         <!-- deploy datatype -->
         <custom-ssh-exec host="${server.host}" username="${server.userid}" command="cd ${server.path}; ./xynafactory.sh ${deploy.template}" />
@@ -199,7 +205,7 @@
          target: build             
          ================================= -->
     <!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
-    <target name="build" depends="build-src" description="Build jar file with java implementation of services.">
+    <target name="build" depends="build-src,post-build-src" description="Build jar file with java implementation of services.">
         <!-- copy libraries to target.dir -->
         <copyJar from="${base.lib.dir}" to="${target.dir}" />
         <copyLicense from="${base.lib.dir}" to="${target.dir}" />
@@ -218,13 +224,17 @@
          ================================= -->
     <!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
     <target name="updateMDMandXynaFactoryJar" description="Receive new mdm.jar and xynafactory.jar from Xyna Factory">
-        <fail message="No server properties specified. Unable to deploy." unless="server.available" />
+        <fail message="No server properties specified." unless="server.available" />
+        <fail message="No workspace specified." unless="workspacename.available" />
         <!-- build mdm.jar -->
         <custom-ssh-exec host="${server.host}" username="${server.userid}" command="cd ${server.path}; ./xynafactory.sh buildmdmjar -workspaceName '${workspacename}' -r " />
         <!-- copy mdm.jar from xyna server -->
-        <custom-scp-from-remote fromfile="${server.userid}@${server.host}:${server.path}/mdm.jar" todir="${base.lib.dir}/xyna" />
+        <default-scp-from-remote fromfile="${server.path}/mdm.jar" todir="${base.lib.dir}/xyna" />
         <!-- copy xynafactory.jar from xyna server -->
-        <custom-scp-from-remote fromfile="${server.userid}@${server.host}:${server.path}/lib/xynafactory.jar" todir="${common.xyna.lib.dir}" />
+        <mkdir dir="${common.xyna.lib.dir}" />
+        <local name="factoryjar" />
+        <custom-ssh-exec host="${server.host}" username="${server.userid}" command="ls ${server.path}/lib | grep xynafactory*.jar" outputproperty="factoryjar" />
+        <default-scp-from-remote fromfile="${server.path}/lib/${factoryjar}" todir="${common.xyna.lib.dir}" />
     </target>
 
     <!-- ================================= 
@@ -232,14 +242,15 @@
          ================================= -->
     <!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
     <target name="updateServiceDefinition" description="Receive new serviceDefinitionLibs.jar from Xyna Factory">
-        <fail message="No server properties specified. Unable to deploy." unless="server.available" />
+        <fail message="No server properties specified." unless="server.available" />
+        <fail message="No workspace specified." unless="workspacename.available" />
         <!-- build mdm.jar -->
         <tstamp>
             <format property="current.millis" pattern="ssSSS" />
         </tstamp>
         <custom-ssh-exec host="${server.host}" username="${server.userid}" command="cd ${server.path}; ./xynafactory.sh buildservicedefinitionjar -fqDatatypeName ${fqclassname} -workspaceName '${workspacename}' -targetDirectory ${project.name}_${current.millis}" />
         <!-- generate lib to temp folder -->
-        <custom-scp-from-remote fromfile="${server.userid}:${server.password}@${server.host}:${server.path}/${project.name}_${current.millis}/serviceDefinition.jar" todir="${base.lib.dir}/xyna" />
+        <default-scp-from-remote fromfile="${server.path}/${project.name}_${current.millis}/serviceDefinition.jar" todir="${base.lib.dir}/xyna" />
         <!-- delete temp folder -->
         <custom-ssh-exec host="${server.host}" username="${server.userid}" command="rm -rf ${server.path}/${project.name}_${current.millis}" />
     </target>
@@ -249,7 +260,7 @@
          ================================= -->
     <!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
     <target name="genExceptionClass" description="Generate code class for exceptions." if="${exceptions.available}">
-        <java fork="true" failonerror="yes" classname="com.gip.xyna.utils.exceptions.ExceptionStorage">
+        <java fork="true" failonerror="yes" classname="com.gip.xyna.xprc.xfractwfe.generation.ExceptionGenFqClassNameAdapter">
             <sysproperty key="BLACK_SERVER_HOME" value="${exception.xml.dir}" />
             <classpath>
                 <fileset dir="${base.lib.dir}">
@@ -293,9 +304,8 @@
         <!--delete dir="${target.dir}" failonerror="false" /-->
         <delete dir="${basedir}/classes" />
     </target>
-	
-	
-   <!-- ================================= 
+
+    <!-- ================================= 
          target: create-servicedefinition-jar         
          ================================= -->
     <target name="create-servicedefinition-jar" description="Create servicedefinition.jar locally">
@@ -358,6 +368,18 @@
                 <echo message="servicedefinition jar exists already." />
             </else>
         </if>
+    </target>
+
+    <!-- ================================= 
+         target: cleanup-lib
+         ================================= -->
+    <target name="cleanup-lib" description="cleanup-lib">
+        <mkdir dir="${base.lib.dir}" />
+        <delete>
+            <fileset dir="${base.lib.dir}" includes="**/*.jar"/>
+        </delete>
+        <ant antfile="${application.dir}/build.xml" target="prepare-mdm-jar" inheritAll="false" dir="${application.dir}" />
+        <antcall target="create-servicedefinition-jar" />
     </target>
 
 </project>

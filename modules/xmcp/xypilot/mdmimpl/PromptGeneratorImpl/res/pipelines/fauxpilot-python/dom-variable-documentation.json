@@ -1,0 +1,11 @@
+{
+    "template": "fauxpilot/dom-variable-documentation.ftl",
+    "parser": "xmcp.xypilot.impl.gen.parse.JavaDocParser",
+    "inference_parameters": {
+        "model": "py-model",
+        "n": 1,
+        "stop": ["\n\n"],
+        "max_tokens": 32
+    }
+}
+

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="build" default="build" basedir=".">
+
+	<!-- this is the absolute path to the root -->
+	<pathconvert property="root.dir">
+		<path location="../../../.." />
+	</pathconvert>
+	<pathconvert property="project.root.dir">
+		<path location="../.." />
+	</pathconvert>
+
+	<property name="target.dir" value="${basedir}/deploy/" />
+    <property name="oas.dir" value="${root.dir}/modules/xfmg/oas" />
+
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		<classpath>
+			<pathelement location="${common.xyna.lib.dir}/ant-contrib.jar" />
+		</classpath>
+	</taskdef>
+
+    <import file="${oas.dir}/oasMacros.xml" />
+
+	<target name="build">
+        <xmlproperty file="${oas.dir}/application.xml" />
+        <buildoasapp oas.dir="${oas.dir}" yaml="tmf633-service-catalog-openapi-1.1.15.yaml" type="client" target="." version="${Application(versionName)}" />
+        <buildoasapp oas.dir="${oas.dir}" yaml="tmf640-service-activation-openapi-1.1.8.yaml" type="datamodel" target="." version="${Application(versionName)}" />
+		<antcall target="unzipApps" />
+		<move todir="${target.dir}">
+			<fileset dir="${basedir}" includes="*.zip" />
+			<regexpmapper from="^(.*)_((?:\d+\.){3})zip" to="\1.\2app" />
+		</move>
+	</target>
+
+	<target name="unzipApps">
+		<foreach target="unzipApp" param="zipfile">
+			<fileset dir="${basedir}" includes="*.zip" >
+			</fileset>
+		</foreach>
+	</target>
+
+	<target name="unzipApp">
+		<basename property="filename" file="${zipfile}" suffix=".zip"/>
+		<unzip src="${zipfile}" dest="${basedir}/${filename}"/>
+	</target>
+
+</project>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="JSON Web Token" TypeName="JSONWebToken" TypePath="xact.http.jwt" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Token" VariableName="token">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="JWT Header" ReferenceName="JWTHeader" ReferencePath="xact.http.jwt" VariableName="jWTHeader"/>
+  <Data Label="JWT Claims" ReferenceName="JWTClaims" ReferencePath="xact.http.jwt" VariableName="jWTClaims"/>
+  <Libraries>JSONWebTokenImpl.jar</Libraries>
+  <SharedLibraries>JWT</SharedLibraries>
+  <Service Label="JSON Web Token" TypeName="JSONWebToken">
+    <Operation IsStatic="false" Label="Extract from Header" Name="extractFromHeader">
+      <Input>
+        <Data ID="7" Label="Header" ReferenceName="Header" ReferencePath="xact.http" VariableName="header7"/>
+        <Data ID="11" Label="Name" ReferenceName="Text" ReferencePath="base" VariableName="text11"/>
+        <Data ID="1145" Label="Prefix" ReferenceName="Text" ReferencePath="base" VariableName="text1145"/>
+      </Input>
+      <Output>
+        <Data ID="9" Label="JSON Web Token" ReferenceName="JSONWebToken" ReferencePath="xact.http.jwt" VariableName="jSONWebToken9"/>
+      </Output>
+      <Meta>
+        <Documentation>
+          <![CDATA[ Header-Field
+&lt;Name&gt;: &lt;token&gt;]]>
+        </Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().extractFromHeader(header7, text11, text1145);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Validate and Parse JWS Token" Name="validateAndParseJWSToken">
+      <Input>
+        <Data ID="314" Label="Key" ReferenceName="Key" ReferencePath="xact.http.jwt" VariableName="key314"/>
+      </Input>
+      <Output>
+        <Data ID="301" Label="JSON Web Token" ReferenceName="JSONWebToken" ReferencePath="xact.http.jwt" VariableName="jSONWebToken301"/>
+      </Output>
+      <Throws>
+        <Exception ID="1031" Label="JWT Exception" ReferenceName="JWTException" ReferencePath="xact.http.jwt" VariableName="jWTException1031"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().validateAndParseJWSToken(key314);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Create and Sign JWS Token" Name="createAndSignJWSToken">
+      <Input>
+        <Data ID="976" Label="Key" ReferenceName="Key" ReferencePath="xact.http.jwt" VariableName="key976"/>
+      </Input>
+      <Output>
+        <Data ID="980" Label="JSON Web Token" ReferenceName="JSONWebToken" ReferencePath="xact.http.jwt" VariableName="jSONWebToken980"/>
+      </Output>
+      <Throws>
+        <Exception ID="1037" Label="JWT Exception" ReferenceName="JWTException" ReferencePath="xact.http.jwt" VariableName="jWTException1037"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().createAndSignJWSToken(key976);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Parse Token Unsecured" Name="parseTokenUnsecured">
+      <Input/>
+      <Output>
+        <Data ID="992" Label="JSON Web Token" ReferenceName="JSONWebToken" ReferencePath="xact.http.jwt" VariableName="jSONWebToken992"/>
+      </Output>
+      <Throws>
+        <Exception ID="1025" Label="JWT Exception" ReferenceName="JWTException" ReferencePath="xact.http.jwt" VariableName="jWTException1025"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().parseTokenUnsecured();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Extract Bearer Token" Name="extractBearerToken">
+      <Input>
+        <Data ID="1072" Label="Header" ReferenceName="Header" ReferencePath="xact.http" VariableName="header1072"/>
+      </Input>
+      <Output>
+        <Data ID="1078" Label="JSON Web Token" ReferenceName="JSONWebToken" ReferencePath="xact.http.jwt" VariableName="jSONWebToken1078"/>
+      </Output>
+      <Meta>
+        <Documentation>
+          <![CDATA[ Header-Field
+Authorization: Bearer &lt;token&gt;]]>
+        </Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().extractBearerToken(header1072);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

@@ -1,0 +1,9 @@
+server.path=/opt/xyna/xyna_001/server
+server.transmitXml=no
+server.host=
+server.userid=
+
+# set one
+server.keyfile=
+server.password=
+server.containername=

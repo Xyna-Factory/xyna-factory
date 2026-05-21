@@ -80,7 +80,7 @@ public class JsonFilterActionInstance extends DefaultFilterActionInstance {
       setProperty("Strict-Transport-Security", new StringBuilder().append("max-age=").append(maxAge).append("; includeSubDomains").toString());
     }
 
-    if(shouldZip(tc)) {
+    if(shouldZip(tc) && inputStream != null) {
       try {
         inputStream = zip(tc, status, mime, inputStream);
       } catch (IOException e) {

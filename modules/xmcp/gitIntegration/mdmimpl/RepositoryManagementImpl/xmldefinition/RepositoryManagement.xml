@@ -21,11 +21,14 @@
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
   <Libraries>RepositoryManagementImpl.jar</Libraries>
-  <Libraries>JavaEWAH-1.2.3.jar</Libraries>
-  <Libraries>org.eclipse.jgit-6.6.0.202305301015-r.jar</Libraries>
-  <Libraries>slf4j-api-1.7.36.jar</Libraries>
   <SharedLibraries>XynaObjectGitIntegrationManagement</SharedLibraries>
+  <SharedLibraries>JGit</SharedLibraries>
   <Service Label="Repository Management" TypeName="RepositoryManagement">
+    <Meta>
+      <AdditionalDependencies>
+        <Datatype>xmcp.forms.plugin.PluginManagement</Datatype>
+      </AdditionalDependencies>
+    </Meta>
     <Operation IsStatic="true" Label="Add Repository Connection" Name="addRepositoryConnection">
       <Input>
         <Data ID="1" Label="Path" ReferenceName="Text" ReferencePath="base" VariableName="text1"/>
@@ -61,6 +64,98 @@
         <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.listRepositoryConnections();</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="List Users of Repository" Name="listUsersOfRepository">
+      <Input>
+        <Data ID="14" Label="Repository" VariableName="repository14">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="15" IsList="true" Label="Repository User" ReferenceName="RepositoryUser" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryUser15"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.listUsersOfRepository(repository14);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="List All Repository Users" Name="listAllRepositoryUsers">
+      <Input/>
+      <Output>
+        <Data ID="16" IsList="true" Label="Repository User" ReferenceName="RepositoryUser" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryUser16"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.listAllRepositoryUsers();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Add User to Repository" Name="addUserToRepository" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="17" Label="Repository" VariableName="repository17">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="18" Label="Encoded Password" VariableName="EncodedPassword">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="19" Label="Repository User" VariableName="repositoryUser">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="19" Label="Mail" VariableName="mail">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.gitintegration.RepositoryManagementImpl.addUserToRepository(correlatedXynaOrder, repository17, EncodedPassword, repositoryUser, mail);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="List Branches" Name="listBranches">
+      <Input>
+        <Data ID="20" Label="Branch" VariableName="branch">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="21" Label="Branch Data" ReferenceName="BranchData" ReferencePath="xmcp.gitintegration.repository" VariableName="branchData21"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.listBranches(branch);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="List Commits" Name="listCommits">
+      <Input>
+        <Data ID="23" Label="Repository" VariableName="repository">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="24" Label="Branch" VariableName="branch">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="25" Label="Length" VariableName="length">
+          <Meta>
+            <Type>int</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="22" IsList="true" Label="Commit" ReferenceName="Commit" ReferencePath="xmcp.gitintegration.repository" VariableName="commit22"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.listCommits(repository, branch, length);</CodeSnippet>
+      </SourceCode>
+    </Operation>
     <Operation IsStatic="true" Label="Get Repository Connection" Name="getRepositoryConnection">
       <Input>
         <Data ID="26" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace26"/>
@@ -69,7 +164,7 @@
         <Data ID="27" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection27"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return RepositoryManagementImpl.getRepositoryConnection(workspace26);</CodeSnippet>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.getRepositoryConnection(workspace26);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Update Repository Connection" Name="updateRepositoryConnection">
@@ -78,7 +173,25 @@
       </Input>
       <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java">RepositoryManagementImpl.updateRepositoryConnection(repositoryConnection28);</CodeSnippet>
+        <CodeSnippet Type="Java">xmcp.gitintegration.RepositoryManagementImpl.updateRepositoryConnection(repositoryConnection28);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Checkout" Name="checkout">
+      <Input>
+        <Data ID="30" Label="Branch" VariableName="branch">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="29" Label="Repository" VariableName="repository">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.gitintegration.RepositoryManagementImpl.checkout(branch, repository);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
  */
 package com.gip.xyna.xact.filter.session;
 
+
+
 import com.gip.xyna.utils.misc.JsonBuilder;
 import com.gip.xyna.utils.misc.JsonParser;
 import com.gip.xyna.utils.misc.JsonParser.EmptyJsonVisitor;
@@ -27,7 +29,6 @@ import com.gip.xyna.utils.misc.JsonSerializable;
 import com.gip.xyna.xact.filter.json.ObjectIdentifierJson;
 import com.gip.xyna.xact.filter.session.exceptions.ViewException;
 import com.gip.xyna.xact.filter.util.Utils;
-import com.gip.xyna.xact.filter.util.xo.Util;
 import com.gip.xyna.xact.filter.xmom.MetaXmomContainers;
 import com.gip.xyna.xact.filter.xmom.datatypes.json.DatatypeXo;
 import com.gip.xyna.xact.filter.xmom.datatypes.json.ExceptiontypeXo;
@@ -45,8 +46,10 @@ import xmcp.processmodeller.datatypes.response.GetServiceGroupResponse;
 import xmcp.processmodeller.datatypes.response.GetWorkflowResponse;
 import xmcp.processmodeller.datatypes.response.XMOMItemResponse;
 
+
+
 public class View {
-  
+
   private GenerationBaseObject gbo;
   private boolean readonly = false;
 
@@ -79,7 +82,7 @@ public class View {
         return workflowToJson(object);
       case EXCEPTION:
         return exceptionTypeToJson(object);
-      
+
       default:
         return Utils.error("Unimplemented View for type " + gbo.getType());
       }
@@ -96,7 +99,7 @@ public class View {
     response.setDeploymentState(gbo.getDeploymentState());
     response.setModified(gbo.hasBeenModified());
   }
-  
+
   private GeneralXynaObject serviceGroupToJson(ObjectIdentifierJson object) {
     GetServiceGroupResponse response = new GetServiceGroupResponse();
     setStateOfReponse(response, gbo);
@@ -109,7 +112,7 @@ public class View {
 
     return response;
   }
-  
+
   private GeneralXynaObject datatypeToJson(ObjectIdentifierJson object) {
     GetDataTypeResponse response = new GetDataTypeResponse();
     setStateOfReponse(response, gbo);
@@ -128,18 +131,18 @@ public class View {
 
     return response;
   }
-  
+
   private GeneralXynaObject exceptionTypeToJson(ObjectIdentifierJson object) {
     GetExceptionTypeResponse response = new GetExceptionTypeResponse();
     setStateOfReponse(response, gbo);
-    
+
     ExceptiontypeXo exceptionType = new ExceptiontypeXo(gbo);
     exceptionType.setReadonly(readonly);
     response.setXmomItem((ExceptionType) exceptionType.getXoRepresentation());
     response.setRevision(gbo.getRevision());
     return response;
   }
-  
+
 
   private GeneralXynaObject workflowToJson(ObjectIdentifierJson object) {
     gbo.createDataflow();
@@ -160,7 +163,7 @@ public class View {
   public GenerationBaseObject getGenerationBaseObject() {
     return gbo;
   }
-  
+
   public static class MetaJson {
 
     private int revision;
@@ -169,32 +172,32 @@ public class View {
 
     public MetaJson() {
     }
-    
+
     public MetaJson(GenerationBaseObject gbo) {
       this.revision = gbo.getRevision();
       this.saveState = gbo.getSaveState();
       this.deploymentState = gbo.getDeploymentState();
     }
-    
+
     public int getRevision() {
       return revision;
     }
-    
+
     public boolean getSaveState() {
       return saveState;
     }
-    
+
     public String getDeploymentState() {
       return deploymentState;
     }
-    
+
     public static JsonVisitor<MetaJson> getJsonVisitor() {
       return new MetaJsonVisitor();
     }
-    
+
     public static class MetaJsonVisitor extends EmptyJsonVisitor<MetaJson> {
       private MetaJson mj = new MetaJson();
-      
+
       @Override
       public MetaJson get() {
         return mj;
@@ -206,7 +209,7 @@ public class View {
         mj = new MetaJson();
         return ret;
       }
-      
+
       @Override
       public void attribute(String label, String value, com.gip.xyna.utils.misc.JsonParser.JsonVisitor.Type type)
           throws UnexpectedJSONContentException {
@@ -224,10 +227,10 @@ public class View {
         }
         super.attribute(label, value, type);
       }
-      
+
     }
   }
-  
+
   public static class ViewWrapperJson implements JsonSerializable {
 
     private MetaJson meta;
@@ -235,10 +238,10 @@ public class View {
     //private JsonSerializable object;
     private JsonSerializable content;
     private String contentString;
-    
+
     public ViewWrapperJson() {
     }
-   
+
     public void setMeta(MetaJson meta) {
       this.meta = meta;
     }
@@ -254,23 +257,23 @@ public class View {
     public JsonSerializable getContent() {
       return content;
     }
-    
+
     public ObjectIdentifierJson getIdentifier() {
       return identifier;
     }
-    
+
     public MetaJson getMeta() {
       return meta;
     }
-    
+
     public String getContentAsString() {
       return contentString;
     }
-    
+
     @Override
     public void toJson(JsonBuilder jb) {
       jb.startObject(); {
-        Util.writeMetaData(jb, MetaXmomContainers.GET_WORKFLOW_RESPONSE_FQN, true); // add meta data of container class that holds information about response
+        Utils.writeMetaData(jb, MetaXmomContainers.GET_WORKFLOW_RESPONSE_FQN, true); // add meta data of container class that holds information about response
         jb.addNumberAttribute(Tags.REVISION, meta.getRevision());
         jb.addBooleanAttribute(Tags.SAVE_STATE, meta.getSaveState());
         jb.addStringAttribute(Tags.DEPLOYMENT_STATE, meta.getDeploymentState());
@@ -278,29 +281,29 @@ public class View {
           content.toJson(jb);
         } jb.endObject();
       } jb.endObject();
-      
+
     }
-    
+
     public String toJson() {
       JsonBuilder jb = new JsonBuilder();
       toJson(jb);
       return jb.toString();
     }
-    
+
     public static <T> ViewWrapperJson parse(String json, String string, JsonVisitor<T> contentVisitor) throws InvalidJSONException, UnexpectedJSONContentException {
       JsonParser jp = new JsonParser();
       ViewWrapperJsonVisitor<T> vwjv =  new ViewWrapperJsonVisitor<T>("data", contentVisitor);
       jp.parse(json, vwjv );
       return vwjv.get();
     }
-    
+
     public static class ViewWrapperJsonVisitor<T> extends EmptyJsonVisitor<ViewWrapperJson> {
-      
+
       private String wrapLabel;
       private JsonVisitor<T> contentVisitor;
       private ViewWrapperJson wrapped;
       private JsonVisitor<ObjectIdentifierJson> identifierVisitor;
-     
+
       public ViewWrapperJsonVisitor(String wrapLabel, JsonVisitor<T> contentVisitor) {
         this.wrapLabel = wrapLabel;
         this.contentVisitor = contentVisitor;
@@ -317,7 +320,7 @@ public class View {
         wrapped = new ViewWrapperJson();
         return ret;
       }
-      
+
       @Override
       public JsonVisitor<?> objectStarts(String label) throws UnexpectedJSONContentException {
         if( label.equals(wrapLabel) ) {
@@ -330,14 +333,14 @@ public class View {
           return MetaJson.getJsonVisitor();
         }
         return identifierVisitor.objectStarts(label);
-        
+
       }
-      
+
       @Override
       public void attribute(String label, String value, Type type) throws UnexpectedJSONContentException {
         identifierVisitor.attribute(label, value, type);
       }
-      
+
       @Override
       public void object(String label, Object value) throws UnexpectedJSONContentException {
         if( label.equals(wrapLabel) ) {
@@ -363,12 +366,12 @@ public class View {
 
   }
 
-  
+
   public boolean isReadonly() {
     return readonly;
   }
 
-  
+
   public void setReadonly(boolean readonly) {
     this.readonly = readonly;
   }

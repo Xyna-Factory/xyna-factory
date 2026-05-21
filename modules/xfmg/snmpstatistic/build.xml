@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="build" default="build-all" basedir=".">
+<project name="build" default="build" basedir=".">
 
     <!-- this is the absolute path to the root -->
     <pathconvert property="root.dir">

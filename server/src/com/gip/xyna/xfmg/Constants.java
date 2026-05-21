@@ -43,6 +43,9 @@ public class Constants {
   public static final String PERSISTENCE_GEN_CLASSES_CLASSDIR = "xnwhclasses";
   public static final String PERSISTENCE_GEN_CLASSES_PACKAGE = "com.gip.xyna.xnwh.persistence.memory.gen";
   public static final String CLUSTER_PROVIDER_BASE_PACKAGE = "com.gip.xyna.xfmg.xclusteringservices.clusterprovider";
+
+  // name of the attribute in the manifest of a jar file that contains the FQN of a SharedResourceSynchronizerFactory implementation class
+  public static final String SHAREDRESOURCESYNCHRONIZER_FACTORY_FQN_MANIFEST_ATTRIBUTE = "Xyna-SharedResourceSynchronizer-Factory-FQN"; 
   
   //TODO schöner für tests wäre, wenn man wie im memory-PL nicht den lib ordner hardcoded, sondern statt dessen aus dem appclassloader die jars ermittelt.
   public static String LIB_DIR = "lib"; //nicht final, weil tests das verbiegen
@@ -62,6 +65,7 @@ public class Constants {
   public static final String DATAMODELTYPE_BASEDIR = "." + fileSeparator + "datamodeltypes";
   public static final String REMOTEDESTINATIONTYPE_BASEDIR = "." + fileSeparator + "remotedestinationtypes";
   public static final String ORDERINPUTSOURCETYPE_BASEDIR = "." + fileSeparator + "orderinputsourcetypes";
+  public static final String SHAREDRESOURCESYNCHRONIZERS_BASEDIR = "." + fileSeparator + "sharedresourcesynchronizers";
   
   
 
@@ -143,7 +147,6 @@ public class Constants {
   public static final long DEFAULT_CANCEL_TIMEOUT = (long) 5000;
   public static final String STORAGE_PATH = "storage";
   public static final int DELETE_FILE_RETRIES = 20;
-  public static final String SERVER_POLICY = "server.policy";
 
   
   public static final String LOG4J_CONFIGURATION_KEY = "log4j.configurationFile";

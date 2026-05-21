@@ -1,0 +1,196 @@
+/*
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ */
+
+package com.gip.xyna.xact.filter;
+
+
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.log4j.Logger;
+
+import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xact.trigger.NetConfNotificationReceiverTriggerConnection;
+import com.gip.xyna.xdev.xfractmod.xmdm.ConnectionFilter;
+import com.gip.xyna.xdev.xfractmod.xmdm.EventListener;
+import com.gip.xyna.xdev.xfractmod.xmdm.FilterConfigurationParameter;
+import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Workspace;
+import com.gip.xyna.xprc.XynaOrder;
+import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
+
+import xact.netconf.datatypes.NetConfEvent;
+
+
+public class NetConfNotificationReceiverFilter extends ConnectionFilter<NetConfNotificationReceiverTriggerConnection> {
+
+  private static final long serialVersionUID = 1L;
+
+  private static Logger logger = CentralFactoryLogging.getLogger(NetConfNotificationReceiverFilter.class);
+
+  private final static String regex_Valid = "(<notification.*<\\/notification>)";
+  private final static Pattern pattern_valid = Pattern.compile(regex_Valid);
+  private final static String regex_EventTime = "<notification.*<eventTime>(.*)<\\/eventTime>.*<\\/notification>";
+  private final static Pattern pattern_EventTime = Pattern.compile(regex_EventTime);
+
+
+  /**
+   * Called to create a configuration template to parse configuration and show configuration options.
+   * @return NetConfNotificationReceiverConfigurationParameter template
+   */
+  @Override
+  public FilterConfigurationParameter createFilterConfigurationTemplate() {
+    return new NetConfNotificationReceiverConfigurationParameter();
+  }
+
+
+  /**
+   * Analyzes TriggerConnection and creates XynaOrder if it accepts the connection.
+   * This method returns a FilterResponse object, which includes the XynaOrder if the filter is responsible for the request.
+   * # If this filter is not responsible the returned object must be: FilterResponse.notResponsible()
+   * # If this filter is responsible the returned object must be: FilterResponse.responsible(XynaOrder order)
+   * # If this filter is responsible but the request is handled without creating a XynaOrder the 
+   *   returned object must be: FilterResponse.responsibleWithoutXynaorder()
+   * # If this filter is responsible but the request should be handled by an older version of the filter in another application version, the returned
+   *    object must be: FilterResponse.responsibleButTooNew().
+   * @param tc
+   * @return FilterResponse object
+   * @throws XynaException caused by errors reading data from triggerconnection or having an internal error.
+   *         Results in onError() being called by Xyna Processing.
+   */
+  @Override
+  public FilterResponse createXynaOrder(NetConfNotificationReceiverTriggerConnection tc, FilterConfigurationParameter baseConfig)
+                        throws XynaException {
+    NetConfNotificationReceiverConfigurationParameter conf = (NetConfNotificationReceiverConfigurationParameter) baseConfig;
+    String FilterTargetWF = conf.getOrderType();
+    RuntimeContext rtc = null;
+    if (conf.getWorkspace().isPresent()) {
+      rtc = new Workspace(conf.getWorkspace().get());
+    } else if (conf.getApplicationName().isPresent() && conf.getApplicationVersion().isPresent()) {
+      rtc = new Application(conf.getApplicationName().get(), conf.getApplicationVersion().get());
+    }
+    DestinationKey destKey = null;
+    if (rtc == null) {
+      destKey = new DestinationKey(FilterTargetWF);
+    } else {
+      destKey = new DestinationKey(FilterTargetWF, rtc);
+    }
+    String RD_IP = tc.getIP();
+    String RD_ID = tc.getID();
+    String message = tc.getMessage();
+
+    Matcher matcher_valid = pattern_valid.matcher(message);
+    if (!matcher_valid.matches()) {
+      return FilterResponse.notResponsible();
+    }
+    long longEventTime = parseEventTime(matcher_valid);
+    NetConfEvent.Builder builder = new NetConfEvent.Builder();
+    builder.iP(RD_IP);
+    builder.deviceID(RD_ID);
+    builder.eventTime(longEventTime);
+    builder.event(message);
+    NetConfEvent event = builder.instance();
+    XynaOrder xynaOrder = new XynaOrder(destKey, event);
+    return FilterResponse.responsible(xynaOrder);
+  }
+  
+  
+  private long parseEventTime(Matcher matcher_valid) {
+    long ret = 0L;
+    String eventTime = "";
+    try {
+      String valid_message = matcher_valid.group(1);
+      Matcher matcher_EventTime = pattern_EventTime.matcher(valid_message);
+      if (!matcher_EventTime.matches()) {
+        return ret;
+      }
+      eventTime = matcher_EventTime.group(1);
+      try {
+        Instant instant1 = Instant.parse(eventTime);
+        return instant1.toEpochMilli();
+      } catch(Exception ex1) {
+        // do nothing
+      }
+      DateTimeFormatter formatter0 = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+      ZonedDateTime zonedtime = ZonedDateTime.parse(eventTime, formatter0);
+      Instant instant2 = zonedtime.toInstant();
+      return instant2.toEpochMilli();
+    } catch (Exception ex) {
+      logger.warn("NetConfNotificationReceiver Filter, createXynaOrder: Could not parse event time, " +
+                  "supplied value = '" + eventTime + "'", ex);
+    }
+    return ret;
+  }
+
+  /**
+   * Called when above XynaOrder returns successfully.
+   * @param response by XynaOrder returned GeneralXynaObject
+   * @param tc corresponding triggerconnection
+   */
+  @Override
+  public void onResponse(GeneralXynaObject response, NetConfNotificationReceiverTriggerConnection tc) {
+    // not implemented
+  }
+
+
+  /**
+   * Called when above XynaOrder returns with error or if an XynaException occurs in generateXynaOrder().
+   * @param e
+   * @param tc corresponding triggerconnection
+   */
+  public void onError(XynaException[] e, NetConfNotificationReceiverTriggerConnection tc) {
+    // not implemented
+  }
+
+
+  /**
+   * @return description of this filter
+   */
+  public String getClassDescription() {
+    return "Filter configured via NetConfNotificationReceiver";
+  }
+
+
+  /**
+   * Called once for each filter instance when it is deployed and again on each classloader change (e.g. when changing corresponding implementation jars).
+   * @param triggerInstance trigger instance this filter instance is registered to
+   */
+  @SuppressWarnings("rawtypes")
+  @Override
+  public void onDeployment(EventListener triggerInstance) {
+    super.onDeployment(triggerInstance);
+  }
+
+
+  /**
+   * Called once for each filter instance when it is undeployed and again on each classloader change (e.g. when changing corresponding implementation jars).
+   * @param triggerInstance trigger instance this filter instance is registered to
+   */
+  @SuppressWarnings("rawtypes")
+  @Override
+  public void onUndeployment(EventListener triggerInstance) {
+    super.onUndeployment(triggerInstance);
+  }
+
+}

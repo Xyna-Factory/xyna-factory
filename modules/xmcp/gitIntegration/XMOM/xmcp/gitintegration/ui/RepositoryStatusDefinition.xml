@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Repository Status Definition" TypeName="RepositoryStatusDefinition" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Repository Status Definition" Name="RepositoryStatusDefinition">
+    <Input>
+      <Data ID="26" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository26"/>
+    </Input>
+    <Output>
+      <Data ID="39" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition39"/>
+      <Data ID="617" Label="Branch Data" ReferenceName="BranchData" ReferencePath="xmcp.gitintegration.repository" VariableName="branchData617"/>
+      <Data ID="1971" Label="Commit" ReferenceName="Commit" ReferencePath="xmcp.gitintegration.repository" VariableName="commit1971"/>
+      <Data ID="3434" Label="Repository Status" ReferenceName="RepositoryStatus" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryStatus3434"/>
+    </Output>
+    <ServiceReference ID="269" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="268"/>
+      <Target RefID="268"/>
+    </ServiceReference>
+    <ServiceReference ID="896" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="895"/>
+      <Target RefID="895"/>
+    </ServiceReference>
+    <ServiceReference ID="5780" Label="Repository Status Details Panels Definition" ReferenceName="RepositoryStatusDetailsPanelsDefinition" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="5779"/>
+      <Target RefID="5779"/>
+    </ServiceReference>
+    <ServiceReference ID="2915" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="2914"/>
+      <Target RefID="2914"/>
+    </ServiceReference>
+    <Function ID="268" Label="List Branches">
+      <Source RefID="269"/>
+      <Source RefID="26"/>
+      <Target RefID="269"/>
+      <Target RefID="322"/>
+      <Invoke Operation="listBranches" ServiceID="269">
+        <Source RefID="26"/>
+      </Invoke>
+      <Receive ServiceID="269">
+        <Target RefID="322"/>
+      </Receive>
+    </Function>
+    <Mappings ID="288" Label="Mapping">
+      <Input>
+        <Data ID="305" Label="Branch Data" ReferenceName="BranchData" ReferencePath="xmcp.gitintegration.repository" VariableName="branchData305">
+          <Source RefID="288"/>
+        </Data>
+        <Source RefID="322"/>
+      </Input>
+      <Output>
+        <Data ID="355" Label="Branch - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition355">
+          <Source RefID="288"/>
+        </Data>
+        <Target RefID="356"/>
+      </Output>
+      <Output>
+        <Data ID="405" Label="Commit - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition405">
+          <Source RefID="288"/>
+        </Data>
+        <Target RefID="406"/>
+      </Output>
+      <Mapping>%1%.label="On branch"</Mapping>
+      <Mapping>%1%.dataPath="%0%.currentBranch.name"</Mapping>
+      <Mapping>%2%.label="Commit"</Mapping>
+      <Mapping>%2%.dataPath="%0%.currentBranch.commitHash"</Mapping>
+    </Mappings>
+    <Mappings ID="923" Label="Mapping">
+      <Input>
+        <Data ID="948" Label="Branch Data" ReferenceName="BranchData" ReferencePath="xmcp.gitintegration.repository" VariableName="branchData948">
+          <Source RefID="923"/>
+        </Data>
+        <Source RefID="322"/>
+      </Input>
+      <Output>
+        <Data ID="973" Label="Branch" ReferenceName="Branch" ReferencePath="xmcp.gitintegration.repository" VariableName="branch973">
+          <Source RefID="923"/>
+        </Data>
+        <Target RefID="1025"/>
+      </Output>
+      <Output>
+        <Data ID="999" Label="IntegerNumber" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber999">
+          <Source RefID="923"/>
+        </Data>
+        <Target RefID="1026"/>
+      </Output>
+      <Mapping>%1%=%0%.currentBranch</Mapping>
+      <Mapping>%2%.value="1"</Mapping>
+    </Mappings>
+    <Function ID="895" Label="List Commits">
+      <Source RefID="896"/>
+      <Source RefID="26"/>
+      <Source RefID="1025"/>
+      <Source RefID="1026"/>
+      <Target RefID="896"/>
+      <Target RefID="898"/>
+      <Invoke Operation="listCommits" ServiceID="896">
+        <Source RefID="26"/>
+        <Source RefID="1025"/>
+        <Source RefID="1026"/>
+      </Invoke>
+      <Receive ServiceID="896">
+        <Target RefID="898"/>
+      </Receive>
+    </Function>
+    <Choice ID="1256" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="898"/>
+      <Target RefID="1461"/>
+      <Target RefID="2102"/>
+      <Input>
+        <Data ID="1335" IsList="true" Label="Commit" ReferenceName="Commit" ReferencePath="xmcp.gitintegration.repository" VariableName="commit1335">
+          <Source RefID="1256"/>
+        </Data>
+        <Source RefID="898"/>
+      </Input>
+      <Case ID="1257" Label="true" Premise="length(%0%)==&quot;1&quot;">
+        <Mappings ID="1751" Label="Mapping">
+          <Output>
+            <Data ID="1776" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition1776">
+              <Source RefID="1751"/>
+            </Data>
+            <Target RefID="1777"/>
+          </Output>
+          <Mapping>%0%["0"].label="Author"</Mapping>
+          <Mapping>%0%["0"].dataPath="%1%.authorName"</Mapping>
+          <Mapping>%0%["1"].label="Email"</Mapping>
+          <Mapping>%0%["1"].dataPath="%1%.authorEmail"</Mapping>
+          <Mapping>%0%["2"].label="Commit message"</Mapping>
+          <Mapping>%0%["2"].dataPath="%1%.comment"</Mapping>
+        </Mappings>
+        <Mappings ID="1231" Label="Mapping">
+          <Input>
+            <Data ID="1826" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition1826">
+              <Source RefID="1231"/>
+            </Data>
+            <Source RefID="1777"/>
+          </Input>
+          <Output>
+            <Data ID="1433" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1433">
+              <Source RefID="1231"/>
+            </Data>
+            <Target RefID="1434"/>
+          </Output>
+          <Mapping>%1%.label="Current commit information"</Mapping>
+          <Mapping>%1%.children=%0%</Mapping>
+        </Mappings>
+        <Mappings ID="2024" Label="Mapping">
+          <Input>
+            <Data ID="2127" IsList="true" Label="Commit" ReferenceName="Commit" ReferencePath="xmcp.gitintegration.repository" VariableName="commit2127">
+              <Source RefID="2024"/>
+            </Data>
+            <Source RefID="898"/>
+          </Input>
+          <Output>
+            <Data ID="2074" Label="Commit" ReferenceName="Commit" ReferencePath="xmcp.gitintegration.repository" VariableName="commit2074">
+              <Source RefID="2024"/>
+            </Data>
+            <Target RefID="2075"/>
+          </Output>
+          <Mapping>%1%=%0%["0"]</Mapping>
+        </Mappings>
+        <Assign ID="1260">
+          <Source RefID="1434"/>
+          <Source RefID="2075"/>
+          <Target RefID="1461"/>
+          <Target RefID="2102"/>
+          <Copy>
+            <Source RefID="1434"/>
+            <Target RefID="1461"/>
+          </Copy>
+          <Copy>
+            <Source RefID="2075"/>
+            <Target RefID="2102"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="1258" Label="false">
+        <Mappings ID="1408" Label="Mapping">
+          <Output>
+            <Data ID="1459" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1459">
+              <Source RefID="1408"/>
+            </Data>
+            <Target RefID="1460"/>
+          </Output>
+          <Output>
+            <Data ID="2100" Label="Commit" ReferenceName="Commit" ReferencePath="xmcp.gitintegration.repository" VariableName="commit2100">
+              <Source RefID="2049"/>
+            </Data>
+            <Target RefID="2692"/>
+          </Output>
+          <Mapping>%0%.hidden="true"</Mapping>
+        </Mappings>
+        <Assign ID="1262">
+          <Source RefID="1460"/>
+          <Source RefID="2692"/>
+          <Target RefID="1461"/>
+          <Target RefID="2102"/>
+          <Copy>
+            <Source RefID="1460"/>
+            <Target RefID="1461"/>
+          </Copy>
+          <Copy>
+            <Source RefID="2692"/>
+            <Target RefID="2102"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Function ID="2914" Label="Status">
+      <Source RefID="2915"/>
+      <Source RefID="26"/>
+      <Target RefID="2915"/>
+      <Target RefID="2917"/>
+      <Invoke Operation="status" ServiceID="2915">
+        <Source RefID="26"/>
+      </Invoke>
+      <Receive ServiceID="2915">
+        <Target RefID="2917"/>
+      </Receive>
+    </Function>
+    <Function ID="5779" Label="Repository Status Details Panels Definition">
+      <Source RefID="5780"/>
+      <Source RefID="2917"/>
+      <Target RefID="5780"/>
+      <Target RefID="5782"/>
+      <Target RefID="5783"/>
+      <Target RefID="5784"/>
+      <Invoke Operation="RepositoryStatusDetailsPanelsDefinition" ServiceID="5780">
+        <Source RefID="2917"/>
+      </Invoke>
+      <Receive ServiceID="5780">
+        <Target RefID="5782"/>
+        <Target RefID="5783"/>
+        <Target RefID="5784"/>
+      </Receive>
+    </Function>
+    <Mappings ID="3467" Label="Mapping">
+      <Input>
+        <Data ID="4533" Label="Repository Status" ReferenceName="RepositoryStatus" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryStatus4533">
+          <Source RefID="3467"/>
+        </Data>
+        <Source RefID="2917"/>
+      </Input>
+      <Input>
+        <Data ID="5599" Label="Untracked - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5599">
+          <Source RefID="3467"/>
+        </Data>
+        <Source RefID="5782">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="6085" Label="Changes - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition6085">
+          <Source RefID="3467"/>
+        </Data>
+        <Source RefID="5783">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="6246" Label="Missing - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition6246">
+          <Source RefID="3467"/>
+        </Data>
+        <Source RefID="5784">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="3500" Label="Untracked - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition3500">
+          <Source RefID="3467"/>
+        </Data>
+        <Target RefID="3501"/>
+      </Output>
+      <Output>
+        <Data ID="3534" Label="Changes - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition3534">
+          <Source RefID="3467"/>
+        </Data>
+        <Target RefID="3535"/>
+      </Output>
+      <Output>
+        <Data ID="3568" Label="Missing - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition3568">
+          <Source RefID="3467"/>
+        </Data>
+        <Target RefID="3569"/>
+      </Output>
+      <Mapping>%4%.label=concat(length(%0%.untracked), " untracked files...")</Mapping>
+      <Mapping>%4%.dataPath="%2%"</Mapping>
+      <Mapping>%4%.detailsDefinitionReference=%1%</Mapping>
+      <Mapping>%5%.label=concat(length(%0%.changes), " changed files...")</Mapping>
+      <Mapping>%5%.dataPath="%2%"</Mapping>
+      <Mapping>%5%.detailsDefinitionReference=%2%</Mapping>
+      <Mapping>%6%.label=concat(length(%0%.missing), " missing files...")</Mapping>
+      <Mapping>%6%.dataPath="%2%"</Mapping>
+      <Mapping>%6%.detailsDefinitionReference=%3%</Mapping>
+    </Mappings>
+    <Mappings ID="3014" Label="Mapping">
+      <Input>
+        <Data ID="3826" Label="Untracked - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition3826">
+          <Source RefID="3014"/>
+        </Data>
+        <Source RefID="3501">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="3859" Label="Changes - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition3859">
+          <Source RefID="3014"/>
+        </Data>
+        <Source RefID="3535">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="3892" Label="Missing - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition3892">
+          <Source RefID="3014"/>
+        </Data>
+        <Source RefID="3569">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="3047" Label="Status - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition3047">
+          <Source RefID="3014"/>
+        </Data>
+        <Target RefID="3048"/>
+      </Output>
+      <Mapping>%3%.label="Repository status"</Mapping>
+      <Mapping>%3%.header.rightArea.children["0"]=%0%</Mapping>
+      <Mapping>%3%.header.rightArea.children["1"]=%1%</Mapping>
+      <Mapping>%3%.header.rightArea.children["2"]=%2%</Mapping>
+    </Mappings>
+    <Mappings ID="52" Label="Mapping">
+      <Input>
+        <Data ID="71" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository71">
+          <Source RefID="52"/>
+        </Data>
+        <Source RefID="26"/>
+      </Input>
+      <Input>
+        <Data ID="455" Label="Branch - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition455">
+          <Source RefID="52"/>
+        </Data>
+        <Source RefID="356">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="472" Label="Commit - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition472">
+          <Source RefID="52"/>
+        </Data>
+        <Source RefID="406">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="1486" Label="Commit - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1486">
+          <Source RefID="52"/>
+        </Data>
+        <Source RefID="1461">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="3113" Label="Status - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition3113">
+          <Source RefID="52"/>
+        </Data>
+        <Source RefID="3048">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="61" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition61">
+          <Source RefID="52"/>
+        </Data>
+        <Target RefID="62"/>
+      </Output>
+      <Mapping>%5%.label="Status"</Mapping>
+      <Mapping>%5%.closable="true"</Mapping>
+      <Mapping>%5%.children["0"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%1%</Mapping>
+      <Mapping>%5%.children["1"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%2%</Mapping>
+      <Mapping>%5%.children["2"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%3%</Mapping>
+      <Mapping>%5%.children["3"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%4%</Mapping>
+    </Mappings>
+    <Data ID="62" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition62">
+      <Source RefID="52"/>
+    </Data>
+    <Data ID="322" Label="Branch Data" ReferenceName="BranchData" ReferencePath="xmcp.gitintegration.repository" VariableName="branchData322">
+      <Source RefID="268"/>
+    </Data>
+    <Data ID="356" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition356">
+      <Source RefID="288"/>
+    </Data>
+    <Data ID="406" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition406">
+      <Source RefID="288"/>
+    </Data>
+    <Data ID="898" IsList="true" Label="Commit" ReferenceName="Commit" ReferencePath="xmcp.gitintegration.repository" VariableName="commit898">
+      <Source RefID="895"/>
+    </Data>
+    <Data ID="1025" Label="Branch" ReferenceName="Branch" ReferencePath="xmcp.gitintegration.repository" VariableName="branch1025">
+      <Source RefID="923"/>
+    </Data>
+    <Data ID="1026" Label="IntegerNumber" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber1026">
+      <Source RefID="923"/>
+    </Data>
+    <Data ID="1434" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1434">
+      <Source RefID="1231"/>
+    </Data>
+    <Data ID="1460" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1460">
+      <Source RefID="1408"/>
+    </Data>
+    <Data ID="1461" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1461">
+      <Source RefID="1256"/>
+    </Data>
+    <Data ID="1777" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition1777">
+      <Source RefID="1751"/>
+    </Data>
+    <Data ID="2075" Label="Commit" ReferenceName="Commit" ReferencePath="xmcp.gitintegration.repository" VariableName="commit2075">
+      <Source RefID="2024"/>
+    </Data>
+    <Data ID="2102" Label="Commit" ReferenceName="Commit" ReferencePath="xmcp.gitintegration.repository" VariableName="commit2102">
+      <Source RefID="1256"/>
+    </Data>
+    <Data ID="2692" Label="Commit" ReferenceName="Commit" ReferencePath="xmcp.gitintegration.repository" VariableName="commit2692">
+      <Source RefID="2049"/>
+    </Data>
+    <Data ID="2917" Label="Repository Status" ReferenceName="RepositoryStatus" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryStatus2917">
+      <Source RefID="2914"/>
+    </Data>
+    <Data ID="3048" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition3048">
+      <Source RefID="3014"/>
+    </Data>
+    <Data ID="3501" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition3501">
+      <Source RefID="3467"/>
+    </Data>
+    <Data ID="3535" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition3535">
+      <Source RefID="3467"/>
+    </Data>
+    <Data ID="3569" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition3569">
+      <Source RefID="3467"/>
+    </Data>
+    <Data ID="5782" Label="Untracked - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5782">
+      <Source RefID="5779"/>
+    </Data>
+    <Data ID="5783" Label="Changes - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5783">
+      <Source RefID="5779"/>
+    </Data>
+    <Data ID="5784" Label="Missing - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5784">
+      <Source RefID="5779"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="62"/>
+      <Source RefID="322"/>
+      <Source RefID="2102"/>
+      <Source RefID="2917"/>
+      <Target RefID="39"/>
+      <Target RefID="617"/>
+      <Target RefID="1971"/>
+      <Target RefID="3434"/>
+      <Copy>
+        <Source RefID="62">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="39"/>
+      </Copy>
+      <Copy>
+        <Source RefID="322"/>
+        <Target RefID="617"/>
+      </Copy>
+      <Copy>
+        <Source RefID="2102"/>
+        <Target RefID="1971"/>
+      </Copy>
+      <Copy>
+        <Source RefID="2917"/>
+        <Target RefID="3434"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

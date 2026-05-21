@@ -348,7 +348,7 @@ public class OrderAbortionManagement extends FunctionGroup
           if (queryFamily == null) {
             queryFamily =
                 con.prepareQuery(new Query<OrderInstanceDetails>("select * from " + OrderInstanceDetails.TABLE_NAME + " where "
-                    + OrderInstanceDetails.COL_ROOT_ID + " = ?", new OrderInstanceDetails().getReader()));
+                    + OrderInstanceDetails.COL_ROOT_ID + " = ?", new OrderInstanceDetails().getReader(), OrderInstanceDetails.TABLE_NAME));
           }
         }
       }
@@ -396,7 +396,7 @@ public class OrderAbortionManagement extends FunctionGroup
       //orderbackup aufräumen
       PreparedQuery<OrderInstanceBackup> queryBackups =
           con.prepareQuery(new Query<OrderInstanceBackup>("select "+OrderInstanceBackup.COL_ID+" from " + OrderInstanceBackup.TABLE_NAME + " where "
-              + OrderInstanceBackup.COL_ROOT_ID + " = ?", OrderInstanceBackup.getSelectiveReader()));
+              + OrderInstanceBackup.COL_ROOT_ID + " = ?", OrderInstanceBackup.getSelectiveReader(), OrderInstanceBackup.TABLE_NAME));
       List<OrderInstanceBackup> backups = con.query(queryBackups, new Parameter(rootOrderId), Integer.MAX_VALUE);
       if (backups.size() > 0) {
         foundOrder = true;
@@ -472,7 +472,7 @@ public class OrderAbortionManagement extends FunctionGroup
                                                  return rs.getString(OrderInstanceBackup.COL_BACKUP_CAUSE);
                                                }
 
-                                             }));
+                                             }, OrderInstanceBackup.TABLE_NAME));
     }
     return queryBackupCause;
   }
@@ -500,7 +500,7 @@ public class OrderAbortionManagement extends FunctionGroup
                 public Pair<Long, Integer> read(ResultSet rs) throws SQLException {
                   return new Pair<>(rs.getLong(OrderInstanceBackup.COL_ROOT_ID), rs.getInt(OrderInstanceBackup.COL_BINDING));
                 }
-              }));
+              }, OrderInstanceBackup.TABLE_NAME));
           if (localBinding == -2) {
             localBinding = new OrderInstanceBackup().getLocalBinding(ODSConnectionType.DEFAULT);
           }

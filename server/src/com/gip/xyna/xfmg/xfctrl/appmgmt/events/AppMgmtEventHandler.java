@@ -59,6 +59,7 @@ public abstract class AppMgmtEventHandler implements EventHandler<AppMgmtEvent> 
         try {
           zos.putNextEntry(entry);
           StreamUtils.copy(export.getContentStream(), zos);
+          export.getContentStream().close();
         } catch (IOException e) {
           handleFileException(e);
         }

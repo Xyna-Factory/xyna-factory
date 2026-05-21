@@ -234,11 +234,11 @@ public class ManualInteractionManagement extends FunctionGroup
                 loadAllManualInteractionEntriesForRootOrderId = con.prepareQuery(new Query<ManualInteractionEntry>("select * from "
                                 + ManualInteractionEntry.TABLE_NAME + " where " + ManualInteractionEntry.MI_COL_XYNAORDER_ROOT_ID + " =? and "
                                 + ManualInteractionEntry.COL_BINDING + " =?"
-                                , ManualInteractionEntry.reader), true);
+                                , ManualInteractionEntry.reader, ManualInteractionEntry.TABLE_NAME), true);
                 loadMIEntryForOrderId = con.prepareQuery(new Query<ManualInteractionEntry>("select * from "
                                 + ManualInteractionEntry.TABLE_NAME + " where " + ManualInteractionEntry.MI_COL_XYNAORDER_ID + " =? and "
                                 + ManualInteractionEntry.COL_BINDING + " =?"
-                                , ManualInteractionEntry.reader), true);
+                                , ManualInteractionEntry.reader, ManualInteractionEntry.TABLE_NAME), true);
                 storableClusterContext = new ClusterContext(ManualInteractionEntry.class, ODSConnectionType.DEFAULT);
               } finally {
                 try {
@@ -309,7 +309,8 @@ public class ManualInteractionManagement extends FunctionGroup
       // TODO this will result in out of memory for many manual interactions
       PreparedQuery<ManualInteractionEntry> pq =
           cache.getQueryFromCache("select * from " + ManualInteractionEntry.TABLE_NAME + " where "
-              + ManualInteractionEntry.MI_COL_RESULT + " is null", con, ManualInteractionEntry.reader);
+              + ManualInteractionEntry.MI_COL_RESULT + " is null", con, ManualInteractionEntry.reader,
+              ManualInteractionEntry.TABLE_NAME);
       existingEntries = con.query(pq, new Parameter(), maxRows);
     } finally {
       con.closeConnection();
@@ -747,12 +748,12 @@ public class ManualInteractionManagement extends FunctionGroup
     ODSConnection con = getODS().openConnection(ODSConnectionType.DEFAULT);
     try {
       PreparedQuery<ManualInteractionEntry> query =
-        cache.getQueryFromCache(selectString, con, reader);
+        cache.getQueryFromCache(selectString, con, reader, new ManualInteractionEntry().getTableName());
 
       mies.addAll(con.query(query, paras, maxRows));
       if (mies.size() >= maxRows) {
         PreparedQuery<? extends OrderCount> queryCount =
-          cache.getQueryFromCache(selectCountString, con, OrderCount.getCountReader());
+          cache.getQueryFromCache(selectCountString, con, OrderCount.getCountReader(), new ManualInteractionEntry().getTableName());
         OrderCount count = con.queryOneRow(queryCount, paras);
         countAll = count.getCount();
       } else {

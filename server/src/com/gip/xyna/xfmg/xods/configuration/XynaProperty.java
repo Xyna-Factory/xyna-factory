@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -297,6 +297,9 @@ public interface XynaProperty {
   public static final XynaPropertyInt RMI_IL_SOCKET_COMPRESSION_BUFFERSIZE =
       new XynaPropertyInt("xyna.rmi.interlink.ssl.compression.buffersize", 1024*128);
 
+  public static final XynaPropertyDuration SHUTDOWN_ABORT_COMMUNICATION_TIMEOUT = new XynaPropertyDuration("shutdown.timeout.factorynodes", "10 s")
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Time to wait for each remote node to abort communication during shutdown")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Solange pro FactoryNode warten, bis die Kommunikation beendet ist");
 
   /**
    * Path to and including grep (for logScanning) Examples: "/bin/grep" "/usr/xpg4/bin/grep"
@@ -770,10 +773,17 @@ public interface XynaProperty {
 
   
   public static final XynaPropertyString XML_HEADER_COMMENT = new XynaPropertyString("xyna.generation.xml.headercomment", "")
-      .setDefaultDocumentation(DocumentationLanguage.EN, "This is put into application.xmls and XMOM files as header comment. Changes take effect immediately. Old files are not updated.");
+      .setDefaultDocumentation(DocumentationLanguage.EN, "This is put into application.xmls and XMOM files as header comment. Changes take effect immediately. Old files are not updated. Should not include <!-- and -->.");
 
-  public static final XynaPropertyBoolean BC_SINGLE_CHARACTER_WILDCARD = new XynaPropertyBoolean("xyna.xnwh.persistence.support_single_character_wildcard", false)
-      .setDefaultDocumentation(DocumentationLanguage.EN, "If set to true, \"_\" is replaced by the persistencelayer-specific single character wildcard.")
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Wenn diese Property auf true steht, wird \"_\" duch den Persistenzlayer-spezifische Platzhalter für ein einzelnes Zeichen ersetzt.");
+  public static final XynaPropertyBoolean CONTAINER_XML_WRAP = new XynaPropertyBoolean("xyna.container.xml_wrap", true)
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Erzeuge umschliessendes <container>-Tag für xdev.fractmod.xmdm.Container beim Erstellen von Xml")
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Create <container> tag around toXml for xdev.fractmod.xmdm.Container");
 
+  public static final XynaPropertyBoolean QUERY_ESCAPE = new XynaPropertyBoolean("xnwh.queries.escape", true)
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Escape table and column names in queries")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Escapen von Tabellen- und Spaltennamen in Querys");
+
+  public static final XynaPropertyString TMP_DIR = new XynaPropertyString("xyna.xdev.temp_dir", ".")
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Directory for temporary files during modelling.")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Verzeichnis für temporäre Dateien während der Modellierung.");
 }

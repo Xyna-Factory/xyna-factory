@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Mapping" TypeName="Mapping" TypePath="xmcp.xypilot" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>Holds the generated mapping assignments.</Documentation>
+  </Meta>
+  <Data Label="Expression Completion" VariableName="expressionCompletion">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>The expression completing the last assignment statement, can be empty.</Documentation>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="Assignments" ReferenceName="MappingAssignment" ReferencePath="xmcp.xypilot" VariableName="assignments">
+    <Meta>
+      <Documentation>The newly generated assignments to append to the existing assignments.</Documentation>
+    </Meta>
+  </Data>
+</DataType>

@@ -114,6 +114,7 @@ import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSelect;
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
 import com.gip.xyna.xfmg.xods.orderinputsourcemgmt.storables.OrderInputSourceStorable;
+import com.gip.xyna.xfmg.xopctrl.managedsessions.ManagedSession;
 import com.gip.xyna.xfmg.xopctrl.managedsessions.SessionManagement;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.ScopedRightCache;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement;
@@ -127,6 +128,8 @@ import com.gip.xyna.xmcp.SynchronousSuccesfullOrderExecutionResponse;
 import com.gip.xyna.xmcp.WrappingType;
 import com.gip.xyna.xmcp.XynaMultiChannelPortal;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
+import com.gip.xyna.xnwh.persistence.ODS;
+import com.gip.xyna.xnwh.persistence.ODSConnection;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.securestorage.SecureStorage;
 import com.gip.xyna.xnwh.selection.parsing.ArchiveIdentifier;
@@ -167,6 +170,7 @@ import xfmg.xfctrl.appmgmt.Workingcopy;
 import xfmg.xfctrl.filemgmt.ManagedFileId;
 import xfmg.xfctrl.nodemgmt.ConnectException;
 import xfmg.xopctrl.UserAuthenticationRight;
+import xmcp.DeEncoder;
 import xmcp.factorymanager.RtcManagerServicesServiceOperation;
 import xmcp.factorymanager.rtcmanager.AbortOrders;
 import xmcp.factorymanager.rtcmanager.ApplicationDefinition;
@@ -235,6 +239,7 @@ import xmcp.yggdrasil.Force;
 import xmcp.zeta.TableHelper;
 import xmcp.zeta.TableHelper.Filter;
 import xmcp.zeta.TableHelper.LogicalOperand;
+import xmcp.zeta.TableHelper.Sort;
 
 
 public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymentTask, RtcManagerServicesServiceOperation {
@@ -1010,22 +1015,8 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
     
     TableHelper<ApplicationElement, TableInfo> tableHelper = TableHelper.<ApplicationElement, TableInfo>init(tableInfo)
         .limitConfig(TableInfo::getLimit)
-        .sortConfig(ti -> {
-          for (TableColumn tc : ti.getColumns()) {
-            TableHelper.Sort sort = TableHelper.createSortIfValid(tc.getPath(), tc.getSort());
-            if(sort != null)
-              return sort;
-          }
-          return null;
-        })
-        .filterConfig(ti -> 
-          ti.getColumns().stream()
-          .filter(tableColumn -> 
-            !tableColumn.getDisableFilter() && tableColumn.getPath() != null && tableColumn.getFilter() != null && tableColumn.getFilter().length() > 0
-          )
-          .map(tc -> new TableHelper.Filter(tc.getPath(), tc.getFilter()))
-          .collect(Collectors.toList())
-        )
+        .sortConfig(this::defaultSort)
+        .filterConfig(this::defaultFilter)
         .addSelectFunction(TABLE_KEY_RTC_ELEMENT_CONTENT_TYPE, ad -> ad.getElementType() != null ? ad.getElementType() : "")
         .addSelectFunction(TABLE_KEY_RTC_ELEMENT_CONTENT_NAME, ApplicationElement::getName)
         .addSelectFunction(TABLE_KEY_AD_CONTENT_ORIGIN_RTC, ApplicationElement::getOriginRTC);
@@ -1205,43 +1196,49 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
     
     // TRIGGER, TRIGGERINSTANCE
     multiChannelPortal.listTriggerInformation().stream()
-      .filter(ti -> ti.getRuntimeContext().equals(rtc))
       .forEach(ti -> {
-        ApplicationElement e = new ApplicationElement();
-        e.setDependencyType(dependencyType.name());
-        e.setElementType(ApplicationEntryType.TRIGGER.name());
-        e.setName(ti.getTriggerName());
-        e.setOriginRTC(rtc.getName());
-        result.add(e);
+          if (ti.getRuntimeContext().equals(rtc)) {
+            ApplicationElement e = new ApplicationElement();
+            e.setDependencyType(dependencyType.name());
+            e.setElementType(ApplicationEntryType.TRIGGER.name());
+            e.setName(ti.getTriggerName());
+            e.setOriginRTC(rtc.getName());
+            result.add(e);
+          }
         
-        ti.getTriggerInstances().forEach(tin -> {
-          ApplicationElement e2 = new ApplicationElement();
-          e2.setDependencyType(dependencyType.name());
-          e2.setElementType(ApplicationEntryType.TRIGGERINSTANCE.name());
-          e2.setName(tin.getTriggerInstanceName());
-          e2.setOriginRTC(getRtcName(rtc));
-          result.add(e2);
+          ti.getTriggerInstances().forEach(tin -> {
+            if (tin.getRuntimeContext().equals(rtc)) {
+              ApplicationElement e2 = new ApplicationElement();
+              e2.setDependencyType(dependencyType.name());
+              e2.setElementType(ApplicationEntryType.TRIGGERINSTANCE.name());
+              e2.setName(tin.getTriggerInstanceName());
+              e2.setOriginRTC(getRtcName(rtc));
+              result.add(e2);
+            }
         });
     });
     
     // FILTER, FILTERINSTANCE
     multiChannelPortal.listFilterInformation().stream()
-    .filter(fi -> fi.getRuntimeContext().equals(rtc))
-    .forEach(ti -> {
-      ApplicationElement e = new ApplicationElement();
-      e.setDependencyType(dependencyType.name());
-      e.setElementType(ApplicationEntryType.FILTER.name());
-      e.setName(ti.getTriggerName());
-      e.setOriginRTC(getRtcName(rtc));
-      result.add(e);
+        .forEach(fi -> {
+          if (fi.getRuntimeContext().equals(rtc)) {
+            ApplicationElement e = new ApplicationElement();
+            e.setDependencyType(dependencyType.name());
+            e.setElementType(ApplicationEntryType.FILTER.name());
+            e.setName(fi.getFilterName());
+            e.setOriginRTC(getRtcName(rtc));
+            result.add(e);
+          }
       
-      ti.getFilterInstances().forEach(fin -> {
-        ApplicationElement e2 = new ApplicationElement();
-        e2.setDependencyType(dependencyType.name());
-        e2.setElementType(ApplicationEntryType.FILTERINSTANCE.name());
-        e2.setName(fin.getTriggerInstanceName());
-        e2.setOriginRTC(getRtcName(rtc));
-        result.add(e2);
+          fi.getFilterInstances().forEach(fin -> {
+            if (fin.getRuntimeContext().equals(rtc)) {
+              ApplicationElement e2 = new ApplicationElement();
+              e2.setDependencyType(dependencyType.name());
+              e2.setElementType(ApplicationEntryType.FILTERINSTANCE.name());
+              e2.setName(fin.getFilterInstanceName());
+              e2.setOriginRTC(getRtcName(rtc));
+              result.add(e2);
+            }
       });
     });
     
@@ -1315,7 +1312,9 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
       CreateWorkspaceResult result = workspaceManagement.createWorkspace(workspace, sessionManagement.resolveSessionToUser(correlatedXynaOrder.getSessionId()));
       if(result.getResult() != Result.Failed && request.getRepositoryLink() instanceof SVNRepositoryLink) {
         SVNRepositoryLink svnRepositoryLink = (SVNRepositoryLink)request.getRepositoryLink();
-        
+        String decodedPw = DeEncoder.decode(svnRepositoryLink.getPassword(), correlatedXynaOrder.getSessionId(), getToken(correlatedXynaOrder.getSessionId()));
+        svnRepositoryLink.setPassword(decodedPw);
+
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put(REPOSITORY_ACCES_KEY_BRANCH_BASE_DIR, svnRepositoryLink.getBaseDirectoryForBranches());
         paramMap.put(REPOSITORY_ACCES_KEY_HOOK_PORT, svnRepositoryLink.getHookManagerPort());
@@ -1350,7 +1349,22 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
       throw new CreateWorkspaceException(ex.getMessage(), ex);
     }
   }
-  
+
+  private String getToken(String sessionId) throws PersistenceLayerException {
+    ManagedSession session = new ManagedSession(sessionId, null, null);
+    ODS ods = XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getODS();
+    ODSConnection con = ods.openConnection();
+    try {
+      con.queryOneRow(session);
+    } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
+      throw new RuntimeException("Session not found!");
+    } finally {
+      con.closeConnection();
+    }
+
+    return session.getToken();
+  }
+
   @Override
   public void deleteApplicationDefinition(XynaOrderServerExtension correlatedXynaOrder, ApplicationDefinition applicationDefinition) throws DeleteApplicationDefinitionException, InsufficientRights {
     try {
@@ -1583,22 +1597,8 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
   public List<? extends RuntimeApplication> getRuntimeApplications(XynaOrderServerExtension correlatedXynaOrder, TableInfo tableInfo) throws GetRuntimeApplicationsException, InsufficientRights {
     TableHelper<RuntimeApplication, TableInfo> tableHelper = TableHelper.<RuntimeApplication, TableInfo>init(tableInfo)
         .limitConfig(TableInfo::getLimit)
-        .sortConfig(ti -> {
-          for (TableColumn tc : ti.getColumns()) {
-            TableHelper.Sort sort = TableHelper.createSortIfValid(tc.getPath(), tc.getSort());
-            if(sort != null)
-              return sort;
-          }
-          return null;
-        })
-        .filterConfig(ti -> 
-          ti.getColumns().stream()
-          .filter(tableColumn -> 
-            !tableColumn.getDisableFilter() && tableColumn.getPath() != null && tableColumn.getFilter() != null && tableColumn.getFilter().length() > 0
-          )
-          .map(tc -> new TableHelper.Filter(tc.getPath(), tc.getFilter()))
-          .collect(Collectors.toList())
-        )
+        .sortConfig(this::defaultSort)
+        .filterConfig(this::defaultFilter)
         .addSelectFunction(TABLE_KEY_RTA_NAME, RuntimeApplication::getName)
         .addSelectFunction(TABLE_KEY_RTA_VERSION, RuntimeApplication::getVersion)
         .addSelectFunction(TABLE_KEY_RTA_STATE, RuntimeApplication::getState)
@@ -1646,22 +1646,8 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
     List<Dependency> result = new ArrayList<>();
     TableHelper<HierarchicalDependency, TableInfo> tableHelper = TableHelper.<HierarchicalDependency, TableInfo>init(tableInfo)
         .limitConfig(TableInfo::getLimit)
-        .sortConfig(ti -> {
-          for (TableColumn tc : ti.getColumns()) {
-            TableHelper.Sort sort = TableHelper.createSortIfValid(tc.getPath(), tc.getSort());
-            if(sort != null)
-              return sort;
-          }
-          return null;
-        })
-        .filterConfig(ti -> 
-          ti.getColumns().stream()
-          .filter(tableColumn -> 
-            !tableColumn.getDisableFilter() && tableColumn.getPath() != null && tableColumn.getFilter() != null && tableColumn.getFilter().length() > 0
-          )
-          .map(tc -> new TableHelper.Filter(tc.getPath(), tc.getFilter()))
-          .collect(Collectors.toList())
-        )
+        .sortConfig(this::defaultSort)
+        .filterConfig(this::defaultFilter)
         .addSelectFunction(TABLE_KEY_REQUIRED_RTC_NAME, d -> {
           if(d.getContext().getRuntimeDependencyContextType() == RuntimeDependencyContextType.Application) {
             Application application = (Application) d.getContext().asCorrespondingRuntimeContext();
@@ -1728,6 +1714,7 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
     }
   }
   
+  @SuppressWarnings("deprecation")
   private String getRTAStateForGui(xfmg.xfctrl.appmgmt.ApplicationState state) {
     if (state instanceof Running) {
       return ApplicationState.RUNNING.name();
@@ -2090,13 +2077,12 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
           link.setPathInSVN(String.valueOf(params.get(REPOSITORY_ACCES_KEY_PATH))); 
           link.setSVNServerNameIP(String.valueOf(params.get(REPOSITORY_ACCES_KEY_SERVER_NAME)));
           link.setUsername(String.valueOf(params.get(REPOSITORY_ACCES_KEY_USER)));
-          link.setPassword(String.valueOf(params.get(REPOSITORY_ACCES_KEY_PASSWORD)));
         }
         
         details.setRepositoryLink(link);
       }
       List<Issue> issues = new ArrayList<>();
-      Collection<RuntimeContextProblem> problems =  information.getProblems();
+//      Collection<RuntimeContextProblem> problems =  information.getProblems();
 //      for (RuntimeContextProblem problem : problems) {
 //        Issue issue = new Issue();
 //        problem.getMessage();
@@ -2284,28 +2270,11 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
       throw new GetRTCsException(ex.getMessage(), ex);
     }
 
-    Function<TableInfo, List<Filter>> nodeFilter = ti ->  Arrays.asList(new TableHelper.Filter(TABLE_KEY_FACTORY_NODE, factoryNode.getName(), true));
-
     List<RuntimeContextTableEntry> result = new ArrayList<>();
     TableHelper<RuntimeContextTableEntry, TableInfo> tableHelper = TableHelper.<RuntimeContextTableEntry, TableInfo>init(tableInfo)
         .limitConfig(TableInfo::getLimit)
-        .sortConfig(ti -> {
-          for (TableColumn tc : ti.getColumns()) {
-            TableHelper.Sort sort = TableHelper.createSortIfValid(tc.getPath(), tc.getSort());
-            if(sort != null)
-              return sort;
-          }
-          return null;
-        })
-        .filterConfig(ti -> 
-          ti.getColumns().stream()
-          .filter(tableColumn -> 
-            !tableColumn.getDisableFilter() && tableColumn.getPath() != null && tableColumn.getFilter() != null && tableColumn.getFilter().length() > 0
-          )
-          .map(tc -> new TableHelper.Filter(tc.getPath(), tc.getFilter()))
-          .collect(Collectors.toList())
-        )
-        .secondaryFilterConfig(Arrays.asList(nodeFilter), LogicalOperand.AND)
+        .sortConfig(this::defaultSort)
+        .filterConfig(this::defaultFilter)
         .addSelectFunction(TABLE_KEY_REQUIRED_RTC_NAME, d -> {
           if(d.getRuntimeContext() instanceof RuntimeApplication) {
             RuntimeApplication application = (RuntimeApplication) d.getRuntimeContext();
@@ -2335,18 +2304,6 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
       return tableEntry;
     }).collect(Collectors.toList()));
 
-    // add application definitions
-    List<ApplicationDefinitionInformation> adInformations = applicationManagement.listApplicationDefinitions(true);
-    result.addAll(adInformations.stream().map(adi -> {
-      RuntimeContextTableEntry tableEntry = new RuntimeContextTableEntry();
-      ApplicationDefinition ad = new ApplicationDefinition();
-      ad.setName(adi.getName());
-      ad.setState(adi.getState().name());
-      tableEntry.setRuntimeContext(ad);
-      tableEntry.setRtcType(getRuntimeDependencyContextTypeGuiName(RuntimeDependencyContextType.ApplicationDefinition));
-      return tableEntry;
-    }).collect(Collectors.toList()));
-
     // add applications
     try {
       result.addAll(getRuntimeApplicationList(correlatedXynaOrder).stream().map(rta -> {
@@ -2363,6 +2320,9 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
     tableHelper.sort(result);
     result = result.stream()
       .filter(tableHelper.filter())
+      // filtering for isLocal isn't be done via TableHelper's secondaryFilterConfig, because variable is only present in sub class RuntimeApplication
+      .filter(entry -> !(entry.getRuntimeContext() instanceof xmcp.factorymanager.rtcmanager.RuntimeApplication) ||
+                       ((xmcp.factorymanager.rtcmanager.RuntimeApplication) entry.getRuntimeContext()).getIsLocal())
       .collect(Collectors.toList());
     result = tableHelper.limit(result);
 
@@ -2725,22 +2685,8 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
 
     TableHelper<WorkspaceElement, TableInfo> tableHelper = TableHelper.<WorkspaceElement, TableInfo>init(tableInfo)
         .limitConfig(TableInfo::getLimit)
-        .sortConfig(ti -> {
-          for (TableColumn tc : ti.getColumns()) {
-            TableHelper.Sort sort = TableHelper.createSortIfValid(tc.getPath(), tc.getSort());
-            if(sort != null)
-              return sort;
-          }
-          return null;
-        })
-        .filterConfig(ti -> 
-          ti.getColumns().stream()
-          .filter(tableColumn -> 
-            !tableColumn.getDisableFilter() && tableColumn.getPath() != null && tableColumn.getFilter() != null && tableColumn.getFilter().length() > 0
-          )
-          .map(tc -> new TableHelper.Filter(tc.getPath(), tc.getFilter()))
-          .collect(Collectors.toList())
-        )
+        .sortConfig(this::defaultSort)
+        .filterConfig(this::defaultFilter)
         .addSelectFunction(TABLE_KEY_RTC_ELEMENT_CONTENT_TYPE, workspaceElement -> workspaceElement.getElementType() != null ? workspaceElement.getElementType() : "")
         .addSelectFunction(TABLE_KEY_RTC_ELEMENT_CONTENT_NAME, WorkspaceElement::getName)
         .addSelectFunction(TABLE_KEY_WORKSPACE_CONTENT_ADS, WorkspaceElement::getApplicationDefinitions);
@@ -2784,5 +2730,27 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
 
     return applicationDefinitions;
   }
+  
+  
+  private Sort defaultSort(TableInfo ti) {
+    for (TableColumn tc : ti.getColumns()) {
+      TableHelper.Sort sort = TableHelper.createSortIfValid(tc.getPath(), tc.getSort());
+      if (sort != null)
+        return sort;
+    }
+    return null;
+  }
 
+  private List<Filter> defaultFilter(TableInfo ti) {
+    return ti.getColumns().stream()
+    .filter(tableColumn -> 
+      !tableColumn.getDisableFilter() && 
+      tableColumn.getPath() != null && 
+      tableColumn.getFilter() != null && 
+      tableColumn.getFilter().length() > 0
+    )
+    .map(tc -> new TableHelper.Filter(tc.getPath(), tc.getFilter()))
+    .collect(Collectors.toList());
+  }
+  
 }

@@ -1,9 +1,22 @@
 ## Requirements
-* java (11)
-* mvn (3.6.3)
-* ant (1.10.12)
+* java version 11
+* mvn version 3.9
+* ant version 1.10
+* lib maven-resolver-ant-tasks version 1.5
+* lib ant-contrib-tasks version 1.0
 * nvm
 * zip
+
+### libs
+
+The libs maven-resolver-ant-tasks and ant-contrib-tasks are required and must be located in the directory "${HOME}/.ant/lib".
+The used versions are defined in the file build.conf und these libs can be installed by the following command:
+
+```
+cd installation
+./build.sh install_libs
+```
+
 
 ## Build
 `> ./build.sh all`

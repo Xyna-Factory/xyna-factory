@@ -43,7 +43,16 @@ public class CreateworkspaceImpl extends XynaCommandImplementation<Createworkspa
       WorkspaceManagement workspaceManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getWorkspaceManagement();
       Workspace workspace = new Workspace(payload.getWorkspaceName());
 
-      CreateWorkspaceResult result = workspaceManagement.createWorkspace(workspace, tsa.getUsername());
+      Long preferredRevision = null;
+      if (payload.getRevision() != null) {
+        try {
+          preferredRevision = Long.parseLong(payload.getRevision());
+        }
+        catch (Exception e) {
+          throw new IllegalArgumentException("Revision is no integer number", e);
+        }
+      }
+      CreateWorkspaceResult result = workspaceManagement.createWorkspace(workspace, tsa.getUsername(), preferredRevision);
       
       switch (result.getResult()) {
         case Success:

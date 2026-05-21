@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ package xmcp.gitintegration.impl.processing;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -60,12 +61,10 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
   private static final String TEMPORARY_SESSION_AUTHENTICATION_USERNAME_MODIFY = "RuntimeContextDependencyProcessor.modify";
   private static final String TEMPORARY_SESSION_AUTHENTICATION_USERNAME_DELETE = "RuntimeContextDependencyProcessor.delete";
 
-
-  private static final RevisionManagement revisionManagement =
-      XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
-  private static final RuntimeContextDependencyManagement rtcDependencyManagement =
-      XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
-
+  private static final RevisionManagement revisionManagement = XynaFactory.isFactoryServer() ? XynaFactory.getInstance()
+      .getFactoryManagement().getXynaFactoryControl().getRevisionManagement() : null;
+  private static final RuntimeContextDependencyManagement rtcDependencyManagement = XynaFactory.isFactoryServer() ? XynaFactory
+      .getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement() : null;
 
   @Override
   public String getTagName() {
@@ -86,7 +85,7 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
 
     String differencesString = "";
     if (!fromStr.equals(toStr)) {
-      differencesString = fromStr + "=>" + toStr;
+      differencesString = "=>" + toStr;
     }
     return differencesString;
   }
@@ -140,6 +139,7 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       throw new RuntimeException(e);
     }
+    Collections.sort(rcdList, (x, y) -> format(x).compareTo(format(y)));
     return rcdList;
   }
 

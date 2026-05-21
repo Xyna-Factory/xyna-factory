@@ -50,6 +50,8 @@ public enum ObjectType {
   memberMethod,
   memberMethodsArea,
   overriddenMethodsArea,
+  metaTag,
+  metaTagArea,
 
   queryFilterCriterion,
   querySortCriterion,
@@ -69,6 +71,7 @@ public enum ObjectType {
   operation,
   exception, 
   servicegroup,
+  implementationArea,
   
   memberDocumentationArea,
   operationDocumentationArea,

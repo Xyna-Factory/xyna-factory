@@ -74,8 +74,7 @@ public class DatatypeVariable extends AVariable {
   public static final String ANY_TYPE = "base.AnyType";
 
   protected void specialParseXml(Element e, Long revision) throws XPRC_InvalidPackageNameException {
-
-    parseUnknownMetaTags(e, Arrays.asList(EL.PERSISTENCE, EL.METATYPE, EL.USEROUTPUT));
+    parseUnknownMetaTags(e, Arrays.asList(EL.PERSISTENCE, EL.METATYPE, EL.USEROUTPUT, GenerationBase.EL.DOCUMENTATION));
 
     // parse data
     boolean isRef = !GenerationBase.isEmpty(e.getAttribute(GenerationBase.ATT.REFERENCENAME));
@@ -158,7 +157,7 @@ public class DatatypeVariable extends AVariable {
     //2. variable in wf => ja
     //  konstantenbelegung in wfs:
     //3. verschachtelte membervariable in wf => ja
-    //4. bei listen gibt es ein kapselndes data-element fï¿½r jedes listenelement => nein
+    //4. bei listen gibt es ein kapselndes data-element für jedes listenelement => nein
     //
     if (getParentVariableInXml() == null || getParentVariableInXml().isList()) {
       return false;

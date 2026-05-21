@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,10 +29,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.log4j.Logger;
-
-import com.gip.xyna.CentralFactoryLogging;
-import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.XynaFactory;
 import com.gip.xyna.xact.filter.monitor.MonitorSession.MonitorSessionInstance;
 import com.gip.xyna.xact.filter.monitor.auditpreprocessing.MissingImportsRestorer.MissingImport;
 import com.gip.xyna.xact.filter.session.Dataflow;
@@ -43,9 +40,20 @@ import com.gip.xyna.xact.filter.util.AVariableIdentification;
 import com.gip.xyna.xact.filter.util.Utils;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Workspace;
+import com.gip.xyna.xfmg.xods.configuration.Configuration;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyWithDefaultValue;
+import com.gip.xyna.xmcp.XynaMultiChannelPortal;
+import com.gip.xyna.xnwh.selection.parsing.ArchiveIdentifier;
+import com.gip.xyna.xnwh.selection.parsing.SearchRequestBean;
+import com.gip.xyna.xnwh.selection.parsing.SelectionParser;
 import com.gip.xyna.xprc.xfractwfe.generation.Step;
 import com.gip.xyna.xprc.xfractwfe.generation.WF.WFStep;
-
+import com.gip.xyna.xprc.xprcods.orderarchive.OrderArchive.SearchMode;
+import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstance;
+import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstanceColumn;
+import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstanceResult;
+import com.gip.xyna.xprc.xprcods.orderarchive.XynaExceptionInformation;
+import com.gip.xyna.xprc.xprcods.orderarchive.selectorder.OrderInstanceSelect;
 
 import xmcp.processmodeller.datatypes.Connection;
 import xmcp.processmodeller.datatypes.RepairEntry;
@@ -54,7 +62,9 @@ import xmcp.processmonitor.datatypes.CustomField;
 import xmcp.processmonitor.datatypes.Error;
 import xmcp.processmonitor.datatypes.NoAuditData;
 import xmcp.processmonitor.datatypes.RollbackStep;
+import xmcp.processmonitor.datatypes.RunningTime;
 import xmcp.processmonitor.datatypes.RuntimeInfo;
+import xmcp.processmonitor.datatypes.WorkflowRuntimeInfo;
 import xmcp.processmonitor.datatypes.response.GetAuditResponse;
 import xmcp.xact.modeller.Hint;
 import xprc.xpce.RuntimeContext;
@@ -63,31 +73,37 @@ import xprc.xpce.RuntimeContext;
 
 public class GetAuditRequestProcessor {
 
-  private static final Logger logger = CentralFactoryLogging.getLogger(GetAuditRequestProcessor.class);
+  private static Configuration config = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryManagementODS().getConfiguration();
 
+  public static String CUSTOM_FIELD_PROPERTY_PREFIX  = "xyna.processmonitor.customColumn";
+  public static String CUSTOM_FIELD_PROPERTY_ENABLED = "enabled";
+  public static String CUSTOM_FIELD_PROPERTY_LABEL   = "label";
+  
 
   public GetAuditResponse processGetAuditRequestFromUpload(MonitorSessionInstance session, String fileId) throws NoAuditData {
     try {
       return createGetAuditResponse(MonitorAudit.fromUpload(session, fileId));
-    } catch (XynaException ex) {
-      throw new NoAuditData(ex);
+    } catch (Throwable ex) {
+      return createGetAuditResponse(-1l, ex, false);
     }
   }
 
   public GetAuditResponse processGetAuditRequest(Long orderId) throws NoAuditData {
     try {
       return createGetAuditResponse(MonitorAudit.fromLocalOrder(orderId));
-    } catch (XynaException ex) {
-      throw new NoAuditData(ex);
+    } catch (Throwable ex) {
+      return createGetAuditResponse(orderId, ex, true);
     }
   }
-  
+
   private GetAuditResponse createGetAuditResponse(MonitorAudit monitorAudit) {
-    
     GetAuditResponse result = new GetAuditResponse();
     result.setOrderId(monitorAudit.getGuiOrderId());
     result.setParentOrderId(monitorAudit.getGuiParentOrderId());
     result.setRevision(0);
+
+    // set workflow parsing to audit mode, which creates fake variables when they can't be created due to a workflow being missing in the XMOM repository
+    com.gip.xyna.xact.filter.xmom.workflows.json.Workflow.isAudit.set(true);
 
     int lazyLoadingLimit = (AuditPreprocessing.LAZY_LOADING_LIMIT.get() != 0) ? AuditPreprocessing.LAZY_LOADING_LIMIT.get() : 1;
     result.setLazyLoadingLimit(lazyLoadingLimit);
@@ -97,7 +113,7 @@ public class GetAuditRequestProcessor {
       List<RepairEntry> entries = repair.repairAuditWorkflow(monitorAudit.getWorkflow());
       result.setRepairResult(entries);
     }
-    
+
     try {
       result.setInfo(fillWorkflowRuntimeInfo(monitorAudit));
     } catch (Exception e) {
@@ -115,7 +131,7 @@ public class GetAuditRequestProcessor {
     } catch (Exception e) {
       Utils.logError("Could not determine dataflow for order " + monitorAudit.getOrderId(), e);
     }
-    
+
     try {
       result.setWorkflow(fillWorkflow(monitorAudit));
     } catch (Exception e) {
@@ -133,13 +149,13 @@ public class GetAuditRequestProcessor {
     } catch (Exception e) {
       Utils.logError("Could not determine errors for order " + monitorAudit.getOrderId(), e);
     }
-    
+
     try {
       result.setRollback(new ArrayList<RollbackStep>()); //TODO
     } catch (Exception e) {
       Utils.logError("Could not determine rollback for order " + monitorAudit.getOrderId(), e);
     }
-    
+
     if (monitorAudit.getMissingImports() != null && monitorAudit.getMissingImports().size() > 0) {
       Hint missingImportsHint = new Hint();
       StringBuilder builder = new StringBuilder();
@@ -156,28 +172,96 @@ public class GetAuditRequestProcessor {
 
     return result;
   }
-  
+
+  private GetAuditResponse createGetAuditResponse(Long orderId, Throwable exception, boolean searchOrderInfo) {
+    GetAuditResponse result = new GetAuditResponse();
+    result.setOrderId(Long.toString(orderId));
+
+    XynaExceptionInformation xei = new XynaExceptionInformation(exception);
+    Error e = createErrorObject(xei);
+    List<Error> errors = new ArrayList<>();
+    errors.add(e);
+    result.setErrors(errors);
+
+    if (!searchOrderInfo) {
+      return result;
+    }
+
+    List<OrderInstance> oil = null;
+    try {
+      SearchRequestBean srb = new SearchRequestBean(ArchiveIdentifier.orderarchive, 1);
+      srb.setFilterEntries(Map.of(OrderInstanceColumn.C_ID.getColumnName(), Long.toString(orderId)));
+      OrderInstanceSelect ois = (OrderInstanceSelect) SelectionParser.generateSelectObjectFromSearchRequestBean(srb);
+      XynaMultiChannelPortal xmcp = ((XynaMultiChannelPortal)XynaFactory.getInstance().getXynaMultiChannelPortal());
+      OrderInstanceResult oir = xmcp.searchOrderInstances(ois, 1, SearchMode.FLAT);
+      oil = oir.getResult();
+    } catch (Exception ex) {
+      xei = new XynaExceptionInformation(ex);
+      e = createErrorObject(xei);
+      errors.add(e);
+    }
+
+    if (oil != null && oil.size() > 0) {
+      OrderInstance oi = oil.get(0);
+      result.setParentOrderId(Long.toString(oi.getParentId()));
+
+      try {
+        result.addToCustomFields(new CustomField(getCustomFieldLabel(0), oi.getCustom0()));
+        result.addToCustomFields(new CustomField(getCustomFieldLabel(1), oi.getCustom1()));
+        result.addToCustomFields(new CustomField(getCustomFieldLabel(2), oi.getCustom2()));
+        result.addToCustomFields(new CustomField(getCustomFieldLabel(3), oi.getCustom3()));
+      } catch (Exception ex) {
+        Utils.logError("Could not determine custom fields for order " + orderId, ex);
+      }
+
+      try {
+        WorkflowRuntimeInfo wri = new WorkflowRuntimeInfo();
+        wri.setId("wf");
+        wri.setRunningTime(new RunningTime(oi.getStartTime(), oi.getStopTime()));
+        wri.setStatus(oi.getStatusAsString());
+        result.setInfo(List.of(wri));
+      } catch (Exception ex) {
+        Utils.logError("Could not determine any runtime info for order " + orderId, ex);
+      }
+
+      try {
+        if (oi.getWorkspaceName() != null && oi.getWorkspaceName().length() > 0) {
+          result.setRootRtc(new xprc.xpce.Workspace(oi.getWorkspaceName()));
+        } else if (oi.getApplicationName() != null && oi.getApplicationName().length() > 0) {
+          result.setRootRtc(new xprc.xpce.Application(oi.getApplicationName(), oi.getVersionName()));
+        }
+      } catch (Exception ex) {
+        Utils.logError("Could not determine root rtc for order " + orderId, ex);
+      }
+    }
+
+    return result;
+  }
+
   private List<Error> createErrors(MonitorAudit monitorAudit){
     if(monitorAudit.getExceptions() != null) {
-      return monitorAudit.getExceptions().stream().map(ex -> {
-        Error e = new Error();
-        e.setMessage(ex.getMessage());
-        e.setException(ex.getClass().getName());
-
-        StringBuilder sb = new StringBuilder();
-        sb.append(ex.getClass().getName())
-          .append(": ").append(ex.getMessage()).append("\n");
-        for (StackTraceElement traceElement : ex.getStacktrace()) {
-          sb.append(traceElement).append("\n");
-        }
-        e.setStacktrace(sb.toString());
-        
-        return e;
-      }).collect(Collectors.toList());
+      return monitorAudit.getExceptions().stream().map(ex -> createErrorObject(ex)).collect(Collectors.toList());
     }
+
     return Collections.emptyList();
   }
-  
+
+  private Error createErrorObject(XynaExceptionInformation ex) {
+    Error e = new Error();
+    e.setMessage(ex.getMessage());
+    e.setException(ex.getClass().getName());
+
+    StringBuilder sb = new StringBuilder();
+    sb.append(ex.getClass().getName())
+      .append(": ").append(ex.getMessage()).append("\n");
+    for (StackTraceElement traceElement : ex.getStacktrace()) {
+      sb.append(traceElement).append("\n");
+    }
+    e.setStacktrace(sb.toString());
+
+    return e;
+  }
+
   private RuntimeContext getRuntimeContext(com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext runtimeContext) {
     RuntimeContext rtc = null;
     if (runtimeContext instanceof Workspace) {
@@ -194,10 +278,8 @@ public class GetAuditRequestProcessor {
   private List<CustomField> getCustomFields(MonitorAudit monitorAudit) {
     List<CustomField> result = new ArrayList<>();
     
-    MonitorV2 impl = new MonitorV2();
-    
     CustomField customField = new CustomField();
-    String label = impl.getCustomFieldLabel(0);
+    String label = getCustomFieldLabel(0);
     String value = monitorAudit.getCustom0();
     label = (label == null || label.length() == 0) ? "Custom 1" : label;
     value = (value == null) ? "" : value;
@@ -206,7 +288,7 @@ public class GetAuditRequestProcessor {
     result.add(customField);
     
     customField = new CustomField();    
-    label = impl.getCustomFieldLabel(1);
+    label = getCustomFieldLabel(1);
     value = monitorAudit.getCustom1();
     label = (label == null || label.length() == 0) ? "Custom 2" : label; 
     value = (value == null) ? "" : value;
@@ -215,7 +297,7 @@ public class GetAuditRequestProcessor {
     result.add(customField);
     
     customField = new CustomField();
-    label = impl.getCustomFieldLabel(2);
+    label = getCustomFieldLabel(2);
     value = monitorAudit.getCustom2();
     label = (label == null || label.length() == 0) ? "Custom 3" : label;
     value = (value == null) ? "" : value;
@@ -224,7 +306,7 @@ public class GetAuditRequestProcessor {
     result.add(customField);
     
     customField = new CustomField();
-    label = impl.getCustomFieldLabel(3);
+    label = getCustomFieldLabel(3);
     value = monitorAudit.getCustom3();
     label = (label == null || label.length() == 0) ? "Custom 4" : label;
     value = (value == null) ? "" : value;
@@ -284,5 +366,25 @@ public class GetAuditRequestProcessor {
   private Workflow fillWorkflow(MonitorAudit monitorAudit) {
     com.gip.xyna.xact.filter.xmom.workflows.json.Workflow jsonWorkflow = new com.gip.xyna.xact.filter.xmom.workflows.json.Workflow(monitorAudit.getWorkflowGbo());
     return (Workflow) jsonWorkflow.getXoRepresentation();
+  }
+
+
+  private boolean isCustomFieldEnabled(int fieldIndex) {
+    String propName = String.format("%s%d.%s", CUSTOM_FIELD_PROPERTY_PREFIX, fieldIndex, CUSTOM_FIELD_PROPERTY_ENABLED);
+    XynaPropertyWithDefaultValue enabledProperty = config.getPropertyWithDefaultValue(propName);
+    if (enabledProperty == null || enabledProperty.getValueOrDefValue() == null) {
+      return false;
+    }
+    return Boolean.TRUE.toString().equalsIgnoreCase(enabledProperty.getValueOrDefValue());
+  }
+
+
+  private String getCustomFieldLabel(int fieldIndex) {
+    if (!isCustomFieldEnabled(fieldIndex)) {
+      return null;
+    }
+    String propName = String.format("%s%d.%s", CUSTOM_FIELD_PROPERTY_PREFIX, fieldIndex, CUSTOM_FIELD_PROPERTY_LABEL);
+    XynaPropertyWithDefaultValue labelProperty = config.getPropertyWithDefaultValue(propName);
+    return (labelProperty != null) ? labelProperty.getValueOrDefValue() : null;
   }
 }

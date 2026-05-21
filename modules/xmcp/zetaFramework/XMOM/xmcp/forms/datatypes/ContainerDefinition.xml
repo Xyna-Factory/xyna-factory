@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,12 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="BaseDefinition" BaseTypePath="xmcp.forms.datatypes" IsAbstract="true" Label="Container Definition" TypeName="ContainerDefinition" TypePath="xmcp.forms.datatypes" Version="1.8">
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="ContainerDefinition" TypePath="xmcp.forms.datatypes" Label="Container Definition" IsAbstract="true" BaseTypeName="BaseDefinition" BaseTypePath="xmcp.forms.datatypes">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data IsList="true" Label="Children" ReferenceName="BaseDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="children"/>
+  <Data Label="Children" VariableName="children" IsList="true" ReferenceName="BaseDefinition" ReferencePath="xmcp.forms.datatypes">
+  </Data>
+  <Data Label="Trigger Change Children" VariableName="triggerChangeChildren" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes">
+  </Data>
 </DataType>

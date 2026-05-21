@@ -20,4 +20,5 @@
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
+  <Data Label="Plugin" VariableName="plugin" ReferenceName="ContextMenuPlugin" ReferencePath="xmcp.yggdrasil.plugin"/>
 </DataType>

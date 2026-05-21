@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Execute Checkout" TypeName="ExecuteCheckout" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Execute Checkout" Name="ExecuteCheckout">
+    <Input>
+      <Data ID="26" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository26"/>
+      <Data ID="39" Label="Branch Name" ReferenceName="BranchName" ReferencePath="xmcp.gitintegration.repository" VariableName="branchName39"/>
+    </Input>
+    <Output/>
+    <ServiceReference ID="53" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="52"/>
+      <Target RefID="52"/>
+    </ServiceReference>
+    <Mappings ID="71" Label="Mapping">
+      <Input>
+        <Data ID="88" Label="Branch Name" ReferenceName="BranchName" ReferencePath="xmcp.gitintegration.repository" VariableName="branchName88">
+          <Source RefID="71"/>
+        </Data>
+        <Source RefID="39"/>
+      </Input>
+      <Output>
+        <Data ID="105" Label="Branch" ReferenceName="Branch" ReferencePath="xmcp.gitintegration.repository" VariableName="branch105">
+          <Source RefID="71"/>
+        </Data>
+        <Target RefID="106"/>
+      </Output>
+      <Mapping>%1%.name=%0%.name</Mapping>
+    </Mappings>
+    <Function ID="52" Label="Checkout">
+      <Source RefID="53"/>
+      <Source RefID="106"/>
+      <Source RefID="26"/>
+      <Target RefID="53"/>
+      <Invoke Operation="checkout" ServiceID="53">
+        <Source RefID="106"/>
+        <Source RefID="26"/>
+      </Invoke>
+      <Receive ServiceID="53"/>
+    </Function>
+    <Data ID="106" Label="Branch" ReferenceName="Branch" ReferencePath="xmcp.gitintegration.repository" VariableName="branch106">
+      <Source RefID="71"/>
+    </Data>
+    <Assign ID="1"/>
+  </Operation>
+</Service>

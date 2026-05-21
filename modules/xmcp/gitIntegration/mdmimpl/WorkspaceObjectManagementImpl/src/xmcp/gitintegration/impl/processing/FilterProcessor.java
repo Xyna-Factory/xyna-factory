@@ -25,6 +25,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -51,16 +52,20 @@ import xmcp.gitintegration.MODIFY;
 import xmcp.gitintegration.Reference;
 import xmcp.gitintegration.ReferenceData;
 import xmcp.gitintegration.ReferenceManagement;
+import xmcp.gitintegration.RepositoryManagement;
 import xmcp.gitintegration.Filter;
 import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.impl.ItemDifference;
 import xmcp.gitintegration.impl.ReferenceComparator;
+import xmcp.gitintegration.impl.ReferenceConverter;
 import xmcp.gitintegration.impl.ReferenceUpdater;
 import xmcp.gitintegration.impl.XynaContentDifferenceType;
+import xmcp.gitintegration.impl.references.InternalReference;
 import xmcp.gitintegration.impl.references.ReferenceObjectType;
 import xmcp.gitintegration.impl.xml.ReferenceXmlConverter;
 import xmcp.gitintegration.storage.ReferenceStorable;
 import xmcp.gitintegration.storage.ReferenceStorage;
+import xprc.xpce.Workspace;
 
 
 
@@ -82,7 +87,7 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
     }
     return revisionManagement;
   }
-  
+
   private static XynaActivationBase getXynaActivation() {
     if(xynaActivation == null) {
       xynaActivation = XynaFactory.getInstance().getActivation();
@@ -206,7 +211,7 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
   @Override
   public String createDifferencesString(Filter from, Filter to) {
     StringBuffer ds = new StringBuffer();
-    
+
     if (!Objects.equals(from.getFQFilterClassName(), to.getFQFilterClassName())) {
       ds.append("\n");
       ds.append("    " + TAG_FQFILTERCLASSNAME + " ");
@@ -277,6 +282,7 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
         for (ReferenceStorable storable : storage.getReferencetorableList(revision, filter.getFilterName(), ReferenceObjectType.FILTER)) {
           refList.add(new Reference(storable.getPath(), storable.getReftype()));
         }
+        Collections.sort(refList, (x, y) -> x.getPath().compareTo(y.getPath()));
         filter.setReferences(refList);
 
         ssl = StringSerializableList.autoSeparator(String.class, ":|/;\\@-_.+#=[]?§$%&!", ':');
@@ -290,6 +296,8 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+
+    Collections.sort(tiList, (x, y) -> x.getFilterName().compareTo(y.getFilterName()));
     return tiList;
   }
 
@@ -317,9 +325,9 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
     if (files != null) {
       for (File file : files) {
         Path path = Paths.get(file.getParent());
-        if (path.getNameCount() > 3) {
-          // remove prefix "../revision/revision_REV/"
-          Path resultPath = path.subpath(3, path.getNameCount() - 1);
+        if (path.getNameCount() > 4) {
+          // remove prefix "../revision/revision_REV/filter"
+          Path resultPath = path.subpath(4, path.getNameCount());
           resultList.add((new File(resultPath.toString(), file.getName())).getPath());
         } else {
           resultList.add(file.getPath());
@@ -336,8 +344,8 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
     String workspaceName = ReferenceUpdater.getWorkspaceName(revision);
     for (Reference reference : item.getReferences() != null ? item.getReferences() : new ArrayList<Reference>()) {
       ReferenceData.Builder builder = new ReferenceData.Builder();
-      builder.objectName(item.getTriggerName()).objectType(ReferenceObjectType.FILTER.toString()).path(reference.getPath())
-      .referenceType(reference.getType()).workspaceName(workspaceName);
+      builder.objectName(item.getFilterName()).objectType(ReferenceObjectType.FILTER.toString()).path(reference.getPath())
+          .referenceType(reference.getType()).workspaceName(workspaceName);
       ReferenceManagement.addReference(builder.instance());
     }
     // create filter
@@ -347,6 +355,11 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
 
 
   private void createFilter(Filter item, long revision) {
+    ReferenceSupport refSupport = new ReferenceSupport();
+    ReferenceConverter refConverter = new ReferenceConverter();
+    Workspace workspaceName = new Workspace(ReferenceUpdater.getWorkspaceName(revision));
+    String pathToRepo = RepositoryManagement.getRepositoryConnection(workspaceName).getPath();
+
     StringSerializableList<String> ssl;
     ssl = StringSerializableList.autoSeparator(String.class, ":|/;\\@-_.+#=[]?§$%&!", ':');
     String[] jarFiles = ssl.deserializeFromString(item.getJarfiles()).toArray(new String[] {});
@@ -355,17 +368,31 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
     if (jarFiles.length > 0 && item.getReferences() == null) {
       throw new RuntimeException("No references found (filter: " + item.getFilterName() + ")");
     }
+
+    for (int i=0; i<jarFiles.length; i++) {
+      jarFiles[i] = Path.of(jarFiles[i]).getFileName().toFile().getName();
+    }
+
     File[] jarFilesArray = new File[jarFiles.length];
     int idx = 0;
     List<Reference> references = new ArrayList<>(item.getReferences());
+    List<InternalReference> internalReferences = new ArrayList<>();
+
+    for(Reference reference : references) {
+      InternalReference internalRef = refConverter.convert(reference);
+      internalRef.setPathToRepo(pathToRepo);
+      internalReferences.add(internalRef);
+    }
+
+    List<File> candidateFiles = refSupport.executeReferences(internalReferences);
     for (String jarFile : jarFiles) {
-      base.File file = ReferenceManagement.findReferencedJar(references, new File(jarFile).getName(), revision);
+      base.File file = candidateFiles.stream().filter(x -> x.getName().equals(jarFile)).map(x -> new base.File(x.getAbsolutePath())).findFirst().get();
       jarFilesArray[idx++] = new File(file.getPath());
     }
     try {
       List<File> jarFilesList = copyToSavedIfNecessary(jarFilesArray, item.getFQFilterClassName(), revision);
-      xynaActivation.getActivationTrigger().addFilter(item.getFilterName(), jarFilesList.toArray(new File[jarFilesList.size()]),
-                                                      item.getFQFilterClassName(), item.getTriggerName(), sharedLibs, null, revision);
+      getXynaActivation().getActivationTrigger().addFilter(item.getFilterName(), jarFilesList.toArray(new File[jarFilesList.size()]),
+                                                           item.getFQFilterClassName(), item.getTriggerName(), sharedLibs, null, revision);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -384,7 +411,7 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
     ReferenceComparator comparator = new ReferenceComparator();
     ReferenceUpdater updater = new ReferenceUpdater();
     List<ItemDifference<Reference>> idrList = comparator.compare(from.getReferences(), to.getReferences());
-    updater.update(idrList,revision, ReferenceObjectType.TRIGGER, from.getFQFilterClassName(), to.getFQFilterClassName());
+    updater.update(idrList,revision, ReferenceObjectType.FILTER, from.getFilterName(), to.getFilterName());
   }
 
 

@@ -50,7 +50,7 @@
 	    "operation": "read",
 		"targetVariable": "!revision!",
 		"pathInResponse": "revision",
-		"unquoteResult":"True"
+		"unquoteResult": false
 	  },
 	  {
 	    "operation": "read",
@@ -68,7 +68,7 @@
 	    "operation": "read",
 		"targetVariable": "!revision!",
 		"pathInResponse": "revision",
-		"unquoteResult":"True"
+		"unquoteResult": false
 	  },
 	  {
 	    "operation": "call",
@@ -80,7 +80,7 @@
 	    "operation": "read",
 		"targetVariable": "!revision!",
 		"pathInResponse": "revision",
-		"unquoteResult":"True"
+		"unquoteResult": false
 	  },
 	  {
 	    "operation": "call",

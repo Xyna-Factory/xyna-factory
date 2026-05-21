@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,8 +94,8 @@ public class CodedservicesAction extends XmomGuiAction {
     JsonFilterActionInstance jfai = new JsonFilterActionInstance();
     try {
       SortType sortType = SortType.typeAware;
-      if(tc.getParas() != null && tc.getParas().contains("sort")) {
-        sortType = SortType.valueOf(tc.getParas().getProperty("sort"));
+      if(tc.getParameters() != null && tc.getParameters().containsKey("sort")) {
+        sortType = SortType.valueOf(tc.getFirstValueOfParameter("sort"));
       }
       
       XmomObjectsPath xmomObjectsPath = new XmomObjectsPath(xmomGui.getXmomLoader(), "codedServices");

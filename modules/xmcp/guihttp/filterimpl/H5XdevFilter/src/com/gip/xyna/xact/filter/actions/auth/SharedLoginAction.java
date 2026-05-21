@@ -24,6 +24,7 @@ import com.gip.xyna.xact.filter.JsonFilterActionInstance;
 import com.gip.xyna.xact.filter.URLPath;
 import com.gip.xyna.xact.filter.actions.PathElements;
 import com.gip.xyna.xact.filter.actions.auth.utils.AuthUtils;
+import com.gip.xyna.xact.filter.session.XMOMGui;
 import com.gip.xyna.xact.filter.util.Utils;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
@@ -34,6 +35,11 @@ import xmcp.auth.SharedLoginRequest;
 
 
 public class SharedLoginAction extends LoginAction {
+
+
+  public SharedLoginAction(XMOMGui xmomgui) {
+    super(xmomgui);
+  }
 
 
   @Override
@@ -50,7 +56,7 @@ public class SharedLoginAction extends LoginAction {
 
 
     SessionCredentials creds = new SessionCredentials(request.getSessionId(), request.getToken());
-    return createLoginResponse(jfai, tc, creds, request.getPath());
+    return createLoginResponse(jfai, tc, creds, request.getPath(), xmomgui);
   }
 
 

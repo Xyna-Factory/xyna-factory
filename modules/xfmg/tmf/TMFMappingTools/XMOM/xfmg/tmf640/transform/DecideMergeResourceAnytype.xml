@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Decide Merge Resource Anytype" TypeName="DecideMergeResourceAnytype" TypePath="xfmg.tmf640.transform" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Decide Merge Resource Anytype" Name="DecideMergeResourceAnytype">
+    <Input>
+      <Data ID="701" Label="DecideMerge" ReferenceName="DecideMerge" ReferencePath="xprc.base.list" VariableName="decideMerge701"/>
+      <Data ID="31" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType31">
+        <Meta>
+          <Type>GeneralXynaObject</Type>
+        </Meta>
+      </Data>
+      <Data ID="52" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType52">
+        <Meta>
+          <Type>GeneralXynaObject</Type>
+        </Meta>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="73" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType73">
+        <Meta>
+          <Type>GeneralXynaObject</Type>
+        </Meta>
+      </Data>
+    </Output>
+    <ServiceReference ID="12" Label="Decide Merge Resources" ReferenceName="DecideMergeResources" ReferencePath="xfmg.tmf640.transform">
+      <Source RefID="11"/>
+      <Target RefID="11"/>
+    </ServiceReference>
+    <Mappings ID="110" Label="Mapping">
+      <Input>
+        <Data ID="195" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType195">
+          <Meta/>
+          <Source RefID="110"/>
+        </Data>
+        <Source RefID="31">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="212" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType212">
+          <Meta/>
+          <Source RefID="110"/>
+        </Data>
+        <Source RefID="52">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="159" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef159">
+          <Source RefID="110"/>
+        </Data>
+        <Target RefID="160"/>
+      </Output>
+      <Output>
+        <Data ID="177" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef177">
+          <Source RefID="110"/>
+        </Data>
+        <Target RefID="178"/>
+      </Output>
+      <Mapping>%2%#cast("tmf640.datamodel.ResourceRef")=%0%#cast("tmf640.datamodel.ResourceRef")</Mapping>
+      <Mapping>%3%#cast("tmf640.datamodel.ResourceRef")=%1%#cast("tmf640.datamodel.ResourceRef")</Mapping>
+    </Mappings>
+    <Function ID="11" Label="Decide Merge Resources">
+      <Source RefID="12"/>
+      <Source RefID="160"/>
+      <Source RefID="178"/>
+      <Target RefID="12"/>
+      <Target RefID="14"/>
+      <Invoke Operation="DecideMergeResources" ServiceID="12">
+        <Source RefID="160">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="178">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="12">
+        <Target RefID="14"/>
+      </Receive>
+    </Function>
+    <Data ID="14" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef14">
+      <Source RefID="11"/>
+    </Data>
+    <Data ID="160" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef160">
+      <Source RefID="110"/>
+    </Data>
+    <Data ID="178" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef178">
+      <Source RefID="110"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="14"/>
+      <Target RefID="73"/>
+      <Copy>
+        <Source RefID="14">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="73"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

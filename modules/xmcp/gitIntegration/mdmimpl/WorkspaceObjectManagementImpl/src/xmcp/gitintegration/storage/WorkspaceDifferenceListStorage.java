@@ -97,7 +97,7 @@ public class WorkspaceDifferenceListStorage {
     builder.contentType(entry.getContenttype());
     builder.differenceType(WorkspaceContentProcessingPortal.differenceTypes.get(entry.getDifferencetype()));
     builder.existingItem(portal.parseWorkspaceContentItem(convertToXMLNode(entry.getExistingitem())));
-    builder.id(entry.getEntryid());
+    builder.entryId(entry.getEntryid());
     builder.newItem(portal.parseWorkspaceContentItem(convertToXMLNode(entry.getNewitem())));
     return builder.instance();
   }
@@ -120,9 +120,9 @@ public class WorkspaceDifferenceListStorage {
     WorkspaceContentDifferenceStorable result = new WorkspaceContentDifferenceStorable();
     result.setContenttype(entry.getContentType());
     result.setDifferencetype(entry.getDifferenceType().getClass().getSimpleName());
-    result.setEntryid(entry.getId());
+    result.setEntryid(entry.getEntryId());
     result.setListid(listId);
-    result.setListentryindex(WorkspaceContentDifferenceStorable.createListentryindex(listId, entry.getId()));
+    result.setListentryindex(WorkspaceContentDifferenceStorable.createListentryindex(listId, entry.getEntryId()));
 
     XmlBuilder builder = new XmlBuilder();
     portal.writeItem(builder, entry.getExistingItem());
@@ -258,8 +258,9 @@ public class WorkspaceDifferenceListStorage {
         }
         
         result.add(differences.instance());
+        int index = result.size() - 1;
+        result.get(index).unversionedSetIndex(index);
       }
-      
       return result;
     }
     

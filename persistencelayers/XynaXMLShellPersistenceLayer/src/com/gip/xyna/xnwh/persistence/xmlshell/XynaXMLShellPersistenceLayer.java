@@ -244,9 +244,9 @@ public class XynaXMLShellPersistenceLayer implements PersistenceLayer {
           child.delete();
         }
       } catch(Exception e) {
-        // Wenn hier irgendwas passiert, kï¿½nnen wir das eigentlich ignorieren. Worst case wï¿½re, dass die temporï¿½ren Dateien nicht gelï¿½scht werden konnten und
-        // die Platte voll mï¿½llen.
-        logger.warn("Beim Lï¿½schen der temporï¿½ren Persistencedaten kam es zu einem Fehler.", e);
+        // Wenn hier irgendwas passiert, können wir das eigentlich ignorieren. Worst case wäre, dass die temporären Dateien nicht gelöscht werden konnten und
+        // die Platte voll müllen.
+        logger.warn("Beim Löschen der temporären Persistencedaten kam es zu einem Fehler.", e);
       }
       
     }

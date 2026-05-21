@@ -1,2 +1,0 @@
-1. create and distribute mdm.jar to service groups (mdmimpl/<serviceGroupName>/lib/xyna): ant prepare-mdm-jar
-2. build application: ant build

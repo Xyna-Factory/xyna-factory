@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,14 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <!--                                               ################# Version auch in blackedition_lib.sh updaten ########### -->
-<Application applicationName="Processing" comment="" factoryVersion="" versionName="1.0.19" xmlVersion="1.1">
+<Application applicationName="Processing" comment="" factoryVersion="" versionName="1.0.28" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">Konfiguration im Planning-Workflow, Starten von Aufträgen</Description>
-    <Description Lang="EN">Configuration in Planning workflow, starting orders</Description>
-    <BuildDate>2015.06.25 10:13:00</BuildDate>
+    <Description Lang="DE">Grundfunktionalität zum Xyna Factory Processing von Aufträgen</Description>
+    <Description Lang="EN">Basic functionality for Xyna Factory processing of orders</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>
-        <VersionName>1.0.19</VersionName>
+        <VersionName>1.1.4</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
@@ -52,6 +51,10 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xprc.xpce.datatype.NamedXMOMMember</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xprc.xpce.datatype.MetaTag</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">

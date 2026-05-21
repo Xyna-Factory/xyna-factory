@@ -31,7 +31,7 @@ import com.gip.xyna.xfmg.xfctrl.deploystate.deployitem.UnresolvableInterface.Typ
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase.XMOMType;
 import com.gip.xyna.xprc.exceptions.XPRC_InvalidVariableIdException;
 import com.gip.xyna.xprc.xfractwfe.generation.AVariable;
-import com.gip.xyna.xprc.xfractwfe.generation.JavaOperation;
+import com.gip.xyna.xprc.xfractwfe.generation.CodeOperation;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.ScopeStep;
 import com.gip.xyna.xprc.xfractwfe.generation.ScopeStep.ServiceIdentification;
@@ -295,8 +295,8 @@ public class OperationInterface implements MatchableInterface {
 
   public static OperationInterface of(TypeInterface providerType, Operation operation) throws AvariableNotResolvableException {
     boolean isActive = true;
-    if (operation instanceof JavaOperation) {
-      isActive = ((JavaOperation) operation).isActive();
+    if (operation instanceof CodeOperation) {
+      isActive = ((CodeOperation) operation).isActive();
     }
     List<TypeInterface> input = new ArrayList<TypeInterface>();
     if (!operation.isStatic()) {

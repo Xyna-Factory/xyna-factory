@@ -1059,7 +1059,7 @@ public class XynaFractalWorkflowEngine extends Section implements WorkflowEngine
                                              return rs.getInt(1);
                                            }
 
-                                         });
+                                         }, OrderInstanceBackup.TABLE_NAME);
         cntBackup = con.queryOneRow(pq, null);
       } finally {
         con.closeConnection();

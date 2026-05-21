@@ -1,0 +1,41 @@
+module test_module_z_C_2 {
+  yang-version 1.1;
+  namespace "http://www.gip.com/xyna/yang/test/testrpc_z_C_2";
+  prefix "c2";
+  revision 2025-06-13;
+
+  rpc testrpc_z_C_2 {
+    input {
+      uses group_c2;
+    }
+  }
+  
+  grouping group_c2 {
+    container c_root {
+      list c_list_1 {
+        key "c1";
+        leaf c1 {
+          type string;
+        }
+        container d_c {
+          leaf d1 {
+            type string;
+          }
+          leaf d2 {
+            type string;
+          }
+          leaf d3 {
+            type string;
+          }
+          list e_list_1 {
+            key "e1";
+            leaf e1 {
+              type string;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+}

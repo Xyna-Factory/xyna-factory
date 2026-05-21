@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,12 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="FormPanelDefinition" BaseTypePath="xmcp.forms.datatypes" IsAbstract="false" Label="Table Panel Definition" TypeName="TablePanelDefinition" TypePath="xmcp.forms.datatypes" Version="1.8">
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="TablePanelDefinition" TypePath="xmcp.forms.datatypes" Label="Table Panel Definition" IsAbstract="false" BaseTypeName="FormPanelDefinition" BaseTypePath="xmcp.forms.datatypes">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Table Workflow RTC" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="tableWorkflowRTC"/>
+  <Data Label="Table Workflow RTC" VariableName="tableWorkflowRTC" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce">
+  </Data>
   <Data Label="Table Workflow FQN" VariableName="tableWorkflowFQN">
     <Meta>
       <Type>String</Type>
@@ -42,9 +43,11 @@
       <Type>Integer</Type>
     </Meta>
   </Data>
-  <Data Label="Details Definition Reference" ReferenceName="Definition" ReferencePath="xmcp.forms.datatypes" VariableName="detailsDefinitionReference">
+  <Data Label="Details Definition Reference" VariableName="detailsDefinitionReference" ReferenceName="Definition" ReferencePath="xmcp.forms.datatypes">
     <Meta>
       <Documentation>Either set an actual Definition or a Definition Workflow</Documentation>
     </Meta>
+  </Data>
+  <Data Label="Trigger refresh" VariableName="triggerRefresh" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes">
   </Data>
 </DataType>

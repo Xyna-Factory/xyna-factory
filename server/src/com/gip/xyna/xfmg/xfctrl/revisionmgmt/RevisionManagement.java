@@ -271,7 +271,8 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
     ODSConnection con = ods.openConnection();
     try {
       PreparedQuery<? extends XMOMVersionStorable> query = queryCache
-                      .getQueryFromCache(sqlQueryXMOMVersionForRevision, con, XMOMVersionStorable.getStaticReader());
+                      .getQueryFromCache(sqlQueryXMOMVersionForRevision, con, XMOMVersionStorable.getStaticReader(),
+                                         XMOMVersionStorable.TABLE_NAME);
       XMOMVersionStorable xmomversion = con.queryOneRow(query, new Parameter(revision, getOwnBinding()));
       
       if (xmomversion == null) {
@@ -312,7 +313,7 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
         }
       }
       PreparedQuery<? extends XMOMVersionStorable> query = queryCache
-                      .getQueryFromCache(sqlQueryXMOMVersionForOwnBinding, con, XMOMVersionStorable.getStaticReader());
+                      .getQueryFromCache(sqlQueryXMOMVersionForOwnBinding, con, XMOMVersionStorable.getStaticReader(), XMOMVersionStorable.TABLE_NAME);
       List<? extends XMOMVersionStorable> xmomversions = con.query(query, new Parameter(getOwnBinding()), -1);
       
       for(XMOMVersionStorable xmomversion : xmomversions) {
@@ -523,7 +524,7 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
     boolean success = false;
     try {
       PreparedQuery<? extends XMOMVersionStorable> query = queryCache
-                        .getQueryFromCache(sqlQueryXMOMVersionForApplicationAndVersionForAllBindings, con, XMOMVersionStorable.getStaticReader());
+                        .getQueryFromCache(sqlQueryXMOMVersionForApplicationAndVersionForAllBindings, con, XMOMVersionStorable.getStaticReader(), XMOMVersionStorable.TABLE_NAME);
       List<? extends XMOMVersionStorable> xmomversions = con.query(query, new Parameter(applicationName, newVersion), -1);
       
       for(XMOMVersionStorable xmomversion : xmomversions) {
@@ -577,13 +578,17 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
   
   
   /**
-   * Legt eine neue Revision für eine neuen Workspace an.
+   * Legt eine neue Revision für einen neuen Workspace an.
    * @param workspace
    * @return
    * @throws PersistenceLayerException
    * @throws XFMG_DuplicateWorkspace
    */
   public long buildNewRevisionForNewWorkspace(Workspace workspace) throws PersistenceLayerException, XFMG_DuplicateWorkspace {
+    return buildNewRevisionForNewWorkspace(workspace, null);
+  }
+  
+  public long buildNewRevisionForNewWorkspace(Workspace workspace, Long preferredRevision) throws PersistenceLayerException, XFMG_DuplicateWorkspace {
     if (revisions.containsKey(workspace)) {
       throw new XFMG_DuplicateWorkspace(workspace.getName());
     }
@@ -596,7 +601,7 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
     boolean success = false;
     try {
       PreparedQuery<? extends XMOMVersionStorable> query = queryCache
-                      .getQueryFromCache(sqlQueryXMOMVersionForWorkspaceForAllBindings, con, XMOMVersionStorable.getStaticReader());
+                      .getQueryFromCache(sqlQueryXMOMVersionForWorkspaceForAllBindings, con, XMOMVersionStorable.getStaticReader(), XMOMVersionStorable.TABLE_NAME);
       List<? extends XMOMVersionStorable> xmomversions = con.query(query, new Parameter(workspace.getName()), -1);
       
       for(XMOMVersionStorable xmomversion : xmomversions) {
@@ -611,10 +616,15 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
         }
       }
       
+      if (preferredRevision != null && revision != null && !preferredRevision.equals(revision)) {
+        throw new RuntimeException("Could not use preferred revision. Other node already created revision " + revision
+            + " for this workspace.");
+      }
+      
       if(revision == null) {
         // neue unbenutzte Revisionen erzeugen und anlegen
-        logger.debug("No revision found - create new one");
-        revision = createNewRevision(null);
+        logger.debug("No revision found - create new one." + (preferredRevision != null ? " Preferred Revision: " + preferredRevision : ""));
+        revision = createNewRevision(preferredRevision);
       }
       
       XMOMVersionStorable xmomversion = new XMOMVersionStorable(workspace, revision, getOwnBinding());

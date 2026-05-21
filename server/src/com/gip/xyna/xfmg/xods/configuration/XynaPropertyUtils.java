@@ -321,7 +321,14 @@ public class XynaPropertyUtils {
     public Map<DocumentationLanguage, String> getDefDocumentation(){
       return defDocumentation;
     }
-    
+
+    /**
+     * Returns the documentation if set and the default documentation otherwise.
+     */
+    public Map<DocumentationLanguage, String> getDocuOrDefDocu(){
+      return documentation.isEmpty() ? defDocumentation : documentation;
+    }
+
     public int hashCode() {
       return name.hashCode();
     }

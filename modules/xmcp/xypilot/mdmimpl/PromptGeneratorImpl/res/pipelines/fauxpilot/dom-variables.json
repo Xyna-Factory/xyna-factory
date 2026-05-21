@@ -1,0 +1,12 @@
+{
+    "template": "fauxpilot/dom-variables.ftl",
+    "parser": "xmcp.xypilot.impl.gen.parse.MemberParser",
+    "inference_parameters": {
+        "model": "fastertransformer",
+        "n": 1,
+        "stop": ["\n  ]"],
+        "max_tokens": 512,
+        "temperature": 0.1
+    }
+}
+

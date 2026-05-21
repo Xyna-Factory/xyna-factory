@@ -1,0 +1,9 @@
+{
+    "template": "copilot/exception-documentation.ftl",
+    "parser": "xmcp.xypilot.impl.gen.parse.JavaDocParser",
+    "inference_parameters": {
+        "model": "copilot-java",
+        "n": 1,
+        "stop": ["\n */"]
+    }
+}

@@ -29,13 +29,11 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.security.Security;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -45,42 +43,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import javax.management.RuntimeErrorException;
 import javax.net.SocketFactory;
 
-import org.apache.log4j.Logger;
+import jdk.net.ExtendedSocketOptions;
 
-import xact.connection.Command;
-import xact.connection.CommandResponseTuple;
-import xact.connection.ConnectionAlreadyClosed;
-import xact.connection.DeviceType;
-import xact.connection.ReadTimeout;
-import xact.connection.Response;
-import xact.connection.SendParameter;
-import xact.ssh.AliasEntry;
-import xact.ssh.AuthenticationMethod;
-import xact.ssh.AuthenticationMode;
-import xact.ssh.EncryptionType;
-import xact.ssh.HostKeyAliasMapping;
-import xact.ssh.HostKeyCheckingMode;
-import xact.ssh.HostKeyHashMap;
-import xact.ssh.HostKeyStorableRepository;
-import xact.ssh.IdentityStorableRepository;
-import xact.ssh.IllegalUserNameException;
-import xact.ssh.ProxyParameter;
-import xact.ssh.SSHConnection;
-import xact.ssh.SSHConnectionInstanceOperation;
-import xact.ssh.SSHConnectionParameter;
-import xact.ssh.SSHConnectionSuperProxy;
-import xact.ssh.SSHProxyParameter;
-import xact.ssh.SSHSendParameter;
-import xact.ssh.SecureStorablePassphraseStore;
-import xact.ssh.SupportedHostNameFeature;
-import xact.ssh.Utils;
-import xact.ssh.XynaHostKeyRepository;
-import xact.ssh.XynaIdentityRepository;
-import xact.templates.DocumentType;
-import xfmg.xfmon.protocolmsg.ProtocolMessage;
+import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
@@ -98,29 +65,52 @@ import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.ServiceStepEventHand
 import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.ServiceStepEventSource;
 import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.events.AbortServiceStepEvent;
 import com.gip.xyna.xprc.xsched.orderabortion.AbortionCause;
+import com.hierynomus.sshj.key.KeyAlgorithm;
 
+import net.schmizz.sshj.Config;
 import net.schmizz.sshj.SSHClient;
-import net.schmizz.sshj.common.KeyType;
+import net.schmizz.sshj.common.Factory.Named;
 import net.schmizz.sshj.common.SSHException;
 import net.schmizz.sshj.connection.ConnectionException;
 import net.schmizz.sshj.connection.channel.Channel;
 import net.schmizz.sshj.connection.channel.direct.Session;
 import net.schmizz.sshj.transport.TransportException;
+import net.schmizz.sshj.transport.cipher.Cipher;
+import net.schmizz.sshj.transport.mac.MAC;
 import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
-import net.schmizz.sshj.userauth.AuthParams;
 import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
-import net.schmizz.sshj.userauth.method.AuthHostbased;
 import net.schmizz.sshj.userauth.method.AuthMethod;
 import net.schmizz.sshj.userauth.method.AuthPassword;
 import net.schmizz.sshj.userauth.method.AuthPublickey;
 import net.schmizz.sshj.userauth.password.PasswordFinder;
 import net.schmizz.sshj.userauth.password.Resource;
-
-import net.schmizz.sshj.transport.mac.MAC;
-import com.hierynomus.sshj.transport.mac.Macs;
-
-
-import java.security.*;
+import xact.connection.Command;
+import xact.connection.CommandResponseTuple;
+import xact.connection.ConnectionAlreadyClosed;
+import xact.connection.DeviceType;
+import xact.connection.ReadTimeout;
+import xact.connection.Response;
+import xact.connection.SendParameter;
+import xact.ssh.AuthenticationMethod;
+import xact.ssh.EncryptionType;
+import xact.ssh.FactoryUtils;
+import xact.ssh.HostKeyAliasMapping;
+import xact.ssh.HostKeyCheckingMode;
+import xact.ssh.HostKeyStorableRepository;
+import xact.ssh.IdentityStorableRepository;
+import xact.ssh.ProxyParameter;
+import xact.ssh.SSHConnection;
+import xact.ssh.SSHConnectionInstanceOperation;
+import xact.ssh.SSHConnectionParameter;
+import xact.ssh.SSHConnectionSuperProxy;
+import xact.ssh.SSHProxyParameter;
+import xact.ssh.SSHSendParameter;
+import xact.ssh.SupportedHostNameFeature;
+import xact.ssh.Utils;
+import xact.ssh.XynaHostKeyRepository;
+import xact.ssh.XynaIdentityRepository;
+import xact.templates.DocumentType;
+import xfmg.xfmon.protocolmsg.ProtocolMessage;
 
 
 
@@ -163,6 +153,15 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
   public static final XynaPropertyInt substringLengthProperty = new XynaPropertyInt("xact.connection.ssh.partialResponseLength", 0);
   private static final XynaPropertyBoolean legacyErrorMessage = new XynaPropertyBoolean("xact.ssh.connect.timeout.errormessage.legacy", false)
                                .setDefaultDocumentation(DocumentationLanguage.EN, "Error message when socket connect fails with timeout is similar to what jsch creates when not using a socketfactory (\"timeout: socket is not established\")");
+  private static final XynaPropertyInt tcp_keepalive_idle = new XynaPropertyInt(
+      "xact.connection.ssh.tcp_keepalive.idle_seconds", 7200);
+  private static final XynaPropertyInt tcp_keepalive_interval = new XynaPropertyInt(
+      "xact.connection.ssh.tcp_keepalive.interval_seconds", 75);
+  private static final XynaPropertyInt tcp_keepalive_count = new XynaPropertyInt(
+      "xact.connection.ssh.tcp_keepalive.count", 9);
+  private static final XynaPropertyBoolean use_tcp_keepalive = new XynaPropertyBoolean(
+      "xact.connection.ssh.tcp_keepalive.enable", true)
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Enable TCP Keepalive");
   private static final Thread pipedStreamHolder = new Thread(new Runnable() {
     public void run() {
       while (!XynaFactory.getInstance().isShuttingDown()) {
@@ -220,6 +219,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
 
     try {
       transientConnectionData.setSession(createSession(getSSHConnectionParameter()));
+      transientConnectionData.setTransport(client.getTransport());
     } catch (xact.connection.SSHException sshE) {
         logger.trace("Error (SSHException) in Connect",sshE);
         throw new RuntimeException(sshE);
@@ -273,81 +273,84 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
 
     client.setSocketFactory(new SocketFactory() {
 
-      // client uses only socketFactory.createSocket()
-      @Override
-      public Socket createSocket() throws IOException {
+      private Socket buildSocket() throws IOException {
         Socket s;
         if (proxy.isPresent()) {
           s = new Socket(proxy.get());
         } else {
           s = new Socket();
         }
-        s.setKeepAlive(true);
+        return adjustSocketOptions(s);
+      }
+
+      private Socket adjustSocketOptions(Socket s) throws IOException {
+        if (use_tcp_keepalive.get()) {
+          s.setKeepAlive(true);
+
+          if (tcp_keepalive_idle.get() > 0) {
+            s.setOption(ExtendedSocketOptions.TCP_KEEPIDLE, tcp_keepalive_idle.get());
+          }
+          if (tcp_keepalive_count.get() > 0) {
+            s.setOption(ExtendedSocketOptions.TCP_KEEPCOUNT, tcp_keepalive_count.get());
+          }
+          if (tcp_keepalive_interval.get() > 0) {
+            s.setOption(ExtendedSocketOptions.TCP_KEEPINTERVAL, tcp_keepalive_interval.get());
+          }
+        } else {
+          s.setKeepAlive(false);
+        }
+
         s.setTcpNoDelay(true);
         return s;
       }
 
+      // client uses only socketFactory.createSocket()
+      @Override
+      public Socket createSocket() throws IOException {
+        return buildSocket();
+      }
 
-      // Client uses only socketFactory.createSocket(), method is required but will not have an effect!
+      // Client uses only socketFactory.createSocket(), method is required but will
+      // not have an effect!
       @Override
       public Socket createSocket(String host, int port) throws IOException, UnknownHostException {
-        Socket s;
-        if (proxy.isPresent()) {
-          s = new Socket(proxy.get());
-        } else {
-          s = new Socket();
-        }
+        Socket s = buildSocket();
         connectSocket(s, new InetSocketAddress(host, port));
         return s;
       }
 
-
-      // Client uses only socketFactory.createSocket(), method is required but will not have an effect!
+      // Client uses only socketFactory.createSocket(), method is required but will
+      // not have an effect!
       @Override
-      public Socket createSocket(String host, int port, InetAddress localHost, int localPort) throws IOException, UnknownHostException {
-        Socket s;
-        if (proxy.isPresent()) {
-          s = new Socket(proxy.get());
-        } else {
-          s = new Socket();
-        }
+      public Socket createSocket(String host, int port, InetAddress localHost, int localPort)
+          throws IOException, UnknownHostException {
+        Socket s = buildSocket();
         connectSocket(s, new InetSocketAddress(host, port));
         return s;
       }
 
-
-      // Client uses only socketFactory.createSocket(), method is required but will not have an effect!
+      // Client uses only socketFactory.createSocket(), method is required but will
+      // not have an effect!
       @Override
       public Socket createSocket(InetAddress host, int port) throws IOException {
-        Socket s;
-        if (proxy.isPresent()) {
-          s = new Socket(proxy.get());
-        } else {
-          s = new Socket();
-        }
+        Socket s = buildSocket();
         connectSocket(s, new InetSocketAddress(host, port));
         return s;
       }
 
-
-      // Client uses only socketFactory.createSocket(), method is required but will not have an effect!
+      // Client uses only socketFactory.createSocket(), method is required but will
+      // not have an effect!
       @Override
-      public Socket createSocket(InetAddress address, int port, InetAddress localAddress, int localPort) throws IOException {
-        Socket s;
-        if (proxy.isPresent()) {
-          s = new Socket(proxy.get());
-        } else {
-          s = new Socket();
-        }
+      public Socket createSocket(InetAddress address, int port, InetAddress localAddress, int localPort)
+          throws IOException {
+        Socket s = buildSocket();
         connectSocket(s, new InetSocketAddress(address, port));
         return s;
       }
 
-
-      // Client uses only socketFactory.createSocket(), sub-method will not have an effect!
+      // Client uses only socketFactory.createSocket(), sub-method will not have an
+      // effect!
       private void connectSocket(Socket s, InetSocketAddress host) throws IOException {
-        s.setKeepAlive(true);
-        s.setTcpNoDelay(true);
         if (connectionTimeout > 0) {
           s.connect(host, connectionTimeout);
         } else {
@@ -357,25 +360,36 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
 
     });
 
+
     try {
       // TODO Default Settings unsupported vs login-server
 
       Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
  
       // Client uses only socketFactory.createSocket() and overrides with setConnectTimeout and setTimeout
-      client.setConnectTimeout(connectionTimeout);
+      if (connectionTimeout >= 0) {
+        client.setConnectTimeout(connectionTimeout);
+        client.setTimeout(connectionTimeout);
+      }
 
       XynaIdentityRepository idRepo = new IdentityStorableRepository(client.getTransport().getConfig());
       client.connect(conParams.getHost(), port);
       setAuthNone=true;
       authenticate(conParams, idRepo);
+
+      // reset Socket timeout an handle connection via read timeouts
+      client.setTimeout(0);
+      if (client.getSocket() != null) {
+        client.getSocket().setSoTimeout(0);
+      }
+
       return client.startSession();
 
     } catch (IOException e) {
       if (e instanceof SSHException) {
         //MarkerImprovedErrorLogging
         logger.trace("Error (SSHException) in CreateSession",e);
-        throw xact.ssh.Utils.toSshException((SSHException) e);
+        throw Utils.toSshException((SSHException) e);
       } else {
         //MarkerImprovedErrorLogging
         logger.trace("Error in CreateSession",e);
@@ -739,36 +753,59 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
       client.addHostKeyVerifier(hostRepo);
     }
 
-    // Reduce valid KeyAlgorithms
-    client.getTransport().getConfig()
-        .setKeyAlgorithms(java.util.Arrays.<net.schmizz.sshj.common.Factory.Named<com.hierynomus.sshj.key.KeyAlgorithm>> asList(
-                          com.hierynomus.sshj.key.KeyAlgorithms.SSHDSA(),
-                          com.hierynomus.sshj.key.KeyAlgorithms.SSHRSA(),
-                          com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp521(), //This KeyAlgorithm is necessary
-                          com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp256(),
-                          com.hierynomus.sshj.key.KeyAlgorithms.RSASHA512(),
-                          com.hierynomus.sshj.key.KeyAlgorithms.RSASHA256()
-                           ));
+    Config config = client.getTransport().getConfig();
 
-    //Change of order due to the specific FW of an RD.
-    client.getTransport().getConfig()
-        .setMACFactories(java.util.Arrays.<net.schmizz.sshj.common.Factory.Named<MAC>> asList(
-                             Macs.HMACSHA2256(),
-                             Macs.HMACSHA2256Etm(),
-                             Macs.HMACSHA2512(),
-                             Macs.HMACSHA2512Etm(),
-                             Macs.HMACSHA1(),
-                             Macs.HMACSHA1Etm(),
-                             Macs.HMACSHA196(),
-                             Macs.HMACSHA196Etm(),
-                             Macs.HMACMD5(),
-                             Macs.HMACMD5Etm(),
-                             Macs.HMACMD596(),
-                             Macs.HMACMD596Etm(),
-                             Macs.HMACRIPEMD160(),
-                             Macs.HMACRIPEMD160Etm(),
-                             Macs.HMACRIPEMD16096(),
-                             Macs.HMACRIPEMD160OpenSsh()));
+    List<Named<KeyAlgorithm>> keyAlgs = createKeyAlgsList(getSSHConnectionParameter().getKeyAlgorithms0());
+    config.setKeyAlgorithms(keyAlgs);
+
+    List<Named<MAC>> macs = createMacList(getSSHConnectionParameter().getMessageAuthenticationCodes());
+    config.setMACFactories(macs);
+
+    boolean ciphersSet = getSSHConnectionParameter().getCiphers() != null && !getSSHConnectionParameter().getCiphers().isEmpty();
+    List<Named<Cipher>> ciphers = ciphersSet ? createCiphers(getSSHConnectionParameter().getCiphers()) : config.getCipherFactories();
+    config.setCipherFactories(ciphers);
+  }
+
+  private List<Named<Cipher>> createCiphers(List<String> ciphers) {
+    List<Named<Cipher>> result = new ArrayList<>();
+    for(String cipher: ciphers) {
+      var cipherSupplier = FactoryUtils.CipherFactories.get(cipher);
+      if(cipherSupplier == null) {
+        throw new RuntimeException("Unknown cipher: " + cipher);
+      }
+      result.add(cipherSupplier.get());
+    }
+    return result;
+  }
+
+  private List<Named<KeyAlgorithm>> createKeyAlgsList(List<String> keyAlgorithms) {
+    if(keyAlgorithms == null || keyAlgorithms.isEmpty()) {
+      return FactoryUtils.createKeyAlgsListDefault();
+    }
+    List<Named<KeyAlgorithm>> result = new ArrayList<>();
+    for(String keyAlg : keyAlgorithms) {
+      var algSupplier = FactoryUtils.KeyAlgFactories.get(keyAlg);
+      if(algSupplier == null) {
+        throw new RuntimeException("Unknown key algorithm " + keyAlg);
+      }
+      result.add(algSupplier.get());
+    }
+    return result;
+  }
+  
+  private List<Named<MAC>> createMacList(List<String> macs) {
+    if(macs == null || macs.isEmpty()) {
+      return FactoryUtils.createMacListDefault();
+    }
+    List<Named<MAC>> result = new ArrayList<>();
+    for(String mac : macs) {
+      var macSupplier = FactoryUtils.macFactories.get(mac);
+      if(macSupplier == null) {
+        throw new RuntimeException("Unknown message authentication code type " + mac);
+      }
+      result.add(macSupplier.get());
+    }
+    return result;
   }
 
 

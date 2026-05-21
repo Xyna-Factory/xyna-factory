@@ -11,8 +11,6 @@ cd installation/delivery
 
 vi delivery.properties #release.number erhöhen
 
-svn ci -m "neues Release" delivery.properties
-
 ant -f delivery.xml release
 
 cd -

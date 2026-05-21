@@ -54,8 +54,6 @@
     <available file="${jdev.home}" />
   </condition>
 
-  <property name="FLEX_HOME" value="${root}/opt/common/flex_sdk" />
-
   <!-- needed for sqlplus -->
   <condition property="nls_lang"
              value="${env.NLS_LANG}"
@@ -148,31 +146,8 @@
     </path>
   </pathconvert>
 
-  <taskdef resource="net/sf/antcontrib/antcontrib.properties">
-    <classpath>
-      <pathelement location="${install.lib.dir}/ant-contrib.jar" />
-    </classpath>
-  </taskdef>
-
-  <taskdef name="for" classname="net.sf.antcontrib.logic.ForTask">
-    <classpath>
-      <pathelement location="${install.lib.dir}/ant-contrib.jar" />
-    </classpath>
-  </taskdef>
-
-  <taskdef name="var" classname="net.sf.antcontrib.property.Variable">
-    <classpath>
-      <pathelement location="${install.lib.dir}/ant-contrib.jar" />
-    </classpath>
-  </taskdef>
-
-  <taskdef name="propertyregex"
-           classname="net.sf.antcontrib.property.RegexTask">
-    <classpath>
-      <pathelement location="${install.lib.dir}/ant-contrib.jar" />
-    </classpath>
-  </taskdef>
-
+  <taskdef resource="net/sf/antcontrib/antlib.xml"/>
+ 
   <if>
     <and>
       <not>
@@ -202,9 +177,6 @@
     </sequential>
   </macrodef>
 
-  <!--  <taskdef resource="flexUnitTasks.tasks"
-           classpath="${install.lib.dir}/flexUnitTasks-4.0.0.jar" />-->
-
   <if>
     <equals arg1="${isInstall}" arg2="true" />
     <then>
@@ -216,27 +188,8 @@
   </if>
 
   <!-- Maven Resolver Ant Task - http://maven.apache.org/resolver-ant-tasks/ -->
-  <taskdef uri="antlib:org.apache.maven.resolver.ant" resource="org/apache/maven/resolver/ant/antlib.xml">
-    <classpath>
-      <fileset dir="${install.lib.dir}" includes="maven-resolver-ant-tasks-*uber.jar"/>
-    </classpath>
-  </taskdef>
-
-  <condition property="mavenSettingFile" value="${user.home}/mavenSettings.xml" else="${installation.build.dir}/defaultMavenSettings.xml">
-    <available file="${user.home}/mavenSettings.xml" />
-  </condition>
-
-  <resolver:settings file="${mavenSettingFile}"/>
-
-  <!-- TODO switch on current os-family and only contain one? -->
-  <resolver:remoterepos id="xyna.repository">
-    <remoterepo refid="xyna.repository.win"/>
-    <remoterepo refid="xyna.repository.unix"/>
-    <remoterepo refid="central.maven.repository"/>
-  </resolver:remoterepos>
-
-  <resolver:pom file="${basedir}/pom.xml" id="pom"/>
-
+  <taskdef uri="antlib:org.apache.maven.resolver.ant" resource="org/apache/maven/resolver/ant/antlib.xml" />
+  
   <!-- macro for downloading license files -->
   <macrodef name="loadLicenses">
     <attribute name="targetDir"/>
@@ -244,8 +197,6 @@
       <exec osfamily="windows" executable="cmd" outputproperty="exec.output">
         <arg value="/c"/>
         <arg value="mvn"/>
-        <arg value="-s" />
-        <arg value="${mavenSettingFile}" />
         <arg value="license:download-licenses" />
         <arg value="-DlicensesOutputDirectory=@{targetDir}" />
         <arg value="-DlicensesOutputFile=@{targetDir}\licenses.xml" />
@@ -253,8 +204,6 @@
         <!--arg value="-Dlicense.organizeLicensesByDependencies=true" /-->
       </exec>
       <exec osfamily="unix" executable="mvn" outputproperty="exec.output">
-        <arg value="-s" />
-        <arg value="${mavenSettingFile}" />
         <arg value="license:download-licenses" />
         <arg value="-DlicensesOutputDirectory=@{targetDir}" />
         <arg value="-DlicensesOutputFile=@{targetDir}/licenses.xml" />
@@ -470,20 +419,6 @@
       </else>
     </if>
     <echo message="Update complete." />
-  </target>
-
-  <!-- ================================= 
-               target: resolve             
-          =================================  -->
-  <target name="resolve">
-    <resolver:resolve>
-      <resolver:dependencies pomRef="pom"/>
-      <resolver:remoterepos refid="xyna.repository"/>
-      <resolver:files refid="files" dir="${basedir}/lib/xyna" layout="{artifactId}-{classifier}-{version}.{extension}"/>
-      <resolver:files refid="files" dir="${basedir}/lib" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/>
-    </resolver:resolve>
-    <loadLicenses targetDir="${base.lib.dir}" />
-    <!-- delete generated-resources ? -->
   </target>
 
 </project>

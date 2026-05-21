@@ -17,7 +17,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
-  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="DEVEL-00347" Label="Insufficient Rights" TypeName="InsufficientRights" TypePath="xmcp.factorymanager.shared">
+  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="HTML5GUI-00388" Label="Insufficient Rights" TypeName="InsufficientRights" TypePath="xmcp.factorymanager.shared">
     <Data IsList="true" Label="Missing Rights" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="missingRights"/>
     <MessageText Language="EN">The current user does not have sufficient rights for this process.</MessageText>
     <MessageText Language="DE">Der aktuelle Benutzer hat nicht genügend Rechte für diesen Vorgang.</MessageText>

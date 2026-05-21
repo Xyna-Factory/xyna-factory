@@ -1210,5 +1210,15 @@ public class XMLUtils {
     }
   }
 
+  
+  public static void appendStringAsElement(String element, XmlBuilder xml) {
+    try {
+      xml.append(XMLUtils.parseString(element).getDocumentElement());
+    } catch (XPRC_XmlParsingException e) {
+      if (logger.isWarnEnabled()) {
+        logger.warn("unknown meta tag could not be parsed and was removed: " + element, e);
+      }
+    }
+  }
 
 }

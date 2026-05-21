@@ -37,9 +37,6 @@
           "!GuiHttp!": "default workspace"
         },
         {
-          "!1.1.99!": "1.1.99"
-        },
-        {
           "!xmcp.factorymanager.ParameterInheritanceRule!": "xmcp.factorymanager.ParameterInheritanceRule"
         },
         {
@@ -87,6 +84,7 @@
             "monitoringLevel": -1,
             "monitoringLevelIsCustom": true,
             "name": "!autotest.generated!",
+            "fullQualifiedName": "!autotest.generated!",
             "parameterInheritanceRules": {
               "$list": [],
               "$meta": {

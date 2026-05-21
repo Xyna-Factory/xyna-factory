@@ -420,7 +420,8 @@ public abstract class OrderBackupHelperProcessAbstract {
     
     PreparedQuery<OrderInstanceBackup> loadOrderBackupForRootIds =
         preparedQueryCache.getQueryFromCache(orderbackupSQL.toString(), con,
-                                             OrderInstanceBackup.getReaderWarnIfNotDeserializable());
+                                             OrderInstanceBackup.getReaderWarnIfNotDeserializable(),
+                                             OrderInstanceBackup.TABLE_NAME);
     
     return con.query(loadOrderBackupForRootIds, new Parameter(rootOrderIDList.toArray()), -1);
   }

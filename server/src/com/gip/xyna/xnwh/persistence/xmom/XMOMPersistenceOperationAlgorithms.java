@@ -60,7 +60,10 @@ import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 import com.gip.xyna.xfmg.xfctrl.classloading.MDMClassLoader;
 import com.gip.xyna.xfmg.xfctrl.dependencies.RuntimeContextDependencyManagement;
+import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
+import com.gip.xyna.xnwh.exceptions.XNWH_NoPersistenceLayerConfiguredForTableException;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.exceptions.XNWH_RetryTransactionException;
 import com.gip.xyna.xnwh.exceptions.XNWH_XMOMPersistenceMaxLengthValidationException;
@@ -68,6 +71,7 @@ import com.gip.xyna.xnwh.exceptions.XNWH_XMOMPersistenceValidationException;
 import com.gip.xyna.xnwh.persistence.Command;
 import com.gip.xyna.xnwh.persistence.ODSConnection;
 import com.gip.xyna.xnwh.persistence.ODSConnectionType;
+import com.gip.xyna.xnwh.persistence.ODSImpl;
 import com.gip.xyna.xnwh.persistence.Parameter;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.persistence.PreparedCommand;
@@ -82,6 +86,7 @@ import com.gip.xyna.xnwh.persistence.xmom.PersistenceAccessControl.PersistenceAc
 import com.gip.xyna.xnwh.persistence.xmom.PersistenceExpressionVisitors.CastCondition;
 import com.gip.xyna.xnwh.persistence.xmom.QueryGenerator.QualifiedStorableColumnInformation;
 import com.gip.xyna.xnwh.persistence.xmom.QueryGenerator.QueryPiplineElement;
+import com.gip.xyna.xnwh.persistence.xmom.UpdateGenerator.DeleteInfo;
 import com.gip.xyna.xnwh.persistence.xmom.UpdateGenerator.UnfinishedUpdateStatement;
 import com.gip.xyna.xnwh.persistence.xmom.UpdateGenerator.UpdateGeneration;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache.StorableColumnInformation;
@@ -106,6 +111,7 @@ import com.gip.xyna.xprc.xfractwfe.base.FractalProcessStep;
 import com.gip.xyna.xprc.xfractwfe.base.GenericInputAsContextStep;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.PersistenceTypeInformation;
+import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 import com.gip.xyna.xprc.xfractwfe.generation.restriction.MandatoryRestriction;
 import com.gip.xyna.xprc.xfractwfe.generation.restriction.MaxLengthRestriction;
 import com.gip.xyna.xprc.xfractwfe.generation.restriction.RestrictionType;
@@ -119,7 +125,11 @@ import com.gip.xyna.xprc.xpce.transaction.odsconnection.ODSConnectionTransaction
 
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperations {
-  
+
+
+  public static final XynaPropertyBoolean LEGACY_LIST_UPDATES = new XynaPropertyBoolean("xnwh.persistence.xmom.update.legacy_list_updates", true)
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Set to true to enable update service to operate on entire lists.");
+
   private final static FlatteningTransformator transformator = new FlatteningTransformator();
   private final static ConcurrentReentrantReadWriteLockMap concurrencyProtectionLocks = new ConcurrentReentrantReadWriteLockMap();
   public final static ThreadLocal<Boolean> allowReResolution = new ThreadLocal<Boolean>() {protected Boolean initialValue() {return false;}; };
@@ -383,7 +393,7 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
     return executeProtected(Collections.emptySortedSet(), () -> builder.execute(new WarehouseRetryExecutableNoException<Integer>() {
                                    
        public Integer executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-         QueryGenerator generator = getQueryGenerator();
+         QueryGenerator generator = getQueryGenerator(con.getConnectionType(), mergedInfo.getTableName());
          QueryPiplineElement qpe = generator.count(mergedInfo, adjustedFormula, queryParameterT, new Parameter(), context);
          try {
            List<Integer> countResult = executeQueryPipeline(con, qpe);
@@ -400,7 +410,7 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
   private List<? extends XynaObject> query(ODSConnection con, XMOMStorableStructureInformation info, List<String> columns,
                                            IFormula formula, boolean forUpdate, QueryParameter queryParameter, PersistenceAccessContext context)
       throws PersistenceLayerException {
-    QueryGenerator generator = getQueryGenerator();
+    QueryGenerator generator = getQueryGenerator(con.getConnectionType(), info.getTableName());
     QueryPiplineElement qpe = generator.parse(info, columns, formula, queryParameter, forUpdate, new Parameter(), context);
     List<? extends XynaObject> result = executeQueryPipeline(con, qpe);
     return restoreOrder(qpe, result);
@@ -599,6 +609,9 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
   
   public void update(final XynaOrderServerExtension correlatedOrder, final XynaObject storable, List<String> untransformedUpdatePaths, final UpdateParameter updateParameter, ExtendedParameter extendedParameter) 
                   throws PersistenceLayerException {
+
+    validate(storable);
+
     PersistenceAccessContext context = PersistenceAccessControl.getAccessContext(correlatedOrder);
     final XMOMStorableStructureInformation info = getStorableStructureInformation(storable);
     long revision;
@@ -650,9 +663,9 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
                   //falls referenzierte objekte existieren, muss man diese nur dann updaten, wenn auch in ihnen etwas anderes geupdated wird!
                   //FIXME referenzierte objekte können in der hierarchie mehrfach vorkommen, dann nur ein update durchführen
                   List<StorableColumnInformation> accessPathOfUpdate =
-                      new ArrayList<StorableColumnInformation>(preparedUpdate.getUnfinishedUpdateStatement().getQualifiedColumn().getAccessPath());
+                      new ArrayList<StorableColumnInformation>(preparedUpdate.getUnfinishedUpdateStatement().getQualifiedColumn().get(0).getAccessPath());
                   List<StorableColumnInformation> accessPathOfColumn = new ArrayList<StorableColumnInformation>(column.getAccessPath());
-                  accessPathOfUpdate.add(preparedUpdate.getUnfinishedUpdateStatement().getQualifiedColumn().getColumn());
+                  accessPathOfUpdate.add(preparedUpdate.getUnfinishedUpdateStatement().getQualifiedColumn().get(0).getColumn());
                   accessPathOfColumn.add(column.getColumn());
                   if (QueryGenerator.covers(accessPathOfUpdate, accessPathOfColumn)) {
                     isXMOMStorableChangedByUpdates = true;
@@ -667,7 +680,7 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
                   }
                    
                   historizationColumn.setInDatatype(obj, timestamp);
-                  UnfinishedUpdateStatement updateStatement = UpdateGenerator.buildUpdate("", new QualifiedStorableColumnInformation(historizationColumn, accessPath), false);
+                  UnfinishedUpdateStatement updateStatement = UpdateGenerator.buildUpdate("", new QualifiedStorableColumnInformation(historizationColumn, accessPath), false, preparedUpdate.getUnfinishedUpdateStatement().isListUpdate());
                   UpdateGeneration update = new UpdateGeneration(updateStatement, listIdxs);
                   historizationUpdates.add(update);
                 }
@@ -679,9 +692,29 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
       
       updates.addAll(UpdateGenerator.pruneDuplicatedUpdates(historizationUpdates));
     }
+
+    Set<DeleteInfo> deleteStatements = new HashSet<>();
     
+    if (!LEGACY_LIST_UPDATES.get()) {
+      //expand each list update -> one for each index
+      for (UpdateGeneration up : new ArrayList<>(updates)) {
+        if (up.getUnfinishedUpdateStatement().isListUpdate()) {
+          List<UpdateGeneration> replaced = expandList(up, storable);
+          updates.remove(up);
+          updates.addAll(replaced);
+          String primaryKeyOfPossessingXMOMStorable = getPrimaryKeyOfFirstPossessingXMOMStorable(storable, info, up.getUnfinishedUpdateStatement().getQualifiedColumn().get(0), up.getListIndizesForRootObject());
+          deleteStatements.add(up.getUnfinishedUpdateStatement().finishDelete(replaced.size() -1, primaryKeyOfPossessingXMOMStorable));
+        }
+      }
+    }
+    
+    UpdateGenerator.combineUpdates(updates);
+
     for (UpdateGeneration update : updates) {
-      context.checkAccess(AccessType.UPDATE, update.getUnfinishedUpdateStatement().getQualifiedColumn().getColumn());
+      UnfinishedUpdateStatement unfinishedUpdateStatement = update.getUnfinishedUpdateStatement();
+      for (QualifiedStorableColumnInformation column : unfinishedUpdateStatement.getQualifiedColumn()) {
+        context.checkAccess(AccessType.UPDATE, column.getColumn());
+      }
     }
     
     WarehouseRetryExecutorBuilder builder =
@@ -703,11 +736,16 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
             }
             
             for (UpdateGeneration update : updates) {
-              QualifiedStorableColumnInformation columnToUpdate = update.getUnfinishedUpdateStatement().getQualifiedColumn();
-              String primaryKeyOfPossessingXMOMStorable = getPrimaryKeyOfFirstPossessingXMOMStorable(storable, info, columnToUpdate, update.getListIndizesForRootObject());
-              Object value = getColumnFromDatatype(columnToUpdate, storable, update.getListIndizesForRootObject());
-              Pair<String, Parameter> finishedStatement = update.getUnfinishedUpdateStatement().finish(primaryKeyOfPossessingXMOMStorable, value);
-              PreparedCommand cmd = con.prepareCommand(new Command(finishedStatement.getFirst()));
+              UnfinishedUpdateStatement unfinishedUpdateStatement = update.getUnfinishedUpdateStatement();
+              QualifiedStorableColumnInformation firstColumn = unfinishedUpdateStatement.getQualifiedColumn().get(0);
+              String primaryKeyOfPossessingXMOMStorable = getPrimaryKeyOfFirstPossessingXMOMStorable(storable, info, firstColumn, update.getListIndizesForRootObject());
+              for(QualifiedStorableColumnInformation columnToUpdate : unfinishedUpdateStatement.getQualifiedColumn()) {
+               Object value = getColumnFromDatatype(columnToUpdate, storable, update.getListIndizesForRootObject());
+               unfinishedUpdateStatement.setParam(columnToUpdate, value);
+              }
+              String tableName = update.getUnfinishedUpdateStatement().getTableName();
+              Pair<String, Parameter> finishedStatement = unfinishedUpdateStatement.finish(primaryKeyOfPossessingXMOMStorable);
+              PreparedCommand cmd = con.prepareCommand(new Command(finishedStatement.getFirst(), tableName));
               int modifiedRows = con.executeDML(cmd, finishedStatement.getSecond());
               if (modifiedRows <= 0) {
                 ResultSetReader<Long> reader = new ResultSetReader<Long>() {
@@ -715,14 +753,24 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
                     return rs.getLong(1);
                   }
                 };
-                Pair<String, Parameter> existenceVerification = update.getUnfinishedUpdateStatement().getExistenceVerificationRequest(primaryKeyOfPossessingXMOMStorable);
-                PreparedQuery<Long> query = con.prepareQuery(new Query<Long>(existenceVerification.getFirst(), reader));
+                Pair<String, Parameter> existenceVerification = unfinishedUpdateStatement.getExistenceVerificationRequest(primaryKeyOfPossessingXMOMStorable);
+                PreparedQuery<Long> query = con.prepareQuery(new Query<Long>(existenceVerification.getFirst(), reader, tableName));
                 Long count = con.queryOneRow(query, existenceVerification.getSecond());
                 if (count <= 0) {
-                  throw new RuntimeException(new XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY(String.valueOf(existenceVerification.getSecond().get(0)),
-                                                                                       columnToUpdate.getColumn().getParentStorableInfo().getTableName()));
+                  String typename = determineTypeName(storable, update.getListIndizesForRootObject(), unfinishedUpdateStatement.getQualifiedColumn().get(0));
+                  Pair<String, Parameter> finishedInsertStatement = update.getUnfinishedUpdateStatement().finishInsert(primaryKeyOfPossessingXMOMStorable, typename);
+                  PreparedCommand insertCmd = con.prepareCommand(new Command(finishedInsertStatement.getFirst(), tableName));
+                  modifiedRows = con.executeDML(insertCmd, finishedInsertStatement.getSecond());
+                  if (modifiedRows <= 0) {
+                    throw new RuntimeException(new XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY(String.valueOf(existenceVerification.getSecond().get(0)),
+                                                                                         tableName));                  
+                  }
                 }
               }
+            }
+            for(DeleteInfo deleteData : deleteStatements) {
+              PreparedCommand deleteCommand = con.prepareCommand(new Command(deleteData.getSql(), deleteData.getTableName()));
+              con.executeDML(deleteCommand, new Parameter(deleteData.getPrimaryKey()));
             }
             perConCon.commit(con);
           } catch (XNWH_RetryTransactionException e) {
@@ -733,6 +781,50 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
     };
     
     executeProtected(Collections.emptySortedSet(), () -> {builder.execute(wrenr); return (Void)null;}, perConCon, AccessType.UPDATE);
+  }
+  
+
+  private List<UpdateGeneration> expandList(UpdateGeneration up, XynaObject storable) {
+    List<UpdateGeneration> result = new ArrayList<>();
+    if(up.getListIndizesForRootObject().get(up.getListIndizesForRootObject().size()-1) != -1) {
+      return result; //don't expand if the list is not the final index
+    }
+    if(up.getListIndizesForRootObject().stream().filter(x -> x == -1).count() > 1) {
+      throw new RuntimeException("Can't update multiple lists");
+    }
+    UnfinishedUpdateStatement old = up.getUnfinishedUpdateStatement();
+    List<Integer> baseIdxList = up.getListIndizesForRootObject().subList(0, up.getListIndizesForRootObject().size() -1);
+    List list = (List)getColumnFromDatatype(up.getUnfinishedUpdateStatement().getQualifiedColumn().get(0), storable, baseIdxList);
+    int toInsert = list != null ?  list.size() : 0;
+    for(int i=0; i<toInsert; i++) {
+      List<Integer> listIdxs = new ArrayList<Integer>(baseIdxList);
+      listIdxs.add(i);
+      String primaryKeySuffix = String.format("%s#%d", old.getPrimaryKeySuffix(), i);
+      UnfinishedUpdateStatement unfinished;
+      unfinished = new UnfinishedUpdateStatement(false, primaryKeySuffix, old.getParentInfo(), old.getQualifiedColumn().get(0), false);
+      UpdateGeneration ug = new UpdateGeneration(unfinished, listIdxs);
+      result.add(ug);
+    }
+
+    return result;
+  }
+
+  private String determineTypeName(XynaObject storable, List<Integer> idx, QualifiedStorableColumnInformation column) {
+    Iterator<Integer> listIdxIterator = idx.iterator();
+    XynaObject current = storable;
+    for (StorableColumnInformation access : column.getAccessPath()) {
+      try {
+        if (access.isList()) {
+          current = (XynaObject) ((List) current.get(access.getVariableName())).get(listIdxIterator.next());
+        } else {
+          current = (XynaObject) current.get(access.getVariableName());
+        }
+      } catch (InvalidObjectPathException e) {
+        throw new RuntimeException(e);
+      }
+    }
+
+    return current.getClass().getDeclaredAnnotationsByType(XynaObjectAnnotation.class)[0].fqXmlName();
   }
   
   private static Pattern VARIABLE_INDEX = Pattern.compile("%[0-9]+%");
@@ -760,7 +852,9 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
         throw new RuntimeException("primitive child in accesspath " + column.getColumnName());
       }
       if (column.isList()) {
-        // TODO check size
+        if(!listIdxIterator.hasNext()) {
+          return column.getFromDatatype(current);
+        }
         current = (XynaObject) ((List) column.getFromDatatype(current)).get(listIdxIterator.next());
       } else {
         current = (XynaObject) column.getFromDatatype(current);
@@ -1078,7 +1172,7 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
     //   b) it's a request with currentVersion = false and deleteParams say purge, delete complete history
     //   c) it's a request with currentVersion = false and deleteParams say !purge, historizationStamp has to be set and we'll delete only that version
     Parameter parameter = new Parameter();
-    QueryGenerator generator = getQueryGenerator();
+    QueryGenerator generator = getQueryGenerator(con.getConnectionType(), info.getTableName());
     List<String> columns = generateSelectionForDelete(info, deleteParameter);
     String formula = buildFormulaConditionForDelete(info, storable, deleteParameter);
     QueryPiplineElement currentQueryElement = generator.parse(info, columns, new ArgumentlessFormula(formula),
@@ -1094,7 +1188,7 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
         finalReader = new PrimaryKeyHierarchyReader(currentQueryElement.getSelectedColumns(), currentQueryElement.getAliasDictionary());
         reader = finalReader;
       }
-      PreparedQuery pq = con.prepareQuery(new Query(currentQueryElement.getSqlString(), reader));
+      PreparedQuery pq = con.prepareQuery(new Query(currentQueryElement.getSqlString(), reader, currentQueryElement.rootTableName));
       result = con.query(pq, currentQueryElement.getParams(), currentQueryElement.getMaxObjects(), reader);
       if (result == null || result.size() == 0) {
         result = Collections.emptyList();
@@ -1354,16 +1448,19 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
   private void deleteHierarchy(ODSConnection con, Map<String, Set<Object>> pkMap, List<StorableStructureInformation> deletionOrder,
                                DeleteParameter deleteParameter, PersistenceAccessContext context) throws PersistenceLayerException {
     for (StorableStructureInformation structure : deletionOrder) {
+      QueryGenerator gen = getQueryGenerator(con.getConnectionType(), structure.getTableName());
       if (pkMap.containsKey(structure.getTableName()) && pkMap.get(structure.getTableName()) != null) {
         Set<Object> pks = pkMap.get(structure.getTableName());
         StringBuilder deleteBuilder = new StringBuilder();
-        deleteBuilder.append("DELETE FROM ").append(structure.getTableName())
-                     .append(" WHERE ").append(structure.getPrimaryKeyName()).append(" IN (");
+        String escTableName = gen.escape.apply(structure.getTableName());
+        String escPrimaryKey = gen.escape.apply(structure.getPrimaryKeyName());
+        deleteBuilder.append("DELETE FROM ").append(escTableName)
+                     .append(" WHERE ").append(escPrimaryKey).append(" IN (");
         Parameter params = new Parameter(pks.toArray());
         deleteBuilder.append(nQuestionMarks(pks.size()));
         deleteBuilder.append(")");
         
-        Command command = new Command(deleteBuilder.toString());
+        Command command = new Command(deleteBuilder.toString(), structure.getTableName());
         con.executeDML(con.prepareCommand(command), params);
       }
     }
@@ -1372,14 +1469,15 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
      * erst löschen, dann fehler werfen, falls noch anderswo referenziert, damit mehrfache referenzen auf das gleiche storable innerhalb einer
      * hierarchie nicht beim "handleBackwardReferences" zu fehlern führt
      */
-
-    for (StorableStructureInformation structure : deletionOrder) {
-      if (pkMap.containsKey(structure.getTableName()) && pkMap.get(structure.getTableName()) != null) {
-        Set<Object> pks = pkMap.get(structure.getTableName());
-        for (Object value : pks) {
-          if (value != null) {
-            if (structure instanceof XMOMStorableStructureInformation) {
-              handleBackwardReferences(con, (XMOMStorableStructureInformation) structure, value, deleteParameter, pkMap, context);
+    if (deleteParameter.getBackwardReferenceHandling() != BackwardReferenceHandling.IGNORE) {
+      for (StorableStructureInformation structure : deletionOrder) {
+        if (pkMap.containsKey(structure.getTableName()) && pkMap.get(structure.getTableName()) != null) {
+          Set<Object> pks = pkMap.get(structure.getTableName());
+          for (Object value : pks) {
+            if (value != null) {
+              if (structure instanceof XMOMStorableStructureInformation) {
+                handleBackwardReferences(con, (XMOMStorableStructureInformation) structure, value, deleteParameter, pkMap, context);
+              }
             }
           }
         }
@@ -1413,13 +1511,17 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
     for (StorableColumnInformation columnReferencedBy : info.getPossibleReferences()) {
       StringBuilder queryBuilder = new StringBuilder();
       StorableStructureInformation parent = columnReferencedBy.getParentStorableInfo();
+      QueryGenerator gen = getQueryGenerator(con.getConnectionType(), parent.getTableName());
+      String escTableName = gen.escape.apply(parent.getTableName());
+      String escColumnName = gen.escape.apply(columnReferencedBy.getCorrespondingReferenceIdColumn().getColumnName());
       queryBuilder.append("SELECT count(*) FROM ")
-                  .append(parent.getTableName())
-                  .append(" WHERE ").append(columnReferencedBy.getCorrespondingReferenceIdColumn().getColumnName()).append(" = ?");
+                  .append(escTableName)
+                  .append(" WHERE ").append(escColumnName).append(" = ?");
       Collection<Object> keysFromDeletionMap = deletionMap.get(parent.getTableName());
       Object[] paramsArr;
       if (keysFromDeletionMap != null && keysFromDeletionMap.size() > 0) {
-        queryBuilder.append(" AND ").append("NOT ").append(parent.getPrimaryKeyName()).append(" IN (");
+        String escPrimaryKey = gen.escape.apply(parent.getPrimaryKeyName());
+        queryBuilder.append(" AND ").append("NOT ").append(escPrimaryKey).append(" IN (");
         queryBuilder.append(nQuestionMarks(keysFromDeletionMap.size()));
         queryBuilder.append(")");
         paramsArr = new Object[keysFromDeletionMap.size() + 1];
@@ -1437,7 +1539,7 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
       };
       
       Long count = null;
-      PreparedQuery<Long> countQuery = con.prepareQuery(new Query<>(queryBuilder.toString(), reader));
+      PreparedQuery<Long> countQuery = con.prepareQuery(new Query<>(queryBuilder.toString(), reader, parent.getTableName()));
       count = con.queryOneRow(countQuery, params);
       if (count > 0) {
         throw new RuntimeException("Object ist still referenced from " + columnReferencedBy.getParentStorableInfo().getTableName() + "." + columnReferencedBy.getColumnName());
@@ -1485,15 +1587,17 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
   }
 
   private void invalidateReferences(ODSConnection con, XMOMStorableStructureInformation info, Object pk, PersistenceAccessContext context) throws PersistenceLayerException {
-    for (StorableColumnInformation reference : info.getPossibleReferences()) {      
+    for (StorableColumnInformation reference : info.getPossibleReferences()) {  
       validateColumnAgainstCallingContext(context, AccessType.UPDATE, reference);
       StorableColumnInformation columnReferencedBy = reference;
       StringBuilder updateBuilder = new StringBuilder();
-      updateBuilder.append("UPDATE ")
-                  .append(columnReferencedBy.getParentStorableInfo().getTableName())
-                  .append(" SET ").append(columnReferencedBy.getCorrespondingReferenceIdColumn().getColumnName()).append(" = NULL")
-                  .append(" WHERE ").append(columnReferencedBy.getCorrespondingReferenceIdColumn().getColumnName()).append(" = ?");
-      Command cmd = new Command(updateBuilder.toString());
+      QueryGenerator gen = getQueryGenerator(con.getConnectionType(), columnReferencedBy.getParentStorableInfo().getTableName());
+      String escTableName = gen.escape.apply(columnReferencedBy.getParentStorableInfo().getTableName());
+      String escColumnName = gen.escape.apply(columnReferencedBy.getCorrespondingReferenceIdColumn().getColumnName());
+      updateBuilder.append("UPDATE ").append(escTableName)
+                  .append(" SET ").append(escColumnName).append(" = NULL")
+                  .append(" WHERE ").append(escColumnName).append(" = ?");
+      Command cmd = new Command(updateBuilder.toString(), columnReferencedBy.getParentStorableInfo().getTableName());
       con.executeDML(con.prepareCommand(cmd), new Parameter(pk));
     }
   }
@@ -1512,13 +1616,14 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
           path.add(currentPath);
         }
       } while (currentPath != null);
-      PersistenceExpressionVisitors.UnfinishedWhereClause uwc = new PersistenceExpressionVisitors.UnfinishedWhereClause();
+      PersistenceExpressionVisitors.UnfinishedWhereClause uwc = new PersistenceExpressionVisitors.UnfinishedWhereClause(getQueryGenerator(con.getConnectionType(), info.getTableName()));
       uwc.append(" WHERE ")
          .append(path, referencedByColumn)
          .append(" = ?");
       PersistenceExpressionVisitors.FormulaParsingResult fpr = new PersistenceExpressionVisitors.FormulaParsingResult(uwc, Collections.<CastCondition>emptyList());
-      QueryPiplineElement qpe = getQueryGenerator().build(root, null, fpr, new QueryParameter(-1, true, null), true, 
-                                                          new Parameter(pk), PersistenceAccessControl.allAccess());
+      QueryGenerator gen = getQueryGenerator(con.getConnectionType(), info.getTableName());
+      QueryPiplineElement qpe = gen.build(root, null, fpr, new QueryParameter(-1, true, null), true, 
+                                          new Parameter(pk), PersistenceAccessControl.allAccess());
       List<? extends XynaObject> referenceHolderToDelete = executeQueryPipeline(con, qpe);
       for (XynaObject xynaObject : referenceHolderToDelete) {
         delete(con, xynaObject, root, deleteParameter, context);
@@ -1922,7 +2027,13 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
   
   private final static QueryGenerator qg = new QueryGenerator();
   
-  private static QueryGenerator getQueryGenerator() {
+  private static QueryGenerator getQueryGenerator(ODSConnectionType conType, String tableName) {
+    try {
+      return ODSImpl.getInstance().getQueryGenerator(conType, tableName);
+    } catch (XNWH_NoPersistenceLayerConfiguredForTableException e) {
+      if (logger.isWarnEnabled())
+        logger.warn("could not determine correct QueryGenerator for " + tableName + " - " + conType);
+    }
     return qg;
   }
   

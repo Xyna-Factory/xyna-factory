@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Copyright 2024 Xyna GmbH, Germany
+# Copyright 2026 Xyna GmbH, Germany
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,12 +27,13 @@ ALL_TRIGGERS=("nsnhix5600" "dhcp_v4" "radius")
 ALL_SERVICES=("nsnhix5600" "templatemechanism" "sipuseragent" "jmsforwarding" "dhcp_v4")
 ALL_DEPLOY_TARGETS=("geronimo" "tomcat" "oracle")
 ALL_DATAMODELTYPES=("mib","tr069","xsd");
+GUIHTTP_APP="GuiHttp"
 #ACHTUNG: Version auch bei addRequirement zu default workspace berücksichtigen
 ALL_APPLICATIONS="Base Processing"; #Default-Applications, die immer installiert sein sollten
-APPMGMTVERSION=1.0.10
-GUIHTTPVERSION=1.1.377
-SNMPSTATVERSION=1.0.3
-PROCESSINGVERSION=1.0.19
+APPMGMTVERSION=1.0.11
+GUIHTTPVERSION=1.4.5
+SNMPSTATVERSION=1.0.4
+PROCESSINGVERSION=1.0.28
 ALL_REPOSITORYACCESSES=("svn");
 INSTANCE_NUMBER="1" #1 ist default
 
@@ -331,7 +332,7 @@ display_usage () {
 -n    dry-run, display the evaluated commandline parameters
 -v    verbose mode, display factory commands
 -i    specify instancenumber; default is 1
--m    specify merge-mode for merging configuration files, e.g. server.policy, log4j2.xml
+-m    specify merge-mode for merging configuration files, e.g. log4j2.xml
       possible values are merge, customized, new, abort; default is merge
 -3    specify check-mode for checking third party licenses
       possible values are server, revision, delivery, none
@@ -657,10 +658,6 @@ deploy_trigger () {
     f_xynafactory deploysharedlib snmplibs
     f_xynafactory addtrigger SNMP com.gip.xyna.xact.trigger.SNMPTrigger snmplibs ../revisions/rev_workingset/saved/trigger/SNMPTrigger/SNMPTrigger.jar
     f_xynafactory deploytrigger SNMP SNMP${SNMP_NSNHIX_PORT} ${CHOOSEN_INTERFACE_NAME} ${SNMP_NSNHIX_PORT} 10 30 200 600 3
-
-    add_to_server_policy \
-      '//SocketPermission for SNMPTrigger '${SNMP_NSNHIX_PORT} \
-      'permission java.net.SocketPermission "*:'${SNMP_NSNHIX_PORT}'", "accept, listen, connect, resolve";'
   fi
 
   if [[ "x${TRIGGER_DHCP_V4}" == "xtrue" ]] && [[ -d revisions/rev_workingset/saved/trigger/DHCPTrigger ]]; then
@@ -856,7 +853,7 @@ install_xynafactory () {
   configure_xynafactory_sh "${INSTALL_PREFIX}/server/xynafactory.sh"
   
   ${VOLATILE_MKDIR} -p ${INSTALL_PREFIX}/server/installDefaults/
-  ${VOLATILE_CP} ${INSTALL_PREFIX}/server/{log4j2.xml,server.policy,xynafactory.sh} ${INSTALL_PREFIX}/server/installDefaults
+  ${VOLATILE_CP} ${INSTALL_PREFIX}/server/{log4j2.xml,xynafactory.sh} ${INSTALL_PREFIX}/server/installDefaults
   
   #Anpassen des RMI-Ports, damit Factory korrekt starten kann
   set_rmi_port
@@ -892,33 +889,37 @@ update_xynafactory () {
   fi
    
   echo -e "\n  + Copy delivery items to ${INSTALL_PREFIX}/{revisions,server}/."
+  replace_child_dirs server/clusterproviders
+  replace_child_versioned_files server/conpooltypes
+  replace_child_dirs server/datamodeltypes
+  replace_dir server/lib ${INSTALL_PREFIX}/server/lib
+  replace_child_dirs server/orderinputsourcetypes
+  replace_child_dirs server/persistencelayers
+  replace_child_versioned_files server/sharedresourcesynchronizers
+  copy_dir server/storage ${INSTALL_PREFIX}/server
+  copy_dir server/resources ${INSTALL_PREFIX}/server
+  copy_dir server/exceptions ${INSTALL_PREFIX}/server
+  copy_dir func_lib ${INSTALL_PREFIX}/server
+  copy_file server/product_lib.sh ${INSTALL_PREFIX}/server
+  copy_file server/Exceptions.xml ${INSTALL_PREFIX}/server
+  copy_file server/TemplateImplNew.zip ${INSTALL_PREFIX}/server
+  copy_file server/TemplateImpl.zip ${INSTALL_PREFIX}/server
 
-  ${VOLATILE_RM} -rf ${INSTALL_PREFIX}/server/lib
-   
   ${VOLATILE_MKDIR} -p ${INSTALL_PREFIX}/revisions/rev_workingset/saved/{services,sharedLibs,XMOM}
-  ${VOLATILE_CP} -rp "./func_lib/" ${INSTALL_PREFIX}/server/.
   
-  #alles im server-Verzeichnis kopieren außer log4j2.xml, server.policy, xynafactory.sh
-  ${VOLATILE_CP} -rp server ${INSTALL_PREFIX}/.
-  
-  #log4j2.xml, server.policy, xynafactory.sh aus backup wiederherstellen
-  restore_file_from_dir ${INSTALL_PREFIX} server server.policy 
-  restore_file_from_dir ${INSTALL_PREFIX} server log4j2.xml
-  restore_file_from_dir ${INSTALL_PREFIX} server xynafactory.sh
-  #weitere Ausnahmen:
+  #persistencelayers.xml aus backup wiederherstellen
   restore_file_from_dir ${INSTALL_PREFIX} server/storage/persistence persistencelayers.xml
   
   #Lizenzen
   install_license ${INSTALL_PREFIX}/server/lib
   
-  #Konfigurieren und Mergen von log4j2.xml, server.policy, xynafactory.sh
+  #Konfigurieren und Mergen von log4j2.xml, xynafactory.sh
   NEW_FILE_DIR="$(basename $HOSTNAME)"
   if f_selected ${LOG4J2_MERGE} ; then
     ${VOLATILE_CP} server/log4j2.xml "$NEW_FILE_DIR/log4j2.xml"
     configure_log4j2_xml "$NEW_FILE_DIR/log4j2.xml" "$NEW_FILE_DIR/log4j2.xml_configured"
     merge_files ${INSTALL_PREFIX}/server log4j2.xml "$NEW_FILE_DIR" log4j2.xml_configured
   fi;
-  merge_files ${INSTALL_PREFIX}/server server.policy server server.policy
   ${VOLATILE_CP} server/xynafactory.sh "$NEW_FILE_DIR/xynafactory.sh"
   configure_xynafactory_sh   "$NEW_FILE_DIR/xynafactory.sh"   "$NEW_FILE_DIR/xynafactory.sh_configured"
   merge_files ${INSTALL_PREFIX}/server xynafactory.sh "$NEW_FILE_DIR" xynafactory.sh_configured
@@ -940,6 +941,62 @@ update_xynafactory () {
   ${VOLATILE_CHMOD} 550 ${INSTALL_PREFIX}/server/xynafactory.sh
 
   echo -e "\n  Updating server directory finished.\n"
+}
+
+replace_dir () {
+  local SOURCE_DIR=$1
+  local TARGET_DIR=$2
+
+  rm -rf ${TARGET_DIR}
+  ${VOLATILE_CP} -rp ${SOURCE_DIR} ${TARGET_DIR}
+}
+
+copy_dir () {
+  local SOURCE_DIR=$1
+  local TARGET_DIR=$2
+
+  ${VOLATILE_MKDIR} -p ${TARGET_DIR}
+  ${VOLATILE_CP} -rp ${SOURCE_DIR} ${TARGET_DIR}
+}
+
+copy_file () {
+  local SOURCE_FILE=$1
+  local TARGET_DIR=$2
+
+  ${VOLATILE_MKDIR} -p ${TARGET_DIR}
+  ${VOLATILE_CP} -rp ${SOURCE_FILE} ${TARGET_DIR}
+}
+
+replace_versioned_file () {
+  local SOURCE_FILE=$1
+  local TARGET_DIR=$2
+  local SOURCE_BASE_FILE=$(basename -- "$SOURCE_FILE")
+  local TARGET_BASE_FILE=${SOURCE_BASE_FILE//[0-9]\.[0-9]\.[0-9]/*}
+
+  rm -f ${TARGET_DIR}/${TARGET_BASE_FILE}
+  ${VOLATILE_CP} -rp ${SOURCE_FILE} ${TARGET_DIR}
+}
+
+replace_child_dirs () {
+  local SOURCE_DIR=$1
+
+  ${VOLATILE_MKDIR} -p ${INSTALL_PREFIX}/${SOURCE_DIR}
+  for dir in ${SOURCE_DIR}/*; do
+    if [ -d "${dir}" ]; then
+      replace_dir ${dir} ${INSTALL_PREFIX}/${dir}
+    fi
+  done
+}
+
+replace_child_versioned_files () {
+  local SOURCE_DIR=$1
+
+  ${VOLATILE_MKDIR} -p ${INSTALL_PREFIX}/${SOURCE_DIR}
+  for file in ${SOURCE_DIR}/*; do
+    if [ -f "${file}" ]; then
+      replace_versioned_file ${file} ${INSTALL_PREFIX}/${SOURCE_DIR}
+    fi
+  done
 }
 
 install_license () {
@@ -1252,18 +1309,10 @@ import_applications () {
         continue;;
       */SNMPStatistics.*)
         f_adjust_snmpstatistics_app
-        add_to_server_policy \
-          '//SocketPermission for SNMPTrigger '${SNMP_TRIGGER_PORT} \
-          'permission java.net.SocketPermission "*:'${SNMP_TRIGGER_PORT}'", "accept, listen, connect, resolve";'
         f_import_applications_internal "../$HOSTNAME/SNMPStatistics.${SNMPSTATVERSION}.app"
         continue;;
       */Radius.*)
         configure_persistence_layer_for_radius_service;;
-      */LDAP.*)
-        add_to_server_policy \
-          '//required for LDAP bind SSL' \
-          'permission java.lang.RuntimePermission "setFactory";'
-        ;;
     esac;
     f_import_applications_internal ${APP_FILE}
   done
@@ -1301,16 +1350,25 @@ import_applications () {
         f_set_xyna_property "xfmg.xfctrl.appmgmt.ExportApplication.Destination" "xfmg.xfctrl.appmgmt.ExportApplication@GlobalApplicationMgmt/${APPMGMTVERSION}"
         f_set_xyna_property "xfmg.xfctrl.appmgmt.ImportApplication.Destination" "xfmg.xfctrl.appmgmt.ImportApplication@GlobalApplicationMgmt/${APPMGMTVERSION}"
         f_set_xyna_property "xfmg.xfctrl.appmgmt.MigrateRuntimeContextDependencies.Destination" "xfmg.xfctrl.appmgmt.MigrateRuntimeContextDependencies@GlobalApplicationMgmt/${APPMGMTVERSION}"
-        
+
       ;;
      */GuiHttp.*)
-        echo -e "\n  - Starting application ${APP}";
-        f_xynafactory startapplication --force -applicationName "GuiHttp" -versionName "${GUIHTTPVERSION}"
+        GUIHTTP_APP_COUNT=$(f_xynafactory listapplications -h | ${VOLATILE_GREP} "${GUIHTTP_APP}" | ${VOLATILE_GREP} -cve '^\s*$')
+        # Check if more then 1 GuiHttp Applications found (Reason: Old application available because manual migration is needed)
+        if [[ ${GUIHTTP_APP_COUNT} -gt 1 ]]; then
+          ALL_RUNNING_GUIHTTP_APP_VERSIONS=$(f_xynafactory listapplications -h | ${VOLATILE_GREP} "${GUIHTTP_APP}" | ${VOLATILE_GREP} "STATUS: 'RUNNING'" | ${VOLATILE_AWK} '{print $2}' | ${VOLATILE_TR} -d \')
+          for APP_VERSION in ${ALL_RUNNING_GUIHTTP_APP_VERSIONS}
+          do
+            # Stopping all running GuiHttp applications
+            echo -e "\n  - Stopping application ${GUIHTTP_APP}:${APP_VERSION}";
+            f_xynafactory stopapplication -applicationName "${GUIHTTP_APP}" -versionName "${APP_VERSION}"
+          done
+        fi
+        echo -e "\n  - Starting application ${APP}:${GUIHTTPVERSION}";
+        f_xynafactory startapplication --force -applicationName "${GUIHTTP_APP}" -versionName "${GUIHTTPVERSION}"
       ;;
     esac;
   done;
-  
-  
 }
 
 
@@ -1461,7 +1519,7 @@ merge_files () {
     
   else
     local MSG="Merging customized \"${FILENAME}\" with new version from delivery failed.\n"
-    MSG="${MSG}Following files can be found in \"${DIR}\":\n";
+    MSG="${MSG}Following files can be found in \"${PWD}/${TMP_FILE_DIR}\":\n";
     MSG="${MSG}  - conflicted merge: \"${FILENAME}_merge\"\n";
     MSG="${MSG}  - original file: \"${FILENAME}_customized\" (or \"${FILENAME}\")\n";
     MSG="${MSG}  - new file \"${FILENAME}_new\" (or \"${NEW_FILE}\")\n";
@@ -1477,13 +1535,13 @@ merge_files () {
         MSG="${MSG}Actions:\n";
         if [ ! -e ${COMMON_BASE_FILE} ] ; then
           MSG="${MSG}  *) Provide a proper common base from last installed delivery \n";
-          MSG="${MSG}       in \"${BASE_DIR}/${FILENAME}\".\n";
+          MSG="${MSG}       in \"${DIR}/${BASE_DIR}/${FILENAME}\".\n";
           MSG="${MSG}     Continue installation with [ENTER]\n";
         fi;
         MSG="${MSG}  *) Resolve conflict manually:\n";
         MSG="${MSG}     Edit \"${FILENAME}_merge\" to resolve the conflict.\n";
-        MSG="${MSG}     Copy \"${FILENAME}_merge\" to \"${FILENAME}\".\n";
-        MSG="${MSG}     Copy \"${FILENAME}_new\" to \"${BASE_DIR}/${FILENAME}\".\n";
+        MSG="${MSG}     Copy \"${FILENAME}_merge\" to \"${DIR}/${FILENAME}\".\n";
+        MSG="${MSG}     Copy \"${FILENAME}_new\" to \"${DIR}/${BASE_DIR}/${FILENAME}\".\n";
         MSG="${MSG}     Continue installation with [ENTER]\n";
         MSG="${MSG}  *) Stop installation with [STRG-C]";
         ;;
@@ -1513,38 +1571,6 @@ merge_files () {
         exit 1;
         ;;
     esac
-  fi;
-}
-
-#
-# Trägt die übergebenen Zeilen in server.policy ein, falls die erste Zeile noch nicht eingetragen ist.
-# Falls die Datei server.policy geändert wurde, wird XYNAFACTORY_NEEDS_RESTART auf true gesetzt
-# Aufruf : add_to_server_policy "Zeile 1" "Zeile 2" ...
-add_to_server_policy () {
-  FILE_TO_EDIT="${INSTALL_PREFIX}/server/server.policy"
-  if [[ $# < 1 ]] ; then return; fi; 
-  #Ist erste Zeile bereits in server.policy eingetragen?
-  local MATCH=$(${VOLATILE_AWK} -vfirstline="$1" \
-                  'BEGIN { matchStr="none"; } \
-                   { if( match($0,firstline) != 0) { matchStr=NR; } } \
-                   END {print matchStr;}' \
-                  ${FILE_TO_EDIT});
-  if [[ ${MATCH} = "none" ]] ; then
-    #server.policy ergänzen
-    backup_file ${FILE_TO_EDIT}
-    local LINES;
-    for line in "$@"; do 
-      LINES="${LINES}\t${line}\n";
-    done;
-    ${VOLATILE_RM} -f ${TMP_FILE}
-    ${VOLATILE_AWK} -vbefore="//this should always be the last permission in this file to guarantee it having no syntax errors." \
-                    -vlines="${LINES}" \
-                    '{ if( match($0,before) != 0) { print lines; }; print $0; }' \
-                    ${FILE_TO_EDIT} > ${TMP_FILE}
-    ${VOLATILE_MV} ${TMP_FILE} ${FILE_TO_EDIT}
-    ${VOLATILE_RM} -f ${TMP_FILE}
-    #Damit server.policy wirksam wird, ist ein Neustart erforderlich
-    XYNAFACTORY_NEEDS_RESTART="true";
   fi;
 }
 

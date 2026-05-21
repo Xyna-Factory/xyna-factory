@@ -28,6 +28,7 @@ import com.gip.xyna.utils.db.pool.ConnectionBuildStrategy;
 import com.gip.xyna.utils.db.pool.ValidationStrategy;
 import com.gip.xyna.utils.misc.Documentation;
 import com.gip.xyna.utils.misc.StringParameter;
+import com.gip.xyna.utils.misc.EnvironmentVariable.StringEnvironmentVariable;
 import com.gip.xyna.utils.timing.Duration;
 import com.gip.xyna.xmcp.PluginDescription;
 import com.gip.xyna.xmcp.PluginDescription.ParameterUsage;
@@ -47,7 +48,7 @@ public class MockMySQLPoolType extends ConnectionPoolType {
                     en("timeout until connection must be established").
                     de("Timeout, bis zu dem Verbindung hergestellt sein muss").
                     build()).
-      defaultValue(Duration.valueOf("365 d")). //1 jahr. besser als sonderbehandlung fï¿½r 0
+      defaultValue(Duration.valueOf("365 d")). //1 jahr. besser als sonderbehandlung für 0
       optional().build();
 
   public static final StringParameter<Duration> SOCKET_TIMEOUT = 
@@ -70,8 +71,29 @@ public class MockMySQLPoolType extends ConnectionPoolType {
       defaultValue(Duration.valueOf("10 s")).
       build();
 
-  public static final List<StringParameter<?>> additionalParameters = 
-      StringParameter.asList( CONNECT_TIMEOUT, SOCKET_TIMEOUT, VALIDATION_TIMEOUT );
+  public static final StringParameter<StringEnvironmentVariable> USERNAME_ENV = StringParameter
+      .typeEnvironmentVariable(StringEnvironmentVariable.class, "usernameEnv")
+      .label("Username environment variable.")
+      .documentation(Documentation.en("Name of the environment variable containing the db username.")
+          .de("Name der Umgebungsvariable, die den DB Nutzernamen enthält.").build())
+      .optional().build();
+
+  public static final StringParameter<StringEnvironmentVariable> PASSWORD_ENV = StringParameter
+      .typeEnvironmentVariable(StringEnvironmentVariable.class, "passwordEnv")
+      .label("Password environment variable.")
+      .documentation(Documentation.en("Name of the environment variable containing the db password.")
+          .de("Name der Umgebungsvariable, die das DB Passwort enthält.").build())
+      .optional().build();
+
+  public static final StringParameter<StringEnvironmentVariable> CONNECT_ENV = StringParameter
+      .typeEnvironmentVariable(StringEnvironmentVariable.class, "connectStringEnv")
+      .label("Connectstring environment variable.")
+      .documentation(Documentation.en("Name of the environment variable containing the JDBC connect string.")
+          .de("Name der Umgebungsvariable mit den JDBC Verbindungsdaten.").build())
+      .optional().build();
+
+  public static final List<StringParameter<?>> additionalParameters = StringParameter.asList(CONNECT_TIMEOUT,
+      SOCKET_TIMEOUT, VALIDATION_TIMEOUT, USERNAME_ENV, PASSWORD_ENV, CONNECT_ENV);
 
   private PluginDescription pluginDescription;
 

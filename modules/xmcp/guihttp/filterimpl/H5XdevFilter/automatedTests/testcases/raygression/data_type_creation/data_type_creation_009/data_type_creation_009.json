@@ -160,7 +160,7 @@
       "operation": "read",
       "pathInResponse": "revision",
       "targetVariable": "!3!",
-      "unquoteResult": "True"
+      "unquoteResult": false
     },
     {
       "operation": "call",

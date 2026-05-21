@@ -23,8 +23,6 @@
     </pathconvert>
     <property name="xmom.dir" value="${basedir}/../../XMOM" />
     
-    <property name="application.dir" value="${basedir}/../../" />
-	
     <property name="project.name" value="JSONDatamodelServicesImpl" />
     <property name="fqclassname" value="xfmg.xfctrl.datamodel.json.JSONDatamodelServices" />
     <property name="mdm.xml.path" value="xfmg/xfctrl/datamodel/json" />

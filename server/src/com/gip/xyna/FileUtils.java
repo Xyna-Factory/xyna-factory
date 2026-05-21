@@ -50,6 +50,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -441,7 +443,7 @@ public class FileUtils {
   
   private static void executeWriteStringToFile(String content, File f, String charsetName, boolean append) throws Ex_FileWriteException {
     String p = f.getAbsolutePath();
-    //bei append vor concurrency beim write schützen. bei !append nur vor concurrency beim file.create
+    //bei append vor concurrency beim write schätzen. bei !append nur vor concurrency beim file.create
     if (append) {
       fileLock.lock(p);
     }
@@ -1224,6 +1226,27 @@ public class FileUtils {
     }
     for (Pair<Long, File> createdDir : createdDirectories) {
       createdDir.getSecond().setLastModified(createdDir.getFirst());
+    }
+  }
+
+
+  /**
+   * Reads an attribute from the manifest of a jar file.
+   * @param jarPath The path to the jar file.
+   * @param attributeName The name of the attribute to read from the manifest.
+   * @return The value of the attribute, or null if the manifest does not contain the attribute or the manifest is not present.
+   * @throws IOException If an I/O error occurs reading the jar file.
+   */
+  public static String readAttributeFromJar(Path jarPath, String attributeName) throws IOException {
+    try (JarFile jarFile = new JarFile(jarPath.toFile())) {
+      Manifest manifest = jarFile.getManifest();
+      if (manifest == null) {
+        return null;
+      }
+
+      String value = manifest.getMainAttributes().getValue(attributeName);
+
+      return value;
     }
   }
 

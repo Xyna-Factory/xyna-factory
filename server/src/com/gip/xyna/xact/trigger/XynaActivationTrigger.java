@@ -856,10 +856,13 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
     }
     File oneJar = jarFiles[0];
     File parent = oneJar.getParentFile();
-    while (!parent.getName().equals(getSimpleClassName(fqClassName))) {
+    String simpleClassName = getSimpleClassName(fqClassName);
+    while (!parent.getName().equals(simpleClassName)) {
       parent = parent.getParentFile();
       if (parent == null) {
-        throw new RuntimeException();
+        String start = oneJar.toPath().toAbsolutePath().normalize().toString();
+        throw new RuntimeException("Could not determine source folder. Started search at " + start + ". No parent directory named '"
+            + simpleClassName + "' found.");
       }
     }
     return parent.getAbsolutePath();
@@ -1990,6 +1993,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
     List<File> allFilesExceptForJars = new ArrayList<File>();
     addSubdirectoryFilesExceptJars(allFilesExceptForJars, savedPathFile, jarFiles);
     copyFilesToTargetFolder(deployedPath, allFilesExceptForJars.toArray(new File[allFilesExceptForJars.size()]));
+    deleteObsoleteJarsInTargetDir(deployedPath, jarFiles);
     return copyFilesToTargetFolder(deployedPath, jarFiles);
   }
 
@@ -3244,6 +3248,42 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
     }
     
     return Pair.of(maxReceives, autoReject);
+  }
+  
+  
+  private static void deleteObsoleteJarsInTargetDir(String targetDirPath, File[] sourceFiles) throws Ex_FileAccessException {
+    Set<File> sourceFileSet = new HashSet<File>();
+    for (File file : sourceFiles) {
+      File adapted = toCanonicalOrAbsoluteFile(file);
+      if (adapted != null) {
+        sourceFileSet.add(adapted);
+      }
+    }
+    File targetDir = new File(targetDirPath);
+    File[] subdirs = targetDir.listFiles( (dir, name) -> new File(dir, name).isDirectory() );
+    subdirs = subdirs == null ? new File[0] : subdirs;
+    for (File subdir : subdirs) {
+      deleteObsoleteJarsInTargetDir(subdir.getAbsolutePath(), sourceFiles);
+    }
+    File[] jarFiles = targetDir.listFiles( (dir, name) -> name.toLowerCase().endsWith(".jar") );
+    jarFiles = jarFiles == null ? new File[0] : jarFiles;
+    for (File file : jarFiles) {
+      File targetDirFile = toCanonicalOrAbsoluteFile(file);
+      if (!sourceFileSet.contains(targetDirFile)) { 
+        targetDirFile.delete();
+      }
+    }
+  }
+  
+  
+  public static File toCanonicalOrAbsoluteFile(File file) {
+    File adapted = null;
+    try {
+      adapted = file.getCanonicalFile();
+    } catch (Exception e) {
+      adapted = file.getAbsoluteFile();
+    }
+    return adapted;
   }
   
   

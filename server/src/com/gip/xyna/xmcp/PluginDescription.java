@@ -59,7 +59,7 @@ public class PluginDescription implements Comparable<PluginDescription>, Seriali
   private String[] forms;
   
   public static enum PluginType {
-    orderInputSource, dataModelType, repositoryAccess, connectionPool, remoteDestinationType, keystoretype;
+    orderInputSource, dataModelType, repositoryAccess, connectionPool, remoteDestinationType, keystoretype, sharedResourceSynchronizer;
   }
   
   public static enum ParameterUsage {

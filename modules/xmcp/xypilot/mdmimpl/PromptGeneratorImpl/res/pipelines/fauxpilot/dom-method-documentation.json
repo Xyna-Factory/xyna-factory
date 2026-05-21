@@ -1,0 +1,11 @@
+{
+    "template": "fauxpilot/dom-method-documentation.ftl",
+    "parser": "xmcp.xypilot.impl.gen.parse.JavaDocParser",
+    "inference_parameters": {
+        "model": "fastertransformer",
+        "n": 1,
+        "stop": ["\n\n"],
+        "max_tokens": 64
+    }
+}
+

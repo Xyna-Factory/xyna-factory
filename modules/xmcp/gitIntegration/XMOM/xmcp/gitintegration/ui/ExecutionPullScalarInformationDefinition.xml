@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Execution Pull Scalar Information Definition" TypeName="ExecutionPullScalarInformationDefinition" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Execution Pull Scalar Information Definition" Name="ExecutionPullScalarInformationDefinition">
+    <Input>
+      <Data ID="60" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput60"/>
+    </Input>
+    <Output>
+      <Data ID="284" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition284"/>
+    </Output>
+    <ServiceReference ID="401" Label="GitIntegration UI Services" ReferenceName="GitIntegrationUIServices.GitIntegrationUIServices" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="400"/>
+      <Target RefID="400"/>
+    </ServiceReference>
+    <Function ID="400" Label="Create Diff Lists Item Definitions">
+      <Source RefID="401"/>
+      <Source RefID="60"/>
+      <Target RefID="401"/>
+      <Target RefID="420"/>
+      <Invoke Operation="createDiffListsItemDefinitions" ServiceID="401">
+        <Source RefID="60"/>
+      </Invoke>
+      <Receive ServiceID="401">
+        <Target RefID="420"/>
+      </Receive>
+    </Function>
+    <Mappings ID="81" Label="Mapping">
+      <Input>
+        <Data ID="437" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition437">
+          <Source RefID="81"/>
+        </Data>
+        <Source RefID="420"/>
+      </Input>
+      <Output>
+        <Data ID="117" Label="diff-Lists - FPD" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition117">
+          <Source RefID="81"/>
+        </Data>
+        <Target RefID="118"/>
+      </Output>
+      <Mapping>%1%.label="Created Diff-Lists"</Mapping>
+      <Mapping>%1%.children=%0%</Mapping>
+      <Mapping>%1%.hideIfEmpty="true"</Mapping>
+    </Mappings>
+    <Choice ID="606" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="60"/>
+      <Target RefID="1033"/>
+      <Input>
+        <Data ID="813" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput813">
+          <Source RefID="606"/>
+        </Data>
+        <Source RefID="60"/>
+      </Input>
+      <Input>
+        <Data ID="864" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput864">
+          <Source RefID="606"/>
+        </Data>
+        <Source RefID="60"/>
+      </Input>
+      <Case ID="607" Label="true" Premise="%0%.exception==null||length(%1%.exception)==&quot;0&quot;">
+        <Mappings ID="629" Label="Mapping">
+          <Output>
+            <Data ID="646" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition646">
+              <Source RefID="629"/>
+            </Data>
+            <Target RefID="1032"/>
+          </Output>
+          <Mapping>%0%.label="Pull successful"</Mapping>
+        </Mappings>
+        <Assign ID="610">
+          <Source RefID="1032"/>
+          <Target RefID="1033"/>
+          <Copy>
+            <Source RefID="1032"/>
+            <Target RefID="1033"/>
+          </Copy>
+        </Assign>
+        <Data ID="1032" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1032">
+          <Source RefID="629"/>
+        </Data>
+      </Case>
+      <Case ID="608" Label="false">
+        <Mappings ID="664" Label="Mapping">
+          <Output>
+            <Data ID="665" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition665"/>
+            <Target RefID="1015"/>
+          </Output>
+          <Mapping>%0%.label="Pull failed"</Mapping>
+        </Mappings>
+        <Assign ID="612">
+          <Source RefID="1015"/>
+          <Target RefID="1033"/>
+          <Copy>
+            <Source RefID="1015"/>
+            <Target RefID="1033"/>
+          </Copy>
+        </Assign>
+        <Data ID="1015" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1015"/>
+      </Case>
+    </Choice>
+    <Mappings ID="41" Label="Mapping">
+      <Input>
+        <Data ID="135" Label="diff-Lists - FPD" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition135">
+          <Source RefID="41"/>
+        </Data>
+        <Source RefID="118">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="684" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition684">
+          <Source RefID="41"/>
+        </Data>
+        <Source RefID="1033">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="313" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition313">
+          <Source RefID="41"/>
+        </Data>
+        <Target RefID="314"/>
+      </Output>
+      <Mapping>%2%.children["0"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%1%</Mapping>
+      <Mapping>%2%.children["1"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%0%</Mapping>
+      <Mapping>%2%.label="Pull summary"</Mapping>
+    </Mappings>
+    <Data ID="118" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition118">
+      <Source RefID="81"/>
+    </Data>
+    <Data ID="314" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition314">
+      <Source RefID="41"/>
+    </Data>
+    <Data ID="420" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition420">
+      <Source RefID="400"/>
+    </Data>
+    <Data ID="1033" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1033">
+      <Source RefID="606"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="314"/>
+      <Target RefID="284"/>
+      <Copy>
+        <Source RefID="314">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="284"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

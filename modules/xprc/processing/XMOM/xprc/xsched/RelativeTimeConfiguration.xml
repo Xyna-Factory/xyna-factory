@@ -19,7 +19,7 @@
 <DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="TimeConfiguration" BaseTypePath="xprc.xsched" Label="RelativeTimeConfiguration" TypeName="RelativeTimeConfiguration" TypePath="xprc.xsched" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
-  <IsXynaComponent>true</IsXynaComponent>
+    <IsXynaComponent>true</IsXynaComponent>
   </Meta>
   <Data Label="MilliSeconds" VariableName="milliSeconds">
     <Meta>

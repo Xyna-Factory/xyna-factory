@@ -22,7 +22,10 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.xdev.xfractmod.xmdm.Container;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
+import com.gip.xyna.xfmg.xfctrl.dependencies.RuntimeContextDependencyManagement;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.DynamicRuntimeContext;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xprc.XynaOrderCreationParameter;
 import com.gip.xyna.xprc.remotecallserialization.XynaXmomSerialization;
@@ -35,16 +38,43 @@ public class RemoteCallXynaOrderCreationParameter extends XynaOrderCreationParam
   
   private byte[] payloadBytes;
   private String fqn;
+  private transient Long callerRevision;
 
+  @Deprecated
   public RemoteCallXynaOrderCreationParameter(DestinationKey dk, GeneralXynaObject... inputPayload) {
     super(dk, inputPayload);
   }
   
+
+  public RemoteCallXynaOrderCreationParameter(Long rootRevision, DestinationKey dk, GeneralXynaObject... inputPayload) {
+    super(dk, inputPayload);
+    setInputPayloadNull();
+    if (dk.getRuntimeContext() instanceof DynamicRuntimeContext) {
+      RuntimeContextDependencyManagement rcdm;
+      rcdm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
+      callerRevision = rcdm.getRevisionDefiningXMOMObject(dk.getOrderType(), rootRevision);
+    } else {
+      callerRevision = getRevision(dk.getRuntimeContext());
+    }
+    setInputPayloadInternal(inputPayload);
+  }
   
   public RemoteCallXynaOrderCreationParameter(XynaOrderCreationParameter xocp) {
     super(xocp);
     setInputPayload(xocp.getInputPayload());
     removeXynaObjectInputPayload();
+  }
+
+  
+  private Long getRevision(RuntimeContext rtc) {
+    try {
+      return XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement()
+          .getRevision(rtc);
+    } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
+      CentralFactoryLogging.getLogger(RemoteCallXynaOrderCreationParameter.class)
+          .warn("Could not find revision for destinationKey trying WorkingSet", e);
+      return RevisionManagement.REVISION_DEFAULT_WORKSPACE;
+    }
   }
   
   
@@ -62,13 +92,12 @@ public class RemoteCallXynaOrderCreationParameter extends XynaOrderCreationParam
   @Override
   public void setInputPayload(GeneralXynaObject payload) {
     if (payload != null) {
-      payloadBytes = serialization.serialize(getRevision(), payload);
+      payloadBytes = serialization.serialize(callerRevision, payload);
     }
   }
   
   
-  @Override
-  public void setInputPayload(GeneralXynaObject... payload) {
+  public void setInputPayloadInternal(GeneralXynaObject... payload) {
     GeneralXynaObject objToSet;
 
     if (payload == null || (payload.length == 1 && payload[0] == null)) {
@@ -82,7 +111,7 @@ public class RemoteCallXynaOrderCreationParameter extends XynaOrderCreationParam
       objToSet = c;
       fqn = Container.class.getCanonicalName();
     }
-    payloadBytes = serialization.serialize(getRevision(), objToSet);
+    payloadBytes = serialization.serialize(callerRevision, objToSet);
 
   }
   

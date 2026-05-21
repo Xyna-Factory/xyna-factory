@@ -547,11 +547,14 @@ public class XynaFactoryCommandLineInterface extends Thread {
           message = " is in unexpected state:";
       }
       System.out.println(XYNA_FACTORY + message + " (Status '"+rc.getMessage()+"')");
+      logger.log(XynaFactoryLogLevel.Factory, XYNA_FACTORY + message + " (Status '"+rc.getMessage()+"')");
       System.exit(code);
     }
     if (!quiet) {
       System.out.println(XYNA_FACTORY + " is starting...");
     }
+    logger.log(XynaFactoryLogLevel.Factory, XYNA_FACTORY + " is starting...");
+
     savePidToFile();
             
     if (containsArg(args, "-Xthreadtime")) {
@@ -647,7 +650,7 @@ public class XynaFactoryCommandLineInterface extends Thread {
 
   private static void savePidToFile() {
     String pidFileFolder = System.getProperty(PID_FOLDER_PROPERTY);
-    final File f = pidFileFolder == null ? new File("xynafactory.pid") : new File(pidFileFolder, "xynafactory.pid");
+    final File f = pidFileFolder == null || pidFileFolder.isBlank() ? new File("xynafactory.pid") : new File(pidFileFolder, "xynafactory.pid");
     if (f.exists()) {
       //server wurde nicht korrekt runtergefahren => backup anlegen, evtl lebt prozess ja noch.
       SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");

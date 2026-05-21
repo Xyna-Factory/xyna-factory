@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,31 +20,31 @@
     <Input>
       <Data ID="9084" Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFileId9084"/>
       <Data ID="9633" Label="ApplicationParam" ReferenceName="Text" ReferencePath="base" VariableName="text9633"/>
+      <Data ID="49887" Label="Workspace Name" ReferenceName="Text" ReferencePath="base" VariableName="text49887"/>
     </Input>
     <Output/>
     <Throws>
-      <Exception Label="Server Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException13556">
+      <Exception Label="Server Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException53973">
         <Meta>
           <Type>XynaException</Type>
         </Meta>
       </Exception>
-      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException13557"/>
     </Throws>
     <ServiceReference ID="12544" Label="FileManagement" ReferenceName="FileManagement.FileManagement" ReferencePath="xfmg.xfctrl.filemgmt">
       <Source RefID="12543"/>
       <Target RefID="12543"/>
     </ServiceReference>
-    <ServiceReference ID="64" Label="Application Generation" ReferenceName="ApplicationGeneration.ApplicationGeneration" ReferencePath="xfmg.oas.generation">
-      <Source RefID="63"/>
-      <Target RefID="63"/>
-    </ServiceReference>
-    <ServiceReference ID="209" Label="Store" ReferenceName="Store" ReferencePath="xnwh.persistence">
-      <Source RefID="208"/>
-      <Target RefID="208"/>
-    </ServiceReference>
     <ServiceReference ID="107" Label="FileManagement" ReferenceName="FileManagement.FileManagement" ReferencePath="xfmg.xfctrl.filemgmt">
       <Source RefID="106"/>
       <Target RefID="106"/>
+    </ServiceReference>
+    <ServiceReference ID="51962" Label="Application Import Impl" ReferenceName="ApplicationImportImpl" ReferencePath="xmcp.oas.fman">
+      <Source RefID="51961"/>
+      <Target RefID="51961"/>
+    </ServiceReference>
+    <ServiceReference ID="51490" Label="Application Generation" ReferenceName="ApplicationGeneration.ApplicationGeneration" ReferencePath="xfmg.oas.generation">
+      <Source RefID="51489"/>
+      <Target RefID="51489"/>
     </ServiceReference>
     <Mappings ID="53" Label="Mapping">
       <Output>
@@ -63,7 +63,11 @@
         <Data ID="9804" Label="ApplicationParam" ReferenceName="Text" ReferencePath="base" VariableName="text9804">
           <Source RefID="374"/>
         </Data>
-        <Source RefID="9633"/>
+        <Source RefID="9633">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
       </Input>
       <Case ID="10287" Label="" Premise="%0%.text==&quot;OAS Applications&quot;">
         <Mappings ID="10370" Label="Set Generate OAS Applications">
@@ -98,7 +102,7 @@
           </Copy>
         </Assign>
       </Case>
-      <Case ID="11385" Premise="%0%.text==&quot;Client Application&quot;">
+      <Case ID="11385" Label="" Premise="%0%.text==&quot;Client Application&quot;">
         <Mappings ID="12034" Label="Set Generate Client Application">
           <Output>
             <Data ID="12035" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory12035"/>
@@ -129,7 +133,7 @@
           </Copy>
         </Assign>
       </Case>
-      <Case ID="11708" Premise="%0%.text==&quot;Provider Application&quot;">
+      <Case ID="11708" Label="" Premise="%0%.text==&quot;Provider Application&quot;">
         <Mappings ID="12200" Label="Set Generate Provider Application">
           <Output>
             <Data ID="12201" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory12201"/>
@@ -160,7 +164,7 @@
           </Copy>
         </Assign>
       </Case>
-      <Case ID="11871" Premise="%0%.text==&quot;Datamodel Application&quot;">
+      <Case ID="11871" Label="" Premise="%0%.text==&quot;Datamodel Application&quot;">
         <Mappings ID="12366" Label="Set Generate Datamodel Application">
           <Output>
             <Data ID="12367" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory12367"/>
@@ -225,17 +229,32 @@
         </Assign>
       </Case>
     </Choice>
-    <Function ID="63" Label="Generate Application by managed File ID">
-      <Source RefID="64"/>
-      <Source RefID="12461"/>
-      <Source RefID="9084"/>
-      <Target RefID="64"/>
-      <Invoke Operation="generateApplicationByManagedFileID" ServiceID="64">
+    <Mappings ID="50248" Label="Mapping">
+      <Input>
+        <Data ID="50491" Label="Application Generation Parameter" ReferenceName="ApplicationGenerationParameter" ReferencePath="xfmg.oas.generation" VariableName="applicationGenerationParameter50491">
+          <Source RefID="50248"/>
+        </Data>
         <Source RefID="12461"/>
-        <Source RefID="9084"/>
-      </Invoke>
-      <Receive ServiceID="64"/>
-    </Function>
+      </Input>
+      <Input>
+        <Data ID="51368" Label="Workspace Name" ReferenceName="Text" ReferencePath="base" VariableName="text51368">
+          <Source RefID="50248"/>
+        </Data>
+        <Source RefID="49887">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="50369" Label="Application Generation Parameter" ReferenceName="ApplicationGenerationParameter" ReferencePath="xfmg.oas.generation" VariableName="applicationGenerationParameter50369">
+          <Source RefID="50248"/>
+        </Data>
+        <Target RefID="50370"/>
+      </Output>
+      <Mapping>%2%~=%0%</Mapping>
+      <Mapping>%2%.workspaceName=%1%.text</Mapping>
+    </Mappings>
     <Function ID="12543" Label="Get File Info">
       <Source RefID="12544"/>
       <Source RefID="9084"/>
@@ -276,7 +295,7 @@
         <Target RefID="82"/>
       </Output>
       <Mapping>%4%=%0%</Mapping>
-      <Mapping>%4%.date=%1%.asString()</Mapping>
+      <Mapping>%4%.date0=%1%.asString()</Mapping>
       <Mapping>%4%.fileName=%3%.name</Mapping>
     </Mappings>
     <Function ID="106" Label="retrieve as document">
@@ -309,61 +328,125 @@
         <Target RefID="151"/>
       </Output>
       <Mapping>%2%=%0%</Mapping>
-      <Mapping>%2%.specificationFile=%1%.text</Mapping>
-      <Mapping>%2%.importStatus="Success"</Mapping>
+      <Mapping>%2%.importStatus="Starting"</Mapping>
     </Mappings>
-    <Function ID="208" Label="Store">
-      <Source RefID="209"/>
-      <Source RefID="151"/>
-      <Source RefID="212"/>
-      <Target RefID="209"/>
-      <Target RefID="200"/>
-      <Invoke Operation="Store" ServiceID="209">
-        <Source RefID="151">
+    <Choice ID="52142" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="14144"/>
+      <Target RefID="53292"/>
+      <Input>
+        <Data ID="52207" Label="File Info" ReferenceName="FileInfo" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="fileInfo52207">
+          <Source RefID="52142"/>
+        </Data>
+        <Source RefID="14144"/>
+      </Input>
+      <Case ID="52143" Label="true" Premise="endswith(%0%.name,&quot;.zip&quot;)">
+        <Mappings ID="52440" Label="Mapping">
+          <Input>
+            <Data ID="52559" Label="OAS_ImportHistory IN" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory52559">
+              <Source RefID="52440"/>
+            </Data>
+            <Source RefID="151">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Input>
+            <Data ID="53463" Label="File Info" ReferenceName="FileInfo" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="fileInfo53463">
+              <Source RefID="52440"/>
+            </Data>
+            <Source RefID="14144"/>
+          </Input>
+          <Output>
+            <Data ID="52499" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory52499">
+              <Source RefID="52440"/>
+            </Data>
+            <Target RefID="52500"/>
+          </Output>
+          <Mapping>%2%=%0%</Mapping>
+          <Mapping>%2%.specificationFile=concat(%1%.name, " (", %1%.fileSize.fileSize, " Byte)")</Mapping>
+        </Mappings>
+        <Assign ID="52146">
+          <Source RefID="52500"/>
+          <Target RefID="53292"/>
+          <Copy>
+            <Source RefID="52500"/>
+            <Target RefID="53292"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="52144" Label="false">
+        <Mappings ID="52900" Label="Mapping">
+          <Input>
+            <Data ID="52901" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory52901"/>
+            <Source RefID="151">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Input>
+            <Data ID="52902" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document52902"/>
+            <Source RefID="105"/>
+          </Input>
+          <Output>
+            <Data ID="52903" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory52903"/>
+            <Target RefID="52904"/>
+          </Output>
+          <Mapping>%2%=%0%</Mapping>
+          <Mapping>%2%.specificationFile=%1%.text</Mapping>
+        </Mappings>
+        <Assign ID="52148">
+          <Source RefID="52904"/>
+          <Target RefID="53292"/>
+          <Copy>
+            <Source RefID="52904"/>
+            <Target RefID="53292"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Function ID="51489" Label="Store Oas Import History">
+      <Source RefID="51490"/>
+      <Source RefID="53292"/>
+      <Target RefID="51490"/>
+      <Target RefID="51880"/>
+      <Invoke Operation="storeOasImportHistory" ServiceID="51490">
+        <Source RefID="53292">
           <Meta>
             <LinkType>UserConnected</LinkType>
-            <ExpectedType>xmcp.oas.fman.storables.OAS_ImportHistory</ExpectedType>
-          </Meta>
-        </Source>
-        <Source RefID="212">
-          <Meta>
-            <LinkType>Constant</LinkType>
           </Meta>
         </Source>
       </Invoke>
-      <Receive ServiceID="209">
-        <Target RefID="200">
-          <Meta>
-            <ExpectedType>xmcp.oas.fman.storables.OAS_ImportHistory</ExpectedType>
-          </Meta>
-        </Target>
+      <Receive ServiceID="51490">
+        <Target RefID="51880"/>
       </Receive>
+    </Function>
+    <Function ID="51961" Label="Application Import Impl">
+      <Source RefID="51962"/>
+      <Source RefID="9084"/>
+      <Source RefID="50370"/>
+      <Source RefID="51880"/>
+      <Target RefID="51962"/>
+      <Invoke Operation="ApplicationImportImpl" ServiceID="51962">
+        <Source RefID="9084"/>
+        <Source RefID="50370">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="51880">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="51962"/>
     </Function>
     <Data ID="52" Label="Now" ReferenceName="Now" ReferencePath="base.date" VariableName="now52"/>
     <Data ID="82" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory82"/>
     <Data ID="105" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document105"/>
     <Data ID="151" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory151"/>
-    <Data ID="200" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory200"/>
-    <Data ID="212" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="storeParameter212">
-      <Data VariableName="historizePreviousObject">
-        <Meta>
-          <Type>boolean</Type>
-        </Meta>
-        <Value>false</Value>
-      </Data>
-      <Data VariableName="keepMetaFieldData">
-        <Meta>
-          <Type>boolean</Type>
-        </Meta>
-        <Value>false</Value>
-      </Data>
-      <Data VariableName="forceRecursiveStore">
-        <Meta>
-          <Type>boolean</Type>
-        </Meta>
-        <Value>false</Value>
-      </Data>
-    </Data>
     <Data ID="540" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory540">
       <Source RefID="458"/>
     </Data>
@@ -386,6 +469,17 @@
     </Data>
     <Data ID="14144" Label="File Info" ReferenceName="FileInfo" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="fileInfo14144">
       <Source RefID="12543"/>
+    </Data>
+    <Data ID="50370" Label="Application Generation Parameter" ReferenceName="ApplicationGenerationParameter" ReferencePath="xfmg.oas.generation" VariableName="applicationGenerationParameter50370">
+      <Source RefID="50248"/>
+    </Data>
+    <Data ID="51880" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory51880"/>
+    <Data ID="52500" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory52500">
+      <Source RefID="52440"/>
+    </Data>
+    <Data ID="52904" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory52904"/>
+    <Data ID="53292" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory53292">
+      <Source RefID="52142"/>
     </Data>
     <Assign ID="1"/>
   </Operation>

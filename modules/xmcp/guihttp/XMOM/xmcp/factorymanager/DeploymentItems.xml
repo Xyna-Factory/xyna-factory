@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="DeploymentItems" TypeName="DeploymentItems" TypePath="xmcp.factorymanager" Version="1.8">
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="DeploymentItems" TypeName="DeploymentItems" TypePath="xmcp.factorymanager" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
@@ -96,6 +96,21 @@
       </Throws>
       <SourceCode>
         <CodeSnippet Type="Java">return xmcp.factorymanager.DeploymentItemsImpl.undeploy(undeployDeploymentItem, runtimeContext);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Force Deploy" Name="forceDeploy">
+      <Input>
+        <Data IsList="true" Label="Deployment item id" ReferenceName="DeploymentItemId" ReferencePath="xmcp.factorymanager.deploymentitems" VariableName="deploymentItemId1"/>
+        <Data Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp" VariableName="runtimeContext2"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Deployment Item" ReferenceName="DeploymentItem" ReferencePath="xmcp.factorymanager.deploymentitems" VariableName="deploymentItem4"/>
+      </Output>
+      <Throws>
+        <Exception Label="Deploy DeploymentItem Exception" ReferenceName="DeployDeploymentItemException" ReferencePath="xmcp.factorymanager.deploymentitems.exceptions" VariableName="deployDeploymentItemException3"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.DeploymentItemsImpl.forceDeploy(deploymentItemId1, runtimeContext2);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

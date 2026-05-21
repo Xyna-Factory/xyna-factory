@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,25 +19,41 @@ package xmcp.factorymanager.impl;
 
 
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.utils.collections.SerializablePair;
 import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.utils.misc.StringParameter;
+import com.gip.xyna.utils.misc.StringParameter.StringParameterWithEnum;
 import com.gip.xyna.xact.exceptions.XACT_FilterNotFound;
 import com.gip.xyna.xact.exceptions.XACT_TriggerInstanceNotFound;
 import com.gip.xyna.xact.exceptions.XACT_TriggerNotFound;
 import com.gip.xyna.xact.trigger.DeployFilterParameter;
 import com.gip.xyna.xact.trigger.FilterInformation;
 import com.gip.xyna.xact.trigger.FilterInformation.FilterInstanceInformation;
+import com.gip.xyna.xact.trigger.RunnableForFilterAccess;
 import com.gip.xyna.xact.trigger.TriggerInformation;
 import com.gip.xyna.xact.trigger.TriggerInformation.TriggerInstanceInformation;
 import com.gip.xyna.xact.trigger.XynaActivationTrigger;
+import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeDependencyContext.RuntimeDependencyContextType;
+import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
+import com.gip.xyna.xprc.XynaOrderServerExtension;
 
+import xact.http.URLPath;
+import xact.http.enums.httpmethods.HTTPMethod;
+import xact.templates.Document;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import xmcp.factorymanager.filtermanager.DeployFilterRequest;
@@ -48,6 +64,7 @@ import xmcp.factorymanager.filtermanager.FilterInstance;
 import xmcp.factorymanager.filtermanager.FilterInstanceDetails;
 import xmcp.factorymanager.filtermanager.GetFilterDetailRequest;
 import xmcp.factorymanager.filtermanager.GetTriggerRequest;
+import xmcp.factorymanager.filtermanager.StartParameterDetails;
 import xmcp.factorymanager.filtermanager.Trigger;
 import xmcp.factorymanager.filtermanager.TriggerDetail;
 import xmcp.factorymanager.filtermanager.TriggerInstance;
@@ -98,7 +115,7 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
     if (deployFilterRequest10.getConfigurationParameter() == null) {
       parameter = new String[0];
     } else {
-      parameter = deployFilterRequest10.getConfigurationParameter().split(",");
+      parameter = split(deployFilterRequest10.getConfigurationParameter());
     }
     DeployFilterParameter deployFilterParameter = 
         new DeployFilterParameter.Builder().
@@ -119,10 +136,14 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
   public void deployTriggerInstance(DeployTriggerRequest deployTriggerRequest16) {
     try {
       String[] parameter;
-      if (deployTriggerRequest16.getStartParameter() == null) {
+      if (deployTriggerRequest16.getStartParameter() == null && deployTriggerRequest16.getStartParameterArray() == null) {
         parameter = new String[0];
       } else {
-        parameter = deployTriggerRequest16.getStartParameter().split(",");
+        if (deployTriggerRequest16.getStartParameter() != null) {
+          parameter = split(deployTriggerRequest16.getStartParameter());
+        } else {
+          parameter = deployTriggerRequest16.getStartParameterArray().toArray(new String[0]);;
+        }
       }
       activationTrigger.deployTrigger(
         deployTriggerRequest16.getTriggerName(),
@@ -308,6 +329,35 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
       collect(Collectors.toList());
   }
   
+  public List<? extends StartParameterDetails> getPossibleStartParameterForTriggerDeployment(Trigger trigger43) {
+    TriggerInformation triggerinfo;
+    try {
+      triggerinfo = activationTrigger.getTriggerInformation(trigger43.getName(), getRevision(trigger43.getRuntimeContext()), true);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    
+    if (triggerinfo.getEnhancedStartParameter() != null) {
+      return triggerinfo.getEnhancedStartParameter().stream().
+      map(para -> new StartParameterDetails.Builder().
+          name(para.getName()).
+          documentation(para.documentation(DocumentationLanguage.EN)).
+          optional(para.isOptional()).
+          mandatory(getMandatoryFromStringParameter(para)).
+          type(getTypeFromStringParameter(para)).
+          instance()).
+      collect(Collectors.toList());
+    } else if (triggerinfo.getStartParameterDocumentation() != null) {
+      return Arrays.asList(triggerinfo.getStartParameterDocumentation()).stream().
+      map(docu -> new StartParameterDetails.Builder().
+          lagacyParameterCombination(Arrays.asList(docu)).
+          instance()).
+      collect(Collectors.toList());
+    }
+    return List.of();
+  }
+
+  
   public List<? extends TriggerInstance> getPossibleTriggerInstanceForFilterDeployment(Filter filter37, RuntimeContext runtimeContext36) {
     TriggerInformation triggerinfo;
     try {
@@ -327,6 +377,24 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
       filter(info -> revisions.contains(getRevision(info.getRuntimeContext()))).
       map(info -> convertToXMOM(info)).
       collect(Collectors.toList());
+  }
+  
+  @Override
+  public GeneralXynaObject invokeGuiHttpEndpoint(XynaOrderServerExtension order, URLPath url, HTTPMethod method, Document payload) {
+    try {
+      RunnableForFilterAccess runnable = order.getRootOrder().getRunnableForFilterAccess("H5XdevFilter");
+      Object result = runnable.execute(url, method, payload.getText());
+      if(result != null) {
+        if(result instanceof GeneralXynaObject) {
+          return (GeneralXynaObject) result;
+        } else {
+          return new Document.Builder().text(result.toString()).instance();
+        }
+      }
+    } catch (Exception e) {
+      return null;
+    }
+    return null;
   }
   
   private Trigger convertToXMOM(TriggerInformation info) {
@@ -386,7 +454,7 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
       status(info.getState().serializeToString()).
       description(info.getDescription()).
       runtimeContext(convert(info.getRuntimeContext())).
-      startParameter(info.getStartParameterAsString()).
+      startParameter(separateBySpaces(info.getStartParameter())).
       instance();
   }
 
@@ -406,7 +474,7 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
       status(info.getState().serializeToString()).
       description(info.getDescription()).
       runtimeContext(convert(info.getRuntimeContext())).
-      configurationParameter(String.join(", ", info.getConfiguration())).
+      configurationParameter(separateBySpaces(info.getConfiguration())).
       instance();
   }
   
@@ -472,5 +540,74 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       throw new RuntimeException(e);
     }
+  }
+  
+  private static String getTypeFromStringParameter(StringParameter<?> sp) {
+    
+    String typename = sp.getSimpleTypeString();
+    if (sp instanceof StringParameterWithEnum) {
+      StringParameterWithEnum<?,?> spwe = (StringParameterWithEnum<?,?>) sp;
+      if (spwe.hasDocumentedEnum()) {
+        typename = spwe.getSimpleTypeString();
+      } else {
+        String enums = spwe.getEnumConstantsAsStrings().toString();
+        typename = spwe.getSimpleTypeString()+"("+ enums.substring(1,enums.length()-1) +")";
+      }
+    }
+    return typename;
+  }
+  
+  private static String getMandatoryFromStringParameter(StringParameter<?> sp) {
+    
+    if (sp.isMandatory()) {
+      return "mandatory";
+    } else if (sp.isMandatoryFor()) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("mandatory for [");
+      String sep = "";
+      List<SerializablePair<String,Serializable>> mandatoryFor = sp.getMandatoryFor();
+      for (SerializablePair<String,Serializable> pair : mandatoryFor) {
+        sb.append(sep).append(pair.getFirst());
+        if (pair.getSecond() != null) {
+          if (pair.getSecond() instanceof String) {
+            sb.append("=\"").append(pair.getSecond()).append("\"");
+          } else {
+            sb.append("=").append(pair.getSecond());
+          }
+        }
+        sep = ", ";
+      }
+      sb.append("]");
+      return sb.toString();
+    } else {
+      return "";
+    }
+  }
+  
+  private static final Pattern escapedSpaces = Pattern.compile("([^\\s\"']+)|\"([^\"]*)\"|'([^']*)'");
+  
+  private static String[] split(String input) {
+   
+    List<String> ret = new ArrayList<String>();
+    Matcher matcher = escapedSpaces.matcher(input);
+    while (matcher.find()) {
+      for (int i=1; i <= matcher.groupCount(); i++) {
+        if (matcher.group(i) != null) {
+          ret.add(matcher.group(i));
+          break;
+        }
+      }
+    }
+    return ret.toArray(new String[0]);
+  }
+  
+  
+  private static String separateBySpaces(List<String> values) {
+    if (values == null || values.isEmpty()) {
+      return "";
+    }
+    return values.stream().
+        map(value -> value.contains(" ") ? "\"" + value + "\"" : value).
+        reduce("", (w1,w2) -> w1 + " " + w2);
   }
 }

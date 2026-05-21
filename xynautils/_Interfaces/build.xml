@@ -23,7 +23,7 @@
 	<!--Name of the utils project-->
 	<property name="utils.name" value="interfaces" />
 
-	<property name="svn.project" value="xyna/utils/_Interfaces"/>
+	<property name="git.project" value="xyna/utils/_Interfaces"/>
 	
 	<!--Master build file-->
 	<property name="build.file" value="../install/xynautils/masterbuild.xml" />

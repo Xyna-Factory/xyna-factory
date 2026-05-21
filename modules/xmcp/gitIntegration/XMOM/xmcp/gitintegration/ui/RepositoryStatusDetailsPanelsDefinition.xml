@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Repository Status Details Panels Definition" TypeName="RepositoryStatusDetailsPanelsDefinition" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Repository Status Details Panels Definition" Name="RepositoryStatusDetailsPanelsDefinition">
+    <Input>
+      <Data ID="2" Label="Repository Status" ReferenceName="RepositoryStatus" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryStatus2"/>
+    </Input>
+    <Output>
+      <Data ID="7" Label="Untracked - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition7"/>
+      <Data ID="12" Label="Changes - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition12"/>
+      <Data ID="17" Label="Missing - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition17"/>
+    </Output>
+    <ServiceReference ID="105" Label="GitIntegration UI Services" ReferenceName="GitIntegrationUIServices.GitIntegrationUIServices" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="104"/>
+      <Target RefID="104"/>
+    </ServiceReference>
+    <Function ID="104" Label="Create Repository Status Text Item Definitions">
+      <Source RefID="105"/>
+      <Source RefID="2"/>
+      <Target RefID="105"/>
+      <Target RefID="107"/>
+      <Target RefID="108"/>
+      <Target RefID="109"/>
+      <Invoke Operation="createRepositoryStatusTextItemDefinitions" ServiceID="105">
+        <Source RefID="2"/>
+      </Invoke>
+      <Receive ServiceID="105">
+        <Target RefID="107"/>
+        <Target RefID="108"/>
+        <Target RefID="109"/>
+      </Receive>
+    </Function>
+    <Mappings ID="26" Label="Mapping">
+      <Input>
+        <Data ID="126" IsList="true" Label="Untracked - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition126">
+          <Source RefID="26"/>
+        </Data>
+        <Source RefID="107">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="143" IsList="true" Label="Changes - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition143">
+          <Source RefID="26"/>
+        </Data>
+        <Source RefID="108">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="160" IsList="true" Label="Missing - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition160">
+          <Source RefID="26"/>
+        </Data>
+        <Source RefID="109">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="35" Label="Untracked - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition35">
+          <Source RefID="26"/>
+        </Data>
+        <Target RefID="36"/>
+      </Output>
+      <Output>
+        <Data ID="45" Label="Changes - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition45">
+          <Source RefID="26"/>
+        </Data>
+        <Target RefID="46"/>
+      </Output>
+      <Output>
+        <Data ID="55" Label="Missing - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition55">
+          <Source RefID="26"/>
+        </Data>
+        <Target RefID="56"/>
+      </Output>
+      <Mapping>%3%.label="Untracked"</Mapping>
+      <Mapping>%3%.closable="true"</Mapping>
+      <Mapping>%3%.dataPath="%2%"</Mapping>
+      <Mapping>%3%.children=%0%</Mapping>
+      <Mapping>%4%.label="Changes"</Mapping>
+      <Mapping>%4%.closable="true"</Mapping>
+      <Mapping>%4%.dataPath="%2%"</Mapping>
+      <Mapping>%4%.children=%1%</Mapping>
+      <Mapping>%5%.label="Missing"</Mapping>
+      <Mapping>%5%.closable="true"</Mapping>
+      <Mapping>%5%.dataPath="%2%"</Mapping>
+      <Mapping>%5%.children=%2%</Mapping>
+    </Mappings>
+    <Data ID="36" Label="Untracked - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition36">
+      <Source RefID="26"/>
+    </Data>
+    <Data ID="46" Label="Changes - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition46">
+      <Source RefID="26"/>
+    </Data>
+    <Data ID="56" Label="Missing - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition56">
+      <Source RefID="26"/>
+    </Data>
+    <Data ID="107" IsList="true" Label="Untracked - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition107">
+      <Source RefID="104"/>
+    </Data>
+    <Data ID="108" IsList="true" Label="Changes - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition108">
+      <Source RefID="104"/>
+    </Data>
+    <Data ID="109" IsList="true" Label="Missing - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition109">
+      <Source RefID="104"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="36"/>
+      <Source RefID="46"/>
+      <Source RefID="56"/>
+      <Target RefID="7"/>
+      <Target RefID="12"/>
+      <Target RefID="17"/>
+      <Copy>
+        <Source RefID="36">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="7"/>
+      </Copy>
+      <Copy>
+        <Source RefID="46">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="12"/>
+      </Copy>
+      <Copy>
+        <Source RefID="56">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="17"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

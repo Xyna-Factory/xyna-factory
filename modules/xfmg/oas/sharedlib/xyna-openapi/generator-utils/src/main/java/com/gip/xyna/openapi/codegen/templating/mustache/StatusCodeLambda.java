@@ -42,7 +42,7 @@ public class StatusCodeLambda implements Mustache.Lambda {
     httpStatusCodes.put("206", "Partial Content");
     httpStatusCodes.put("207", "Multi-Status"); // (WebDAV; RFC 4918)
     httpStatusCodes.put("208", "Already Reported"); // (WebDAV; RFC 5842)
-    httpStatusCodes.put("226", "IM Used (RFC 3229)");
+    httpStatusCodes.put("226", "IM Used"); // (RFC 3229)
     httpStatusCodes.put("300", "Multiple Choices");
     httpStatusCodes.put("301", "Moved Permanently");
     httpStatusCodes.put("302", "Found"); 
@@ -70,7 +70,7 @@ public class StatusCodeLambda implements Mustache.Lambda {
     httpStatusCodes.put("415", "Unsupported Media Type");
     httpStatusCodes.put("416", "Range Not Satisfiable");
     httpStatusCodes.put("417", "Expectation Failed");
-    httpStatusCodes.put("418", "I'm a teapot"); // (RFC 2324, RFC 7168)
+    httpStatusCodes.put("418", "I am a teapot"); // (RFC 2324, RFC 7168)
     httpStatusCodes.put("421", "Misdirected Request");
     httpStatusCodes.put("422", "Unprocessable Entity");
     httpStatusCodes.put("423", "Locked"); // (WebDAV; RFC 4918)

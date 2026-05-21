@@ -17,10 +17,10 @@
 -->
 
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-    <soap:Body xmlns:ns1="http://www.gip.com/xyna/1.5.6/pallas/order/messages/1.0"
+    <soap:Body xmlns:ns1="http://www.gip.com/xyna/1.5.6/project/order/messages/1.0"
 xmlns:ns2="http://www.gip.com/xyna/1.5/xsd/common/1.2"
-xmlns:ns3="http://www.gip.com/xyna/1.5.6/pallas/order/1.0"
-xmlns:ns4="http://www.gip.com/xyna/1.5/pallaspoc"
+xmlns:ns3="http://www.gip.com/xyna/1.5.6/project/order/1.0"
+xmlns:ns4="http://www.gip.com/xyna/1.5/projectpoc"
 xmlns:ns5="http://www.gip.com/xyna/1.5.3/productmanagement/common/1.0">
         <ns1:addOrderRequest>
         Text

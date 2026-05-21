@@ -1792,6 +1792,60 @@ public class Updater implements UpdaterInterface {
       ud.addFollowingBranchVersionsAsAllowedForUpdate(3); //9.0.x.x darf hier drauf updaten
       updates.add(ud);
 
+      // 10.0.0.0
+      Version v471 = new Version(v470).increaseToMajorVersion(1, 1);
+      ud = new UpdateJustVersion(v470, v471);
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(2); //9.x.x.x darf hier drauf updaten
+      updates.add(ud);
+
+      // 10.1.0.0
+      Version v472 = new Version(v471).increaseToMajorVersion(2, 1);
+      ud = new UpdateJustVersion(v471, v472);
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(3); //10.0.x.x darf hier drauf updaten
+      updates.add(ud);
+
+      // 10.2.0.0
+      Version v473 = new Version(v472).increaseToMajorVersion(2, 1);
+      ud = new UpdateJustVersion(v472, v473);
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(3); //10.1.x.x darf hier drauf updaten
+      updates.add(ud);
+
+      // 10.3.0.0
+      Version v474 = new Version(v473).increaseToMajorVersion(2, 1);
+      ud = new UpdateJustVersion(v473, v474);
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(3); //10.2.x.x darf hier drauf updaten
+      updates.add(ud);
+
+      // 10.4.0.0
+      Version v475 = new Version(v474).increaseToMajorVersion(2, 1);
+      ud = new UpdateJustVersion(v474, v475);
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(3); //10.3.x.x darf hier drauf updaten
+      updates.add(ud);
+
+      // 10.5.0.0
+      Version v476 = new Version(v475).increaseToMajorVersion(2, 1);
+      ud = new UpdateJustVersion(v475, v476);
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(3); //10.4.x.x darf hier drauf updaten
+      updates.add(ud);
+
+      // 10.6.0.0
+      Version v477 = new Version(v476).increaseToMajorVersion(2, 1);
+      ud = new UpdateJustVersion(v476, v477);
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(3); //10.5.x.x darf hier drauf updaten
+      updates.add(ud);
+
+      // 10.7.0.0
+      Version v478 = new Version(v477).increaseToMajorVersion(2, 1);
+      ud = new UpdateJustVersion(v477, v478);
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(3); //10.6.x.x darf hier drauf updaten
+      updates.add(ud);
+
+      // 10.8.0.0
+      Version v479 = new Version(v478).increaseToMajorVersion(2, 1);
+      ud = new UpdateJustVersion(v478, v479);
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(3); //10.7.x.x darf hier drauf updaten
+      updates.add(ud);
+
       //ACHTUNG: bei updates in einem branch muss gewährleistet werden, dass alle späteren versionen (trunk, spätere branches)
       //         auf dem branch updaten können. bei updates, die in späteren versionen dann sonderbehandlungen im update-
       //         prozess benötigen, müssen die versionen, auf denen die updates passieren sollen, oben genau angegeben werden.
@@ -1838,7 +1892,7 @@ public class Updater implements UpdaterInterface {
         selectHistoryOfVersionSorted =
             con.prepareQuery(new Query<UpdateHistoryStorable>("select * from " + UpdateHistoryStorable.TABLE_NAME + " where "
                 + UpdateHistoryStorable.COL_VERSION + " = ? and " + UpdateHistoryStorable.COL_SUCCESS + " = ? and "
-                + UpdateHistoryStorable.COL_UPDATE_TYPE + " = ?", UpdateHistoryStorable.reader));
+                + UpdateHistoryStorable.COL_UPDATE_TYPE + " = ?", UpdateHistoryStorable.reader, UpdateHistoryStorable.TABLE_NAME));
       }
       UpdateHistoryStorable s = con.queryOneRow(selectHistoryOfVersionSorted, new Parameter(v.getString(), true, time.name()));
       if (s == null) {
@@ -1868,7 +1922,8 @@ public class Updater implements UpdaterInterface {
     try {
       if (selectCountUpdateHistory == null) {
         selectCountUpdateHistory =
-            con.prepareQuery(new Query<OrderCount>("select count(*) from " + UpdateHistoryStorable.TABLE_NAME, OrderCount.getCountReader()));
+            con.prepareQuery(new Query<OrderCount>("select count(*) from " + UpdateHistoryStorable.TABLE_NAME, OrderCount.getCountReader(),
+                UpdateHistoryStorable.TABLE_NAME));
       }
       long id = con.queryOneRow(selectCountUpdateHistory, new Parameter()).getCount();
       UpdateHistoryStorable s =

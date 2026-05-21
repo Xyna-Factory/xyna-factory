@@ -1,0 +1,27 @@
+[
+    {
+        "name": "asText",
+        "documentation": "Returns a textual representation of the address.",
+        "parameters": [
+            {
+                "type": "output",
+                "name": "text3",
+                "fqn": "base.Text",
+                "isList": false
+            }
+        ]
+    },
+    {
+        "name": "parse",
+        "documentation": "Creates a new IPv4Address from a textual representation.",
+        "parameters": [
+            {
+                "type": "input",
+                "name": "text11",
+                "fqn": "base.Text",
+                "isList": false
+            },
+            {
+                "type": "output",
+                "name": "iPv4Address15",
+                "fqn": "test.xypilot.IPv4Address",

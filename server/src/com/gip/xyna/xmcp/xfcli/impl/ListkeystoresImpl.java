@@ -60,6 +60,7 @@ public class ListkeystoresImpl extends XynaCommandImplementation<Listkeystores> 
         List<String> row = new ArrayList<String>();
         row.add(ks.getName());
         row.add(ks.getType());
+        row.add(ks.getFilename());
         rows.add(row);
       }
     }
@@ -71,7 +72,7 @@ public class ListkeystoresImpl extends XynaCommandImplementation<Listkeystores> 
 
     @Override
     public List<String> getHeader() {
-      return Arrays.asList("name", "type");
+      return Arrays.asList("name", "type", "filename");
     }
     
   }

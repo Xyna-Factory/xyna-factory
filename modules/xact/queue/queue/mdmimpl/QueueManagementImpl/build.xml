@@ -32,6 +32,4 @@
 
     <import file="${root.dir}/installation/build/buildService.xml" />
 
-    <property name="additional.lib.dir" value="${module.dir}/common/lib" />
-
 </project>

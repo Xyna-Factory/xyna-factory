@@ -64,7 +64,8 @@ public class CredentialsCache implements IPropertyChangeListener {
   
   private Map<String, XynaUserCredentials> credsPerNode = new ConcurrentHashMap<String, XynaUserCredentials>();
   private Map<String, Session> sessionsPerNode = new ConcurrentHashMap<String, Session>();
-
+  private Map<String, Object> locksPerNode = new ConcurrentHashMap<String, Object>(); 
+  
   //deprecated nur für externe verwendung. es soll das singleton verwendet werden!
   @Deprecated
   public CredentialsCache() {
@@ -80,30 +81,59 @@ public class CredentialsCache implements IPropertyChangeListener {
     }
     return instance;
   }
+  
 
-  public synchronized XynaCredentials getCredentials(String nodeName, InfrastructureLinkProfile infrastructure) throws XFMG_NodeConnectException {
-    Session session = sessionsPerNode.get(nodeName);
-    if (session == null) {
-      XynaUserCredentials creds = credsPerNode.get(nodeName);
-      if (creds == null) {
-        creds = getXynaUserCredentials(nodeName);
-        credsPerNode.put(nodeName, creds);
+  private void ensureLockIsPresent(String nodeName) {
+    if (!locksPerNode.containsKey(nodeName)) {
+      synchronized (this) {
+        if (!locksPerNode.containsKey(nodeName)) {
+          locksPerNode.putIfAbsent(nodeName, new Object());
+        }
       }
-      SessionCredentials createdSession = infrastructure.createSession(creds.getUserName(), creds.getPassword());
-      session = new Session(new XynaPlainSessionCredentials(createdSession.getSessionId(), createdSession.getToken()), System.currentTimeMillis());
-      sessionsPerNode.put(nodeName, session);
     }
-    return session.creds;
+  }
+
+  public XynaCredentials getCredentials(String nodeName, InfrastructureLinkProfile infrastructure) throws XFMG_NodeConnectException {
+    ensureLockIsPresent(nodeName);
+    synchronized (locksPerNode.get(nodeName)) {
+      Session session = sessionsPerNode.get(nodeName);
+      if (session == null) {
+        XynaUserCredentials creds = credsPerNode.get(nodeName);
+        if (creds == null) {
+          creds = getXynaUserCredentials(nodeName);
+          credsPerNode.put(nodeName, creds);
+        }
+        SessionCredentials createdSession = infrastructure.createSession(creds.getUserName(), creds.getPassword());
+        session = new Session(new XynaPlainSessionCredentials(createdSession.getSessionId(), createdSession.getToken()),
+                              System.currentTimeMillis());
+        sessionsPerNode.put(nodeName, session);
+      }
+      return session.creds;
+    }
+  }
+  
+  public XynaCredentials getCredentialsIfPresent(String nodeName) {
+    ensureLockIsPresent(nodeName);
+    synchronized(locksPerNode.get(nodeName)) {
+      Session session = sessionsPerNode.get(nodeName);
+      if(session == null) {
+        return null;
+      }
+      return session.creds;
+    }
   }
   
   
-  public synchronized void clearSession(String nodeName) {
-    Session session = sessionsPerNode.get(nodeName);
-    if (session != null && System.currentTimeMillis() - session.age >= minOffsetForSessionDeletion.getMillis()) {
-      //nicht die session entfernen, wenn sie gerade erst neu gemacht wurde (das passiert, wenn mehrere threads grob gleichzeitig einen fehler sehen)
-      //TODO schöner wäre es, wenn stattdessen alle interlink-verwender einfach konsistenz die session-fehler behandeln, d.h. wenn das alles über
-      //einen gemeinsamen codepfad gehen würde
-      sessionsPerNode.remove(nodeName);
+  public void clearSession(String nodeName) {
+    ensureLockIsPresent(nodeName);
+    synchronized (locksPerNode.get(nodeName)) {
+      Session session = sessionsPerNode.get(nodeName);
+      if (session != null && System.currentTimeMillis() - session.age >= minOffsetForSessionDeletion.getMillis()) {
+        //nicht die session entfernen, wenn sie gerade erst neu gemacht wurde (das passiert, wenn mehrere threads grob gleichzeitig einen fehler sehen)
+        //TODO schöner wäre es, wenn stattdessen alle interlink-verwender einfach konsistenz die session-fehler behandeln, d.h. wenn das alles über
+        //einen gemeinsamen codepfad gehen würde
+        sessionsPerNode.remove(nodeName);
+      }
     }
   }
 

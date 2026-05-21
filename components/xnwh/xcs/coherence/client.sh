@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Copyright 2022 Xyna GmbH, Germany
+# Copyright 2026 Xyna GmbH, Germany
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
-RMI_OPTIONS="-Djava.security.policy=server.policy"
+RMI_OPTIONS=""
 LOG4J_OPTIONS="-Dlog4j.debug=false -Dlog4j.configuration=file:log4j.properties";
 #DEBUG_OPTIONS="-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=4000 -Xdebug -Xnoagent -Djava.compiler=NONE";
 #PROFILING_OPTIONS="-Xrunhprof:cpu=samples,format=a,file=hprof.txt,cutoff=0,depth=12,thread=y"

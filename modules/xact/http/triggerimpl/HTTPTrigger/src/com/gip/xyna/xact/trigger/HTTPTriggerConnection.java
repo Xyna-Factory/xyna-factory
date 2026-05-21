@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,12 +36,15 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -79,7 +82,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
   private String method; 
   private Method methodEnum;
   private Properties header;
-  private Properties paras;
+  private HashMap<String, List<String>> parameters;
   private String payload;
   private String charSet = Charset.defaultCharset().name();
 
@@ -98,7 +101,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
                   HTTP_FORBIDDEN = "403 Forbidden", HTTP_NOTFOUND = "404 Not Found",
                   HTTP_BADREQUEST = "400 Bad Request", HTTP_UNAUTHORIZED = "401 Unauthorized",
                   HTTP_CONFLICT = "409 Conflict", HTTP_INTERNALERROR = "500 Internal Server Error",
-                  HTTP_NOTIMPLEMENTED = "501 Not Implemented";
+                  HTTP_NOTIMPLEMENTED = "501 Not Implemented", HTTP_SERVICE_ANAVAILABLE = "503 Service Unavailable";
 
 
   public static final String PROP_KEY_WWW_AUTHENTICATE = "WWW-Authenticate";
@@ -180,7 +183,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
     }
     triggerIp = trigger.getOwnIp();
     triggerHostname = trigger.getOwnHostname();
-
+    initCharset();
   }
 
 
@@ -230,11 +233,52 @@ public class HTTPTriggerConnection extends TriggerConnection {
       readMethodAndUriAndParameters(); //erste zeile die nicht nur ein zeilenumbruch ist
       readHeaders(); //zeilen in der form <name>=<value> CRLF
 
+      determineCharset();
     } catch (IOException e) {
       throw new HTTPTRIGGER_HTTP_STREAM_ERROR(e.getMessage(), e);
     }
   }
 
+  
+  private void initCharset() {
+    try {
+      String propval = HTTPTrigger.PROP_DEFAULT_ENCODING.get(); 
+      if (propval == null) { return; }
+      propval = propval.trim();
+      if (propval.length() < 1) { return; }
+      if (!Charset.isSupported(propval)) { return; }
+      this.charSet = propval;
+    }
+    catch (Exception e) {
+      logger.error("Error accessing xyna property for default encoding");
+    }
+  }
+  
+  
+  private void determineCharset() {
+    Object obj = header.get(PROP_KEY_CONTENT_TYPE.toLowerCase());
+    if (!(obj instanceof String)) { return; }    
+    String val = "";
+    for (String part : ((String) obj).toLowerCase().split(";")) {
+      part = part.trim();
+      if (part.startsWith("charset=")) { val = part.substring(8); break; }
+    }
+    if (val.length() == 0) { return; }
+    if (val.startsWith("'") || val.startsWith("\"")) {
+      val = val.substring(1);
+    }
+    if (val.endsWith("'") || val.endsWith("\"")) {
+      val = val.substring(0, val.length() - 1);
+    }
+    val = val.toUpperCase();
+    if (!Charset.isSupported(val)) { return; }
+    this.charSet = val;
+    if (!suppressLogging) {
+      logger.debug("Set charset to " + val);
+    }
+  }
+  
+  
   /**
    * 
    * @throws XynaException falls fehler nicht zurück signalisiert wurde
@@ -326,7 +370,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
             buf = new byte[(int) Math.min(512l, numberOfBytes - readBytes)];
             read = lineBufferedInputStream.read(buf);
           }
-
+          
           payload = new String(postLine.toByteArray(), getCharSet());
         }
     } catch (IOException e) {
@@ -350,7 +394,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
         }
         String chunk = readPayloadInternally(chunkSize, false);
         payloadBuilder.append(chunk);
-        String throwAwayLine = lineBufferedInputStream.readLine(); // we expect a trailing linebreak per chunk
+        lineBufferedInputStream.readLine(); // we expect a trailing linebreak per chunk
         chunkMeta = lineBufferedInputStream.readLine();
         if (chunkMeta == null) {
           break;
@@ -437,8 +481,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
 
 
   private void debugProperties(String fieldName, Properties properties, boolean onlyIfTraceDisabled) {
-
-    if (suppressLogging || !logger.isDebugEnabled() || (logger.isTraceEnabled() && onlyIfTraceDisabled)) {
+    if (!shouldDebugProperties(onlyIfTraceDisabled)) {
       return;
     }
 
@@ -457,6 +500,28 @@ public class HTTPTriggerConnection extends TriggerConnection {
 
     logger.debug(sb.toString());
 
+  }
+  
+  private boolean shouldDebugProperties(boolean onlyIfTraceDisabled) {
+    return !suppressLogging && logger.isDebugEnabled() && (!logger.isTraceEnabled() || !onlyIfTraceDisabled);
+  }
+  
+  private void debugParameters(Map<String, List<String>> data, boolean onlyIfTraceDisabled) {
+    if (!shouldDebugProperties(onlyIfTraceDisabled)) {
+      return;
+    }
+
+    StringBuilder sb = new StringBuilder();
+    sb.append("Parsed parameter fields: ");
+    int count = 0;
+    for (String key : data.keySet()) {
+      String value = String.join(", ", data.get(key));
+      sb.append("{").append(key).append(": ").append("[").append(value).append("]}");
+      count++;
+      if (count < data.size()) {
+        sb.append(", ");
+      }
+    }
   }
 
   private static final long timeoutFirstPartOfRequestLine = 5000; //TODO konfigurierbar?
@@ -537,10 +602,10 @@ public class HTTPTriggerConnection extends TriggerConnection {
     }
 
     // Decode parameters from the URI
-    paras = new Properties();
+    parameters = new HashMap<>();
     int qmi = uri.indexOf('?');
     if (qmi >= 0) {
-      decodeParas(uri.substring(qmi + 1), paras);
+      decodeParameters(uri.substring(qmi +1), parameters);
       uri = decode(uri.substring(0, qmi));
     } else {
       uri = decode(uri);
@@ -550,7 +615,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
       logger.debug("Method: " + methodEnum + ", URI: " + uri);
     }
 
-    debugProperties("parameter", paras, false);
+    debugParameters(parameters, false);
     
     try {
       this.socket.setSoTimeout(previousTimeout);
@@ -593,27 +658,27 @@ public class HTTPTriggerConnection extends TriggerConnection {
       }
     }
     logInvalidHttpRequest();
-    sendError(HTTP_BADREQUEST, "BAD REQUEST: Syntax error. Usage: GET /uri");
+    sendErrorResponse(HTTP_BADREQUEST, "BAD REQUEST: Syntax error. Usage: GET /uri");
   }
 
 
   /**
-   * Decodes parameters in percent-encoded URI-format ( e.g. "name=Jack%20Daniels&pass=Single%20Malt" ) and adds them to
-   * given Properties.
+   * Decodes parameters in percent-encoded URI-format ( e.g. "name=default%20workspace&desc=a%20description" ) and adds 
+   * them to given HashMap.
    */
-  private void decodeParas(String paras, Properties p) throws InterruptedException {
-    if (paras == null)
+  private void decodeParameters(String paras, HashMap<String, List<String>> p) {
+    if(paras == null) {
       return;
-
+    }
+    
     StringTokenizer st = new StringTokenizer(paras, "&");
     while (st.hasMoreTokens()) {
       String e = st.nextToken();
       int sep = e.indexOf('=');
-      if (sep >= 0) {
-        p.put(decode(e.substring(0, sep)).trim(), decode(e.substring(sep + 1)));
-      } else {
-        p.put(decode(e).trim(), "");
-      }
+      String key = sep >= 0 ? decode(e.substring(0, sep)).trim() : decode(e).trim();
+      String value = sep >= 0 ? decode(e.substring(sep + 1)) : "";
+      p.putIfAbsent(key, new ArrayList<String>());
+      p.get(key).add(value);
     }
   }
   
@@ -631,43 +696,6 @@ public class HTTPTriggerConnection extends TriggerConnection {
     }
   }
 
-  /**
-   * Decodes the percent encoding scheme. <br/>
-   * For example: "an+example%20string" -> "an example string"
-   * @deprecated
-   */
-  private String decodePercentX(String str) throws InterruptedException {
-    try {
-      StringBuffer sb = new StringBuffer();
-      for (int i = 0; i < str.length(); i++) {
-        char c = str.charAt(i);
-        switch (c) {
-          case '+' :
-            sb.append(' ');
-            break;
-          case '%' :
-            sb.append((char) Integer.parseInt(str.substring(i + 1, i + 3), 16));
-            i += 2;
-            break;
-          default :
-            sb.append(c);
-            break;
-        }
-      }
-      return sb.toString();
-    } catch (Exception e) {
-      try {
-        logInvalidHttpRequest();
-        sendError(HTTP_BADREQUEST, "BAD REQUEST: Bad percent-encoding.");
-      } catch (SocketNotAvailableException e1) {
-        if (!suppressLogging) {
-          logger.error("socket was unexpectedly not available when trying to send errormessage to client", e1);
-        }
-      }
-      return null; // wird nicht ausgeführt
-    }
-  }
-
 
   private void logInvalidHttpRequest() {
     if (!suppressLogging && logger.isInfoEnabled() && socket.getInetAddress() != null) {
@@ -680,7 +708,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
   public void sendResponse(String response) throws SocketNotAvailableException {
     try {
       byte[] msgBytes = response.getBytes(getCharSet());
-      sendResponse(HTTP_OK, MIME_PLAINTEXT, null, new ByteArrayInputStream(msgBytes), new Long(msgBytes.length));
+      sendResponse(HTTP_OK, MIME_PLAINTEXT, null, new ByteArrayInputStream(msgBytes), Long.valueOf(msgBytes.length));
     } catch (UnsupportedEncodingException e) {
       handleUnsupportedEncoding();
     }
@@ -689,7 +717,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
   public void sendHtmlResponse(String response) throws SocketNotAvailableException {
     try {
       byte[] msgBytes = response.getBytes(getCharSet());
-      sendResponse(HTTP_OK, MIME_HTML, null, new ByteArrayInputStream(msgBytes), new Long(msgBytes.length));
+      sendResponse(HTTP_OK, MIME_HTML, null, new ByteArrayInputStream(msgBytes),  Long.valueOf(msgBytes.length));
     } catch (UnsupportedEncodingException e) {
       handleUnsupportedEncoding();
     }
@@ -713,21 +741,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
 
 
   public void sendError(String s) throws SocketNotAvailableException {
-    StringBuffer sb = new StringBuffer();
-    sb.append("<html><body><h3>" + HTTP_INTERNALERROR + "</h3>");
-    sb.append(s);
-    sb.append("</body></html>");
-    ByteArrayInputStream bais = null;
-    long length;
-    try {
-      byte[] msgBytes = sb.toString().getBytes(getCharSet());
-      length = msgBytes.length;
-      bais = new ByteArrayInputStream(msgBytes);
-    } catch (UnsupportedEncodingException e1) {
-      handleUnsupportedEncoding();
-      length = -1; //hier kommt man nicht hin
-    }
-    sendResponse(HTTP_INTERNALERROR, MIME_HTML, null, bais, length);
+      sendErrorResponse(HTTP_INTERNALERROR, s);
   }
 
   public void sendError(XynaException[] es, boolean logError) throws SocketNotAvailableException {
@@ -750,16 +764,31 @@ public class HTTPTriggerConnection extends TriggerConnection {
     sendError(es, true);
   }
 
+
+  /**
+   * @deprecated use sendErrorResponse instead.
+   */
   @Deprecated
-  public void sendError(String status, String msg) throws InterruptedException, SocketNotAvailableException {
-    msg = "<html><body><h3>" + msg + "</h3></body></html>";
+  public void sendError(String status, String msg) throws SocketNotAvailableException, InterruptedException {
+    sendErrorResponse(status, msg);
+  }
+
+  public void sendErrorResponse(String status, String msg) throws SocketNotAvailableException {
+    StringBuffer sb = new StringBuffer();
+    sb.append("<html><body><h3>").append(status).append("</h3>");
+    sb.append(msg);
+    sb.append("</body></html>");
+    ByteArrayInputStream bais = null;
+    long length;
     try {
-      byte[] msgBytes = msg.getBytes(getCharSet());
-      sendResponse(status, MIME_HTML, null, new ByteArrayInputStream(msgBytes), new Long(msgBytes.length));
-    } catch (UnsupportedEncodingException e) {
+      byte[] msgBytes = sb.toString().getBytes(getCharSet());
+      length = msgBytes.length;
+      bais = new ByteArrayInputStream(msgBytes);
+    } catch (UnsupportedEncodingException e1) {
       handleUnsupportedEncoding();
+      length = -1; //hier kommt man nicht hin
     }
-    throw new InterruptedException();
+    sendResponse(status, MIME_HTML, null, bais, length);
   }
 
 
@@ -787,6 +816,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
   /**
    * @deprecated use {@link #getAuthenticationInformationOrSend401Response(String, String)}
    */
+  @Deprecated
   public DigestAuthentificationInformation getAuthentificationInformationOrSend401Response(String realm, String mime)
                   throws XynaException, InterruptedException {
     return getAuthenticationInformationOrSend401Response(realm, mime);
@@ -811,6 +841,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
   /**
    * @deprecated use {@link #getAuthenticationInformationOrSend401Response(String, String, String)}
    */
+  @Deprecated
   public DigestAuthentificationInformation getAuthentificationInformationOrSend401Response(String realm, String mime,
                                                                                            String password)
                   throws InterruptedException, XynaException {
@@ -988,7 +1019,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
             // workaround for multiple response header entries with the same name
             Object complexValue = responseHeader.get(key);
             if (complexValue instanceof List) {
-              for (Object singleValue : (List)complexValue) {
+              for (Object singleValue : (List<?>)complexValue) {
                 pw.print(key+": "+String.valueOf(singleValue)+CRLF);
               }
             }
@@ -1049,7 +1080,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
 
 
   public String getMethod() {
-    return methodEnum.name();
+    return methodEnum == null ? null : methodEnum.name();
   }
   
   public Method getMethodEnum() {
@@ -1059,10 +1090,17 @@ public class HTTPTriggerConnection extends TriggerConnection {
   public Properties getHeader() {
     return header;
   }
-
-
-  public Properties getParas() {
-    return paras;
+  
+  public HashMap<String, List<String>> getParameters() {
+    return parameters;
+  }
+  
+  public String getFirstValueOfParameter(String key) {
+    return parameters.get(key).get(0);
+  }
+  
+  public String getFirstValueOfParameterOrDefault(String key, String def) {
+    return parameters.containsKey(key) ? getFirstValueOfParameter(key) : def;
   }
 
   public String getPayload() {

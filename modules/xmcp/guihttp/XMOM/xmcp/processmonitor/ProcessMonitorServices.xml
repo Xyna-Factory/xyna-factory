@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,20 +34,6 @@
       </Throws>
       <SourceCode>
         <CodeSnippet Type="Java">xmcp.processmonitor.ProcessMonitorServicesImpl.cancelFrequencyControlledTask(taskId);</CodeSnippet>
-      </SourceCode>
-    </Operation>
-    <Operation IsStatic="true" Label="Get Audit" Name="getAudit">
-      <Input>
-        <Data Label="Order Overview entry" ReferenceName="OrderOverviewEntry" ReferencePath="xmcp.processmonitor.datatypes" VariableName="orderOverviewEntry"/>
-      </Input>
-      <Output>
-        <Data Label="Audit" ReferenceName="Audit" ReferencePath="xmcp.processmonitor.datatypes" VariableName="audit"/>
-      </Output>
-      <Throws>
-        <Exception Label="No Audit Data" ReferenceName="NoAuditData" ReferencePath="xmcp.processmonitor.datatypes" VariableName="noAuditData"/>
-      </Throws>
-      <SourceCode>
-        <CodeSnippet Type="Java">return xmcp.processmonitor.ProcessMonitorServicesImpl.getAudit(orderOverviewEntry);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Get Capacities" Name="getCapacities">
@@ -222,13 +208,7 @@
         <Data ID="48" IsList="true" Label="Table Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn48"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">for (var column : tableColumn47) {
-    if (column.getPath().equals(columnPath49.getValue())) {
-        column.setPath(columnPath50.getValue());
-    }
-}
-
-return tableColumn47;</CodeSnippet>
+        <CodeSnippet Type="Java">return xmcp.processmonitor.ProcessMonitorServicesImpl.mapColumnPath(tableColumn47, columnPath49, columnPath50);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

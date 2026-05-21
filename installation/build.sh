@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Copyright 2024 Xyna GmbH, Germany
+# Copyright 2025 Xyna GmbH, Germany
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,6 +23,13 @@ print_help() {
   echo "Usage: $0 build"
   echo "Usage: $0 all -b GIT_BRANCH_XYNA_MODELLER"
   echo "Usage: $0 compose"
+  echo "Usage: $0 plugins"
+  echo "Usage: $0 clusterproviders"
+  echo "Usage: $0 conpooltypes"
+  echo "Usage: $0 install_libs"
+  #creates necessary libs for generating application xmls from workspace-xml (from gitintegration)
+  # (invoked by buildApplication.xml generate-application-xml)
+  echo "Usage: $0 install_gitintegration_libs (depends on build)"
 }
 
 check_dependencies() {
@@ -39,8 +46,44 @@ check_dependencies_frontend() {
 }
 
 checkout_factory() {
-  echo "cheking out factory..."
+  echo "checking out factory..."
   # $1 where to check out
+}
+
+install_libs() {
+  echo "installing libs..."
+  if [[ -z ${MAVEN_RESOLVER_ANT_TASKS_VERSION} ]]; then
+    print_help
+    echo "Error: MAVEN_RESOLVER_ANT_TASKS_VERSION is not set"; 
+    exit 1
+  fi
+  if [[ -z ${ANT_CONTRIB_TASKS_VERSION} ]]; then
+    print_help
+    echo "Error: ANT_CONTRIB_TASKS_VERSION is not set"; 
+    exit 1
+  fi
+  HTTP_CODE_OK=200
+  
+  mkdir -p ${HOME}/.ant/lib
+  URL=https://repo1.maven.org/maven2/org/apache/maven/resolver/maven-resolver-ant-tasks/${MAVEN_RESOLVER_ANT_TASKS_VERSION}/maven-resolver-ant-tasks-${MAVEN_RESOLVER_ANT_TASKS_VERSION}-uber.jar
+  TARGET_FILE=${HOME}/.ant/lib/maven-resolver-ant-tasks-${MAVEN_RESOLVER_ANT_TASKS_VERSION}-uber.jar
+  HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" ${URL})
+  if [ "$HTTP_CODE" != "$HTTP_CODE_OK" ]; then 
+    echo "Error: HTTP_CODE=${HTTP_CODE}, URL=${URL}"; 
+    exit 1
+  fi
+  curl -s ${URL} -o "${TARGET_FILE}"
+  
+  URL=https://repo1.maven.org/maven2/ant-contrib/ant-contrib/${ANT_CONTRIB_TASKS_VERSION}/ant-contrib-${ANT_CONTRIB_TASKS_VERSION}.jar
+  TARGET_FILE="${HOME}/.ant/lib/ant-contrib-${ANT_CONTRIB_TASKS_VERSION}.jar"
+  HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" ${URL})
+  if [ "$HTTP_CODE" != "$HTTP_CODE_OK" ]; then 
+    echo "Error: HTTP_CODE=${HTTP_CODE}, URL=${URL}"; 
+    exit 1
+  fi
+  curl -s ${URL} -o "${TARGET_FILE}"
+  echo "ls -l ${HOME}/.ant/lib"
+  ls -l ${HOME}/.ant/lib
 }
 
 build_xynautils_exceptions() {
@@ -49,9 +92,7 @@ build_xynautils_exceptions() {
   mkdir -p lib
   mvn dependency:resolve
   mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  ant -Doracle.home=/tmp integration
-  mv ../releases/xynautils-exceptions/xynautils-exceptions-I*[0-9].jar ../releases/xynautils-exceptions/xynautils-exceptions.jar
-  mvn install:install-file -Dfile=../releases/xynautils-exceptions/xynautils-exceptions.jar -DpomFile=./pom.xml
+  ant -Doracle.home=/tmp installMavenArtifact
 }
 
 build_xynautils_logging() {
@@ -60,9 +101,7 @@ build_xynautils_logging() {
   mkdir -p lib
   mvn dependency:resolve
   mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  ant -Doracle.home=/tmp integration
-  mv ../releases/xynautils-logging/xynautils-logging-I*[0-9].jar ../releases/xynautils-logging/xynautils-logging.jar
-  mvn install:install-file -Dfile=../releases/xynautils-logging/xynautils-logging.jar -DpomFile=./pom.xml
+  ant -Doracle.home=/tmp installMavenArtifact
 }
 
 build_xynautils_database() {
@@ -71,9 +110,7 @@ build_xynautils_database() {
   mkdir -p lib
   mvn dependency:resolve
   mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  ant -Doracle.home=/tmp integration
-  mv ../releases/xynautils-database/xynautils-database-I*[0-9].jar ../releases/xynautils-database/xynautils-database.jar
-  mvn install:install-file -Dfile=../releases/xynautils-database/xynautils-database.jar -DpomFile=./pom.xml
+  ant -Doracle.home=/tmp installMavenArtifact
 }
 
 build_xynautils_snmp() {
@@ -82,9 +119,7 @@ build_xynautils_snmp() {
   mkdir -p lib
   mvn dependency:resolve
   mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  ant -Doracle.home=/tmp integration
-  mv ../releases/xynautils-snmp/xynautils-snmp-I*[0-9].jar ../releases/xynautils-snmp/xynautils-snmp.jar
-  mvn install:install-file -Dfile=../releases/xynautils-snmp/xynautils-snmp.jar -DpomFile=./pom.xml
+  ant -Doracle.home=/tmp installMavenArtifact
 }
 
 build_xynautils_ldap() {
@@ -93,9 +128,7 @@ build_xynautils_ldap() {
   mkdir -p lib
   mvn dependency:resolve
   mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  ant -Doracle.home=/tmp integration
-  mv ../releases/xynautils-ldap/xynautils-ldap-I*[0-9].jar ../releases/xynautils-ldap/xynautils-ldap.jar
-  mvn install:install-file -Dfile=../releases/xynautils-ldap/xynautils-ldap.jar -DpomFile=./pom.xml
+  ant -Doracle.home=/tmp installMavenArtifact
 }
 
 build_xynautils_misc() {
@@ -104,96 +137,50 @@ build_xynautils_misc() {
   mkdir -p lib
   mvn dependency:resolve
   mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  ant -Doracle.home=/tmp integration
-  mv ../releases/xynautils-misc/xynautils-misc-I*[0-9].jar ../releases/xynautils-misc/xynautils-misc.jar
-  mvn install:install-file -Dfile=../releases/xynautils-misc/xynautils-misc.jar -DpomFile=./pom.xml
+  ant -Doracle.home=/tmp installMavenArtifact
+}
+
+build_xynautils_xml() {
+  echo "building xynautils-xml..."
+  cd $SCRIPT_DIR/../xynautils/xml
+  mkdir -p lib
+  mvn dependency:resolve
+  mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
+  ant -Doracle.home=/tmp installMavenArtifact
+}
+
+build_xynautils_soap() {
+  echo "building xynautils-soap..."
+  cd $SCRIPT_DIR/../xynautils/soap
+  mkdir -p lib
+  mvn dependency:resolve
+  mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
+  ant -Doracle.home=/tmp installMavenArtifact
 }
 
 build_misc() {
   echo "building misc..."
   cd $SCRIPT_DIR/../misc
-  mkdir -p lib/xyna
-  mvn dependency:resolve
-  mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  sed -i 's/ depends="resolve"//' build.xml
-  ant -Doracle.home=/tmp build
-  mvn install:install-file -Dfile=./deploy/misc.jar -DpomFile=./pom.xml
+  ant -Doracle.home=/tmp installMavenArtifact
+}
+
+build_cligenerator_jar() {
+  echo "building cligenerator"
+  cd $SCRIPT_DIR/../server
+  mvn -f cligenerator.pom.xml dependency:resolve
+  mvn -f cligenerator.pom.xml -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
+  ant -Doracle.home=/tmp installMavenArtifactCLIGenerator
 }
 
 build_xynafactory_jar() {
   echo "building xynafactory.jar..."
   cd $SCRIPT_DIR/../server
-  mkdir -p lib/internal_xyna
-  cp build.xml build.xml.bak
-  sed -i 's/depends="resolve, /depends="/' build.xml
-  sed -i "s/XynaFactoryServer/xynafactory/" pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>ecj</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>XynaJavaSerializationPersistenceLayer</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>OraclePersistenceLayer</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>XynaLocalMemoryPersistenceLayer</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>XynaMemoryPersistenceLayer</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>XynaXMLShellPersistenceLayer</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>xynafactoryCLIGenerator</{N;N;d}}}' pom.xml
-  mvn dependency:resolve
-  mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  ant -Doracle.home=/tmp buildCliClassGeneratorJar
-  mvn install:install-file -Dfile=./deploy/xynafactoryCLIGenerator.jar -DpomFile=./pom.xml -Dversion=1.0.0 -DartifactId=xynafactoryCLIGenerator -DgroudId="com.gip.xyna"
-  cp ./deploy/xynafactoryCLIGenerator.jar lib/xynafactoryCLIGenerator-1.0.0.jar
-  ant -Doracle.home=/tmp build
-  mvn install:install-file -Dfile=./deploy/xynafactory.jar -DpomFile=./pom.xml
-  cp lib/xynafactoryCLIGenerator-1.0.0.jar .
-  
-  
-  ant -Doracle.home=/tmp -Dxyna.clusterprovider.OracleRACClusterProvider=false build
-  
-  rm -rf lib build.xml
-  mv build.xml.bak build.xml
-  mkdir -p lib/internal_xyna
-  mv xynafactoryCLIGenerator-1.0.0.jar lib/
-}
-
-
-prepare_modules() {
-  echo "prepareing modules..."
-  cd $SCRIPT_DIR/..
-  # sed -i '/websphere/d' modules/xact/queue/build.xml # can not build without unavailable libs
-  sed -i '/<dependency>/{N;N;{/<artifactId>com.ibm.mq.traceControl/{N;N;d}}}' modules/xact/queue/webspheremq/sharedlib/webspheremq/pom.xml
-  sed -i '/<dependency>/{N;N;{/fscontext/{N;N;d}}}' modules/xact/queue/webspheremq/sharedlib/webspheremq/pom.xml
-  sed -i '/<dependency>/{N;N;{/javaee-api/{N;N;d}}}' modules/xact/queue/webspheremq/sharedlib/webspheremq/pom.xml
-  sed -i '/<dependency>/{N;N;{/providerutil/{N;N;d}}}' modules/xact/queue/webspheremq/sharedlib/webspheremq/pom.xml
-  sed -i '/<dependency>/{N;N;{/jms/{N;N;d}}}' modules/xact/queue/webspheremq/sharedlib/webspheremq/pom.xml
-  sed -i '/<\/dependencies>/,$d'  modules/xact/queue/webspheremq/sharedlib/webspheremq/pom.xml
-  echo "<dependency><groupId>org.apache.geronimo.specs</groupId><artifactId>geronimo-jms_1.1_spec</artifactId><version>1.1.1</version></dependency>" >> modules/xact/queue/webspheremq/sharedlib/webspheremq/pom.xml
-  echo "</dependencies></project>" >> modules/xact/queue/webspheremq/sharedlib/webspheremq/pom.xml
-  sed -i '/<copy/d' modules/xact/queue/webspheremq/sharedlib/webspheremq/build.xml
-  sed -i '/<dependency>/{N;N;{/jms/{N;N;d}}}' modules/xact/queue/webspheremq/mdmimpl/WebSphereMQImpl/pom.xml
-  sed -i '/<\/dependencies>/,$d'  modules/xact/queue/webspheremq/mdmimpl/WebSphereMQImpl/pom.xml
-  echo "<dependency><groupId>org.apache.geronimo.specs</groupId><artifactId>geronimo-jms_1.1_spec</artifactId><version>1.1.1</version></dependency>" >> modules/xact/queue/webspheremq/mdmimpl/WebSphereMQImpl/pom.xml
-  echo "</dependencies></project>" >> modules/xact/queue/webspheremq/mdmimpl/WebSphereMQImpl/pom.xml
-  sed -i '/<dependency>/{N;N;{/jms/{N;N;d}}}' modules/xact/queue/webspheremq/triggerimpl/WebSphereMQTrigger/test_filter/pom.xml
-  sed -i '/<\/dependencies>/,$d' modules/xact/queue/webspheremq/triggerimpl/WebSphereMQTrigger/test_filter/pom.xml
-  echo "<dependency><groupId>org.apache.geronimo.specs</groupId><artifactId>geronimo-jms_1.1_spec</artifactId><version>1.1.1</version></dependency>" >> modules/xact/queue/webspheremq/triggerimpl/WebSphereMQTrigger/test_filter/pom.xml
-  echo "</dependencies></project>" >> modules/xact/queue/webspheremq/triggerimpl/WebSphereMQTrigger/test_filter/pom.xml
-  mkdir -p modules/xact/queue/webspheremq/sharedlib/webspheremq/lib
-  mkdir -p modules/xact/queue/webspheremq/triggerimpl/WebSphereMQTrigger/test_filter/lib
-  mkdir -p modules/xact/queue/webspheremq/mdmimpl/WebSphereMQImpl/lib
-  cd modules/xact/queue/webspheremq/sharedlib/webspheremq
-  mvn dependency:resolve
-  mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  cd ../../../../../../
-  cd modules/xact/queue/webspheremq/mdmimpl/WebSphereMQImpl/
-  mvn dependency:resolve
-  mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  cd ../../../../../../
-  cd modules/xact/queue/webspheremq/triggerimpl/WebSphereMQTrigger/test_filter
-  mvn dependency:resolve
-  mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
+  ant -Doracle.home=/tmp -Dxyna.clusterprovider.OracleRACClusterProvider=false installMavenArtifactXynaFactory
 }
 
 build_oracle_aq_tools() {
   echo "build oracleAQ Tools"
   cd $SCRIPT_DIR/build
-  sed -i 's#name="prepareLibs"#name="prepareLibsX"#' ../../modules/xact/queue/oracleaq/sharedlib/OracleAQTools/build.xml
   ant -Doracle.home=/tmp -f ../../modules/xact/queue/oracleaq/sharedlib/OracleAQTools/build.xml build
   mvn install:install-file -Dfile=../../modules/xact/queue/oracleaq/sharedlib/OracleAQTools/deploy/OracleAQTools.jar -DpomFile=../../modules/xact/queue/oracleaq/sharedlib/OracleAQTools/pom.xml 
 }
@@ -208,7 +195,7 @@ build_conpooltypes() {
   echo "building connectionpooltypes..."
   cd $SCRIPT_DIR/build
   ant -Doracle.home=/tmp conpooltypes
-  mvn install:install-file -Dfile=../../common/lib/xyna/DefaultConnectionPoolTypes-1.0.0.jar -DpomFile=../../components/xnwh/pools/DefaultConnectionPoolTypes/pom.xml
+  mvn install:install-file -Dfile=../../common/lib/xyna/DefaultConnectionPoolTypes-1.0.1.jar -DpomFile=../../components/xnwh/pools/DefaultConnectionPoolTypes/pom.xml
 }
 
 build_persistencelayers() {
@@ -216,13 +203,11 @@ build_persistencelayers() {
   cd $SCRIPT_DIR/build
   
   #build and install memory persistencelayer
-  ant -Doracle.home=/tmp -f  ../../persistencelayers/XynaMemoryPersistenceLayer/build.xml
-  mvn install:install-file -Dfile=../../persistencelayers/XynaMemoryPersistenceLayer/deploy/XynaMemoryPersistenceLayer.jar -DpomFile=../../persistencelayers/XynaMemoryPersistenceLayer/pom.xml
-
+  ant -Doracle.home=/tmp -f  ../../persistencelayers/XynaMemoryPersistenceLayer/build.xml installMavenArtifact
+ 
   #build and install install XynaJavaSerializationPersistenceLayer
-  ant -Doracle.home=/tmp -f ../../persistencelayers/XynaJavaSerializationPersistenceLayer/build.xml
-  mvn install:install-file -Dfile=../../persistencelayers/XynaJavaSerializationPersistenceLayer/deploy/XynaJavaSerializationPersistenceLayer.jar -DpomFile=../../persistencelayers/XynaJavaSerializationPersistenceLayer/pom.xml
-
+  ant -Doracle.home=/tmp -f ../../persistencelayers/XynaJavaSerializationPersistenceLayer/build.xml installMavenArtifact
+ 
   # build all persistencelayers
   ant -Doracle.home=/tmp buildPersistenceLayers  
 }
@@ -238,7 +223,6 @@ build_clusterproviders() {
   
   #oracle rac cluster provider
   cd $SCRIPT_DIR/../clusterproviders/OracleRACClusterProvider
-  rm -f /test/com/gip/xyna/xfmg/xclusteringservices/clusterprovider/OracleRACClusterProviderTest.java
   ant -Doracle.home=/tmp
   
   #xsor cluster provider
@@ -251,8 +235,7 @@ build_networkavailability() {
   
   #build and install demon
   cd $SCRIPT_DIR/../components/xact/demon
-  ant -Doracle.home=/tmp
-  mvn install:install-file -Dfile=$SCRIPT_DIR/../components/xact/demon/deploy/demonlib.jar -DpomFile=$SCRIPT_DIR/../components/xact/demon/pom.xml
+  ant -Doracle.home=/tmp installMavenArtifact
 
   #build networkavailability
   cd $SCRIPT_DIR/../components/xact/NetworkAvailability
@@ -267,6 +250,16 @@ compose_networkavailability() {
   cp -r $SCRIPT_DIR/../components/xact/NetworkAvailability/lib .
   cp $SCRIPT_DIR/../components/xact/NetworkAvailability/*.sh .
   cp $SCRIPT_DIR/../components/xact/NetworkAvailability/log4j.properties .
+}
+
+install_gitintegration_libs() {
+  mkdir -p $SCRIPT_DIR/build/lib/gitintegration
+  cd $SCRIPT_DIR/../modules/xmcp/gitIntegration
+  ant prepare-mdm-jar
+  cd $SCRIPT_DIR/../modules/xmcp/gitIntegration/mdmimpl/WorkspaceObjectManagementImpl
+  ant build
+  cp -r deploy/* $SCRIPT_DIR/build/lib/gitintegration
+  cp -r lib/xyna/* $SCRIPT_DIR/build/lib/gitintegration
 }
 
 build_prerequisites() {
@@ -293,6 +286,7 @@ build_xyna_factory() {
   mkdir -p release
   
   compose_checkscripts
+  compose_scripts
   compose_components
   compose_dhcpd
   compose_doc
@@ -360,43 +354,8 @@ compose_thirdparties() {
   cd $SCRIPT_DIR/../release
   mkdir third_parties
   cd $SCRIPT_DIR/build
-  # backup pom.xml
-  cp pom.xml pom.xml-bak
-  # comment "dependencyManagement"-tags
-  sed -i s/\<dependencyManagement\>/\<\!--dependencyManagement--\>/g pom.xml
-  sed -i s:\</dependencyManagement\>:\<\!--/dependencyManagement--\>:g pom.xml
-  # delete unfree or erroneous dependencies
-  sed -i '/<dependency>/{N;N;{/<artifactId>demonlib</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>DHCPClusterStateSharedLib</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>DHCPv6DBStorablesSharedLib</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>DHCPSharedLib</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>OraclePersistenceLayer</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>RemoteGenericODSAccess</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>SFTPTrigger</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>XynaContentStorables</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>XynaLocalMemoryPersistenceLayer</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>XynaXMLShellPersistenceLayer</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>com.ibm.mq.allclient</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>com.ibm.mq.traceControl</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>tools</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>fscontext</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>providerutil</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>javaee-api</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>jms</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>jradius-core</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>jradius-dictionary</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>jradius-extended</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>ecj</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>gnu-crypto</{N;N;d}}}' pom.xml
-  echo "pom.xml:"
-  echo "$(cat pom.xml)"
   # run license downloads (bom must have name "pom.xml")
-  mvn license:download-licenses -DlicensesOutputDirectory=$SCRIPT_DIR/../release/third_parties -DlicensesOutputFile=$SCRIPT_DIR/../release/third_parties/licenses.xml
-  echo "license.xml"
-  echo "$(cat $SCRIPT_DIR/../release/third_parties/licenses.xml)"
-  # restore backup
-  rm pom.xml
-  mv pom.xml-bak pom.xml
+  mvn license:download-licenses -f third_parties.pom.xml -DlicensesOutputDirectory=$SCRIPT_DIR/../release/third_parties -DlicensesOutputFile=$SCRIPT_DIR/../release/third_parties/licenses.xml
   echo "license-download done"
 }
 
@@ -434,10 +393,14 @@ compose_dhcpd() {
 
 }
 
-
 compose_checkscripts() {
   cd $SCRIPT_DIR/../release
   cp -r ../installation/CheckScripts .
+}
+
+compose_scripts() {
+  cd $SCRIPT_DIR/../release
+  cp -r ../installation/scripts .
 }
 
 compose_files() {
@@ -467,6 +430,7 @@ compose_server() {
   compose_server_exceptions
   compose_server_lib
   compose_server_orderinpoutsourcetypes
+  compose_server_sharedresourcesynchronizers
   compose_server_persistencelayers
   compose_server_repositoryaccess
   compose_server_resources
@@ -478,7 +442,6 @@ compose_server_files() {
   cd $SCRIPT_DIR/../release
   cp ../server/log4j2.xml ./server
   cp ../server/product_lib.sh ./server
-  cp ../server/server.policy ./server
   cp ../server/deploy/TemplateImpl.zip ./server
   cp ../server/deploy/TemplateImplNew.zip ./server
   cp ../server/xynafactory.sh ./server
@@ -534,8 +497,13 @@ compose_server_persistencelayers() {
 
 compose_server_orderinpoutsourcetypes() {
   cd $SCRIPT_DIR/../release/server
+  rm -rf $SCRIPT_DIR/../localbuild/server/orderinputsourcetypes/*/xyna
   cp -r $SCRIPT_DIR/../localbuild/server/orderinputsourcetypes .
-  rm -rf $SCRIPT_DIR/../localbuild/server/orderinputsourcetypes/deploy/*/xyna
+}
+
+compose_server_sharedresourcesynchronizers() {
+  cd $SCRIPT_DIR/../release/server
+  cp -r $SCRIPT_DIR/../localbuild/server/sharedresourcesynchronizers .
 }
 
 compose_server_lib() {
@@ -588,8 +556,6 @@ compose_modeller() {
 prepare_build() {
   mkdir -p /opt/common
   cd $SCRIPT_DIR/build
-  sed -i "s#<url>file:\/\/.*<\/url>#<url>file://$HOME/.m2/repository<\/url>#" $SCRIPT_DIR/build/defaultMavenSettings.xml #TODO: allow config
-  sed -i "s#<localRepository>.*</localRepository>#<localRepository>//$HOME/.m2/repository</localRepository>#" $SCRIPT_DIR/build/defaultMavenSettings.xml
   mvn install
 }
 
@@ -602,6 +568,8 @@ build_xynautils() {
   build_xynautils_snmp
   build_xynautils_ldap
   build_xynautils_misc
+  build_xynautils_xml
+  build_xynautils_soap
 }
 
 fill_lib() {
@@ -610,9 +578,14 @@ fill_lib() {
   ant resolve
 }
 
+cleanup_lib() {
+  echo "cleanup lib..."
+  cd $SCRIPT_DIR/build/lib
+  rm -rf factory
+}
+
 build_all() {
   build
-  build_oracle_aq_tools
   build_modules
   build_plugins
   build_clusterproviders
@@ -626,20 +599,20 @@ build_all() {
 build() {
   build_xynautils
   build_misc
+  build_cligenerator_jar
   build_xynafactory_jar
   build_conpooltypes
   build_persistencelayers
   fill_lib
-  prepare_modules
   build_oracle_aq_tools
 }
 
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+. ${SCRIPT_DIR}/build.env
+GIT_BRANCH_XYNA_MODELLER=""
 
 check_dependencies
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 prepare_build
-
-GIT_BRANCH_XYNA_MODELLER=""
 
 case $1 in
   "xynautils")
@@ -675,6 +648,15 @@ case $1 in
     ;;
   "conpooltypes")
     build_conpooltypes
+    ;;
+  "install_libs")
+    install_libs
+    ;;
+  "cleanup_lib")
+    cleanup_lib
+    ;;
+  "install_gitintegration_libs")
+    install_gitintegration_libs
     ;;
   *)
     print_help

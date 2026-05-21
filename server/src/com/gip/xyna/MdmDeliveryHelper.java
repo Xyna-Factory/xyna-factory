@@ -47,7 +47,7 @@ public class MdmDeliveryHelper {
       if (isXmlFile) {
         return true;
       } else {
-        boolean isNonSvnDirectory = new File(dir, name).isDirectory() && !name.equals(".svn");
+        boolean isNonSvnDirectory = new File(dir, name).isDirectory();
         if (isNonSvnDirectory) {
           return true;
         }

@@ -97,7 +97,6 @@ public class CommandLineArgumentJavaGenerator {
   private static final String CLIREGISTRY_CLASSNAME = "com.gip.xyna.xmcp.xfcli.CLIRegistry";
 
   public static void main(String[] args) throws Exception {
-
     String xmlFileBaseLocationString = args[0];
     String targetSourceFolderString = args[1];
     String targetPackage = args[2];
@@ -242,6 +241,7 @@ public class CommandLineArgumentJavaGenerator {
     cb.addLine("private ", className, "() {");
     cb.addLine("}").addLB();
 
+    cb.addLine("@SuppressWarnings(\"unchecked\")");
     cb.addLine("public static List<Class<? extends ", AXYNACOMMAND_SIMPLE_CLASS_NAME, ">> getCommands() throws ",
                ClassNotFoundException.class.getSimpleName(), "{");
     cb.addLine(List.class.getSimpleName(),"<Class<? extends ", AXYNACOMMAND_SIMPLE_CLASS_NAME, ">> list = new ", ArrayList.class.getSimpleName(), "<Class<? extends ", AXYNACOMMAND_SIMPLE_CLASS_NAME, ">>()");
@@ -391,7 +391,7 @@ public class CommandLineArgumentJavaGenerator {
 
     cb.addLine("package ", targetPackage, ".generated").addLB();
 
-    for (String s : getParserImports()) {
+    for (String s : getParserImports(argumentInfoList)) {
       cb.addLine("import " + s);
     }
     cb.addLine("import ", targetPackage, ".impl.", getImplClassNameByCommandName(commandName));
@@ -504,6 +504,9 @@ public class CommandLineArgumentJavaGenerator {
 
 
     //@Override
+    if(!argumentInfoList.isEmpty()) {
+      cb.addLine("@SuppressWarnings(\"static-access\")");
+    }
     cb.addLine("public ", Options.class.getSimpleName(), " getAllOptions() {");
     cb.addLine("if (allOptions == null) {");
 
@@ -533,24 +536,26 @@ public class CommandLineArgumentJavaGenerator {
     cb.addLine("}").addLB(); // end getAllOptions
 
     cb.addLine("protected void setFieldsByParsedOptions(", Option.class.getSimpleName(), "[] options) {");
-    cb.addLine("for (", Option.class.getSimpleName(), " o: options) {");
-    for (ArgumentOptionInformation info : argumentInfoList) {
-      cb.addLine("if (\"", info.name, "\".equals(o.getOpt())) {");
-      if (!info.multipleValues) {
-        cb.addLine("this.", info.name, " = o.getValue()");
-      } else {
-        cb.addLine("this.", info.name, " = o.getValues()");
+    if(!argumentInfoList.isEmpty() || !boolOptionInfoList.isEmpty()) {
+      cb.addLine("for (", Option.class.getSimpleName(), " o: options) {");
+      for (ArgumentOptionInformation info : argumentInfoList) {
+        cb.addLine("if (\"", info.name, "\".equals(o.getOpt())) {");
+        if (!info.multipleValues) {
+          cb.addLine("this.", info.name, " = o.getValue()");
+        } else {
+          cb.addLine("this.", info.name, " = o.getValues()");
+        }
+        cb.addLine("continue");
+        cb.addLine("}");
       }
-      cb.addLine("continue");
-      cb.addLine("}");
+      for (BooleanOptionInformation info : boolOptionInfoList) {
+        cb.addLine("if (\"", info.name, "\".equals(o.getOpt())) {");
+        cb.addLine("this.", info.name, " = true");
+        cb.addLine("continue");
+        cb.addLine("}");
+      }
+      cb.addLine("}"); // for loop
     }
-    for (BooleanOptionInformation info : boolOptionInfoList) {
-      cb.addLine("if (\"", info.name, "\".equals(o.getOpt())) {");
-      cb.addLine("this.", info.name, " = true");
-      cb.addLine("continue");
-      cb.addLine("}");
-    }
-    cb.addLine("}"); // for loop
     cb.addLine("}").addLB(); // setFieldsByParsedOptions
 
 
@@ -624,30 +629,35 @@ public class CommandLineArgumentJavaGenerator {
     cb.addLine("}").addLB();
     
     //commandline als text
-    cb.addLine("public String getCommandAsString() throws ", INVALID_PARAMETERNUMBER_SIMPLE_CLASS_NAME," {");
-    cb.addLine("StringBuilder sb = new StringBuilder(getCommandName())");
-    cb.addLine("for (", Option.class.getSimpleName(), " o: (Collection<", Option.class.getSimpleName(), ">)getAllOptions().getOptions()) {");
-    for (ArgumentOptionInformation info : argumentInfoList) {
-      cb.addLine("if (\"", info.name, "\".equals(o.getOpt())) {");
-      cb.addLine("if (", info.name, " == null) {");
-      cb.addLine("if (o.isRequired()) {");
-      cb.addLine("throw createInvalidParaEx()");
-      cb.addLine("}"); //required
-      cb.addLine("} else {");
-      cb.add("sb.append(\" -\").append(o.getOpt())");
-      if (info.multipleValues) {
-        cb.addLB();
-        cb.addLine("for (String _1", info.name, " : ", info.name, ") {");
-        cb.addLine("sb.append(\" \").append(_1", info.name, ")");
-        cb.addLine("}");
-      } else {
-        cb.add(".append(\" \").append(", info.name, ")").addLB();
-      }
-      cb.addLine("}"); //else
-      cb.addLine("continue");
-      cb.addLine("}"); //name.equals
+    if (!argumentInfoList.isEmpty()) {
+      cb.addLine("@SuppressWarnings(\"unchecked\")");
     }
-    cb.addLine("}"); //for
+    cb.addLine("public String getCommandAsString() throws ", INVALID_PARAMETERNUMBER_SIMPLE_CLASS_NAME, " {");
+    cb.addLine("StringBuilder sb = new StringBuilder(getCommandName())");
+    if (!argumentInfoList.isEmpty()) {
+      cb.addLine("for (", Option.class.getSimpleName(), " o: (Collection<", Option.class.getSimpleName(), ">)getAllOptions().getOptions()) {");
+      for (ArgumentOptionInformation info : argumentInfoList) {
+        cb.addLine("if (\"", info.name, "\".equals(o.getOpt())) {");
+        cb.addLine("if (", info.name, " == null) {");
+        cb.addLine("if (o.isRequired()) {");
+        cb.addLine("throw createInvalidParaEx()");
+        cb.addLine("}"); //required
+        cb.addLine("} else {");
+        cb.add("sb.append(\" -\").append(o.getOpt())");
+        if (info.multipleValues) {
+          cb.addLB();
+          cb.addLine("for (String _1", info.name, " : ", info.name, ") {");
+          cb.addLine("sb.append(\" \").append(_1", info.name, ")");
+          cb.addLine("}");
+        } else {
+          cb.add(".append(\" \").append(", info.name, ")").addLB();
+        }
+        cb.addLine("}"); //else
+        cb.addLine("continue");
+        cb.addLine("}"); //name.equals
+      }
+      cb.addLine("}"); //for
+    }
     cb.addLine("return sb.toString()");
     cb.addLine("}").addLB();
 
@@ -673,7 +683,7 @@ public class CommandLineArgumentJavaGenerator {
   }
 
 
-  private static Set<String> getParserImports() {
+  private static Set<String> getParserImports(List<ArgumentOptionInformation> argumentInfoList) {
     Set<String> result = new HashSet<String>();
     result.add(XynaException.class.getName());
     result.add(INVALID_PARAMETERNUMBER_CLASS_NAME);
@@ -682,10 +692,14 @@ public class CommandLineArgumentJavaGenerator {
     result.add(AXYNACOMMAND_CLASS_NAME);
     result.add(XYNA_COMMAND_IMPLEMENTATION_CLASS_NAME);
     result.add(OutputStream.class.getName());
-    result.add(OptionBuilder.class.getName());
-    result.add(List.class.getName());
-    result.add(ArrayList.class.getName());
-    result.add(Collection.class.getName());
+    if (argumentInfoList.stream().filter(x -> x.multipleValues).count() > 0) {
+      result.add(List.class.getName());
+      result.add(ArrayList.class.getName());
+    }
+    if (!argumentInfoList.isEmpty()) {
+      result.add(Collection.class.getName());
+      result.add(OptionBuilder.class.getName());
+    }
     return result;
   }
 

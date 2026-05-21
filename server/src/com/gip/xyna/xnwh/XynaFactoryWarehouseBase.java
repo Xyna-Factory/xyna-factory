@@ -21,6 +21,7 @@ package com.gip.xyna.xnwh;
 import com.gip.xyna.Department;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMPersistenceBase;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceManagement;
 import com.gip.xyna.xnwh.xclusteringservices.XynaClusteringServices;
 import com.gip.xyna.xnwh.xwarehousejobs.XynaWarehouseJobManagement;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
@@ -46,5 +47,7 @@ public abstract class XynaFactoryWarehouseBase extends Department implements Xyn
 
 
   public abstract XMOMPersistenceBase getXMOMPersistence();
+
+  public abstract SharedResourceManagement getSharedResourceManagement();
 
 }

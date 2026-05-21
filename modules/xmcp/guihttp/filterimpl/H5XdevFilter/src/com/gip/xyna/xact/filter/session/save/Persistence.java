@@ -292,6 +292,8 @@ public class Persistence {
              operations(operations).
              sharedLibs(dom.getSharedLibs()).
              additionalLibNames(dom.getAdditionalLibraries()).
+             pythonLibNames(dom.getPythonLibraries()).
+             additionalDependencies(dom.getAdditionalDependencies(), dom.getSharedLibs()).
              build();
 
     return dt.toXML();
@@ -454,7 +456,6 @@ public class Persistence {
       FileOutputStream fos = new FileOutputStream(destinationPath + "/" + tFile.getOriginalFilename());
       try {
         StreamUtils.copy(is, fos);
-        gbo.getDOM().getAdditionalLibraries().add(tFile.getOriginalFilename());
       } finally {
         fos.close();
       }

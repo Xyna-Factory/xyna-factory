@@ -264,6 +264,10 @@ public class ObjectId {
       String baseId = ObjectIdPrefix.operation.getBaseId(id);
       return new ObjectId(ObjectType.operation, baseId, part, objectId);
     }
+    if( ObjectIdPrefix.implementationArea.match(id) ) {
+      String baseId = ObjectIdPrefix.implementationArea.getBaseId(id);
+      return new ObjectId(ObjectType.implementationArea, baseId, part, objectId);
+    }
     if( ObjectIdPrefix.remoteDestinationArea.match(id)) {
       String baseId = ObjectIdPrefix.remoteDestinationArea.getBaseId(id);
       return new ObjectId(ObjectType.remoteDestinationArea, baseId, part, objectId);
@@ -290,6 +294,16 @@ public class ObjectId {
     if (ObjectIdPrefix.reference.match(id)) {
       String baseId = ObjectIdPrefix.reference.getBaseId(id);
       return new ObjectId(ObjectType.reference, baseId);
+    }
+
+    if( ObjectIdPrefix.metaTagArea.match(id) ) {
+      String baseId = ObjectIdPrefix.metaTagArea.getBaseId(id);
+      return new ObjectId(ObjectType.metaTagArea, baseId, part, objectId);
+    }
+
+    if( ObjectIdPrefix.metaTag.match(id) ) {
+      String baseId = ObjectIdPrefix.metaTag.getBaseId(id);
+      return new ObjectId(ObjectType.metaTag, baseId, part, objectId);
     }
 
     throw new UnknownObjectIdException(objectId);
@@ -428,6 +442,31 @@ public class ObjectId {
     return ObjectIdPrefix.operationDocumentationArea.getPrefix() + emptyIfNull(baseId);
   }
   
+  public static String createOperationImplementationAreaId(String baseId) {
+    return ObjectIdPrefix.implementationArea.getPrefix() + emptyIfNull(baseId);
+  }
+
+  public static String createMetaTagId(int idx, String baseId) {
+    String id = ObjectIdPrefix.metaTag.getPrefix() + idx;
+    if (emptyIfNull(baseId).length() > 0) {
+      id += SEPARATOR + baseId;
+    }
+
+    return id;
+  }
+
+  public static int getMetaTagIdx(ObjectId objectId) {
+    int idx;
+    if (objectId.getBaseId().length() > 0) {
+      int startPosBaseId = objectId.getObjectId().indexOf(ObjectId.SEPARATOR);
+      idx = Integer.parseInt(objectId.getObjectId().substring(ObjectId.ObjectIdPrefix.metaTag.getPrefix().length(), startPosBaseId));
+    } else {
+      idx = Integer.parseInt(objectId.getObjectId().substring(ObjectId.ObjectIdPrefix.metaTag.getPrefix().length()));
+    }
+
+    return idx;
+  }
+
   public static String createIdForCase(String baseId, String branchId, String caseId) {
     return baseId + SEPARATOR + ObjectIdPrefix.distinctionBranch +  branchId + SEPARATOR + ObjectIdPrefix.distinctionCase + caseId;
   }
@@ -867,6 +906,14 @@ public class ObjectId {
         return id.substring(prefix.length());
       }
     },
+    implementationArea("implementationArea") {
+      public boolean match(String objectId) {
+        return objectId.startsWith(prefix);
+      }
+      public String getBaseId(String id) {
+        return id.substring(prefix.length());
+      }
+    },
     remoteDestinationArea("remoteDestinationArea"){
       public boolean match(String objectId) {
         return objectId.startsWith(prefix);
@@ -913,6 +960,36 @@ public class ObjectId {
       }
       public String getBaseId(String id) {
         return id.substring(prefix.length());
+      }
+    },
+    metaTagArea("metaTagArea"){
+      public boolean match(String objectId) {
+        return objectId.startsWith(prefix);
+      }
+      public String getBaseId(String id) {
+        return id.substring(prefix.length());
+      }
+    },
+    metaTag("metaTag"){
+      public boolean match(String objectId) {
+        return objectId.startsWith(prefix);
+      }
+      public String getBaseId(String id) {
+        return id.contains(SEPARATOR + "") ? id.substring(id.indexOf(SEPARATOR) + 1) : ""; 
+      }
+    },
+    metaTagDeprecated("metaTag"){
+      public boolean match(String objectId) {
+        return objectId.startsWith(prefix);
+      }
+      public String getBaseId(String id) {
+        if (id != null && id.contains(SEPARATOR + "")) {
+          // meta tag of a member
+          return id.substring(prefix.length(), id.indexOf(SEPARATOR));
+        } else {
+          // meta tag of a data type
+          return id.substring(prefix.length());
+        }
       }
     }
     ;
@@ -1017,6 +1094,8 @@ public class ObjectId {
         return warning;
       case reference:
         return reference;
+      case metaTagArea:
+        return metaTagArea;
       default:
         return null;
       }

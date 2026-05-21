@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="List to Map Transformation" TypeName="ListToMapTransformation" TypePath="xfmg.xfctrl.datamodel.json.parameter" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="List to Map Transformation" TypeName="ListToMapTransformation" TypePath="xfmg.xfctrl.datamodel.json.parameter" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
     <Documentation>Transform arrays/lists into maps (and vice versa when parsing), by using the member identified by "keyName" as the key for the map-entries.

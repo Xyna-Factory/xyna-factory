@@ -16,27 +16,31 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }}
 {{#operations}}<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="true" 
-Label="{{baseName}} Api" TypeName="{{classFilename}}" TypePath="{{apiPackage}}">
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" BaseTypeName="OASBaseApi" BaseTypePath="xmcp.oas.datatype" IsAbstract="true"
+Label="{{apiLabel}}" TypeName="{{apiRefName}}" TypePath="{{apiRefPath}}">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>Abstract base type.
+Create a derived data type in your implementing workspace and override the services to implement the endpoints.
+    </Documentation>
   </Meta>
-  <Service Label="{{pathPrefix}} Api" TypeName="{{baseName}}Api">{{#operation}}
-    <Operation Label="{{httpMethod}} {{path}}" Name="{{#lambda.camelcase}}{{httpMethod}}{{path}}{{/lambda.camelcase}}" IsAbstract="true" IsStatic="false">
+  <Service Label="{{apiLabel}}" TypeName="{{apiRefName}}">{{#xynaOperation}}
+    <Operation Label="{{implLabel}}" Name="{{implVarName}}" IsStatic="false">
       <Meta>
-        <Documentation>{{summary}}
-
-{{notes}}
+        <Documentation>{{implDescription}}
         </Documentation>
       </Meta>
       <Input>
-        <Data ID="{{^lambda.index}}{{/lambda.index}}" Label="{{httpMethod}} {{path}} Parameter" VariableName="{{#lambda.camelcase}}{{httpMethod}}{{path}}{{/lambda.camelcase}}Parameter{{#lambda.index}}{{/lambda.index}}"
-        ReferenceName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Parameter" ReferencePath="{{apiPackage}}.{{pathPrefix}}.request"/>
+        <Data ID="{{parameterId}}" Label="{{parameterLabel}}" VariableName="{{parameterVarName}}{{parameterId}}"
+        ReferenceName="{{parameterRefName}}" ReferencePath="{{parameterRefPath}}"/>
       </Input>
       <Output>
-        <Data ID="{{^lambda.index}}{{/lambda.index}}" Label="{{httpMethod}} {{path}} Response" VariableName="{{#lambda.camelcase}}{{httpMethod}}{{path}}{{/lambda.camelcase}}Response{{#lambda.index}}{{/lambda.index}}"
-        ReferenceName="{{#lambda.pascalcase}}{{httpMethod}}{{path}}{{/lambda.pascalcase}}Response" ReferencePath="{{apiPackage}}.{{pathPrefix}}.response" />
+        <Data ID="{{responseId}}" Label="{{responseLabel}}" VariableName="{{responseVarName}}{{responseId}}"
+        ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}" />
       </Output>
-    </Operation>{{/operation}}
+      <SourceCode>
+        <CodeSnippet Type="Java">return null;</CodeSnippet>
+      </SourceCode>
+    </Operation>{{/xynaOperation}}
   </Service>
 </DataType>{{/operations}}

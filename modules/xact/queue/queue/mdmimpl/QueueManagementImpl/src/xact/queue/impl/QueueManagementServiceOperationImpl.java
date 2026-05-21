@@ -18,14 +18,12 @@
 package xact.queue.impl;
 
 
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
-
-import xact.queue.NoSuchQueueException;
-import xact.queue.Queue;
-import xact.queue.QueueManagementServiceOperation;
-import xact.queue.QueueName;
+import java.util.Set;
 
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
@@ -34,17 +32,21 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueManagement;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
+import com.gip.xyna.xprc.XynaOrderServerExtension;
+
+import xact.queue.NoSuchQueueException;
+import xact.queue.Queue;
+import xact.queue.QueueManagementServiceOperation;
+import xact.queue.QueueName;
+
 
 
 public class QueueManagementServiceOperationImpl implements ExtendedDeploymentTask, QueueManagementServiceOperation {
 
-  public static long revision; 
-  
+
   public void onDeployment() throws XynaException {
     // This is executed again on each classloader-reload, that is each
     // time a dependent object is redeployed, for example a type of an input parameter.
-    revision = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().
-        getRevisionManagement().getRevision(getClass());
   }
 
   public void onUndeployment() throws XynaException {
@@ -69,15 +71,22 @@ public class QueueManagementServiceOperationImpl implements ExtendedDeploymentTa
     return null;
   }
 
-  public Queue getQueue(QueueName queueName) throws NoSuchQueueException {
+
+  public Queue getQueue(XynaOrderServerExtension order, QueueName queueName) throws NoSuchQueueException {
+    Long revision = order.getRevision();
+    Set<Long> dependencyRevisions = new HashSet<Long>();
+    XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()
+        .getDependenciesRecursivly(revision, dependencyRevisions);
+    dependencyRevisions.add(revision);
     try {
-      return (Queue) getQueueManagement().buildQueueInstance( revision, queueName.getName());
-    } catch( PersistenceLayerException e ) {
+      return (Queue) getQueueManagement().buildQueueInstance(dependencyRevisions, queueName.getName());
+    } catch (PersistenceLayerException e) {
       throw new RuntimeException(e);
-    } catch( XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e ) {
+    } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       throw new NoSuchQueueException(queueName.getName(), e);
     }
   }
+
 
   public List<? extends QueueName> listQueueNames() {
     try {
@@ -98,6 +107,6 @@ public class QueueManagementServiceOperationImpl implements ExtendedDeploymentTa
   }
 
   private QueueManagement getQueueManagement() {
-    return XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getQueueManagement(); 
+    return XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getQueueManagement();
   }
 }

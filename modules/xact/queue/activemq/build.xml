@@ -47,10 +47,10 @@
         <antcall target="build-application" />
     </target>
 
-    <!-- mdm.jar should be provided by common parent directory? -->
     <target name="prepare-mdm-jar">
         <antcall target="create-mdm-jar" />
         <supply-mdm-jar type="filterimpl" name="ActiveMQForwardingFilter" />
+        <supply-mdm-jar type="mdmimpl" name="ActiveMQImpl" />
         <delete file="${basedir}/mdm.jar" />
     </target>
 

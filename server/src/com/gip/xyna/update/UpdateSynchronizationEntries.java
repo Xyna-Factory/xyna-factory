@@ -70,14 +70,14 @@ public class UpdateSynchronizationEntries extends UpdateJustVersion {
     boolean canUpdateOrderbackup = true; //evtl. kann Orderbackup nicht geupdated werden
     PreparedCommand pcUpdateOrderBackup = null;
     try {
-      pcUpdateOrderBackup = conDef.prepareCommand(new Command(updateOrderInstanceBackup));
+      pcUpdateOrderBackup = conDef.prepareCommand(new Command(updateOrderInstanceBackup, OrderInstanceBackup.TABLE_NAME));
     } catch( PersistenceLayerException e ) {
       logger.warn("Cannot update OrderBackup. This is normal when using the XynaMemoryPersistenceLayer.", e);
       canUpdateOrderbackup = false;
     }
   
     FactoryWarehouseCursor<? extends com.gip.xyna.update.outdatedclasses_5_0_0_3.SynchronizationEntry> cursor =
-        conDef.getCursor( sqlGetAllSynchronizationEntriesWithLaneId, new Parameter(),
+        conDef.getCursor( sqlGetAllSynchronizationEntriesWithLaneId, oldSynchronizationEntry.TABLE_NAME, new Parameter(),
                          oldSynchronizationEntry.getReader(), 100);
     try {
       for( com.gip.xyna.update.outdatedclasses_5_0_0_3.SynchronizationEntry se : cursor.separated() ) {

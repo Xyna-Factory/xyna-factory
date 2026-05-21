@@ -481,7 +481,7 @@ public class PersistenceStrategyImpl implements PersistenceStrategy, ProcessingS
         if (deleteAllFromTable == null) {
           deleteAllFromTable =
               con.prepareCommand(new Command("delete from " + ClusterInfoStorable.TABLE_NAME + " where "
-                  + ClusterInfoStorable.COL_PK + " LIKE ?"));
+                  + ClusterInfoStorable.COL_PK + " LIKE ?", ClusterInfoStorable.TABLE_NAME));
         }
         con.deleteAll(clazzStorable);
         con.executeDML(deleteAllFromTable, new Parameter(Storable.getPersistable(clazzStorable).tableName() + "!%"));

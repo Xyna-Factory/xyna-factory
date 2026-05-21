@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,6 +57,7 @@ import xmcp.factorymanager.ParameterInheritanceRule;
 import xmcp.factorymanager.impl.converter.OrderTypeConverter;
 import xmcp.factorymanager.ordertypes.OrderType;
 import xmcp.factorymanager.ordertypes.OrderTypeName;
+import xmcp.factorymanager.ordertypes.OrderTypeTableFilter;
 import xmcp.factorymanager.ordertypes.exception.CreateNewOderTypeException;
 import xmcp.factorymanager.ordertypes.exception.DeleteOrderTypeException;
 import xmcp.factorymanager.ordertypes.exception.LoadOrderTpeException;
@@ -130,7 +131,8 @@ public class OrderTypeServicesServiceOperationImpl implements ExtendedDeployment
   }
   
   @Override
-  public void changeOrderType(OrderType orderType) throws UpdateOrderTypeException {    
+  public void changeOrderType(OrderType orderType) throws UpdateOrderTypeException {
+    orderType.setName(orderType.getFullQualifiedName());
     try {
       ordertypeManagement.modifyOrdertype(createOrderTypeParameter(orderType));
     } catch (PersistenceLayerException | XFMG_InvalidModificationOfUnexistingOrdertype | XFMG_InvalidCapacityCardinality | XPRC_INVALID_MONITORING_TYPE e) {
@@ -142,6 +144,7 @@ public class OrderTypeServicesServiceOperationImpl implements ExtendedDeployment
 
   @Override
   public void createOrderType(OrderType orderType) throws CreateNewOderTypeException {
+    orderType.setName(orderType.getFullQualifiedName());
     try {
       ordertypeManagement.createOrdertype(createOrderTypeParameter(orderType));
     } catch (PersistenceLayerException | XFMG_InvalidCreationOfExistingOrdertype | XFMG_FailedToAddObjectToApplication | XPRC_INVALID_MONITORING_TYPE e) {
@@ -247,7 +250,7 @@ public class OrderTypeServicesServiceOperationImpl implements ExtendedDeployment
   @Override
   public OrderType getOrderTypeDetails(RuntimeContext runtimeContext, OrderTypeName orderTypeName) throws LoadOrderTpeException {
     try {
-      return OrderTypeConverter.convert(ordertypeManagement.getOrdertype(orderTypeName.getName(), revisionManagement.getRuntimeContext(runtimeContext.getRevision())));
+      return OrderTypeConverter.convert(ordertypeManagement.getOrdertype(orderTypeName.getName(), revisionManagement.getRuntimeContext(runtimeContext.getRevision())), true);
     } catch (PersistenceLayerException e) {
       throw new LoadOrderTpeException(e.getMessage(), e);
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
@@ -256,7 +259,7 @@ public class OrderTypeServicesServiceOperationImpl implements ExtendedDeployment
   }
 
   @Override
-  public List<? extends OrderType> getListEntries(TableInfo tableInfo) throws LoadOrderTypesException {   
+  public List<? extends OrderType> getListEntries(TableInfo tableInfo, OrderTypeTableFilter filter) throws LoadOrderTypesException {   
     TableHelper<OrderType, TableInfo> tableHelper = TableHelper.<OrderType, TableInfo>init(tableInfo)
         .limitConfig(TableInfo::getLimit)
         .sortConfig(ti -> {
@@ -290,7 +293,7 @@ public class OrderTypeServicesServiceOperationImpl implements ExtendedDeployment
       List<OrdertypeParameter> orderTypes = multiChannelPortal.listOrdertypes(SearchOrdertypeParameter.all());
       
       List<OrderType> result = orderTypes.stream()
-          .map(OrderTypeConverter::convert)
+          .map((in) -> OrderTypeConverter.convert(in, filter.getShowPath()))
           .filter(tableHelper.filter())
           .collect(Collectors.toList());
       tableHelper.sort(result);

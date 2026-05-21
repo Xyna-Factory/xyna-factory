@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,22 +21,29 @@ package com.gip.xyna.xact.filter.actions.monitor;
 import com.gip.xyna.xact.filter.HTMLBuilder.HTMLPart;
 import com.gip.xyna.xact.filter.actions.H5xFilterAction;
 import com.gip.xyna.xact.filter.actions.PathElements;
+import com.gip.xyna.xact.filter.actions.startorder.Endpoint;
 import com.gip.xyna.xact.filter.monitor.GetAuditRequestProcessor;
 import com.gip.xyna.xact.filter.session.XMOMGuiReply;
 import com.gip.xyna.xact.filter.util.ReadonlyUtil;
 
+import org.apache.log4j.Logger;
+
+import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.filter.JsonFilterActionInstance;
 import com.gip.xyna.xact.filter.URLPath;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
+import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.Rights;
+import com.gip.xyna.xfmg.xopctrl.usermanagement.XynaPlainSessionCredentials;
 
 import xmcp.processmonitor.datatypes.response.GetAuditResponse;
 
-public class OpenAuditAction extends H5xFilterAction{
+public class OpenAuditAction extends H5xFilterAction implements Endpoint {
 
   private static final String BASE_PATH = "/" + PathElements.AUDITS;
+  private static final Logger logger = CentralFactoryLogging.getLogger(OpenAuditAction.class);
 
 
   public void appendIndexPage(HTMLPart body) {
@@ -77,4 +84,18 @@ public class OpenAuditAction extends H5xFilterAction{
   public boolean match(URLPath url, Method arg1) {
     return url.getPath().startsWith(BASE_PATH) && url.getPathLength() == 2;
   }
+
+
+  @Override
+  public GeneralXynaObject execute(XynaPlainSessionCredentials creds, URLPath url, Method method, String payload) {
+    try {
+      return new GetAuditRequestProcessor().processGetAuditRequest(Long.valueOf(url.getPathElement(1)));
+    } catch (Exception e) {
+      if (logger.isWarnEnabled()) {
+        logger.warn("Could not process open audit request.", e);
+      }
+      return null;
+    }
+  }
+  
 }

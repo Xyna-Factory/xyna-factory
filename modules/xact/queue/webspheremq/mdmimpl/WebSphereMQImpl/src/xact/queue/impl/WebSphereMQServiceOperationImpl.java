@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ public class WebSphereMQServiceOperationImpl implements ExtendedDeploymentTask {
 
   private static long revision;
   private static final QueueType queueType = QueueType.WEBSPHERE_MQ;
-  
+
   public void onDeployment() throws XynaException {
     // do something on deployment, if required
     // This is executed again on each classloader-reload, that is each
@@ -72,8 +72,9 @@ public class WebSphereMQServiceOperationImpl implements ExtendedDeploymentTask {
   }
 
   private QueueManagement getQueueManagement() {
-    return XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getQueueManagement(); 
+    return XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getQueueManagement();
   }
+
 
   public static class WebSphereMQBuilder implements QueueInstanceBuilder {
 
@@ -82,19 +83,18 @@ public class WebSphereMQServiceOperationImpl implements ExtendedDeploymentTask {
       cfg.setName_externalQueue(queue.getExternalName());
       cfg.setName_unique(new QueueName(queue.getUniqueName()));
       QueueConnectData connData = queue.getConnectData();
-      if( connData instanceof WebSphereMQConnectData ) {
-        WebSphereMQConnectData wsmcd = (WebSphereMQConnectData)connData;
+      if (connData instanceof WebSphereMQConnectData) {
+        WebSphereMQConnectData wsmcd = (WebSphereMQConnectData) connData;
         cfg.setHostname(wsmcd.getHostname());
         cfg.setPort(wsmcd.getPort());
         cfg.setChannel(wsmcd.getChannel());
         cfg.setQueueManager(wsmcd.getQueueManager());
       } else {
-        throw new IllegalStateException("Expected WebSphereMQConnectData, got "+connData);
+        throw new IllegalStateException("Expected WebSphereMQConnectData, got " + connData);
       }
-      return null;//FIXME new WebSphereMQ(cfg);
+      return new WebSphereMQ(cfg);
     }
-    
+
   }
 
-  
 }

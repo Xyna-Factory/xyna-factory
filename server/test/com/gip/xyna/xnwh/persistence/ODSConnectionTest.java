@@ -190,7 +190,7 @@ public class ODSConnectionTest extends TestCase {
                                                                  return new OrderInstance(13l);
                                                                }
 
-                                                             })), new Parameter(17l));
+                                                             }, "orderarchive")), new Parameter(17l));
       assertEquals(13l, (long) wi.getId());
     } finally {
       con.closeConnection();
@@ -206,7 +206,8 @@ public class ODSConnectionTest extends TestCase {
                                       + OrderInstanceColumn.C_ID.getColumnName() + " > 15 and "
                                       + OrderInstanceColumn.C_ID.getColumnName() + " < 22) or "
                                       + OrderInstanceColumn.C_ORDER_TYPE.getColumnName() + "='bla88'",
-                                                             new OrderInstance(1l).getReader()));
+                                                             new OrderInstance(1l).getReader(),
+                                                             "orderarchive"));
       try {
         for (int i = 0; i < 100; i++) {
           OrderInstanceDetails wid = newOrderInstanceDetails((long) i, "bla" + i);
@@ -387,7 +388,7 @@ public class ODSConnectionTest extends TestCase {
                                                                     return new OrderInstance(rs.getLong("id"));
                                                                   }
 
-                                                                })), new Parameter());
+                                                                }, "orderarchive")), new Parameter());
       assertEquals(7l, (long) wi.getId());
 
       try {

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,17 +21,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
-import org.apache.log4j.Logger;
-
-import com.gip.xyna.CentralFactoryLogging;
-import com.gip.xyna.xact.filter.HasXoRepresentation;
 import com.gip.xyna.xact.filter.json.RuntimeContextJson;
 import com.gip.xyna.xact.filter.session.GenerationBaseObject;
 import com.gip.xyna.xact.filter.session.gb.ObjectId;
 import com.gip.xyna.xact.filter.session.gb.ObjectType;
 import com.gip.xyna.xact.filter.xmom.MetaXmomContainers;
+import com.gip.xyna.xact.filter.xmom.PluginPaths;
 import com.gip.xyna.xact.filter.xmom.workflows.enums.Tags;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
@@ -45,6 +41,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.PersistenceTypeInformation;
 
+import xmcp.processmodeller.datatypes.Area;
 import xmcp.processmodeller.datatypes.DataType;
 import xmcp.processmodeller.datatypes.DataTypeTypeLabelArea;
 import xmcp.processmodeller.datatypes.TextArea;
@@ -52,18 +49,16 @@ import xmcp.processmodeller.datatypes.datatypemodeller.DynamicMethod;
 import xmcp.processmodeller.datatypes.datatypemodeller.GlobalStorablePropertyArea;
 import xmcp.processmodeller.datatypes.datatypemodeller.MemberMethodArea;
 import xmcp.processmodeller.datatypes.datatypemodeller.Method;
-import xmcp.processmodeller.datatypes.servicegroupmodeller.JavaLibrariesArea;
-import xmcp.processmodeller.datatypes.servicegroupmodeller.JavaLibrary;
 import xmcp.processmodeller.datatypes.servicegroupmodeller.JavaSharedLibrariesArea;
 import xmcp.processmodeller.datatypes.servicegroupmodeller.JavaSharedLibrary;
+import xmcp.processmodeller.datatypes.servicegroupmodeller.LibrariesArea;
+import xmcp.processmodeller.datatypes.servicegroupmodeller.Library;
 
-public class DatatypeXo extends DomOrExceptionXo implements HasXoRepresentation {
+public class DatatypeXo extends DomOrExceptionXo {
 
   private List<DatatypeMethodXo> methods;
   private final DOM dom;
   private boolean readonly = false;
-
-  private static final Logger logger = CentralFactoryLogging.getLogger(DatatypeXo.class);
 
 
   public DatatypeXo(GenerationBaseObject gbo) {
@@ -71,7 +66,8 @@ public class DatatypeXo extends DomOrExceptionXo implements HasXoRepresentation 
     this.dom = gbo.getDOM();
     this.methods = Utils.createDtMethods(dom, gbo);
   }
-  
+
+
   @Override
   public GeneralXynaObject getXoRepresentation() {
     DataType dataType = new DataType();
@@ -86,28 +82,31 @@ public class DatatypeXo extends DomOrExceptionXo implements HasXoRepresentation 
     dataType.setLabel(dom.getLabel());
     dataType.setId("dt");
     dataType.setIsAbstract(dom.isAbstract());
-    dataType.addToAreas(createDataTypeTypeLabelArea());
+    dataType.unversionedSetPlugin(pluginMgmt.createPlugin(contextBuilder.instantiateContext(PluginPaths.location_datatype_root, null)));
 
-//    if (dom.isInheritedFromStorable()) {
-//      dataType.addToAreas(createStorablePropertyArea());
-//    }
-    dataType.addToAreas(createGlobalStorablePropertyArea());
+    List<Area> dataTypeAreas = new ArrayList<Area>() {
 
-    TextArea documentationArea = createDocumentationArea();
-    documentationArea.setText(dom.getDocumentation());
-    dataType.addToAreas(documentationArea);
+      {
+        add(createDataTypeTypeLabelArea());
+        add(createGlobalStorablePropertyArea());
+        add(createDocumentationArea(dom.getDocumentation(), PluginPaths.location_datatype_documenation));
+        add(createLibrariesArea());
+        add(createJavaSharedLibrariesArea());
+        add(createInheritedVariablesArea());
+        add(createMemberVariableArea(PluginPaths.location_datatype_members));
+        add(createInheritedMethodArea());
+        add(createOverrideMethodArea());
+        add(createMemberMethodArea());
+        add(createMetaTagArea(dom.getUnknownMetaTags(), false));
+      }
+    };
     
-    dataType.addToAreas(createJavaLibrariesArea());
-    dataType.addToAreas(createJavaSharedLibrariesArea());
+    dataType.unversionedSetAreas(dataTypeAreas);
 
-    dataType.addToAreas(createInheritedVariablesArea());
-    dataType.addToAreas(createMemberVariableArea());
-    dataType.addToAreas(createInheritedMethodArea());
-    dataType.addToAreas(createOverrideMethodArea());
-    dataType.addToAreas(createMemberMethodArea());
     return dataType;
   }
-  
+
+
   private static JavaSharedLibrariesArea createEmptyJavaSharedLibrariesArea() {
     JavaSharedLibrariesArea area = new JavaSharedLibrariesArea();
     area.setReadonly(false);
@@ -137,28 +136,33 @@ public class DatatypeXo extends DomOrExceptionXo implements HasXoRepresentation 
     return area;
   }
   
-  
-  private static JavaLibrariesArea createEmptyJavaLibrariesArea() {
-    JavaLibrariesArea area = new JavaLibrariesArea();
+  private static LibrariesArea createEmptyJavaLibrariesArea() {
+    LibrariesArea area = new LibrariesArea();
     area.setReadonly(false);
     area.setName(Tags.SERVICE_GROUP_JAVA_LIBRARIES_AREA_ID);
     area.setId(Tags.SERVICE_GROUP_JAVA_LIBRARIES_AREA_ID);
     area.setItemTypes(Collections.emptyList());
     return area;
   }
-  
 
-  private JavaLibrariesArea createJavaLibrariesArea() {
-    JavaLibrariesArea area = createEmptyJavaLibrariesArea();
-    Set<String> libs = dom.getAdditionalLibraries();
+  private LibrariesArea createLibrariesArea() {
+    LibrariesArea area = createEmptyJavaLibrariesArea();
     int i = 0;
-    for (String lib : libs) {
-      area.addToItems(new JavaLibrary(ObjectId.createServiceGroupLibId(i), false, lib));
+    for (String lib : dom.getAdditionalLibraries()) {
+      Library javaLib = new Library(ObjectId.createServiceGroupLibId(i), false, lib);
+      area.addToItems(javaLib);
+      area.addToJavaLibraries(javaLib);
+      i++;
+    }
+    i = 0;
+    for (String lib : dom.getPythonLibraries()) {
+      Library pythonLib = new Library(ObjectId.createServiceGroupLibId(i), false, lib);
+      area.addToItems(pythonLib);
+      area.addToPythonLibraries(pythonLib);
       i++;
     }
     return area;
   }
-  
   
   private static MemberMethodArea createEmptyMemberMethodArea() {
     MemberMethodArea area = new MemberMethodArea();
@@ -178,6 +182,7 @@ public class DatatypeXo extends DomOrExceptionXo implements HasXoRepresentation 
       method.setDeletable(!m.isInherited());
       area.addToItems(method);
     });
+    area.unversionedSetPlugin(pluginMgmt.createPlugin(contextBuilder.instantiateContext(PluginPaths.location_datatype_methods, null)));
     return area;
   }
   
@@ -338,7 +343,7 @@ public class DatatypeXo extends DomOrExceptionXo implements HasXoRepresentation 
     area.setId(ObjectId.createId(ObjectType.typeInfoArea, null));
     dataType.addToAreas(area);
 
-    TextArea documentationArea = createDocumentationArea();
+    TextArea documentationArea = createEmptyDocumentationArea();
     documentationArea.setText("Conceptual parent of all modelled datatypes and exceptions.");
     dataType.addToAreas(documentationArea);
 

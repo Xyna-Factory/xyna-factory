@@ -24,19 +24,18 @@
   <property name="release.dir"
             value="${ant.file.xynautils_masterbuild}/../../../releases" />
 
-  <property name="svn.root" value="svn://svn.gip.local" />
-  <property name="svn.tag" value="${project.name}-${release.number}" />
-  <property name="svn.project" value="xyna/utils/${utils.name}" />
+  <property name="git.tag" value="${project.name}-${release.number}" />
+  <property name="git.project" value="xyna/utils/${utils.name}" />
 
   <property name="vendor.name" value="Xyna GmbH" />
 
   <import file="${ant.file.xynautils_masterbuild}/../../build/ant-xyna.xml" />
+  <import file="${ant.file.xynautils_masterbuild}/../../../../installation/build/macros.xml" />
 
   <!-- Directory to build releases -->
   <property name="root.dir" value="${release.dir}/checkout_${timestamp}" />
   <property name="release.build.dir" value="${root.dir}/build_${timestamp}" />
 
-  <typedef file="${ant.file.xynautils_masterbuild}/../../delivery/svn.xml" />
   <typedef file="${ant.file.xynautils_masterbuild}/../../build/buildMacros.xml" />
   <typedef file="${ant.file.xynautils_masterbuild}/../../delivery/deliveryMacros.xml" />
 
@@ -77,9 +76,9 @@
           depends="checkRelease"
           description="Create new release.">
     <if>
-      <isset property="svn.branch" />
+      <isset property="git.branch" />
       <then>
-        <checkout branch="${svn.branch}" />
+        <checkout branch="${git.branch}" />
       </then>
       <else>
         <checkout />
@@ -160,6 +159,47 @@
           tofile="${release.dir}/${project.name}" failonerror="false"/>
   </target>
 
+  <!-- ================================= 
+              target: build              
+       =================================
+-->
+  <target name="build"
+          depends="copySources"
+          description="Create build artfact">
+    <delete dir="${release.dir}/${project.name}" />
+    <delete>
+      <fileset dir="${release.dir}">
+        <include name="${project.name}.zip" />
+      </fileset>
+    </delete>
+    <buildJar basedir="${root.dir}"
+              destfile="${release.build.dir}/${project.name}.jar" />
+    <copy todir="${release.build.dir}" flatten="true">
+      <fileset dir="${root.dir}">
+        <include name="lib/**/*.jar" />
+      </fileset>
+    </copy>
+
+    <!-- build zip file -->
+    <zipDeliveryItems srcdir="${release.build.dir}"
+                      destdir="${release.dir}"
+                      name="${project.name}" />
+    <!-- clean up -->
+    <delete dir="${root.dir}" />
+    <unzip dest="${release.dir}"
+           src="${release.dir}/${project.name}.zip" />
+    <move file="${release.dir}/${project.name}"
+          tofile="${release.dir}/${project.name}" failonerror="false"/>
+  </target>
+
+  <!-- =================================
+              target: installMavenArtifact
+       =================================
+-->
+  <target name="installMavenArtifact" depends="build" description="install artifact to maven repository">
+     <install-maven-artifact artifactFile="${release.dir}/${project.name}/${project.name}.jar" pomFile="${basedir}/pom.xml" />
+  </target>
+
   <!-- - - - - - - - - - - - - - - - - - 
 	          target: copySources                      
 	         - - - - - - - - - - - - - - - - -
@@ -174,7 +214,6 @@
       <fileset dir="${basedir}">
         <include name="**/*" />
         <exclude name=".metadata/**" />
-        <exclude name="**/.svn" />
         <exclude name="**/classes/**" />
         <exclude name="**/deploy" />
         <!--<exclude name="delivery/**" />-->
@@ -261,6 +300,23 @@
       <group title="XML" packages="com.gip.xyna.utils.xml*" />
       <group title="XynaTree" packages="com.gip.xyna.utils.xynatree*" />
     </javadoc>
+  </target>
+
+  <!-- =================================
+              target: resolve
+        =================================  -->
+  <target name="resolve" description="resolve" >
+    <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/lib" />
+  </target>
+
+  <!-- =================================
+        target: cleanup-lib
+        ================================= -->
+  <target name="cleanup-lib" description="cleanup-lib">
+    <mkdir dir="${basedir}/lib" />
+    <delete>
+      <fileset dir="${basedir}/lib" includes="**/*.jar"/>
+    </delete>
   </target>
 
 </project>

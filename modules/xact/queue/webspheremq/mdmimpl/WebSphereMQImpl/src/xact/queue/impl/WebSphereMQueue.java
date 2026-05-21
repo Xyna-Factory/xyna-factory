@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,13 +88,12 @@ public class WebSphereMQueue {
       connectionFactory = new MQQueueConnectionFactory();
       connectionFactory.setHostName(config.getHostname());
       connectionFactory.setPort(config.getPort());
-      connectionFactory.setTransportType(JMSC.MQJMS_TP_CLIENT_MQ_TCPIP); //TODO 
+      connectionFactory.setTransportType(JMSC.MQJMS_TP_CLIENT_MQ_TCPIP);
       connectionFactory.setQueueManager(config.getQueueManager());
       connectionFactory.setChannel(config.getChannel());
       
       
       connection = (MQQueueConnection) connectionFactory.createConnection("","");
-      //connection = (MQQueueConnection) connectionFactory.createQueueConnection();
       connection.start();
       
       session = (MQQueueSession) connection.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);

@@ -70,7 +70,8 @@ public final class OrderArchiveQueryHelper {
     Query<OrderInstanceBackup> qB =
         new Query<OrderInstanceBackup>("select * from " + OrderInstanceBackup.TABLE_NAME + " where "
             + OrderInstanceBackup.COL_ID + "<? and " + OrderInstanceBackup.COL_ID + ">? and "
-            + OrderInstanceBackup.COL_BINDING + "=?", new OrderInstanceBackup().getReader());
+            + OrderInstanceBackup.COL_BINDING + "=?", new OrderInstanceBackup().getReader(), 
+            OrderInstanceBackup.TABLE_NAME);
     return connection.prepareQuery(qB, true);
   }
 
@@ -99,7 +100,7 @@ public final class OrderArchiveQueryHelper {
   public static PreparedCommand getDeleteOldArchived(OrderArchive oa, ODSConnection con) throws PersistenceLayerException {
     OrderInstance backingClass = oa.auditAccess.getQueryBackingClass(con);
     return con.prepareCommand(new Command("delete from " + backingClass.getTableName() + " where "
-        + OrderInstanceColumn.C_LAST_UPDATE.getColumnName() + " < ?"));
+        + OrderInstanceColumn.C_LAST_UPDATE.getColumnName() + " < ?", backingClass.getTableName()));
   }
 
 
@@ -127,7 +128,8 @@ public final class OrderArchiveQueryHelper {
     selectRelevantByParentIdSQL.append(OrderInstance.COL_PARENT_ID).append("=?");
 
     return con.prepareQuery(new Query<OrderInstance>(selectRelevantByParentIdSQL.toString(),
-                                                     orderInstanceReaderWithoutExceptionsAndExecType), true);
+                                                     orderInstanceReaderWithoutExceptionsAndExecType,
+                                                     backingClass.getTableName()), true);
 
   }
 
@@ -142,7 +144,8 @@ public final class OrderArchiveQueryHelper {
     
     selectRelevantColumns.append(OrderInstance.COL_ID).append("=?");
     return connection.prepareQuery(new Query<OrderInstance>(selectRelevantColumns.toString(),
-                                                            orderInstanceReaderWithoutExceptionsAndExecType), true);
+                                                            orderInstanceReaderWithoutExceptionsAndExecType,
+                                                            backingClass.getTableName()), true);
   }
   
 
@@ -156,14 +159,16 @@ public final class OrderArchiveQueryHelper {
     
     selectRelevantColumns.append(OrderInstance.COL_ROOT_ID).append("=?");
     return connection.prepareQuery(new Query<OrderInstance>(selectRelevantColumns.toString(),
-                                                            orderInstanceReaderWithoutExceptionsAndExecType), true);
+                                                            orderInstanceReaderWithoutExceptionsAndExecType,
+                                                            backingClass.getTableName()), true);
   }
 
 
   public static PreparedCommand getUpdateOrderInstanceBackupCause(ODSConnection defaultCon)
       throws PersistenceLayerException {
     return defaultCon.prepareCommand(new Command("update " + OrderInstanceBackup.TABLE_NAME + " set "
-        + OrderInstanceBackup.COL_BACKUP_CAUSE + "=? where " + OrderInstanceBackup.COL_ID + "=?"), true);
+        + OrderInstanceBackup.COL_BACKUP_CAUSE + "=? where " + OrderInstanceBackup.COL_ID + "=?",
+        OrderInstanceBackup.TABLE_NAME), true);
   }
 
 
@@ -174,7 +179,7 @@ public final class OrderArchiveQueryHelper {
         return rs.getLong(1);
       }
     };
-    return connection.prepareQuery(new Query<Long>(sql, rsr), true);
+    return connection.prepareQuery(new Query<Long>(sql, rsr, OrderInstanceBackup.TABLE_NAME), true);
   }
  
 }

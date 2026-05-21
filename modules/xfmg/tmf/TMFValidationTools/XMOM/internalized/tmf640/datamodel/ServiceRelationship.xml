@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="ServiceRelationship" TypeName="ServiceRelationship" TypePath="internalized.tmf640.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation/>
+  </Meta>
+  <Data Label="relationshipType" VariableName="relationshipType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>required
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="serviceRelationshipCharacteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="serviceRelationshipCharacteristic">
+    <Meta>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Data Label="service" ReferenceName="ServiceRefOrValue" ReferencePath="internalized.tmf640.datamodel" VariableName="service">
+    <Meta>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Data Label="@baseType" VariableName="atbaseType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the super-class
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@schemaLocation" VariableName="atschemaLocation">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>A URI to a JSON-Schema file that defines additional attributes and relationships
+format: uri
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@type" VariableName="attype">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the sub-class entity name
+        </Documentation>
+    </Meta>
+  </Data>
+  <Service Label="ServiceRelationship" TypeName="ServiceRelationship">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+// validate ServiceRelationship.relationshipType of type String
+try {
+    var validator_relationshipType = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_relationshipType.setName("relationshipType");
+    validator_relationshipType.setValue(getRelationshipType());
+    validator_relationshipType.setRequired();
+    result.getErrorMessages().addAll(validator_relationshipType.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceRelationship.relationshipType");
+}
+
+// validate ServiceRelationship.serviceRelationshipCharacteristic of type Characteristic
+try {
+    List&lt;? extends internalized.tmf640.datamodel.Characteristic&gt; serviceRelationshipCharacteristic = getServiceRelationshipCharacteristic();
+    if (serviceRelationshipCharacteristic != null) {
+        for (internalized.tmf640.datamodel.Characteristic obj : serviceRelationshipCharacteristic) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceRelationship.serviceRelationshipCharacteristic");
+}
+
+// validate ServiceRelationship.service of type ServiceRefOrValue
+try {
+    internalized.tmf640.datamodel.ServiceRefOrValue service = getService();
+    if (service != null) {
+        result.getErrorMessages().addAll(service.validate().getErrorMessages());
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceRelationship.service");
+}
+
+// validate ServiceRelationship.atbaseType of type String
+try {
+    var validator_atbaseType = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atbaseType.setName("@baseType");
+    validator_atbaseType.setValue(getAtbaseType());
+    result.getErrorMessages().addAll(validator_atbaseType.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceRelationship.atbaseType");
+}
+
+// validate ServiceRelationship.atschemaLocation of type String
+try {
+    var validator_atschemaLocation = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atschemaLocation.setName("@schemaLocation");
+    validator_atschemaLocation.setValue(getAtschemaLocation());
+    validator_atschemaLocation.setFormat("uri");
+    result.getErrorMessages().addAll(validator_atschemaLocation.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceRelationship.atschemaLocation");
+}
+
+// validate ServiceRelationship.attype of type String
+try {
+    var validator_attype = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_attype.setName("@type");
+    validator_attype.setValue(getAttype());
+    result.getErrorMessages().addAll(validator_attype.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceRelationship.attype");
+}
+
+return result.getResult();
+                </CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

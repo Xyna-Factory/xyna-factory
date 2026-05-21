@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Determine Functional Role" TypeName="DetermineFunctionalRole" TypePath="xact.radius" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,useWidth,vScroll(440)</FixedDetailOptions>
+    <IsXynaComponent>true</IsXynaComponent>
+  </Meta>
+  <Operation ID="2" IsStatic="false" Label="Determine Functional Role" Name="DetermineFunctionalRole">
+    <Input>
+      <Data ID="97" Label="User Role" ReferenceName="UserRole" ReferencePath="xact.radius" VariableName="userRole97"/>
+    </Input>
+    <Output>
+      <Data ID="99" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole99"/>
+    </Output>
+    <Meta>
+      <Abstract.UID>D0FF5DC1-12F8-8039-3925-9494467DA117</Abstract.UID>
+    </Meta>
+    <Mappings ID="152" Label="Get property">
+      <Input>
+        <Data ID="610" Label="User Role" ReferenceName="UserRole" ReferencePath="xact.radius" VariableName="userRole610">
+          <Source RefID="152"/>
+        </Data>
+        <Source RefID="97"/>
+      </Input>
+      <Input>
+        <Data ID="708" Label="Use Value" ReferenceName="UseValue" ReferencePath="xfmg.xods.configuration.parameter" VariableName="useValue708">
+          <Source RefID="152"/>
+        </Data>
+        <Source RefID="717">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="161" Label="Xyna Property String" ReferenceName="XynaPropertyString" ReferencePath="xfmg.xods.configuration" VariableName="xynaPropertyString161">
+          <Source RefID="152"/>
+        </Data>
+        <Target RefID="162"/>
+      </Output>
+      <Mapping>%2%.propertyName=concat("xact.radius.rightmanagment.", %0%.role)</Mapping>
+      <Mapping>%2%.behaviourIfPropertyNotSet=%1%</Mapping>
+      <Mapping>%2%.value=""</Mapping>
+    </Mappings>
+    <Choice ID="446" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="162"/>
+      <Target RefID="619"/>
+      <Meta>
+        <OuterConditionPart>tolowercase(%0%.get())==?</OuterConditionPart>
+      </Meta>
+      <Input>
+        <Data ID="458" Label="Xyna Property String" ReferenceName="XynaPropertyString" ReferencePath="xfmg.xods.configuration" VariableName="xynaPropertyString458">
+          <Source RefID="446"/>
+        </Data>
+        <Source RefID="162"/>
+      </Input>
+      <Case ID="483" Label="" Premise="tolowercase(%0%.get())==&quot;super-user&quot;">
+        <Mappings ID="519" Label="Mapping">
+          <Input>
+            <Data ID="520" Label="Super User" ReferenceName="SuperUser" ReferencePath="xact.radius" VariableName="superUser520"/>
+            <Source RefID="521">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="522" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole522"/>
+            <Target RefID="523"/>
+          </Output>
+          <Mapping>%1%#cast("xact.radius.SuperUser")~=%0%</Mapping>
+        </Mappings>
+        <Assign ID="485">
+          <Source RefID="523"/>
+          <Target RefID="619"/>
+          <Copy>
+            <Source RefID="523"/>
+            <Target RefID="619"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="532" Label="" Premise="tolowercase(%0%.get())==&quot;read-write&quot;">
+        <Mappings ID="551" Label="Mapping">
+          <Input>
+            <Data ID="552" Label="Read Write User" ReferenceName="ReadWriteUser" ReferencePath="xact.radius" VariableName="readWriteUser552"/>
+            <Source RefID="553">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="554" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole554"/>
+            <Target RefID="555"/>
+          </Output>
+          <Mapping>%1%#cast("xact.radius.ReadWriteUser")~=%0%</Mapping>
+        </Mappings>
+        <Assign ID="534">
+          <Source RefID="555"/>
+          <Target RefID="619"/>
+          <Copy>
+            <Source RefID="555"/>
+            <Target RefID="619"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="564" Label="" Premise="tolowercase(%0%.get())==&quot;read-only&quot;">
+        <Mappings ID="30" Label="Mapping">
+          <Input>
+            <Data ID="107" Label="Read Only User" ReferenceName="ReadOnlyUser" ReferencePath="xact.radius" VariableName="readOnlyUser107"/>
+            <Source RefID="110">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="108" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole108"/>
+            <Target RefID="583"/>
+          </Output>
+          <Mapping>%1%#cast("xact.radius.ReadOnlyUser")~=%0%</Mapping>
+        </Mappings>
+        <Assign ID="566">
+          <Source RefID="583"/>
+          <Target RefID="619"/>
+          <Copy>
+            <Source RefID="583"/>
+            <Target RefID="619"/>
+          </Copy>
+        </Assign>
+        <Data ID="583" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole583"/>
+      </Case>
+      <Case ID="447" IsDefault="true" Label="default">
+        <Mappings ID="51" Label="Mapping">
+          <Input>
+            <Data ID="116" Label="Unknown Role" ReferenceName="UnknownRole" ReferencePath="xact.radius" VariableName="unknownRole116"/>
+            <Source RefID="117">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="111" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole111"/>
+            <Target RefID="592"/>
+          </Output>
+          <Mapping>%1%#cast("xact.radius.UnknownRole")~=%0%</Mapping>
+        </Mappings>
+        <Assign ID="449">
+          <Source RefID="592"/>
+          <Target RefID="619"/>
+          <Copy>
+            <Source RefID="592"/>
+            <Target RefID="619"/>
+          </Copy>
+        </Assign>
+        <Data ID="592" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole592"/>
+      </Case>
+    </Choice>
+    <Data ID="110" Label="Read Only User" ReferenceName="ReadOnlyUser" ReferencePath="xact.radius" VariableName="readOnlyUser">
+      <Target RefID="30"/>
+    </Data>
+    <Data ID="117" Label="Unknown Role" ReferenceName="UnknownRole" ReferencePath="xact.radius" VariableName="unknownRole">
+      <Target RefID="51"/>
+    </Data>
+    <Data ID="162" Label="Xyna Property String" ReferenceName="XynaPropertyString" ReferencePath="xfmg.xods.configuration" VariableName="xynaPropertyString162">
+      <Source RefID="152"/>
+    </Data>
+    <Data ID="521" ReferenceName="SuperUser" ReferencePath="xact.radius" VariableName="superUser521"/>
+    <Data ID="523" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole523"/>
+    <Data ID="553" ReferenceName="ReadWriteUser" ReferencePath="xact.radius" VariableName="readWriteUser553"/>
+    <Data ID="555" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole555"/>
+    <Data ID="619" Label="Functional Role" ReferenceName="FunctionalRole" ReferencePath="xact.radius" VariableName="functionalRole619">
+      <Source RefID="446"/>
+    </Data>
+    <Data ID="717" Label="Use Value" ReferenceName="UseValue" ReferencePath="xfmg.xods.configuration.parameter" VariableName="const_UseValue717"/>
+    <Assign ID="4">
+      <Source RefID="619"/>
+      <Target RefID="99"/>
+      <Copy>
+        <Source RefID="619"/>
+        <Target RefID="99"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

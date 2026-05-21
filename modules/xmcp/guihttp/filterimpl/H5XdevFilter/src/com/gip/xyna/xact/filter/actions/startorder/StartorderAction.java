@@ -20,6 +20,8 @@ package com.gip.xyna.xact.filter.actions.startorder;
 
 
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
@@ -68,6 +70,12 @@ public class StartorderAction extends RuntimeContextDependendAction {
   private static final XynaFactoryControl xfctrl = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl();
   private static final String documentFqn = "xact.templates.Document";
   private static final String ordertypeFqn = "xprc.xpce.OrderType";
+  private List<Endpoint> endpoints;
+  
+  
+  public void setEndpoints(List<Endpoint> endpoints) {
+    this.endpoints = endpoints;
+  }
 
   protected boolean matchRuntimeContextIndependent(URLPath url, Method method) {
     return url.getPath().equals("/" + PathElements.START_ORDER) && Method.POST == method;
@@ -164,6 +172,7 @@ public class StartorderAction extends RuntimeContextDependendAction {
     xocp.setMonitoringLevel(srj.getMonitoringLevel());
     xocp.setSessionId(xpsc.getSessionId());
     xocp.setTransientCreationRole(role);
+    xocp.addRunnableForFilterAccess("H5XdevFilter", new H5XdevFilterAccessRunnable(tc, endpoints));
 
     XynaMultiChannelPortalSecurityLayer xynaMultiChannelPortalSecurityLayer =
         XynaFactory.getInstance().getXynaMultiChannelPortalSecurityLayer();
@@ -195,9 +204,9 @@ public class StartorderAction extends RuntimeContextDependendAction {
       RevisionManagement rm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
       Application app = (Application) rc;
       Long calledRevision = rm.getRevision(app.getName(), app.getVersionName(), null);
+      boolean isApp = rm.isApplicationRevision(myRevision);
 
-
-      if (RevisionOrderControl.checkCustomOrderEntryClosed(calledRevision, myRevision, H5XdevFilter.ORDERENTRYNAME)) {
+      if (isApp && RevisionOrderControl.checkCustomOrderEntryClosed(calledRevision, myRevision, H5XdevFilter.ORDERENTRYNAME)) {
         AuthUtils.replyError(tc, jfai, Status.forbidden, new RuntimeException("Order entry disabled for application '" + app.getName() + "/" + app.getVersionName() + "'."));
         return jfai;
       }

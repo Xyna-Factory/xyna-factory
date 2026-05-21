@@ -42,7 +42,9 @@ import xmcp.gitintegration.repository.RepositoryUser;
 
 public class UserManagementStorage {
 
-  public static final String SEC_STORE_DESTINATION = "repositoryusers";
+  public static final String SEC_STORE_PW_DESTINATION = "repositoryusers";
+  public static final String SEC_STORE_KEY_DESTINATION = "repositoryusers.key";
+  public static final String SEC_STORE_PASSPHRASE_DESTINATION = "repositoryusers.passPhrase";
   public static final String CLI_USERNAME = "<CLI_USER>";
 
   private static PreparedQueryCache queryCache = new PreparedQueryCache();
@@ -52,19 +54,45 @@ public class UserManagementStorage {
     ODSImpl ods = ODSImpl.getInstance();
     ods.registerStorable(RepositoryUserStorable.class);
   }
+  
+  public static void shutdown() throws PersistenceLayerException {
+    ODSImpl ods = ODSImpl.getInstance();
+    ods.unregisterStorable(RepositoryUserStorable.class);
+  }
 
 
   public String loadPassword(String factoryUser, String repository) throws XynaException {
     String id = RepositoryUserStorable.createIdentifier(factoryUser, repository);
-    return (String) SecureStorage.getInstance().retrieve(SEC_STORE_DESTINATION, id);
+    return (String) SecureStorage.getInstance().retrieve(SEC_STORE_PW_DESTINATION, id);
   }
 
 
-  public void AddUserToRepository(String factoryUser, String repoUser, String repository, String password, String mail) {
+  public String loadPrivateKey(String factoryUser, String repository) throws XynaException {
+    String id = RepositoryUserStorable.createIdentifier(factoryUser, repository);
+    return (String) SecureStorage.getInstance().retrieve(SEC_STORE_KEY_DESTINATION, id);
+  }
+
+
+  public String loadPassphrase(String factoryUser, String repository) throws XynaException {
+    String id = RepositoryUserStorable.createIdentifier(factoryUser, repository);
+    return (String) SecureStorage.getInstance().retrieve(SEC_STORE_PASSPHRASE_DESTINATION, id);
+  }
+  
+
+  public void AddUserToRepository(String factoryUser, String repoUser, String repository, String pw, String keyPath, String keyphrase, String mail) {
     try {
       buildExecutor().execute(new AddUserToRepository(factoryUser, repoUser, repository, mail));
       SecureStorage sec = SecureStorage.getInstance();
-      sec.store(SEC_STORE_DESTINATION, RepositoryUserStorable.createIdentifier(factoryUser, repository), password);
+      String identifier = RepositoryUserStorable.createIdentifier(factoryUser, repository);
+      if (pw != null && !pw.isEmpty()) {
+        sec.store(SEC_STORE_PW_DESTINATION, identifier, pw);
+      }
+      if (keyPath != null && !keyPath.isEmpty()) {
+        sec.store(SEC_STORE_KEY_DESTINATION, identifier, keyPath);
+      }
+      if (keyphrase != null && !keyphrase.isEmpty()) {
+        sec.store(SEC_STORE_PASSPHRASE_DESTINATION, identifier, keyphrase);
+      }
     } catch (Exception e) {
       throw new RuntimeException("Could not add user to Repository");
     }
@@ -107,10 +135,15 @@ public class UserManagementStorage {
   }
 
 
-  public void removeUserFromRepository(String repository, String factoryUser, String repoUser) {
+  public void removeUserFromRepository(String repository, String factoryUser) {
     try {
-      buildExecutor().execute(new RemoveUserFromRepository(repository, factoryUser, repoUser));
-    } catch (PersistenceLayerException e) {
+      buildExecutor().execute(new RemoveUserFromRepository(repository, factoryUser));
+      SecureStorage sec = SecureStorage.getInstance();
+      String identifier = RepositoryUserStorable.createIdentifier(factoryUser, repository);
+        sec.remove(SEC_STORE_PW_DESTINATION, identifier);
+        sec.remove(SEC_STORE_KEY_DESTINATION, identifier);
+        sec.remove(SEC_STORE_PASSPHRASE_DESTINATION, identifier);
+    } catch (Exception e) {
       new RuntimeException(e);
     }
   }
@@ -161,7 +194,7 @@ public class UserManagementStorage {
 
     @Override
     public RepositoryUser executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-      PreparedQuery<RepositoryUserStorable> query = queryCache.getQueryFromCache(QUERY_REPO_USER, con, RepositoryUserStorable.reader);
+      PreparedQuery<RepositoryUserStorable> query = queryCache.getQueryFromCache(QUERY_REPO_USER, con, RepositoryUserStorable.reader, RepositoryUserStorable.TABLE_NAME);
       RepositoryUserStorable storable = con.queryOneRow(query, new Parameter(factoryUser, repository));
       return convert(storable);
     }
@@ -213,7 +246,7 @@ public class UserManagementStorage {
 
     @Override
     public List<RepositoryUser> executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-      PreparedQuery<RepositoryUserStorable> query = queryCache.getQueryFromCache(QUERY_USERS_OF_REPO, con, RepositoryUserStorable.reader);
+      PreparedQuery<RepositoryUserStorable> query = queryCache.getQueryFromCache(QUERY_USERS_OF_REPO, con, RepositoryUserStorable.reader, RepositoryUserStorable.TABLE_NAME);
       List<RepositoryUserStorable> storableCollection = con.query(query, new Parameter(repository), -1);
       return storableCollection.stream().map(x -> convert(x)).collect(Collectors.toList());
     }
@@ -231,7 +264,7 @@ public class UserManagementStorage {
 
     @Override
     public List<String> executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-      PreparedQuery<RepositoryUserStorable> query = queryCache.getQueryFromCache(QUERY_REPOS_OF_USER, con, RepositoryUserStorable.reader);
+      PreparedQuery<RepositoryUserStorable> query = queryCache.getQueryFromCache(QUERY_REPOS_OF_USER, con, RepositoryUserStorable.reader, RepositoryUserStorable.TABLE_NAME);
       List<RepositoryUserStorable> storableCollection = con.query(query, new Parameter(user), -1);
       return storableCollection.stream().map(x -> x.getRepopath()).collect(Collectors.toList());
     }
@@ -241,19 +274,17 @@ public class UserManagementStorage {
 
     private String repository;
     private String factoryUser;
-    private String repoUser;
 
 
-    public RemoveUserFromRepository(String repository, String factoryUser, String repoUser) {
+    public RemoveUserFromRepository(String repository, String factoryUser) {
       this.repository = repository;
       this.factoryUser = factoryUser;
-      this.repoUser = repoUser;
     }
 
 
     @Override
     public void executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-      RepositoryUserStorable storable = new RepositoryUserStorable(factoryUser, repoUser, repository, -1l, "");
+      RepositoryUserStorable storable = new RepositoryUserStorable(factoryUser, "", repository, -1l, "");
       con.deleteOneRow(storable);
     }
   }
@@ -270,7 +301,7 @@ public class UserManagementStorage {
 
     @Override
     public void executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-      PreparedQuery<RepositoryUserStorable> query = queryCache.getQueryFromCache(QUERY_USERS_OF_REPO, con, RepositoryUserStorable.reader);
+      PreparedQuery<RepositoryUserStorable> query = queryCache.getQueryFromCache(QUERY_USERS_OF_REPO, con, RepositoryUserStorable.reader, RepositoryUserStorable.TABLE_NAME);
       List<RepositoryUserStorable> storableCollection = con.query(query, new Parameter(repository), -1);
       con.delete(storableCollection);
 
@@ -289,7 +320,7 @@ public class UserManagementStorage {
 
     @Override
     public void executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-      PreparedQuery<RepositoryUserStorable> query = queryCache.getQueryFromCache(QUERY_REPOS_OF_USER, con, RepositoryUserStorable.reader);
+      PreparedQuery<RepositoryUserStorable> query = queryCache.getQueryFromCache(QUERY_REPOS_OF_USER, con, RepositoryUserStorable.reader, RepositoryUserStorable.TABLE_NAME);
       List<RepositoryUserStorable> storableCollection = con.query(query, new Parameter(user), -1);
       con.delete(storableCollection);
     }

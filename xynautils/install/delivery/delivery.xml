@@ -25,13 +25,13 @@
   <!-- =================================
             target: release
         ================================= -->
-  <target name="release" description="build a release from specified SVN-tag">
+  <target name="release" description="build a release from specified GIT-tag">
     <property name="root.dir" value="${delivery.dir}/checkout_${timestamp}" />
     <property name="build.dir" value="${delivery.dir}/build_${timestamp}" />
     <if>
-      <isset property="svn.branch" />
+      <isset property="git.branch" />
       <then>
-        <checkout branch="${svn.branch}" />
+        <checkout branch="${git.branch}" />
       </then>
       <else>
         <checkout />

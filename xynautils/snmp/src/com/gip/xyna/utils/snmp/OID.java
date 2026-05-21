@@ -225,7 +225,7 @@ public class OID implements Comparable {
   }
   
   /**
-   * hï¿½ngt an die OID den angegebenen Index an
+   * hängt an die OID den angegebenen Index an
    * @param index
    * @return neue OID
    */

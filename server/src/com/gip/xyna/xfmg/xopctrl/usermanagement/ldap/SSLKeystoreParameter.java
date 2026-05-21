@@ -417,7 +417,7 @@ public class SSLKeystoreParameter extends SSLParameter {
       return foundField;
     }
     try {
-      foundField = SSLParameter.class.getDeclaredField(target_fieldname);
+      foundField = SSLKeystoreParameter.class.getDeclaredField(target_fieldname);
     } catch (NoSuchFieldException e) {
     }
     if (foundField == null) {

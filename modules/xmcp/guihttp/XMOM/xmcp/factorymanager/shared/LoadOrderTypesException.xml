@@ -17,7 +17,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
-  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="DEVEL-00307" Label="Load order types Exception" TypeName="LoadOrderTypesException" TypePath="xmcp.factorymanager.shared">
+  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="HTML5GUI-00387" Label="Load order types Exception" TypeName="LoadOrderTypesException" TypePath="xmcp.factorymanager.shared">
     <Data Label="Reason" VariableName="reason">
       <Meta>
         <Type>String</Type>

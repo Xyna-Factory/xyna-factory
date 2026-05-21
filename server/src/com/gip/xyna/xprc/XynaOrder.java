@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
@@ -579,10 +581,15 @@ public class XynaOrder implements Serializable {
     s.writeObject(new SerializableClassloadedXynaObject(inputPayload));
     s.writeObject(new SerializableClassloadedXynaObject(outputPayload));
     if (runnablesForFilterAccess != null) {
-      s.writeObject(Integer.valueOf(runnablesForFilterAccess.size()));
-      for (Entry<String, RunnableForFilterAccess> e : runnablesForFilterAccess.entrySet()) {
-        s.writeObject(e.getKey());
-        s.writeObject(new SerializableClassloadedObject(e.getValue(), revision, parentRevision));
+      Set<Entry<String, RunnableForFilterAccess>> entriesToSerialize = runnablesForFilterAccess.entrySet().stream().filter(x -> x.getValue().serialize()).collect(Collectors.toSet());
+      if(entriesToSerialize.size() > 0) { 
+        s.writeObject(Integer.valueOf(entriesToSerialize.size()));
+        for (Entry<String, RunnableForFilterAccess> e : entriesToSerialize) {
+          s.writeObject(e.getKey());
+          s.writeObject(new SerializableClassloadedObject(e.getValue(), revision, parentRevision));
+        }
+      } else {
+        s.writeObject(EMPTYRUNNABLES);
       }
     } else {
       s.writeObject(EMPTYRUNNABLES);

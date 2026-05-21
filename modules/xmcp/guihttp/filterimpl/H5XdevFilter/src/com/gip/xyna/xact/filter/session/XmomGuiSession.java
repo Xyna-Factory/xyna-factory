@@ -25,12 +25,14 @@ public class XmomGuiSession {
 
 
   private final String id;
+  private final String token;
   private final String user;
   private final Role role;
 
 
-  public XmomGuiSession(String id) throws XynaException {
+  public XmomGuiSession(String id, String token) throws XynaException {
     this.id = id;
+    this.token = token;
     this.user = XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getSessionManagement().resolveSessionToUser(id);
     this.role = XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getSessionManagement().getRole(id);
   }
@@ -38,6 +40,11 @@ public class XmomGuiSession {
 
   public String getId() {
     return id;
+  }
+  
+  
+  public String getToken() {
+    return token;
   }
 
   

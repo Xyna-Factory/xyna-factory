@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Operation signature input TableInfo" TypeName="OperationSignatureInputTableInfo" TypePath="xmcp.yang.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Operation signature input TableInfo" Name="OperationSignatureInputTableInfo">
+    <Input>
+      <Data ID="167" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo167"/>
+      <Data ID="1293" Label="Operation Table Data" ReferenceName="OperationTableData" ReferencePath="xmcp.yang" VariableName="operationTableData1293"/>
+    </Input>
+    <Output>
+      <Data ID="10" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo10"/>
+      <Data ID="23" IsList="true" Label="OperationSignatureEntry" ReferenceName="OperationSignatureEntry" ReferencePath="xmcp.yang.fman" VariableName="operationSignatureEntry23"/>
+      <Data ID="1601" Label="Operation Table Data" ReferenceName="OperationTableData" ReferencePath="xmcp.yang" VariableName="operationTableData1601"/>
+    </Output>
+    <ServiceReference ID="137" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="136"/>
+      <Target RefID="136"/>
+    </ServiceReference>
+    <ServiceReference ID="290" Label="Yang App Generation" ReferenceName="YangAppGeneration.YangAppGeneration" ReferencePath="xdev.yang">
+      <Source RefID="289"/>
+      <Target RefID="289"/>
+    </ServiceReference>
+    <Choice ID="126" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="167"/>
+      <Target RefID="54"/>
+      <Input>
+        <Data ID="133" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo133"/>
+        <Source RefID="167"/>
+      </Input>
+      <Case ID="127" Label="true" Premise="%0%.bootstrap==&quot;true&quot;">
+        <Function ID="136" Label="Build TableInfo and Select Columns">
+          <Source RefID="137"/>
+          <Source RefID="167"/>
+          <Source RefID="264"/>
+          <Source RefID="458"/>
+          <Target RefID="137"/>
+          <Target RefID="135"/>
+          <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="137">
+            <Source RefID="167"/>
+            <Source RefID="264">
+              <Meta>
+                <LinkType>Constant</LinkType>
+                <ExpectedType>xmcp.yang.fman.OperationSignatureEntry</ExpectedType>
+              </Meta>
+            </Source>
+            <Source RefID="458">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="137">
+            <Target RefID="135"/>
+          </Receive>
+        </Function>
+        <Assign>
+          <Source RefID="135"/>
+          <Target RefID="54"/>
+          <Copy>
+            <Source RefID="135"/>
+            <Target RefID="54"/>
+          </Copy>
+        </Assign>
+        <Data ID="135" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo135"/>
+      </Case>
+      <Case ID="128" Label="false">
+        <Mappings ID="142" Label="Mapping">
+          <Input>
+            <Data ID="143" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo143"/>
+            <Source RefID="167"/>
+          </Input>
+          <Output>
+            <Data ID="144" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo144"/>
+            <Target RefID="53"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Assign>
+          <Source RefID="53"/>
+          <Target RefID="54"/>
+          <Copy>
+            <Source RefID="53"/>
+            <Target RefID="54"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Function ID="289" Label="Load Operation Signature">
+      <Source RefID="290"/>
+      <Source RefID="1293"/>
+      <Target RefID="290"/>
+      <Target RefID="292"/>
+      <Target RefID="293"/>
+      <Invoke Operation="loadOperationSignature" ServiceID="290">
+        <Source RefID="1293"/>
+      </Invoke>
+      <Receive ServiceID="290">
+        <Target RefID="292"/>
+        <Target RefID="293"/>
+      </Receive>
+    </Function>
+    <Data ID="53" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo53"/>
+    <Data ID="54" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo54"/>
+    <Data ID="264" Label="OperationSignatureEntry" ReferenceName="OperationSignatureEntry" ReferencePath="xmcp.yang.fman" VariableName="const_OperationSignatureEntry264"/>
+    <Data ID="292" IsList="true" Label="Inputs - OperationSignatureEntry" ReferenceName="OperationSignatureEntry" ReferencePath="xmcp.yang.fman" VariableName="operationSignatureEntry292">
+      <Source RefID="289"/>
+    </Data>
+    <Data ID="293" IsList="true" Label="Outputs - OperationSignatureEntry" ReferenceName="OperationSignatureEntry" ReferencePath="xmcp.yang.fman" VariableName="operationSignatureEntry293">
+      <Source RefID="289"/>
+    </Data>
+    <Data ID="458" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="const_TableColumn458">
+      <Value>
+        <Data ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
+          <Data VariableName="disableFilter">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>true</Value>
+          </Data>
+          <Data VariableName="path">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>index</Value>
+          </Data>
+          <Data VariableName="break0">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="pre">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="shrink">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>true</Value>
+          </Data>
+          <Data VariableName="name">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>Index</Value>
+          </Data>
+          <Data VariableName="sort">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>asc</Value>
+          </Data>
+          <Data VariableName="disableSort">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>true</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
+          <Data VariableName="disableFilter">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>true</Value>
+          </Data>
+          <Data VariableName="path">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>variableName</Value>
+          </Data>
+          <Data VariableName="break0">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="pre">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="shrink">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>true</Value>
+          </Data>
+          <Data VariableName="name">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>Variable Name</Value>
+          </Data>
+          <Data VariableName="disableSort">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>true</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
+          <Data VariableName="disableFilter">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>true</Value>
+          </Data>
+          <Data VariableName="path">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>fqn</Value>
+          </Data>
+          <Data VariableName="break0">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="pre">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="shrink">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>true</Value>
+          </Data>
+          <Data VariableName="name">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>Fqn</Value>
+          </Data>
+          <Data VariableName="disableSort">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>true</Value>
+          </Data>
+        </Data>
+      </Value>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="54"/>
+      <Source RefID="292"/>
+      <Source RefID="1293"/>
+      <Target RefID="10"/>
+      <Target RefID="23"/>
+      <Target RefID="1601"/>
+      <Copy>
+        <Source RefID="54">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="10"/>
+      </Copy>
+      <Copy>
+        <Source RefID="292">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="23"/>
+      </Copy>
+      <Copy>
+        <Source RefID="1293"/>
+        <Target RefID="1601"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

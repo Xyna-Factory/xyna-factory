@@ -40,7 +40,7 @@ check_target_platform () {
             fi
             ;;
           rhel)
-            TOKEN_ETC_ISSUE="Red Hat Enterprise Linux Server"
+            TOKEN_ETC_ISSUE="Red Hat Enterprise Linux"
             if [[ -f "/etc/redhat-release" ]]; then
               TARGET_FILE="/etc/redhat-release"
             fi
@@ -126,7 +126,7 @@ check_target_version () {
       return 0
       ;;
     rhel)
-      local INSTALLATION_PLATFORM_VERSION=$(${VOLATILE_CAT} ${TARGET_FILE} | ${VOLATILE_AWK} '$1=="Red" { print $7 }');
+      local INSTALLATION_PLATFORM_VERSION=$(${VOLATILE_CAT} ${TARGET_FILE} | ${VOLATILE_AWK} '$1=="Red" { print $6 }');
       echo ${INSTALLATION_PLATFORM_VERSION}
       ;;
     debian)
@@ -401,7 +401,6 @@ write_settings_to_cache () {
   echo "MAGIC_NUMBER_OF_CACHE_FILE=${MAGIC_NUMBER_OF_THIS_FUNC_LIB}" > "${FUNC_LIB_CACHE_FILE}"
   set | ${VOLATILE_GREP} "^VOLATILE_" >> "${FUNC_LIB_CACHE_FILE}" 
 }
-
 
 #  Volle Pfade zu benoetigten Programmen ermitteln
 get_volatile_settings () {

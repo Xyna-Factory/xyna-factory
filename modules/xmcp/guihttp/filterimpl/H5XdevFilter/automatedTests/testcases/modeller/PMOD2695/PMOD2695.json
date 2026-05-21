@@ -115,7 +115,7 @@
     },
     {
       "operation": "read",
-      "pathInResponse": "updates/$list[0]/areas/$list[name=memberMethods]/items/$list[0]/implementation",
+      "pathInResponse": "updates/$list[0]/areas/$list[name=memberMethods]/items/$list[0]/areas/$list[name=implementation]/text",
       "targetVariable": "!implementation!",
       "unquoteResult": true
     },
