@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package xact.ssh.server;
+package xact.ssh.server.auth;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -48,8 +48,6 @@ public class ClientKeyStorable extends Storable<ClientKeyStorable> {
   @Column(name = COL_ID)
   private long id;
   
-  // FIXME reintroduce indizes when testing on live machine
-  
   //@Column(name = COL_NAME, index = IndexType.MULTIPLE)
   @Column(name = COL_NAME)
   private String name;
@@ -79,7 +77,6 @@ public class ClientKeyStorable extends Storable<ClientKeyStorable> {
   }
   
   
-  // TODO ensure not to waste id's check call hierarchy
   public ClientKeyStorable(String name, String type, String publickey, boolean hashed) { // overload with byte[] key ?
     this();
     this.name = name;

@@ -23,7 +23,7 @@
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>SSHServer</ApplicationName>
-        <VersionName>1.0.7</VersionName>
+        <VersionName>2.0.0</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>

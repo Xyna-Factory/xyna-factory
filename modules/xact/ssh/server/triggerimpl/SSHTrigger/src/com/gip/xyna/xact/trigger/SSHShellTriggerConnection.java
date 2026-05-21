@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,15 +23,13 @@ import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xact.trigger.SSHStartParameter.ErrorHandling;
-import com.gip.xyna.xdev.xfractmod.xmdm.TriggerConnection;
 
-public class SSHTriggerConnection extends TriggerConnection {
-  
+public class SSHShellTriggerConnection extends SSHDTriggerConnection {
+
   private static final long serialVersionUID = 1L;
-  
-  private static final Logger logger = CentralFactoryLogging.getLogger(SSHTriggerConnection.class);
 
-  
+  private static final Logger logger = CentralFactoryLogging.getLogger(SSHShellTriggerConnection.class);
+
   public enum RequestType {
     Init, Exec, Close;
   }
@@ -40,12 +38,12 @@ public class SSHTriggerConnection extends TriggerConnection {
   private transient ShellCommand shellCommand;
 
   private boolean closeConnection = true;
-  
-  public SSHTriggerConnection(ShellCommand shellCommand, RequestType requestType) {
+
+  public SSHShellTriggerConnection(ShellCommand shellCommand, RequestType requestType) {
     this.shellCommand = shellCommand;
     this.requestType = requestType;
   }
-  
+
   public RequestType getRequestType() {
     return requestType;
   }
@@ -61,33 +59,32 @@ public class SSHTriggerConnection extends TriggerConnection {
   public void sendLineQuietly(String msg) {
     try {
       shellCommand.sendLine(msg);
-    } catch( IOException e ) {
-      logger.warn( "Could not sendLine ", e);
+    } catch (IOException e) {
+      logger.warn("Could not sendLine ", e);
     }
   }
-  
+
   public void sendQuietly(String msg) {
     try {
       shellCommand.send(msg);
-    } catch( IOException e ) {
-      logger.warn( "Could not sendLine ", e);
+    } catch (IOException e) {
+      logger.warn("Could not sendLine ", e);
     }
   }
-  
-  
+
   public void sendLine(String msg) throws IOException {
     shellCommand.sendLine(msg);
   }
-  
+
   public void send(String msg) throws IOException {
     shellCommand.send(msg);
   }
-  
+
   public synchronized void close() {
     try {
-      if( closeConnection ) {
-        if( requestType == RequestType.Close ) {
-          //bei RequestType Close ist ShellCommand bereits geschlossen
+      if (closeConnection) {
+        if (requestType == RequestType.Close) {
+          // bei RequestType Close ist ShellCommand bereits geschlossen
         } else {
           shellCommand.close();
         }
@@ -96,13 +93,13 @@ public class SSHTriggerConnection extends TriggerConnection {
       super.close();
     }
   }
-  
+
   public String readLine() throws IOException {
     return shellCommand.readLine();
   }
 
   public void nextRequest() {
-    if( !shellCommand.isClosed() ) {
+    if (!shellCommand.isClosed()) {
       closeConnection = false;
       shellCommand.nextRequest();
     }
@@ -111,7 +108,7 @@ public class SSHTriggerConnection extends TriggerConnection {
   public void customize(SSHCustomizationParameter customization) {
     shellCommand.customize(customization);
   }
-  
+
   public SSHCustomizationParameter getCustomization() {
     return shellCommand.getCustomization();
   }
@@ -123,5 +120,17 @@ public class SSHTriggerConnection extends TriggerConnection {
   public ErrorHandling getErrorHandling() {
     return shellCommand.getStartParameter().getErrorHandling();
   }
- 
+
+  @Override
+  public void handleProcessingRejected(String cause) {
+    this.sendLineQuietly(this.getCustomization().getErrorPrefix() + "processing rejected: " + cause);
+    this.close();
+  }
+
+  @Override
+  public void handleNoFilterFound() {
+    this.sendLineQuietly(this.getCustomization().getErrorPrefix() + "no filter");
+    this.close();
+  }
+
 }
