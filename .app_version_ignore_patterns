@@ -1,0 +1,19 @@
+# this file is passed to checkAppVersionBump.py
+# it contains regular expressions for which files
+# to ignore when determining which app versions need
+# to be updated.
+
+
+# application.xml files
+# changes to dependency versions do not require the app itself to update its version
+|/application\.xml$
+
+# build.xml files
+/build\.xml$
+
+# automated tests of GuiHttp
+/xmcp/guihttp/automatedTests/
+
+# GitIntegration scripts outside the application
+/xmcp/gitintegration/mdmimpl/WorkspaceObjectManagementImpl/src/xmcp/gitintegration/offline/
+/xmcp/gitintegration/mdmimpl/WorkspaceObjectManagementImpl/src/com/

@@ -1,0 +1,36 @@
+name: Check App Version Bump
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  check-app-version-bump:
+    runs-on: ubuntu-latest
+    steps:
+
+     - name: Check out xyna-factory
+       uses: actions/checkout@v6
+       with:
+         fetch-depth: 0
+
+     - name: Collect diffs
+       env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+       run: gh pr diff ${{ github.event.pull_request.number }} --name-only > pr.diff
+
+     - name: Check out PR target branch
+       run: git checkout ${{ github.base_ref }}
+
+     - name: Build base application versions
+       run: python installation/build/createAppVersionSummary.py --path modules --output base-versions.json
+
+     - name: Check out PR branch
+       run: git checkout ${{ github.head_ref }}
+
+     - name: Build new application versions
+       run: python installation/build/createAppVersionSummary.py --path modules --output new-versions.json
+
+     - name: Check app version bump
+       run: python installation/build/checkAppVersionBump.py --diff pr.diff --base-versions base-versions.json --new-versions new-versions.json --ignore-patterns .app_version_ignore_patterns
+
