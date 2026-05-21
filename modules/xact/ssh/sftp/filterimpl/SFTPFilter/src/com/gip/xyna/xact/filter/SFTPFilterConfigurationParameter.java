@@ -28,6 +28,8 @@ import com.gip.xyna.xact.exceptions.XACT_InvalidFilterConfigurationParameterValu
 import com.gip.xyna.xdev.xfractmod.xmdm.FilterConfigurationParameter;
 
 public class SFTPFilterConfigurationParameter extends FilterConfigurationParameter {
+    private static final long serialVersionUID = 1L;
+
     public final static String PROCESS_SFTP_ORDERTYPE = "xact.sftp.ProcessSFTPRequest";
 
     public static final StringParameter<String> FILTER_PREFIX = StringParameter.typeString("filterPrefix")

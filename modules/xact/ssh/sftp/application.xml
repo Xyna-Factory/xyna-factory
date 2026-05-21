@@ -18,6 +18,8 @@
 -->
 <Application applicationName="SFTPServer" comment="" factoryVersion="" versionName="2.0.0" xmlVersion="1.1">
   <ApplicationInfo>
+    <Description Lang="DE">Erzeuge Dateien per Workflow ausgelöst durch SCP oder SFTP.</Description>
+    <Description Lang="EN">Create files via Workflow triggered by SCP or SFTP.</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>

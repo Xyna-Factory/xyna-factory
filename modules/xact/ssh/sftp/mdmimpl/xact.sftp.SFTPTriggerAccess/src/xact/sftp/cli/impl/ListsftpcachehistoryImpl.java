@@ -38,7 +38,7 @@ public class ListsftpcachehistoryImpl extends XynaCommandImplementation<Listsftp
   @Override
   public void execute(OutputStream statusOutputStream, Listsftpcachehistory payload) throws XynaException {
     try {
-      EventListener el = SFTPTriggerAccessServiceOperationImpl.getFirstEnabledTriggerInstanceInSameRevisionOrAbove();
+      EventListener<?,?> el = SFTPTriggerAccessServiceOperationImpl.getFirstEnabledTriggerInstanceInSameRevisionOrAbove();
       if (el == null) {
         writeLineToCommandLine(statusOutputStream, "SFTPTrigger instance not found or not enabled.");
         return;

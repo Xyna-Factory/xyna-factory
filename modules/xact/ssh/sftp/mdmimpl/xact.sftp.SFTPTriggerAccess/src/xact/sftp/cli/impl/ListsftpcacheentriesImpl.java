@@ -37,7 +37,7 @@ public class ListsftpcacheentriesImpl extends XynaCommandImplementation<Listsftp
 
   public void execute(OutputStream statusOutputStream, Listsftpcacheentries payload) throws XynaException {
     try {
-      EventListener el = SFTPTriggerAccessServiceOperationImpl.getFirstEnabledTriggerInstanceInSameRevisionOrAbove();
+      EventListener<?,?> el = SFTPTriggerAccessServiceOperationImpl.getFirstEnabledTriggerInstanceInSameRevisionOrAbove();
       Method m = el.getClass().getDeclaredMethod(LIST_CACHE_METHOD_NAME);
       TableFormatter table = (TableFormatter) m.invoke(el);
       StringBuilder output = new StringBuilder();
