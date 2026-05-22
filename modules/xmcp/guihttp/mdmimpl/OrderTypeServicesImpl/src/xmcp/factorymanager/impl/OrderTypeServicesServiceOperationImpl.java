@@ -46,11 +46,13 @@ import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 import com.gip.xyna.xprc.XynaProcessingPortal.DispatcherIdentification;
 import com.gip.xyna.xprc.exceptions.XPRC_INVALID_MONITORING_TYPE;
+import com.gip.xyna.xprc.xpce.XynaProcessCtrlExecution;
 import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
 import com.gip.xyna.xprc.xpce.dispatcher.XynaDispatcher;
 import com.gip.xyna.xprc.xpce.parameterinheritance.ParameterInheritanceManagement.ParameterType;
 import com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule;
 import com.gip.xyna.xprc.xpce.planning.Capacity;
+import com.gip.xyna.xprc.xpce.planning.PlanningDispatcher;
 
 import xmcp.Application;
 import xmcp.RuntimeContext;
@@ -141,7 +143,10 @@ public class OrderTypeServicesServiceOperationImpl implements ExtendedDeployment
       ordertypeManagement.modifyOrdertype(createOrderTypeParameter(orderType));
       if (orderType.getPlanningDestination() == null || orderType.getPlanningDestination().getName() == null || !orderType.getPlanningDestinationIsCustom()) {
         var dk = new DestinationKey(orderType.getFullQualifiedName(), convertRTC(orderType.getRuntimeContext()));
-        XynaFactory.getInstance().getProcessing().removeDestination(DispatcherIdentification.Planning, dk);
+        var processing = XynaFactory.getInstance().getProcessing();
+        processing.removeDestination(DispatcherIdentification.Planning, dk);
+        PlanningDispatcher planningDispatcher = processing.getXynaProcessCtrlExecution().getXynaPlanning().getPlanningDispatcher();
+        planningDispatcher.setDestination(dk, XynaDispatcher.DESTINATION_DEFAULT_PLANNING, false);
       }
     } catch (PersistenceLayerException | XFMG_InvalidModificationOfUnexistingOrdertype | XFMG_InvalidCapacityCardinality | XPRC_INVALID_MONITORING_TYPE e) {
       throw new UpdateOrderTypeException(e.getMessage(), e);
