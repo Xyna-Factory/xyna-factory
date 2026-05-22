@@ -6,7 +6,7 @@
 
 # application.xml files
 # changes to dependency versions do not require the app itself to update its version
-|/application\.xml$
+/application\.xml$
 
 # build.xml files
 /build\.xml$
