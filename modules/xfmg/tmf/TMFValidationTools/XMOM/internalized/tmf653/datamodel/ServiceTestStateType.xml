@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="ServiceTestStateType" TypeName="ServiceTestStateType" TypePath="internalized.tmf653.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>Valid values for the lifecycle state of the service
+        </Documentation>
+  </Meta>
+  <Data Label="Value" VariableName="value">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>
+values: acknowledged, rejected, pending, inProgress, cancelled, completed, failed
+        </Documentation>
+    </Meta>
+  </Data>
+  <Service Label="ServiceTestStateType" TypeName="ServiceTestStateType">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+// validate ServiceTestStateType.value of type String
+try {
+    var validator_value = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_value.setName("Value");
+    validator_value.setValue(getValue());
+    validator_value.setAllowableValues("acknowledged", "rejected", "pending", "inProgress", "cancelled", "completed", "failed");
+    result.getErrorMessages().addAll(validator_value.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceTestStateType.value");
+}
+
+return result.getResult();
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="get ACKNOWLEDGED" Name="getACKNOWLEDGED">
+      <Input/>
+      <Output>
+        <Data ID="2" Label="ServiceTestStateType" ReferenceName="ServiceTestStateType" ReferencePath="internalized.tmf653.datamodel" VariableName="varName"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new ServiceTestStateType("acknowledged");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="is ACKNOWLEDGED" Name="isACKNOWLEDGED">
+      <Input/>
+      <Output>
+        <Data Label="ACKNOWLEDGED" VariableName="isACKNOWLEDGED">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return "acknowledged".equals(this.getValue());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="get REJECTED" Name="getREJECTED">
+      <Input/>
+      <Output>
+        <Data ID="2" Label="ServiceTestStateType" ReferenceName="ServiceTestStateType" ReferencePath="internalized.tmf653.datamodel" VariableName="varName"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new ServiceTestStateType("rejected");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="is REJECTED" Name="isREJECTED">
+      <Input/>
+      <Output>
+        <Data Label="REJECTED" VariableName="isREJECTED">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return "rejected".equals(this.getValue());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="get PENDING" Name="getPENDING">
+      <Input/>
+      <Output>
+        <Data ID="2" Label="ServiceTestStateType" ReferenceName="ServiceTestStateType" ReferencePath="internalized.tmf653.datamodel" VariableName="varName"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new ServiceTestStateType("pending");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="is PENDING" Name="isPENDING">
+      <Input/>
+      <Output>
+        <Data Label="PENDING" VariableName="isPENDING">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return "pending".equals(this.getValue());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="get INPROGRESS" Name="getINPROGRESS">
+      <Input/>
+      <Output>
+        <Data ID="2" Label="ServiceTestStateType" ReferenceName="ServiceTestStateType" ReferencePath="internalized.tmf653.datamodel" VariableName="varName"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new ServiceTestStateType("inProgress");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="is INPROGRESS" Name="isINPROGRESS">
+      <Input/>
+      <Output>
+        <Data Label="INPROGRESS" VariableName="isINPROGRESS">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return "inProgress".equals(this.getValue());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="get CANCELLED" Name="getCANCELLED">
+      <Input/>
+      <Output>
+        <Data ID="2" Label="ServiceTestStateType" ReferenceName="ServiceTestStateType" ReferencePath="internalized.tmf653.datamodel" VariableName="varName"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new ServiceTestStateType("cancelled");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="is CANCELLED" Name="isCANCELLED">
+      <Input/>
+      <Output>
+        <Data Label="CANCELLED" VariableName="isCANCELLED">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return "cancelled".equals(this.getValue());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="get COMPLETED" Name="getCOMPLETED">
+      <Input/>
+      <Output>
+        <Data ID="2" Label="ServiceTestStateType" ReferenceName="ServiceTestStateType" ReferencePath="internalized.tmf653.datamodel" VariableName="varName"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new ServiceTestStateType("completed");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="is COMPLETED" Name="isCOMPLETED">
+      <Input/>
+      <Output>
+        <Data Label="COMPLETED" VariableName="isCOMPLETED">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return "completed".equals(this.getValue());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="get FAILED" Name="getFAILED">
+      <Input/>
+      <Output>
+        <Data ID="2" Label="ServiceTestStateType" ReferenceName="ServiceTestStateType" ReferencePath="internalized.tmf653.datamodel" VariableName="varName"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new ServiceTestStateType("failed");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="is FAILED" Name="isFAILED">
+      <Input/>
+      <Output>
+        <Data Label="FAILED" VariableName="isFAILED">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return "failed".equals(this.getValue());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

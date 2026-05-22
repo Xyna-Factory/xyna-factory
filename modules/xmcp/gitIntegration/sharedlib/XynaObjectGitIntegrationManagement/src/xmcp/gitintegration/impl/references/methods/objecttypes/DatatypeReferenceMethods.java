@@ -74,7 +74,9 @@ public class DatatypeReferenceMethods implements ReferenceObjectTypeMethods {
     try {
       DOM dom = DOM.getInstance(objectName, revision);
       dom.parseGeneration(false, true);
-      return new ArrayList<String>(dom.getAdditionalLibraries());
+      List<String> result = new ArrayList<String>(dom.getAdditionalLibraries());
+      result.addAll(dom.getPythonLibraries());
+      return result;
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

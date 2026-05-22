@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,24 +17,49 @@
  */
 package xact.ssh.server;
 
+import java.util.List;
+
+import org.apache.sshd.common.cipher.BuiltinCiphers;
+import org.apache.sshd.common.mac.BuiltinMacs;
+import org.apache.sshd.common.kex.BuiltinDHFactories;
+import org.apache.sshd.common.signature.BuiltinSignatures;
+
 import com.gip.xyna.utils.timing.Duration;
 
 public interface SSHServerParameter {
-  
+
   public enum Auth {
     publickey, password, both, needless;
   }
-  
+
   String getHostKeyFilename();
 
-  String getAlgorithm();
+  String getHostkeyAlgorithm();
+
+  int getHostkeySize();
 
   int getPort();
 
   String getHost();
- 
-  Auth getAuth();
-  
+
+  public boolean getPasswordAuth();
+
+  public boolean getPublicKeyAuth();
+
+  public boolean getAlwaysAuth();
+
+  public boolean getOTCAuth();
+
   Duration getIdleTimeout();
-  
+
+  public List<BuiltinSignatures> getAuthAlgoFactories();
+
+  public List<BuiltinDHFactories> getKexFactories();
+
+  public List<BuiltinMacs> getMacFactories();
+
+  public List<BuiltinCiphers> getCipherFactories();
+
+  public boolean isEnableShell();
+
 }

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="MetricDefMeasureConsequence" TypeName="MetricDefMeasureConsequence" TypePath="internalized.tmf653.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>A MetricDefMeasureConsequence defines the action (prescribed action or notification) to take when a  MetricDefMeasureThresholdRule is crossed.
+        </Documentation>
+  </Meta>
+  <Data Label="description" VariableName="description">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>A narrative that explains in detail what the consequence is.
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="name" VariableName="name">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>A word, term, or phrase by which a  MetricDefMeasureConsequence is known and distinguished from other MetricDefMeasureConsequences.
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="prescribeAction" VariableName="prescribeAction">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Recommended remedy for a violated threshold. This could be  the hyperlink to the action.
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="repeatAction" VariableName="repeatAction">
+    <Meta>
+      <Type>Boolean</Type>
+      <Documentation>An indicator used to specify that a consequence should cease  being applied if a value is in the same range as the previous value or continue being applied if a value is in the same range as the previous value.  If the repeatAction is True, if the consequence is always applied as soon as the MetricMeasure value is in the range of values and if the repeatAction is False, the consequence is applied only if the previous MetricMeasure value was not in the same range.
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="validFor" ReferenceName="TimePeriod" ReferencePath="internalized.tmf653.datamodel" VariableName="validFor">
+    <Meta>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Data Label="@baseType" VariableName="atbaseType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the super-class
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@schemaLocation" VariableName="atschemaLocation">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>A URI to a JSON-Schema file that defines additional attributes and relationships
+format: uri
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@type" VariableName="attype">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the sub-class Extensible name
+        </Documentation>
+    </Meta>
+  </Data>
+  <Service Label="MetricDefMeasureConsequence" TypeName="MetricDefMeasureConsequence">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+// validate MetricDefMeasureConsequence.description of type String
+try {
+    var validator_description = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_description.setName("description");
+    validator_description.setValue(getDescription());
+    result.getErrorMessages().addAll(validator_description.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate MetricDefMeasureConsequence.description");
+}
+
+// validate MetricDefMeasureConsequence.name of type String
+try {
+    var validator_name = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_name.setName("name");
+    validator_name.setValue(getName());
+    result.getErrorMessages().addAll(validator_name.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate MetricDefMeasureConsequence.name");
+}
+
+// validate MetricDefMeasureConsequence.prescribeAction of type String
+try {
+    var validator_prescribeAction = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_prescribeAction.setName("prescribeAction");
+    validator_prescribeAction.setValue(getPrescribeAction());
+    result.getErrorMessages().addAll(validator_prescribeAction.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate MetricDefMeasureConsequence.prescribeAction");
+}
+
+// validate MetricDefMeasureConsequence.repeatAction of type Boolean
+try {
+    var validator_repeatAction = new com.gip.xyna.openapi.BooleanTypeValidator();
+    validator_repeatAction.setName("repeatAction");
+    validator_repeatAction.setValue(getRepeatAction());
+    result.getErrorMessages().addAll(validator_repeatAction.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate MetricDefMeasureConsequence.repeatAction");
+}
+
+// validate MetricDefMeasureConsequence.validFor of type TimePeriod
+try {
+    if (getValidFor() != null) {
+        result.getErrorMessages().addAll(getValidFor().validate().getErrorMessages());
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate MetricDefMeasureConsequence.validFor");
+}
+
+// validate MetricDefMeasureConsequence.atbaseType of type String
+try {
+    var validator_atbaseType = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atbaseType.setName("@baseType");
+    validator_atbaseType.setValue(getAtbaseType());
+    result.getErrorMessages().addAll(validator_atbaseType.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate MetricDefMeasureConsequence.atbaseType");
+}
+
+// validate MetricDefMeasureConsequence.atschemaLocation of type String
+try {
+    var validator_atschemaLocation = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atschemaLocation.setName("@schemaLocation");
+    validator_atschemaLocation.setValue(getAtschemaLocation());
+    validator_atschemaLocation.setFormat("uri");
+    result.getErrorMessages().addAll(validator_atschemaLocation.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate MetricDefMeasureConsequence.atschemaLocation");
+}
+
+// validate MetricDefMeasureConsequence.attype of type String
+try {
+    var validator_attype = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_attype.setName("@type");
+    validator_attype.setValue(getAttype());
+    result.getErrorMessages().addAll(validator_attype.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate MetricDefMeasureConsequence.attype");
+}
+
+return result.getResult();
+                </CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

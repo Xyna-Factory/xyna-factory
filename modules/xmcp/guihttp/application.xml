@@ -17,7 +17,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <!--                                               ################# Version auch in blackedition_lib.sh updaten ########### -->
-<Application applicationName="GuiHttp" comment="" factoryVersion="" versionName="1.4.3" xmlVersion="1.1">
+<Application applicationName="GuiHttp" comment="" factoryVersion="" versionName="1.4.7" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Interne Funktionalität zum Interagieren des Xyna Fractal Modellers mit dem Xyna Factory Server</Description>
     <Description Lang="EN">Internal functionality for interaction of the Xyna Fractal Modeller with the Xyna Factory Server</Description>
@@ -28,7 +28,7 @@
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>ZetaFramework</ApplicationName>
-        <VersionName>0.6.64</VersionName>
+        <VersionName>0.6.66</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>XynaPropertyMgmt</ApplicationName>
@@ -621,9 +621,6 @@
   <SharedLibs>
     <SharedLib implicitDependency="true">
       <SharedLib>XynaObjectJsonBuilder</SharedLib>
-    </SharedLib>
-    <SharedLib implicitDependency="true">
-      <SharedLib>ZetaTools</SharedLib>
     </SharedLib>
   </SharedLibs>
   <TriggerInstances>
@@ -1865,6 +1862,18 @@
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.factorymanager.xynaproperties.exceptions.PropertyUpdateException</FqName>
       <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.xynaproperties.ExportSettings</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.xynaproperties.XynaPropertyExport</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.xynaproperties.ImportSettings</FqName>
+      <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.processmodeller.datatypes.Application</FqName>
