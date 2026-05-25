@@ -25,9 +25,9 @@ import java.util.Optional;
 
 public class XmomNavigator {
 
-  private final XmomTree tree;
+  //private final XmomTree tree;
   
-
+/*
   public XmomNavigator(XmomTree tree) {
     this.tree = tree;
   }
@@ -41,17 +41,17 @@ public class XmomNavigator {
   public XmomNodeInfo getRoot() {
     return tree.getRoot();
   }
+  */
   
-  
-  public Optional<XmomNodeInfo> gotoPath(TreePath path) {
+  public Optional<XmomNodeInfo> gotoPath(XmomTree tree, TreePath path) {
     if (path.getSegments().size() < 1) {
       return Optional.empty();
     }
     String rootName = path.getSegments().get(0).getName();
-    if (!rootName.equals(getRoot().getName())) {
+    if (!rootName.equals(tree.getRoot().getName())) {
       return Optional.empty();
     }
-    XmomNodeInfo info = getRoot();
+    XmomNodeInfo info = tree.getRoot();
     for (int i = 1; i < path.getSegments().size(); i++) {
       TreePathSegment seg = path.getSegments().get(i);
       Optional<XmomNodeInfo> child = info.getChild(seg);
@@ -64,9 +64,9 @@ public class XmomNavigator {
   }
   
   
-  public List<TreePath> getAllPathsOfValueNodes() {
+  public List<TreePath> getAllPathsOfValueNodes(XmomTree tree) {
     List<TreePath> ret = new ArrayList<>();
-    XmomNodeInfo root = getRoot();
+    XmomNodeInfo root = tree.getRoot();
     TreePathSegment seg = new TreePathSegment(root.getName());
     handleNodeForValuePaths(root, new TreePath(seg), ret);
     return ret;

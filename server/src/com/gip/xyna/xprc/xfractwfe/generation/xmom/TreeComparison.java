@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.gip.xyna.xprc.xfractwfe.generation.xmom.matcher.NodeMatcher;
+
 
 public class TreeComparison {
 
@@ -43,8 +45,6 @@ public class TreeComparison {
   
   public MatchInfo compare(XmomTree tree1, XmomTree tree2, NodeMatcher matcher) {
     MatchInfo ret = new MatchInfo();
-    //map, path as string
-    
     XmomWalker walker = new XmomWalker();
     List<XmomPointer> list1 = walker.findDescendants(tree1, matcher);
     List<XmomPointer> list2 = walker.findDescendants(tree2, matcher);

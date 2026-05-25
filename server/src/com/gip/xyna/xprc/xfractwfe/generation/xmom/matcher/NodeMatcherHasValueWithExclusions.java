@@ -16,31 +16,32 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package com.gip.xyna.xprc.xfractwfe.generation.xmom;
+package com.gip.xyna.xprc.xfractwfe.generation.xmom.matcher;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import com.gip.xyna.xprc.xfractwfe.generation.xmom.matcher.NodeMatcher;
+import com.gip.xyna.xprc.xfractwfe.generation.xmom.XmomPointer;
 
 
-public class XmomWalker {
+public class NodeMatcherHasValueWithExclusions implements NodeMatcher {
 
-  public List<XmomPointer> findDescendants(XmomTree tree, NodeMatcher matcher) {
-    List<XmomPointer> ret = new ArrayList<>();
-    handleNode(tree.getRootPointer(), matcher, ret);
-    return ret;
-  }
+  private Set<String> excludedNames = new HashSet<>();
   
   
-  private void handleNode(XmomPointer pointer, NodeMatcher matcher, List<XmomPointer> ret) {
-    if (matcher.matches(pointer)) {
-      ret.add(pointer);
-    }
-    for (XmomPointer child : pointer.getChildren()) {
-      handleNode(child, matcher, ret);
+  public NodeMatcherHasValueWithExclusions(String... excluded) {
+    for (String val : excluded) {
+      excludedNames.add(val);
     }
   }
   
-  
+
+  @Override
+  public boolean matches(XmomPointer pointer) {
+    if (excludedNames.contains(pointer.getNodeInfo().getName())) {
+      return false;
+    }
+    return pointer.getNodeInfo().hasValue();
+  }
+
 }

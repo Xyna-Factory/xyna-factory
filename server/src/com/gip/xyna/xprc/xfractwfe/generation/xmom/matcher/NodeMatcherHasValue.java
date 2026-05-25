@@ -16,17 +16,15 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package com.gip.xyna.xprc.xfractwfe.generation.xmom;
+package com.gip.xyna.xprc.xfractwfe.generation.xmom.matcher;
 
+import com.gip.xyna.xprc.xfractwfe.generation.xmom.XmomPointer;
 
-public class NodeMatcherIdRefCountOne implements NodeMatcher {
+public class NodeMatcherHasValue implements NodeMatcher {
 
   @Override
   public boolean matches(XmomPointer pointer) {
-    if (pointer.getNodeInfo().getIdValue().isEmpty()) {
-      return false;
-    }
-    return pointer.getNodeInfo().getIdValue().get().getRefCount() == 1;
+    return pointer.getNodeInfo().hasValue();
   }
-
+  
 }

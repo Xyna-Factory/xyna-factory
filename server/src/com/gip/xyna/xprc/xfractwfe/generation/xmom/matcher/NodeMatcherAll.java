@@ -16,11 +16,15 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package com.gip.xyna.xprc.xfractwfe.generation.xmom;
+package com.gip.xyna.xprc.xfractwfe.generation.xmom.matcher;
 
+import com.gip.xyna.xprc.xfractwfe.generation.xmom.XmomPointer;
 
-public interface NodeMatcher {
+public class NodeMatcherAll implements NodeMatcher {
 
-  public boolean matches(XmomPointer pointer);
-  
+  @Override
+  public boolean matches(XmomPointer pointer) {
+    return true;
+  }
+
 }

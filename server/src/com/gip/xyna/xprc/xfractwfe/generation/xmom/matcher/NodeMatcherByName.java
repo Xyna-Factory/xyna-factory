@@ -16,31 +16,28 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package com.gip.xyna.xprc.xfractwfe.generation.xmom;
+package com.gip.xyna.xprc.xfractwfe.generation.xmom.matcher;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.gip.xyna.xprc.xfractwfe.generation.xmom.XmomPointer;
 
-import com.gip.xyna.xprc.xfractwfe.generation.xmom.matcher.NodeMatcher;
+public class NodeMatcherByName implements NodeMatcher {
 
-
-public class XmomWalker {
-
-  public List<XmomPointer> findDescendants(XmomTree tree, NodeMatcher matcher) {
-    List<XmomPointer> ret = new ArrayList<>();
-    handleNode(tree.getRootPointer(), matcher, ret);
-    return ret;
-  }
+  private final String matchedName;
   
-  
-  private void handleNode(XmomPointer pointer, NodeMatcher matcher, List<XmomPointer> ret) {
-    if (matcher.matches(pointer)) {
-      ret.add(pointer);
+  public NodeMatcherByName(String matchedName) {
+    if (matchedName == null) {
+      throw new IllegalArgumentException("Name to match is null.");
     }
-    for (XmomPointer child : pointer.getChildren()) {
-      handleNode(child, matcher, ret);
+    if (matchedName.isBlank()) {
+      throw new IllegalArgumentException("Name to match is empty.");
     }
+    this.matchedName = matchedName;
   }
-  
-  
+
+
+  @Override
+  public boolean matches(XmomPointer pointer) {
+    return matchedName.equals(pointer.getNodeInfo().getName());
+  }
+
 }

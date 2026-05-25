@@ -16,36 +16,19 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package com.gip.xyna.xprc.xfractwfe.generation.xmom;
+package com.gip.xyna.xprc.xfractwfe.generation.xmom.matcher;
+
+import com.gip.xyna.xprc.xfractwfe.generation.xmom.XmomPointer;
 
 
-public class NodeMatcherByNameAndPathExclusion implements NodeMatcher {
-
-  private final String matchedName;
-  private final TreePath excludedPath;
-  
-  
-  public NodeMatcherByNameAndPathExclusion(String matchedName, TreePath path) {
-    if (matchedName == null) {
-      throw new IllegalArgumentException("Name to match is null.");
-    }
-    if (matchedName.isBlank()) {
-      throw new IllegalArgumentException("Name to match is empty.");
-    }
-    if (path.isEmpty()) {
-      throw new IllegalArgumentException("Excluded tree path is empty");
-    }
-    this.matchedName = matchedName;
-    this.excludedPath = path;
-  }
- 
+public class NodeMatcherRefCountMulti implements NodeMatcher {
 
   @Override
   public boolean matches(XmomPointer pointer) {
-    if (excludedPath.equals(pointer.getPath())) {
+    if (pointer.getNodeInfo().getIdValue().isEmpty()) {
       return false;
     }
-    return matchedName.equals(pointer.getNodeInfo().getName());
+    return pointer.getNodeInfo().getIdValue().get().getRefCount() > 1;
   }
 
 }
