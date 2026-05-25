@@ -36,9 +36,16 @@ import com.gip.xyna.xprc.xfractwfe.generation.xmom.WriterXmomJson;
 import com.gip.xyna.xprc.xfractwfe.generation.xmom.WriterXmomXml;
 import com.gip.xyna.xprc.xfractwfe.generation.xmom.XmomNavigator;
 import com.gip.xyna.xprc.xfractwfe.generation.xmom.XmomNodeInfo;
+import com.gip.xyna.xprc.xfractwfe.generation.xmom.XmomPointer;
 import com.gip.xyna.xprc.xfractwfe.generation.xmom.XmomTree;
+import com.gip.xyna.xprc.xfractwfe.generation.xmom.XmomWalker;
+import com.gip.xyna.xprc.xfractwfe.generation.xmom.matcher.NodeMatcher;
+import com.gip.xyna.xprc.xfractwfe.generation.xmom.matcher.NodeMatcherAll;
+import com.gip.xyna.xprc.xfractwfe.generation.xmom.matcher.NodeMatcherHasValue;
+import com.gip.xyna.xprc.xfractwfe.generation.xmom.matcher.NodeMatcherRefCountMulti;
 
 import xmomjsontest.tools.CompareXmlTools;
+
 
 public class ParseWriteXmomTest {
 
@@ -65,12 +72,8 @@ public class ParseWriteXmomTest {
     }
   }
   
-  private void log(String txt) {
-    System.out.println(txt);
-  }
   
-  
-  public void test1() throws Exception {
+  public void testParseWrite() throws Exception {
     try {
       String txt = readFile("test/xmomjsontest/data/TestWf1.xml");
       log(txt);
@@ -98,6 +101,61 @@ public class ParseWriteXmomTest {
   }
   
   
+  public void testWalker() throws Exception {
+    try {
+      String txt = readFile("test/xmomjsontest/data/TestWf1.xml");
+      log(txt);
+      
+      Document doc = XMLUtils.parseString(txt, true);
+      XmomTree tree = new ParserXmomXml().build(doc);
+      
+      XmomWalker walker = new XmomWalker();
+      List<XmomPointer> list = walker.findDescendants(tree, new NodeMatcherAll());
+      logPointerList(list);
+      
+      list = walker.findDescendants(tree, new NodeMatcherHasValue());
+      logPointerList(list);
+      
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+  }
+  
+  
+  public void testWalker2() throws Exception {
+    try {
+      String txt = readFile("test/xmomjsontest/data/TestWf1.xml");
+      log(txt);
+      
+      Document doc = XMLUtils.parseString(txt, true);
+      XmomTree tree = new ParserXmomXml().build(doc);
+      logXmomTree(tree);
+      
+      XmomWalker walker = new XmomWalker();
+      List<XmomPointer> list = walker.findDescendants(tree, new NodeMatcherRefCountMulti());
+      logPointerList(list);
+      
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+  }
+  
+  
+  private void logPointerList(List<XmomPointer> list) {
+    log("");
+    log("#####");
+    for (XmomPointer xp : list) {
+      String val = "";
+      if (xp.getNodeInfo().getValue().isPresent()) {
+        val = xp.getNodeInfo().getValue().get();
+      }
+      log(xp.getPath().asString() + " : " + val);
+    }
+  }
+  
+  
   private void logXmomTree(XmomTree tree) {
     XmomNavigator nav = new XmomNavigator();
     List<TreePath> paths = nav.getAllPathsOfValueNodes(tree);
@@ -108,9 +166,14 @@ public class ParseWriteXmomTest {
   }
   
   
+  private void log(String txt) {
+    System.out.println(txt);
+  }
+  
+  
   public static void main(String[] args) {
     try {
-      new ParseWriteXmomTest().test1();
+      new ParseWriteXmomTest().testWalker2();
     }
     catch (Throwable e) {
       e.printStackTrace();
