@@ -18,26 +18,28 @@
 
 package com.gip.xyna.xprc.xfractwfe.generation.xmom;
 
+import java.util.HashSet;
+import java.util.Set;
 
-public class XmomTree {
 
-  private final XmomNodeInfo root;
+public class NodeMatcherHasValueWithExclusions implements NodeMatcher {
 
-  public XmomTree(XmomNodeInfo root) {
-    this.root = root;
-  }
-
+  private Set<String> excludedNames = new HashSet<>();
   
-  public XmomNodeInfo getRoot() {
-    return root;
-  }
   
-  public XmomPointer getRootPointer() {
-    return XmomPointer.getRoot(this);
-  }
-
-  public IdMapping getIdMapping() {
-    return root.getIdMapping();
+  public NodeMatcherHasValueWithExclusions(String... excluded) {
+    for (String val : excluded) {
+      excludedNames.add(val);
+    }
   }
   
+
+  @Override
+  public boolean matches(XmomPointer pointer) {
+    if (excludedNames.contains(pointer.getNodeInfo().getName())) {
+      return false;
+    }
+    return pointer.getNodeInfo().hasValue();
+  }
+
 }

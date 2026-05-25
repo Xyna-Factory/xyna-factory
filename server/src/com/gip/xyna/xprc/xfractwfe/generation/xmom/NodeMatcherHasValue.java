@@ -19,25 +19,11 @@
 package com.gip.xyna.xprc.xfractwfe.generation.xmom;
 
 
-public class XmomTree {
+public class NodeMatcherHasValue implements NodeMatcher {
 
-  private final XmomNodeInfo root;
-
-  public XmomTree(XmomNodeInfo root) {
-    this.root = root;
-  }
-
-  
-  public XmomNodeInfo getRoot() {
-    return root;
-  }
-  
-  public XmomPointer getRootPointer() {
-    return XmomPointer.getRoot(this);
-  }
-
-  public IdMapping getIdMapping() {
-    return root.getIdMapping();
+  @Override
+  public boolean matches(XmomPointer pointer) {
+    return pointer.getNodeInfo().hasValue();
   }
   
 }

@@ -21,7 +21,7 @@ package com.gip.xyna.xprc.xfractwfe.generation.xmom;
 
 public class IdValue {
 
-  private final String value;
+  private String value;
   //private String adaptedValue;
   private int refCount = 1;
   
@@ -51,6 +51,10 @@ public class IdValue {
   
   public void incRefCount() {
     refCount++;
+  }
+   
+  public void changeValue(String newValue) {
+    this.value = newValue;
   }
   
 }

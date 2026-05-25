@@ -29,23 +29,23 @@ import java.util.Set;
 
 public class IdRenumbering {
 
-  private Set<Integer> _idSet = new HashSet<>();
-  private List<Integer> _idList = new ArrayList<>();
+  private Set<String> _idSet = new HashSet<>();
+  private List<String> _idList = new ArrayList<>();
   
-  public void add(int id) {
+  public void add(String id) {
     if (!_idSet.contains(id)) {
       _idSet.add(id);
       _idList.add(id);
     }
   }
   
-  public Map<Integer, Integer> renumber() {
-    Map<Integer, Integer> ret = new HashMap<>();
-    List<Integer> list = new ArrayList<>();
+  public Map<String, Integer> renumber() {
+    Map<String, Integer> ret = new HashMap<>();
+    List<String> list = new ArrayList<>();
     list.addAll(_idList);
     Collections.sort(list);
     int i = 0;
-    for (int val : list) {
+    for (String val : list) {
       ret.put(val, i);
       i++;
     }

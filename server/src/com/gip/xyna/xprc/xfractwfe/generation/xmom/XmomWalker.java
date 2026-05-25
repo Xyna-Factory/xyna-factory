@@ -20,10 +20,25 @@ package com.gip.xyna.xprc.xfractwfe.generation.xmom;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 public class XmomWalker {
 
-
+  public List<XmomPointer> findDescendants(XmomTree tree, NodeMatcher matcher) {
+    List<XmomPointer> ret = new ArrayList<>();
+    handleNode(tree.getRootPointer(), matcher, ret);
+    return ret;
+  }
+  
+  
+  private void handleNode(XmomPointer pointer, NodeMatcher matcher, List<XmomPointer> ret) {
+    if (matcher.matches(pointer)) {
+      ret.add(pointer);
+    }
+    for (XmomPointer child : pointer.getChildren()) {
+      handleNode(child, matcher, ret);
+    }
+  }
+  
+  
 }

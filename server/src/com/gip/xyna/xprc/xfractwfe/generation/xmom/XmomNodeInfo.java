@@ -166,5 +166,9 @@ public class XmomNodeInfo {
   public IdMapping getIdMapping() {
     return idMapping;
   }
+
+  public Optional<IdValue> getIdValue() {
+    return id;
+  }
   
 }
