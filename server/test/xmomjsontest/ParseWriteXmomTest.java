@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,22 +21,28 @@ package xmomjsontest;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+
+import javax.xml.xpath.XPathFactory;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
-import com.gip.xyna.xprc.xfractwfe.generation.CodeBuffer;
-import com.gip.xyna.xprc.xfractwfe.generation.DOM;
-import com.gip.xyna.xprc.xfractwfe.generation.DomForTest;
-import com.gip.xyna.xprc.xfractwfe.generation.WfForTest;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
-import com.gip.xyna.xprc.xfractwfe.generation.xml.Workflow;
-import com.gip.xyna.xprc.xfractwfe.generation.xml.WorkflowOperation;
-import com.gip.xyna.xprc.xfractwfe.generation.xml.XmomType;
+import com.gip.xyna.xprc.xfractwfe.generation.xmom.ParserXmomJson;
+import com.gip.xyna.xprc.xfractwfe.generation.xmom.ParserXmomXml;
+import com.gip.xyna.xprc.xfractwfe.generation.xmom.TreePath;
+import com.gip.xyna.xprc.xfractwfe.generation.xmom.WriterXmomJson;
+import com.gip.xyna.xprc.xfractwfe.generation.xmom.WriterXmomXml;
+import com.gip.xyna.xprc.xfractwfe.generation.xmom.XmomNavigator;
+import com.gip.xyna.xprc.xfractwfe.generation.xmom.XmomNodeInfo;
+import com.gip.xyna.xprc.xfractwfe.generation.xmom.XmomTree;
 
-public class TestXml {
+import xmomjsontest.tools.CompareXmlTools;
 
+public class ParseWriteXmomTest {
+
+  private static final XPathFactory xpathFactory = XPathFactory.newInstance();
   
   public String readFile(String filename) {
     try {
@@ -58,22 +64,33 @@ public class TestXml {
       throw new RuntimeException(e);
     }
   }
-
+  
+  private void log(String txt) {
+    System.out.println(txt);
+  }
+  
+  
   public void test1() throws Exception {
     try {
-      String txt = readFile("test/xmomjsontest/TestWf1.xml");
+      String txt = readFile("test/xmomjsontest/data/TestWf1.xml");
       log(txt);
       
       Document doc = XMLUtils.parseString(txt, true);
-      Element elem = XMLUtils.getChildElementByName(doc.getDocumentElement(), "Operation", 
-                                                    doc.getDocumentElement().getNamespaceURI());
-      log(elem.getNodeName());
-      log(elem.getLocalName());
-      log(elem.getTagName());
-      log(elem.getNamespaceURI());
-      log(elem.getPrefix());
-      log(elem.lookupNamespaceURI(elem.getPrefix()));
+      XmomTree tree = new ParserXmomXml().build(doc);
+      logXmomTree(tree);
       
+      String json = new WriterXmomJson().toJsonString(tree);
+      log(json);
+      
+      XmomTree tree2 = new ParserXmomJson().build(json);
+      logXmomTree(tree2);
+      String xml = new WriterXmomXml().toXmlString(tree2);
+      log(xml);
+      
+      XmomTree tree3 = new ParserXmomXml().build(xml);
+      logXmomTree(tree3);
+      
+      new CompareXmlTools().compareXml(doc, xml);
     } catch (Exception e) {
       e.printStackTrace();
       throw new RuntimeException(e);
@@ -81,14 +98,19 @@ public class TestXml {
   }
   
   
-  private void log(String txt) {
-    System.out.println(txt);
+  private void logXmomTree(XmomTree tree) {
+    XmomNavigator nav = new XmomNavigator();
+    List<TreePath> paths = nav.getAllPathsOfValueNodes(tree);
+    for (TreePath path : paths) {
+      Optional<XmomNodeInfo> info = nav.gotoPath(tree, path);
+      log(path.asString() + " -> " + info.get().getValue().get());
+    }
   }
   
   
   public static void main(String[] args) {
     try {
-      new XmomJsonTest().test1();
+      new ParseWriteXmomTest().test1();
     }
     catch (Throwable e) {
       e.printStackTrace();

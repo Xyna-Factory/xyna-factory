@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="TestWf1" TypePath="ztest.us.xmom_json_1" Label="Test Wf 1">
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2026 Xyna GmbH, Germany
@@ -16,7 +17,6 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="TestWf1" TypePath="ztest.us.xmom_json_1" Label="Test Wf 1">
   <Operation ID="0" Label="Test Wf 1" Name="TestWf1" IsStatic="false">
     <Input>
     </Input>

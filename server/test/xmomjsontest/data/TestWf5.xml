@@ -1,0 +1,188 @@
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="TestWf5" TypePath="ztest.us.xmom_json_1" Label="Test Wf 5">
+  <Operation ID="0" Label="Test Wf 5" Name="TestWf5" IsStatic="false">
+    <Input>
+    </Input>
+    <Output>
+      <Data ID="39" Label="Txt" VariableName="txt39" ReferenceName="Txt" ReferencePath="ztest.us.xmom_json_1">
+      </Data>
+    </Output>
+    <Mappings ID="10" Label="Mapping">
+      <Output>
+        <Data ID="29" VariableName="txt29" Label="Txt" ReferenceName="Txt" ReferencePath="ztest.us.xmom_json_1">
+          <Source RefID="10"/>
+        </Data>
+        <Target RefID="30">
+        </Target>
+      </Output>
+      <Output>
+        <Data ID="122" VariableName="txt122" Label="Txt" ReferenceName="Txt" ReferencePath="ztest.us.xmom_json_1">
+          <Source RefID="10"/>
+        </Data>
+        <Target RefID="123">
+        </Target>
+      </Output>
+      <Mapping>%0%.txt="pos 1!"</Mapping>
+      <Mapping>%1%.txt="mapping-b"</Mapping>
+    </Mappings>
+    <Choice ID="52" TypePath="server" TypeName="BaseChoiceTypeFormula">
+      <Target RefID="89">
+      </Target>
+      <Case ID="53" Label="true" Premise="&quot;true&quot;">
+        <Mappings ID="75" Label="Mapping">
+          <Input>
+            <Data ID="195" VariableName="txt195" Label="Txt" ReferenceName="Txt" ReferencePath="ztest.us.xmom_json_1">
+              <Source RefID="75"/>
+            </Data>
+            <Source RefID="30">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="76" VariableName="txt76" Label="Txt" ReferenceName="Txt" ReferencePath="ztest.us.xmom_json_1">
+            </Data>
+            <Target RefID="77">
+            </Target>
+          </Output>
+          <Mapping>%1%.txt=concat("pos 2a!", %0%.txt)</Mapping>
+        </Mappings>
+        <Mappings ID="132" Label="Mapping">
+          <Input>
+            <Data ID="186" VariableName="txt186" Label="Txt" ReferenceName="Txt" ReferencePath="ztest.us.xmom_json_1">
+              <Source RefID="132"/>
+            </Data>
+            <Source RefID="77">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="133" VariableName="txt133" Label="Txt" ReferenceName="Txt" ReferencePath="ztest.us.xmom_json_1">
+            </Data>
+            <Target RefID="134">
+            </Target>
+          </Output>
+          <Mapping>%1%.txt=concat("pos 2b!", %0%.txt)</Mapping>
+        </Mappings>
+        <Assign ID="56">
+          <Source RefID="134">
+          </Source>
+          <Target RefID="89">
+          </Target>
+          <Copy>
+            <Source RefID="134">
+            </Source>
+            <Target RefID="89">
+            </Target>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="54" Label="false">
+        <Mappings ID="86" Label="Mapping">
+          <Input>
+            <Data ID="204" VariableName="txt204" Label="Txt" ReferenceName="Txt" ReferencePath="ztest.us.xmom_json_1">
+              <Source RefID="86"/>
+            </Data>
+            <Source RefID="123">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="87" VariableName="txt87" Label="Txt" ReferenceName="Txt" ReferencePath="ztest.us.xmom_json_1">
+            </Data>
+            <Target RefID="88">
+            </Target>
+          </Output>
+          <Mapping>%1%.txt=concat("pos 3a!", %0%.txt)</Mapping>
+        </Mappings>
+        <Mappings ID="143" Label="Mapping">
+          <Input>
+            <Data ID="213" VariableName="txt213" Label="Txt" ReferenceName="Txt" ReferencePath="ztest.us.xmom_json_1">
+              <Source RefID="143"/>
+            </Data>
+            <Source RefID="30">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="144" VariableName="txt144" Label="Txt" ReferenceName="Txt" ReferencePath="ztest.us.xmom_json_1">
+            </Data>
+            <Target RefID="145">
+            </Target>
+          </Output>
+          <Mapping>%1%.txt=concat("pos 3b!", %0%.txt)</Mapping>
+        </Mappings>
+        <Mappings ID="422" Label="Mapping">
+          <Input>
+            <Data ID="423" VariableName="txt423" Label="Txt" ReferenceName="Txt" ReferencePath="ztest.us.xmom_json_1">
+            </Data>
+            <Source RefID="145">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="424" VariableName="txt424" Label="Txt" ReferenceName="Txt" ReferencePath="ztest.us.xmom_json_1">
+            </Data>
+            <Target RefID="425">
+            </Target>
+          </Output>
+          <Mapping>%1%.txt=concat("pos 3c!", %0%.txt)</Mapping>
+        </Mappings>
+        <Assign ID="58">
+          <Source RefID="425">
+          </Source>
+          <Target RefID="89">
+          </Target>
+          <Copy>
+            <Source RefID="425">
+            </Source>
+            <Target RefID="89">
+            </Target>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="30" VariableName="txt30" Label="Txt" ReferenceName="Txt" ReferencePath="ztest.us.xmom_json_1">
+      <Source RefID="10"/>
+    </Data>
+    <Data ID="77" VariableName="txt77" Label="Txt" ReferenceName="Txt" ReferencePath="ztest.us.xmom_json_1">
+    </Data>
+    <Data ID="88" VariableName="txt88" Label="Txt" ReferenceName="Txt" ReferencePath="ztest.us.xmom_json_1">
+    </Data>
+    <Data ID="89" VariableName="txt89" Label="Txt" ReferenceName="Txt" ReferencePath="ztest.us.xmom_json_1">
+      <Source RefID="52"/>
+    </Data>
+    <Data ID="123" VariableName="txt123" Label="Txt" ReferenceName="Txt" ReferencePath="ztest.us.xmom_json_1">
+      <Source RefID="10"/>
+    </Data>
+    <Data ID="134" VariableName="txt134" Label="Txt" ReferenceName="Txt" ReferencePath="ztest.us.xmom_json_1">
+    </Data>
+    <Data ID="145" VariableName="txt145" Label="Txt" ReferenceName="Txt" ReferencePath="ztest.us.xmom_json_1">
+    </Data>
+    <Data ID="425" VariableName="txt425" Label="Txt" ReferenceName="Txt" ReferencePath="ztest.us.xmom_json_1">
+    </Data>
+    <Assign ID="1">
+      <Source RefID="89">
+      </Source>
+      <Target RefID="39">
+      </Target>
+      <Copy>
+        <Source RefID="89">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="39">
+        </Target>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
