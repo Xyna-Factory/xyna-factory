@@ -687,19 +687,15 @@ public class Dataflow {
     }
     return null;
   }
-  
-  private void createConstantConnection( AVariableIdentification varToConnect, AVariableIdentification existingLink, Map<AVariableIdentification, InputConnection> connections) {
+
+
+  private void createConstantConnection(AVariableIdentification varToConnect, AVariableIdentification existingLink, Map<AVariableIdentification, InputConnection> connections) {
     List<AVariableIdentification> inputVars = new ArrayList<AVariableIdentification>();
     inputVars.add(existingLink);
-    GeneralXynaObject constValue;
-    try {
-      constValue = existingLink.getIdentifiedVariable().getXoRepresentation();
-      String constant = Utils.xoToJson(constValue, existingLink.getIdentifiedVariable().getCreator().getRevision());
-      InputConnection inputConnection = new SimpleConnection(inputVars, LinkstateIn.CONSTANT, null, constant);
-      connections.put(varToConnect, inputConnection);
-    } catch (InvalidObjectPathException | XDEV_PARAMETER_NAME_NOT_FOUND e) {
-      throw new RuntimeException("Constant for EndDocument not found.");
-    }
+    AVariable constVar = existingLink.getIdentifiedVariable();
+    String constant = serializeConstant(constVar, constVar.getCreator().getRevision());
+    InputConnection inputConnection = new SimpleConnection(inputVars, LinkstateIn.CONSTANT, null, constant);
+    connections.put(varToConnect, inputConnection);
   }
   
   //
@@ -1942,12 +1938,8 @@ public class Dataflow {
         if (parameter.getIsUserConnected()[i]) {
           sc.setLinkState(LinkstateIn.USER);
         } else if (parameter.getIsConstantConnected()[i]) {
-          try {
-            GeneralXynaObject constValue = existingLink.getIdentifiedVariable().getXoRepresentation();
-            sc.setConstant(Utils.xoToJson(constValue, existingLink.getIdentifiedVariable().getCreator().getRevision()));
-          } catch (Exception e) {
-            sc.setConstant("");
-          }
+          AVariable existingVar = existingLink.getIdentifiedVariable();
+          sc.setConstant(serializeConstant(existingVar, existingVar.getCreator().getRevision()));
           sc.setLinkState(LinkstateIn.CONSTANT);
         } else {
           sc.inputVars.remove(existingLink);
@@ -3011,13 +3003,8 @@ public class Dataflow {
       SimpleConnection constantConnection = getSimpleConnection(toSatisfy, connections, branchId);
       constantConnection.setLinkState(LinkstateIn.CONSTANT);
       constantConnection.addInputVar(existingLink);
-      try {
-        GeneralXynaObject constValue = existingLink.getIdentifiedVariable().getXoRepresentation();
-        constantConnection.setConstant(Utils.xoToJson(constValue, existingLink.getIdentifiedVariable().getCreator().getRevision()));
-      } catch (Exception e) {
-        constantConnection.setConstant("");
-      }
-      
+      AVariable constValue = existingLink.getIdentifiedVariable();
+      constantConnection.setConstant(serializeConstant(constValue, constValue.getCreator().getRevision()));
       return constantConnection;
     } else if (branchId == null && toSatisfy.connectedness.isConstantConnected()) { //bei branchId!=null steht die constant-connectedness am assign-input (oberer fall)
       SimpleConnection constantConnection = getSimpleConnection(toSatisfy, connections, branchId);
@@ -3025,16 +3012,7 @@ public class Dataflow {
       constantConnection.setLinkState(LinkstateIn.CONSTANT);
       globalConstVar = Utils.getGlobalConstVar(toSatisfy.connectedness.getConnectedVariableId(), gbo.getWFStep());
       constantConnection.setInputVars(createConstConnInputVars(globalConstVar));
-      try {
-        if(globalConstVar.getCreator().getRevision() != StringXMLSource.REVISION) {
-          GeneralXynaObject constValue = globalConstVar.getXoRepresentation();
-          constantConnection.setConstant(Utils.xoToJson(constValue, globalConstVar.getCreator().getRevision()));
-        } else {
-          constantConnection.setConstant("");
-        }
-      } catch (Exception e) {
-        constantConnection.setConstant("");
-      }
+      constantConnection.setConstant(serializeConstant(globalConstVar, globalConstVar.getCreator().getRevision()));
       constantConnection.setInputVars(createConstConnInputVars(globalConstVar));
       return constantConnection;
     } else {
@@ -3856,18 +3834,35 @@ public class Dataflow {
   }
 
 
+  private String serializeConstant(AVariable value, Long revision) {
+    try {
+      return serializeConstant(value.getXoRepresentation(), revision);
+    } catch (Exception e) {
+      return "";
+    }
+  }
+
+
+  private String serializeConstant(GeneralXynaObject value, Long revision) {
+    try {
+      if (revision != StringXMLSource.REVISION) {
+        return Utils.xoToJson(value, revision);
+      } else {
+        return "";
+      }
+    } catch (Exception e) {
+      return "";
+    }
+  }
+
+
   public String setConstantValue(AVariableIdentification target, String branchId, GeneralXynaObject value) {
     SimpleConnection connectionToSetConstant = determineConnectionForConstant(target, branchId);
 
     // add global variable for new value - remove old if present
     AVariable constDataVar = AVariable.createFromXo(value, gbo.getWFStep().getCreator(), target.getIdentifiedVariable().isList());
     constDataVar.setId(gbo.getWFStep().getCreator().getNextXmlId().toString());
-    String constant = "";
-    try {
-      constant = Utils.xoToJson(value, constDataVar.getCreator().getRevision());
-    } catch(Exception e) {
-      //empty constant
-    }
+    String constant = serializeConstant(value, constDataVar.getCreator().getRevision());
     executeSetConstant(connectionToSetConstant, constDataVar, constant);
 
     return constDataVar.getId();

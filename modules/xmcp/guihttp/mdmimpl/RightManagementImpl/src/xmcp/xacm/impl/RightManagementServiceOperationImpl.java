@@ -52,7 +52,7 @@ public class RightManagementServiceOperationImpl implements ExtendedDeploymentTa
   private static final String optionsPattern = "^\\s*\\[(.*)\\]";
 
   private static final String optionsType = "options";
-  private static final String regExpType = "regex";
+  private static final String regExpType = "regexp";
   private static final String xynaType = "xyna";
 
 
