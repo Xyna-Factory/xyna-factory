@@ -1664,7 +1664,8 @@ public class XMOMStorableStructureCache {
         merger.resultSetReaderForDatatype = this.resultSetReaderForDatatype;
         merger.persistenceAccessDelegator = this.persistenceAccessDelegator;
       } else {
-        merger.resultSetReaderForDatatype = new StorableTypDecisionReader(superRoot.getColInfoByVarType(VarType.TYPENAME).getColumnName(), hierarchy);
+        String typenameColumn = superRoot.getColInfoByVarType(VarType.TYPENAME).getColumnName();
+        merger.resultSetReaderForDatatype = new StorableTypDecisionReader(typenameColumn, hierarchy, superRoot.getTableName());
         merger.persistenceAccessDelegator = new PersistenceAccessDelegator(hierarchy);
       }
       

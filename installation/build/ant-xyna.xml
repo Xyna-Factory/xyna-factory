@@ -128,19 +128,9 @@
   <macrodef name="installPom">
     <attribute name="pom" default="${basedir}/pom.xml" />
     <sequential>
-      <exec osfamily="windows" executable="cmd" outputproperty="exec.output">
-        <arg value="/c"/>
-        <arg value="mvn"/>
-        <arg value="-f" />
-        <arg value="@{pom}" />
-        <arg value="install" />
-      </exec>
-      <exec osfamily="unix" executable="mvn" outputproperty="exec.output">
-        <arg value="-f" />
-        <arg value="@{pom}" />
-        <arg value="install" />
-      </exec>
-      <echo message="${exec.output}" />
+    <resolver:install>
+      <resolver:pom file="@{pom}"/>
+      </resolver:install>
     </sequential>
   </macrodef>
 
