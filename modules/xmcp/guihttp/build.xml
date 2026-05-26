@@ -36,7 +36,7 @@
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/ProcessMonitorServicesImpl">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
-        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="${root.dir}/modules/xmcp/guihttp/sharedlib/XynaObjectJsonBuilder">
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="sharedlib/XynaObjectJsonBuilder">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/AdministrativeVetoServicesImpl">
@@ -82,9 +82,6 @@
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/FilterAndTriggerManagerServicesImpl">
-            <property name="target.dir" value="${target.dir}/app" />
-        </ant>
-        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="${root.dir}/modules/xmcp/zetaFramework/sharedlib/ZetaTools">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
 

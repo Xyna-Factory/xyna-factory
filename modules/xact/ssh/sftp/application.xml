@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Application applicationName="SFTPServer" comment="" factoryVersion="" versionName="2.0.0" xmlVersion="1.1">
+  <ApplicationInfo>
+    <Description Lang="DE">Erzeuge Dateien per Workflow ausgelöst durch SCP oder SFTP.</Description>
+    <Description Lang="EN">Create files via Workflow triggered by SCP or SFTP.</Description>
+    <RuntimeContextRequirements>
+      <RuntimeContextRequirement>
+        <ApplicationName>Base</ApplicationName>
+        <VersionName>1.1.4</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>SSHServer</ApplicationName>
+        <VersionName>2.0.0</VersionName>
+      </RuntimeContextRequirement>
+    </RuntimeContextRequirements>
+  </ApplicationInfo>
+  <Filters>
+    <Filter implicitDependency="true">
+      <Name>SFTPFilter</Name>
+      <JarFiles>SFTPFilter/SFTPFilter.jar:</JarFiles>
+      <FqFilterClassname>com.gip.xyna.xact.filter.SFTPFilter</FqFilterClassname>
+      <TriggerName>SSHTrigger</TriggerName>
+      <SharedLibs/>
+    </Filter>
+  </Filters>
+  <XMOMEntries>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.sftp.CacheParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.sftp.Content</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.sftp.None</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.sftp.OneTimeCredentialCollision</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.sftp.Password</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.sftp.Path</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.sftp.SFTPTriggerAccess</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.sftp.SessionIsolated</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.sftp.SourceIP</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.sftp.Timed</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.sftp.Username</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.sftp.demo.ProcessSFTPRequest</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+  </XMOMEntries>
+</Application>
