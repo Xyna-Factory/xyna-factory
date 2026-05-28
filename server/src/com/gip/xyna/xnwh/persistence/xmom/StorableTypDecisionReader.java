@@ -25,17 +25,21 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xnwh.persistence.ResultSetReader;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache.StorableStructureInformation;
-import com.gip.xyna.xnwh.persistence.xmom.generation.StorableCodeBuilder;
 
-public class StorableTypDecisionReader implements ResultSetReader {
+public class StorableTypDecisionReader implements ResultSetReader<Object> {
+
+  private static final Logger logger = CentralFactoryLogging.getLogger(StorableTypDecisionReader.class);
   
-  private Map<String, ResultSetReader<?>> readers = new HashMap<>();
+  private Map<String, ResultSetReader<? extends Object>> readers = new HashMap<>();
   private String typenameColumn;
+  private String tableName;
   
-  public StorableTypDecisionReader(String typenameColumn, Collection<StorableStructureInformation> structures) {
+  public StorableTypDecisionReader(String typenameColumn, Collection<StorableStructureInformation> structures, String tableName) {
     this.typenameColumn = typenameColumn;
+    this.tableName = tableName;
     for (StorableStructureInformation structure : structures) {
       readers.put(structure.fqClassNameOfDatatype, structure.getResultSetReaderForDatatype());
     }
@@ -46,12 +50,15 @@ public class StorableTypDecisionReader implements ResultSetReader {
     String typeName = rs.getString(typenameColumn);
     if (typeName == null) {
       // TODO we might be a null element in a list :-/
-      Logger.getLogger(StorableTypDecisionReader.class).warn("No typename in column...return null");
+      if(logger.isWarnEnabled()) {
+        logger.warn(String.format("No typename in column %s of table %s...return null", typenameColumn, tableName));
+      }
       return null;
     }
-    ResultSetReader typedReader = readers.get(typeName);
+    ResultSetReader<? extends Object> typedReader = readers.get(typeName);
     if (typedReader == null) {
-      throw new SQLException("Type " + typeName + " is unresolvable!");
+      String expected = String.join(", ", readers.keySet());
+      throw new SQLException("Type " + typeName + " is unresolvable in table" + tableName + "! Expected one of: { " + expected + " }.");
     } else {
       return typedReader.read(rs);
     }
