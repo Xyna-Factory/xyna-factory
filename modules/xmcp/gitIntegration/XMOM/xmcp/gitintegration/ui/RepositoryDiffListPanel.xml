@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Repository Diff List Panel" TypeName="RepositoryDiffListPanel" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Repository Diff List Panel" Name="RepositoryDiffListPanel">
+    <Input>
+      <Data ID="356" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository356"/>
+      <Data ID="1264" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext1264"/>
+    </Input>
+    <Output>
+      <Data ID="10937" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition10937"/>
+      <Data ID="11705" IsList="true" Label="Numerated Workspace Diffs List" ReferenceName="NumeratedWorkspaceDiffsList" ReferencePath="xmcp.gitintegration" VariableName="numeratedWorkspaceDiffsList11705"/>
+    </Output>
+    <ServiceReference ID="32" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="31"/>
+      <Target RefID="31"/>
+    </ServiceReference>
+    <ServiceReference ID="11995" Label="Numerated Workspace Diffs List" ReferenceName="NumeratedWorkspaceDiffsList.NumeratedWorkspaceDiffsList" ReferencePath="xmcp.gitintegration">
+      <Source RefID="11994"/>
+      <Target RefID="11994"/>
+    </ServiceReference>
+    <ServiceReference ID="11025" Label="Create Diff List Id Panel for Repository Panel" ReferenceName="CreateDiffListIdPanelForRepositoryPanel" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="11024"/>
+      <Target RefID="11024"/>
+    </ServiceReference>
+    <ServiceReference ID="11916" Label="Get Workspace List Ids" ReferenceName="GetWorkspaceListIds" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="11915"/>
+      <Target RefID="11915"/>
+    </ServiceReference>
+    <Function ID="31" Label="Load Connections for single Repository">
+      <Source RefID="32"/>
+      <Source RefID="356"/>
+      <Target RefID="32"/>
+      <Target RefID="11289"/>
+      <Invoke Operation="loadConnectionsForSingleRepository" ServiceID="32">
+        <Source RefID="356"/>
+      </Invoke>
+      <Receive ServiceID="32">
+        <Target RefID="11289"/>
+      </Receive>
+    </Function>
+    <Foreach ID="11918">
+      <Source RefID="11289"/>
+      <Target RefID="11920"/>
+      <InputList RefID="11289">
+        <Data ID="11919" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection11919"/>
+      </InputList>
+      <OutputList RefID="11920">
+        <Data ID="11914" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds11914"/>
+      </OutputList>
+      <Function ID="11915" Label="Get Workspace List Ids">
+        <Source RefID="11916"/>
+        <Source RefID="11919"/>
+        <Target RefID="11916"/>
+        <Target RefID="11914"/>
+        <Invoke Operation="GetWorkspaceListIds" ServiceID="11916">
+          <Source RefID="11919"/>
+        </Invoke>
+        <Receive ServiceID="11916">
+          <Target RefID="11914"/>
+        </Receive>
+      </Function>
+    </Foreach>
+    <Function ID="11994" Label="Numerate Workspace Diff List Ids">
+      <Source RefID="11995"/>
+      <Source RefID="11920"/>
+      <Target RefID="11995"/>
+      <Target RefID="11997"/>
+      <Invoke Operation="numerateWorkspaceDiffListIds" ServiceID="11995">
+        <Source RefID="11920"/>
+      </Invoke>
+      <Receive ServiceID="11995">
+        <Target RefID="11997"/>
+      </Receive>
+    </Function>
+    <Foreach ID="11998">
+      <Source RefID="11997"/>
+      <Target RefID="12000"/>
+      <Target RefID="12001"/>
+      <Target RefID="12002"/>
+      <InputList RefID="11997">
+        <Data ID="11999" Label="Numerated Workspace Diffs List" ReferenceName="NumeratedWorkspaceDiffsList" ReferencePath="xmcp.gitintegration" VariableName="numeratedWorkspaceDiffsList11999"/>
+      </InputList>
+      <OutputList RefID="12000">
+        <Data ID="11385" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition11385">
+          <Source RefID="713"/>
+        </Data>
+      </OutputList>
+      <OutputList RefID="12001">
+        <Data ID="11386" IsList="true" Label="Workspace Diff List Id" ReferenceName="WorkspaceDiffListId" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffListId11386">
+          <Source RefID="713"/>
+        </Data>
+      </OutputList>
+      <OutputList RefID="12002">
+        <Data ID="11478" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName11478">
+          <Source RefID="713"/>
+        </Data>
+      </OutputList>
+      <Choice ID="713" TypeName="BaseChoiceTypeFormula" TypePath="server">
+        <Source RefID="11999"/>
+        <Target RefID="11385"/>
+        <Target RefID="11386"/>
+        <Target RefID="11478"/>
+        <Meta>
+          <OuterConditionPart>%0%?</OuterConditionPart>
+        </Meta>
+        <Input>
+          <Data ID="11344" Label="Numerated Workspace Diffs List" ReferenceName="NumeratedWorkspaceDiffsList" ReferencePath="xmcp.gitintegration" VariableName="numeratedWorkspaceDiffsList11344">
+            <Source RefID="713"/>
+          </Data>
+          <Source RefID="11999"/>
+        </Input>
+        <Case ID="714" IsDefault="true" Label="default">
+          <Mappings ID="994" Label="Mapping">
+            <Input>
+              <Data ID="11512" Label="Numerated Workspace Diffs List" ReferenceName="NumeratedWorkspaceDiffsList" ReferencePath="xmcp.gitintegration" VariableName="numeratedWorkspaceDiffsList11512">
+                <Source RefID="994"/>
+              </Data>
+              <Source RefID="11999">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Input>
+            <Output>
+              <Data ID="11149" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName11149">
+                <Source RefID="994"/>
+              </Data>
+              <Target RefID="11150"/>
+            </Output>
+            <Output>
+              <Data ID="1060" IsList="true" Label="Workspace Diff List Id" ReferenceName="WorkspaceDiffListId" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffListId1060">
+                <Source RefID="994"/>
+              </Data>
+              <Target RefID="1061"/>
+            </Output>
+            <Mapping>%2%=%0%.workspaceDiffsListIds.workspaceListIds</Mapping>
+          </Mappings>
+          <Foreach ID="11475">
+            <Source RefID="1061"/>
+            <Target RefID="11477"/>
+            <InputList RefID="1061">
+              <Data ID="11476" Label="Workspace Diff List Id" ReferenceName="WorkspaceDiffListId" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffListId11476"/>
+            </InputList>
+            <OutputList RefID="11477">
+              <Data ID="11027" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition11027">
+                <Source RefID="11024"/>
+              </Data>
+            </OutputList>
+            <Function ID="11024" Label="Create Diff List Id Panel for Repository Panel">
+              <Source RefID="11025"/>
+              <Source RefID="11999"/>
+              <Source RefID="11476"/>
+              <Source RefID="1264"/>
+              <Target RefID="11025"/>
+              <Target RefID="11027"/>
+              <Invoke Operation="CreateDiffListIdPanelForRepositoryPanel" ServiceID="11025">
+                <Source RefID="11999">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+                <Source RefID="11476"/>
+                <Source RefID="1264"/>
+              </Invoke>
+              <Receive ServiceID="11025">
+                <Target RefID="11027"/>
+              </Receive>
+            </Function>
+          </Foreach>
+          <Assign ID="716">
+            <Source RefID="11477"/>
+            <Source RefID="1061"/>
+            <Source RefID="11150"/>
+            <Target RefID="11385"/>
+            <Target RefID="11386"/>
+            <Target RefID="11478"/>
+            <Copy>
+              <Source RefID="11477"/>
+              <Target RefID="11385"/>
+            </Copy>
+            <Copy>
+              <Source RefID="1061"/>
+              <Target RefID="11386"/>
+            </Copy>
+            <Copy>
+              <Source RefID="11150"/>
+              <Target RefID="11478"/>
+            </Copy>
+          </Assign>
+        </Case>
+      </Choice>
+      <Data ID="11150" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName11150">
+        <Source RefID="994"/>
+      </Data>
+      <Data ID="1061" IsList="true" Label="Workspace Diff List Id" ReferenceName="WorkspaceDiffListId" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffListId1061">
+        <Source RefID="994"/>
+      </Data>
+      <Data ID="11477" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition11477">
+        <Source RefID="11475"/>
+        <Target RefID="11477"/>
+      </Data>
+    </Foreach>
+    <Mappings ID="10871" Label="Mapping">
+      <Input>
+        <Data ID="10974" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition10974">
+          <Source RefID="10871"/>
+        </Data>
+        <Source RefID="12000"/>
+      </Input>
+      <Output>
+        <Data ID="1301" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1301"/>
+        <Target RefID="10904"/>
+      </Output>
+      <Mapping>%1%.children=%0%</Mapping>
+      <Mapping>%1%.label="Open difference lists"</Mapping>
+    </Mappings>
+    <Data ID="10904" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition10904"/>
+    <Data ID="11289" IsList="true" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection11289">
+      <Source RefID="31"/>
+    </Data>
+    <Data ID="11920" IsList="true" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds11920">
+      <Source RefID="11918"/>
+      <Target RefID="11920"/>
+    </Data>
+    <Data ID="11997" IsList="true" Label="Numerated Workspace Diffs List" ReferenceName="NumeratedWorkspaceDiffsList" ReferencePath="xmcp.gitintegration" VariableName="numeratedWorkspaceDiffsList11997">
+      <Source RefID="11994"/>
+    </Data>
+    <Data ID="12000" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition12000">
+      <Source RefID="11998"/>
+      <Target RefID="12000"/>
+    </Data>
+    <Data ID="12001" IsList="true" Label="Workspace Diff List Id" ReferenceName="WorkspaceDiffListId" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffListId12001">
+      <Source RefID="11998"/>
+      <Target RefID="12001"/>
+    </Data>
+    <Data ID="12002" IsList="true" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName12002">
+      <Source RefID="11998"/>
+      <Target RefID="12002"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="10904"/>
+      <Source RefID="11997"/>
+      <Target RefID="10937"/>
+      <Target RefID="11705"/>
+      <Copy>
+        <Source RefID="10904"/>
+        <Target RefID="10937"/>
+      </Copy>
+      <Copy>
+        <Source RefID="11997"/>
+        <Target RefID="11705"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
