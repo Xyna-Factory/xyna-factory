@@ -471,8 +471,9 @@ class PathParameter {
     ArrayList<URLPathParameter> ret = new ArrayList<>();
     Matcher matcher = pathRegEx.matcher(path);
     if (matcher.find()) {
-      for (String attribute: attributeNames) {
-        ret.add(new URLPathParameter.Builder().attribute(attribute).value(matcher.group(attribute)).instance());
+      for (int i=0; i< attributeNames.length; i++) {
+        String attribute = attributeNames[i];
+        ret.add(new URLPathParameter.Builder().attribute(attribute).value(matcher.group("p"+i)).instance());
       }
     }
     return ret;
