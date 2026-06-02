@@ -63,6 +63,7 @@ public final class SnmpAccessData {
   private String timeoutModel;
   private int[] timeoutModelData;
   private String engineId;
+  private String context;
 
   private SnmpAccessData(){/*Konstruktor darf nur intern verwendet werden*/}
 
@@ -139,6 +140,7 @@ public final class SnmpAccessData {
       sad.timeoutModel           = sadOrig.timeoutModel;
       sad.timeoutModelData       = sadOrig.timeoutModelData;
       sad.engineId               = sadOrig.engineId;
+      sad.context                = sadOrig.context;
     }
 
     public SADBuilder host(String host) {
@@ -174,6 +176,11 @@ public final class SnmpAccessData {
      */
     public SADBuilder engineId(String engineId) {
       sad.engineId = engineId;
+      return this;
+    }
+    
+    public SADBuilder context(String context) {
+      sad.context = context;
       return this;
     }
 
@@ -304,6 +311,7 @@ public final class SnmpAccessData {
      * @deprecated Use timeoutModel( "interval", retryIntervalsAsIntArray) instead
      * @return
      */
+    @Deprecated
     public SADBuilder retryIntervals(String retryIntervals ) {
       if( retryIntervals == null || retryIntervals.length() == 0 ) {
         //sad.retryIntervals = new int[]{500,1000,2000,5000,5000};
@@ -432,6 +440,7 @@ public final class SnmpAccessData {
    * @return the retryIntervals as String
    * @deprecated
    */
+  @Deprecated
   public String getRetryIntervalsString() {
     String ri = arrayToString( retryIntervals );
     return ri;
@@ -442,6 +451,7 @@ public final class SnmpAccessData {
    * @return retryIntervals as int[]
    * @deprecated
    */
+  @Deprecated
   public int[] getRetryIntervalIntArray() {
     if( retryIntervals != null ) {
       return retryIntervals.clone();
@@ -472,5 +482,9 @@ public final class SnmpAccessData {
 
   public String getEngineId() {
     return engineId;
+  }
+  
+  public String getContext() {
+    return context;
   }
 }
