@@ -32,4 +32,9 @@
       <Documentation>if not set explicitly use value of Xyna Property xact.snmp.v3.privalgorithm</Documentation>
     </Meta>
   </Data>
+  <Data Label="Context Name" VariableName="contextName">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
 </DataType>

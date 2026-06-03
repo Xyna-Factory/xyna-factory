@@ -82,7 +82,7 @@ public final class SnmpContextImplApache implements SnmpContext {
   static Logger logger = Logger.getLogger(SnmpContextImplApache.class.getName());
 
   private Snmp snmp;
-  private AbstractTarget target;
+  private AbstractTarget<Address> target;
 
   private SnmpAccessData snmpAccessData;
 
@@ -122,13 +122,13 @@ public final class SnmpContextImplApache implements SnmpContext {
 
        
     if (snmpAccessData.isSNMPv1()) {
-      CommunityTarget ct = new CommunityTarget();
+      CommunityTarget<Address> ct = new CommunityTarget<>();
       ct.setCommunity(new OctetString(snmpAccessData.getCommunity()));
       ct.setVersion(SnmpConstants.version1);
       target = ct;
       snmp.getMessageDispatcher().addMessageProcessingModel(new MPv1());
     } else if (snmpAccessData.isSNMPv2c() ) {
-      CommunityTarget ct = new CommunityTarget();
+      CommunityTarget<Address> ct = new CommunityTarget<>();
       ct.setCommunity(new OctetString(snmpAccessData.getCommunity()));
       ct.setVersion(SnmpConstants.version2c);
       target = ct;
@@ -136,7 +136,7 @@ public final class SnmpContextImplApache implements SnmpContext {
     } else if (snmpAccessData.isSNMPv3()) {
       initV3(snmp, snmpAccessData);
       
-      UserTarget ut = new UserTarget();      
+      UserTarget<Address> ut = new UserTarget<>();      
       if (snmpAccessData.getAuthenticationPassword() != null) {
         if (snmpAccessData.getPrivacyPassword() != null) {
           ut.setSecurityLevel(SecurityLevel.AUTH_PRIV);
@@ -283,7 +283,11 @@ public final class SnmpContextImplApache implements SnmpContext {
   private PDU createPDU(int type) {
     PDU pdu = null;
     if( snmpAccessData.isSNMPv3() ) {
-        pdu = new ScopedPDU();
+      ScopedPDU spdu = new ScopedPDU();
+      if( snmpAccessData.getContext() != null ) {
+        spdu.setContextName(new OctetString(snmpAccessData.getContext()));
+      }
+      pdu = spdu;
     } else {
         pdu = new PDU(); 
     }
@@ -348,7 +352,7 @@ public final class SnmpContextImplApache implements SnmpContext {
   private VarBindList sendPdu(final PDU pdu, final String operation) {
     try {
       //long start = System.currentTimeMillis();
-      ResponseEvent response = snmp.send(pdu, target);
+      ResponseEvent<Address> response = snmp.send(pdu, target);
       //long end = System.currentTimeMillis();
       //logger.trace( (end-start) +" ms");
       //extract the response PDU (could be null if timed out)

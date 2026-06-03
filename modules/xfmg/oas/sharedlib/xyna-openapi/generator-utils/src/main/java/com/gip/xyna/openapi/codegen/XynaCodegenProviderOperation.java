@@ -83,14 +83,15 @@ public class XynaCodegenProviderOperation extends XynaCodegenOperation {
   
   public String buildFilterRegexp(CodegenOperation operation, List<XynaCodegenProperty> pathParams) {
     String regexPath = operation.path;
-    for(XynaCodegenProperty param : pathParams) {
+    for(int i=0; i<pathParams.size(); i++) {
+      XynaCodegenProperty param = pathParams.get(i);
       if (param.isPrimitive) {
         if (param.javaType.equals("Integer") || param.javaType.equals("Long") || param.javaType.equals("Double") || param.javaType.equals("Float")) {
-          regexPath = regexPath.replaceAll("\\{" + param.propLabel + "\\}", "(?<" + param.propLabel + ">[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?)");
+          regexPath = regexPath.replaceAll("\\{" + param.propLabel + "\\}", "(?<p" + i + ">[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?)");
         } else if (param.javaType.equals("String")) {
-          regexPath = regexPath.replaceAll("\\{" + param.propLabel + "\\}", "(?<" + param.propLabel + ">[^/?]*)");
+          regexPath = regexPath.replaceAll("\\{" + param.propLabel + "\\}", "(?<p" + i + ">[^/?]*)");
         } else if (param.javaType.equals("Boolean")) {
-          regexPath = regexPath.replaceAll("\\{" + param.propLabel + "\\}", "(?<" + param.propLabel + ">([fF][aA][lL][sS][eE])|([tT][rR][uU][eE]))");
+          regexPath = regexPath.replaceAll("\\{" + param.propLabel + "\\}", "(?<p" + i + ">([fF][aA][lL][sS][eE])|([tT][rR][uU][eE]))");
         }
       }
     }

@@ -868,6 +868,16 @@ public class StepForeach extends Step {
     this.limitType = type;
   }
   
+  public void setParallelExecution() {
+    this.parallelExecution = true;
+    try {
+      this.limit = getLimitForLimitTypeCapacity();
+    } catch (Exception ex) { //XPRC_InvalidServiceIdException, XPRC_OperationUnknownException
+      this.limit = LIMIT_UNKNOWN;
+    }
+    this.limitType = LimitType.Capacity;
+  }
+
   public void setSequentialExecution() {
     this.parallelExecution = false;
   }
@@ -1228,7 +1238,7 @@ public class StepForeach extends Step {
         xml.addAttribute(ATT.FOREACH_PARALLEL, Boolean.toString(parallelExecution));
         if (limitType != null) {
           xml.addAttribute(ATT.FOREACH_LIMITTYPE, XMLUtils.escapeXMLValue(limitType.toString()));
-          xml.addAttribute(ATT.FOREACH_LIMIT, XMLUtils.escapeXMLValue(limit)); // TODO
+          xml.addAttribute(ATT.FOREACH_LIMIT, limit == LIMIT_UNKNOWN ? null : XMLUtils.escapeXMLValue(limit));
         }
       }
       

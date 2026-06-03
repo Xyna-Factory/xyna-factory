@@ -313,6 +313,9 @@ public class SNMPServiceServiceOperationImpl implements ExtendedDeploymentTask, 
         }
         builder.privacyProtocol(priv_algo.getName()).privacyPassword(privPassword);
       }
+      if (connectionDataV3.getContextName() != null && !connectionDataV3.getContextName().isEmpty()) {
+        builder.context(connectionDataV3.getContextName());
+      }
       SnmpAccessData accessData = builder.build();
       try {
         SnmpContextImplApache scia = new SnmpContextImplApache(accessData, getSocketTimeout(),sourceIpSlashHost);
