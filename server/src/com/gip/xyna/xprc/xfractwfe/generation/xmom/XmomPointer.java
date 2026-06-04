@@ -60,6 +60,29 @@ public class XmomPointer {
   }
   
   
+  public Optional<XmomPointer> getDescendant(String... path) {
+    XmomPointer pos = this;
+    for (String name : path) {
+      TreePathSegment seg = new TreePathSegment(name);
+      Optional<XmomPointer> child = pos.getChild(seg);
+      if (child.isEmpty()) {
+        return Optional.empty();
+      }
+      pos = child.get();
+    }
+    return Optional.ofNullable(pos);
+  }
+  
+  
+  public String getChildValueOrEmptyString(String name) {
+    Optional<XmomPointer> child = this.getDescendant(name);
+    if (child.isEmpty()) { return ""; }
+    Optional<String> value = child.get().getNodeInfo().getValue();
+    if (value.isEmpty()) { return ""; }
+    return value.get();
+  }
+  
+  
   public List<XmomPointer> getChildren() {
     List<XmomPointer> ret = new ArrayList<>();
     List<TreePathSegment> list = this.node.getAllChildPathSegments();

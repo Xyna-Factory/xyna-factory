@@ -53,6 +53,14 @@ public class IdValue {
     refCount++;
   }
    
+  public void handleIgnoreRef(boolean ignore) {
+    if (ignore) {
+      refCount--;
+    } else {
+      refCount++;
+    }
+  }
+  
   public void changeValue(String newValue) {
     this.value = newValue;
   }

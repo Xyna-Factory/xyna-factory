@@ -53,6 +53,9 @@ public class WriterXmomJson {
   
   
   private Optional<JsonElement> toJson(XmomNodeInfo xmom) {
+    if (xmom.isIgnoreOrEmpty()) {
+      return Optional.empty();
+    }
     if (!xmom.hasChildren()) {
       if (!xmom.hasValue()) {
         return Optional.empty();

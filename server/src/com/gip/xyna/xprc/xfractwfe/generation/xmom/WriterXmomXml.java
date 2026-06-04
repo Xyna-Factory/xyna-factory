@@ -39,11 +39,13 @@ public class WriterXmomXml {
   
   
   private void writeXml(XmlBuilder xml, XmomNodeInfo xmom) {
+    if (xmom.isIgnoreOrEmpty()) {
+      return;
+    }
     if (!xmom.hasChildren()) {
       if (!xmom.hasValue()) {
         return;
       }
-      //xml.addAttribute(xmom.getName(), xmom.getValue().get());
       writeValueElement(xml, xmom);
       return;
     }
@@ -97,6 +99,8 @@ public class WriterXmomXml {
   
   private boolean isAttributename(String name) {
     if (EL.MAPPING.equals(name)) {
+      return false;
+    } else if (EL.LINKTYPE.equals(name)) {
       return false;
     }
     /*

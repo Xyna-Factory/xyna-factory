@@ -43,6 +43,7 @@ public class XmomNodeInfo {
   private Map<String, XmomNodeInfoList> childMap = new HashMap<>();
   private IdMapping idMapping;
   private Optional<IdValue> id = Optional.empty();
+  private boolean ignore = false;
   
   
   public XmomNodeInfo(String name, IdMapping idMapping) {
@@ -64,18 +65,37 @@ public class XmomNodeInfo {
   
   
   private void initValue(String name, Optional<String> value, IdMapping idMapping) {
-    if (!isIdName(name)) {
-      this.value = value;
-      return;
-    }
     if (value.isEmpty()) {
+      return;
+    } else if (value.get() == null) {
       return;
     }
     if (value.get().isBlank()) {
       return;
     }
+    if (!isIdName(name)) {
+      this.value = value;
+      return;
+    }
     IdValue id = idMapping.getOrCreateIdValue(value.get());
     this.id = Optional.ofNullable(id);
+  }
+  
+  
+  public XmomNodeInfo createChild(String name) {
+    return createChild(name, Optional.empty());
+  }
+  
+  
+  public XmomNodeInfo createChild(String name, String value) {
+    return createChild(name, Optional.ofNullable(value));
+  }
+  
+  
+  public XmomNodeInfo createChild(String name, Optional<String> value) {
+    XmomNodeInfo child = new XmomNodeInfo(name, value, this.getIdMapping());
+    this.addChild(child);
+    return child;
   }
   
   
@@ -143,6 +163,21 @@ public class XmomNodeInfo {
   }
 
   
+  public boolean isIgnoreOrEmpty() {
+    if (hasValue()) {
+      return false;
+    }
+    for (XmomNodeInfoList list : childMap.values()) {
+      for (XmomNodeInfo child : list.getList()) {
+        if (!child.isIgnoreOrEmpty()) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+  
+  
   public String getName() {
     return name;
   }
@@ -170,5 +205,16 @@ public class XmomNodeInfo {
   public Optional<IdValue> getIdValue() {
     return id;
   }
-  
+
+  public boolean isIgnore() {
+    return ignore;
+  }
+
+  public void setIgnore(boolean ignore) {
+    this.ignore = ignore;
+    if (getIdValue().isPresent()) {
+      getIdValue().get().handleIgnoreRef(ignore);
+    }
+  }
+
 }
