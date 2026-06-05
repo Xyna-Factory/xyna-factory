@@ -24,8 +24,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import java.util.jar.Manifest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -286,15 +287,13 @@ public class ServiceImplementationTemplate extends ImplementationTemplate {
       
       if (generateJavaDoc) {
         //javadoc
-        Set<String> files = new HashSet<String>();
-        for (Pair<String, String> filenameFilecontentPair : result.getFilesForGeneratedAdditionalLib()) {
-          String filename = GenerationBase.getRelativeJavaFileLocation(filenameFilecontentPair.getFirst(), false, revision);
-          files.add(filename);
-        }
+        List<Pair<String, String>> files = new ArrayList<>();
+        files.addAll(result.getTemplateImplementationFiles());
+        files.addAll(result.getFilesForGeneratedAdditionalLib());
         File javadocDir = new File(targetDir, "javadoc");
         String sourcePath = GenerationBase.getRelativeJavaFileLocation("a.B", false, revision);
         sourcePath = sourcePath.substring(0, sourcePath.length() - "a.B.java".length());
-        GenerationBase.createJavaDoc(files.toArray(new String[files.size()]), javadocDir.getAbsolutePath(), sourcePath, classPath);
+        GenerationBase.createJavaDoc(files, javadocDir.getAbsolutePath(), sourcePath, classPath);
         Manifest manifest = new Manifest();
         Support4Eclipse.createJarFile(manifest, new File(targetDir, SERVICE_DEFINITION_JAVADOC_JAR), javadocDir, true);
         FileUtils.deleteDirectoryRecursively(javadocDir);
