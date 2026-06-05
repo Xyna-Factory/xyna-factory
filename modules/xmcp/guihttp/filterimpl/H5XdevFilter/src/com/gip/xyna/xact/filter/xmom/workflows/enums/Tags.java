@@ -49,6 +49,7 @@ public class Tags {
   public static final String THROW_INPUT = "input";
   public static final String RETRY_INPUT = "input";
   public static final String RETRY_DOCUMENTATION = "documentation";
+  public static final String FOREACH_PARALLEL_EXECUTION = "parallelExecution";
   
   public static final String READONLY = "readonly";
   

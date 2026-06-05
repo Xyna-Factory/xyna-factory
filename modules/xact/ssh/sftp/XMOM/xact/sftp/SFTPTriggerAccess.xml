@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="SFTP Trigger Access" TypeName="SFTPTriggerAccess" TypePath="xact.sftp" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>SFTPTriggerAccessImpl.jar</Libraries>
+  <Service Label="SFTP Trigger Access" TypeName="SFTPTriggerAccess">
+    <Operation IsStatic="true" Label="add one time credentials" Name="addOneTimeCredentials">
+      <Input>
+        <Data Label="Username" ReferenceName="Username" ReferencePath="xact.sftp" VariableName="username"/>
+        <Data Label="Password" ReferenceName="Password" ReferencePath="xact.sftp" VariableName="password"/>
+        <Data Label="IP" ReferenceName="IP" ReferencePath="base" VariableName="iP"/>
+        <Data Label="Port" ReferenceName="Port" ReferencePath="base" VariableName="port"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Server Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException"/>
+        <Exception Label="One Time Credential Collision" ReferenceName="OneTimeCredentialCollision" ReferencePath="xact.sftp" VariableName="oneTimeCredentialCollision"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xact.sftp.SFTPTriggerAccessImpl.addOneTimeCredentials(username, password, iP, port);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

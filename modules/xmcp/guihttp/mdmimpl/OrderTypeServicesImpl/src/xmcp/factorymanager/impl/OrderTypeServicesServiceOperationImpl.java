@@ -44,13 +44,19 @@ import com.gip.xyna.xmcp.XynaMultiChannelPortal;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
+import com.gip.xyna.xprc.XynaProcessingPortal.DispatcherIdentification;
 import com.gip.xyna.xprc.exceptions.XPRC_INVALID_MONITORING_TYPE;
+import com.gip.xyna.xprc.xpce.XynaProcessCtrlExecution;
+import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
 import com.gip.xyna.xprc.xpce.dispatcher.XynaDispatcher;
 import com.gip.xyna.xprc.xpce.parameterinheritance.ParameterInheritanceManagement.ParameterType;
 import com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule;
 import com.gip.xyna.xprc.xpce.planning.Capacity;
+import com.gip.xyna.xprc.xpce.planning.PlanningDispatcher;
 
+import xmcp.Application;
 import xmcp.RuntimeContext;
+import xmcp.Workspace;
 import xmcp.factorymanager.DestinationType;
 import xmcp.factorymanager.OrderTypeServicesServiceOperation;
 import xmcp.factorymanager.ParameterInheritanceRule;
@@ -135,6 +141,13 @@ public class OrderTypeServicesServiceOperationImpl implements ExtendedDeployment
     orderType.setName(orderType.getFullQualifiedName());
     try {
       ordertypeManagement.modifyOrdertype(createOrderTypeParameter(orderType));
+      if (orderType.getPlanningDestination() == null || orderType.getPlanningDestination().getName() == null || !orderType.getPlanningDestinationIsCustom()) {
+        var dk = new DestinationKey(orderType.getFullQualifiedName(), convertRTC(orderType.getRuntimeContext()));
+        var processing = XynaFactory.getInstance().getProcessing();
+        processing.removeDestination(DispatcherIdentification.Planning, dk);
+        PlanningDispatcher planningDispatcher = processing.getXynaProcessCtrlExecution().getXynaPlanning().getPlanningDispatcher();
+        planningDispatcher.setDestination(dk, XynaDispatcher.DESTINATION_DEFAULT_PLANNING, false);
+      }
     } catch (PersistenceLayerException | XFMG_InvalidModificationOfUnexistingOrdertype | XFMG_InvalidCapacityCardinality | XPRC_INVALID_MONITORING_TYPE e) {
       throw new UpdateOrderTypeException(e.getMessage(), e);
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
@@ -199,7 +212,7 @@ public class OrderTypeServicesServiceOperationImpl implements ExtendedDeployment
     }
     Map<ParameterType, List<InheritanceRule>> parameterInheritanceRules = new EnumMap<>(ParameterType.class);
     parameterInheritanceRules.put(ParameterType.MonitoringLevel, inheritanceRules);
-    
+
     OrdertypeParameter ordertypeParameter = new OrdertypeParameter();
     ordertypeParameter.setOrdertypeName(orderType.getName());
     
@@ -209,7 +222,7 @@ public class OrderTypeServicesServiceOperationImpl implements ExtendedDeployment
       ordertypeParameter.setCustomPlanningDestinationValue(new DestinationValueParameter("DefaultPlanning", XynaOrderServerExtension.ExecutionType.XYNA_FRACTAL_WORKFLOW.getTypeAsString()));
     
     ordertypeParameter.setCustomExecutionDestinationValue(createDestinationValueParameter(orderType.getExecutionDestination()));
-    
+
     if(orderType.getCleanupDestination() != null && orderType.getCleanupDestination().getName() != null)
       ordertypeParameter.setCustomCleanupDestinationValue(createDestinationValueParameter(orderType.getCleanupDestination()));
     else
@@ -300,6 +313,14 @@ public class OrderTypeServicesServiceOperationImpl implements ExtendedDeployment
       return tableHelper.limit(result);
     } catch (PersistenceLayerException e) {
       throw new LoadOrderTypesException(e.getMessage(), e);
+    }
+  }
+  
+  private com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext convertRTC(xmcp.RuntimeContext xmcpRtc) {
+    if (xmcpRtc instanceof Application) {
+      return new com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application(xmcpRtc.getName(), ((Application) xmcpRtc).getVersionName());
+    } else {
+      return new com.gip.xyna.xfmg.xfctrl.revisionmgmt.Workspace(xmcpRtc.getName());
     }
   }
  

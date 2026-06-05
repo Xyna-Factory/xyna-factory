@@ -315,11 +315,14 @@ public class Persistence {
       messageTexts.add(new Pair<String, String>(language, messagesMap.get(language)));
     }
 
+    // If this is a clone (saved under a different FQName), reset code to null so that ExceptionManagement will generate a new one
+    String codeToUse = !persistType.getFQTypeName().equals(exception.getOriginalFqName()) ? null : exception.getExceptionEntry().getCode();
+
     ExceptionType dt = ExceptionType.create(persistType).
         basetype(Utils.getBaseType(exception)).
         meta(Utils.createMeta(exception)).
         variables(variables).
-        code(exception.getExceptionEntry().getCode()).
+        code(codeToUse).
         messageTexts(messageTexts).
         build();
 

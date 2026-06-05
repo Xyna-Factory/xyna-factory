@@ -27,9 +27,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
-
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.exceptions.Ex_FileAccessException;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.utils.misc.JsonParser;
@@ -108,8 +105,6 @@ import xnwh.persistence.Storable;
 
 public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
 
-  private static final Logger logger = CentralFactoryLogging.getLogger(ChangeOperation.class);
-
   private ChangeJson change;
 
   @Override
@@ -155,6 +150,13 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
           queryParameter.setQueryHistory(change.getQueryHistory());
           QueryUtils.saveQueryParamater(object, modification.getObject().getDataflow(), queryParameter);
         }
+      }
+    } else if (step instanceof StepForeach && change.getParallelExecution() != null) {
+      StepForeach foreach = (StepForeach) step;
+      if (!change.getParallelExecution()) {
+        foreach.setSequentialExecution();
+      } else {
+        foreach.setParallelExecution();
       }
     }
   }
@@ -400,7 +402,6 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
     String documentation = change.getText();
     if (documentation != null) {
       object.setDocumentation(documentation);
-//      addUpdate( new UpdateResponseJson(getObjectId(), new LabelJson(label) ) ); TODO
     }
   }
 

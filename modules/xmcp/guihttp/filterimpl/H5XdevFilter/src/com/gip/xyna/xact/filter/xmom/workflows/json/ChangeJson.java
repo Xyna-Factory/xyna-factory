@@ -19,7 +19,6 @@ package com.gip.xyna.xact.filter.xmom.workflows.json;
 
 import com.gip.xyna.utils.misc.JsonParser.EmptyJsonVisitor;
 import com.gip.xyna.utils.misc.JsonParser.JsonVisitor;
-import com.gip.xyna.utils.misc.JsonSerializable;
 import com.gip.xyna.xact.filter.xmom.XMOMGuiJson;
 import com.gip.xyna.xact.filter.xmom.workflows.enums.Tags;
 
@@ -35,8 +34,6 @@ public class ChangeJson extends XMOMGuiJson {
   private Boolean detachable = null;
   private String castToFqn = null;
   private Boolean overrideCompensation = null;
-  private JsonSerializable parameter; 
-  private JsonSerializable conditionalChoice;
   private Integer limitResults;
   private Boolean queryHistory;
   private Boolean ascending;
@@ -54,6 +51,7 @@ public class ChangeJson extends XMOMGuiJson {
   private String name;
   private Boolean isUsed;
   private String tag;
+  private Boolean parallelExecution;
   
   
   private ChangeJson() {
@@ -77,10 +75,6 @@ public class ChangeJson extends XMOMGuiJson {
 
   public void setIsList(boolean isList) {
     this.isList = isList;
-  }
-
-  public void setParameter(JsonSerializable parameter) {
-    this.parameter = parameter;
   }
 
   public static JsonVisitor<ChangeJson> getJsonVisitor() {
@@ -211,23 +205,18 @@ public class ChangeJson extends XMOMGuiJson {
         cj.tag = value;
         return;
       }
+      if( label.equals(Tags.FOREACH_PARALLEL_EXECUTION)) {
+        cj.parallelExecution = Boolean.valueOf(value);
+      }
     }
 
     @Override
     public JsonVisitor<?> objectStarts(String content) {
-      return null; //FIXME wie Objekt erkennen?
+      return null;
     }
 
     @Override
     public void object(String label, Object value) {
-      if( label.equals("parameter") ) {
-        cj.parameter = (JsonSerializable)value; //FIXME
-        return;
-      }
-      if( label.equals("conditionalChoice") ) {
-        cj.conditionalChoice = (JsonSerializable)value;//FIXME
-        return;
-      }
     }
   }
 
@@ -343,6 +332,10 @@ public class ChangeJson extends XMOMGuiJson {
 
   public String getTag() {
     return tag;
+  }
+
+  public Boolean getParallelExecution() {
+    return parallelExecution;
   }
 
 }
