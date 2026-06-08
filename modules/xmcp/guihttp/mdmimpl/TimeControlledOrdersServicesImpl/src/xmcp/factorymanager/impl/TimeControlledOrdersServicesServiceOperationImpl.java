@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Objects;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -70,6 +71,7 @@ import com.gip.xyna.xprc.xbatchmgmt.BatchProcessManagement;
 import com.gip.xyna.xprc.xbatchmgmt.BatchProcessManagement.CancelMode;
 import com.gip.xyna.xprc.xbatchmgmt.beans.BatchProcessInformation;
 import com.gip.xyna.xprc.xbatchmgmt.beans.BatchProcessInput;
+import com.gip.xyna.xprc.xbatchmgmt.beans.BatchProcessStatus;
 import com.gip.xyna.xprc.xbatchmgmt.beans.SlaveExecutionPeriod;
 import com.gip.xyna.xprc.xbatchmgmt.input.InputGeneratorData;
 import com.gip.xyna.xprc.xbatchmgmt.input.InputGeneratorData.InputGeneratorType;
@@ -511,11 +513,24 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
       List<TimeControlledOrderTableEntry> result = new ArrayList<>();
       Long lowestBatchProcessId = Long.MAX_VALUE;
       int batchProcessSearchLimit = (tableInfo.getLimit() != null) ? tableInfo.getLimit() : 1000;
+      boolean alignedSorting = isAlignedSorting(tableInfo);
+      if(logger.isDebugEnabled()) {
+        logger.debug("searching TCOs." + (alignedSorting ? "" : " NOT") + " using aligned sorting");
+      }
       while (true) {
         BatchProcessSelectImpl select = new BatchProcessSelectImpl();
         List<TableHelper.Filter> filters = filterFunction.apply(tableInfo);
         filters.forEach(f -> addWhereClause(tableHelper, select, f));
         select.addWhereClause(select.whereBatchProcessId().isSmallerThan(lowestBatchProcessId));
+        if(!filter.getShowArchived()) {
+          // com.gip.xyna.xprc.xbatchmgmt.beans.BatchProcessStatus
+          // Planing (and Waiting and Running) are converted to OrderInstanceStatus.SCHEDULING
+          // Disabled is converted to OrderInstanceStatus.WAITING_FOR_BATCH_PROCESS
+          // SCHEDULING + WAITING_FOR_BATCH_PROCESS are 'active' batch processes, everything else is archived.
+          // batchProcessManagement.searchBatchProcesse always checks active and archived entries
+          // this where clause prevents searching through all archived processes if the search specifies active orders only.
+          select.addWhereClause(select.whereStatus().isEqual(BatchProcessStatus.Planning.toString()).or().whereStatus().isEqual(BatchProcessStatus.Disabled.toString()));
+        }
 
         List<BatchProcessInformation> batchProcessInformation = batchProcessManagement.searchBatchProcesses(select, batchProcessSearchLimit).getResult();
         List<TimeControlledOrderTableEntry> partialResult = batchProcessInformation.stream()
@@ -526,7 +541,12 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
         result.addAll(partialResult);
         tableHelper.sort(result);
         result = tableHelper.limit(result);
-        if (batchProcessInformation.size() == 0 || batchProcessInformation.size() < tableInfo.getLimit()) {
+        boolean lastChunk = batchProcessInformation.size() < batchProcessSearchLimit;
+        boolean foundAllResults = alignedSorting ? result.size() == tableInfo.getLimit() : false;
+        if (lastChunk || foundAllResults) {
+          if (logger.isDebugEnabled()) {
+            logger.debug("finished TCO search. processing all entries necessary: " + lastChunk + " - found results early: "  + foundAllResults);
+          }
           break;
         }
         lowestBatchProcessId = batchProcessInformation.get(batchProcessInformation.size() - 1).getBatchProcessId();
@@ -536,6 +556,25 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
       throw new LoadTCOsException(ex.getMessage(), ex);
     }
   }
+
+
+  private boolean isAlignedSorting(TableInfo tableInfo) {
+    for (TableColumn col : tableInfo.getColumns()) {
+      if (col.getSort() != null && !col.getSort().isBlank()) {
+        if (logger.isDebugEnabled()) {
+          logger.debug("sorting on column " + col.getName() + ": " + col.getSort());
+        }
+        if (Objects.equals(col.getPath(), TABLE_PATH_ID) && col.getSort().equals("asc")) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    }
+    // no explicit sorting set. Use aligned sorting
+    return true;
+  }
+
 
   private TimeControlledOrderTableEntry convertToTableEntry(BatchProcessInformation i) {
     if(i == null) {
@@ -790,6 +829,14 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
         });
         break;
       case TABLE_PATH_STATUS:
+        if(filter.getValue() == null || filter.getValue().isBlank()) {
+          break;
+        }
+        try {
+          select.addWhereClause(select.whereStatus().isEqual(filter.getValue()));
+        } catch(XNWH_WhereClauseBuildException ex) {
+          logger.error(ex.getMessage(), ex);
+        }
         break;
       case TABLE_PATH_VERSION:
         TableHelper.prepareQueryFilter(filter.getValue()).forEach(f -> {
