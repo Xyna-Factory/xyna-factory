@@ -49,7 +49,7 @@ import xmomjsontest.tools.CompareXmlTools;
 
 public class ParseWriteXmomTest {
 
-  private static final XPathFactory xpathFactory = XPathFactory.newInstance();
+  //private static final XPathFactory xpathFactory = XPathFactory.newInstance();
   
   public String readFile(String filename) {
     try {

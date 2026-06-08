@@ -244,7 +244,7 @@ public class WF extends GenerationBase implements HasDocumentation, HasMetaTags 
 
 
     @Override
-    protected void generateJavaInternally(CodeBuffer cb, HashSet<String> importedClassesFqStrings) throws XPRC_InvalidVariableIdException,
+    public void generateJavaInternally(CodeBuffer cb, HashSet<String> importedClassesFqStrings) throws XPRC_InvalidVariableIdException,
         XPRC_MissingContextForNonstaticMethodCallException, XPRC_OperationUnknownException, XPRC_InvalidServiceIdException,
         XPRC_InvalidVariableIdException, XPRC_InvalidVariableMemberNameException, XPRC_ParsingModelledExpressionException {
 
@@ -556,7 +556,7 @@ public class WF extends GenerationBase implements HasDocumentation, HasMetaTags 
   }
 
 
-  private WF(String originalName, String wfInputName, Long revision) {
+  public WF(String originalName, String wfInputName, Long revision) {
     super(originalName, wfInputName, revision);
   }
 
@@ -987,7 +987,7 @@ public class WF extends GenerationBase implements HasDocumentation, HasMetaTags 
 
 
   @Override
-  protected void parseXmlInternally(Element rootElement) throws XPRC_InvalidPackageNameException,
+  public void parseXmlInternally(Element rootElement) throws XPRC_InvalidPackageNameException,
       XPRC_InconsistentFileNameAndContentException, XPRC_InvalidXmlMissingRequiredElementException {
 
     validateClassName(rootElement.getAttribute(GenerationBase.ATT.TYPEPATH), rootElement.getAttribute(GenerationBase.ATT.TYPENAME));
