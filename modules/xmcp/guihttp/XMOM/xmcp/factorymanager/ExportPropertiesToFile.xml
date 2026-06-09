@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="ExportPropertiesToFile" TypePath="xmcp.factorymanager" Label="Export Properties To File">
+  <Operation ID="0" Label="Export Properties To File" Name="ExportPropertiesToFile" IsStatic="false">
+    <Input>
+      <Data ID="14" Label="ExportSettings" VariableName="exportSettings14" ReferenceName="ExportSettings" ReferencePath="xmcp.factorymanager.xynaproperties">
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="118" Label="Managed File Id" VariableName="managedFileId118" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt">
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Server Exception" VariableName="xynaException1593" ReferenceName="XynaException" ReferencePath="core.exception">
+        <Meta>
+          <Type>XynaException</Type>
+        </Meta>
+      </Exception>
+      <Exception Label="Insufficient Rights" VariableName="insufficientRights1594" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared">
+      </Exception>
+    </Throws>
+    <ServiceReference ID="170" Label="FileManagement" ReferenceName="FileManagement.FileManagement" ReferencePath="xfmg.xfctrl.filemgmt">
+      <Source RefID="169"/>
+      <Target RefID="169"/>
+    </ServiceReference>
+    <ServiceReference ID="35" Label="Check Rights for Current User" ReferenceName="CheckRightsForCurrentUser" ReferencePath="xmcp.factorymanager.shared">
+      <Source RefID="34"/>
+      <Target RefID="34"/>
+    </ServiceReference>
+    <ServiceReference ID="74" Label="Xyna Properties Services" ReferenceName="XynaPropertiesServices.XynaPropertiesServices" ReferencePath="xmcp.factorymanager">
+      <Source RefID="73"/>
+      <Target RefID="73"/>
+    </ServiceReference>
+    <Function ID="34" Label="Check Rights for Current User">
+      <Source RefID="35">
+      </Source>
+      <Source RefID="36">
+      </Source>
+      <Target RefID="35">
+      </Target>
+      <Invoke ServiceID="35" Operation="CheckRightsForCurrentUser">
+        <Source RefID="36">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="35">
+      </Receive>
+    </Function>
+    <Function ID="73" Label="Export Properties">
+      <Source RefID="74">
+      </Source>
+      <Source RefID="14">
+      </Source>
+      <Target RefID="74">
+      </Target>
+      <Target RefID="72">
+      </Target>
+      <Invoke ServiceID="74" Operation="exportProperties">
+        <Source RefID="14">
+        </Source>
+      </Invoke>
+      <Receive ServiceID="74">
+        <Target RefID="72">
+        </Target>
+      </Receive>
+    </Function>
+    <Mappings ID="241" Label="Mapping">
+      <Input>
+        <Data ID="412" VariableName="xynaPropertyExport412" Label="XynaPropertyExport" ReferenceName="XynaPropertyExport" ReferencePath="xmcp.factorymanager.xynaproperties">
+          <Source RefID="241"/>
+        </Data>
+        <Source RefID="72">
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="481" VariableName="document481" Label="Document" ReferenceName="Document" ReferencePath="xact.templates">
+          <Source RefID="241"/>
+        </Data>
+        <Target RefID="482">
+        </Target>
+      </Output>
+      <Output>
+        <Data ID="551" VariableName="text551" Label="Filename" ReferenceName="Text" ReferencePath="base">
+          <Source RefID="241"/>
+        </Data>
+        <Target RefID="552">
+        </Target>
+      </Output>
+      <Mapping>%1%.text=%0%.data</Mapping>
+      <Mapping>%2%.text=concat("xyna-properties.", tolowercase(%0%.exportSettings.format))</Mapping>
+    </Mappings>
+    <Function ID="169" Label="store document">
+      <Source RefID="170">
+      </Source>
+      <Source RefID="482">
+      </Source>
+      <Source RefID="552">
+      </Source>
+      <Source RefID="1534">
+      </Source>
+      <Target RefID="170">
+      </Target>
+      <Target RefID="172">
+      </Target>
+      <Invoke ServiceID="170" Operation="storeDocument">
+        <Source RefID="482">
+        </Source>
+        <Source RefID="552">
+        </Source>
+        <Source RefID="1534">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="170">
+        <Target RefID="172">
+        </Target>
+      </Receive>
+    </Function>
+    <Data ID="36" VariableName="userAuthenticationRight36" IsList="true" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+      <Value>
+        <Data ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xmcp.xfm.factoryManager</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xfmg.xfctrl.XynaProperties:read:*</Value>
+          </Data>
+        </Data>
+      </Value>
+    </Data>
+    <Data ID="72" VariableName="xynaPropertyExport72" Label="XynaPropertyExport" ReferenceName="XynaPropertyExport" ReferencePath="xmcp.factorymanager.xynaproperties">
+    </Data>
+    <Data ID="172" VariableName="managedFileId172" Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt">
+      <Source RefID="169"/>
+    </Data>
+    <Data ID="482" VariableName="document482" Label="Document" ReferenceName="Document" ReferencePath="xact.templates">
+      <Source RefID="241"/>
+    </Data>
+    <Data ID="552" VariableName="text552" Label="Filename" ReferenceName="Text" ReferencePath="base">
+      <Source RefID="241"/>
+    </Data>
+    <Data ID="1534" VariableName="const_Text1534" Label="Text" ReferenceName="Text" ReferencePath="base">
+      <Data VariableName="text">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>exportXynaProperties</Value>
+      </Data>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="172">
+      </Source>
+      <Target RefID="118">
+      </Target>
+      <Copy>
+        <Source RefID="172">
+        </Source>
+        <Target RefID="118">
+        </Target>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
