@@ -39,7 +39,9 @@ import xmcp.gitintegration.impl.references.ReferenceObjectTypeMethods;
 import xmcp.gitintegration.impl.references.ReferenceType;
 import xmcp.gitintegration.impl.references.methods.LibFolderMethods;
 import xmcp.gitintegration.impl.references.methods.objecttypes.DatatypeReferenceMethods;
+import xmcp.gitintegration.impl.references.methods.objecttypes.FilterReferenceMethods;
 import xmcp.gitintegration.impl.references.methods.objecttypes.SharedLibraryReferenceMethods;
+import xmcp.gitintegration.impl.references.methods.objecttypes.TriggerReferenceMethods;
 import xmcp.gitintegration.storage.ReferenceStorable;
 import xmcp.gitintegration.storage.ReferenceStorage;
 
@@ -81,6 +83,8 @@ public class ReferenceSupport {
     //register implementations here
     result.put(ReferenceObjectType.DATATYPE, new DatatypeReferenceMethods());
     result.put(ReferenceObjectType.SHAREDLIB, new SharedLibraryReferenceMethods());
+    result.put(ReferenceObjectType.FILTER, new FilterReferenceMethods());
+    result.put(ReferenceObjectType.TRIGGER, new TriggerReferenceMethods());
 
     return result;
   }

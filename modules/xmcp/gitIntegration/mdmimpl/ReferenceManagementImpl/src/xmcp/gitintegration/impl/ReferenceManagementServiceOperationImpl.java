@@ -53,6 +53,7 @@ import xmcp.gitintegration.RepositoryManagement;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
 import xmcp.gitintegration.impl.processing.ReferenceSupport;
 import xmcp.gitintegration.impl.references.InternalReference;
+import xmcp.gitintegration.impl.references.ReferenceObjectType;
 import xmcp.gitintegration.impl.references.ReferenceType;
 import xmcp.gitintegration.repository.RepositoryConnection;
 import xmcp.gitintegration.storage.ReferenceStorable;
@@ -186,13 +187,13 @@ public class ReferenceManagementServiceOperationImpl implements ExtendedDeployme
     XynaActivationTrigger xat = XynaFactory.getInstance().getActivation().getActivationTrigger();
     Trigger[] triggers = xat.getTriggers(revision);
     for(int i=0; i< triggers.length; i++) {
-      result.add(new ObjectWithReferences(triggers[i].getTriggerName(), "TRIGGER"));
+      result.add(new ObjectWithReferences(triggers[i].getTriggerName(), ReferenceObjectType.TRIGGER.toString()));
     }
     //Filter
     try {
       Filter[] filters = xat.getFilters(revision);
       for (int i = 0; i < filters.length; i++) {
-        result.add(new ObjectWithReferences(filters[i].getName(), "FILTER"));
+        result.add(new ObjectWithReferences(filters[i].getName(), ReferenceObjectType.FILTER.toString()));
       }
     } catch (PersistenceLayerException e) {
 
@@ -201,7 +202,7 @@ public class ReferenceManagementServiceOperationImpl implements ExtendedDeployme
     //SharedLibraries
     Collection<SharedLib> libs = XynaFactory.getInstance().getXynaMultiChannelPortalPortal().listSharedLibs(revision);
     for(SharedLib lib : libs) {
-      result.add(new ObjectWithReferences(lib.getName(), "SHARED_LIBRARY"));
+      result.add(new ObjectWithReferences(lib.getName(), ReferenceObjectType.SHAREDLIB.toString()));
     }
 
     //DataTypes that have at least one referenced library
@@ -216,7 +217,7 @@ public class ReferenceManagementServiceOperationImpl implements ExtendedDeployme
         Set<String> add = new HashSet<>(d.getAdditionalLibraries());
         add.addAll(d.getPythonLibraries());
         if(!add.isEmpty()) {
-          result.add(new ObjectWithReferences(fqn, "DATATYPE"));
+          result.add(new ObjectWithReferences(fqn, ReferenceObjectType.DATATYPE.toString()));
         }
       } catch(Exception e) {
         
