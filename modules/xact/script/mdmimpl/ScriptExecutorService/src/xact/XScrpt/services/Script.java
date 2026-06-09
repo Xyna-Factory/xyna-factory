@@ -274,19 +274,12 @@ public class Script implements ServiceStepEventHandler<AbortServiceStepEvent> {
   }
 
 
-  /**
-   * Liest die uebergebenen InputStreams aus. Wenn es nichts zu Lesen gibt (stdout.available() < 1 && stderr.available()
-   * < 1) wird ermittelt, ob der schreibende Thread (externe Process) noch laeuft. Ist das der Fall, dann wartet der
-   * Thread eine kurze Zeit (0.5 sec) bevor er den naechsten Leseversuch staret. Die Methode endet, entweder mit
-   * Exception oder wenn der externe Process fertig ist. Liefert den exitValue des exterene Prozesses
-   */
-  protected String readProcessStreams(InputStream stdout, InputStream stderr) throws Exception {
+  protected void readProcessStreamsImpl(InputStream stdout, InputStream stderr) throws Exception {
     int avail_s, avail_e, count_s, count_e;
     String line;
     byte[] buf_s = new byte[1024]; // Lesepuffer fuer stdout
     byte[] buf_e = new byte[1024]; // Lesepuffer fuer stderr
 
-    while (true) {
       while (true) {
         try {
           // Gibt es was von den Streams zu Lesen?
@@ -322,25 +315,28 @@ public class Script implements ServiceStepEventHandler<AbortServiceStepEvent> {
           break;
         }
       } // Ende innere (Lese-) Schleife 
-
-      // Nachsehen, ob der externe Prozess noch laeuft
-      // Die Methode process.exitValue() erzeugt eine Exception wenn
-      // der Prozess noch laueft. Wenn sie keine Exception erzeugt,
-      // ist der Prozess fertig und wir koennen auch die auessere
-      // Schleife beenden.
-      try {
-        exitCode = process.exitValue();
-        if (logger.isDebugEnabled()) {
-          logger.debug("Script execution finished with exitCode " + exitCode + ", output: " + scriptOutput.toString());
-        }
-        break; // Ok, Prozess ist fertig, es gibt nix mehr zu lesen
-      } catch (IllegalThreadStateException e) {
+  }
+  
+  
+  protected String readProcessStreams(InputStream stdout, InputStream stderr) throws Exception {
+    boolean processRunning = true;
+    while (processRunning) {
+      readProcessStreamsImpl(stdout, stderr);
+      
+      if (process.isAlive()) {
         // Der Prozess laeuft noch, also kurz warten, dann naechsten
         // Leseversuch starten
         try {
           Thread.sleep(500);
         } catch (InterruptedException ex) {
         }
+      } else {
+        processRunning = false;
+        exitCode = process.exitValue();
+        if (logger.isDebugEnabled()) {
+          logger.debug("Script execution finished with exitCode " + exitCode + ", output: " + scriptOutput.toString());
+        }
+        readProcessStreamsImpl(stdout, stderr); // streams might still contain unread final data
       }
     } // Ende auessere Schleife
 
@@ -378,19 +374,19 @@ public class Script implements ServiceStepEventHandler<AbortServiceStepEvent> {
 
   public void cancelScriptExecution() {
 
-    logger.debug("TIMEOUT or CANCEL, destroying process ...");
+    logger.debug("TIMEOUT or CANCEL, destroying process ... xxxx");
 
     // Kein process.destroy() mehr probieren. Es tut irgendwie nicht das, was wir
     // brauchen. Unter Linux tut es zwar ueberhaupt etwas, aber es scheint die
     // Streams zu schliessen, so dass wir den output des beendeten Prozesses nicht
     // mehr lesen koennen (IOException). Unter Solaris scheint es ueberhaupt nicht
     // oder nicht immer zu funktionieren.
-    //process.destroy();
+    process.destroy();
     if ( timer != null ) {
       timer.cancel();
       timedOut = true; //FIXME nur auf true setzen, wenn es auch timeout ist - nicht bei cancel
     }
-
+    /*
     if (pid > 0) {
       String killCmd = killCommand + " -TERM " + pid; // FIXME: kill und Signal als Properties
       logger.info("killing process: " + killCmd);
@@ -429,7 +425,7 @@ public class Script implements ServiceStepEventHandler<AbortServiceStepEvent> {
     } else {
       logger.error("cannot kill process since pid is not set!");
     }
-
+    */
   }
 
 
