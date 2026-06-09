@@ -48,7 +48,7 @@ import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.ServiceStepEventSour
 
 public class ScriptExecutorServiceImpl implements DeploymentTask {
 
-  static Logger logger = Logger.getLogger(ScriptExecutorServiceImpl.class);  
+  static Logger logger = Logger.getLogger(ScriptExecutorServiceImpl.class);
   private static int RETURN_VAL_127 = 127;
 
   protected ScriptExecutorServiceImpl() {
