@@ -386,46 +386,6 @@ public class Script implements ServiceStepEventHandler<AbortServiceStepEvent> {
       timer.cancel();
       timedOut = true; //FIXME nur auf true setzen, wenn es auch timeout ist - nicht bei cancel
     }
-    /*
-    if (pid > 0) {
-      String killCmd = killCommand + " -TERM " + pid; // FIXME: kill und Signal als Properties
-      logger.info("killing process: " + killCmd);
-      try {
-        Runtime.getRuntime().exec(killCmd);
-      } catch (IOException e) {
-        logger.warn("could not execute kill command", e);
-      }
-      try {
-        Thread.sleep(2000);
-      } catch (InterruptedException ex) {
-      }
-      // Wenn der Process jetzt noch laeuft hat er vielleicht das QUIT Signal abgefangen
-      // Dann noch mal mit KILL probieren
-      try {
-        logger.info("process exited with exit code: " + process.exitValue());
-      } catch (IllegalThreadStateException x1) {
-        logger.info("process still running. Trying forcefully (kill -KILL) ...");
-        try {
-          killCmd = killCommand + " -KILL " + pid;
-          Runtime.getRuntime().exec(killCmd);
-        } catch (IOException e) {
-          logger.warn("Could not kill process <" + pid + ">", e);
-        }
-        try {
-          Thread.sleep(500);
-        } catch (InterruptedException ex) {
-        }
-        // Wenn der process jetzt noch laeuft ist nichts mehr zu machen
-        try {
-          logger.info("process exited with exit code: " + process.exitValue());
-        } catch (IllegalThreadStateException x2) {
-          logger.error("process still running. giving up");
-        }
-      }
-    } else {
-      logger.error("cannot kill process since pid is not set!");
-    }
-    */
   }
 
 
