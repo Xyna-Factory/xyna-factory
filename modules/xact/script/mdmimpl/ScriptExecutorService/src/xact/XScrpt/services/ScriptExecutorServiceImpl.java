@@ -48,8 +48,8 @@ import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.ServiceStepEventSour
 
 public class ScriptExecutorServiceImpl implements DeploymentTask {
 
-  static Logger logger = Logger.getLogger(ScriptExecutorServiceImpl.class);
-
+  static Logger logger = Logger.getLogger(ScriptExecutorServiceImpl.class);  
+  private static int RETURN_VAL_127 = 127;
 
   protected ScriptExecutorServiceImpl() {
   }
@@ -166,7 +166,7 @@ public class ScriptExecutorServiceImpl implements DeploymentTask {
         eventSource.listenOnAbortEvents(script);
       } catch (XPRC_TTLExpirationBeforeHandlerRegistration e) {
         scriptExecutionResult.setScriptError("Execution timeout while executing script " + scriptCallString + ": " + e.getMessage());
-        scriptExecutionResult.setReturnValue(127); // FIXME what is 127??
+        scriptExecutionResult.setReturnValue(RETURN_VAL_127);
         throw new ScriptExecutionException(scriptExecutionResult, e);
       }
 
@@ -175,7 +175,7 @@ public class ScriptExecutorServiceImpl implements DeploymentTask {
         processid = script.execGetPid(scriptCallString);
       } catch (IOException e1) {
         scriptExecutionResult.setScriptError("Error while executing script " + scriptCallString + ": " + e1.getMessage());
-        scriptExecutionResult.setReturnValue(127); // FIXME what is 127??
+        scriptExecutionResult.setReturnValue(RETURN_VAL_127);
         throw new ScriptExecutionException(scriptExecutionResult, e1);
       }
 

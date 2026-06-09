@@ -92,7 +92,6 @@ public class Script implements ServiceStepEventHandler<AbortServiceStepEvent> {
   protected StringBuffer scriptError;
 
   private int mode;
-  private String[] envp;
 
   protected Timer timer = null;
   protected TimerTask timerTask = null;
@@ -103,7 +102,6 @@ public class Script implements ServiceStepEventHandler<AbortServiceStepEvent> {
    * Constructor: Im Array envp koennen Umgebungsvariablen der Form name=value uebergeben werden.
    */
   public Script(String[] envp) {
-    this.envp = envp;
     this.mode = MIXED_MODE; // Default
 
     this.scriptOutput = new StringBuffer();
@@ -373,14 +371,7 @@ public class Script implements ServiceStepEventHandler<AbortServiceStepEvent> {
 
 
   public void cancelScriptExecution() {
-
-    logger.debug("TIMEOUT or CANCEL, destroying process ... xxxx");
-
-    // Kein process.destroy() mehr probieren. Es tut irgendwie nicht das, was wir
-    // brauchen. Unter Linux tut es zwar ueberhaupt etwas, aber es scheint die
-    // Streams zu schliessen, so dass wir den output des beendeten Prozesses nicht
-    // mehr lesen koennen (IOException). Unter Solaris scheint es ueberhaupt nicht
-    // oder nicht immer zu funktionieren.
+    logger.debug("TIMEOUT or CANCEL, destroying process ...");
     process.destroy();
     if ( timer != null ) {
       timer.cancel();
