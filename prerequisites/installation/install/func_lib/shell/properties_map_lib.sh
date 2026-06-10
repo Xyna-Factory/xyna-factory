@@ -312,8 +312,6 @@ f_map_current_property() {
     jvm.option.profiling)                             PROFILING_OPTIONS="${CURRENT_PROPERTY}";;
     jvm.option.xml.backup)                            XML_BACKUP_OPTIONS="${CURRENT_PROPERTY}";;
     jvm.option.rmi)                                   RMI_OPTIONS="${CURRENT_PROPERTY}";;
-    ntp1.ipAddress)      f_check_is_ip_address "${i}"; NTP1_SERVER="${CURRENT_PROPERTY}";;
-    ntp2.ipAddress)                                   NTP2_SERVER="${CURRENT_PROPERTY}";;
     os.locale)                                        OS_LOCALE="${CURRENT_PROPERTY}";;
     pid.folder)                                       PID_FOLDER="${CURRENT_PROPERTY}";;
     project.prefix.uppercase)                         PROJECT_PREFIX_UPPERCASE="${CURRENT_PROPERTY}";;
