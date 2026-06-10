@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="ExportPropertiesToFile" TypePath="xmcp.factorymanager" Label="Export Properties To File">
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="ExportPropertiesToFile" TypePath="xmcp.factorymanager.xynaproperties" Label="Export Properties To File">
   <Operation ID="0" Label="Export Properties To File" Name="ExportPropertiesToFile" IsStatic="false">
     <Input>
       <Data ID="14" Label="ExportSettings" VariableName="exportSettings14" ReferenceName="ExportSettings" ReferencePath="xmcp.factorymanager.xynaproperties">
@@ -27,18 +27,14 @@
       </Data>
     </Output>
     <Throws>
-      <Exception Label="Server Exception" VariableName="xynaException1593" ReferenceName="XynaException" ReferencePath="core.exception">
+      <Exception Label="Server Exception" VariableName="xynaException1755" ReferenceName="XynaException" ReferencePath="core.exception">
         <Meta>
           <Type>XynaException</Type>
         </Meta>
       </Exception>
-      <Exception Label="Insufficient Rights" VariableName="insufficientRights1594" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared">
+      <Exception Label="Insufficient Rights" VariableName="insufficientRights1756" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared">
       </Exception>
     </Throws>
-    <ServiceReference ID="170" Label="FileManagement" ReferenceName="FileManagement.FileManagement" ReferencePath="xfmg.xfctrl.filemgmt">
-      <Source RefID="169"/>
-      <Target RefID="169"/>
-    </ServiceReference>
     <ServiceReference ID="35" Label="Check Rights for Current User" ReferenceName="CheckRightsForCurrentUser" ReferencePath="xmcp.factorymanager.shared">
       <Source RefID="34"/>
       <Target RefID="34"/>
@@ -46,6 +42,10 @@
     <ServiceReference ID="74" Label="Xyna Properties Services" ReferenceName="XynaPropertiesServices.XynaPropertiesServices" ReferencePath="xmcp.factorymanager">
       <Source RefID="73"/>
       <Target RefID="73"/>
+    </ServiceReference>
+    <ServiceReference ID="170" Label="FileManagement" ReferenceName="FileManagement.FileManagement" ReferencePath="xfmg.xfctrl.filemgmt">
+      <Source RefID="169"/>
+      <Target RefID="169"/>
     </ServiceReference>
     <Function ID="34" Label="Check Rights for Current User">
       <Source RefID="35">

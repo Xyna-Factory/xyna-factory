@@ -158,10 +158,6 @@
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.factorymanager.ExportPropertiesToFile</DestinationKey>
-      <OrderContextMapping>false</OrderContextMapping>
-    </Ordertype>
-    <Ordertype implicitDependency="true">
       <DestinationKey>xmcp.factorymanager.filtermanager.DeployFilterInstance</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
@@ -470,7 +466,7 @@
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.factorymanager.xynaproperties.ExportXynaProperties</DestinationKey>
+      <DestinationKey>xmcp.factorymanager.xynaproperties.ExportPropertiesToFile</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -718,10 +714,6 @@
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.factorymanager.DestinationType</FqName>
       <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.factorymanager.ExportPropertiesToFile</FqName>
-      <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.factorymanager.FilterAndTriggerManagerServices</FqName>
@@ -1844,7 +1836,7 @@
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.factorymanager.xynaproperties.ExportXynaProperties</FqName>
+      <FqName>xmcp.factorymanager.xynaproperties.ExportPropertiesToFile</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
