@@ -13,11 +13,3 @@ vi delivery.properties #release.number erhöhen
 
 ant -f delivery.xml
 
-cd -
-
-XBE_REREQ_DIR="~/data/xyna/Xyna\ Black\ Edition/06_Releases/XynaBlackEditionPrerequisites/"
-
-mkdir ${XBE_REREQ_DIR}/<ReleaseNumber>
-
-cp release/* ${XBE_REREQ_DIR}/<ReleaseNumber>
-
