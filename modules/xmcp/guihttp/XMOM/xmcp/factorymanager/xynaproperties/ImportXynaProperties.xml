@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="ImportXynaProperties" TypePath="xmcp.factorymanager.xynaproperties" Label="Import Xyna Properties">
+  <Operation ID="0" Label="Import Xyna Properties" Name="ImportXynaProperties" IsStatic="false">
+    <Input>
+      <Data ID="45" Label="Import Data" VariableName="xynaPropertyExport45" ReferenceName="XynaPropertyExport" ReferencePath="xmcp.factorymanager.xynaproperties">
+      </Data>
+      <Data ID="66" Label="ImportSettings" VariableName="importSettings66" ReferenceName="ImportSettings" ReferencePath="xmcp.factorymanager.xynaproperties">
+      </Data>
+    </Input>
+    <Output>
+    </Output>
+    <Throws>
+      <Exception Label="Insufficient Rights" VariableName="insufficientRights194" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared">
+      </Exception>
+    </Throws>
+    <ServiceReference ID="155" Label="Check Rights for Current User" ReferenceName="CheckRightsForCurrentUser" ReferencePath="xmcp.factorymanager.shared">
+      <Source RefID="154"/>
+      <Target RefID="154"/>
+    </ServiceReference>
+    <ServiceReference ID="11" Label="Xyna Properties Services" ReferenceName="XynaPropertiesServices.XynaPropertiesServices" ReferencePath="xmcp.factorymanager">
+      <Source RefID="10"/>
+      <Target RefID="10"/>
+    </ServiceReference>
+    <Function ID="154" Label="Check Rights for Current User">
+      <Source RefID="155">
+      </Source>
+      <Source RefID="156">
+      </Source>
+      <Target RefID="155">
+      </Target>
+      <Invoke ServiceID="155" Operation="CheckRightsForCurrentUser">
+        <Source RefID="156">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="155">
+      </Receive>
+    </Function>
+    <Function ID="10" Label="Import Properties">
+      <Source RefID="11">
+      </Source>
+      <Source RefID="45">
+      </Source>
+      <Source RefID="66">
+      </Source>
+      <Target RefID="11">
+      </Target>
+      <Invoke ServiceID="11" Operation="importProperties">
+        <Source RefID="45">
+        </Source>
+        <Source RefID="66">
+        </Source>
+      </Invoke>
+      <Receive ServiceID="11">
+      </Receive>
+    </Function>
+    <Data ID="156" VariableName="userAuthenticationRight156" IsList="true" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+      <Value>
+        <Data ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xmcp.xfm.factoryManager</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xfmg.xfctrl.XynaProperties:read:*</Value>
+          </Data>
+        </Data>
+      </Value>
+    </Data>
+    <Assign ID="1">
+    </Assign>
+  </Operation>
+</Service>
