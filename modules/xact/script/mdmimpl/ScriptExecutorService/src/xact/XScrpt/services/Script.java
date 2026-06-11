@@ -40,44 +40,7 @@ public class Script implements ServiceStepEventHandler<AbortServiceStepEvent> {
   public static final int SEPARATED_MODE = 1; // stdout u. stderr getrennt
 
   private static final Logger logger = CentralFactoryLogging.getLogger(Script.class);
-
-
-  // Das kill Programm liegt bei SunOS z.B. unter /usr/bin/kill (der Default),
-  // bei Linux aber unter /bin/kill. Per System.property kann das killCommand
-  // gesetzt werden.
-  public static final String DEFAULT_KILL_CMD_SUN_OS = "/usr/bin/kill";
-  public static final String DEFAULT_KILL_CMD_LINUX = "/bin/kill";
-
-  private static final String[] KILL_COMMAND_POSSIBILITIES = new String[] {DEFAULT_KILL_CMD_LINUX,
-      DEFAULT_KILL_CMD_SUN_OS};
-  protected static String killCommand;
-  static {
-    boolean found = false;
-    for (String nextKillCommand : KILL_COMMAND_POSSIBILITIES) {
-      if (new File(nextKillCommand).exists()) {
-        killCommand = nextKillCommand;
-        found = true;
-      }
-      break;
-    }
-    if (!found) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Could not find <kill> command in one of the following: {");
-      for (int i = 0; i < KILL_COMMAND_POSSIBILITIES.length; i++) {
-        sb.append("'").append(KILL_COMMAND_POSSIBILITIES[i]).append("'");
-        if (i != KILL_COMMAND_POSSIBILITIES.length - 1) {
-          sb.append(", ");
-        }
-      }
-      sb.append("}, killing script executions wont be possible.");
-      logger.warn(sb);
-      killCommand = "kill";
-    }
-  }
-
-
   private static final String PATH_TO_SHELL = System.getProperty("SHELL");
-
 
   protected String command;
   protected Process process;
@@ -188,7 +151,6 @@ public class Script implements ServiceStepEventHandler<AbortServiceStepEvent> {
    */
   public long execGetPid(String command) throws IOException {
 
-    //String[] _cmd = (shell != null && shell.length()>0 ? new String[]{shell, command} : new String[]{command});
     String _cmd[];
 
     // Sonderbehandlung, wenn Kommando mit einem '-' beginnt:
@@ -208,7 +170,6 @@ public class Script implements ServiceStepEventHandler<AbortServiceStepEvent> {
             dbg.append(" ");
         }
         dbg.append(" ...");
-        //OBLog.log.finer(dbg.toString());
         logger.debug(dbg.toString());
       }
 

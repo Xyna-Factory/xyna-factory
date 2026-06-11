@@ -145,9 +145,6 @@ public class ScriptExecutorServiceImpl implements DeploymentTask {
       } else {
         script.setMode(Script.SEPARATED_MODE);
       }
-      
-      //        ServiceStepEventSource eventSource = ServiceStepEventHandling.getEventSource();
-      //        eventSource.listenOnCancelEvents(script);
 
       long startTime = System.currentTimeMillis();
       if (timeoutInteger != null) {
