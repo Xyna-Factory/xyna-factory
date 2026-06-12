@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Possible RTC for Filter Deployment" TypeName="GetPossibleRTCForFilterDeployment" TypePath="xmcp.factorymanager.filtermanager" Version="1.8">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Possible RTC for Filter Deployment" TypeName="GetPossibleRTCForFilterDeployment" TypePath="xmcp.factorymanager.filtermanager" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Get Possible RTC for Filter Deployment" Name="GetPossibleRTCForFilterDeployment">
     <Input>
       <Data ID="51" Label="Filter" ReferenceName="Filter" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="filter51"/>

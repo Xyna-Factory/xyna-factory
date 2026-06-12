@@ -15,12 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="ContainerArea" BaseTypePath="xmcp.processmodeller.datatypes" IsAbstract="false" Label="Libraries Area" TypeName="LibrariesArea" TypePath="xmcp.processmodeller.datatypes.servicegroupmodeller" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="ContainerArea" BaseTypePath="xmcp.processmodeller.datatypes" IsAbstract="false" Label="Libraries Area" TypeName="LibrariesArea" TypePath="xmcp.processmodeller.datatypes.servicegroupmodeller" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
   <Data IsList="true" Label="Java Libraries" ReferenceName="Library" ReferencePath="xmcp.processmodeller.datatypes.servicegroupmodeller" VariableName="javaLibraries"/>
   <Data IsList="true" Label="Python Libraries" ReferenceName="Library" ReferencePath="xmcp.processmodeller.datatypes.servicegroupmodeller" VariableName="pythonLibraries"/>
 </DataType>
-

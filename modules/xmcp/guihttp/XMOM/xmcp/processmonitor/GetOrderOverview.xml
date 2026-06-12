@@ -29,12 +29,30 @@
       <Data ID="18" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo18"/>
       <Data ID="23" IsList="true" Label="Order Overview entry" ReferenceName="OrderOverviewEntry" ReferencePath="xmcp.processmonitor.datatypes" VariableName="orderOverviewEntry23"/>
     </Output>
-    <ServiceReference ID="3510" Label="Process Monitor Services" ReferenceName="ProcessMonitorServices.ProcessMonitorServices" ReferencePath="xmcp.processmonitor"/>
-    <ServiceReference ID="22" Label="Process Monitor Services" ReferenceName="ProcessMonitorServices.ProcessMonitorServices" ReferencePath="xmcp.processmonitor"/>
-    <ServiceReference ID="134" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables"/>
-    <ServiceReference ID="106" Label="Add Custom Field Columns" ReferenceName="AddCustomFieldColumns" ReferencePath="xmcp.processmonitor"/>
-    <ServiceReference ID="586" Label="Process Monitor Services" ReferenceName="ProcessMonitorServices.ProcessMonitorServices" ReferencePath="xmcp.processmonitor"/>
-    <ServiceReference ID="3227" Label="Process Monitor Services" ReferenceName="ProcessMonitorServices.ProcessMonitorServices" ReferencePath="xmcp.processmonitor"/>
+    <ServiceReference ID="106" Label="Add Custom Field Columns" ReferenceName="AddCustomFieldColumns" ReferencePath="xmcp.processmonitor">
+      <Source RefID="103"/>
+      <Target RefID="103"/>
+    </ServiceReference>
+    <ServiceReference ID="586" Label="Process Monitor Services" ReferenceName="ProcessMonitorServices.ProcessMonitorServices" ReferencePath="xmcp.processmonitor">
+      <Source RefID="585"/>
+      <Target RefID="585"/>
+    </ServiceReference>
+    <ServiceReference ID="22" Label="Process Monitor Services" ReferenceName="ProcessMonitorServices.ProcessMonitorServices" ReferencePath="xmcp.processmonitor">
+      <Source RefID="7"/>
+      <Target RefID="7"/>
+    </ServiceReference>
+    <ServiceReference ID="134" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="135"/>
+      <Target RefID="135"/>
+    </ServiceReference>
+    <ServiceReference ID="3510" Label="Process Monitor Services" ReferenceName="ProcessMonitorServices.ProcessMonitorServices" ReferencePath="xmcp.processmonitor">
+      <Source RefID="3509"/>
+      <Target RefID="3509"/>
+    </ServiceReference>
+    <ServiceReference ID="3227" Label="Process Monitor Services" ReferenceName="ProcessMonitorServices.ProcessMonitorServices" ReferencePath="xmcp.processmonitor">
+      <Source RefID="3226"/>
+      <Target RefID="3226"/>
+    </ServiceReference>
     <Mappings ID="729" Label="Create Date Transformation">
       <Input>
         <Data ID="730" Label="ISO8601ToUnixTimestampTransformation" ReferenceName="ISO8601ToUnixTimestampTransformation" ReferencePath="xmcp.tables.datatypes.transformation" VariableName="iSO8601ToUnixTimestampTransformation730"/>
@@ -80,7 +98,6 @@
               </Output>
               <Mapping>%0%["0"].name="Id"</Mapping>
               <Mapping>%0%["0"].path="id"</Mapping>
-              <Mapping>%0%["0"].sort="dsc"</Mapping>
               <Mapping>%0%["1"].name="Root Id"</Mapping>
               <Mapping>%0%["1"].path="rootId"</Mapping>
             </Mappings>
@@ -143,6 +160,7 @@
           <Mapping>%1%["1"].path="status"</Mapping>
           <Mapping>%1%["2"].name="Start Time"</Mapping>
           <Mapping>%1%["2"].path="runTimeStartISO8601"</Mapping>
+          <Mapping>%1%["2"].sort="dsc"</Mapping>
           <Mapping>%1%["2"].transformation#cast("xmcp.tables.datatypes.transformation.ISO8601ToUnixTimestampTransformation")=%0%</Mapping>
           <Mapping>%1%["3"].name="Last Update"</Mapping>
           <Mapping>%1%["3"].path="runTimeStopISO8601"</Mapping>

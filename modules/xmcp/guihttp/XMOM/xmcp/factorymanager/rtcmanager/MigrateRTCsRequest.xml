@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Migrate RTCs Request" TypeName="MigrateRTCsRequest" TypePath="xmcp.factorymanager.rtcmanager" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Migrate RTCs Request" TypeName="MigrateRTCsRequest" TypePath="xmcp.factorymanager.rtcmanager" Version="1.8">
   <Data IsList="true" Label="RTC Migration" ReferenceName="RTCMigration" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="rTCMigration"/>
   <Data Label="Abort problemetic Orders" VariableName="abortProblemeticOrders">
     <Meta>

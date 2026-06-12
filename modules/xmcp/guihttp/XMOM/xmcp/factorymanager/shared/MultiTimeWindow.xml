@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="TimeWindow" BaseTypePath="xmcp.factorymanager.shared" Label="Multi time window" TypeName="MultiTimeWindow" TypePath="xmcp.factorymanager.shared" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="TimeWindow" BaseTypePath="xmcp.factorymanager.shared" Label="Multi time window" TypeName="MultiTimeWindow" TypePath="xmcp.factorymanager.shared" Version="1.8">
   <Data IsList="true" Label="Sub window definitions" ReferenceName="TimeWindow" ReferencePath="xmcp.factorymanager.shared" VariableName="subWindowDefinitions"/>
 </DataType>

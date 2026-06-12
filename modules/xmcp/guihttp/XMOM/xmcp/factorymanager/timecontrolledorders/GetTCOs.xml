@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2026 Xyna GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get TCOs" TypeName="GetTCOs" TypePath="xmcp.factorymanager.timecontrolledorders" Version="1.8">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get TCOs" TypeName="GetTCOs" TypePath="xmcp.factorymanager.timecontrolledorders" Version="1.8">
   <Meta>
     <FixedDetailOptions>highDetailsMode,showDetailAreas,vScroll(150)</FixedDetailOptions>
   </Meta>
@@ -30,21 +29,13 @@
       <Data ID="204" IsList="true" Label="Time Controlled Order Table Entry" ReferenceName="TimeControlledOrderTableEntry" ReferencePath="xmcp.factorymanager.timecontrolledorders" VariableName="timeControlledOrderTableEntry204"/>
     </Output>
     <Throws>
-      <Exception Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights2282"/>
-      <Exception Label="LoadTCOs Exception" ReferenceName="LoadTCOsException" ReferencePath="xmcp.factorymanager.timecontrolledorders.exceptions" VariableName="loadTCOsException2283"/>
+      <Exception ID="731" Label="User Does Not Exist" ReferenceName="UserDoesNotExist" ReferencePath="xfmg.xopctrl" VariableName="userDoesNotExist731"/>
+      <Exception ID="732" Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights732"/>
+      <Exception ID="733" Label="LoadTCOs Exception" ReferenceName="LoadTCOsException" ReferencePath="xmcp.factorymanager.timecontrolledorders.exceptions" VariableName="loadTCOsException733"/>
     </Throws>
-    <ServiceReference ID="5" Label="Check Rights for Current User" ReferenceName="CheckRightsForCurrentUser" ReferencePath="xmcp.factorymanager.shared">
-      <Source RefID="6"/>
-      <Target RefID="6"/>
-    </ServiceReference>
-    <ServiceReference ID="43" Label="Time Controlled Orders Services" ReferenceName="TimeControlledOrdersServices.TimeControlledOrdersServices" ReferencePath="xmcp.factorymanager">
-      <Source RefID="44"/>
-      <Target RefID="44"/>
-    </ServiceReference>
-    <ServiceReference ID="35" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
-      <Source RefID="36"/>
-      <Target RefID="36"/>
-    </ServiceReference>
+    <ServiceReference ID="5" Label="Check Rights for Current User" ReferenceName="CheckRightsForCurrentUser" ReferencePath="xmcp.factorymanager.shared"/>
+    <ServiceReference ID="43" Label="Time Controlled Orders Services" ReferenceName="TimeControlledOrdersServices.TimeControlledOrdersServices" ReferencePath="xmcp.factorymanager"/>
+    <ServiceReference ID="35" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables"/>
     <Function ID="6" Label="Check Rights for Current User">
       <Source RefID="5"/>
       <Source RefID="67"/>

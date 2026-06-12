@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2022 Xyna GmbH, Germany
@@ -14,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="Case" TypePath="xmcp.processmodeller.datatypes.distinction" Label="Case" IsAbstract="false" BaseTypeName="ModellingItem" BaseTypePath="xmcp.processmodeller.datatypes">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="ModellingItem" BaseTypePath="xmcp.processmodeller.datatypes" IsAbstract="false" Label="Case" TypeName="Case" TypePath="xmcp.processmodeller.datatypes.distinction" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
