@@ -82,7 +82,7 @@ import com.gip.xyna.utils.collections.CollectionUtils.Transformation;
 import com.gip.xyna.utils.collections.GraphUtils;
 import com.gip.xyna.utils.collections.GraphUtils.ConnectedEdges;
 import com.gip.xyna.utils.collections.LruCacheWithTimingInformation;
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.collections.Triple;
 import com.gip.xyna.utils.exceptions.XynaException;
@@ -9156,7 +9156,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
     if (onlyOpenOrderEntranceTypes == null) {
       onlyOpenEntrances = Optional.empty();
     } else {
-      onlyOpenEntrances = new Optional<EnumSet<OrderEntranceType>>(onlyOpenOrderEntranceTypes);
+      onlyOpenEntrances = Optional.ofNullable(onlyOpenOrderEntranceTypes);
     }
 
     return startRequestInThread(new ApplicationRunnable() {

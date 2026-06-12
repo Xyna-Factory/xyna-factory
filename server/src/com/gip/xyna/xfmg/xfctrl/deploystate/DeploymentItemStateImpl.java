@@ -39,7 +39,7 @@ import com.gip.xyna.XynaFactory;
 import com.gip.xyna.exceptions.Ex_FileWriteException;
 import com.gip.xyna.utils.collections.ConcurrentMapWithObjectRemovalSupport;
 import com.gip.xyna.utils.collections.ObjectWithRemovalSupport;
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.xfctrl.dependencies.RuntimeContextDependencyManagement;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemStateReport.Dependency;
@@ -142,11 +142,11 @@ public class DeploymentItemStateImpl extends DeploymentItemIdentificationBase im
     this.exists = true;
     this.locationContentChanges = item.locationContentChanges();
     if (item.isDeployed()) {
-      this.lastDeploymentTransition = Optional.of(DeploymentTransition.SUCCESS);
+      this.lastDeploymentTransition = Optional.ofNullable(DeploymentTransition.SUCCESS);
       this.deployed = true;
     }
     if (item.isIncomplete()) {
-      this.lastDeploymentTransition = Optional.of(DeploymentTransition.ERROR_DURING_ROLLBACK);
+      this.lastDeploymentTransition = Optional.ofNullable(DeploymentTransition.ERROR_DURING_ROLLBACK);
     }
     this.applicationItem = item.isApplicationItem();
     lastModified = item.getLastModified();
@@ -382,9 +382,9 @@ public class DeploymentItemStateImpl extends DeploymentItemIdentificationBase im
       }
       Optional<DeploymentTransition> newDeploymentTransition;
       if (transition == DeploymentTransition.SUCCESSFULL_ROLLBACK) {
-        newDeploymentTransition = Optional.of(DeploymentTransition.SUCCESS);
+        newDeploymentTransition = Optional.ofNullable(DeploymentTransition.SUCCESS);
       } else {
-        newDeploymentTransition = Optional.of(transition);
+        newDeploymentTransition = Optional.ofNullable(transition);
       }
       changed = changed || !lastDeploymentTransition.equals(newDeploymentTransition);
       lastDeploymentTransition = newDeploymentTransition;
@@ -413,16 +413,16 @@ public class DeploymentItemStateImpl extends DeploymentItemIdentificationBase im
              unwrappedThrowable.get().getCause() != null) {
         Throwable cause = unwrappedThrowable.get().getCause();
         if (cause instanceof XPRC_MDMDeploymentException) {
-          unwrappedThrowable = Optional.of(cause);
+          unwrappedThrowable = Optional.ofNullable(cause);
         } else if (cause instanceof XPRC_InheritedConcurrentDeploymentException) {
-          unwrappedThrowable = Optional.of(cause);
+          unwrappedThrowable = Optional.ofNullable(cause);
         } else if (cause instanceof MDMParallelDeploymentException) {
-          unwrappedThrowable = Optional.of(cause);
+          unwrappedThrowable = Optional.ofNullable(cause);
         } else {
-          return Optional.of(ErroneousOrderExecutionResponse.generateSerializableExceptionInformation(unwrappedThrowable.get(), new ResultController()));
+          return Optional.ofNullable(ErroneousOrderExecutionResponse.generateSerializableExceptionInformation(unwrappedThrowable.get(), new ResultController()));
         }
       }
-      return Optional.of(ErroneousOrderExecutionResponse.generateSerializableExceptionInformation(unwrappedThrowable.get(), new ResultController()));
+      return Optional.ofNullable(ErroneousOrderExecutionResponse.generateSerializableExceptionInformation(unwrappedThrowable.get(), new ResultController()));
     } else {
       return Optional.<SerializableExceptionInformation>empty();
     }
@@ -931,7 +931,7 @@ public class DeploymentItemStateImpl extends DeploymentItemIdentificationBase im
     if (s.size() == 0) {
       return Optional.<I>empty();
     }
-    return Optional.of(s.iterator().next());
+    return Optional.ofNullable(s.iterator().next());
   }
 
 
@@ -1266,20 +1266,20 @@ public class DeploymentItemStateImpl extends DeploymentItemIdentificationBase im
   
   public void restore(DeploymentItemStateStorable data) {
     if (data.getLastDeploymentTransition() != null) {
-      this.lastDeploymentTransition = Optional.of(DeploymentTransition.byName(data.getLastDeploymentTransition()));
+      this.lastDeploymentTransition = Optional.ofNullable(DeploymentTransition.byName(data.getLastDeploymentTransition()));
     }
     this.lastModifiedBy = data.getLastModifiedBy();
     this.lastStateChange = data.getLastStateChange();
     this.lastStateChangeBy = data.getLastStateChangeBy();
     this.lastOperationInterfaceChange = data.getLastOperationInterfaceChange();
     if (data.getRollbackCause() != null) {
-      this.rollbackCause = Optional.of(data.getRollbackCause());
+      this.rollbackCause = Optional.ofNullable(data.getRollbackCause());
     }
     if (data.getRollbackCause() != null) {
-      this.rollbackError = Optional.of(data.getRollbackError());
+      this.rollbackError = Optional.ofNullable(data.getRollbackError());
     }
     if (data.getBuildError() != null) {
-      this.buildError = Optional.of(data.getBuildError());
+      this.buildError = Optional.ofNullable(data.getBuildError());
     }
     this.deployedServiceChangedInconsistency = data.getDeployedImplInconsistency();
     this.locationContentChanges = data.getLocationContentChanges();
@@ -1492,7 +1492,7 @@ public class DeploymentItemStateImpl extends DeploymentItemIdentificationBase im
                     List<TypeInterface> commonDenominator = new ArrayList<TypeInterface>();
                     for (int i=0; i < wfDefinition.getInput().size(); i++) {
                       TypeInterface currentInput = wfDefinition.getInput().get(i);
-                      Optional<TypeInterface> typeInHierarchy = Optional.of(currentInput);
+                      Optional<TypeInterface> typeInHierarchy = Optional.ofNullable(currentInput);
                       while (typeInHierarchy.isPresent()) {
                         if (typeInHierarchy.get().isAssignableFrom(operation.getInput().get(i))) {
                           commonDenominator.add(typeInHierarchy.get());

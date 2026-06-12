@@ -38,7 +38,7 @@ import com.gip.xyna.utils.collections.CollectionUtils;
 import com.gip.xyna.utils.collections.CollectionUtils.Join;
 import com.gip.xyna.utils.collections.CollectionUtils.JoinType;
 import com.gip.xyna.utils.collections.CollectionUtils.Transformation;
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationEntryStorable;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagementImpl;
@@ -191,10 +191,10 @@ public class DeploymentItemStateManagementImpl extends FunctionGroup implements 
     //Tags und Tasks hinzufügen
     DeploymentMarkerManagement dmMgmt = XynaFactory.getPortalInstance().getFactoryManagementPortal().getXynaFactoryControl().getDeploymentMarkerManagement();
     if (selection.containsColumn(DeploymentItemColumn.MARKER) || selection.containsColumn(DeploymentItemColumn.TASK)) {
-      report.addDeploymentMarker(dmMgmt.searchDeploymentTasks(Optional.of(dis), revision));
+      report.addDeploymentMarker(dmMgmt.searchDeploymentTasks(Optional.ofNullable(dis), revision));
     }
     if (selection.containsColumn(DeploymentItemColumn.MARKER) || selection.containsColumn(DeploymentItemColumn.TAG)) {
-      report.addDeploymentMarker(dmMgmt.searchDeploymentTags(Optional.of(dis), revision));
+      report.addDeploymentMarker(dmMgmt.searchDeploymentTags(Optional.ofNullable(dis), revision));
     }
     
     //OpenTaskCount hinzufügen

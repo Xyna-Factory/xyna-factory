@@ -43,7 +43,7 @@ import com.gip.xyna.FunctionGroup;
 import com.gip.xyna.FutureExecution;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.XynaFactoryPath;
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.XynaFactoryManagement;
@@ -207,7 +207,7 @@ public class SessionManagement extends FunctionGroup implements IPropertyChangeL
   
   @Deprecated
   public SessionCredentials getNewSession(User user, boolean force) throws PersistenceLayerException, XFMG_DuplicateSessionException {
-    return createSession(new XynaUserCredentials(user.getName(), user.getPassword()), new Optional<String>(user.getRole()), force);
+    return createSession(new XynaUserCredentials(user.getName(), user.getPassword()), Optional.ofNullable(user.getRole()), force);
   }
   
   

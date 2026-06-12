@@ -24,7 +24,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xfmg.exceptions.XFMG_DomainDoesNotExistException;
 import com.gip.xyna.xfmg.exceptions.XFMG_DomainIsAssignedException;

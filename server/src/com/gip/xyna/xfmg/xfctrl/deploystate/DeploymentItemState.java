@@ -19,7 +19,7 @@ package com.gip.xyna.xfmg.xfctrl.deploystate;
 
 import java.util.Set;
 
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.xfmg.xfctrl.deploystate.deployitem.CrossRevisionResolver;
 import com.gip.xyna.xfmg.xfctrl.deploystate.deployitem.DeploymentItem;
 import com.gip.xyna.xfmg.xfctrl.deploystate.deployitem.OperationInterface;

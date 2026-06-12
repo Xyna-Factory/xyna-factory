@@ -20,7 +20,7 @@ package com.gip.xyna.xfmg.xfctrl.appmgmt;
 import java.rmi.RemoteException;
 import java.util.EnumSet;
 
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.xfmg.exceptions.XFMG_CouldNotImportApplication;
 import com.gip.xyna.xfmg.exceptions.XFMG_CouldNotRemoveApplication;
 import com.gip.xyna.xfmg.exceptions.XFMG_CouldNotStartApplication;

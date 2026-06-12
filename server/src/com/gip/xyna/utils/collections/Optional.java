@@ -26,6 +26,7 @@ import java.util.NoSuchElementException;
 /**
  * Optional ist nur dann Serializable, wenn auch T Serializable ist 
  */
+@Deprecated
 public class Optional<T> implements Serializable {
   
   private static final long serialVersionUID = 1L;
@@ -35,7 +36,7 @@ public class Optional<T> implements Serializable {
   private final T value; //achtung: T ist nicht immer serializable, dann ist auch optional nicht serializable. so wird es derzeit verwendet, auch wenn das unschön ist
   private final boolean present;
 
-  public Optional(T value) {
+  private Optional(T value) {
       this.value = value;
       this.present = true;
   }
@@ -50,7 +51,7 @@ public class Optional<T> implements Serializable {
   }
 
   // not part if the jdk impl (at least last I checked)
-  public static <T> Optional<T> of(T value) {
+  public static <T> Optional<T> ofNullable(T value) {
     if (value == null) {
       return Optional.empty();
     } else {

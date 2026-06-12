@@ -20,7 +20,7 @@ package com.gip.xyna.xfmg.xfctrl.deploystate;
 import java.util.List;
 import java.util.Set;
 
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemState.DeploymentLocation;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemState.DeploymentTransition;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemStateManagementImpl.StateTransition;

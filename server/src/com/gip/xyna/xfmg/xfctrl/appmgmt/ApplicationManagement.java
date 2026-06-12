@@ -23,7 +23,7 @@ import java.io.PrintStream;
 import java.util.EnumSet;
 import java.util.List;
 
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.xdev.ProjectCreationOrChangeProvider.RepositoryEvent;
 import com.gip.xyna.xfmg.exceptions.XFMG_CouldNotBuildNewVersionForApplication;
 import com.gip.xyna.xfmg.exceptions.XFMG_CouldNotBuildWorkingSet;

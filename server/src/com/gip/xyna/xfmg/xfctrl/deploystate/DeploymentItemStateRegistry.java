@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.xfmg.xfctrl.dependencies.RuntimeContextDependencyManagement;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemState.DeploymentLocation;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemState.DeploymentTransition;
@@ -195,7 +195,7 @@ public class DeploymentItemStateRegistry implements DeploymentItemRegistry {
         l.add(t);
         t = t.getCause();
       }
-      return Optional.of(l);
+      return Optional.ofNullable(l);
     } else {
       return Optional.empty();
     }

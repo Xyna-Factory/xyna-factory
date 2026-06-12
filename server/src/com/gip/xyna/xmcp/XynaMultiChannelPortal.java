@@ -57,7 +57,7 @@ import com.gip.xyna.XynaFactory;
 import com.gip.xyna.XynaRuntimeException;
 import com.gip.xyna.exceptions.Ex_FileAccessException;
 import com.gip.xyna.idgeneration.IDGenerator;
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.utils.exceptions.exceptioncode.CodeGroupUnknownException;
 import com.gip.xyna.utils.exceptions.exceptioncode.NoCodeAvailableException;
@@ -632,7 +632,7 @@ public class XynaMultiChannelPortal extends XynaMultiChannelPortalBase {
     
     try {
       DeploymentItemStateManagement dism = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getDeploymentItemStateManagement();
-      dism.save(DeploymentItemBuilder.build(fqNameFromXML, Optional.of(type), true, revision).get(), revision);
+      dism.save(DeploymentItemBuilder.build(fqNameFromXML, Optional.ofNullable(type), true, revision).get(), revision);
     } catch (Exception e) {
       logger.warn("Failed to build item from saved XML for " + fqNameFromXML,e);
     }

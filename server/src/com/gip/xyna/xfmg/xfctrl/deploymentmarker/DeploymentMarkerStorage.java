@@ -30,7 +30,7 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.CollectionUtils;
 import com.gip.xyna.utils.collections.CollectionUtils.Transformation;
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.xfmg.xfctrl.deploymentmarker.storables.DeploymentTagStorable;
 import com.gip.xyna.xfmg.xfctrl.deploymentmarker.storables.DeploymentTaskStorable;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemIdentificationBase;

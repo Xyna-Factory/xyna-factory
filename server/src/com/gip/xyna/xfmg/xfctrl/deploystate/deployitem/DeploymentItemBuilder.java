@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.Stack;
 
@@ -34,7 +35,6 @@ import org.apache.log4j.Logger;
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.exceptions.Ex_FileAccessException;
-import com.gip.xyna.utils.collections.Optional;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderType;
@@ -443,7 +443,7 @@ public class DeploymentItemBuilder {
     di.addPublishedInterface(DeploymentLocation.SAVED, TypeInterface.of(inputSourceFQName));
     di.setLastModified(System.currentTimeMillis());
     di.setType(XMOMType.ORDERINPUTSOURCE);
-    return Optional.of(di);
+    return Optional.ofNullable(di);
   }
 
   
@@ -554,7 +554,7 @@ public class DeploymentItemBuilder {
       di.setLabel(saved.getLabel());
     }
     // TODO compare xml-strings for location content changes?
-    return Optional.of(di);
+    return Optional.ofNullable(di);
   }
 
   private static Pair<Set<DeploymentItemInterface>, Set<DeploymentItemInterface>> buildInterfaces(GenerationBase gb) {
@@ -1164,7 +1164,7 @@ public class DeploymentItemBuilder {
     for (List<Operation> serviceEntries : serviceGroup.getServiceNameToOperationMap().values()) {
       for (Operation operation : serviceEntries) {
         if (operation.getName().equals(methodName)) {
-          return Optional.of(operation);
+          return Optional.ofNullable(operation);
         }
       }
     }
