@@ -23,6 +23,8 @@ package xact.XScrpt.services;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -42,7 +44,6 @@ public class Script implements ServiceStepEventHandler<AbortServiceStepEvent> {
   private static final Logger logger = CentralFactoryLogging.getLogger(Script.class);
   private static final String PATH_TO_SHELL = System.getProperty("SHELL");
 
-  protected String command;
   protected Process process;
   protected long pid = -1;
   protected int exitCode = 0;
@@ -140,7 +141,7 @@ public class Script implements ServiceStepEventHandler<AbortServiceStepEvent> {
    * Externes Kommando ausfuehren. Gibt die Ausgabe des Kommandos (stdout) zurueck
    */
   public String exec(String command) throws Exception {
-    pid = execGetPid(command);
+    pid = execGetPid(command, new ArrayList<String>());
     return getOutput();
   }
 
@@ -149,8 +150,15 @@ public class Script implements ServiceStepEventHandler<AbortServiceStepEvent> {
    * start an external command returns the pid of started (UINX) process
    * @throws IOException 
    */
-  public long execGetPid(String command) throws IOException {
-
+  public long execGetPid(String callString, List<String> args) throws IOException {
+    if (callString == null) {
+      throw new IllegalArgumentException("Command to execute is null");
+    }
+    return execGetPidImpl(callString.trim(), args == null ? new ArrayList<String>() : args);
+  }
+  
+  
+  private long execGetPidImpl(String callString, List<String> args) throws IOException {
     String _cmd[];
 
     // Sonderbehandlung, wenn Kommando mit einem '-' beginnt:
@@ -159,7 +167,8 @@ public class Script implements ServiceStepEventHandler<AbortServiceStepEvent> {
     // gepackt. Enthaelt das Kommando ein ',', so wird ab diesem der Rest
     // des Kommandos als ein Token betrachtet und wird komplett in das letzte
     // Array-Item gesteckt
-    if (command.trim().charAt(0) == '-') {
+    if (callString.charAt(0) == '-') {
+      String command = concatArgs(callString, args);
       _cmd = StringHelper.splitCmd(command.substring(1)); // '-' vorher abschneiden
 
       if (logger.isDebugEnabled()) {
@@ -169,23 +178,26 @@ public class Script implements ServiceStepEventHandler<AbortServiceStepEvent> {
           if (i < _cmd.length - 1)
             dbg.append(" ");
         }
-        dbg.append(" ...");
+        dbg.append("\" ...");
         logger.debug(dbg.toString());
       }
-
       process = Runtime.getRuntime().exec(_cmd);
+      
     } else if (PATH_TO_SHELL != null && PATH_TO_SHELL.length() > 0) {
-      _cmd = new String[] {PATH_TO_SHELL, "-c", command.trim()};
+      String command = concatArgs(callString, args);
+      _cmd = new String[] {PATH_TO_SHELL, "-c", command};
       if (logger.isDebugEnabled()) {
         logger.debug("Executing script \"" + _cmd[0] + " " + _cmd[1] + " " + _cmd[2] + "\" ...");
       }
       process = Runtime.getRuntime().exec(_cmd);
+      
     } else {
       // Start external process
       if (logger.isDebugEnabled()) {
-        logger.debug("Executing script \"" + command + "\" ...");
+        logger.debug("Executing script \"" + concatArgs(callString, args) + "\" ...");
       }
-      process = Runtime.getRuntime().exec(command);
+      _cmd = mergeArgs(callString, args);
+      process = Runtime.getRuntime().exec(_cmd);
     }
 
     if (logger.isDebugEnabled()) {
@@ -215,6 +227,24 @@ public class Script implements ServiceStepEventHandler<AbortServiceStepEvent> {
     return pid;
   }
 
+  
+  private String concatArgs(String callString, List<String> args) {
+    String ret = callString;
+    for (String s : args) {
+      ret += " ";
+      ret += s;
+    }
+    return ret;
+  }
+  
+  
+  private String[] mergeArgs(String before, List<String> after) {
+    List<String> tmplist = new ArrayList<>();
+    tmplist.add(before);
+    tmplist.addAll(after);
+    return tmplist.toArray(new String[tmplist.size()]);
+  }
+  
 
   /**
    * This method must be called by the client first to get the script output and second to ensure that the process will
