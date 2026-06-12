@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="StepRuntimeInfo" BaseTypePath="xmcp.processmonitor.datatypes" Label="Iteration Runtime Info" TypeName="IterationRuntimeInfo" TypePath="xmcp.processmonitor.datatypes" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="StepRuntimeInfo" BaseTypePath="xmcp.processmonitor.datatypes" Label="Iteration Runtime Info" TypeName="IterationRuntimeInfo" TypePath="xmcp.processmonitor.datatypes" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
     <Documentation>Runtime Info object for a single iteration.</Documentation>

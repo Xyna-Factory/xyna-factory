@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Query Roles TableInfo" TypeName="QueryRolesTableInfo" TypePath="xmcp.xacm.rolemanagement" Version="1.8">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Query Roles TableInfo" TypeName="QueryRolesTableInfo" TypePath="xmcp.xacm.rolemanagement" Version="1.8">
   <Meta>
     <Documentation>https://wiki.gip.com/wiki/Zeta_Framework/Tabellen/Tabellen_(Backend)</Documentation>
     <FixedDetailOptions>highDetailsMode,openDocumentation,showDetailAreas,vScroll(2627)</FixedDetailOptions>
