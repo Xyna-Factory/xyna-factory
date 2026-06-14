@@ -84,6 +84,14 @@ public class TreePath {
   }
   
   
+  public TreePathSegment getLastSegment() {
+    if (isEmpty()) {
+      throw new IllegalArgumentException("Error: Path is empty.");
+    }
+    return segments.get(segments.size() - 1);
+  }
+  
+  
   public String asString() {
     StringBuilder s = new StringBuilder();
     for (TreePathSegment seg : segments) {

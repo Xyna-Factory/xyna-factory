@@ -282,7 +282,7 @@ public class ScopeStep extends Step {
 
 
   @Override
-  protected void generateJavaInternally(CodeBuffer cb, HashSet<String> importedClassesFqStrings)
+  public void generateJavaInternally(CodeBuffer cb, HashSet<String> importedClassesFqStrings)
       throws XPRC_InvalidVariableIdException, XPRC_MissingContextForNonstaticMethodCallException,
       XPRC_OperationUnknownException, XPRC_InvalidServiceIdException, XPRC_InvalidVariableIdException,
       XPRC_InvalidVariableMemberNameException, XPRC_ParsingModelledExpressionException {

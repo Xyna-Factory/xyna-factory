@@ -43,13 +43,13 @@ public class PackAlgoAssign implements PackAlgorithm {
 
   
   private void handleAssign(XmomPointer assign) {
-    Optional<XmomPointer> sourceRef1 = assign.getDescendant(EL.SOURCE, ATT.REFID);
+    Optional<XmomPointer> sourceRef1 = assign.getDescendantByPath(EL.SOURCE, ATT.REFID);
     if (sourceRef1.isEmpty()) { return; }
-    Optional<XmomPointer> sourceRef2 = assign.getDescendant(EL.COPY, EL.SOURCE, ATT.REFID);
+    Optional<XmomPointer> sourceRef2 = assign.getDescendantByPath(EL.COPY, EL.SOURCE, ATT.REFID);
     if (sourceRef2.isEmpty()) { return; }
-    Optional<XmomPointer> targetRef1 = assign.getDescendant(EL.TARGET, ATT.REFID);
+    Optional<XmomPointer> targetRef1 = assign.getDescendantByPath(EL.TARGET, ATT.REFID);
     if (targetRef1.isEmpty()) { return; }
-    Optional<XmomPointer> targetRef2 = assign.getDescendant(EL.COPY, EL.TARGET, ATT.REFID);
+    Optional<XmomPointer> targetRef2 = assign.getDescendantByPath(EL.COPY, EL.TARGET, ATT.REFID);
     if (targetRef2.isEmpty()) { return; }
     
     if (!sourceRef1.get().getNodeInfo().hasValue()) { return; }
@@ -65,7 +65,7 @@ public class PackAlgoAssign implements PackAlgorithm {
     if (!sourceRefVal1.equals(sourceRefVal2)) { return; }
     if (!targetRefVal1.equals(targetRefVal2)) { return; }
     
-    Optional<XmomPointer> linkType = assign.getDescendant(EL.COPY, EL.SOURCE, EL.META, EL.LINKTYPE);
+    Optional<XmomPointer> linkType = assign.getDescendantByPath(EL.COPY, EL.SOURCE, EL.META, EL.LINKTYPE);
     Optional<String> linkTypeVal = Optional.empty();
     if (linkType.isPresent()) {
       linkTypeVal = linkType.get().getNodeInfo().getValue();

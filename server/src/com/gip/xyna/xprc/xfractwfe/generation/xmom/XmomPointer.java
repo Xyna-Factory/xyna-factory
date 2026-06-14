@@ -60,7 +60,7 @@ public class XmomPointer {
   }
   
   
-  public Optional<XmomPointer> getDescendant(String... path) {
+  public Optional<XmomPointer> getDescendantByPath(String... path) {
     XmomPointer pos = this;
     for (String name : path) {
       TreePathSegment seg = new TreePathSegment(name);
@@ -75,7 +75,7 @@ public class XmomPointer {
   
   
   public String getChildValueOrEmptyString(String name) {
-    Optional<XmomPointer> child = this.getDescendant(name);
+    Optional<XmomPointer> child = this.getDescendantByPath(name);
     if (child.isEmpty()) { return ""; }
     Optional<String> value = child.get().getNodeInfo().getValue();
     if (value.isEmpty()) { return ""; }
@@ -108,6 +108,35 @@ public class XmomPointer {
         throw new RuntimeException("Could not find expected child node: " + path.asString());
       }
       ret.add(child.get());
+    }
+    return ret;
+  }
+  
+  
+  public List<XmomPointer> getPrevSiblings() {
+    List<XmomPointer> ret = new ArrayList<>();
+    List<XmomPointer> list = this.getParent().getChildrenWithName(this.path.getLastSegment().getName());
+    int pos = this.path.getLastSegment().getIndex();
+    if (pos == 0) {
+      return ret;
+    }
+    for (XmomPointer p : list) {
+      if (p.getPath().getLastSegment().getIndex() >= pos) {
+        break;
+      }
+      ret.add(p);
+    }
+    return ret;
+  }
+  
+  
+  public List<XmomPointer> getPrevSiblingsOfAncestors() {
+    List<XmomPointer> ret = new ArrayList<>();
+    XmomPointer ancestor = this.getParent();
+    while (!ancestor.isRoot()) {
+      List<XmomPointer> list = ancestor.getPrevSiblings();
+      ret.addAll(list);
+      ancestor = ancestor.getParent();
     }
     return ret;
   }

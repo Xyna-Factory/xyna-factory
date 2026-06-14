@@ -26,6 +26,7 @@ import java.util.Map.Entry;
 public class IdMapping {
 
   private Map<String, IdValue> map = new HashMap<>();
+  private int maxVal = 0;
   
   
   public IdValue getOrCreateIdValue(String value) {
@@ -36,7 +37,20 @@ public class IdMapping {
     } else {
       id.incRefCount();
     }
+    try {
+      int val = Integer.parseInt(value);
+      if (val > maxVal) {
+        maxVal = val;
+      }
+    } catch (Exception e) {
+      // do nothing
+    }
     return id;
+  }
+  
+  
+  public int getMaxIdVal() {
+    return maxVal;
   }
   
   

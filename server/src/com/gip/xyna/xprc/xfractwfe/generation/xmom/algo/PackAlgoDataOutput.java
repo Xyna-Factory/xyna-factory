@@ -26,6 +26,7 @@ import java.util.Optional;
 
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.ATT;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.EL;
+import com.gip.xyna.xprc.xfractwfe.generation.xmom.XmomNodeInfo;
 import com.gip.xyna.xprc.xfractwfe.generation.xmom.XmomPointer;
 import com.gip.xyna.xprc.xfractwfe.generation.xmom.XmomTree;
 import com.gip.xyna.xprc.xfractwfe.generation.xmom.XmomWalker;
@@ -85,7 +86,7 @@ public class PackAlgoDataOutput implements PackAlgorithm {
 
   
   private Optional<String> getTargetRef(XmomPointer data) {
-    Optional<XmomPointer> targetRef = data.getParent().getDescendant(EL.TARGET, ATT.REFID);
+    Optional<XmomPointer> targetRef = data.getParent().getDescendantByPath(EL.TARGET, ATT.REFID);
     if (targetRef.isEmpty()) { return Optional.empty(); }
     if (!targetRef.get().getNodeInfo().getValue().isEmpty()) { return Optional.empty(); }
     return targetRef.get().getNodeInfo().getValue();
@@ -93,7 +94,7 @@ public class PackAlgoDataOutput implements PackAlgorithm {
   
   
   private void handleOutputChild(XmomPointer data, Map<String, XmomPointer> rootChildren) {
-    Optional<XmomPointer> targetRef = data.getParent().getDescendant(EL.TARGET, ATT.REFID);
+    Optional<XmomPointer> targetRef = data.getParent().getDescendantByPath(EL.TARGET, ATT.REFID);
     String refId = targetRef.get().getNodeInfo().getValue().get();
     XmomPointer target = rootChildren.get(refId);
     if (!dataNodesMatch(data, target)) { return; }
@@ -103,7 +104,7 @@ public class PackAlgoDataOutput implements PackAlgorithm {
       return;
     }
     target.getNodeInfo().setIgnore(true);
-    data.getNodeInfo().createChild(PackingConstants.DataOutput.P_ROOT_DATA, "*");
+    data.getNodeInfo().createChild(PackingConstants.DataOutput.P_ROOT_DATA, refId);
   }
   
   
@@ -120,7 +121,7 @@ public class PackAlgoDataOutput implements PackAlgorithm {
   
   @Override
   public void unpack(XmomTree tree) {
-    // TODO Auto-generated method stub
+    XmomNodeInfo root = tree.getRoot();
     
   }
 

@@ -190,6 +190,14 @@ public class XmomNodeInfo {
     return value;
   }
   
+  public String getValueOrEmpty() {
+    Optional<String> val = getValue();
+    if (val.isEmpty()) {
+      return "";
+    }
+    return val.get();
+  }
+  
   public boolean hasValue() {
     return value.isPresent() || id.isPresent();
   }
