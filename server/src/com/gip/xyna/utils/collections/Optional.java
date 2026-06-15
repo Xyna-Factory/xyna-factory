@@ -36,7 +36,7 @@ public class Optional<T> implements Serializable {
   private final T value; //achtung: T ist nicht immer serializable, dann ist auch optional nicht serializable. so wird es derzeit verwendet, auch wenn das unschön ist
   private final boolean present;
 
-  private Optional(T value) {
+  public Optional(T value) {
       this.value = value;
       this.present = true;
   }
