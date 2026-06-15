@@ -51,7 +51,7 @@ public class Optional<T> implements Serializable {
   }
 
   // not part if the jdk impl (at least last I checked)
-  public static <T> Optional<T> ofNullable(T value) {
+  public static <T> Optional<T> of(T value) {
     if (value == null) {
       return Optional.empty();
     } else {
