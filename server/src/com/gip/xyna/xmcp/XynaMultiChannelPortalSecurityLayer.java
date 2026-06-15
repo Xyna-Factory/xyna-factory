@@ -1064,6 +1064,13 @@ public class XynaMultiChannelPortalSecurityLayer extends XynaMultiChannelPortal 
   }
   
   
+  //TODO: Breaking change, remove
+  @Deprecated
+  public SessionCredentials createSession(XynaUserCredentials credentials, com.gip.xyna.utils.collections.Optional<String> roleName, boolean force, Role role) throws XynaException {
+    return this.createSession(credentials, (java.util.Optional<String>) roleName.adapt(), force, role);
+  }
+  
+  
   public SessionCredentials createSession(XynaUserCredentials credentials, Optional<String> roleName, boolean force, Role role) throws XynaException {
     if (hasRight(resolveFunctionToRight("createSession"), role)) {
       return super.createSession(credentials, roleName, force);

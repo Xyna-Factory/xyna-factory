@@ -136,6 +136,11 @@ public interface XynaFactoryManagementPortal {
   public SessionCredentials getNewSession(User user, boolean force) throws PersistenceLayerException, XFMG_DuplicateSessionException;
 
 
+  //TODO: Breaking change, remove
+  @Deprecated
+  public SessionCredentials createSession(XynaUserCredentials credentials, com.gip.xyna.utils.collections.Optional<String> roleName, boolean force) throws PersistenceLayerException, XFMG_DuplicateSessionException;
+  
+  
   public SessionCredentials createSession(XynaUserCredentials credentials, Optional<String> roleName, boolean force) throws PersistenceLayerException, XFMG_DuplicateSessionException;
 
   

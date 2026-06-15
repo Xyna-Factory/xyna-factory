@@ -1610,6 +1610,14 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
   }
 
 
+  //TODO: Breaking change, remove
+  @Deprecated
+  public void stopApplication(final String applicationName, final String versionName, boolean clusterwide,
+                              final com.gip.xyna.utils.collections.Optional<EnumSet<OrderEntranceType>> onlyDisableEntranceTypes) throws XFMG_CouldNotStopApplication {
+    this.stopApplication(applicationName, versionName, clusterwide, (java.util.Optional<EnumSet<OrderEntranceType>>) onlyDisableEntranceTypes.adapt());
+  }
+  
+  
   public void stopApplication(final String applicationName, final String versionName, boolean clusterwide,
                               final Optional<EnumSet<OrderEntranceType>> onlyDisableEntranceTypes) throws XFMG_CouldNotStopApplication {
 

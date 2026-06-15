@@ -624,6 +624,14 @@ public class XynaFactoryManagementPropertiesOnly extends XynaFactoryManagementBa
   }
 
 
+  //TODO: Breaking change, remove
+  @Deprecated
+  public SessionCredentials createSession(XynaUserCredentials credentials, com.gip.xyna.utils.collections.Optional<String> roleName, boolean force)
+                  throws PersistenceLayerException {
+    throw new IllegalStateException(ILLEGAL_STATE_MESSAGE);
+  }
+  
+  
   public SessionCredentials createSession(XynaUserCredentials credentials, Optional<String> roleName, boolean force)
                   throws PersistenceLayerException {
     throw new IllegalStateException(ILLEGAL_STATE_MESSAGE);

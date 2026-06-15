@@ -338,6 +338,13 @@ public class DeploymentItemStateImpl extends DeploymentItemIdentificationBase im
   }
 
 
+  //TODO: Breaking change, remove
+  @Deprecated
+  public boolean deploymentTransition(DeploymentTransition transition, boolean fromSaved, com.gip.xyna.utils.collections.Optional<? extends Throwable> deploymentException) {
+    return this.deploymentTransition(transition, fromSaved, (java.util.Optional<? extends Throwable>) deploymentException.adapt());
+  }
+  
+  
   public boolean deploymentTransition(DeploymentTransition transition, boolean fromSaved, Optional<? extends Throwable> deploymentException) {
     boolean changed = false;
     if (transition != null) {
@@ -401,6 +408,14 @@ public class DeploymentItemStateImpl extends DeploymentItemIdentificationBase im
     return changed;
   }
 
+  
+  //TODO: Breaking change, remove
+  @Deprecated
+  public void setBuildError(com.gip.xyna.utils.collections.Optional<? extends Throwable> buildException) {
+    buildError = handleException(buildException.adapt());
+  }
+  
+  
   public void setBuildError(Optional<? extends Throwable> buildException) {
     buildError = handleException(buildException);
   }
@@ -925,7 +940,7 @@ public class DeploymentItemStateImpl extends DeploymentItemIdentificationBase im
     return foundSet;
   }
 
-  
+
   public <I extends DeploymentItemInterface> Optional<I> getPublishedInterface(Class<I> interfaceType, DeploymentLocation location) {
     Set<I> s = getPublishedInterfaces(interfaceType, location);
     if (s.size() == 0) {

@@ -52,8 +52,16 @@ public interface DeploymentItemStateManagement {
   
   public void undeploy(String fqName, DeploymentContext ctx, long revision);
   
+  //TODO: Breaking change, remove
+  @Deprecated
+  public void deployFinished(String fqName, DeploymentTransition transition, boolean copiedXMLFromSaved, com.gip.xyna.utils.collections.Optional<Throwable> deploymentException, long revision);
+  
   public void deployFinished(String fqName, DeploymentTransition transition, boolean copiedXMLFromSaved, Optional<Throwable> deploymentException, long revision);
 
+  //TODO: Breaking change, remove
+  @Deprecated
+  public void buildFinished(String fqName, com.gip.xyna.utils.collections.Optional<Throwable> buildException, long revision);
+  
   public void buildFinished(String fqName, Optional<Throwable> buildException, long revision);
 
   public void discoverItems(long revision);

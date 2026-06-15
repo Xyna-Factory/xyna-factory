@@ -1882,6 +1882,15 @@ public class XynaMultiChannelPortal extends XynaMultiChannelPortalBase {
     return getXynaFactoryManagementPortal().createSession(credentials, roleName, force);
   }
 
+  
+  //TODO: Breaking change, remove
+  @Deprecated
+  @AccessControlled(associatedRight = Rights.SESSION_CREATION)
+  public SessionCredentials createSession(XynaUserCredentials credentials, com.gip.xyna.utils.collections.Optional<String> roleName, boolean force)
+      throws PersistenceLayerException, XFMG_DuplicateSessionException {
+    return getXynaFactoryManagementPortal().createSession(credentials, roleName.adapt(), force);
+  }
+  
 
   @AccessControlled(associatedRight = Rights.SESSION_CREATION)
   public boolean authorizeSession(String sessionId, String token, String roleName) throws PersistenceLayerException,

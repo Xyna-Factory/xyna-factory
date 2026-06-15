@@ -251,6 +251,15 @@ public class XynaFactoryManagement extends XynaFactoryManagementBase {
   }
   
   
+  //TODO: Breaking change, remove
+  @Deprecated
+  public SessionCredentials createSession(XynaUserCredentials credentials, com.gip.xyna.utils.collections.Optional<String> roleName, boolean force)
+                  throws PersistenceLayerException, XFMG_DuplicateSessionException {
+    return ((XynaOperatorControl) getSection(XynaOperatorControl.DEFAULT_NAME)).getSessionManagement()
+                    .createSession(credentials, roleName.adapt(), force);
+  }
+  
+  
   public SessionCredentials createSession(XynaUserCredentials credentials, Optional<String> roleName, boolean force)
                   throws PersistenceLayerException, XFMG_DuplicateSessionException {
     return ((XynaOperatorControl) getSection(XynaOperatorControl.DEFAULT_NAME)).getSessionManagement()

@@ -54,6 +54,11 @@ public interface ApplicationManagement {
   public void stopApplication(String applicationName, String versionName, boolean clusterwide)
       throws XFMG_CouldNotStopApplication;
   
+  //TODO: Breaking change, remove
+  @Deprecated
+  public void stopApplication(String applicationName, String versionName, boolean clusterwide, com.gip.xyna.utils.collections.Optional<EnumSet<OrderEntranceType>> onlyDisableEntranceTypes)
+                  throws XFMG_CouldNotStopApplication;
+  
   public void stopApplication(String applicationName, String versionName, boolean clusterwide, Optional<EnumSet<OrderEntranceType>> onlyDisableEntranceTypes)
                   throws XFMG_CouldNotStopApplication;
 

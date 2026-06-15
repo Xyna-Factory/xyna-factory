@@ -211,6 +211,13 @@ public class SessionManagement extends FunctionGroup implements IPropertyChangeL
   }
   
   
+  //TODO: Breaking change, remove
+  @Deprecated
+  public SessionCredentials createSession(XynaUserCredentials credentials, com.gip.xyna.utils.collections.Optional<String> roleName, boolean force) throws PersistenceLayerException, XFMG_DuplicateSessionException {
+    return this.createSession(credentials, (java.util.Optional<String>) roleName.adapt(), force);
+  }
+  
+  
   public SessionCredentials createSession(XynaUserCredentials credentials, Optional<String> roleName, boolean force) throws PersistenceLayerException, XFMG_DuplicateSessionException {
     Role role;
     if (roleName.isPresent()) {
@@ -227,6 +234,14 @@ public class SessionManagement extends FunctionGroup implements IPropertyChangeL
     return createSession(credentials, roleName, force, areMultipleSessionsAllowed(role));
   }
 
+  
+  //TODO: Breaking change, remove
+  @Deprecated
+  public SessionCredentials createSession(XynaUserCredentials credentials, com.gip.xyna.utils.collections.Optional<String> roleName, boolean force, boolean multipleSessionsAllowed) throws PersistenceLayerException, XFMG_DuplicateSessionException {
+    return this.createSession(credentials, (java.util.Optional<String>) roleName.adapt(), force, multipleSessionsAllowed);
+  }
+  
+  
   public SessionCredentials createSession(XynaUserCredentials credentials, Optional<String> roleName, boolean force, boolean multipleSessionsAllowed) throws PersistenceLayerException, XFMG_DuplicateSessionException {
     
     if (!force && !multipleSessionsAllowed) {

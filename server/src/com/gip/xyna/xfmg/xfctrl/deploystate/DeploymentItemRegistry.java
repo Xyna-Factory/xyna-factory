@@ -42,8 +42,16 @@ public interface DeploymentItemRegistry {
   
   public void undeploy(String fqName, DeploymentContext ctx);
   
+  //TODO: Breaking change, remove
+  @Deprecated
+  public void deployFinished(String fqName, DeploymentTransition transition, boolean copiedXMLFromSaved, com.gip.xyna.utils.collections.Optional<? extends Throwable> deploymentException);
+  
   public void deployFinished(String fqName, DeploymentTransition transition, boolean copiedXMLFromSaved, Optional<? extends Throwable> deploymentException);
 
+  //TODO: Breaking change, remove
+  @Deprecated
+  public void buildFinished(String fqName, com.gip.xyna.utils.collections.Optional<? extends Throwable> buildException);
+  
   public void buildFinished(String fqName, Optional<? extends Throwable> buildException);
 
   public void update(DeploymentItem di, Set<DeploymentLocation> locations);

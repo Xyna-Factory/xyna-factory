@@ -93,4 +93,12 @@ public class Optional<T> implements Serializable {
       result = 31 * result + (present ? 1 : 0);
       return result;
   }
+  
+  public java.util.Optional<T> adapt() {
+    if (isPresent()) {
+      return java.util.Optional.<T>ofNullable(value);
+    }
+    return java.util.Optional.empty();
+  }
+  
 }

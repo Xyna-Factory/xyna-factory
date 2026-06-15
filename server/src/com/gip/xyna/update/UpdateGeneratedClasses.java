@@ -1485,6 +1485,15 @@ public class UpdateGeneratedClasses {
                   }
 
 
+  
+                  //TODO: Breaking change, remove
+                  @Deprecated
+                  public SessionCredentials createSession(XynaUserCredentials credentials, com.gip.xyna.utils.collections.Optional<String> roleName, boolean force)
+                      throws PersistenceLayerException {
+                    return null;
+                  }
+                  
+                  
                   public SessionCredentials createSession(XynaUserCredentials credentials, Optional<String> roleName, boolean force)
                       throws PersistenceLayerException {
                     return null;

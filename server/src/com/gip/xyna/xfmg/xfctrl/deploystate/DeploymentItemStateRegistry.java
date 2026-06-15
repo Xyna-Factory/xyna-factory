@@ -148,6 +148,14 @@ public class DeploymentItemStateRegistry implements DeploymentItemRegistry {
   }
 
 
+  //TODO: Breaking change, remove
+  @Deprecated
+  public void deployFinished(String fqName, DeploymentTransition transition, boolean copiedXMLFromSaved,
+                             com.gip.xyna.utils.collections.Optional<? extends Throwable> deploymentException) {
+    this.deployFinished(fqName, transition, copiedXMLFromSaved, (java.util.Optional<? extends Throwable>) deploymentException.adapt());
+  }
+  
+  
   public void deployFinished(String fqName, DeploymentTransition transition, boolean copiedXMLFromSaved,
                              Optional<? extends Throwable> deploymentException) {
     DeploymentItemState dis = registered.get(fqName);
@@ -202,6 +210,13 @@ public class DeploymentItemStateRegistry implements DeploymentItemRegistry {
   }
 
 
+  //TODO: Breaking change, remove
+  @Deprecated
+  public void buildFinished(String fqName, com.gip.xyna.utils.collections.Optional<? extends Throwable> buildException) {
+    this.buildFinished(fqName, (java.util.Optional<? extends Throwable>) buildException.adapt());
+  }
+  
+  
   public void buildFinished(String fqName, Optional<? extends Throwable> buildException) {
     DeploymentItemState dis = registered.get(fqName);
     if (dis == null) {
