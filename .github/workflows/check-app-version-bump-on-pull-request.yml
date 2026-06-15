@@ -17,7 +17,7 @@ jobs:
      - name: Collect diffs
        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-       run: gh pr diff ${{ github.event.pull_request.number }} --name-only > pr.diff
+       run: gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files --paginate --jq '.[].filename' > pr.diff
 
      - name: Build new application versions
        run: python installation/build/createAppVersionSummary.py --path modules --output new-versions.json
