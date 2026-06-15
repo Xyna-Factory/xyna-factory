@@ -15,15 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
+--><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
   <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="HTML5GUI-00389" Label="Create Workspace Exception" TypeName="CreateWorkspaceException" TypePath="xmcp.factorymanager.rtcmanager.exceptions">
     <Data Label="Reason" VariableName="reason">
       <Meta>
         <Type>String</Type>
       </Meta>
     </Data>
-      <MessageText Language="DE">Arbeitsbereich konnte nicht erstellt werden: %0%</MessageText>
-      <MessageText Language="EN">Could not create workspace: %0%</MessageText>
+    <MessageText Language="DE">Arbeitsbereich konnte nicht erstellt werden: %0%</MessageText>
+    <MessageText Language="EN">Could not create workspace: %0%</MessageText>
   </ExceptionType>
 </ExceptionStore>

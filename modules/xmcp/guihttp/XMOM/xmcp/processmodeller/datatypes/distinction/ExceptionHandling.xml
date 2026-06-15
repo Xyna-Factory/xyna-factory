@@ -15,5 +15,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Distinction" BaseTypePath="xmcp.processmodeller.datatypes.distinction" Label="Exception Handling" TypeName="ExceptionHandling" TypePath="xmcp.processmodeller.datatypes.distinction" Version="1.8"/>
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Distinction" BaseTypePath="xmcp.processmodeller.datatypes.distinction" Label="Exception Handling" TypeName="ExceptionHandling" TypePath="xmcp.processmodeller.datatypes.distinction" Version="1.8"/>

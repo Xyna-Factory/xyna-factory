@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Disable Filter Instance" TypeName="DisableFilterInstance" TypePath="xmcp.factorymanager.filtermanager" Version="1.8">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Disable Filter Instance" TypeName="DisableFilterInstance" TypePath="xmcp.factorymanager.filtermanager" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Disable Filter Instance" Name="DisableFilterInstance">
     <Input>
       <Data ID="37" Label="Filter Instance" ReferenceName="FilterInstance" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="filterInstance37"/>

@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Area" BaseTypePath="xmcp.processmodeller.datatypes" Label="Text Area" TypeName="TextArea" TypePath="xmcp.processmodeller.datatypes" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Area" BaseTypePath="xmcp.processmodeller.datatypes" Label="Text Area" TypeName="TextArea" TypePath="xmcp.processmodeller.datatypes" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
@@ -25,5 +24,5 @@
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="Plugin" VariableName="plugin" ReferenceName="Plugin" ReferencePath="xmcp.yggdrasil.plugin"/>
+  <Data Label="Plugin" ReferenceName="Plugin" ReferencePath="xmcp.yggdrasil.plugin" VariableName="plugin"/>
 </DataType>

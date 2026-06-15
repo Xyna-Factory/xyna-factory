@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Veto Sort Criteria" TypeName="GetVetoSortCriteria" TypePath="xmcp.processmonitor.resources" Version="1.8">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Veto Sort Criteria" TypeName="GetVetoSortCriteria" TypePath="xmcp.processmonitor.resources" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Get Veto Sort Criteria" Name="GetVetoSortCriteria">
     <Input/>
     <Output>
