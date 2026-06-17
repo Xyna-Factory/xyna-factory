@@ -218,7 +218,7 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
       return key;
     }
 
-    return key.replaceFirst("^(-+\\s*[\\w\\s]*?-+) ([^-]*) (-+\\s*[\\w\\s]+?-+)$", "$1\n$2\n$3");
+    return key.replaceFirst("^(-+\\s*[\\w\\s]*?-+)\\s([^-]*)\\s(-+\\s*[\\w\\s]+?-+)$", "$1\n$2\n$3");
   }
 
 
