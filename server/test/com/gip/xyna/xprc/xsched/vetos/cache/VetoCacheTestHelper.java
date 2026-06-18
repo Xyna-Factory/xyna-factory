@@ -591,7 +591,7 @@ public class VetoCacheTestHelper extends TestCase {
     
     @Override
     public void initVetoCache(int binding) {
-      //hier nicht m�glich
+      //hier nicht m?glich
     }
     
     @Override
@@ -623,7 +623,7 @@ public class VetoCacheTestHelper extends TestCase {
 
     @Override
     public void cleanupVetoCache() {
-      //hier nicht m�glich
+      //hier nicht m?glich
     }
 
     @Override
