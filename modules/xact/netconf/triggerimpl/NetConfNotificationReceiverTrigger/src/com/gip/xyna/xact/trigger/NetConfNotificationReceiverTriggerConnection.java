@@ -163,6 +163,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
       this.cleanupOldConnectionStep1(OldConnectionID);
       this.connectionList = connectionList;
       this.connectionID = newConnectionID;
+      this.connectionQueue = connectionQueue;
 
       this.username = cred.getUsername();
       this.password = cred.getPassword();
