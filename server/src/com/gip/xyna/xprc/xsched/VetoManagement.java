@@ -110,7 +110,7 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
       new XynaPropertyEnum<VetoManagementAlgorithmType>("xprc.veto.algorithm", VetoManagementAlgorithmType.class, 
           VetoManagementAlgorithmType.SeparateThread  )
       .setDefaultDocumentation(DocumentationLanguage.EN, "Requires factory restart.\nVetoManagementAlgorithm: "+ VetoManagementAlgorithmType.documentation(DocumentationLanguage.EN))
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Ben?tigt Neustart der Factory.\nVetoManagementAlgorithm: "+ VetoManagementAlgorithmType.documentation(DocumentationLanguage.DE));
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Benötigt Neustart der Factory.\nVetoManagementAlgorithm: "+ VetoManagementAlgorithmType.documentation(DocumentationLanguage.DE));
   
 
   private class RMIClusterStateChangeHandler implements ClusterStateChangeHandler {
