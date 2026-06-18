@@ -101,7 +101,7 @@ public class VetoCacheTestHelper extends TestCase {
     @Override
     public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos,
                                               long urgency) {
-      return vm.allocateVetos(orderInformation, exclusiveVetos, urgency);
+      return vm.allocateVetos(orderInformation, exclusiveVetos, sharedVetos, urgency);
     }
 
     public void undoAllocation(OrderInformation orderInformation, List<String> vetos) {
@@ -110,7 +110,7 @@ public class VetoCacheTestHelper extends TestCase {
 
     @Override
     public void undoAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos) {
-      vm.undoAllocation(orderInformation, exclusiveVetos);  
+      vm.undoAllocation(orderInformation, exclusiveVetos, sharedVetos);  
     }
     
     public void allocateAdministrativeVeto(AdministrativeVeto administrativeVeto)
@@ -142,7 +142,7 @@ public class VetoCacheTestHelper extends TestCase {
 
     @Override
     public void finalizeAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos) {
-      vm.finalizeAllocation(orderInformation, exclusiveVetos);
+      vm.finalizeAllocation(orderInformation, exclusiveVetos, sharedVetos);
     }
 
     public boolean freeVetos(OrderInformation orderInformation) {
@@ -178,7 +178,7 @@ public class VetoCacheTestHelper extends TestCase {
     }
 
     public void finalizeAllocation(TestOrder to) {
-      vm.finalizeAllocation(to.getOrderInformation(), to.getVetos());
+      vm.finalizeAllocation(to.getOrderInformation(), to.getVetos(), to.getSharedVetos());
     }
 
     public void beginScheduling(long currentSchedulingRun) {
@@ -515,6 +515,7 @@ public class VetoCacheTestHelper extends TestCase {
   public static class TestOrder {
     OrderInformation orderInformation;
     List<String> vetos;
+    List<String> sharedVetos;
     private long urgency;
     private Runnable runnable;
     private boolean schedulingUndo;
@@ -522,10 +523,16 @@ public class VetoCacheTestHelper extends TestCase {
     public TestOrder(long orderId, String orderType) {
       orderInformation = new OrderInformation(orderId, orderId, orderType);
       vetos = Collections.emptyList();
+      sharedVetos = Collections.emptyList();
     }
     
     public TestOrder vetos(String ... vetos) {
       this.vetos = Arrays.asList( vetos );
+      return this;
+    }
+    
+    public TestOrder sharedVetos(String ... sharedVetos) {
+      this.sharedVetos = Arrays.asList( sharedVetos );
       return this;
     }
     
@@ -560,6 +567,10 @@ public class VetoCacheTestHelper extends TestCase {
       return vetos;
     }
 
+    public List<String> getSharedVetos() {
+      return sharedVetos;
+    }
+
     public Runnable getRunnable() {
       return runnable;
     }
@@ -591,7 +602,7 @@ public class VetoCacheTestHelper extends TestCase {
     
     @Override
     public void initVetoCache(int binding) {
-      //hier nicht m?glich
+      //hier nicht möglich
     }
     
     @Override
@@ -623,7 +634,7 @@ public class VetoCacheTestHelper extends TestCase {
 
     @Override
     public void cleanupVetoCache() {
-      //hier nicht m?glich
+      //hier nicht möglich
     }
 
     @Override
