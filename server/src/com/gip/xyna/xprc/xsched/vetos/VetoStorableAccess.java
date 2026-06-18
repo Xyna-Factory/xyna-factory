@@ -231,19 +231,29 @@ public class VetoStorableAccess implements VetoManagementInterface {
     return vetosearch.searchVetos(select, maxRows);
   }
 
+  @Deprecated
   public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> vetos, long urgency) {
+    return allocateVetos(orderInformation, vetos, Collections.emptyList(), urgency);
+  }
+
+  public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos, long urgency) {
     try {
       return WarehouseRetryExecutor.buildCriticalExecutor().
           connectionDedicated(DedicatedConnection.XynaScheduler).
           storable(VetoInformationStorable.class).
-          execute( new AllocateVetos(orderInformation, vetos) );
+          execute( new AllocateVetos(orderInformation, exclusiveVetos) );
     } catch ( PersistenceLayerException e ) {
       logger.warn("Error while trying to allocate Vetos", e);
       return VetoAllocationResult.FAILED;
     }
   }
   
+  @Deprecated
   public void undoAllocation(OrderInformation orderInformation, List<String> vetos) {
+    undoAllocation(orderInformation, vetos, Collections.emptyList());
+  }
+
+  public void undoAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos) {
     freeVetos(orderInformation);
   }
 
@@ -326,7 +336,12 @@ public class VetoStorableAccess implements VetoManagementInterface {
 
   }
   
+  @Deprecated
   public void finalizeAllocation(OrderInformation orderInformation, List<String> vetos) {
+    finalizeAllocation(orderInformation, vetos, Collections.emptyList());
+  }
+
+  public void finalizeAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos) {
     //nichts zu tun
   }
 

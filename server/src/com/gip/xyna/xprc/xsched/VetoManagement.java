@@ -20,6 +20,7 @@ package com.gip.xyna.xprc.xsched;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -109,7 +110,7 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
       new XynaPropertyEnum<VetoManagementAlgorithmType>("xprc.veto.algorithm", VetoManagementAlgorithmType.class, 
           VetoManagementAlgorithmType.SeparateThread  )
       .setDefaultDocumentation(DocumentationLanguage.EN, "Requires factory restart.\nVetoManagementAlgorithm: "+ VetoManagementAlgorithmType.documentation(DocumentationLanguage.EN))
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Benötigt Neustart der Factory.\nVetoManagementAlgorithm: "+ VetoManagementAlgorithmType.documentation(DocumentationLanguage.DE));
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Ben?tigt Neustart der Factory.\nVetoManagementAlgorithm: "+ VetoManagementAlgorithmType.documentation(DocumentationLanguage.DE));
   
 
   private class RMIClusterStateChangeHandler implements ClusterStateChangeHandler {
@@ -305,26 +306,40 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
   /////////////////////////////////////////////////////////////
   
   public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> vetos, long urgency) {
+    return allocateVetos(orderInformation, vetos, Collections.emptyList(), urgency);
+  }
+
+  public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos, long urgency) {
     
-    if (vetos.isEmpty() ) {
+    if (exclusiveVetos.isEmpty() ) {
       return VetoAllocationResult.SUCCESS;
     }
     
-    for( String v : vetos ) {
+    for( String v : exclusiveVetos ) {
       if( v == null || v.length() == 0 ) {
         return new VetoAllocationResult(new XPRC_VetonameMustNotBeEmpty());
       }
     }
     
-    return vmAlgorithm.allocateVetos(orderInformation, vetos, urgency);
+    return vmAlgorithm.allocateVetos(orderInformation, exclusiveVetos, sharedVetos, urgency);
   }
 
   public void undoAllocation(OrderInformation orderInformation, List<String> vetos) {
-    vmAlgorithm.undoAllocation(orderInformation,vetos);
+    undoAllocation(orderInformation, vetos, Collections.emptyList());
+  }
+
+  @Override
+  public void undoAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos) {
+    vmAlgorithm.undoAllocation(orderInformation, exclusiveVetos, sharedVetos);
   }
   
   public void finalizeAllocation(OrderInformation orderInformation, List<String> vetos) {
-    vmAlgorithm.finalizeAllocation(orderInformation, vetos);
+    finalizeAllocation(orderInformation, vetos, Collections.emptyList());
+  }
+
+  @Override
+  public void finalizeAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos) {
+    vmAlgorithm.finalizeAllocation(orderInformation, exclusiveVetos, sharedVetos);    
   }
   
   public boolean freeVetos(OrderInformation orderInformation) {

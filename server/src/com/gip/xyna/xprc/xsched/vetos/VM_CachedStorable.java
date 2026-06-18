@@ -18,6 +18,7 @@
 package com.gip.xyna.xprc.xsched.vetos;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -60,34 +61,51 @@ public class VM_CachedStorable implements VetoManagementInterface {
 
 
   //synchron zum Scheduler
+  @Deprecated
   public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> vetos, long urgency) {
-    VetoAllocationResult var = vetoCache.allocateVetos(orderInformation, vetos, urgency);
+    return allocateVetos(orderInformation, vetos, Collections.emptyList(), urgency);
+  }
+
+  //synchron zum Scheduler
+  public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos, long urgency) {
+    VetoAllocationResult var = vetoCache.allocateVetos(orderInformation, exclusiveVetos, sharedVetos, urgency);
     if( ! var.isAllocated() ) {
       return var; //konnte nicht allokiert werden
     }
     
-    VetoAllocationResult var2 = vetoStorableAccess.allocateVetos(orderInformation, vetos, urgency);
+    VetoAllocationResult var2 = vetoStorableAccess.allocateVetos(orderInformation, exclusiveVetos, sharedVetos, urgency);
     if( ! var2.isAllocated() ) {
       if( var2.getVetoName() != null ) {
         vetoCache.allocate(var2); //nachträglich!
       }
-      vetoCache.undoAllocation(orderInformation, vetos);
+      vetoCache.undoAllocation(orderInformation, exclusiveVetos, sharedVetos);
     }
     return var2;
   }
   
   //synchron zum Scheduler
+  @Deprecated
   public void undoAllocation(OrderInformation orderInformation, List<String> vetos) {
-    if (vetos.isEmpty() ) {
+    undoAllocation(orderInformation, vetos, Collections.emptyList());
+  }
+
+  //synchron zum Scheduler
+  public void undoAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos) {
+    if (exclusiveVetos.isEmpty() && sharedVetos.isEmpty() ) {
       return;
     }
-    vetoCache.undoAllocation(orderInformation, vetos);
+    vetoCache.undoAllocation(orderInformation, exclusiveVetos, sharedVetos);
     vetoStorableAccess.freeVetos(orderInformation);
   }
   
+  @Deprecated
   public void finalizeAllocation(OrderInformation orderInformation, List<String> vetos) {
-    vetoCache.finalizeAllocation(orderInformation, vetos);
-    vetoStorableAccess.finalizeAllocation(orderInformation, vetos);
+    finalizeAllocation(orderInformation, vetos, Collections.emptyList());
+  }
+
+  public void finalizeAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos) {
+    vetoCache.finalizeAllocation(orderInformation, exclusiveVetos, sharedVetos);
+    vetoStorableAccess.finalizeAllocation(orderInformation, exclusiveVetos, sharedVetos);
   }
 
   
@@ -171,7 +189,7 @@ public class VM_CachedStorable implements VetoManagementInterface {
   }
 
   public VetoSearchResult searchVetos(VetoSelectImpl select, int maxRows) throws PersistenceLayerException {
-    return vetoStorableAccess.searchVetos(select, maxRows); //TODO vetoCache berücksichtigen?
+    return vetoStorableAccess.searchVetos(select, maxRows); //TODO vetoCache ber?cksichtigen?
   }
   
   @Override

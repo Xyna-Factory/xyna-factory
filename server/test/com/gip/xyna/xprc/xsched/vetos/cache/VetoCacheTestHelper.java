@@ -94,12 +94,23 @@ public class VetoCacheTestHelper extends TestCase {
     }
     
     
-    public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> vetoNames, long urgency) {
-      return vm.allocateVetos(orderInformation, vetoNames, urgency);
+    public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> vetos, long urgency) {
+      return allocateVetos(orderInformation, vetos, Collections.emptyList(), urgency);
+    }
+
+    @Override
+    public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos,
+                                              long urgency) {
+      return vm.allocateVetos(orderInformation, exclusiveVetos, urgency);
     }
 
     public void undoAllocation(OrderInformation orderInformation, List<String> vetos) {
-      vm.undoAllocation(orderInformation, vetos);
+      undoAllocation(orderInformation, vetos, Collections.emptyList());
+    }
+
+    @Override
+    public void undoAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos) {
+      vm.undoAllocation(orderInformation, exclusiveVetos);  
     }
     
     public void allocateAdministrativeVeto(AdministrativeVeto administrativeVeto)
@@ -126,7 +137,12 @@ public class VetoCacheTestHelper extends TestCase {
     }
     
     public void finalizeAllocation(OrderInformation orderInformation, List<String> vetos) {
-      vm.finalizeAllocation(orderInformation, vetos);
+      finalizeAllocation(orderInformation, vetos, Collections.emptyList());
+    }
+
+    @Override
+    public void finalizeAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos) {
+      vm.finalizeAllocation(orderInformation, exclusiveVetos);
     }
 
     public boolean freeVetos(OrderInformation orderInformation) {
@@ -575,7 +591,7 @@ public class VetoCacheTestHelper extends TestCase {
     
     @Override
     public void initVetoCache(int binding) {
-      //hier nicht möglich
+      //hier nicht mï¿½glich
     }
     
     @Override
@@ -595,7 +611,7 @@ public class VetoCacheTestHelper extends TestCase {
       if( vce.getVetoInformation() != null ) {
         VetoInformation vi = vce.getVetoInformation();
         VetoInformation viClone = new VetoInformation(vi.getName(), vi.getOrderInformation(), 
-            vi.getDocumentation(), vi.getBinding() );
+            vi.getDocumentation(), vi.getCreated(), vi.getBinding() );
         clone.setVetoInformation(viClone);
       }
       return clone;
@@ -607,7 +623,7 @@ public class VetoCacheTestHelper extends TestCase {
 
     @Override
     public void cleanupVetoCache() {
-      //hier nicht möglich
+      //hier nicht mï¿½glich
     }
 
     @Override

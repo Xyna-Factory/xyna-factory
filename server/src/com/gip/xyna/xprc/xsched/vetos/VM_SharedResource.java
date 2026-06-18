@@ -64,10 +64,16 @@ public class VM_SharedResource implements VetoManagementInterface {
 
 
   @Override
+  @Deprecated
   public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> vetos, long urgency) {
+    return allocateVetos(orderInformation, vetos, Collections.emptyList(), urgency);
+  }
+
+  @Override
+  public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos, long urgency) {
     List<SharedResourceInstance<SharedResourceVeto>> vetosToCreate = new ArrayList<>();
     Long now = System.currentTimeMillis();
-    for (String vetoName : vetos) {
+    for (String vetoName : exclusiveVetos) {
       SharedResourceVeto value = new SharedResourceVeto();
       value.usingOrderId = orderInformation.getOrderId();
       value.usingOrderType = orderInformation.getOrderType();
@@ -84,13 +90,24 @@ public class VM_SharedResource implements VetoManagementInterface {
 
 
   @Override
+  @Deprecated
   public void undoAllocation(OrderInformation orderInformation, List<String> vetos) {
+    undoAllocation(orderInformation, vetos, Collections.emptyList());
+  }
+
+  @Override
+  public void undoAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos) {
     freeVetosForced(orderInformation.getOrderId());
   }
 
+  @Override
+  @Deprecated
+  public void finalizeAllocation(OrderInformation orderInformation, List<String> vetos) {
+    finalizeAllocation(orderInformation, vetos, Collections.emptyList());
+  }
 
   @Override
-  public void finalizeAllocation(OrderInformation orderInformation, List<String> vetos) {
+  public void finalizeAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos) {
     //ntbd
   }
 

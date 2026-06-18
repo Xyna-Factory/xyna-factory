@@ -71,10 +71,15 @@ public class VM_Cache implements VetoManagementInterface {
 
   
 
+  @Deprecated
   public VetoAllocationResult allocateVetos(OrderInformation usingOrder, List<String> vetos, long urgency) {
+    return allocateVetos(usingOrder, vetos, Collections.emptyList(), urgency);
+  }
+
+  public VetoAllocationResult allocateVetos(OrderInformation usingOrder, List<String> exclusiveVetos, List<String> sharedVetos, long urgency) {
     boolean reallocate = false;
     //erste Prüfung, die häufig fehlschlägt
-    for( String v : vetos ) {
+    for( String v : exclusiveVetos ) {
       VetoInformation existing = vetoCache.get(v);
       if( existing != null ) {
         if( existing.getUsingOrderId() != null && !existing.getUsingOrderId().equals(usingOrder.getOrderId()) ) {
@@ -86,8 +91,8 @@ public class VM_Cache implements VetoManagementInterface {
     }
     
     //jetzt ist es unwahrscheinlich, dass administratives Veto zeitgleich gesetzt wird
-    List<String> allocated = new ArrayList<String>(vetos.size());
-    for( String v : vetos ) {
+    List<String> allocated = new ArrayList<String>(exclusiveVetos.size());
+    for( String v : exclusiveVetos ) {
       VetoInformation vi = new VetoInformation(v,usingOrder, System.currentTimeMillis(), ownBinding);
       VetoInformation existing = vetoCache.putIfAbsent(v, vi );
       if( existing != null ) {
@@ -105,7 +110,7 @@ public class VM_Cache implements VetoManagementInterface {
     if( reallocate ) {
       logger.info("veto reallocation for "+usingOrder.getOrderId());
       List<String> prevAllocVetos = allocatedVetos.get(usingOrder.getOrderId());
-      if( ! prevAllocVetos.equals(vetos) ) {
+      if( ! prevAllocVetos.equals(exclusiveVetos) ) {
         //TODO was nun? einfach zusammenfassen? teilweise deallokieren?
         logger.warn("veto reallocation for "+usingOrder.getOrderId() +" changed vetos!");
       }
@@ -116,11 +121,21 @@ public class VM_Cache implements VetoManagementInterface {
     return VetoAllocationResult.SUCCESS;
   }
   
+  @Deprecated
   public void undoAllocation(OrderInformation orderInformation, List<String> vetos) {
+    undoAllocation(orderInformation, vetos, Collections.emptyList());
+  }
+
+  public void undoAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos) {
     freeVetosByOrderId(orderInformation.getOrderId());
   }
   
+  @Deprecated
   public void finalizeAllocation(OrderInformation orderInformation, List<String> vetos) {
+    finalizeAllocation(orderInformation, vetos, Collections.emptyList());
+  }
+
+  public void finalizeAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos) {
     //nichts zu tun
   }
 
@@ -134,7 +149,7 @@ public class VM_Cache implements VetoManagementInterface {
       if( vi != null ) {
         if( vi.getUsingOrderId() == orderId ) {
           if( ! vetoCache.remove(v, vi) ) {
-            //TODO wer sollte den Eintrag ändern?
+            //TODO wer sollte den Eintrag ?ndern?
           }
         }
       } else {
