@@ -83,9 +83,9 @@ public class VM_SeparateThread implements VetoManagementInterface {
       vces.add(veto);
       if( veto != null ) {
         //TODO bei allen Vetos als wartend eintragen? oder nur beim ersten? 
-        //Eintragen als wartend ist nötig, damit nicht niedrig-priorisierter Auftrag Veto erh?lt
+        //Eintragen als wartend ist nötig, damit nicht niedrig-priorisierter Auftrag Veto erhält
         
-        //Zur geforderten Fairnis ist es wahrscheinlich ausreichend, dies beim ersten Veto zu pr?fen
+        //Zur geforderten Fairnis ist es wahrscheinlich ausreichend, dies beim ersten Veto zu prüfen
         var = vetoCache.checkAllocation(veto, orderInformation, urgency);
         if( var != null ) {
           return var;

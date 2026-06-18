@@ -189,7 +189,7 @@ public class VM_CachedStorable implements VetoManagementInterface {
   }
 
   public VetoSearchResult searchVetos(VetoSelectImpl select, int maxRows) throws PersistenceLayerException {
-    return vetoStorableAccess.searchVetos(select, maxRows); //TODO vetoCache ber?cksichtigen?
+    return vetoStorableAccess.searchVetos(select, maxRows); //TODO vetoCache berücksichtigen?
   }
   
   @Override

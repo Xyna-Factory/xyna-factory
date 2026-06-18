@@ -149,7 +149,7 @@ public class VM_Cache implements VetoManagementInterface {
       if( vi != null ) {
         if( vi.getUsingOrderId() == orderId ) {
           if( ! vetoCache.remove(v, vi) ) {
-            //TODO wer sollte den Eintrag ?ndern?
+            //TODO wer sollte den Eintrag ändern?
           }
         }
       } else {
