@@ -198,7 +198,7 @@ public class VM_SharedResource implements VetoManagementInterface {
     SharedResourceVeto value = readResult.getResources().get(0).getValue();
     OrderInformation orderInfo = new OrderInformation(value.usingOrderId, value.usingRootOrderId, value.usingOrderType);
     Long created = administrativeVeto.getCreated();
-    VetoInformation info = new VetoInformation(readResult.getResources().get(0).getId(), orderInfo, value.documentation, created, 0);
+    VetoInformation info = new VetoInformation(readResult.getResources().get(0).getId(), orderInfo, Collections.emptyList(), value.documentation, created, 0);
     return info;
   }
 
@@ -215,7 +215,8 @@ public class VM_SharedResource implements VetoManagementInterface {
     for (SharedResourceInstance<SharedResourceVeto> instance : vetoData.getResources()) {
       SharedResourceVeto value = instance.getValue();
       OrderInformation orderInfo = new OrderInformation(value.usingOrderId, value.usingRootOrderId, value.usingOrderType);
-      VetoInformation info = new VetoInformation(instance.getId(), orderInfo, value.documentation, instance.getCreated(), 0);
+      // TODO: add sharedOrderIds
+      VetoInformation info = new VetoInformation(instance.getId(), orderInfo, Collections.emptyList(), value.documentation, instance.getCreated(), 0);
       result.add(info);
     }
 

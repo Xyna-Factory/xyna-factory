@@ -407,11 +407,16 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
           try {
             if (veto.isAdministrative()) {
               vmAlgorithm.allocateAdministrativeVeto(new AdministrativeVeto(veto.getName(), veto.getDocumentation(), now));
+            } else if (veto.isShared()) {
+              for (Long sharedOrderId : veto.getSharedOrderIds()) {
+                OrderInformation orderInfo = new OrderInformation(sharedOrderId);
+                vmAlgorithm.allocateVetos(orderInfo, Collections.emptyList(), List.of(veto.getName()), now);
+                vmAlgorithm.finalizeAllocation(orderInfo, Collections.emptyList(), List.of(veto.getName()));
+              }
             } else {
-              OrderInformation orderInfo;
-              orderInfo = new OrderInformation(veto.getUsingOrderId(), veto.getUsingRootOrderId(), veto.getUsingOrderType());
-              vmAlgorithm.allocateVetos(orderInfo, List.of(veto.getName()), now);
-              vmAlgorithm.finalizeAllocation(orderInfo, List.of(veto.getName()));
+              OrderInformation orderInfo = new OrderInformation(veto.getUsingOrderId(), veto.getUsingRootOrderId(), veto.getUsingOrderType());
+              vmAlgorithm.allocateVetos(orderInfo, List.of(veto.getName()), Collections.emptyList(), now);
+              vmAlgorithm.finalizeAllocation(orderInfo, List.of(veto.getName()), Collections.emptyList());
             }
           } catch (Exception e) {
             throw new RuntimeException(e);
