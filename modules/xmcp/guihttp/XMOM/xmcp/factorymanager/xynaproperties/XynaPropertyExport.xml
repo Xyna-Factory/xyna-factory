@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="XynaPropertyExport" TypePath="xmcp.factorymanager.xynaproperties" Label="Xyna Property Export" IsAbstract="false">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Xyna Property Export" TypeName="XynaPropertyExport" TypePath="xmcp.factorymanager.xynaproperties" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
@@ -26,7 +25,7 @@
       <Documentation>The exported data in the specifiec format</Documentation>
     </Meta>
   </Data>
-  <Data Label="Export Settings" VariableName="exportSettings" ReferenceName="ExportSettings" ReferencePath="xmcp.factorymanager.xynaproperties">
+  <Data Label="Export Settings" ReferenceName="ExportSettings" ReferencePath="xmcp.factorymanager.xynaproperties" VariableName="exportSettings">
     <Meta>
       <Documentation>The settings used for the export</Documentation>
     </Meta>

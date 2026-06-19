@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="AuditStep" BaseTypePath="xmcp.processmonitor.datatypes" Label="Loop" TypeName="Loop" TypePath="xmcp.processmonitor.datatypes" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="AuditStep" BaseTypePath="xmcp.processmonitor.datatypes" Label="Loop" TypeName="Loop" TypePath="xmcp.processmonitor.datatypes" Version="1.8">
   <Data IsList="true" Label="Iterations" ReferenceName="AuditStep" ReferencePath="xmcp.processmonitor.datatypes" VariableName="iterations"/>
 </DataType>

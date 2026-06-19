@@ -204,11 +204,21 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
       String token = getToken(order.getSessionId());
       password = DeEncoder.decode(encodedPassword, sessionId, token);
       key = DeEncoder.decode(encodedKey, sessionId, token);
+      key = restoreNewLines(key);
       keyPhrase = DeEncoder.decode(encodedKeyPhrase, sessionId, token);
     } catch (PersistenceLayerException e) {
       throw new RuntimeException(e);
     }
     new UserManagementStorage().AddUserToRepository(username, repoUser, repo, password, key, keyPhrase, mail);
+  }
+
+
+  private String restoreNewLines(String key) {
+    if (key == null || key.isBlank()) {
+      return key;
+    }
+
+    return key.replaceFirst("^(-+\\s*[\\w\\s]*?-+)\\s([^-]*)\\s(-+\\s*[\\w\\s]+?-+)$", "$1\n$2\n$3");
   }
 
 

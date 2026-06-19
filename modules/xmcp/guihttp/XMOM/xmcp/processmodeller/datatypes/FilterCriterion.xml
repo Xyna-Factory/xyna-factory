@@ -15,5 +15,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Formula" BaseTypePath="xmcp.processmodeller.datatypes" Label="Filter Criterion" TypeName="FilterCriterion" TypePath="xmcp.processmodeller.datatypes" Version="1.8"/>
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Formula" BaseTypePath="xmcp.processmodeller.datatypes" Label="Filter Criterion" TypeName="FilterCriterion" TypePath="xmcp.processmodeller.datatypes" Version="1.8"/>

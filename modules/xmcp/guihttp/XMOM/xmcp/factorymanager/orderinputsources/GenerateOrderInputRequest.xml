@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Generate order input request" TypeName="GenerateOrderInputRequest" TypePath="xmcp.factorymanager.orderinputsources" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Generate order input request" TypeName="GenerateOrderInputRequest" TypePath="xmcp.factorymanager.orderinputsources" Version="1.8">
   <Data Label="Order input source id" ReferenceName="OrderInputSourceId" ReferencePath="xmcp.factorymanager.orderinputsources" VariableName="orderInputSourceId"/>
   <Data Label="Runtime context" ReferenceName="RuntimeContext" ReferencePath="xmcp" VariableName="runtimeContext"/>
   <Data IsList="true" Label="Parameters" ReferenceName="Parameter" ReferencePath="xmcp.factorymanager.orderinputsources" VariableName="parameters"/>

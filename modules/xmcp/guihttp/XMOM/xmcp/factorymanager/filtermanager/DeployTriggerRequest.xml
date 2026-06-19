@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Deploy Trigger Request" TypeName="DeployTriggerRequest" TypePath="xmcp.factorymanager.filtermanager" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Deploy Trigger Request" TypeName="DeployTriggerRequest" TypePath="xmcp.factorymanager.filtermanager" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
@@ -41,7 +40,7 @@
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="Start Parameter Array" VariableName="startParameterArray" IsList="true">
+  <Data IsList="true" Label="Start Parameter Array" VariableName="startParameterArray">
     <Meta>
       <Type>String</Type>
     </Meta>

@@ -387,8 +387,7 @@ f_check_system_before_installation () {
     local  _TEST_CMD=""
    case ${INSTALLATION_PLATFORM} in
      sles)    NTP_CMD="/etc/init.d/ntp"; NTP_TEST_CMD="${NTP_CMD} status";;
-     rhel)    NTP_CMD="ntpd"; NTP_TEST_CMD="systemctl status ntpd";;
-     oracle)  NTP_CMD="ntpd"; NTP_TEST_CMD="systemctl status ntpd";;
+     rhel|oracle|centos)    NTP_CMD="chronyd"; NTP_TEST_CMD="systemctl status chronyd";;
      ubuntu)  NTP_CMD="ntpd"; NTP_TEST_CMD="systemctl status ntp";;
      debian)  NTP_CMD="svcs -o STATE -H ntp"; NTP_TEST_CMD="${NTP_CMD} 2>/dev/null | ${VOLATILE_GREP} -cvi disabled  1>/dev/null";;
      solaris) NTP_CMD="svcadm restart ntp";         NTP_TEST_CMD="svcadm refresh ntp";;

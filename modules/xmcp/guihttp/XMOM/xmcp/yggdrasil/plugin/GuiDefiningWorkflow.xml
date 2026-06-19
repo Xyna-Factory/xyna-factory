@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="GuiDefiningWorkflow" TypePath="xmcp.yggdrasil.plugin" Label="Gui Defining Workflow" IsAbstract="false">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Gui Defining Workflow" TypeName="GuiDefiningWorkflow" TypePath="xmcp.yggdrasil.plugin" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
@@ -24,5 +24,5 @@
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="Runtime Context" VariableName="runtimeContext" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce"/>
+  <Data Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext"/>
 </DataType>

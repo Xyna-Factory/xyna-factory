@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="ContainerArea" BaseTypePath="xmcp.processmodeller.datatypes" Label="Member Variable Area" TypeName="MemberVariableArea" TypePath="xmcp.processmodeller.datatypes.datatypemodeller" Version="1.8">
-  <Data Label="Plugin" VariableName="plugin" ReferenceName="Plugin" ReferencePath="xmcp.yggdrasil.plugin"/>
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="ContainerArea" BaseTypePath="xmcp.processmodeller.datatypes" Label="Member Variable Area" TypeName="MemberVariableArea" TypePath="xmcp.processmodeller.datatypes.datatypemodeller" Version="1.8">
+  <Data Label="Plugin" ReferenceName="Plugin" ReferencePath="xmcp.yggdrasil.plugin" VariableName="plugin"/>
 </DataType>
