@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="Http" factoryVersion="" versionName="1.5.9" xmlVersion="1.1">
+--><Application applicationName="Http" factoryVersion="" versionName="1.5.10" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">HTTP-Verbindungen öffnen und schließen, HTTP-Nachrichten senden und empfangen</Description>
     <Description Lang="EN">Open and close HTTP connections, send and receive HTTP messages</Description>
@@ -257,6 +257,10 @@
     <XMOMEntry implicitDependency="true">
       <FqName>xact.http.exceptions.UnexpectedHTTPResponseException</FqName>
       <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.http.HTTPResponseResolver</FqName>
+      <Type>DATATYPE</Type>
     </XMOMEntry>
   </XMOMEntries>
 </Application>
