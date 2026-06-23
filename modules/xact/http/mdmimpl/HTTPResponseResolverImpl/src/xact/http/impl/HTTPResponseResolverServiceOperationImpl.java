@@ -260,27 +260,31 @@ public class HTTPResponseResolverServiceOperationImpl implements ExtendedDeploym
   static class CacheEntry {
 
     private boolean stale = true;
+    private boolean erroneous = false;
     private FileCondition fc;
     //private String fileContent; could be optimized to cache the content as well
 
 
     //return success
     public boolean refresh(java.io.File file) {
+      erroneous = false;
       String content;
       try {
         content = FileUtils.readFileAsString(file);
       } catch (Ex_FileWriteException e) {
+        erroneous = true;
         return false;
       }
+      stale = false;
       try {
         fc = new FileCondition(content);
       } catch (RuntimeException e) {
-        logger.warn("File " + file.getPath() + " contains invalid/unexpected json.", e);
+        logger.info("File " + file.getPath() + " contains invalid/unexpected json.", e);
         //TODO should maybe be removed from cache, to not be retried until fixed.
+        erroneous = true;
         return false;
       }
-
-      stale = false;
+      
       return true;
     }
   }
@@ -395,8 +399,9 @@ public class HTTPResponseResolverServiceOperationImpl implements ExtendedDeploym
 
     public static HTTPResponse _404() {
       HTTPResponse resp = new HTTPResponse();
-      resp.responseBody = "Not found";
+      resp.responseBody = "";
       resp.responseCode = 404;
+      resp.reason = "Not found";
       return resp;
     }
   }
@@ -444,6 +449,8 @@ public class HTTPResponseResolverServiceOperationImpl implements ExtendedDeploym
             //deleted? should be handled by another event that is just not processed yet
             return null;
           }
+        } else if (ce.erroneous) {
+          return null;
         }
         if (e.getValue().fc.matches(request, sendParameter)) {
           HTTPResponse response = resolveResponse(new java.io.File(dir, e.getKey()), request, sendParameter);
