@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public class HostKeyHashMap {
   // Assumption: Maximum of 1000 "SSHConnectionInstanceOperationImpl - createSession" calls per ACS at the same time. If necessary, please adjust.
   private final static int MAX_ENTRIES = 1000; //Default: 1000;
 
-  private static java.util.Map<String, Collection<HostKeyStorable>> HostKeyHash = java.util.Collections.synchronizedMap(new LinkedHashMap<String, Collection<HostKeyStorable>>() {
+  private static Map<String, Collection<HostKeyStorable>> HostKeyHash = Collections.synchronizedMap(new LinkedHashMap<>() {
 
     @Override
     protected boolean removeEldestEntry(Map.Entry<String, Collection<HostKeyStorable>> eldest) {
@@ -52,12 +52,6 @@ public class HostKeyHashMap {
 
   } );
 
-  
-  private static void clearHostKeyHash() {
-    HostKeyHash.clear();
-    logger.info("SSH App: HostKeyHash - Clear HashMap");
-  }
-
 
   public static void putHostKeyCollection(String id, Collection<HostKeyStorable> hostKeyEntry) {
     try {
@@ -65,16 +59,6 @@ public class HostKeyHashMap {
     } catch(Exception e) {
       logger.trace("Error in putHostKeyCollection",e);
     }
-  }
-
-
-  private static boolean containsHostKeyCollection(String id) {
-    return HostKeyHash.containsKey(id);
-  }
-
-
-  private static void removeHostKeyCollection(String id) {
-    HostKeyHash.remove(id);
   }
 
 
@@ -90,10 +74,6 @@ public class HostKeyHashMap {
     return Collections.emptyList();
   }
 
-
-  private static long sizeHostKeyHash() {
-    return HostKeyHash.size();
-  }
 
   public static long getNumberOfKeys(String id) {
     return HostKeyHashMap.getHostKeyCollection(id).size();

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -56,7 +55,6 @@ import com.gip.xyna.utils.timing.SleepCounter;
 import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
-import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBuilds;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyDuration;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyInt;
 import com.gip.xyna.xprc.exceptions.XPRC_TTLExpirationBeforeHandlerRegistration;
@@ -105,7 +103,6 @@ import xact.ssh.SSHConnectionParameter;
 import xact.ssh.SSHConnectionSuperProxy;
 import xact.ssh.SSHProxyParameter;
 import xact.ssh.SSHSendParameter;
-import xact.ssh.SupportedHostNameFeature;
 import xact.ssh.Utils;
 import xact.ssh.XynaHostKeyRepository;
 import xact.ssh.XynaIdentityRepository;
@@ -121,38 +118,11 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
 
   private static final long serialVersionUID = 1L;
   private static final Logger logger = CentralFactoryLogging.getLogger(SSHConnectionInstanceOperationImpl.class);
-  private static final String CONFIG_KEY_SERVER_HOST_KEY = "server_host_key";
   private static final SleepCounter sleepTemplate = new SleepCounter(10, 250, 25);
   private static final XynaPropertyBoolean timeoutexceptionDefault = 
                          new XynaPropertyBoolean("xact.ssh.readtimeout.use.default", true)
                                .setDefaultDocumentation(DocumentationLanguage.EN, "If the ssh send parameter for the decision of throwing read timeout exceptions is not set, this default will be used.");
-  private static final XynaPropertyBuilds<Set<SupportedHostNameFeature>> supportedFeatures = 
-                         new XynaPropertyBuilds<Set<SupportedHostNameFeature>>("xact.ssh.hostkeys.supportedfeatures",
-                                                                               new XynaPropertyBuilds.Builder<Set<SupportedHostNameFeature>>() {
-
-                                                                                public Set<SupportedHostNameFeature> fromString(String arg0)
-                                                                                                throws com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBuilds.Builder.ParsingException {
-                                                                                  return SupportedHostNameFeature.fromStringList(arg0);
-                                                                                }
-
-                                                                                public String toString(Set<SupportedHostNameFeature> arg0) {
-                                                                                  StringBuilder sb = new StringBuilder();
-                                                                                  Iterator<SupportedHostNameFeature> iter = arg0.iterator();
-                                                                                  while (iter.hasNext()) {
-                                                                                    sb.append(iter.next().toString());
-                                                                                    if (iter.hasNext()) {
-                                                                                      sb.append(", ");  
-                                                                                    }
-                                                                                  }
-                                                                                  return sb.toString();
-                                                                                }
-                           
-                                                                               },
-                                                                               SupportedHostNameFeature.all())
-                               .setDefaultDocumentation(DocumentationLanguage.EN, "Supported features for the HostKeyRepository, turning features off can improve performance");
   public static final XynaPropertyInt substringLengthProperty = new XynaPropertyInt("xact.connection.ssh.partialResponseLength", 0);
-  private static final XynaPropertyBoolean legacyErrorMessage = new XynaPropertyBoolean("xact.ssh.connect.timeout.errormessage.legacy", false)
-                               .setDefaultDocumentation(DocumentationLanguage.EN, "Error message when socket connect fails with timeout is similar to what jsch creates when not using a socketfactory (\"timeout: socket is not established\")");
   private static final XynaPropertyInt tcp_keepalive_idle = new XynaPropertyInt(
       "xact.connection.ssh.tcp_keepalive.idle_seconds", 7200);
   private static final XynaPropertyInt tcp_keepalive_interval = new XynaPropertyInt(
@@ -257,10 +227,10 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
     HostKeyAliasMapping.injectHostname(conParams.getHost(), conParams.getHostKeyAlias(), persist);
 
     if ((conParams.getHostKeyAlias() != null) && (!conParams.getHostKeyAlias().isEmpty())) {
-      HostKeyStorableRepository tmpHostRepo = new HostKeyStorableRepository(supportedFeatures.get());
+      HostKeyStorableRepository tmpHostRepo = new HostKeyStorableRepository(HostKeyStorableRepository.SUPPORTED_FEATURES_PROP.get());
       tmpHostRepo.injectHostKey(conParams.getHostKeyAlias());
     } else {
-      HostKeyStorableRepository tmpHostRepo = new HostKeyStorableRepository(supportedFeatures.get());
+      HostKeyStorableRepository tmpHostRepo = new HostKeyStorableRepository(HostKeyStorableRepository.SUPPORTED_FEATURES_PROP.get());
       tmpHostRepo.injectHostKey(conParams.getHost());
     }
 
@@ -451,7 +421,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
       port = conParams.getPort();
     }
     String hostname = conParams.getHost();
-    XynaHostKeyRepository hostRepo = new HostKeyStorableRepository(supportedFeatures.get());
+    XynaHostKeyRepository hostRepo = new HostKeyStorableRepository(HostKeyStorableRepository.SUPPORTED_FEATURES_PROP.get());
     List<String> algoList = hostRepo.findExistingAlgorithms(hostname, port);
     if (algoList.size() > 0) {
       boolean univariate = true;
@@ -508,30 +478,6 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
       }
     }
     return StringUtils.joinStringArray(filtered.toArray(new String[0]), ",");
-  }
-
-
-  private Collection<String> determinePossibleHostIdentifiers(SSHConnectionParameter conParams) {
-    List<String> identifiers = new ArrayList<String>();
-    if (conParams.getHostKeyAlias() != null) {
-      identifiers.add(conParams.getHostKeyAlias());
-    } else {
-      identifiers.add(conParams.getHost());
-      if (conParams.getPort() != null && !conParams.getPort().equals(22)) {
-        identifiers.add("[" + conParams.getHost() + "]:" + conParams.getPort());
-      }
-    }
-    logger.debug("possibleHostIdentifiers: " + identifiers);
-    return identifiers;
-  }
-
-
-  private String determineHostIdentifier(SSHConnectionParameter conParams) {
-    if (conParams.getHostKeyAlias() != null) {
-      return conParams.getHostKeyAlias();
-    } else {
-      return conParams.getHost();
-    }
   }
 
 
@@ -749,7 +695,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
     if (checkingMode.getStringRepresentation().equalsIgnoreCase("no")) {
       client.addHostKeyVerifier(new PromiscuousVerifier());
     } else {
-      XynaHostKeyRepository hostRepo = new HostKeyStorableRepository(supportedFeatures.get());
+      XynaHostKeyRepository hostRepo = new HostKeyStorableRepository(HostKeyStorableRepository.SUPPORTED_FEATURES_PROP.get());
       client.addHostKeyVerifier(hostRepo);
     }
 

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,39 +17,18 @@
  */
 package xact.ssh;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.security.AlgorithmParameters;
-import java.security.Key;
-import java.security.KeyFactory;
-import java.security.KeyPair;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.security.SecureRandom;
-import java.security.Security;
-import java.security.spec.KeySpec;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
-
-import javax.crypto.Cipher;
-import javax.crypto.EncryptedPrivateKeyInfo;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.PBEParameterSpec;
 
 import org.apache.log4j.Logger;
 import org.bouncycastle.util.encoders.Hex;
@@ -63,17 +42,13 @@ import com.gip.xyna.xnwh.persistence.ODSImpl;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 
 import net.schmizz.sshj.Config;
-import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.common.Factory;
-import net.schmizz.sshj.common.KeyType;
-import net.schmizz.sshj.common.SSHException;
 import net.schmizz.sshj.userauth.keyprovider.FileKeyProvider;
 import net.schmizz.sshj.userauth.keyprovider.KeyFormat;
 import net.schmizz.sshj.userauth.keyprovider.KeyPairWrapper;
 import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
 import net.schmizz.sshj.userauth.keyprovider.KeyProviderUtil;
 import net.schmizz.sshj.userauth.password.PasswordFinder;
-import net.schmizz.sshj.userauth.password.PasswordUtils;
 import net.schmizz.sshj.userauth.password.Resource;
 
 public class IdentityStorableRepository implements XynaIdentityRepository {
