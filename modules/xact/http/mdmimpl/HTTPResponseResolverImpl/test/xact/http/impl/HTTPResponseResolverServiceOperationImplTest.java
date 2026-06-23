@@ -191,7 +191,8 @@ class HTTPResponseResolverServiceOperationImplTest {
                   { "source": "method", "op": "equals", "value": "POST" },
                   { "source": "url", "op": "regex", "value": ".*blubb.*" }
              ],
-             "response": [7, "hello"]
+             "response": [7, "hello"],
+             "responseCode": 201
           }
         ]
       }
@@ -218,7 +219,7 @@ class HTTPResponseResolverServiceOperationImplTest {
         }
         """;
     assertEquals(parse(expectedJsonResponse).toString(), outputDoc.getText());
-    assertTrue(code instanceof OK);
+    assertEquals(200, code.getCode());
 
     java.io.File simfile3 = new java.io.File("test/simfile3");
     try {
@@ -236,7 +237,8 @@ class HTTPResponseResolverServiceOperationImplTest {
           [7, "hello"]
           """;
       assertEquals(parse(expectedJsonResponse).toString(), outputDoc.getText());
-      assertTrue(code instanceof OK);
+      assertEquals(201, code.getCode());
+      assertEquals("Created", code.getReason());
     } finally {
       FileUtils.deleteFileWithRetries(simfile3);
     }

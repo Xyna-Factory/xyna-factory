@@ -32,7 +32,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -55,8 +54,7 @@ import xact.http.HTTPResponseResolverServiceOperation;
 import xact.http.HeaderField;
 import xact.http.SendParameter;
 import xact.http.enums.httpmethods.HTTPMethod;
-import xact.http.enums.statuscode.NotFound;
-import xact.http.enums.statuscode.OK;
+import xact.http.enums.statuscode.HTTPStatusCode;
 import xact.http.impl.JSONValue.Type;
 import xact.templates.Document;
 
@@ -298,6 +296,111 @@ public class HTTPResponseResolverServiceOperationImpl implements ExtendedDeploym
     }
   }
 
+  public static class HTTPResponse {
+
+    public String responseBody;
+    public int responseCode;
+    public String reason;
+
+
+    public HTTPResponse() {
+
+    }
+
+
+    public HTTPResponse(Map<String, JSONValue> jsonobj) {
+      try {
+        responseBody = getBody(jsonobj, "response");
+        responseCode = getCode(jsonobj, "responseCode");
+        reason = getReason(jsonobj, "reason");
+      } catch (Exception e) {
+        logger.debug("Couldn't parse response", e);
+        responseBody = "Couldn't parse response: " + e.getMessage();
+        responseCode = 500;
+        reason = "Internal Server Error";
+      }
+    }
+
+
+    private String getReason(Map<String, JSONValue> jsonobj, String key) {
+      JSONValue v = jsonobj.get(key);
+      if (v == null) {
+        switch (responseCode) {
+          case 100 :
+            return "Continue";
+          case 200 :
+            return "OK";
+          case 201 :
+            return "Created";
+          case 202 :
+            return "Accepted";
+          case 204 :
+            return "No Content";
+          case 400 :
+            return "Bad Request";
+          case 401 :
+            return "Unauthorized";
+          case 403 :
+            return "Forbidden";
+          case 404 :
+            return "Not Found";
+          case 500 :
+            return "Internal Server Error";
+          case 501 :
+            return "Not Implemented";
+          case 503 :
+            return "Service Unavailable";
+          default :
+            return "";
+        }
+      }
+      if (v.type == Type.STRING) {
+        return v.stringVal;
+      } else if (v.type == Type.NULL) {
+        return "";
+      } else {
+        throw new RuntimeException("JSON key <" + key + "> must be a string.");
+      }
+    }
+
+
+    private int getCode(Map<String, JSONValue> jsonobj, String key) {
+      JSONValue v = jsonobj.get(key);
+      if (v == null) {
+        return 200;
+      }
+      if (v.type == Type.NUMBER) {
+        return Integer.valueOf(v.numberVal);
+      } else if (v.type == Type.STRING) {
+        return Integer.valueOf(v.stringVal);
+      } else {
+        throw new RuntimeException("JSON key <" + key + "> must be a number.");
+      }
+    }
+
+
+    private String getBody(Map<String, JSONValue> jsonobj, String key) {
+      JSONValue v = jsonobj.get(key);
+      if (v == null) {
+        return "";
+      }
+      if (v.type == Type.STRING) {
+        return v.stringVal; //no "" around the string
+      } else if (v.type == Type.NULL) {
+        return "";
+      }
+      return v.toString(); //valid json
+    }
+
+
+    public static HTTPResponse _404() {
+      HTTPResponse resp = new HTTPResponse();
+      resp.responseBody = "Not found";
+      resp.responseCode = 404;
+      return resp;
+    }
+  }
+
 
   static class DirInfo extends ObjectWithRemovalSupport {
 
@@ -333,27 +436,27 @@ public class HTTPResponseResolverServiceOperationImpl implements ExtendedDeploym
     }
 
 
-    public String resolve(Document request, SendParameter sendParameter) {
-      for (Entry<String, CacheEntry> e : cache.entrySet()) {
+    public synchronized HTTPResponse resolve(Document request, SendParameter sendParameter) {
+      return cache.entrySet().stream().sorted(Map.Entry.comparingByKey()).map(e -> {
         CacheEntry ce = e.getValue();
         if (ce.stale) {
           if (!ce.refresh(new java.io.File(dir, e.getKey()))) {
             //deleted? should be handled by another event that is just not processed yet
-            continue;
+            return null;
           }
         }
         if (e.getValue().fc.matches(request, sendParameter)) {
-          String response = resolveResponse(new java.io.File(dir, e.getKey()), request, sendParameter);
+          HTTPResponse response = resolveResponse(new java.io.File(dir, e.getKey()), request, sendParameter);
           if (response != null) {
             return response;
           } //else look for different file
         }
-      }
-      return null;
+        return null;
+      }).filter(Objects::nonNull).findFirst().orElse(HTTPResponse._404());
     }
 
 
-    private String resolveResponse(java.io.File file, Document request, SendParameter sendParameter) {
+    private HTTPResponse resolveResponse(java.io.File file, Document request, SendParameter sendParameter) {
       String content;
       try {
         content = FileUtils.readFileAsString(file);
@@ -365,7 +468,7 @@ public class HTTPResponseResolverServiceOperationImpl implements ExtendedDeploym
         for (JSONValue resp : new JSONFileContent(content).val.vals.get("responses").list) {
           Condition[] conditions = Condition.parseConditions(resp.vals.get("match"));
           if (allMatch(conditions, request, sendParameter)) {
-            return resp.vals.get("response").toString();
+            return new HTTPResponse(resp.vals);
           }
         }
       } catch (InvalidJSONException | UnexpectedJSONContentException | NullPointerException | ArrayIndexOutOfBoundsException e) {
@@ -389,7 +492,7 @@ public class HTTPResponseResolverServiceOperationImpl implements ExtendedDeploym
     }
 
 
-    public void updateAfterChanges(WatchKey wkf) {
+    public synchronized void updateAfterChanges(WatchKey wkf) {
       for (WatchEvent we : wkf.pollEvents()) {
         String relativePath = ((Path) we.context()).toString();
         if (we.kind() == StandardWatchEventKinds.ENTRY_DELETE) {
@@ -443,15 +546,9 @@ public class HTTPResponseResolverServiceOperationImpl implements ExtendedDeploym
       result = cache.<Container> process(new DirKey(Path.of(dir.getPath())), di -> {
         di.updateLastUsed();
         Document outputDoc = new Document();
-        outputDoc.setText(di.resolve(doc, sendParameter));
-        if (outputDoc.getText() == null) {
-          NotFound nf = new NotFound();
-          nf.setCode(404);
-          return new Container(outputDoc, sendParameter.getHeader(), nf);
-        }
-        OK ok = new OK();
-        ok.setCode(200);
-        return new Container(outputDoc, sendParameter.getHeader(), ok);
+        HTTPResponse r = di.resolve(doc, sendParameter);
+        outputDoc.setText(r.responseBody);
+        return new Container(outputDoc, sendParameter.getHeader(), new HTTPStatusCode(r.responseCode, r.reason));
       });
     } catch (IOException e) {
       throw new RuntimeException("Problem with dir: " + dir.getPath(), e);
