@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
-  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="XVPNF-00401" Label="Storable not found" TypeName="StorableNotFound" TypePath="xint.listoperations">
-    <Data Label="Exception Details EN" VariableName="exceptionDetailsEN">
-      <Meta>
-        <Type>String</Type>
-      </Meta>
-    </Data>
-    <Data Label="Exception Details DE" VariableName="exceptionDetailsDE">
-      <Meta>
-        <Type>String</Type>
-      </Meta>
-    </Data>
-    <MessageText Language="EN">%0%</MessageText>
-    <MessageText Language="DE">%1%</MessageText>
+--><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
+  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="XSTORE-00001" IsAbstract="false" Label="Storable not found" TypeName="StorableNotFound" TypePath="xint.listoperations">
+    <MessageText Language="DE">Es wurde kein Storable gefunden, das die Suchkriterien erfüllt</MessageText>
+    <MessageText Language="EN">No storable matching the search criteria has been found</MessageText>
   </ExceptionType>
 </ExceptionStore>
