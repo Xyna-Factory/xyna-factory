@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Delete Role" TypeName="DeleteRole" TypePath="xmcp.xacm.rolemanagement" Version="1.8">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Delete Role" TypeName="DeleteRole" TypePath="xmcp.xacm.rolemanagement" Version="1.8">
   <Meta>
     <FixedDetailOptions>highDetailsMode,showDetailAreas,openDocumentation</FixedDetailOptions>
     <Documentation>Der Workflow führt die folgenden Schritte durch:

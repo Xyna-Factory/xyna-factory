@@ -15,5 +15,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="GetXMOMItemResponse" BaseTypePath="xmcp.processmodeller.datatypes.response" Label="Get Workflow Response" TypeName="GetWorkflowResponse" TypePath="xmcp.processmodeller.datatypes.response" Version="1.8"/>
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="GetXMOMItemResponse" BaseTypePath="xmcp.processmodeller.datatypes.response" Label="Get Workflow Response" TypeName="GetWorkflowResponse" TypePath="xmcp.processmodeller.datatypes.response" Version="1.8"/>

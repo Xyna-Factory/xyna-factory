@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2022 Xyna GmbH, Germany
@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Delete Duplicates" TypeName="DeleteDuplicates" TypePath="xmcp.factorymanager.rtcmanager" Version="1.8">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Delete Duplicates" TypeName="DeleteDuplicates" TypePath="xmcp.factorymanager.rtcmanager" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Delete Duplicates" Name="DeleteDuplicates">
     <Input>
       <Data ID="65" Label="Workspace" ReferenceName="Workspace" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="workspace65"/>

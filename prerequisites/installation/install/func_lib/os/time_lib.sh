@@ -36,8 +36,12 @@ f_configure_ntp_client () {
   # TODO  Aenderung: Falls Konfiguration vorhanden diese nicht ueberschreiben
   echo -e "\n* Configuring NTP client"
   
+  local CONST_DYNAMIC="dynamic"
   case ${INSTALLATION_PLATFORM} in
-    rhel|oracle|centos)    DRIFT_FILE="/var/lib/ntp/drift";;
+    rhel|oracle|centos)
+             CONST_DYNAMIC=""
+             FILE_TO_EDIT="/etc/chrony.conf"
+             DRIFT_FILE="/var/lib/chrony/drift";;
     solaris) FILE_TO_EDIT="/etc/inet/ntp.conf";;
   esac
  
@@ -49,17 +53,17 @@ f_configure_ntp_client () {
   backup_file ${FILE_TO_EDIT}
   ${VOLATILE_CAT} > ${FILE_TO_EDIT} << A_HERE_DOCUMENT
 driftfile ${DRIFT_FILE}
-server ${NTP1_SERVER} iburst dynamic
-server ${NTP2_SERVER} iburst dynamic
+server ${NTP1_SERVER} iburst ${CONST_DYNAMIC}
+server ${NTP2_SERVER} iburst ${CONST_DYNAMIC}
 A_HERE_DOCUMENT
 
   case ${INSTALLATION_PLATFORM} in
     sles)    chkconfig ntp 35;          /etc/init.d/ntp restart;;
     rhel|oracle|centos)  
              if [[ "x${SYSTEMD_ENV}" == "xtrue" ]] ; then
-               systemctl start ntpd; systemctl enable ntpd
+               systemctl restart chronyd;   systemctl enable chronyd
              else
-               chkconfig ntpd on;         /etc/init.d/ntpd restart
+               chkconfig chronyd on;   /etc/init.d/chronyd restart
              fi
              ;;
     debian)  update-rc.d ntp defaults;  /etc/init.d/ntp restart;;

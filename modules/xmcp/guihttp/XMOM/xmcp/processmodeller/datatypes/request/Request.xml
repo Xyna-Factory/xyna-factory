@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Request" TypeName="Request" TypePath="xmcp.processmodeller.datatypes.request" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Request" TypeName="Request" TypePath="xmcp.processmodeller.datatypes.request" Version="1.8">
   <Data Label="Revision" VariableName="revision">
     <Meta>
       <Type>long</Type>

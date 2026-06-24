@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="PluginBase" TypePath="xmcp.yggdrasil.plugin" Label="Plugin Base" IsAbstract="true">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="true" Label="Plugin Base" TypeName="PluginBase" TypePath="xmcp.yggdrasil.plugin" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Context" VariableName="context" ReferenceName="Context" ReferencePath="xmcp.yggdrasil.plugin"/>
+  <Data Label="Context" ReferenceName="Context" ReferencePath="xmcp.yggdrasil.plugin" VariableName="context"/>
 </DataType>
