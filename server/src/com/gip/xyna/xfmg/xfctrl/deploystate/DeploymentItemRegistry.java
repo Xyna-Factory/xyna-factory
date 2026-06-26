@@ -42,13 +42,17 @@ public interface DeploymentItemRegistry {
   
   public void undeploy(String fqName, DeploymentContext ctx);
   
-  //TODO: Breaking change, remove
+  /**
+  * @Deprecated use java.util.Optional instead
+  */
   @Deprecated
   public void deployFinished(String fqName, DeploymentTransition transition, boolean copiedXMLFromSaved, com.gip.xyna.utils.collections.Optional<? extends Throwable> deploymentException);
   
   public void deployFinished(String fqName, DeploymentTransition transition, boolean copiedXMLFromSaved, Optional<? extends Throwable> deploymentException);
 
-  //TODO: Breaking change, remove
+  /**
+  * @Deprecated use java.util.Optional instead
+  */
   @Deprecated
   public void buildFinished(String fqName, com.gip.xyna.utils.collections.Optional<? extends Throwable> buildException);
   

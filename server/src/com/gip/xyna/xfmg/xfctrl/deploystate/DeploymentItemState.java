@@ -75,8 +75,10 @@ public interface DeploymentItemState extends DeploymentItemIdentifier {
   public Set<DeploymentItemInterface> getInconsistencies(DeploymentLocation ownLocation, DeploymentLocation interfaceProviderLocation, boolean tryToInferTypes);
   
   public Set<DeploymentItemInterface> getInconsistencies(DeploymentLocation ownLocation, DeploymentLocation interfaceProviderLocation, boolean tryToInferTypes, CrossRevisionResolver resolver);
-  
-  //TODO: Breaking change, remove
+
+  /**
+  * @Deprecated use java.util.Optional instead
+  */
   @Deprecated
   public boolean deploymentTransition(DeploymentTransition transition, boolean fromSaved, com.gip.xyna.utils.collections.Optional<? extends Throwable> deploymentException);
   
@@ -87,7 +89,9 @@ public interface DeploymentItemState extends DeploymentItemIdentifier {
   
   public String createCreationHint(String name);
 
-  //TODO: Breaking change, remove
+  /**
+  * @Deprecated use java.util.Optional instead
+  */
   @Deprecated
   public void setBuildError(com.gip.xyna.utils.collections.Optional<? extends Throwable> buildException);
   

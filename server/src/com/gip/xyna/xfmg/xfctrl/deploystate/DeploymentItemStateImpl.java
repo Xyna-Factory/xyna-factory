@@ -338,7 +338,9 @@ public class DeploymentItemStateImpl extends DeploymentItemIdentificationBase im
   }
 
 
-  //TODO: Breaking change, remove
+  /**
+  * @Deprecated use java.util.Optional instead
+  */
   @Deprecated
   public boolean deploymentTransition(DeploymentTransition transition, boolean fromSaved, com.gip.xyna.utils.collections.Optional<? extends Throwable> deploymentException) {
     return this.deploymentTransition(transition, fromSaved, (java.util.Optional<? extends Throwable>) deploymentException.adapt());
@@ -408,8 +410,10 @@ public class DeploymentItemStateImpl extends DeploymentItemIdentificationBase im
     return changed;
   }
 
-  
-  //TODO: Breaking change, remove
+
+  /**
+  * @Deprecated use java.util.Optional instead
+  */
   @Deprecated
   public void setBuildError(com.gip.xyna.utils.collections.Optional<? extends Throwable> buildException) {
     buildError = handleException(buildException.adapt());

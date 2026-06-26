@@ -624,7 +624,9 @@ public class XynaFactoryManagementPropertiesOnly extends XynaFactoryManagementBa
   }
 
 
-  //TODO: Breaking change, remove
+  /**
+  * @Deprecated use java.util.Optional instead
+  */
   @Deprecated
   public SessionCredentials createSession(XynaUserCredentials credentials, com.gip.xyna.utils.collections.Optional<String> roleName, boolean force)
                   throws PersistenceLayerException {

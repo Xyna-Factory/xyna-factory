@@ -501,7 +501,9 @@ public class DeploymentItemStateManagementImpl extends FunctionGroup implements 
   }
 
 
-  //TODO: Breaking change, remove
+  /**
+  * @Deprecated use java.util.Optional instead
+  */
   @Deprecated
   public void deployFinished(String fqName, DeploymentTransition transition, boolean copiedXMLFromSaved, com.gip.xyna.utils.collections.Optional<Throwable> deploymentException, long revision) {
     lazyCreateOrGet(revision).deployFinished(fqName, transition, copiedXMLFromSaved, deploymentException.adapt());
@@ -513,7 +515,9 @@ public class DeploymentItemStateManagementImpl extends FunctionGroup implements 
   }
 
 
-  //TODO: Breaking change, remove
+  /**
+  * @Deprecated use java.util.Optional instead
+  */
   @Deprecated
   public void buildFinished(String fqName, com.gip.xyna.utils.collections.Optional<Throwable> buildException, long revision) {
     lazyCreateOrGet(revision).buildFinished(fqName, buildException.adapt());

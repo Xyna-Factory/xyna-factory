@@ -1882,8 +1882,10 @@ public class XynaMultiChannelPortal extends XynaMultiChannelPortalBase {
     return getXynaFactoryManagementPortal().createSession(credentials, roleName, force);
   }
 
-  
-  //TODO: Breaking change, remove
+
+  /**
+  * @Deprecated use java.util.Optional instead
+  */
   @Deprecated
   @AccessControlled(associatedRight = Rights.SESSION_CREATION)
   public SessionCredentials createSession(XynaUserCredentials credentials, com.gip.xyna.utils.collections.Optional<String> roleName, boolean force)

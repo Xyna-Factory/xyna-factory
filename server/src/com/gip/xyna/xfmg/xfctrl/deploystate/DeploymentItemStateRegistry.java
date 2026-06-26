@@ -148,7 +148,9 @@ public class DeploymentItemStateRegistry implements DeploymentItemRegistry {
   }
 
 
-  //TODO: Breaking change, remove
+  /**
+  * @Deprecated use java.util.Optional instead
+  */
   @Deprecated
   public void deployFinished(String fqName, DeploymentTransition transition, boolean copiedXMLFromSaved,
                              com.gip.xyna.utils.collections.Optional<? extends Throwable> deploymentException) {
@@ -210,7 +212,9 @@ public class DeploymentItemStateRegistry implements DeploymentItemRegistry {
   }
 
 
-  //TODO: Breaking change, remove
+  /**
+  * @Deprecated use java.util.Optional instead
+  */
   @Deprecated
   public void buildFinished(String fqName, com.gip.xyna.utils.collections.Optional<? extends Throwable> buildException) {
     this.buildFinished(fqName, (java.util.Optional<? extends Throwable>) buildException.adapt());

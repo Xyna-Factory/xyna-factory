@@ -99,7 +99,9 @@ public class DeploymentMarkerManagement extends FunctionGroup {
     storage.moveDeploymentMarker(oldDeploymentItem, newDeploymentItem, revision);
   }
   
-  //TODO: Breaking change, remove
+  /**
+  * @Deprecated use java.util.Optional instead
+  */
   @Deprecated
   public List<DeploymentMarker> searchDeploymentTags(com.gip.xyna.utils.collections.Optional<? extends DeploymentItemIdentifier> deploymentItem, Long revision) throws PersistenceLayerException, XNWH_SelectParserException, XNWH_InvalidSelectStatementException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
     return storage.searchDeploymentTags(deploymentItem.adapt(), revision);
@@ -109,7 +111,9 @@ public class DeploymentMarkerManagement extends FunctionGroup {
     return storage.searchDeploymentTags(deploymentItem, revision);
   }
 
-  //TODO: Breaking change, remove
+  /**
+  * @Deprecated use java.util.Optional instead
+  */
   @Deprecated
   public List<DeploymentMarker> searchDeploymentTasks(com.gip.xyna.utils.collections.Optional<? extends DeploymentItemIdentifier> deploymentItem, Long revision) throws PersistenceLayerException, XNWH_SelectParserException, XNWH_InvalidSelectStatementException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
     return storage.searchDeploymentTasks(deploymentItem.adapt(), revision);

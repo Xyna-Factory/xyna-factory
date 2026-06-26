@@ -210,8 +210,10 @@ public class SessionManagement extends FunctionGroup implements IPropertyChangeL
     return createSession(new XynaUserCredentials(user.getName(), user.getPassword()), Optional.ofNullable(user.getRole()), force);
   }
   
-  
-  //TODO: Breaking change, remove
+
+  /**
+  * @Deprecated use java.util.Optional instead
+  */
   @Deprecated
   public SessionCredentials createSession(XynaUserCredentials credentials, com.gip.xyna.utils.collections.Optional<String> roleName, boolean force) throws PersistenceLayerException, XFMG_DuplicateSessionException {
     return this.createSession(credentials, (java.util.Optional<String>) roleName.adapt(), force);
@@ -234,8 +236,10 @@ public class SessionManagement extends FunctionGroup implements IPropertyChangeL
     return createSession(credentials, roleName, force, areMultipleSessionsAllowed(role));
   }
 
-  
-  //TODO: Breaking change, remove
+
+  /**
+  * @Deprecated use java.util.Optional instead
+  */
   @Deprecated
   public SessionCredentials createSession(XynaUserCredentials credentials, com.gip.xyna.utils.collections.Optional<String> roleName, boolean force, boolean multipleSessionsAllowed) throws PersistenceLayerException, XFMG_DuplicateSessionException {
     return this.createSession(credentials, (java.util.Optional<String>) roleName.adapt(), force, multipleSessionsAllowed);
