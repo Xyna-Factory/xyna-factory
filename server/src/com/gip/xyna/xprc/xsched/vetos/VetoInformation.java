@@ -18,6 +18,8 @@
 package com.gip.xyna.xprc.xsched.vetos;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
 
 import com.gip.xyna.utils.collections.CollectionUtils.Transformation;
 import com.gip.xyna.xprc.xsched.scheduling.OrderInformation;
@@ -27,6 +29,7 @@ public class VetoInformation implements Serializable {
 
   private final String name;
   private final OrderInformation usingOrder;
+  private final List<Long> sharedOrderIds;
   private final boolean administrative;
   private final int binding;
   private final Long created;
@@ -35,6 +38,7 @@ public class VetoInformation implements Serializable {
   public VetoInformation(AdministrativeVeto administrativeVeto, Long created, int binding) {
     this.name = administrativeVeto.getName();
     this.usingOrder = null;
+    this.sharedOrderIds = Collections.emptyList();
     this.administrative = true;
     this.binding =  binding;
     this.created = created;
@@ -44,14 +48,16 @@ public class VetoInformation implements Serializable {
   public VetoInformation(String name, OrderInformation usingOrder, Long created, int binding) {
     this.name = name;
     this.usingOrder = usingOrder;
+    this.sharedOrderIds = Collections.emptyList();
     this.administrative = false;
     this.binding =  binding;
     this.created = created;
   }
 
-  public VetoInformation(String name, OrderInformation usingOrder, String documentation, Long created, int binding) {
+  public VetoInformation(String name, OrderInformation usingOrder, List<Long> sharedOrderIds, String documentation, Long created, int binding) {
     this.name = name;
     this.usingOrder = usingOrder;
+    this.sharedOrderIds = sharedOrderIds;
     this.documentation = documentation;
     this.administrative = AdministrativeVeto.ADMIN_VETO_ORDERID.equals(usingOrder.getOrderId());
     this.binding = binding;
@@ -61,6 +67,7 @@ public class VetoInformation implements Serializable {
   public VetoInformation(String name) {
     this.name = name;
     this.usingOrder = null;
+    this.sharedOrderIds = Collections.emptyList();
     this.administrative = false;
     this.binding = 0;
     this.created = null;
@@ -143,6 +150,14 @@ public class VetoInformation implements Serializable {
 
   public OrderInformation getUsingOrder() {
     return usingOrder;
+  }
+
+  public List<Long> getSharedOrderIds() {
+    return sharedOrderIds;
+  }
+
+  public boolean isShared() {
+    return !sharedOrderIds.isEmpty();
   }
 
   public static Transformation<VetoInformation, String> extractName = new Transformation<VetoInformation, String>() {

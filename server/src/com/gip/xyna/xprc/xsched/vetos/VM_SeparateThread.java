@@ -19,6 +19,7 @@ package com.gip.xyna.xprc.xsched.vetos;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -60,7 +61,12 @@ public class VM_SeparateThread implements VetoManagementInterface {
     return vetoCache;
   }
   
-  public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> vetoNames, long urgency) {
+  @Deprecated
+  public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> vetos, long urgency) {
+    return allocateVetos(orderInformation, vetos, Collections.emptyList(), urgency);
+  }
+
+  public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos, long urgency) {
     VetoAllocationResult var = vetoCache.checkAllocation();
     if( var != null ) {
       return var;
@@ -71,8 +77,8 @@ public class VM_SeparateThread implements VetoManagementInterface {
     }
     
     //1) Scheitert Allocation an bereits vergebenen Vetos?
-    List<VetoCacheEntry> vces = new ArrayList<VetoCacheEntry>(vetoNames.size());
-    for( String vetoName : vetoNames ) {
+    List<VetoCacheEntry> vces = new ArrayList<VetoCacheEntry>(exclusiveVetos.size());
+    for( String vetoName : exclusiveVetos ) {
       VetoCacheEntry veto = vetoCache.get(vetoName);
       vces.add(veto);
       if( veto != null ) {
@@ -88,9 +94,9 @@ public class VM_SeparateThread implements VetoManagementInterface {
     }
     
     //2) Vetos neu anlegen und gleich prüfen
-    for( int i=0; i<vetoNames.size(); ++i ) {
+    for( int i=0; i<exclusiveVetos.size(); ++i ) {
       if( vces.get(i) == null ) {
-        VetoCacheEntry veto = vetoCache.getOrCreate(vetoNames.get(i), urgency);
+        VetoCacheEntry veto = vetoCache.getOrCreate(exclusiveVetos.get(i), urgency);
         vces.set(i, veto );
         VetoAllocationResult var2 = vetoCache.checkAllocation(veto, orderInformation, urgency);
         if( var2 != null ) {
@@ -128,7 +134,12 @@ public class VM_SeparateThread implements VetoManagementInterface {
     return VetoAllocationResult.SUCCESS;
   }
 
+   @Deprecated
    public void undoAllocation(OrderInformation orderInformation, List<String> vetos) {
+     undoAllocation(orderInformation, vetos, Collections.emptyList());
+   }
+
+   public void undoAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos) {
      logger.trace(" UndoAllocation ");
      List<String> allocated = allocatedVetos.remove(orderInformation.getOrderId());
      if( allocated != null ) {
@@ -141,8 +152,13 @@ public class VM_SeparateThread implements VetoManagementInterface {
      }
    }
 
+   @Deprecated
    public void finalizeAllocation(OrderInformation orderInformation, List<String> vetos) {
-     for( String v : vetos ) {
+     finalizeAllocation(orderInformation, vetos, Collections.emptyList());
+   }
+
+   public void finalizeAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos) {
+     for( String v : exclusiveVetos ) {
        vetoCache.finalizeAllocation(v);
      }
      vetoCache.notifyProcessor();
