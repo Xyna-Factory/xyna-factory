@@ -502,7 +502,7 @@ public class DeploymentItemStateManagementImpl extends FunctionGroup implements 
 
 
   /**
-  * @Deprecated use java.util.Optional instead
+  * @deprecated use java.util.Optional instead
   */
   @Deprecated
   public void deployFinished(String fqName, DeploymentTransition transition, boolean copiedXMLFromSaved, com.gip.xyna.utils.collections.Optional<Throwable> deploymentException, long revision) {
@@ -516,7 +516,7 @@ public class DeploymentItemStateManagementImpl extends FunctionGroup implements 
 
 
   /**
-  * @Deprecated use java.util.Optional instead
+  * @deprecated use java.util.Optional instead
   */
   @Deprecated
   public void buildFinished(String fqName, com.gip.xyna.utils.collections.Optional<Throwable> buildException, long revision) {

@@ -53,7 +53,7 @@ public interface DeploymentItemStateManagement {
   public void undeploy(String fqName, DeploymentContext ctx, long revision);
 
   /**
-  * @Deprecated use java.util.Optional instead
+  * @deprecated use java.util.Optional instead
   */
   @Deprecated
   public void deployFinished(String fqName, DeploymentTransition transition, boolean copiedXMLFromSaved, com.gip.xyna.utils.collections.Optional<Throwable> deploymentException, long revision);
@@ -61,7 +61,7 @@ public interface DeploymentItemStateManagement {
   public void deployFinished(String fqName, DeploymentTransition transition, boolean copiedXMLFromSaved, Optional<Throwable> deploymentException, long revision);
 
   /**
-  * @Deprecated use java.util.Optional instead
+  * @deprecated use java.util.Optional instead
   */
   @Deprecated
   public void buildFinished(String fqName, com.gip.xyna.utils.collections.Optional<Throwable> buildException, long revision);

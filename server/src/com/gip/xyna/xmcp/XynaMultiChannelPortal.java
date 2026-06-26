@@ -1884,7 +1884,7 @@ public class XynaMultiChannelPortal extends XynaMultiChannelPortalBase {
 
 
   /**
-  * @Deprecated use java.util.Optional instead
+  * @deprecated use java.util.Optional instead
   */
   @Deprecated
   @AccessControlled(associatedRight = Rights.SESSION_CREATION)

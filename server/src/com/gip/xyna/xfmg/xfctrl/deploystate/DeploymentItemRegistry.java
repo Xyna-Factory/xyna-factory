@@ -43,7 +43,7 @@ public interface DeploymentItemRegistry {
   public void undeploy(String fqName, DeploymentContext ctx);
   
   /**
-  * @Deprecated use java.util.Optional instead
+  * @deprecated use java.util.Optional instead
   */
   @Deprecated
   public void deployFinished(String fqName, DeploymentTransition transition, boolean copiedXMLFromSaved, com.gip.xyna.utils.collections.Optional<? extends Throwable> deploymentException);
@@ -51,7 +51,7 @@ public interface DeploymentItemRegistry {
   public void deployFinished(String fqName, DeploymentTransition transition, boolean copiedXMLFromSaved, Optional<? extends Throwable> deploymentException);
 
   /**
-  * @Deprecated use java.util.Optional instead
+  * @deprecated use java.util.Optional instead
   */
   @Deprecated
   public void buildFinished(String fqName, com.gip.xyna.utils.collections.Optional<? extends Throwable> buildException);

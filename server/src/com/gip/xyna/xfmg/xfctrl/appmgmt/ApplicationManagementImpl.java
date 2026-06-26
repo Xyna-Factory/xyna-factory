@@ -1611,7 +1611,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
 
 
   /**
-  * @Deprecated use java.util.Optional instead
+  * @deprecated use java.util.Optional instead
   */
   @Deprecated
   public void stopApplication(final String applicationName, final String versionName, boolean clusterwide,

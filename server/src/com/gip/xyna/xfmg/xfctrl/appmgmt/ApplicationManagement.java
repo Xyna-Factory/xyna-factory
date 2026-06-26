@@ -55,7 +55,7 @@ public interface ApplicationManagement {
       throws XFMG_CouldNotStopApplication;
   
   /**
-  * @Deprecated use java.util.Optional instead
+  * @deprecated use java.util.Optional instead
   */
   @Deprecated
   public void stopApplication(String applicationName, String versionName, boolean clusterwide, com.gip.xyna.utils.collections.Optional<EnumSet<OrderEntranceType>> onlyDisableEntranceTypes)

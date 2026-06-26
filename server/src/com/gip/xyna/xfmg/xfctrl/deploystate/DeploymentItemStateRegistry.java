@@ -149,7 +149,7 @@ public class DeploymentItemStateRegistry implements DeploymentItemRegistry {
 
 
   /**
-  * @Deprecated use java.util.Optional instead
+  * @deprecated use java.util.Optional instead
   */
   @Deprecated
   public void deployFinished(String fqName, DeploymentTransition transition, boolean copiedXMLFromSaved,
@@ -213,7 +213,7 @@ public class DeploymentItemStateRegistry implements DeploymentItemRegistry {
 
 
   /**
-  * @Deprecated use java.util.Optional instead
+  * @deprecated use java.util.Optional instead
   */
   @Deprecated
   public void buildFinished(String fqName, com.gip.xyna.utils.collections.Optional<? extends Throwable> buildException) {

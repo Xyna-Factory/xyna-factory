@@ -100,7 +100,7 @@ public class DeploymentMarkerManagement extends FunctionGroup {
   }
   
   /**
-  * @Deprecated use java.util.Optional instead
+  * @deprecated use java.util.Optional instead
   */
   @Deprecated
   public List<DeploymentMarker> searchDeploymentTags(com.gip.xyna.utils.collections.Optional<? extends DeploymentItemIdentifier> deploymentItem, Long revision) throws PersistenceLayerException, XNWH_SelectParserException, XNWH_InvalidSelectStatementException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
@@ -112,7 +112,7 @@ public class DeploymentMarkerManagement extends FunctionGroup {
   }
 
   /**
-  * @Deprecated use java.util.Optional instead
+  * @deprecated use java.util.Optional instead
   */
   @Deprecated
   public List<DeploymentMarker> searchDeploymentTasks(com.gip.xyna.utils.collections.Optional<? extends DeploymentItemIdentifier> deploymentItem, Long revision) throws PersistenceLayerException, XNWH_SelectParserException, XNWH_InvalidSelectStatementException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {

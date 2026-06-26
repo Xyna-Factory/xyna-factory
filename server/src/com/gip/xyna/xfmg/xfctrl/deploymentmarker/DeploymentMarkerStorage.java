@@ -307,7 +307,9 @@ public class DeploymentMarkerStorage {
     }
   }
   
-  //TODO: Breaking change, remove
+  /**
+  * @deprecated use java.util.Optional instead
+  */
   @Deprecated
   public List<DeploymentMarker> searchDeploymentTasks(com.gip.xyna.utils.collections.Optional<? extends DeploymentItemIdentifier> deploymentItem, Long revision) throws PersistenceLayerException {
     return this.searchDeploymentTasks((java.util.Optional<? extends DeploymentItemIdentifier>) deploymentItem.adapt(), revision);
@@ -361,7 +363,9 @@ public class DeploymentMarkerStorage {
     }
   }
 
-  //TODO: Breaking change, remove
+  /**
+  * @deprecated use java.util.Optional instead
+  */
   @Deprecated
   public List<DeploymentMarker> searchDeploymentTags(com.gip.xyna.utils.collections.Optional<? extends DeploymentItemIdentifier> deploymentItem, Long revision) throws PersistenceLayerException {
     return this.searchDeploymentTags((java.util.Optional<? extends DeploymentItemIdentifier>) deploymentItem.adapt(), revision);

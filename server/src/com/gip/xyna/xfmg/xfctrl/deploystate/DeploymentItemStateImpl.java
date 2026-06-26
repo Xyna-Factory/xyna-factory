@@ -339,7 +339,7 @@ public class DeploymentItemStateImpl extends DeploymentItemIdentificationBase im
 
 
   /**
-  * @Deprecated use java.util.Optional instead
+  * @deprecated use java.util.Optional instead
   */
   @Deprecated
   public boolean deploymentTransition(DeploymentTransition transition, boolean fromSaved, com.gip.xyna.utils.collections.Optional<? extends Throwable> deploymentException) {
@@ -412,7 +412,7 @@ public class DeploymentItemStateImpl extends DeploymentItemIdentificationBase im
 
 
   /**
-  * @Deprecated use java.util.Optional instead
+  * @deprecated use java.util.Optional instead
   */
   @Deprecated
   public void setBuildError(com.gip.xyna.utils.collections.Optional<? extends Throwable> buildException) {
