@@ -37,22 +37,55 @@ public interface VetoManagementInterface {
    * @param vetos
    * @param urgency
    * @return
+   * @deprecated Verwende stattdessen allocateVetos(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos, long urgency)
    */
+  @Deprecated
   public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> vetos, long urgency);
+
+  /**
+   * Versucht, die übergebenen Vetos für die angegebene OrderInformation zu belegen.
+   * Kann mehrfach gerufen werden, loggt dann aber eine Meldung.
+   * @param orderInformation
+   * @param exclusiveVetos
+   * @param sharedVetos
+   * @param urgency
+   * @return
+   */
+  public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos, long urgency);
 
   /**
    * Macht die Belegungen des letzten allocateVetos(...) rückgängig.
    * @param orderInformation
    * @param vetos
+   * @deprecated Verwende stattdessen undoAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos)
    */
+  @Deprecated
   public void undoAllocation(OrderInformation orderInformation, List<String> vetos);
+
+  /**
+   * Macht die Belegungen des letzten allocateVetos(...) rückgängig.
+   * @param orderInformation
+   * @param exclusiveVetos
+   * @param sharedVetos
+   */
+  public void undoAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos);
 
   /**
    * Macht die Belegungen des letzten allocateVetos(...) permanent.
    * @param orderInformation
    * @param vetos
+   * @deprecated Verwende stattdessen finalizeAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos)
    */
+  @Deprecated
   public void finalizeAllocation(OrderInformation orderInformation, List<String> vetos);  
+
+  /**
+   * Macht die Belegungen des letzten allocateVetos(...) permanent.
+   * @param orderInformation
+   * @param exclusiveVetos
+   * @param sharedVetos
+   */
+  public void finalizeAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos);  
 
   /**
    * Versucht, die Vetos für die übergebene XynaOrder freizugeben.
