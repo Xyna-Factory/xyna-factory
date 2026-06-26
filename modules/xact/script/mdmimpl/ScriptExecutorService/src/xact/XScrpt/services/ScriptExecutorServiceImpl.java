@@ -49,7 +49,7 @@ import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.ServiceStepEventSour
 public class ScriptExecutorServiceImpl implements DeploymentTask {
 
   static Logger logger = Logger.getLogger(ScriptExecutorServiceImpl.class);
-
+  private static int RETURN_VAL_127 = 127;
 
   protected ScriptExecutorServiceImpl() {
   }
@@ -122,15 +122,6 @@ public class ScriptExecutorServiceImpl implements DeploymentTask {
           + scriptInput.getClass().getName());
       throw new ScriptExecutionException(res);
     }
-
-    // Concatenate script arguments to callstring
-    if (args != null) {
-      for (String s : args) {
-        scriptCallString += " ";
-        scriptCallString += s;
-      }
-    }
-
     long processid = 0;
     logger.debug("ExecutionType: Extern: " + scriptCallString);
 
@@ -145,9 +136,6 @@ public class ScriptExecutorServiceImpl implements DeploymentTask {
       } else {
         script.setMode(Script.SEPARATED_MODE);
       }
-      
-      //        ServiceStepEventSource eventSource = ServiceStepEventHandling.getEventSource();
-      //        eventSource.listenOnCancelEvents(script);
 
       long startTime = System.currentTimeMillis();
       if (timeoutInteger != null) {
@@ -166,16 +154,16 @@ public class ScriptExecutorServiceImpl implements DeploymentTask {
         eventSource.listenOnAbortEvents(script);
       } catch (XPRC_TTLExpirationBeforeHandlerRegistration e) {
         scriptExecutionResult.setScriptError("Execution timeout while executing script " + scriptCallString + ": " + e.getMessage());
-        scriptExecutionResult.setReturnValue(127); // FIXME what is 127??
+        scriptExecutionResult.setReturnValue(RETURN_VAL_127);
         throw new ScriptExecutionException(scriptExecutionResult, e);
       }
 
       // Starten der Ausfuehrung!
       try {
-        processid = script.execGetPid(scriptCallString);
+        processid = script.execGetPid(scriptCallString, args);
       } catch (IOException e1) {
         scriptExecutionResult.setScriptError("Error while executing script " + scriptCallString + ": " + e1.getMessage());
-        scriptExecutionResult.setReturnValue(127); // FIXME what is 127??
+        scriptExecutionResult.setReturnValue(RETURN_VAL_127);
         throw new ScriptExecutionException(scriptExecutionResult, e1);
       }
 
