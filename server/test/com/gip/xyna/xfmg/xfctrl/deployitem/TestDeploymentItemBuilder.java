@@ -25,7 +25,7 @@ import java.util.Set;
 import org.junit.Test;
 
 import com.gip.xyna.exceptions.Ex_FileAccessException;
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemInterface;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemRegistry;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemState.DeploymentLocation;
@@ -65,7 +65,7 @@ public class TestDeploymentItemBuilder extends TestDeploymentItemBuildSetup {
   public void testEmptyWf() {
     Optional<DeploymentItem> odi = null;
     try {
-       odi = DeploymentItemBuilder.build(B_WORKFLOW_FQNAME, Optional.of(XMOMType.WORKFLOW), TEST_REVISION);
+       odi = DeploymentItemBuilder.build(B_WORKFLOW_FQNAME, Optional.ofNullable(XMOMType.WORKFLOW), TEST_REVISION);
     } catch (Throwable t) {
       t.printStackTrace();
       fail("Build should have succeeded");
@@ -83,7 +83,7 @@ public class TestDeploymentItemBuilder extends TestDeploymentItemBuildSetup {
   public void testCallChain() {
     Optional<DeploymentItem> odi = null;
     try {
-      odi = DeploymentItemBuilder.build(A_WORKFLOW_FQNAME, Optional.of(XMOMType.WORKFLOW), TEST_REVISION);
+      odi = DeploymentItemBuilder.build(A_WORKFLOW_FQNAME, Optional.ofNullable(XMOMType.WORKFLOW), TEST_REVISION);
     } catch (Throwable t) {
       t.printStackTrace();
       fail("Build should have succeeded");
@@ -111,7 +111,7 @@ public class TestDeploymentItemBuilder extends TestDeploymentItemBuildSetup {
   @Test
   public void testNonExistingItem() {
     try {
-      Optional<DeploymentItem> odi = DeploymentItemBuilder.build("i.do.not.Exist", Optional.of(XMOMType.WORKFLOW), TEST_REVISION);
+      Optional<DeploymentItem> odi = DeploymentItemBuilder.build("i.do.not.Exist", Optional.ofNullable(XMOMType.WORKFLOW), TEST_REVISION);
       assertFalse(odi.isPresent());
     } catch (Throwable t) {
       t.printStackTrace();
@@ -124,7 +124,7 @@ public class TestDeploymentItemBuilder extends TestDeploymentItemBuildSetup {
   public void testPartialConstantOutput() {
     Optional<DeploymentItem> odi = null;
     try {
-       odi = DeploymentItemBuilder.build(D_WORKFLOW_FQNAME, Optional.of(XMOMType.WORKFLOW), TEST_REVISION);
+       odi = DeploymentItemBuilder.build(D_WORKFLOW_FQNAME, Optional.ofNullable(XMOMType.WORKFLOW), TEST_REVISION);
     } catch (Throwable t) {
       t.printStackTrace();
       fail("Build should have succeeded");
@@ -159,7 +159,7 @@ public class TestDeploymentItemBuilder extends TestDeploymentItemBuildSetup {
   public void testConstantOperationInput() {
     Optional<DeploymentItem> odi = null;
     try {
-       odi = DeploymentItemBuilder.build(E_WORKFLOW_FQNAME, Optional.of(XMOMType.WORKFLOW), TEST_REVISION);
+       odi = DeploymentItemBuilder.build(E_WORKFLOW_FQNAME, Optional.ofNullable(XMOMType.WORKFLOW), TEST_REVISION);
     } catch (Throwable t) {
       t.printStackTrace();
       fail("Build should have succeeded");
@@ -204,7 +204,7 @@ public class TestDeploymentItemBuilder extends TestDeploymentItemBuildSetup {
   public void testConstantListOutput() {
     Optional<DeploymentItem> odi = null;
     try {
-       odi = DeploymentItemBuilder.build(CONSTANT_LIST_OUTPUT_WF_FQNAME, Optional.of(XMOMType.WORKFLOW), TEST_REVISION);
+       odi = DeploymentItemBuilder.build(CONSTANT_LIST_OUTPUT_WF_FQNAME, Optional.ofNullable(XMOMType.WORKFLOW), TEST_REVISION);
     } catch (Throwable t) {
       t.printStackTrace();
       fail("Build should have succeeded");
@@ -248,7 +248,7 @@ public class TestDeploymentItemBuilder extends TestDeploymentItemBuildSetup {
   
   @Test
   public void testNullCheckAccessChainGeneration() throws UnsupportedEncodingException, IOException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY, Ex_FileAccessException, XPRC_XmlParsingException, XPRC_OBJECT_EXISTS_BUT_TYPE_DOES_NOT_MATCH, XPRC_InvalidPackageNameException, XPRC_InheritedConcurrentDeploymentException, AssumedDeadlockException, XPRC_MDMDeploymentException {
-    Optional<DeploymentItem> odi = DeploymentItemBuilder.build(NULL_CHECK_CHOICE_WF_FQNAME, Optional.of(XMOMType.WORKFLOW), TEST_REVISION);
+    Optional<DeploymentItem> odi = DeploymentItemBuilder.build(NULL_CHECK_CHOICE_WF_FQNAME, Optional.ofNullable(XMOMType.WORKFLOW), TEST_REVISION);
     assertTrue(odi.isPresent());
     
     Set<DeploymentItemInterface> diis = odi.get().getInterfaceEmployment().get(DeploymentLocation.SAVED);
@@ -275,7 +275,7 @@ public class TestDeploymentItemBuilder extends TestDeploymentItemBuildSetup {
   
   @Test
   public void testTemplateBlockInstanceInvocation() throws UnsupportedEncodingException, IOException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY, Ex_FileAccessException, XPRC_XmlParsingException, XPRC_OBJECT_EXISTS_BUT_TYPE_DOES_NOT_MATCH, XPRC_InvalidPackageNameException, XPRC_InheritedConcurrentDeploymentException, AssumedDeadlockException, XPRC_MDMDeploymentException {
-    Optional<DeploymentItem> odi = DeploymentItemBuilder.build(TEMPLATE_BLOCK_INSTANCE_INVOCATION_FQNAME, Optional.of(XMOMType.WORKFLOW), TEST_REVISION);
+    Optional<DeploymentItem> odi = DeploymentItemBuilder.build(TEMPLATE_BLOCK_INSTANCE_INVOCATION_FQNAME, Optional.ofNullable(XMOMType.WORKFLOW), TEST_REVISION);
     assertTrue(odi.isPresent());
     Set<DeploymentItemInterface> diis = odi.get().getInterfaceEmployment().get(DeploymentLocation.SAVED);
     boolean foundMappingAssignement = false;
@@ -314,7 +314,7 @@ public class TestDeploymentItemBuilder extends TestDeploymentItemBuildSetup {
   
   @Test
   public void testMappingAssignmentGeneration() throws UnsupportedEncodingException, IOException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY, Ex_FileAccessException, XPRC_XmlParsingException, XPRC_OBJECT_EXISTS_BUT_TYPE_DOES_NOT_MATCH, XPRC_InvalidPackageNameException, XPRC_InheritedConcurrentDeploymentException, AssumedDeadlockException, XPRC_MDMDeploymentException {
-    Optional<DeploymentItem> odi = DeploymentItemBuilder.build(MAPPING_ASSIGNMENT_WF_FQNAME, Optional.of(XMOMType.WORKFLOW), TEST_REVISION);
+    Optional<DeploymentItem> odi = DeploymentItemBuilder.build(MAPPING_ASSIGNMENT_WF_FQNAME, Optional.ofNullable(XMOMType.WORKFLOW), TEST_REVISION);
     assertTrue(odi.isPresent());
     
     Set<DeploymentItemInterface> diis = odi.get().getInterfaceEmployment().get(DeploymentLocation.SAVED);

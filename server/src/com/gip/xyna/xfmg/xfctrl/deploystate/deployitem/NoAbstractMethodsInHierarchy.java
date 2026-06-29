@@ -20,7 +20,7 @@ package com.gip.xyna.xfmg.xfctrl.deploystate.deployitem;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemInterface;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemState;
@@ -40,7 +40,7 @@ public class NoAbstractMethodsInHierarchy implements DeploymentItemInterface, In
   private Optional<Pair<TypeInterface, OperationInterface>> findFirstUnimplementedAbstractOperation() {
     InterfaceResolutionContext context = InterfaceResolutionContext.resCtx.get();
     Map<String, OperationInterface> concreteOperations = new HashMap<String, OperationInterface>();
-    Optional<TypeInterface> supertype = Optional.of(context.getLocalType());
+    Optional<TypeInterface> supertype = Optional.ofNullable(context.getLocalType());
     while (supertype.isPresent()) {
       DeploymentItemState dis = context.resolve(supertype.get());
       if (dis == null) {
@@ -53,7 +53,7 @@ public class NoAbstractMethodsInHierarchy implements DeploymentItemInterface, In
         switch (op.getImplType()) {
           case ABSTRACT :
             if (!containsImplementation(concreteOperations, op)) {
-              return Optional.of(Pair.of(supertype.get(), op));
+              return Optional.ofNullable(Pair.of(supertype.get(), op));
             }
             break;
           case CONCRETE :

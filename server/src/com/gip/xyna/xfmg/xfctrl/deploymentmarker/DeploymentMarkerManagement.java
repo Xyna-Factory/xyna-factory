@@ -25,7 +25,7 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.FunctionGroup;
 import com.gip.xyna.FutureExecution;
 import com.gip.xyna.XynaFactory;
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemIdentifier;
 import com.gip.xyna.xnwh.exceptions.XNWH_InvalidSelectStatementException;
@@ -99,10 +99,26 @@ public class DeploymentMarkerManagement extends FunctionGroup {
     storage.moveDeploymentMarker(oldDeploymentItem, newDeploymentItem, revision);
   }
   
+  /**
+  * @deprecated use java.util.Optional instead
+  */
+  @Deprecated
+  public List<DeploymentMarker> searchDeploymentTags(com.gip.xyna.utils.collections.Optional<? extends DeploymentItemIdentifier> deploymentItem, Long revision) throws PersistenceLayerException, XNWH_SelectParserException, XNWH_InvalidSelectStatementException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
+    return storage.searchDeploymentTags(deploymentItem.adapt(), revision);
+  }
+  
   public List<DeploymentMarker> searchDeploymentTags(Optional<? extends DeploymentItemIdentifier> deploymentItem, Long revision) throws PersistenceLayerException, XNWH_SelectParserException, XNWH_InvalidSelectStatementException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
     return storage.searchDeploymentTags(deploymentItem, revision);
   }
 
+  /**
+  * @deprecated use java.util.Optional instead
+  */
+  @Deprecated
+  public List<DeploymentMarker> searchDeploymentTasks(com.gip.xyna.utils.collections.Optional<? extends DeploymentItemIdentifier> deploymentItem, Long revision) throws PersistenceLayerException, XNWH_SelectParserException, XNWH_InvalidSelectStatementException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
+    return storage.searchDeploymentTasks(deploymentItem.adapt(), revision);
+  }
+  
   public List<DeploymentMarker> searchDeploymentTasks(Optional<? extends DeploymentItemIdentifier> deploymentItem, Long revision) throws PersistenceLayerException, XNWH_SelectParserException, XNWH_InvalidSelectStatementException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
     return storage.searchDeploymentTasks(deploymentItem, revision);
   }

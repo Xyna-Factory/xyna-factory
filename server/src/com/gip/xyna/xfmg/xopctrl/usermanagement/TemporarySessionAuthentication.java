@@ -23,7 +23,7 @@ import org.apache.log4j.Logger;
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.XynaFactoryBase;
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.xfmg.exceptions.XFMG_DuplicateSessionException;
 import com.gip.xyna.xfmg.exceptions.XFMG_NameContainsInvalidCharacter;
 import com.gip.xyna.xfmg.exceptions.XFMG_PasswordRestrictionViolation;
@@ -70,7 +70,7 @@ public class TemporarySessionAuthentication {
     boolean rollbackCommandControl = true;
     try {
       if (noFactoryUser) {
-        session = factory.getFactoryManagement().getXynaOperatorControl().getSessionManagement().createSession(new XynaUserCredentials(username, null), Optional.of(rolename), false, true);
+        session = factory.getFactoryManagement().getXynaOperatorControl().getSessionManagement().createSession(new XynaUserCredentials(username, null), Optional.ofNullable(rolename), false, true);
         try {
           factory.getFactoryManagement().getXynaOperatorControl().getSessionManagement().authorizeSession(session.getSessionId(), session.getToken(), rolename);
         } catch (XFMG_UnknownSessionIDException e) {
