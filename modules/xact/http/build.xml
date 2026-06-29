@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,10 @@
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
 
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/HTTPResponseResolverImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+
         <antcall target="build-application" />
     </target>
 
@@ -47,6 +51,7 @@
         <antcall target="create-mdm-jar" />
         <supply-mdm-jar type="common" name="." libDir="lib" />
         <supply-mdm-jar type="mdmimpl" name="HTTPServiceImpl" />
+        <supply-mdm-jar type="mdmimpl" name="HTTPResponseResolverImpl" />
         <delete file="${basedir}/mdm.jar" />
     </target>
 
