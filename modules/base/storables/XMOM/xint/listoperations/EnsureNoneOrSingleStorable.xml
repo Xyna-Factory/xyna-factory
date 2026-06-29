@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,27 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Ensure None or Single Storable" TypeName="EnsureNoneOrSingleStorable" TypePath="xint.listoperations" Version="1.8">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Ensure None or Single Storable" TypeName="EnsureNoneOrSingleStorable" TypePath="xint.listoperations" Version="1.8">
   <Meta>
     <FixedDetailOptions>highDetailsMode,showDetailAreas,useWidth</FixedDetailOptions>
   </Meta>
-  <Operation ID="0" Label="Ensure None or Single Storable" Name="EnsureNoneOrSingleStorable">
+  <Operation ID="0" IsStatic="false" Label="Ensure None or Single Storable" Name="EnsureNoneOrSingleStorable">
     <Input>
-      <Data ID="4" IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable">
-        <Target RefID="7"/>
-        <Target RefID="13"/>
-        <Target RefID="81"/>
-        <Target RefID="132"/>
-      </Data>
+      <Data ID="4" IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable"/>
     </Input>
     <Output>
-      <Data ID="2" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable2">
-        <Source RefID="3"/>
-      </Data>
+      <Data ID="2" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable2"/>
     </Output>
     <Throws>
-      <Exception ID="141" Label="Multiple Storables Found" ReferenceName="MultipleStorablesFound" ReferencePath="xint.listoperations" VariableName="multipleStorablesFound141"/>
+      <Exception Label="Multiple Storables Found" ReferenceName="MultipleStorablesFound" ReferencePath="xint.listoperations" VariableName="multipleStorablesFound199"/>
     </Throws>
     <Choice ID="7" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="4"/>
@@ -49,8 +41,6 @@
       </Input>
       <Case ID="5" Label="true" Premise="length(%0%)&gt;&quot;1&quot;">
         <Mappings ID="132" Label="make exception">
-          <Source RefID="4"/>
-          <Target RefID="133"/>
           <Input>
             <Data ID="130" IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable130"/>
             <Source RefID="4"/>
@@ -59,8 +49,6 @@
             <Exception ID="131" Label="Multiple Storables Found" ReferenceName="MultipleStorablesFound" ReferencePath="xint.listoperations" VariableName="multipleStorablesFound131"/>
             <Target RefID="133"/>
           </Output>
-          <Mapping>%1%.exceptionDetailsDE="Es wurden mehrere Storables gefunden, die die Suchkriterien erfüllen"</Mapping>
-          <Mapping>%1%.exceptionDetailsEN="Multiple Storables matching the search criteria have been found"</Mapping>
           <Mapping>%1%.storables=%0%</Mapping>
         </Mappings>
         <Throw ExceptionID="133" ID="33" Label="Throw Multiple Storables Found">
@@ -72,10 +60,6 @@
         <Assign ID="25"/>
       </Case>
     </Choice>
-    <Data ID="16" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable16">
-      <Source RefID="13"/>
-      <Target RefID="99"/>
-    </Data>
     <Choice ID="81" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="4"/>
       <Target RefID="98"/>
@@ -89,8 +73,6 @@
       </Input>
       <Case ID="71" Label="true" Premise="length(%0%)&gt;&quot;0&quot;">
         <Mappings ID="13" Label="take first element">
-          <Source RefID="4"/>
-          <Target RefID="16"/>
           <Meta>
             <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
           </Meta>
@@ -115,7 +97,6 @@
       </Case>
       <Case ID="72" Label="false">
         <Mappings ID="96" Label="empty element (null)">
-          <Target RefID="97"/>
           <Meta>
             <FixedDetailOptions>openConfiguration,FillMode,FlatMode</FixedDetailOptions>
           </Meta>
@@ -135,14 +116,18 @@
         </Assign>
       </Case>
     </Choice>
+    <Data ID="16" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable16">
+      <Source RefID="13"/>
+      <Target RefID="99"/>
+    </Data>
     <Data ID="97" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable97">
       <Source RefID="96"/>
       <Target RefID="100"/>
     </Data>
     <Data ID="98" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable98">
-      <Source RefID="81"/>
       <Source RefID="99"/>
       <Source RefID="100"/>
+      <Source RefID="81"/>
       <Target RefID="3"/>
     </Data>
     <Exception ID="133" Label="Multiple Storables Found" ReferenceName="MultipleStorablesFound" ReferencePath="xint.listoperations" VariableName="multipleStorablesFound133">
