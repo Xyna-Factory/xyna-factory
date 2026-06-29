@@ -44,13 +44,13 @@
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
 
-	<antcall target="build-application" />
+        <antcall target="build-application" />
     </target>
 
     <target name="prepare-mdm-jar">
         <antcall target="create-mdm-jar" />
         <supply-mdm-jar type="common" name="." libDir="lib" />
-	<supply-mdm-jar type="mdmimpl" name="HTTPServiceImpl" />
+        <supply-mdm-jar type="mdmimpl" name="HTTPServiceImpl" />
         <supply-mdm-jar type="mdmimpl" name="HTTPResponseResolverImpl" />
         <delete file="${basedir}/mdm.jar" />
     </target>

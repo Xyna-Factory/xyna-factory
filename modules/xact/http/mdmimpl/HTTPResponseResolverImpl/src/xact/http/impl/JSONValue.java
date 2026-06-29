@@ -170,7 +170,7 @@ public class JSONValue {
             sb.append(ByteUtils.toHexString((byte) c, false));
           } else {
             /*
-             * andere unicode charaktere zu escapen ist optional: http://www.ietf.org/rfc/rfc4627.txt
+             * escaping of all other unicode chars is optional: http://www.ietf.org/rfc/rfc4627.txt
             
             char = unescaped /
                 escape (

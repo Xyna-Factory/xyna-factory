@@ -189,13 +189,7 @@ public class HTTPResponseResolverServiceOperationImpl implements ExtendedDeploym
       }
 
       if (op.equals("equals")) {
-        if (resolvedSource == null && valueString == null) {
-          return true;
-        }
-        if (resolvedSource == null || valueString == null) {
-          return false;
-        }
-        return resolvedSource.equals(valueString);
+        return Objects.equals(resolvedSource, valueString);
       } else if (op.equals("regex")) {
         if (resolvedSource == null || valueString == null) {
           return false;
@@ -280,9 +274,7 @@ public class HTTPResponseResolverServiceOperationImpl implements ExtendedDeploym
         fc = new FileCondition(content);
       } catch (RuntimeException e) {
         logger.info("File " + file.getPath() + " contains invalid/unexpected json.", e);
-        //TODO should maybe be removed from cache, to not be retried until fixed.
         erroneous = true;
-        return false;
       }
       
       return true;
@@ -500,7 +492,7 @@ public class HTTPResponseResolverServiceOperationImpl implements ExtendedDeploym
 
 
     public synchronized void updateAfterChanges(WatchKey wkf) {
-      for (WatchEvent we : wkf.pollEvents()) {
+      for (WatchEvent<?> we : wkf.pollEvents()) {
         String relativePath = ((Path) we.context()).toString();
         if (we.kind() == StandardWatchEventKinds.ENTRY_DELETE) {
           cache.remove(relativePath);
@@ -568,7 +560,7 @@ public class HTTPResponseResolverServiceOperationImpl implements ExtendedDeploym
   private void cleanup() {
     //check if not in use -> cleanup
     for (DirKey k : new HashSet<>(cache.keySet())) {
-      cache.<String> process(k, fi -> null);
+      cache.<Void> process(k, fi -> null);
     }
   }
 

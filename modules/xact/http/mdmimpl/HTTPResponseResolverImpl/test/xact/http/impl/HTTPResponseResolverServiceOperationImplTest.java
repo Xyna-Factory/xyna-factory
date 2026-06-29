@@ -43,7 +43,6 @@ import xact.http.URLPath;
 import xact.http.enums.httpmethods.GET;
 import xact.http.enums.httpmethods.POST;
 import xact.http.enums.statuscode.HTTPStatusCode;
-import xact.http.enums.statuscode.OK;
 import xact.http.impl.HTTPResponseResolverServiceOperationImpl.Condition;
 import xact.templates.Document;
 

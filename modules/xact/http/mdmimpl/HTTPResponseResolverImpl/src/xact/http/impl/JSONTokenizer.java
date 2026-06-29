@@ -25,7 +25,7 @@ import java.util.List;
 
 
 
-//dokumentation siehe hier: http://www.json.org/
+//see: http://www.json.org/
 public class JSONTokenizer {
 
   private static final boolean validate = true;
@@ -83,7 +83,7 @@ public class JSONTokenizer {
                     break;
                   case 'u' : //unicode
                     if (validate) {
-                      //hexadezimale zahl
+                      //hexadecimal number
                       for (int i = 1; i < 5; i++) {
                         n = json.charAt(pos + i);
                         if (n >= '0' && n <= '9') {
@@ -161,7 +161,7 @@ public class JSONTokenizer {
               case '\b' :
                 JSONToken number = new JSONToken(JSONTokenType.number, start, pos - 1);
                 l.add(number);
-                pos--; //letztes zeichen muss als neues token geparst werden
+                pos--; //parse last char as new token
                 if (validate) {
                   validateNumber(json, number);
                 }
@@ -204,7 +204,7 @@ public class JSONTokenizer {
           pos += 3;
           break;
         default :
-          //ignore. zeilenumbrüche, whitespaces, etc
+          //ignore. linebreaks, whitespaces, etc
           if (validate) {
             if (!Character.isWhitespace(n)) {
               throw new InvalidJSONException(pos, "Unexpected character");
