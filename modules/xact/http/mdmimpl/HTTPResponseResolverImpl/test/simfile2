@@ -1,0 +1,25 @@
+{
+  "fileMatch": [
+
+       { "source": "header", "op": "equals", "key": "myheader", "value": "12345679" }
+  ],
+  "responses": [
+    {
+      "match": [
+
+            { "source": "method", "op": "equals", "value": "POST" },
+            { "source": "url", "op": "regex", "value": ".*blubb.*" }
+       ],
+       "response": { "key" : "value", 
+                     "other_key": 129 
+                   }
+      
+    },
+    {
+      "match": [ { "source": "method", "op": "equals", "value": "POST" },
+            { "source": "url", "op": "regex", "value": ".*hello.*" }
+             ],
+      "response": "is 9"
+    }
+  ]
+}
