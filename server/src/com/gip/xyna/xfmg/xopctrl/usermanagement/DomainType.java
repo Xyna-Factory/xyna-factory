@@ -17,6 +17,8 @@
  */
 package com.gip.xyna.xfmg.xopctrl.usermanagement;
 
+
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,31 +46,31 @@ import com.gip.xyna.xfmg.xopctrl.usermanagement.jwt.*;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 
 
-public enum DomainType {
-  
-  LOCAL("Local") {
 
+public enum DomainType {
+
+  LOCAL("Local") {
     public LocalUserAuthentication generateAuthenticationMethod(Domain domain) {
       return new LocalUserAuthentication();
     }
 
-    public DomainTypeSpecificData generateDomainTypeSpecificData(Map<String, List<String>> specifics)
-                    throws IllegalArgumentException {
+
+    public DomainTypeSpecificData generateDomainTypeSpecificData(Map<String, List<String>> specifics) throws IllegalArgumentException {
       throw new UnsupportedOperationException("Can not set domain specific data on factory local domain");
     }
-    
-  },
-  RADIUS("RADIUS") {
-    
+
+  }, RADIUS("RADIUS") {
+
     public final static String RADIUS_SPECIFIC_ORDERTYPE_PARAMETER_IDENTIFIER = "ordertype";
     public final static String RADIUS_SPECIFIC_SERVER_PARAMETER_IDENTIFIER = "server";
+
 
     public RADIUSUserAuthentication generateAuthenticationMethod(Domain domain) {
       return new RADIUSUserAuthentication(domain);
     }
-    
-    public RADIUSDomainSpecificData generateDomainTypeSpecificData(Map<String, List<String>> specifics)
-                    throws IllegalArgumentException {
+
+
+    public RADIUSDomainSpecificData generateDomainTypeSpecificData(Map<String, List<String>> specifics) throws IllegalArgumentException {
       List<String> ordertype = specifics.get(RADIUS_SPECIFIC_ORDERTYPE_PARAMETER_IDENTIFIER);
       if (ordertype.size() > 1) {
         throw new IllegalArgumentException("Too many ordertypes!");
@@ -84,7 +86,8 @@ public enum DomainType {
         // TODO only split first 3 as presharedKey might contain ',' ?
         String[] serverParts = server.split(",");
         if (serverParts.length != 3) {
-          throw new IllegalArgumentException("Invalid RADIUS server format: expected <IPv4/IPv6>,<Port>,<PresharedKey>  received " + server);
+          throw new IllegalArgumentException(
+              "Invalid RADIUS server format: expected <IPv4/IPv6>,<Port>,<PresharedKey>  received " + server);
         }
         String ipValue = serverParts[0];
         IP ip = IP.generateIPFromString(ipValue);
@@ -95,22 +98,22 @@ public enum DomainType {
       }
       return new RADIUSDomainSpecificData(ordertype.get(0), radiusServers);
     }
-  },
-  LDAP("LDAP") {
+  }, LDAP("LDAP") {
 
     public final static String LDAP_SPECIFIC_ORDERTYPE_PARAMETER_IDENTIFIER = "ordertype";
     public final static String LDAP_SPECIFIC_WORKSPACE_PARAMETER_IDENTIFIER = "workspace";
     public final static String LDAP_SPECIFIC_APPLICATION_PARAMETER_IDENTIFIER = "application";
     public final static String LDAP_SPECIFIC_VERSION_PARAMETER_IDENTIFIER = "version";
     public final static String LDAP_SPECIFIC_SERVER_PARAMETER_IDENTIFIER = "server";
-    
+
+
     public LDAPUserAuthentication generateAuthenticationMethod(Domain domain) {
       return new LDAPUserAuthentication(domain);
     }
 
+
     @Override
-    public LDAPDomainSpecificData generateDomainTypeSpecificData(Map<String, List<String>> specifics)
-                    throws IllegalArgumentException {
+    public LDAPDomainSpecificData generateDomainTypeSpecificData(Map<String, List<String>> specifics) throws IllegalArgumentException {
       List<String> ordertype = specifics.get(LDAP_SPECIFIC_ORDERTYPE_PARAMETER_IDENTIFIER);
       if (ordertype == null || ordertype.size() < 1) {
         throw new IllegalArgumentException("No ordertype for authentification!");
@@ -122,14 +125,14 @@ public enum DomainType {
       List<String> versions = specifics.get(LDAP_SPECIFIC_VERSION_PARAMETER_IDENTIFIER);
       List<String> workspaces = specifics.get(LDAP_SPECIFIC_WORKSPACE_PARAMETER_IDENTIFIER);
       RuntimeContext rc = null;
-      if (applications != null && applications.size() > 0 &&
-          versions != null && versions.size() > 0) {
+      if (applications != null && applications.size() > 0 && versions != null && versions.size() > 0) {
         rc = new Application(applications.get(0), versions.get(0));
       } else if (workspaces != null && workspaces.size() > 0) {
         rc = new Workspace(workspaces.get(0));
       }
       if (rc != null) {
-        RevisionManagement revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
+        RevisionManagement revisionManagement =
+            XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
         try {
           revision = revisionManagement.getRevision(rc);
         } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
@@ -147,37 +150,32 @@ public enum DomainType {
         if (serverParts.length < 2) {
           throw new IllegalArgumentException("Invalid LDAP server format: expected at least <Host>,<Port>. Received " + server);
         }
-        LDAPServer.Builder serverBuilder = new LDAPServer.Builder()
-                      .host(serverParts[0])
-                      .port(Integer.parseInt(serverParts[1]));
+        LDAPServer.Builder serverBuilder = new LDAPServer.Builder().host(serverParts[0]).port(Integer.parseInt(serverParts[1]));
         if (serverParts.length > 3 && serverParts.length <= 5) {
           serverBuilder.sSLParameter(buildSSLKeystoreParameter(serverParts, 2));
         } else if (serverParts.length > 5) {
-          serverBuilder.sSLParameter(new SSLKeyAndTruststoreParameter.Builder()
-                                           .sSLKeystore(buildSSLKeystoreParameter(serverParts, 2))
-                                           .sSLTruststore(buildSSLKeystoreParameter(serverParts, 5)).instance());
+          serverBuilder.sSLParameter(new SSLKeyAndTruststoreParameter.Builder().sSLKeystore(buildSSLKeystoreParameter(serverParts, 2))
+                                         .sSLTruststore(buildSSLKeystoreParameter(serverParts, 5)).instance());
         }
         ldapServers.add(serverBuilder.instance());
       }
       return new LDAPDomainSpecificData(ordertype.get(0), revision, ldapServers);
     }
-    
+
+
     private SSLKeystoreParameter buildSSLKeystoreParameter(String[] args, int index) {
-      SSLKeystoreParameter.Builder sslBuilder = new SSLKeystoreParameter.Builder()
-                          .path(args[index + 0])
-                          .type(args[index + 1]);
+      SSLKeystoreParameter.Builder sslBuilder = new SSLKeystoreParameter.Builder().path(args[index + 0]).type(args[index + 1]);
       if (args.length > index + 2) {
         sslBuilder.passphrase(args[index + 2]);
       }
       return sslBuilder.instance();
     }
-  },
-  JWT("JWT") {
-
+  }, JWT("JWT") {
     @Override
     public JWTUserAuthentication generateAuthenticationMethod(Domain domain) {
-      return new JWTUserAuthentication((JWTDomainSpecificData) domain.getDomainSpecificData(), null /*new JWKSCache()*/);
+      return new JWTUserAuthentication((JWTDomainSpecificData) domain.getDomainSpecificData());
     }
+
 
     @Override
     public JWTDomainSpecificData generateDomainTypeSpecificData(Map<String, List<String>> specifics) {
@@ -189,35 +187,71 @@ public enum DomainType {
       if (intendedAudience == null || intendedAudience.isEmpty()) {
         throw new IllegalArgumentException("No intended audience provided for JWT domain!");
       }
+      List<String> jwksUriList = specifics.get("jwksUri");
+      Optional<String> jwksUri = (jwksUriList != null && !jwksUriList.isEmpty()) ? Optional.of(jwksUriList.get(0)) : Optional.empty();
+      List<String> rolePrefixList = specifics.get("rolePrefix");
+      Optional<String> rolePrefix =
+          (rolePrefixList != null && !rolePrefixList.isEmpty()) ? Optional.of(rolePrefixList.get(0)) : Optional.empty();
+      List<String> roleSuffixList = specifics.get("roleSuffix");
+      Optional<String> roleSuffix =
+          (roleSuffixList != null && !roleSuffixList.isEmpty()) ? Optional.of(roleSuffixList.get(0)) : Optional.empty();
+      List<String> roleOrder = specifics.get("roleOrder");
+      if (roleOrder != null) {
+        List<String> cleanedRoleOrder = new ArrayList<String>();
+        for (String role : roleOrder) {
+          if (role != null) {
+            for (String part : role.split(",")) {
+              String trimmedRole = part.trim();
+              if (!trimmedRole.isEmpty()) {
+                cleanedRoleOrder.add(trimmedRole);
+              }
+            }
+          }
+        }
+        roleOrder = cleanedRoleOrder;
+      }
       List<String> roleClaimPathList = specifics.get("roleClaimPath");
-      Optional<String> roleClaimPath = (roleClaimPathList != null && !roleClaimPathList.isEmpty())
-          ? Optional.of(roleClaimPathList.get(0))
-          : Optional.empty();
+      Optional<String> roleClaimPath =
+          (roleClaimPathList != null && !roleClaimPathList.isEmpty()) ? Optional.of(roleClaimPathList.get(0)) : Optional.empty();
       List<String> defaultRoleList = specifics.get("defaultRole");
-      Optional<String> defaultRole = (defaultRoleList != null && !defaultRoleList.isEmpty())
-          ? Optional.of(defaultRoleList.get(0))
-          : Optional.empty();
-      return new JWTDomainSpecificData(trustedIssuers, intendedAudience, roleClaimPath, defaultRole);
+      Optional<String> defaultRole =
+          (defaultRoleList != null && !defaultRoleList.isEmpty()) ? Optional.of(defaultRoleList.get(0)) : Optional.empty();
+
+      JWTDomainSpecificData.AuthValidationMode authValidationMode = JWTDomainSpecificData.AuthValidationMode.JWT;
+      List<String> validationModeList = specifics.get("authValidationMode");
+      if (validationModeList != null && !validationModeList.isEmpty()) {
+        try {
+          authValidationMode = JWTDomainSpecificData.AuthValidationMode.valueOf(validationModeList.get(0).trim().toUpperCase());
+        } catch (IllegalArgumentException e) {
+          throw new IllegalArgumentException(
+              "Invalid authValidationMode: '" + validationModeList.get(0) + "'. Allowed values: JWT or HEADER.");
+        }
+      }
+
+      return new JWTDomainSpecificData(trustedIssuers, intendedAudience, roleClaimPath, defaultRole, rolePrefix, roleSuffix, roleOrder,
+                                       jwksUri, authValidationMode);
     }
   };
-  
 
 
   private final String name;
-  
+
+
   private DomainType(String name) {
     this.name = name;
   }
+
 
   @Override
   public String toString() {
     return name;
   }
 
-  
+
   public String getName() {
     return name;
   }
+
 
   public static DomainType valueOfNiceString(String name) {
     for (DomainType domain : values()) {
@@ -227,10 +261,11 @@ public enum DomainType {
     }
     throw new IllegalArgumentException("Domain type '" + name + "' is not known.");
   }
-  
-  
+
+
   public abstract UserAuthentificationMethod generateAuthenticationMethod(Domain domain);
-  
-  public abstract DomainTypeSpecificData generateDomainTypeSpecificData(Map<String, List<String>> specifics) throws IllegalArgumentException;
+
+  public abstract DomainTypeSpecificData generateDomainTypeSpecificData(Map<String, List<String>> specifics)
+      throws IllegalArgumentException;
 
 }
