@@ -21,6 +21,7 @@ package com.gip.xyna.xact.filter.actions.auth;
 
 import java.rmi.RemoteException;
 import java.security.cert.CertificateException;
+
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
@@ -56,10 +57,10 @@ import xmcp.auth.ExternalUserLoginRequest;
  * "force":"true"
  * "domain":"<domainname>"
  * }
- * 
+ *
  * antwort:
- * so wie beim login, nur dass die sessionerzeugung über die externe domain passiert
- * 
+ * so wie beim login, nur dass die sessionerzeugung ï¿½ber die externe domain passiert
+ *
  */
 public class ExternalUserLoginAction implements FilterAction {
 
@@ -70,31 +71,40 @@ public class ExternalUserLoginAction implements FilterAction {
   private static final Exception noUserInfoException = new Exception("No user info provided");
   private static final Exception notAuthorizedException = new Exception("Session could not be authorized.");
   private static final Exception internalServerError = new Exception("Internal Server Error");
+
+
   static {
     noUserInfoException.setStackTrace(new StackTraceElement[0]);
     notAuthorizedException.setStackTrace(new StackTraceElement[0]);
     internalServerError.setStackTrace(new StackTraceElement[0]);
   }
-  
+
+
   private XMOMGui xmomgui;
   private static String headerName = SSL_CLIENT_CERT;
   private static ExternalAuthType loginType = ExternalAuthType.CLIENT_CERT;
 
+
+
   public static enum ExternalAuthType {
     CLIENT_CERT, JSON_WEB_TOKEN;
   }
-  
+
+
   public ExternalUserLoginAction(XMOMGui xmomgui) {
     this.xmomgui = xmomgui;
   }
+
 
   public static void setExternalAuthType(ExternalAuthType type) {
     loginType = type;
   }
 
+
   public static void setAuthTokenHeaderName(String value) {
     headerName = value.toLowerCase();
   }
+
 
   @Override
   public boolean match(URLPath url, Method method) {
@@ -107,9 +117,7 @@ public class ExternalUserLoginAction implements FilterAction {
   }
 
 
-
-  public static Pair<Boolean, ExternalUserInfo> getExternalUserInfoOrFail(JsonFilterActionInstance jfai,
-      HTTPTriggerConnection tc)
+  public static Pair<Boolean, ExternalUserInfo> getExternalUserInfoOrFail(JsonFilterActionInstance jfai, HTTPTriggerConnection tc)
       throws XynaException {
     String header = tc.getHeader().getProperty(headerName);
     try {
@@ -186,7 +194,7 @@ public class ExternalUserLoginAction implements FilterAction {
     return error(creds, tc, jfai, notAuthorizedException);
   }
 
-  
+
   private FilterActionInstance error(SessionCredentials creds, HTTPTriggerConnection tc, JsonFilterActionInstance jfai, Throwable e)
       throws SocketNotAvailableException {
     AuthUtils.replyError(tc, jfai, Status.unauthorized, e);
