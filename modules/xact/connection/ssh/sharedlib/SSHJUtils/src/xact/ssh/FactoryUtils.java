@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,8 +45,6 @@ public final class FactoryUtils {
                     Map.entry("aes128-cbc", BlockCiphers::AES128CBC),
                     Map.entry("aes192-cbc", BlockCiphers::AES192CBC),
                     Map.entry("aes256-cbc", BlockCiphers::AES256CBC),
-                    Map.entry("blowfish-ctr", BlockCiphers::BlowfishCTR),
-                    Map.entry("blowfish-cbc", BlockCiphers::BlowfishCBC),
                     Map.entry("twofish128-ctr", BlockCiphers::Twofish128CTR),
                     Map.entry("twofish192-ctr", BlockCiphers::Twofish192CTR),
                     Map.entry("twofish256-ctr", BlockCiphers::Twofish256CTR),
