@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.CollectionUtils;
 import com.gip.xyna.utils.collections.CollectionUtils.Filter;
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xfmg.exceptions.XFMG_CouldNotLockOperation;
 import com.gip.xyna.xfmg.exceptions.XFMG_CouldNotStopApplication;
@@ -113,7 +113,7 @@ public class StopapplicationImpl extends XynaCommandImplementation<Stopapplicati
           throw new IllegalArgumentException("Unknown order entrance: '" + type + "'");
         }
       }
-      orderEntrances = new Optional<EnumSet<OrderEntranceType>>(orderEntranceTypes);
+      orderEntrances = Optional.ofNullable(orderEntranceTypes);
     } else {
       orderEntrances = Optional.empty();
     }

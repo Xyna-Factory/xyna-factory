@@ -81,7 +81,7 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 
 import com.gip.xyna.exceptions.Ex_FileAccessException;
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.utils.shell.ShellCommand;
 import com.gip.xyna.utils.shell.ShellExecution;
 import com.gip.xyna.utils.shell.ShellExecutionResponse;
@@ -148,7 +148,7 @@ public class TestDeploymentItemLifecycle extends TestDeploymentItemBuildSetup {
   
   @Test
   public void testBasicLifecycle() throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY, Ex_FileAccessException, XPRC_XmlParsingException, XPRC_OBJECT_EXISTS_BUT_TYPE_DOES_NOT_MATCH, XPRC_InvalidPackageNameException, XPRC_InheritedConcurrentDeploymentException, AssumedDeadlockException, XPRC_MDMDeploymentException, XPRC_InvalidVariableIdException, XPRC_InvalidServiceIdException, IOException {
-    Optional<DeploymentItem> odi_A = DeploymentItemBuilder.build(A_WORKFLOW_FQNAME, Optional.of(XMOMType.WORKFLOW), TEST_REVISION);
+    Optional<DeploymentItem> odi_A = DeploymentItemBuilder.build(A_WORKFLOW_FQNAME, Optional.ofNullable(XMOMType.WORKFLOW), TEST_REVISION);
     assertTrue(odi_A.isPresent());
     registry.save(odi_A.get()); // A -> x | x -> x
     DeploymentItemState dis_A = registry.get(A_WORKFLOW_FQNAME);
@@ -158,7 +158,7 @@ public class TestDeploymentItemLifecycle extends TestDeploymentItemBuildSetup {
     assertNotNull(disr.getInconsitencies());
     assertEquals(2, disr.getInconsitencies().size());
     
-    Optional<DeploymentItem> odi_B = DeploymentItemBuilder.build(B_WORKFLOW_FQNAME, Optional.of(XMOMType.WORKFLOW), TEST_REVISION);
+    Optional<DeploymentItem> odi_B = DeploymentItemBuilder.build(B_WORKFLOW_FQNAME, Optional.ofNullable(XMOMType.WORKFLOW), TEST_REVISION);
     assertTrue(odi_B.isPresent());
     registry.save(odi_B.get()); // A -> B | x -> x
     
@@ -168,7 +168,7 @@ public class TestDeploymentItemLifecycle extends TestDeploymentItemBuildSetup {
     assertNotNull(disr.getInconsitencies());
     assertEquals(1, disr.getInconsitencies().size());
     
-    Optional<DeploymentItem> odi_A_DT = DeploymentItemBuilder.build(A_DATATYPE_FQNAME, Optional.of(XMOMType.DATATYPE), TEST_REVISION);
+    Optional<DeploymentItem> odi_A_DT = DeploymentItemBuilder.build(A_DATATYPE_FQNAME, Optional.ofNullable(XMOMType.DATATYPE), TEST_REVISION);
     assertTrue(odi_A_DT.isPresent());
     registry.save(odi_A_DT.get());
     
@@ -183,7 +183,7 @@ public class TestDeploymentItemLifecycle extends TestDeploymentItemBuildSetup {
     assertEquals("Should be SAVED as B only got deployed in a consistent state", DisplayState.SAVED, dis_A.deriveDisplayState());
     
     setupWorkspace(B_WORKFLOW_FQNAME, b2WorkflowXML);
-    Optional<DeploymentItem> odi_B2 = DeploymentItemBuilder.build(B_WORKFLOW_FQNAME, Optional.of(XMOMType.WORKFLOW), TEST_REVISION);
+    Optional<DeploymentItem> odi_B2 = DeploymentItemBuilder.build(B_WORKFLOW_FQNAME, Optional.ofNullable(XMOMType.WORKFLOW), TEST_REVISION);
     assertTrue(odi_B2.isPresent());
     registry.save(odi_B2.get()); // A -> B' | x -> B
     
@@ -193,7 +193,7 @@ public class TestDeploymentItemLifecycle extends TestDeploymentItemBuildSetup {
     registry.deployFinished(odi_B2.get().getName(), DeploymentTransition.SUCCESS, true, Optional.<Throwable>empty()); // A -> B' | x -> B'
     
     setupWorkspace(B_WORKFLOW_FQNAME, bWorkflowXML);
-    odi_B = DeploymentItemBuilder.build(B_WORKFLOW_FQNAME, Optional.of(XMOMType.WORKFLOW), TEST_REVISION);
+    odi_B = DeploymentItemBuilder.build(B_WORKFLOW_FQNAME, Optional.ofNullable(XMOMType.WORKFLOW), TEST_REVISION);
     registry.save(odi_B.get()); // A -> B | x -> B'
     System.out.println(registry.get(odi_B.get().getName()));
     
@@ -205,7 +205,7 @@ public class TestDeploymentItemLifecycle extends TestDeploymentItemBuildSetup {
     assertEquals(DisplayState.INVALID, dis_A.deriveDisplayState());
     
     setupWorkspace(A_WORKFLOW_FQNAME, a3WorkflowXML);
-    odi_A = DeploymentItemBuilder.build(A_WORKFLOW_FQNAME, Optional.of(XMOMType.WORKFLOW), TEST_REVISION);
+    odi_A = DeploymentItemBuilder.build(A_WORKFLOW_FQNAME, Optional.ofNullable(XMOMType.WORKFLOW), TEST_REVISION);
     registry.save(odi_A.get()); // A'' -> B | A -> B'
     
     dis_A = registry.get(A_WORKFLOW_FQNAME);
@@ -216,7 +216,7 @@ public class TestDeploymentItemLifecycle extends TestDeploymentItemBuildSetup {
   
   @Test
   public void testNullCheckChoiceLifecycle() throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY, Ex_FileAccessException, XPRC_XmlParsingException, XPRC_OBJECT_EXISTS_BUT_TYPE_DOES_NOT_MATCH, XPRC_InvalidPackageNameException, XPRC_InheritedConcurrentDeploymentException, AssumedDeadlockException, XPRC_MDMDeploymentException {
-    Optional<DeploymentItem> odi_NullCheckChoice = DeploymentItemBuilder.build(NULL_CHECK_CHOICE_WF_FQNAME, Optional.of(XMOMType.WORKFLOW), TEST_REVISION);
+    Optional<DeploymentItem> odi_NullCheckChoice = DeploymentItemBuilder.build(NULL_CHECK_CHOICE_WF_FQNAME, Optional.ofNullable(XMOMType.WORKFLOW), TEST_REVISION);
     assertTrue(odi_NullCheckChoice.isPresent());
     registry.save(odi_NullCheckChoice.get());
     

@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.gip.xyna.XynaFactory;
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.xfmg.xfctrl.dependencies.RuntimeContextDependencyManagement;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemIdentifier;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemRegistry;
@@ -63,7 +63,7 @@ public class RevisionBasedCrossResolver implements CrossRevisionResolver {
     if (definingRevision == null) {
       return Optional.empty();
     }
-    return Optional.of(InterfaceResolutionContext.getProvider(identifier, reachableRegistries.get(definingRevision)));
+    return Optional.ofNullable(InterfaceResolutionContext.getProvider(identifier, reachableRegistries.get(definingRevision)));
   }
   
   public Set<Long> identifyReachableRevisions() {
