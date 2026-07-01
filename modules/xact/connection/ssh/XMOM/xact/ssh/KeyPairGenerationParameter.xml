@@ -32,4 +32,5 @@
       <Type>boolean</Type>
     </Meta>
   </Data>
+  <Data Label="key attributes" ReferenceName="KeyAttributes" ReferencePath="xact.ssh" VariableName="keyAttributes"/>
 </DataType>

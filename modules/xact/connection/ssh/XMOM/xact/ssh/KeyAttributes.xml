@@ -1,6 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +16,23 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
- <XynaCommandLineCommand>
-  <CommandDefinition Name="addkeypair" Groups="SSH Connection Management" Description="Adds the specified key pair to the own identities."/>
-  <Argument Name="publickey" Description="Public key."/>
-  <Argument Name="privatekey" Description="Private key"/>
-  <Argument Name="passphrase" Description="Passphrase used during generation of the given key." Optional="true"/>
-  <Argument Name="priority" Description="Priority of the key." Optional="true" />
-  <Argument Name="typeclass" Description="Typeclass of the key." Optional="true" />
-</XynaCommandLineCommand>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Key Attributes" TypeName="KeyAttributes" TypePath="xact.ssh" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="identity" VariableName="identity">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="priority" VariableName="priority">
+    <Meta>
+      <Type>long</Type>
+    </Meta>
+  </Data>
+  <Data Label="typeclass" VariableName="typeclass">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+</DataType>
