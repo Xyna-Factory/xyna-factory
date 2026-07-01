@@ -20,9 +20,11 @@ package xact.ssh.cli.impl;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 import com.gip.xyna.utils.exceptions.XynaException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import xact.ssh.EncryptionType;
+import xact.ssh.KeyPair;
 import xact.ssh.cli.generated.Getpublickey;
 import xact.ssh.impl.SSHConnectionManagementRepositoryAccess;
 
@@ -35,10 +37,11 @@ public class GetpublickeyImpl extends XynaCommandImplementation<Getpublickey> {
     if (payload.getEncryptiontype() != null) {
       type = EncryptionType.getByStringRepresentation(payload.getEncryptiontype());
     }
-    List<String> keys = SSHConnectionManagementRepositoryAccess.getPublicKey(type);
-    writeLineToCommandLine(statusOutputStream, "Found " + keys.size() + " identities:");
-    for (String key : keys) {
-      writeLineToCommandLine(statusOutputStream, key);
+    List<KeyPair> keys = SSHConnectionManagementRepositoryAccess.getPublicKey(type);
+    writeLineToCommandLine(statusOutputStream, "Found " + keys.size() + " identities (columns are identity, priority, typeclass and public key information):");
+    for (KeyPair key : keys) {
+        String outputLine = key.getKeyAttributes().getIdentity() + " " + key.getKeyAttributes().getPriority() + " " + key.getKeyAttributes().getTypeclass() + " " + key.getPublicKey();
+        writeLineToCommandLine(statusOutputStream, outputLine);
     }
   }
 

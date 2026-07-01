@@ -76,6 +76,7 @@ import net.schmizz.sshj.transport.TransportException;
 import net.schmizz.sshj.transport.cipher.Cipher;
 import net.schmizz.sshj.transport.mac.MAC;
 import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
+import net.schmizz.sshj.transport.kex.KeyExchange;
 import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
 import net.schmizz.sshj.userauth.method.AuthMethod;
 import net.schmizz.sshj.userauth.method.AuthPassword;
@@ -443,15 +444,34 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
   //Preservation of the Connection-App - copy of "generateKeyProvider"
   private Collection<KeyProvider> generateKeyProvider(SSHConnectionParameter conParams, XynaIdentityRepository idRepo) {
     List<KeyProvider> kpl = new ArrayList<KeyProvider>();
-    HostKeyCheckingMode checkingMode = HostKeyCheckingMode.getByXynaRepresentation(conParams.getHostKeyChecking());
-    if (checkingMode.getStringRepresentation().equalsIgnoreCase("yes") || checkingMode.getStringRepresentation().equalsIgnoreCase("ask")) {
-      kpl = idRepo.getKey(null, getAlgoType(conParams));
-    } else {
-      kpl = idRepo.getKey(null, Optional.empty());
+
+    //Assumption: The first public key entry contains the (optional) prioritized key alias.
+    List<? extends xact.ssh.AuthenticationMode> authenticationModes = conParams.getAuthenticationModes();
+    List<String> aliasNameList = new ArrayList<String>();
+    String keyAlias = null;
+    for (xact.ssh.AuthenticationMode element : authenticationModes) {
+      if (AuthenticationMethod.getByXynaRepresentation(element).getIdentifiers()[0].equalsIgnoreCase(AuthenticationMethod.PUBLICKEY.getIdentifiers()[0])) {
+        xact.ssh.PublicKey publickey = (xact.ssh.PublicKey) element;
+        if ((publickey.getIdentity() != null) && (! publickey.getIdentity().isBlank())) {
+          aliasNameList.add(publickey.getIdentity());
+        }
+      }
     }
+    if (! aliasNameList.isEmpty()) {
+      keyAlias = aliasNameList.get(0);
+    }
+
+    HostKeyCheckingMode checkingMode = HostKeyCheckingMode.getByXynaRepresentation(conParams.getHostKeyChecking());
+
+    if (checkingMode.getStringRepresentation().equalsIgnoreCase("yes") || checkingMode.getStringRepresentation().equalsIgnoreCase("ask")) {
+      kpl = idRepo.getKey(keyAlias, getAlgoType(conParams));
+    } else {
+      kpl = idRepo.getKey(keyAlias, Optional.empty());
+    }
+
     return kpl;
   }
-  
+
   private final Pattern DSA_FILTER = Pattern.compile("[dD][sS][aAsS]");
   private final Pattern RSA_FILTER = Pattern.compile("[rR][sS][aA]");
 
@@ -710,6 +730,22 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
     boolean ciphersSet = getSSHConnectionParameter().getCiphers() != null && !getSSHConnectionParameter().getCiphers().isEmpty();
     List<Named<Cipher>> ciphers = ciphersSet ? createCiphers(getSSHConnectionParameter().getCiphers()) : config.getCipherFactories();
     config.setCipherFactories(ciphers);
+  }
+
+  private List<Named<KeyExchange>> createKexList(List<String> kexMethods) {
+    if(kexMethods == null || kexMethods.isEmpty()) {
+      // allow all supported kex methods if none are specified
+      return (client.getTransport().getConfig().getKeyExchangeFactories());
+    }
+    List<Named<KeyExchange>> result = new ArrayList<>();
+    for(String kex : kexMethods) {
+      var kexSupplier = FactoryUtils.kexFactories.get(kex);
+      if(kexSupplier == null) {
+        throw new RuntimeException("Unknown key exchange algorithm " + kex);
+      }
+      result.add(kexSupplier.get());
+    }
+    return result;
   }
 
   private List<Named<Cipher>> createCiphers(List<String> ciphers) {

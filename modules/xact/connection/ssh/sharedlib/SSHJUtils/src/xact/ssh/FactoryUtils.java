@@ -28,10 +28,12 @@ import com.hierynomus.sshj.transport.cipher.BlockCiphers;
 import com.hierynomus.sshj.transport.cipher.GcmCiphers;
 import com.hierynomus.sshj.transport.cipher.StreamCiphers;
 import com.hierynomus.sshj.transport.mac.Macs;
+import com.hierynomus.sshj.transport.kex.*;
 
 import net.schmizz.sshj.common.Factory.Named;
 import net.schmizz.sshj.transport.cipher.Cipher;
 import net.schmizz.sshj.transport.mac.MAC;
+import net.schmizz.sshj.transport.kex.*;
 
 
 public final class FactoryUtils {
@@ -43,7 +45,8 @@ public final class FactoryUtils {
                     Map.entry("aes128-cbc", BlockCiphers::AES128CBC),
                     Map.entry("aes192-cbc", BlockCiphers::AES192CBC),
                     Map.entry("aes256-cbc", BlockCiphers::AES256CBC),
-                    Map.entry("blowfish-cbc", BlockCiphers::BlowfishCTR),
+                    Map.entry("blowfish-ctr", BlockCiphers::BlowfishCTR),
+                    Map.entry("blowfish-cbc", BlockCiphers::BlowfishCBC),
                     Map.entry("twofish128-ctr", BlockCiphers::Twofish128CTR),
                     Map.entry("twofish192-ctr", BlockCiphers::Twofish192CTR),
                     Map.entry("twofish256-ctr", BlockCiphers::Twofish256CTR),
@@ -105,7 +108,31 @@ public final class FactoryUtils {
                     Map.entry("hmac-sha2-512", Macs::HMACSHA2512),
                     Map.entry("hmac-sha2-512-etm@openssh.com", Macs::HMACSHA2512Etm)
                     );
-
+  
+  public static final Map<String, Supplier<Named<KeyExchange>>> kexFactories = 
+      Map.ofEntries(Map.entry("diffie-hellman-group14-sha1", com.hierynomus.sshj.transport.kex.DHGroups::Group14SHA1),
+                    Map.entry("diffie-hellman-group14-sha256", com.hierynomus.sshj.transport.kex.DHGroups::Group14SHA256),
+                    Map.entry("diffie-hellman-group15-sha512", com.hierynomus.sshj.transport.kex.DHGroups::Group15SHA512),
+                    Map.entry("diffie-hellman-group16-sha512", com.hierynomus.sshj.transport.kex.DHGroups::Group16SHA512),
+                    Map.entry("diffie-hellman-group17-sha512", com.hierynomus.sshj.transport.kex.DHGroups::Group17SHA512),
+                    Map.entry("diffie-hellman-group18-sha512", com.hierynomus.sshj.transport.kex.DHGroups::Group18SHA512),
+                    Map.entry("diffie-hellman-group1-sha1", com.hierynomus.sshj.transport.kex.DHGroups::Group1SHA1),                   
+                    Map.entry("diffie-hellman-group14-sha256-@ssh.com", com.hierynomus.sshj.transport.kex.ExtendedDHGroups::Group14SHA256AtSSH),
+                    Map.entry("diffie-hellman-group15-sha256", com.hierynomus.sshj.transport.kex.ExtendedDHGroups::Group15SHA256),
+                    Map.entry("diffie-hellman-group15-sha256-@ssh.com", com.hierynomus.sshj.transport.kex.ExtendedDHGroups::Group15SHA256AtSSH),
+                    Map.entry("diffie-hellman-group15-sha384-@ssh.com", com.hierynomus.sshj.transport.kex.ExtendedDHGroups::Group15SHA384AtSSH),
+                    Map.entry("diffie-hellman-group16-sha256", com.hierynomus.sshj.transport.kex.ExtendedDHGroups::Group16SHA256),
+                    Map.entry("diffie-hellman-group16-sha384-@ssh.com", com.hierynomus.sshj.transport.kex.ExtendedDHGroups::Group16SHA384AtSSH),
+                    Map.entry("diffie-hellman-group16-sha512-@ssh.com", com.hierynomus.sshj.transport.kex.ExtendedDHGroups::Group16SHA512AtSSH),
+                    Map.entry("diffie-hellman-group18-sha512-@ssh.com", com.hierynomus.sshj.transport.kex.ExtendedDHGroups::Group18SHA512AtSSH),
+                    Map.entry("diffie-hellman-group-exchange-sha1", () -> new DHGexSHA1.Factory()),
+                    Map.entry("diffie-hellman-group-exchange-sha256", () -> new DHGexSHA256.Factory()),
+                    Map.entry("ecdh-sha2-nistp256", () -> new ECDHNistP.Factory256()),
+                    Map.entry("ecdh-sha2-nistp384", () -> new ECDHNistP.Factory384()),
+                    Map.entry("ecdh-sha2-nistp521", () -> new ECDHNistP.Factory521()),
+                    Map.entry("curve25519-sha256@libssh.org", () -> new Curve25519SHA256.FactoryLibSsh()),
+                    Map.entry("curve25519-sha256", () -> new Curve25519SHA256.Factory())
+                    );
   
   public static List<Named<KeyAlgorithm>> createKeyAlgsListDefault() {
     return java.util.Arrays.<net.schmizz.sshj.common.Factory.Named<com.hierynomus.sshj.key.KeyAlgorithm>> asList(

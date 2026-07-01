@@ -111,7 +111,9 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
   
   // not a Singleton because JSch-lib synchronizes on it in cases we'd like it not to
   public HostKeyStorableRepository() {
-    this(SupportedHostNameFeature.all());
+    //this(SupportedHostNameFeature.all());
+    // Hack to speed up updates in hostkey repository
+    this( java.util.Collections.emptySet() );
   }
   
   public HostKeyStorableRepository(Set<SupportedHostNameFeature> features) {

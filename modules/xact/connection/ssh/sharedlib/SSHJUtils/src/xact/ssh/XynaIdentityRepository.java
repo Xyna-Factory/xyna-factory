@@ -37,6 +37,12 @@ public interface XynaIdentityRepository {
   
   public IdentityStorable add(Optional<String> name, EncryptionType keyType, byte[] privateKey, byte[] publicKey, Optional<String> passphrase);
   
+  public IdentityStorable overwrite(IdentityStorable newIdentity);
+  
+  public IdentityStorable addWithAttributes(Optional<String> name, EncryptionType keyType, byte[] privateKey, byte[] publicKey, Optional<String> passphrase, long priority, String typeclass);
+  
+  public String generateIdentity(byte[] publicKey);
+  
   public Collection<IdentityStorable> removeKey(EncryptionType type, Optional<String> publickey);
   
   public void clearAll();

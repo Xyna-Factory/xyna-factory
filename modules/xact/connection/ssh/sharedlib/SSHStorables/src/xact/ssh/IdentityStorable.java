@@ -40,6 +40,8 @@ public class IdentityStorable extends Storable<IdentityStorable> {
   public final static String COL_TYPE = "type";
   public final static String COL_PUBLICKEY = "publickey";
   public final static String COL_PRIVATEKEY = "privatekey";
+  public final static String COL_PRIORITY = "priority";
+  public final static String COL_TYPECLASS = "typeclass";
   
   @Column(name = COL_ID)
   private long id;
@@ -56,6 +58,12 @@ public class IdentityStorable extends Storable<IdentityStorable> {
   @Column(name = COL_PRIVATEKEY, type = ColumnType.BLOBBED_JAVAOBJECT)
   private byte[] privatekey;
   
+  @Column(name = COL_PRIORITY)
+  private long priority;
+  
+  @Column(name = COL_TYPECLASS)
+  private String typeclass;
+  
   
   public IdentityStorable() {
     
@@ -68,6 +76,21 @@ public class IdentityStorable extends Storable<IdentityStorable> {
     this.type = type;
     this.publickey = publickey;
     this.privatekey = privatekey;
+    try {
+      this.id = IDGenerator.getInstance().getUniqueId();
+    } catch (XynaException e) {
+      throw new RuntimeException("Could not generate unique id",e);
+    }
+  }
+
+  public IdentityStorable(String name, String type, byte[] publickey, byte[] privatekey, long priority, String typeclass) {
+    this();
+    this.name = name;
+    this.type = type;
+    this.publickey = publickey;
+    this.privatekey = privatekey;
+    this.priority = priority;
+    this.typeclass = typeclass;
     try {
       this.id = IDGenerator.getInstance().getUniqueId();
     } catch (XynaException e) {
@@ -130,6 +153,22 @@ public class IdentityStorable extends Storable<IdentityStorable> {
     this.privatekey = privatekey;
   }
 
+  public long getPriority() {
+    return priority;
+  }
+  
+  public void setPriority(long priority) {
+    this.priority = priority;
+  }
+  
+  public String getTypeclass() {
+    return typeclass;
+  }
+  
+  public void setTypeclass(String typeclass) {
+    this.typeclass = typeclass;
+  }
+
   
   /*public CheckResult check(IdentityStorable identity) {
     if (name.equals(identity.name) && type.equals(identity.type)) {
@@ -160,6 +199,8 @@ public class IdentityStorable extends Storable<IdentityStorable> {
     this.type = cast.type;
     this.publickey = cast.publickey;
     this.privatekey = cast.privatekey;
+    this.priority = cast.priority;
+    this.typeclass = cast.typeclass;
   }
 
 
@@ -172,6 +213,8 @@ public class IdentityStorable extends Storable<IdentityStorable> {
       result.type = rs.getString(COL_TYPE);
       result.publickey = (byte[]) result.readBlobbedJavaObjectFromResultSet(rs, COL_PUBLICKEY, Long.toString(result.id));
       result.privatekey = (byte[]) result.readBlobbedJavaObjectFromResultSet(rs, COL_PRIVATEKEY, Long.toString(result.id));
+      result.priority = rs.getLong(COL_PRIORITY);
+      result.typeclass = rs.getString(COL_TYPECLASS);
       return result;
     }
 

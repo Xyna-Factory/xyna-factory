@@ -31,4 +31,5 @@
     </Meta>
   </Data>
   <Data Label="pass phrase" ReferenceName="PassPhrase" ReferencePath="xact.ssh" VariableName="passPhrase"/>
+  <Data Label="key attributes" ReferenceName="KeyAttributes" ReferencePath="xact.ssh" VariableName="keyAttributes"/>
 </DataType>

@@ -20,4 +20,6 @@
   <Argument Name="publickeyfile" Description="File name containing the public key."/>
   <Argument Name="privatekeyfile" Description="File name containing the private key."/>
   <Argument Name="passphrase" Description="Passphrase used during generation of the given key." Optional="true"/>
+  <Argument Name="priority" Description="Priority of the key." Optional="true" />
+  <Argument Name="typeclass" Description="Typeclass of the key." Optional="true" />
 </XynaCommandLineCommand>
