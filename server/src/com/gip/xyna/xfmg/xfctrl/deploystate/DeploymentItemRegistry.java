@@ -19,7 +19,7 @@ package com.gip.xyna.xfmg.xfctrl.deploystate;
 
 import java.util.Set;
 
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemState.DeploymentLocation;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemState.DeploymentTransition;
 import com.gip.xyna.xfmg.xfctrl.deploystate.deployitem.DeploymentItem;
@@ -42,8 +42,20 @@ public interface DeploymentItemRegistry {
   
   public void undeploy(String fqName, DeploymentContext ctx);
   
+  /**
+  * @deprecated use java.util.Optional instead
+  */
+  @Deprecated
+  public void deployFinished(String fqName, DeploymentTransition transition, boolean copiedXMLFromSaved, com.gip.xyna.utils.collections.Optional<? extends Throwable> deploymentException);
+  
   public void deployFinished(String fqName, DeploymentTransition transition, boolean copiedXMLFromSaved, Optional<? extends Throwable> deploymentException);
 
+  /**
+  * @deprecated use java.util.Optional instead
+  */
+  @Deprecated
+  public void buildFinished(String fqName, com.gip.xyna.utils.collections.Optional<? extends Throwable> buildException);
+  
   public void buildFinished(String fqName, Optional<? extends Throwable> buildException);
 
   public void update(DeploymentItem di, Set<DeploymentLocation> locations);

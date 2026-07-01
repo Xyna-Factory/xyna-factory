@@ -30,7 +30,7 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.CollectionUtils;
 import com.gip.xyna.utils.collections.CollectionUtils.Transformation;
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.xfmg.xfctrl.deploymentmarker.storables.DeploymentTagStorable;
 import com.gip.xyna.xfmg.xfctrl.deploymentmarker.storables.DeploymentTaskStorable;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemIdentificationBase;
@@ -307,6 +307,14 @@ public class DeploymentMarkerStorage {
     }
   }
   
+  /**
+  * @deprecated use java.util.Optional instead
+  */
+  @Deprecated
+  public List<DeploymentMarker> searchDeploymentTasks(com.gip.xyna.utils.collections.Optional<? extends DeploymentItemIdentifier> deploymentItem, Long revision) throws PersistenceLayerException {
+    return this.searchDeploymentTasks((java.util.Optional<? extends DeploymentItemIdentifier>) deploymentItem.adapt(), revision);
+  }
+  
   public List<DeploymentMarker> searchDeploymentTasks(Optional<? extends DeploymentItemIdentifier> deploymentItem, Long revision) throws PersistenceLayerException {
     List<DeploymentTaskStorable> taskStorables;
     ODSConnection con = ods.openConnection(ODSConnectionType.HISTORY);
@@ -355,6 +363,13 @@ public class DeploymentMarkerStorage {
     }
   }
 
+  /**
+  * @deprecated use java.util.Optional instead
+  */
+  @Deprecated
+  public List<DeploymentMarker> searchDeploymentTags(com.gip.xyna.utils.collections.Optional<? extends DeploymentItemIdentifier> deploymentItem, Long revision) throws PersistenceLayerException {
+    return this.searchDeploymentTags((java.util.Optional<? extends DeploymentItemIdentifier>) deploymentItem.adapt(), revision);
+  }
   
   public List<DeploymentMarker> searchDeploymentTags(Optional<? extends DeploymentItemIdentifier> deploymentItem, Long revision) throws PersistenceLayerException {
     ODSConnection con = ods.openConnection(ODSConnectionType.HISTORY);

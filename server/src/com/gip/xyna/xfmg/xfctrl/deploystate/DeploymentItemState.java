@@ -19,7 +19,7 @@ package com.gip.xyna.xfmg.xfctrl.deploystate;
 
 import java.util.Set;
 
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.xfmg.xfctrl.deploystate.deployitem.CrossRevisionResolver;
 import com.gip.xyna.xfmg.xfctrl.deploystate.deployitem.DeploymentItem;
 import com.gip.xyna.xfmg.xfctrl.deploystate.deployitem.OperationInterface;
@@ -75,6 +75,12 @@ public interface DeploymentItemState extends DeploymentItemIdentifier {
   public Set<DeploymentItemInterface> getInconsistencies(DeploymentLocation ownLocation, DeploymentLocation interfaceProviderLocation, boolean tryToInferTypes);
   
   public Set<DeploymentItemInterface> getInconsistencies(DeploymentLocation ownLocation, DeploymentLocation interfaceProviderLocation, boolean tryToInferTypes, CrossRevisionResolver resolver);
+
+  /**
+  * @deprecated use java.util.Optional instead
+  */
+  @Deprecated
+  public boolean deploymentTransition(DeploymentTransition transition, boolean fromSaved, com.gip.xyna.utils.collections.Optional<? extends Throwable> deploymentException);
   
   /**
    * @return deploymentitemstate hat sich geändert?
@@ -83,6 +89,12 @@ public interface DeploymentItemState extends DeploymentItemIdentifier {
   
   public String createCreationHint(String name);
 
+  /**
+  * @deprecated use java.util.Optional instead
+  */
+  @Deprecated
+  public void setBuildError(com.gip.xyna.utils.collections.Optional<? extends Throwable> buildException);
+  
   public void setBuildError(Optional<? extends Throwable> buildException);
   
   public void addOperationInvocationSite(DeploymentItemState callerOfOperation, OperationInterface operationInterface,

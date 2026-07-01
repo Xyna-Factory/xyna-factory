@@ -50,7 +50,7 @@ import com.gip.xyna.FileUtils;
 import com.gip.xyna.FunctionGroup;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.exceptions.Ex_FileAccessException;
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.utils.collections.SerializablePair;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.ProjectCreationOrChangeProvider;
@@ -1539,7 +1539,7 @@ public class RefactoringManagement extends FunctionGroup {
       }
     }
     try {
-      Optional<DeploymentItem> di = DeploymentItemBuilder.build(item.getFqXmlNameNew(), Optional.<XMOMType>of(type), Collections.singleton(location), revision, false, config.getDeploymentItemCache());
+      Optional<DeploymentItem> di = DeploymentItemBuilder.build(item.getFqXmlNameNew(), Optional.<XMOMType>ofNullable(type), Collections.singleton(location), revision, false, config.getDeploymentItemCache());
       if (di.isPresent()) {
         dism.update(di.get(), Collections.singleton(location), revision);
       } else {

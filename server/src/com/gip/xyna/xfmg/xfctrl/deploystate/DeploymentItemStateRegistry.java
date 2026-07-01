@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.xfmg.xfctrl.dependencies.RuntimeContextDependencyManagement;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemState.DeploymentLocation;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemState.DeploymentTransition;
@@ -148,6 +148,16 @@ public class DeploymentItemStateRegistry implements DeploymentItemRegistry {
   }
 
 
+  /**
+  * @deprecated use java.util.Optional instead
+  */
+  @Deprecated
+  public void deployFinished(String fqName, DeploymentTransition transition, boolean copiedXMLFromSaved,
+                             com.gip.xyna.utils.collections.Optional<? extends Throwable> deploymentException) {
+    this.deployFinished(fqName, transition, copiedXMLFromSaved, (java.util.Optional<? extends Throwable>) deploymentException.adapt());
+  }
+  
+  
   public void deployFinished(String fqName, DeploymentTransition transition, boolean copiedXMLFromSaved,
                              Optional<? extends Throwable> deploymentException) {
     DeploymentItemState dis = registered.get(fqName);
@@ -195,13 +205,22 @@ public class DeploymentItemStateRegistry implements DeploymentItemRegistry {
         l.add(t);
         t = t.getCause();
       }
-      return Optional.of(l);
+      return Optional.ofNullable(l);
     } else {
       return Optional.empty();
     }
   }
 
 
+  /**
+  * @deprecated use java.util.Optional instead
+  */
+  @Deprecated
+  public void buildFinished(String fqName, com.gip.xyna.utils.collections.Optional<? extends Throwable> buildException) {
+    this.buildFinished(fqName, (java.util.Optional<? extends Throwable>) buildException.adapt());
+  }
+  
+  
   public void buildFinished(String fqName, Optional<? extends Throwable> buildException) {
     DeploymentItemState dis = registered.get(fqName);
     if (dis == null) {
