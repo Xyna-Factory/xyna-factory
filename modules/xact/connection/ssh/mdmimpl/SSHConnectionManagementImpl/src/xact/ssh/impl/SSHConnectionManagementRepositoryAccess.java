@@ -259,7 +259,7 @@ public class SSHConnectionManagementRepositoryAccess {
 
   private static String createAlias(String publickey) {
     String adjustedPublickey= publickey;
-    String[] subelements = publickey.trim().split("\s+");
+    String[] subelements = publickey.trim().split("\\s+");
     if (subelements.length<2) {
       adjustedPublickey = publickey.trim();
     } else {
@@ -274,7 +274,7 @@ public class SSHConnectionManagementRepositoryAccess {
     //Format: [ssh-...] [Key] [Optional]
     //Adjust: [ssh-...] [Key]
     String adjustedPublickey= publickey;
-    String[] subelements = publickey.trim().split("\s+");
+    String[] subelements = publickey.trim().split("\\s+");
     if (subelements.length<2) {
       adjustedPublickey = publickey.trim();
     } else {
