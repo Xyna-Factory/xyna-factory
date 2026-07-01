@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,11 @@ package xact.ssh.impl;
 
 
 
-import org.apache.log4j.Logger;
-
 import xact.ssh.SSHFileTransferServiceOperation;
 import base.Credentials;
 import base.File;
 import base.Host;
 
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
@@ -45,11 +42,9 @@ Is there a desire to extend this method (e.g. XynaHostKeyRepository, XynaIdentit
 
 public class SSHFileTransferServiceOperationImpl implements ExtendedDeploymentTask, SSHFileTransferServiceOperation {
 
-  private static final Logger logger = CentralFactoryLogging.getLogger(SSHFileTransferServiceOperationImpl.class);
 
 
   public void onDeployment() throws XynaException {
-    // TODO do something on deployment, if required
     // This is executed again on each classloader-reload, that is each
     // time a dependent object is redeployed, for example a type of an input
     // parameter.
@@ -57,7 +52,6 @@ public class SSHFileTransferServiceOperationImpl implements ExtendedDeploymentTa
 
 
   public void onUndeployment() throws XynaException {
-    // TODO do something on undeployment, if required
     // This is executed again on each classloader-unload, that is each
     // time a dependent object is redeployed, for example a type of an input
     // parameter.

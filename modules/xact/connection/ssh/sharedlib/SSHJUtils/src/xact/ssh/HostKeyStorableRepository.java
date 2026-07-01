@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -40,6 +41,8 @@ import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xfmg.Constants;
+import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBuilds;
 import com.gip.xyna.xnwh.exceptions.XNWH_NoPersistenceLayerConfiguredForTableException;
 import com.gip.xyna.xnwh.persistence.FactoryWarehouseCursor;
 import com.gip.xyna.xnwh.persistence.ODS;
@@ -59,13 +62,35 @@ import net.schmizz.sshj.transport.verification.OpenSSHKnownHosts.KnownHostEntry;
 
 public class HostKeyStorableRepository implements XynaHostKeyRepository {
   
-  //private final Logger logger = CentralFactoryLogging.getLogger(HostKeyStorableRepository.class);
   private final static Logger logger = CentralFactoryLogging.getLogger(HostKeyStorableRepository.class);
 
   private final static PreparedQueryCache queryCache = new PreparedQueryCache();
   private final static ReadWriteLock hostLock = new ReentrantReadWriteLock();
   private final static ODS ods = ODSImpl.getInstance();
   private final static int DEFAULT_PORT = 22;
+  
+  public static final XynaPropertyBuilds<Set<SupportedHostNameFeature>> SUPPORTED_FEATURES_PROP =
+      new XynaPropertyBuilds<Set<SupportedHostNameFeature>>("xact.ssh.hostkeys.supportedfeatures", new XynaPropertyBuilds.Builder<>() {
+
+        public Set<SupportedHostNameFeature> fromString(String arg0) throws ParsingException {
+          return SupportedHostNameFeature.fromStringList(arg0);
+        }
+
+
+        public String toString(Set<SupportedHostNameFeature> arg0) {
+          StringBuilder sb = new StringBuilder();
+          Iterator<SupportedHostNameFeature> iter = arg0.iterator();
+          while (iter.hasNext()) {
+            sb.append(iter.next().toString());
+            if (iter.hasNext()) {
+              sb.append(", ");
+            }
+          }
+          return sb.toString();
+        }
+      }, SupportedHostNameFeature.all())
+          .setDefaultDocumentation(DocumentationLanguage.EN, "Supported features for the HostKeyRepository, turning features off can improve performance");
+
   
   private final static String directHostKeyQueryString = "SELECT * FROM " + HostKeyStorable.TABLE_NAME + " WHERE " + HostKeyStorable.COL_NAME + " = ?" +
                                                                                                   " AND " + HostKeyStorable.COL_FUZZY + " = 'false'" + 
@@ -120,9 +145,8 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
         }
       }
       
-      try {
-        SSHClient ssh = new SSHClient();
-        InputStream entry = new ByteArrayInputStream(HostKeyStorableString.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+      try(SSHClient ssh = new SSHClient()) {
+        InputStream entry = new ByteArrayInputStream(HostKeyStorableString.getBytes(StandardCharsets.UTF_8));
         ssh.addHostKeyVerifier(new OpenSSHKnownHosts(new InputStreamReader(entry,"UTF-8")));
       } catch (Throwable t) {
         throw new RuntimeException("Error adding hostKey", t);
@@ -180,7 +204,6 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
           java.security.PublicKey tempPublickey = keyFactory.generatePublic(keySpec);
           
           byte[] b = new net.schmizz.sshj.common.Buffer.PlainBuffer().putPublicKey(tempPublickey).getCompactData();
-          //String publicKeyString = xact.ssh.EncryptionType.RSA.getSshStringRepresentation() + " " + Base64.getEncoder().encodeToString(b);
           String publicKeyString = Base64.getEncoder().encodeToString(b);
           
           EncryptionType encryType = EncryptionType.getByStringRepresentation(tempPublickey.getAlgorithm());
@@ -369,7 +392,7 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
         if (features.contains(SupportedHostNameFeature.FUZZY) ||
             features.contains(SupportedHostNameFeature.HASHED)) {
           // check against all hashed and fuzzy
-          FactoryWarehouseCursor<HostKeyStorable> cursor = con.getCursor(hashedOrFuzzyHostKeyQueryString, Parameter.EMPTY_PARAMETER, HostKeyStorable.reader, 1000, queryCache);
+          FactoryWarehouseCursor<HostKeyStorable> cursor = con.getCursor(hashedOrFuzzyHostKeyQueryString, HostKeyStorable.TABLE_NAME, Parameter.EMPTY_PARAMETER, HostKeyStorable.reader, 1000, queryCache);
           Collection<HostKeyStorable> keys = cursor.getRemainingCacheOrNextIfEmpty();
           while (keys != null && keys.size() > 0) {
             for (HostKeyStorable hostkey : keys) {
@@ -418,7 +441,9 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
     if (!hits.isEmpty()) {
       for (HostKeyStorable hostKeyStorable : hits) {
         if (isMatched(hostKeyStorable, hostalias)) {
-          logger.debug("SSH App: HostKeyStorableRepository - findExistingAlgorithms hostKeyStorable.getType(): "+hostKeyStorable.getType());
+          if(logger.isDebugEnabled()) {
+            logger.debug("SSH App: HostKeyStorableRepository - findExistingAlgorithms hostKeyStorable.getType(): "+hostKeyStorable.getType());
+          }
           KeyType keytype = EncryptionType.getKeyType(hostKeyStorable.getType());
           matches.add(keytype.toString());
         }
@@ -439,7 +464,7 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
       ODSConnection con = ods.openConnection(ODSConnectionType.DEFAULT);
       try {
         List<String> matches = new ArrayList<String>();
-        FactoryWarehouseCursor<HostKeyStorable> cursor = con.getCursor(loadAllQueryString, Parameter.EMPTY_PARAMETER, HostKeyStorable.reader, 1000, queryCache);
+        FactoryWarehouseCursor<HostKeyStorable> cursor = con.getCursor(loadAllQueryString, HostKeyStorable.TABLE_NAME, Parameter.EMPTY_PARAMETER, HostKeyStorable.reader, 1000, queryCache);
         Collection<HostKeyStorable> keys = cursor.getRemainingCacheOrNextIfEmpty();
         while (keys != null && keys.size() > 0) {
           Collection<HostKeyStorable> keyCollection=keys;
@@ -447,7 +472,9 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
             // TODO include port?
             //        as fallback if the match did not work?
             if (isMatched(hostKeyStorable, HostKeyAliasMapping.convertHostname(hostname))) {
-              logger.debug("SSH App: HostKeyStorableRepository - findExistingAlgorithms hostKeyStorable.getType(): "+hostKeyStorable.getType());
+              if(logger.isDebugEnabled()) {
+                logger.debug("SSH App: HostKeyStorableRepository - findExistingAlgorithms hostKeyStorable.getType(): "+hostKeyStorable.getType());
+              }
               KeyType keytype = EncryptionType.getKeyType(hostKeyStorable.getType());
               matches.add(keytype.toString());
             }
@@ -504,7 +531,7 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
       query = directHostKeyQueryString;
       params = new Parameter(host);
     }
-    PreparedQuery<HostKeyStorable> findHostKeyQuery = queryCache.getQueryFromCache(query, con, HostKeyStorable.reader);
+    PreparedQuery<HostKeyStorable> findHostKeyQuery = queryCache.getQueryFromCache(query, con, HostKeyStorable.reader, HostKeyStorable.TABLE_NAME);
     return con.query(findHostKeyQuery, params, -1);
   }
 
@@ -526,7 +553,7 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
         
         if (features.contains(SupportedHostNameFeature.FUZZY) ||
             features.contains(SupportedHostNameFeature.HASHED)) {
-          FactoryWarehouseCursor<HostKeyStorable> cursor = con.getCursor(hashedOrFuzzyHostKeyQueryString, Parameter.EMPTY_PARAMETER, HostKeyStorable.reader, 1000, queryCache);
+          FactoryWarehouseCursor<HostKeyStorable> cursor = con.getCursor(hashedOrFuzzyHostKeyQueryString, HostKeyStorable.TABLE_NAME, Parameter.EMPTY_PARAMETER, HostKeyStorable.reader, 1000, queryCache);
           Collection<HostKeyStorable> keys = cursor.getRemainingCacheOrNextIfEmpty();
           while (keys != null && keys.size() > 0) {
             for (HostKeyStorable hostkey : keys) {
@@ -572,7 +599,7 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
     try {
       ODSConnection con = ods.openConnection(ODSConnectionType.DEFAULT);
       try {
-        FactoryWarehouseCursor<HostKeyStorable> cursor = con.getCursor(loadAllQueryString, Parameter.EMPTY_PARAMETER, HostKeyStorable.reader, 1000, queryCache);
+        FactoryWarehouseCursor<HostKeyStorable> cursor = con.getCursor(loadAllQueryString, HostKeyStorable.TABLE_NAME, Parameter.EMPTY_PARAMETER, HostKeyStorable.reader, 1000, queryCache);
         Collection<HostKeyStorable> keys = cursor.getRemainingCacheOrNextIfEmpty();
 
         while (keys != null && keys.size() > 0) {
@@ -615,19 +642,14 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
     }
     
     //Test of validity
-    OpenSSHKnownHosts openSSHKnownHosts;
     try {
-      openSSHKnownHosts = new OpenSSHKnownHosts(new File(filenameKnownHosts));
+      new OpenSSHKnownHosts(new File(filenameKnownHosts));
     } catch (IOException e) {
       throw new RuntimeException("File not parsable.", e);
     }
     
     //After validity test assume valid file
-    FileInputStream instream = null;
-    try {
-        instream = new FileInputStream(filenameKnownHosts);
-        BufferedReader bufread = new BufferedReader(new InputStreamReader(instream));
-        
+    try (BufferedReader bufread = new BufferedReader(new InputStreamReader(new FileInputStream(filenameKnownHosts)))){
         String line;
         while( (line = bufread.readLine()) != null) {
                 String[] subelements = line.trim().split("\\s+");
@@ -654,13 +676,7 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
         }
       } catch (IOException e) {
         throw new RuntimeException("File not parsable.", e);
-      } finally {
-      try {
-          instream.close();
-          } catch (IOException e) {
-            throw new RuntimeException("File not parsable.", e);
-          }
-    }
+      }
   }
   
   
@@ -713,7 +729,9 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
     }
     for (SupportedHostNameFeature noSup : notSupported) {
       if (noSup.accept(knownHost)) {
-        logger.debug("HostKey feature '" + noSup + "' is not supported, key will not be matched!");
+        if(logger.isDebugEnabled()) {
+          logger.debug("HostKey feature '" + noSup + "' is not supported, key will not be matched!");
+        }
         return false;
       }
     }
@@ -765,5 +783,4 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
         boolean isHashed = hostname.startsWith("|1|");
         return new HostKeyStorable(hostname, type.getStringRepresentation(), publickey, isHashed, comment);
       }
-    
 }
