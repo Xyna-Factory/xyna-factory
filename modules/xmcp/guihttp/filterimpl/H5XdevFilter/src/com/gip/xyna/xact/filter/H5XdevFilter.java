@@ -119,7 +119,7 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
 
   public static final XynaPropertyBoolean USE_CACHE = new XynaPropertyBoolean("xmcp.guihttp.use_cache", true)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Use a cache to store recently used objects. Cache size is determined by " + cache_size_property_name + ".")
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Cache verwenden, um auf zuletzt verwendete Objekte schneller zugreifen zu kï¿½nnen. Die Grï¿½ï¿½e des Caches wird durch " + cache_size_property_name + " bestimmt.");
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Cache verwenden, um auf zuletzt verwendete Objekte schneller zugreifen zu können. Die Größe des Caches wird durch " + cache_size_property_name + " bestimmt.");
 
   public static final XynaPropertyBoolean AVARCONSTANTS = new XynaPropertyBoolean("xmcp.guihttp.new_constants", true)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Prevent instantiation problems by using a different approach to convert JSONs to constants.")
@@ -127,11 +127,11 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
 
   public static final XynaPropertyBoolean CompressResponse = new XynaPropertyBoolean("xmcp.guihttp.compress_response", true)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Compress response of requests using gzip, if supported by caller.")
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Antwort mit gzip komprimieren, wenn es vom Aufrufer unterstï¿½tzt wird.");
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Antwort mit gzip komprimieren, wenn es vom Aufrufer unterstützt wird.");
 
   public static final XynaPropertyBoolean STRICT_TRANSPORT_SECURITY = new XynaPropertyBoolean("xmcp.guihttp.sts", true)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Send Session Cookie as __Secure- and add Strict-Transport-Security header. Requires an HTTPS Trigger.")
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Session Cookie als __Secure- senden und Strict-Transport-Security Header einfï¿½gen. Benï¿½tigt einen HTTPS-Trigger.");
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Session Cookie als __Secure- senden und Strict-Transport-Security Header einfügen. Benötigt einen HTTPS-Trigger.");
 
   public static final XynaPropertyDuration STRICT_TRANSPORT_SECURITY_MAX_AGE = new XynaPropertyDuration("xmcp.guihttp.sts.maxage", "730 d" )
       .setDefaultDocumentation(DocumentationLanguage.EN, "Max-age of Strict-Transport-Security header.")
@@ -139,7 +139,7 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
 
   public static final XynaPropertyString VALIDATION_WORKFLOW = new XynaPropertyString("xmcp.guihttp.startorder.preprocess_workflow", "")
       .setDefaultDocumentation(DocumentationLanguage.EN, "If set, all startorder Requests outside of GuiHttp are first processed by the given Workflow. Inputs are Document and OrderType, output is Document. Format: <fqn>@<rtc>. <rtc> is either workspaceName or applicationName/versionName.")
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Falls gesetzt, werden alle startorder-Requests auï¿½erhalb von GuiHttp zuerst vom angegebenen Workflow verarbeitet. Inputs sind Document und Ordertype, Output ist Document. Format: <fqn>@<rtc>. <rtc> ist entweder workspaceName oder applicationName/versionName.");
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Falls gesetzt, werden alle startorder-Requests außerhalb von GuiHttp zuerst vom angegebenen Workflow verarbeitet. Inputs sind Document und Ordertype, Output ist Document. Format: <fqn>@<rtc>. <rtc> ist entweder workspaceName oder applicationName/versionName.");
 
   public static final XynaPropertyBoolean SUPPRESS_STACKTRACES = new XynaPropertyBoolean("xmcp.guihttp.suppress_stacktraces", false)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Remove stacktraces from error responses.")
