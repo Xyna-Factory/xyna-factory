@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,22 +62,6 @@ public class SSHJReflection {
     } catch (Exception e) {
       logger.warn("Error in Reflection", e);
       throw new RuntimeException(e);
-    }
-  }
-
-
-  @SuppressWarnings("unchecked")
-  private static <T> T getDeclaredField(Object instance, String fieldName, String controlSuperclassName) {
-    try {
-      if (instance.getClass().getSuperclass().getName().equalsIgnoreCase(controlSuperclassName)) {
-        Field field = instance.getClass().getSuperclass().getDeclaredField(fieldName);
-        field.setAccessible(true);
-        return (T) field.get(instance);
-      } else {
-        return null;
-      }
-    } catch (Exception e) {
-      return null;
     }
   }
 
