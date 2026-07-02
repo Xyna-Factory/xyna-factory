@@ -49,9 +49,9 @@ public class PythonOperation extends CodeOperation {
     type += var.isJavaBaseType ? var.getJavaTypeEnum().getJavaTypeName() : var.getOriginalPath() + "." + var.getOriginalName();
     type += var.isList ? ">" : "";
     String result = "(" + type + ")pyMgmt.convertToJava(context, \"" + type + "\", " + var.getVarName() + ")";
-    if(var.isList) {
-      String fqn = var.getOriginalPath() + "." + var.getOriginalName();
-      result = var.getVarName() + " == null ? null : new com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObjectList("+ result + ", " + fqn + ".class)";
+    if (var.isList && !var.isJavaBaseType) {
+        String fqn = var.getOriginalPath() + "." + var.getOriginalName();
+        result = var.getVarName() + " == null ? null : new com.gip.xyna.xdev.xfractmod.xmdm.XynaObjectList(" + result + ", " + fqn + ".class)";
     }
     return result;
   }
