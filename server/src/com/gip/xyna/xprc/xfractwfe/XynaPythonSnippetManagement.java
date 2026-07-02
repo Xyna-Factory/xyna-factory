@@ -36,8 +36,6 @@ import com.gip.xyna.xprc.xfractwfe.python.PythonMdmGeneration;
 import com.gip.xyna.xprc.xfractwfe.python.PythonProjectGeneration;
 import com.gip.xyna.xprc.xfractwfe.python.jep.JepInterpreterFactory;
 
-import jep.python.PyObject;
-
 
 
 public class XynaPythonSnippetManagement extends Section {
