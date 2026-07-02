@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -130,6 +130,28 @@
       <Output/>
       <SourceCode>
         <CodeSnippet Type="Java">SSHConnectionManagementImpl.returnConnection(managedConnection)</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Modify keypair" Name="modifyKeypair0">
+      <Input>
+        <Data ID="12" Label="Old Key Attributes" ReferenceName="KeyAttributes" ReferencePath="xact.ssh" VariableName="keyAttributes12"/>
+        <Data ID="13" Label="New Key Attributes" ReferenceName="KeyAttributes" ReferencePath="xact.ssh" VariableName="keyAttributes13"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">SSHConnectionManagementImpl.modifyKeypair0(keyAttributes12, keyAttributes13)</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Add key files with key attributes" Name="addKeyFilesWithKeyAttributes">
+      <Input>
+        <Data ID="14" Label="public key file name" ReferenceName="KeyFileName" ReferencePath="xact.ssh" VariableName="keyFileName14"/>
+        <Data ID="15" Label="private key file name" ReferenceName="KeyFileName" ReferencePath="xact.ssh" VariableName="keyFileName15"/>
+        <Data ID="16" Label="pass phrase" ReferenceName="PassPhrase" ReferencePath="xact.ssh" VariableName="passPhrase16"/>
+        <Data ID="17" Label="key attributes" ReferenceName="KeyAttributes" ReferencePath="xact.ssh" VariableName="keyAttributes17"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">SSHConnectionManagementImpl.addKeyFilesWithKeyAttributes(keyFileName14, keyFileName15, passPhrase16, keyAttributes17)</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

@@ -16,11 +16,9 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
  <XynaCommandLineCommand>
-  <CommandDefinition Name="generatekeypair" Groups="SSH Connection Management" Description="Generate a new private-public key pair and add it as own identity."/>
-  <Argument Name="encryptiontype" Description="The encryption type (one of: RSA, DSA) of the key pair."/>
-  <Argument Name="keysize" Description="Size of the key to generate in bytes." Optional="true"/>
-  <Argument Name="passphrase" Description="A passphrase to encode the private key after generation." Optional="true"/>
-  <BoolOption Name="o" LongName="overwrite" Description="If specified the newly generated identity will be the only valid one." Optional="true"/>
-  <Argument Name="priority" Description="Priority of the key." Optional="true" />
-  <Argument Name="typeclass" Description="Typeclass of the key." Optional="true" />
+  <CommandDefinition Name="modifykeypair" Groups="SSH Connection Management" Description="Changing the identity, priority, and type class of a key pair in the identity repository."/>
+  <Argument Name="identity" Description="Name of the key pair."/>
+  <Argument Name="new_identity" Description="New name of the key pair." Optional="true"/>
+  <Argument Name="new_priority" Description="New priority of the key pair." Optional="true"/>
+  <Argument Name="new_typeclass" Description="New typeclass of the key pair." Optional="true"/>
 </XynaCommandLineCommand>

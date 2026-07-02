@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,9 +31,19 @@ import xact.ssh.impl.SSHConnectionManagementRepositoryAccess;
 public class AddkeyfilesImpl extends XynaCommandImplementation<Addkeyfiles> {
 
   public void execute(OutputStream statusOutputStream, Addkeyfiles payload) throws XynaException {
+    Integer priority = 0;
+    String typeclass = "";
+    if (payload.getPriority() != null) {
+        try {
+          priority = Integer.parseInt(payload.getPriority());
+        } catch (NumberFormatException e) { /* ntbd */ }
+    }
+    if (payload.getTypeclass() != null) {
+        typeclass = payload.getTypeclass();
+    }
     File privateKeyFile = new File(payload.getPrivatekeyfile());
     if (privateKeyFile.exists()) {
-      SSHConnectionManagementRepositoryAccess.addKeyFiles(payload.getPublickeyfile(), payload.getPrivatekeyfile(), payload.getPassphrase());
+      SSHConnectionManagementRepositoryAccess.addKeyFiles(payload.getPublickeyfile(), payload.getPrivatekeyfile(), payload.getPassphrase(), "", priority, typeclass);
     } else {
       writeLineToCommandLine(statusOutputStream, "The file '" + privateKeyFile.getAbsolutePath() + "' could not be found!");
     }

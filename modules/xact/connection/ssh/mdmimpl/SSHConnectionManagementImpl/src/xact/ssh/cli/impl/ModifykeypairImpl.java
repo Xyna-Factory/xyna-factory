@@ -17,28 +17,30 @@
  */
 package xact.ssh.cli.impl;
 
-import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
-import com.gip.xyna.utils.exceptions.XynaException;
 import java.io.OutputStream;
-import xact.ssh.cli.generated.Addkeypair;
+import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
+import xact.ssh.cli.generated.Modifykeypair;
 import xact.ssh.impl.SSHConnectionManagementRepositoryAccess;
 
 
+public class ModifykeypairImpl extends XynaCommandImplementation<Modifykeypair> {
 
-public class AddkeypairImpl extends XynaCommandImplementation<Addkeypair> {
-
-  public void execute(OutputStream statusOutputStream, Addkeypair payload) throws XynaException {
-    String typeclass = "";
+  public void execute(OutputStream statusOutputStream, Modifykeypair payload) throws XynaException {
+    String identity = "";
+    String typeclass = null;
     Integer priority = 0;
-    if (payload.getPriority() != null) {
+    if (payload.getNew_priority() != null) {
         try {
-          priority = Integer.parseInt(payload.getPriority());
+          priority = Integer.parseInt(payload.getNew_priority());
         } catch (NumberFormatException e) { /* ntbd */ }
     }
-    if (payload.getTypeclass() != null) {
-      typeclass = payload.getTypeclass();
+    if (payload.getNew_identity() != null) {
+      identity = payload.getNew_identity();
     }
-    SSHConnectionManagementRepositoryAccess.addKeyPair(payload.getPrivatekey(), payload.getPublickey(), payload.getPassphrase(), "", priority, typeclass);
+    if (payload.getNew_typeclass() != null) {
+      typeclass = payload.getNew_typeclass();
+    }
+    SSHConnectionManagementRepositoryAccess.modifyKeyPair(payload.getIdentity(), identity, priority, typeclass);
   }
-
 }

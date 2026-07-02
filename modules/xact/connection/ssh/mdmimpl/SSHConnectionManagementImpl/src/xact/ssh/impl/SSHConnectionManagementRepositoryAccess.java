@@ -102,10 +102,34 @@ public class SSHConnectionManagementRepositoryAccess {
     hostKeyRepo.exportKnownHost(hostname, type.getStringRepresentation(), keyFileName);
   }
 
-  public static void generateKeyPair(EncryptionType type, Integer keysize, String passphrase, boolean overwriteExisting) {
+
+  public static void modifyKeyPair(String oldidentity, String newidentity, long priority, String typeclass) {
+    try {
+      Collection<IdentityStorable> storables = identityRepo.getAllIdentities();
+      for (IdentityStorable identity : storables) {
+        if (identity.getName().equalsIgnoreCase(oldidentity)) {
+          if (! newidentity.isBlank()) {
+            identity.setName(newidentity);
+          }
+          if (typeclass != null) { //if (! typeclass.isBlank()) {
+            identity.setTypeclass(typeclass);
+          }
+          if (priority != 0) {
+            identity.setPriority(priority);
+          }
+          identityRepo.overwrite(identity);
+        }
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+
+  public static void generateKeyPair(EncryptionType type, Integer keysize, String passphrase, boolean overwriteExisting, String identity, long priority, String typeclass) {
     try {
       if (type.getStringRepresentation().equalsIgnoreCase("RSA") | type.getStringRepresentation().equalsIgnoreCase("DSA")) {
-        ExtdKeyGeneration.generateKeyPair(keysize, passphrase, overwriteExisting, type, identityRepo);
+        ExtdKeyGeneration.generateKeyPair(keysize, passphrase, overwriteExisting, type, identityRepo, identity, priority, typeclass);
       } else {
         logger.warn("EncryptionType not supported: " + type.getStringRepresentation());
         NoSuchAlgorithmException e = new NoSuchAlgorithmException();
@@ -117,22 +141,40 @@ public class SSHConnectionManagementRepositoryAccess {
   }
 
 
+  public static void generateKeyPair(EncryptionType type, Integer keysize, String passphrase, boolean overwriteExisting) {
+    generateKeyPair(type, keysize, passphrase, overwriteExisting, "", 0, "");
+  }
+
+
   private static void add(Optional<String> name, EncryptionType type, byte[] privateKey, byte[] publicKey, Optional<String> passphrase) {
     identityRepo.add(name, type, privateKey, publicKey, passphrase);
   }
 
 
-  public static List<String> getPublicKey(EncryptionType encryptionType) {
-    try {
-      List<String> keys = new ArrayList<String>();
+  private static void addWithAttributes(Optional<String> name, EncryptionType type, byte[] privateKey, byte[] publicKey, Optional<String> passphrase, long priority, String typeclass) {
+    identityRepo.addWithAttributes(name, type, privateKey, publicKey, passphrase, priority, typeclass);
+  }
 
+
+  public static List<xact.ssh.KeyPair> getPublicKey(EncryptionType encryptionType) {
+    try {
+      List<xact.ssh.KeyPair> keys = new ArrayList<xact.ssh.KeyPair>();
+      
       Collection<IdentityStorable> storables = identityRepo.getAllIdentities();
+
       for (IdentityStorable identity : storables) {
+        xact.ssh.KeyPair element = new xact.ssh.KeyPair();
         KeyProvider keyproviderIdentity = identityRepo.storableToKeyProvider(identity);
         if (encryptionType == null || encryptionType == EncryptionType.UNKNOWN
             || encryptionType.getSshStringRepresentation().equals(keyproviderIdentity.getType().toString())) {
           String publicKey = new String(identity.getPublickey(), "UTF-8");
-          keys.add(publicKey.trim());
+          xact.ssh.KeyAttributes attributes = new xact.ssh.KeyAttributes();
+          attributes.setIdentity(identity.getName());
+          attributes.setPriority(identity.getPriority());
+          attributes.setTypeclass(identity.getTypeclass());
+          element.setPublicKey(publicKey.trim());
+          element.setKeyAttributes(attributes);
+          keys.add(element);
         }
       }
       return keys;
@@ -152,7 +194,7 @@ public class SSHConnectionManagementRepositoryAccess {
   }
 
 
-  public static void addKeyFiles(String publicfilename, String privatefilename, String passphrase) {
+  public static void addKeyFiles(String publicfilename, String privatefilename, String passphrase, String identity, long priority, String typeclass) {
 
     //Format compatible with JSCH entries
     File privatefile = new File(privatefilename);
@@ -163,16 +205,24 @@ public class SSHConnectionManagementRepositoryAccess {
       String stringprivate = new String(byteprivate, "UTF-8");
       String stringpublic = new String(bytepublic, "UTF-8");
 
-      addKeyPair(stringprivate, stringpublic, passphrase);
+      addKeyPair(stringprivate, stringpublic, passphrase, identity, priority, typeclass);
       
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
   }
 
-  public static void addKeyPair(String privatekey, String publickey, String passphrase) {
 
-    String alias = null;
+  public static void addKeyFiles(String publicfilename, String privatefilename, String passphrase) {
+    addKeyFiles(publicfilename, privatefilename, passphrase, "", 0, "");
+  }
+
+
+  public static void addKeyPair(String privatekey, String publickey, String passphrase, String identity, long priority, String typeclass) {
+
+    if ((identity == null) || (identity.isBlank())) {
+      identity = createAlias(publickey);
+    }
     
     String adjustedPublickey = adjustPublickey(publickey);
     
@@ -193,12 +243,31 @@ public class SSHConnectionManagementRepositoryAccess {
       byte[] byteprivate = privatekey.getBytes(StandardCharsets.UTF_8);
       byte[] bytepublic = adjustedPublickey.getBytes(StandardCharsets.UTF_8);
       
-      add(Optional.ofNullable(alias), EncryptionType.getBySshStringRepresentation(provider.getType().toString()), bytepublic, byteprivate,
-          Optional.ofNullable(passphrase));
+      addWithAttributes(Optional.ofNullable(identity), EncryptionType.getBySshStringRepresentation(provider.getType().toString()), byteprivate, bytepublic,
+          Optional.ofNullable(passphrase), priority, typeclass);
 
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+
+  public static void addKeyPair(String privatekey, String publickey, String passphrase) {
+    addKeyPair(privatekey, publickey, passphrase, "", 0, "");
+  }
+
+
+  private static String createAlias(String publickey) {
+    String adjustedPublickey= publickey;
+    String[] subelements = publickey.trim().split("\\s+");
+    if (subelements.length<2) {
+      adjustedPublickey = publickey.trim();
+    } else {
+      adjustedPublickey = subelements[1].trim();
+    }
+    byte[] bytepublic = adjustedPublickey.getBytes(StandardCharsets.UTF_8);
+    String identity = identityRepo.generateIdentity(bytepublic);
+    return identity;
   }
 
   private static String adjustPublickey(String publickey) {
@@ -215,7 +284,7 @@ public class SSHConnectionManagementRepositoryAccess {
   }
 
   /**
-   * Löscht die Identities vom angegeben type und publickey. Wird keiner der beiden
+   * Loescht die Identities vom angegeben type und publickey. Wird keiner der beiden
    * Parameter angeben wird das ganze Archiv geleert.
    * @param type
    * @param publickey
