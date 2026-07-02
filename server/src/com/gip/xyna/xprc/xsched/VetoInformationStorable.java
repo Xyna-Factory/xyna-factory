@@ -19,6 +19,7 @@ package com.gip.xyna.xprc.xsched;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 
 import com.gip.xyna.utils.collections.CollectionUtils.Transformation;
@@ -139,7 +140,8 @@ public class VetoInformationStorable extends ClusteredStorable<VetoInformationSt
   public static final Transformation<VetoInformationStorable, VetoInformation> toVetoInformation =
       new Transformation<VetoInformationStorable, VetoInformation>() {
         public VetoInformation transform(VetoInformationStorable from) {
-          return new VetoInformation(from.getVetoName(), from.getUsingOrder(), 
+          // TODO: add sharedOrderIds
+          return new VetoInformation(from.getVetoName(), from.getUsingOrder(), Collections.emptyList(),
                                      from.getDocumentation(), from.getCreated(),
                                      from.getBinding());
         }

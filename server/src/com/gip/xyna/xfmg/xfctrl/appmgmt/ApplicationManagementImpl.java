@@ -82,7 +82,7 @@ import com.gip.xyna.utils.collections.CollectionUtils.Transformation;
 import com.gip.xyna.utils.collections.GraphUtils;
 import com.gip.xyna.utils.collections.GraphUtils.ConnectedEdges;
 import com.gip.xyna.utils.collections.LruCacheWithTimingInformation;
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.collections.Triple;
 import com.gip.xyna.utils.exceptions.XynaException;
@@ -1610,6 +1610,16 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
   }
 
 
+  /**
+  * @deprecated use java.util.Optional instead
+  */
+  @Deprecated
+  public void stopApplication(final String applicationName, final String versionName, boolean clusterwide,
+                              final com.gip.xyna.utils.collections.Optional<EnumSet<OrderEntranceType>> onlyDisableEntranceTypes) throws XFMG_CouldNotStopApplication {
+    this.stopApplication(applicationName, versionName, clusterwide, (java.util.Optional<EnumSet<OrderEntranceType>>) onlyDisableEntranceTypes.adapt());
+  }
+  
+  
   public void stopApplication(final String applicationName, final String versionName, boolean clusterwide,
                               final Optional<EnumSet<OrderEntranceType>> onlyDisableEntranceTypes) throws XFMG_CouldNotStopApplication {
 
@@ -9156,7 +9166,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
     if (onlyOpenOrderEntranceTypes == null) {
       onlyOpenEntrances = Optional.empty();
     } else {
-      onlyOpenEntrances = new Optional<EnumSet<OrderEntranceType>>(onlyOpenOrderEntranceTypes);
+      onlyOpenEntrances = Optional.ofNullable(onlyOpenOrderEntranceTypes);
     }
 
     return startRequestInThread(new ApplicationRunnable() {

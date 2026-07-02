@@ -42,7 +42,7 @@ import com.gip.xyna.FutureExecution;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.idgeneration.IDGenerator;
 import com.gip.xyna.utils.collections.ExpiringMap;
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.utils.misc.StringParameter;
@@ -1010,7 +1010,7 @@ public class OrderInputSourceManagement extends FunctionGroup {
 
       public Optional<DeploymentMode> getDeploymentMode(XMOMType type, String fqName, long revision) {
         if (fqName.equals(di.get().getName())) {
-          return Optional.of(DeploymentMode.codeChanged);
+          return Optional.ofNullable(DeploymentMode.codeChanged);
         }
         return super.getDeploymentMode(type, fqName, revision);
       }
