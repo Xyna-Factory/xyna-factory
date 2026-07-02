@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,14 +23,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-
 import org.apache.log4j.Logger;
 
 import xact.ssh.EncryptionType;
@@ -38,9 +35,9 @@ import xact.ssh.HostKeyStorableRepository;
 import xact.ssh.IdentityStorable;
 import xact.ssh.IdentityStorableRepository;
 import xact.ssh.SSHConnectionManagement;
-//import xact.ssh.SSHUtil;
 import xact.ssh.XynaHostKeyRepository;
 import xact.ssh.XynaIdentityRepository;
+import xact.ssh.generatekeypackage.ExtdKeyGeneration;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
@@ -48,7 +45,6 @@ import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 import com.gip.xyna.xfmg.xfctrl.dependencies.DependencyRegister.DependencySourceType;
 import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement;
 
-import net.schmizz.sshj.Config;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
 import net.schmizz.sshj.userauth.password.PasswordFinder;
@@ -68,14 +64,13 @@ public class SSHConnectionManagementRepositoryAccess {
 
     client = new SSHClient();
 
-    hostKeyRepo = new HostKeyStorableRepository();
+    hostKeyRepo = new HostKeyStorableRepository(HostKeyStorableRepository.SUPPORTED_FEATURES_PROP.get());
     hostKeyRepo.init();
     identityRepo = new IdentityStorableRepository(client.getTransport().getConfig());
     identityRepo.init();
 
     XynaFactory.getInstance().getFactoryManagementPortal().getXynaFactoryControl().getDependencyRegister()
-        .addDependency(DependencySourceType.XYNAPROPERTY, HASHHOSTKEYS_PROPERTY_NAME, DependencySourceType.DATATYPE,
-                       SSHConnectionManagement.class.getName(), getRevision());
+        .addDependency(DependencySourceType.XYNAPROPERTY, HASHHOSTKEYS_PROPERTY_NAME, getRevision(), DependencySourceType.DATATYPE, "xact.ssh.SSHConnectionManagement", getRevision());
   }
 
 
@@ -92,7 +87,7 @@ public class SSHConnectionManagementRepositoryAccess {
     hostKeyRepo.shutdown();
     identityRepo.shutdown();
     XynaFactory.getInstance().getFactoryManagementPortal().getXynaFactoryControl().getDependencyRegister()
-        .removeDependency(DependencySourceType.XYNAPROPERTY, HASHHOSTKEYS_PROPERTY_NAME, DependencySourceType.DATATYPE,
+        .removeDependency(DependencySourceType.XYNAPROPERTY, HASHHOSTKEYS_PROPERTY_NAME, getRevision(), DependencySourceType.DATATYPE,
                           SSHConnectionManagement.class.getName(), getRevision());
   }
 
@@ -110,7 +105,7 @@ public class SSHConnectionManagementRepositoryAccess {
   public static void generateKeyPair(EncryptionType type, Integer keysize, String passphrase, boolean overwriteExisting) {
     try {
       if (type.getStringRepresentation().equalsIgnoreCase("RSA") | type.getStringRepresentation().equalsIgnoreCase("DSA")) {
-        xact.ssh.generatekeypackage.ExtdKeyGeneration.generateKeyPair(keysize, passphrase, overwriteExisting, type, identityRepo);
+        ExtdKeyGeneration.generateKeyPair(keysize, passphrase, overwriteExisting, type, identityRepo);
       } else {
         logger.warn("EncryptionType not supported: " + type.getStringRepresentation());
         NoSuchAlgorithmException e = new NoSuchAlgorithmException();
@@ -235,6 +230,4 @@ public class SSHConnectionManagementRepositoryAccess {
     }
     identityRepo.removeKey(type, Optional.ofNullable(publickey));
   }
-
-
 }
