@@ -62,7 +62,7 @@ import com.gip.xyna.FileUtils;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.exceptions.Ex_FileAccessException;
 import com.gip.xyna.exceptions.Ex_FileWriteException;
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.collections.Triple;
 import com.gip.xyna.utils.exceptions.XynaException;
@@ -486,7 +486,7 @@ public class CodeAccess implements RevisionChangeListener {
       Optional<Throwable> exception = Optional.empty();
       BuildFailure failure = buildFailures.get(modifiedComponent.getComponentOriginalName());
       if (failure != null) {
-        exception = Optional.of(failure.e);
+        exception = Optional.ofNullable(failure.e);
       }
       dism.buildFinished(modifiedComponent.getComponentOriginalName(), exception, revision);
     }

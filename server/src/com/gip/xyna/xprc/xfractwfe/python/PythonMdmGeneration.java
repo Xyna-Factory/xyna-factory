@@ -204,7 +204,7 @@ public class PythonMdmGeneration {
 
 
   private void fillDefaults(StringBuilder sb, boolean withImpl, boolean typeHints) {
-    fillImports(sb);
+    fillImports(sb, withImpl);
     fillBaseObject(sb, "XynaObject", "DATATYPE", null, withImpl, typeHints);
     fillBaseObject(sb, "XynaException", "EXCEPTION", "Exception", withImpl, typeHints);
     fillConvertToPythonObject(sb, withImpl, typeHints);
@@ -242,9 +242,13 @@ public class PythonMdmGeneration {
   }
 
 
-  private void fillImports(StringBuilder sb) {
+  private void fillImports(StringBuilder sb, boolean withImpl) {
     sb.append("import decimal\n");
-    sb.append("from com.gip.xyna import XynaFactory # type: ignore\n\n");
+    if (withImpl) {
+      sb.append("from com.gip.xyna import XynaFactory # type: ignore\n\n");
+    } else {
+      sb.append("\n");
+    }
   }
 
 

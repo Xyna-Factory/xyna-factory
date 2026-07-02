@@ -16,14 +16,14 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="JSONWebToken" factoryVersion="" versionName="1.0.2" xmlVersion="1.1">
+<Application applicationName="JSONWebToken" factoryVersion="" versionName="1.0.3" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Tools um JSON Web Tokens zu erzeugen, zu parsen und zu bearbeiten</Description>
     <Description Lang="EN">Tools for creating, parsing and working with JSON Web Tokens</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Http</ApplicationName>
-        <VersionName>1.5.9</VersionName>
+        <VersionName>1.5.10</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>

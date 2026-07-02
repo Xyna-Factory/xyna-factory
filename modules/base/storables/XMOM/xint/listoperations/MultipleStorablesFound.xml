@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,21 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
-  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="XVPNF-00402" Label="Multiple Storables Found" TypeName="MultipleStorablesFound" TypePath="xint.listoperations">
-    <Data Label="Exception Details EN" VariableName="exceptionDetailsEN">
-      <Meta>
-        <Type>String</Type>
-      </Meta>
-    </Data>
-    <Data Label="Exception Details DE" VariableName="exceptionDetailsDE">
-      <Meta>
-        <Type>String</Type>
-      </Meta>
-    </Data>
+--><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
+  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="XSTORE-00002" IsAbstract="false" Label="Multiple Storables Found" TypeName="MultipleStorablesFound" TypePath="xint.listoperations">
     <Data IsList="true" Label="Storables" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storables"/>
-    <MessageText Language="EN">%0%</MessageText>
-    <MessageText Language="DE">%1%</MessageText>
+    <MessageText Language="DE">Es wurden mehrere Storables gefunden, die die Suchkriterien erfüllen</MessageText>
+    <MessageText Language="EN">Multiple Storables matching the search criteria have been found</MessageText>
   </ExceptionType>
 </ExceptionStore>

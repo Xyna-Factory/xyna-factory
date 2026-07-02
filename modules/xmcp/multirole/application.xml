@@ -23,7 +23,7 @@
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>StorableOperations</ApplicationName>
-        <VersionName>1.0.1</VersionName>
+        <VersionName>1.0.2</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>UserRoleManagement</ApplicationName>
