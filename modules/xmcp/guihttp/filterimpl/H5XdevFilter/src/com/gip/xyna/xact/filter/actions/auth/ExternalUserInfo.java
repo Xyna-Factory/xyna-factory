@@ -43,7 +43,7 @@ public class ExternalUserInfo {
   public final String externalUserDisplayName;
   public final String externalUserPassword;
 
-  
+
   private ExternalUserInfo(String externalUserName, String externalUserDisplayName, String externalUserPassword) {
     this.externalUserName = externalUserName;
     this.externalUserDisplayName = externalUserDisplayName;
@@ -58,6 +58,7 @@ public class ExternalUserInfo {
   SSL_CIPHER_USEKEYSIZE: 128
   */
 
+
   public static ExternalUserInfo createFromClientCertificate(String client_cert) throws CertificateException {
     if (client_cert == null) {
       return null;
@@ -66,8 +67,8 @@ public class ExternalUserInfo {
     if (client_cert.length() < BEGIN_CERT.length() + 1) {
       return null;
     }
-    client_cert = BEGIN_CERT + "\n"
-        + client_cert.substring(BEGIN_CERT.length() + 1, client_cert.length() - END_CERT.length() - 1).replace(' ', '\n') + "\n" + END_CERT;
+    client_cert = BEGIN_CERT + "\n" + client_cert.substring(BEGIN_CERT.length() + 1, client_cert.length() - END_CERT.length() - 1)
+        .replace(' ', '\n') + "\n" + END_CERT;
 
     ByteArrayInputStream bais;
     try {
@@ -99,6 +100,39 @@ public class ExternalUserInfo {
     } catch (CertificateException e) {
       throw e;
     }
+  }
+
+
+  public static ExternalUserInfo createFromJWT(String jwt) {
+    if (jwt == null || jwt.isEmpty()) {
+      return null;
+    }
+
+    // Split the JWT into its components: header, payload, and signature
+    String[] parts = jwt.split("\\.");
+    if (parts.length != 3) {
+      return null;
+    }
+
+    // Decode the payload (Base64 URL-decoded)
+    String payload = new String(java.util.Base64.getUrlDecoder().decode(parts[1]));
+
+    // Extract the email claim from the payload
+    String emailKey = "\"email\":\"";
+    int emailStart = payload.indexOf(emailKey);
+    if (emailStart == -1) {
+      return null;
+    }
+
+    emailStart += emailKey.length();
+    int emailEnd = payload.indexOf("\"", emailStart);
+    if (emailEnd == -1) {
+      return null;
+    }
+
+    String email = payload.substring(emailStart, emailEnd);
+    String user_displayname = email.substring(0, email.indexOf('@'));
+    return new ExternalUserInfo(email, user_displayname, jwt);
   }
 
 

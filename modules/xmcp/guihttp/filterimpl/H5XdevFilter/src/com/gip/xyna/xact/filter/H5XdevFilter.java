@@ -67,6 +67,7 @@ import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
 import com.gip.xyna.xdev.xfractmod.xmdm.ConnectionFilter;
 import com.gip.xyna.xdev.xfractmod.xmdm.EventListener;
+import com.gip.xyna.xdev.xfractmod.xmdm.FilterConfigurationParameter;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.RevisionOrderControl;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.RevisionOrderControl.CustomOrderEntryInformation;
@@ -143,6 +144,13 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
   public static final XynaPropertyBoolean SUPPRESS_STACKTRACES = new XynaPropertyBoolean("xmcp.guihttp.suppress_stacktraces", false)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Remove stacktraces from error responses.")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Entferne Stacktraces aus Fehlern in Antwortnachrichten.");
+
+  private H5XdevFilterParameter config;
+
+  @Override
+  public FilterConfigurationParameter createFilterConfigurationTemplate() {
+    return new H5XdevFilterParameter();
+  }
 
   private static class WorkspaceRevisionBuilder implements XynaPropertyBuilds.Builder<Long> {
 
@@ -426,7 +434,6 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     AVARCONSTANTS.registerDependency(UserType.Filter, NAME);
     STRICT_TRANSPORT_SECURITY.registerDependency(UserType.Filter, NAME);
     STRICT_TRANSPORT_SECURITY_MAX_AGE.registerDependency(UserType.Filter, NAME);
-    SUPPRESS_STACKTRACES.registerDependency(UserType.Filter, NAME);
 
     XmomUndoRedoHistory.REDO_LIMIT.registerDependency(UserType.Filter, NAME);
     XmomUndoRedoHistory.UNDO_LIMIT.registerDependency(UserType.Filter, NAME);
@@ -467,6 +474,22 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     XmomUndoRedoHistory.UNDO_LIMIT.unregister();
   }
 
+  @Override
+  public FilterResponse createXynaOrder(HTTPTriggerConnection tc, FilterConfigurationParameter params) throws XynaException {
+
+    if (params != null && !params.equals(config)) {
+      if (logger.isInfoEnabled()) {
+        logger.info("Updating H5Xdev filter configuration: " + (config != null ? config : "none") + " => "+ params);
+      }
+
+      config = (H5XdevFilterParameter)params;
+
+      ExternalUserLoginAction.setExternalAuthType(config.getExternalAuthType());
+      ExternalUserLoginAction.setAuthTokenHeaderName(config.getExternalAuthHeader());
+    }
+
+    return createXynaOrder(tc);
+  }
 
   /**
    * Analyzes TriggerConnection and creates XynaOrder if it accepts the connection.
