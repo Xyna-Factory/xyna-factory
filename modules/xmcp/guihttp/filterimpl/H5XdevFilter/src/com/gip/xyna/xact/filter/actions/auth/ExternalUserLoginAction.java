@@ -59,7 +59,7 @@ import xmcp.auth.ExternalUserLoginRequest;
  * }
  *
  * antwort:
- * so wie beim login, nur dass die sessionerzeugung ï¿½ber die externe domain passiert
+ * so wie beim login, nur dass die sessionerzeugung über die externe domain passiert
  *
  */
 public class ExternalUserLoginAction implements FilterAction {
