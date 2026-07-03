@@ -53,6 +53,7 @@ public class OrderInstanceBackup extends ClusteredStorable<OrderInstanceBackup> 
   public static final String COL_ROOT_ID = "rootId";
   public static final String COL_BOOTCNTID = "bootcntid";
   public static final String COL_REVISION = "revision";
+  public static final String COL_CREATED = "created";
 
   @Column(name = OrderInstanceBackup.COL_ID)
   protected long id;
@@ -74,6 +75,9 @@ public class OrderInstanceBackup extends ClusteredStorable<OrderInstanceBackup> 
   
   @Column(name = COL_REVISION)
   private Long revision; //revision des auftrags, nicht notwednigerweise des ordertypes/workflows
+
+  @Column(name = COL_CREATED)
+  private long created = -1;
 
 
   static int getMaxIndexOfArchivingProblems() {
@@ -202,6 +206,7 @@ public class OrderInstanceBackup extends ClusteredStorable<OrderInstanceBackup> 
       details.setOrderType(""); //FIXME workaround: bugz 16578: keine npe
     }
     this.bootCntId = XynaFactory.getInstance().getBootCntId();    
+    this.created = System.currentTimeMillis();
   }
 
 
@@ -276,6 +281,7 @@ public class OrderInstanceBackup extends ClusteredStorable<OrderInstanceBackup> 
     private boolean hasRootId = false;
     private boolean hasBootCntId = false;
     private boolean hasRevision = false;
+    private boolean hasCreated = false;
     
     public OrderInstanceBackup read(ResultSet rs) throws SQLException {
      if( firstCall ) {
@@ -301,7 +307,8 @@ public class OrderInstanceBackup extends ClusteredStorable<OrderInstanceBackup> 
       if( hasBootCntId ) { 
         oi.bootCntId = rs.getLong(COL_BOOTCNTID);
         if (oi.bootCntId == 0 && rs.wasNull()) oi.bootCntId = null;
-      }      
+      }
+      if( hasCreated ) { oi.created = rs.getLong(COL_CREATED); }
       return oi;
     }
 
@@ -318,7 +325,7 @@ public class OrderInstanceBackup extends ClusteredStorable<OrderInstanceBackup> 
         if( COL_ROOT_ID.equalsIgnoreCase(colName) ) hasRootId = true;
         if( COL_BOOTCNTID.equalsIgnoreCase(colName) ) hasBootCntId = true;
         if( COL_REVISION.equalsIgnoreCase(colName) ) hasRevision = true;
-        
+        if( COL_CREATED.equalsIgnoreCase(colName) ) { hasCreated = true; }
       }
     }
   }
@@ -354,6 +361,7 @@ public class OrderInstanceBackup extends ClusteredStorable<OrderInstanceBackup> 
     if (oi.bootCntId == 0 && rs.wasNull()) {
       oi.bootCntId = null;
     }
+    oi.created = rs.getLong(COL_CREATED);
   }
 
   private static ResultSetReader<OrderInstanceBackup> readerWarnIfNotDeserializable =
@@ -384,6 +392,7 @@ public class OrderInstanceBackup extends ClusteredStorable<OrderInstanceBackup> 
           if (oi.bootCntId == 0 && rs.wasNull()) {
             oi.bootCntId = null;
           }
+          oi.created = rs.getLong(COL_CREATED);
           return oi;
         }
 
@@ -413,6 +422,7 @@ public class OrderInstanceBackup extends ClusteredStorable<OrderInstanceBackup> 
           if (oi.bootCntId == 0 && rs.wasNull()) {
             oi.bootCntId = null;
           }
+          oi.created = rs.getLong(COL_CREATED);
           return oi;
         }
 
@@ -500,6 +510,7 @@ public class OrderInstanceBackup extends ClusteredStorable<OrderInstanceBackup> 
     if(revision == null) {
       revision = RevisionManagement.REVISION_DEFAULT_WORKSPACE;
     }
+    created = data.getCreated();
   }
 
 
@@ -540,5 +551,13 @@ public class OrderInstanceBackup extends ClusteredStorable<OrderInstanceBackup> 
     this.revision = revision;
   }
 
+  public long getCreated() {
+    return created;
+  }
+  
+  @SuppressWarnings("unused")
+  private void setCreated(long startTime) {
+    // value set in constructor should not be changed
+  }
 
 }
