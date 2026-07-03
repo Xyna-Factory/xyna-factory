@@ -99,7 +99,7 @@ public class XSORMemory implements Interconnectable {
   }
 
   /**
-   * freien index zurückgeben
+   * freien index zurï¿½ckgeben
    */
   void freeListPut(int objectIndex) {
     synchronized (freeList) {
@@ -315,7 +315,7 @@ public class XSORMemory implements Interconnectable {
     }
   }
 
-  public void setString(int objectIndex, int offset, String value) {// auf maximallaenge beschränken
+  public void setString(int objectIndex, int offset, String value) {// auf maximallaenge beschrï¿½nken
     lockObject(objectIndex);
     try {
       if (state[objectIndex] == 'S' || state[objectIndex] == 'I') {
@@ -444,7 +444,7 @@ public class XSORMemory implements Interconnectable {
       tid = lock.get(objectIndex);
       if (lockedBy != tid) {
         if (lockedBy != 0) {
-          // jemand anderes hat das lock als vorher -> es geht vorwärts -> gleich wieder
+          // jemand anderes hat das lock als vorher -> es geht vorwï¿½rts -> gleich wieder
           // probieren
           sleepInMs = 0;
         }
@@ -452,7 +452,7 @@ public class XSORMemory implements Interconnectable {
       }
 
       if (i % 100 == 1 && logger.isDebugEnabled()) {
-        // ausführliches logging
+        // ausfï¿½hrliches logging
         ThreadMXBean tbean = ManagementFactory.getThreadMXBean();
         if (tid != 0) { // 0 happens if the lock was released since the lock.compareAndSet
           ThreadInfo ti = tbean.getThreadInfo(tid, 1000);
@@ -499,7 +499,7 @@ public class XSORMemory implements Interconnectable {
     while (!lock.compareAndSet(objectIndex, 0, ownTid)) {
       i++;
       if (i % 100 == 1 && logger.isDebugEnabled()) {
-        // ausführliches logging
+        // ausfï¿½hrliches logging
         ThreadMXBean tbean = ManagementFactory.getThreadMXBean();
         long tid = lock.get(objectIndex);
         if (tid != 0) { // 0 happens if the lock was released since the lock.compareAndSet
@@ -637,7 +637,7 @@ public class XSORMemory implements Interconnectable {
           byte[] oldMsg = mergeStateS.get(key);
           if (insertAtHeadOfQueue) {
             // dann wird auch SIS->S gemerged, aber das bereits in der queue vorhandene
-            // objekt ist das überbleibende objekt, weil es neuer ist
+            // objekt ist das ï¿½berbleibende objekt, weil es neuer ist
             byte[] tmp = oldMsg;
             oldMsg = ret;
             ret = tmp;
@@ -652,18 +652,18 @@ public class XSORMemory implements Interconnectable {
           XSORUtil.setLong(oldBackupReleaseTime, ret, 21);
           outgoingQueue.remove(oldMsg);
 
-          // evtl hat der alte übergang nach S eine payload gehabt und der neue nicht =>
-          // übertragen
+          // evtl hat der alte ï¿½bergang nach S eine payload gehabt und der neue nicht =>
+          // ï¿½bertragen
           if (!payloadNeeded && oldMsg.length > sizeTilPayload) {
-            // altes bytearray wiederverwenden, das hat die richtige länge. einfach die
-            // ersten sizeTilPayload bytes überschreiben
+            // altes bytearray wiederverwenden, das hat die richtige lï¿½nge. einfach die
+            // ersten sizeTilPayload bytes ï¿½berschreiben
             byte[] tmp = ret;
             ret = oldMsg;
             System.arraycopy(tmp, 0, ret, 0, sizeTilPayload);
           }
           mergeStateS.put(key, ret);
           merged = true;
-          // Wegen Clusterzustandsübergang sollte im Merging Mode keiner auf einen Eintrag
+          // Wegen Clusterzustandsï¿½bergang sollte im Merging Mode keiner auf einen Eintrag
           // warten
         } else if (!mergeStateS.containsKey(key) && !mergeStateI.containsKey(key)) {
           mergeStateS.put(key, ret);
@@ -719,8 +719,8 @@ public class XSORMemory implements Interconnectable {
    * wird.
    */
   private int sendSpecialMessage(char specialChar) {
-    byte[] ret = new byte[1 + 4 + 4]; // nur state als kennzeichen für SYNC-Message, type für dispatching und corrId
-                                      // für correlation.
+    byte[] ret = new byte[1 + 4 + 4]; // nur state als kennzeichen fï¿½r SYNC-Message, type fï¿½r dispatching und corrId
+                                      // fï¿½r correlation.
     int transactionCorrId = getNextCorrId();
     ret[0] = (byte) specialChar;
     XSORUtil.setInt(type, ret, 1);
@@ -730,8 +730,8 @@ public class XSORMemory implements Interconnectable {
   }
 
   private int sendSpecialMessageAtFirst(char specialChar) {
-    byte[] ret = new byte[1 + 4 + 4]; // nur state als kennzeichen für SYNC-Message, type für dispatching und corrId
-                                      // für correlation.
+    byte[] ret = new byte[1 + 4 + 4]; // nur state als kennzeichen fï¿½r SYNC-Message, type fï¿½r dispatching und corrId
+                                      // fï¿½r correlation.
     int transactionCorrId = getNextCorrId();
     ret[0] = (byte) specialChar;
     XSORUtil.setInt(type, ret, 1);
@@ -750,7 +750,7 @@ public class XSORMemory implements Interconnectable {
   }
 
   /**
-   * finde dasjenige byte[], welches für den objectIndex zuständig ist.
+   * finde dasjenige byte[], welches fï¿½r den objectIndex zustï¿½ndig ist.
    */
   public byte[] getData(int objectIndex) {
     byte[] data = chunk[objectIndex / recordsPerChunk];
@@ -842,7 +842,7 @@ public class XSORMemory implements Interconnectable {
   }
 
   public long getReleaseTime(int objectIndex) {
-    // releasetime gibts nicht extra für writecopy, weil beim releasen das backup ja
+    // releasetime gibts nicht extra fï¿½r writecopy, weil beim releasen das backup ja
     // verschwindet
     // es schadet aber auch nichts, getReleaseTime mit dem writecopy index
     // aufzurufen
@@ -850,7 +850,7 @@ public class XSORMemory implements Interconnectable {
   }
 
   /**
-   * gibt neuen index gelockt zurück, falls newIndex != oldIndex => muss noch
+   * gibt neuen index gelockt zurï¿½ck, falls newIndex != oldIndex => muss noch
    * geunlockt werden.
    */
   int setPayloadAndUpdateIndexAndLockNewIndex(Object objectID, int objectIndex, byte[] payload, long modTime,
@@ -1005,7 +1005,13 @@ public class XSORMemory implements Interconnectable {
         success = true;
       } finally {
         if (!success) {
-          pkIndex.replace(newXSORPayload.getPrimaryKey(), oldObjectIndex, newObjectIndex);
+          if (oldObjectIndex < 0) {
+            // CREATE case: no previous mapping existed, remove the one we added
+            pkIndex.delete(newXSORPayload.getPrimaryKey(), newObjectIndex);
+          } else {
+            // UPDATE case: restore the previous mapping
+            pkIndex.replace(newXSORPayload.getPrimaryKey(), oldObjectIndex, newObjectIndex);
+          }
         }
       }
     }
@@ -1016,7 +1022,7 @@ public class XSORMemory implements Interconnectable {
   }
 
   public void addAllObjectsToOutgoingQueue(boolean insertAtHeadOfQueue) {
-    // füge alle objekte in outgoing queue ein
+    // fï¿½ge alle objekte in outgoing queue ein
     int cnt = 0;
     for (Object pk : pkIndex.keySet()) {
       int objectIndex = getObjectIndex(pk);
@@ -1024,7 +1030,7 @@ public class XSORMemory implements Interconnectable {
         lockObject(objectIndex);
         try {
           // spec: ist lokaler zustand == I || S => zielzustand S und payload-transfer.
-          // ist lokaler zustand E || M, so führe für diese objekte ein payload-rollback
+          // ist lokaler zustand E || M, so fï¿½hre fï¿½r diese objekte ein payload-rollback
           // auf das backup durch)
 
           char state = getState(objectIndex);
@@ -1035,7 +1041,7 @@ public class XSORMemory implements Interconnectable {
             case 'E':
 
               // objekt ist gerade in bearbeitung, aber evtl wird keine message vom anderen
-              // thread erstellt, die die payload enthält.
+              // thread erstellt, die die payload enthï¿½lt.
               // ->remote mit S und payload anlegen
               sendMessage(pk, objectIndex, 'S', true, insertAtHeadOfQueue);
               cnt++;
@@ -1045,11 +1051,11 @@ public class XSORMemory implements Interconnectable {
               // ist, wird es eh in die queue
               // eingestellt.
               // ausser man ist hier gerade in disc_master. dann kommt aber wohl gleich sync
-              // und dann wird das objekt erneut überprüft.
-              // (bei übergang von disc_master -> sync wird wieder addAllObjects aufgerufen)
+              // und dann wird das objekt erneut ï¿½berprï¿½ft.
+              // (bei ï¿½bergang von disc_master -> sync wird wieder addAllObjects aufgerufen)
             case 'N':
 
-              // state == 'N' -> ein anderer thread hat das objekt geändert oder gelöscht und
+              // state == 'N' -> ein anderer thread hat das objekt geï¿½ndert oder gelï¿½scht und
               // ihm ggfs einen neuen index gegeben.
               // a) update -> anderer thread verschickt message mit payload -> hier ist nichts
               // zu tun.
@@ -1081,12 +1087,12 @@ public class XSORMemory implements Interconnectable {
     CountDownLatch latch;
 
     Lock queueLock = outgoingQueue.getLock(); // locken, damit in der zeit keine nachrichten eingestellt oder entnommen
-                                              // werden können
+                                              // werden kï¿½nnen
     queueLock.lock();
     try {
       if (outgoingQueue.size() == 0) {
-        // nun weiß man nicht, wieviele messages gerade unterwegs sind. man will warten,
-        // bis das letzte reply zurück ist.
+        // nun weiï¿½ man nicht, wieviele messages gerade unterwegs sind. man will warten,
+        // bis das letzte reply zurï¿½ck ist.
         // => neue message einstellen. und darauf warten.
         debugger.debug("outgoing queue empty. inserting sync-message");
         sendSpecialMessage('y'); // greift auf die queue zu, ist aber gleicher thread, deshalb geht das
@@ -1107,7 +1113,7 @@ public class XSORMemory implements Interconnectable {
       queueLock.unlock();
     }
     try {
-      latch.await(); // wird unterbrochen, falls sich der clusterstate ändert durch ein interrupt auf
+      latch.await(); // wird unterbrochen, falls sich der clusterstate ï¿½ndert durch ein interrupt auf
                      // den thread (siehe cachecoherenceimpl)
       debugger.debug("Continuing ...");
     } catch (InterruptedException e) {
