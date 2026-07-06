@@ -20,7 +20,6 @@ package xact.ssh.cli.impl;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 import com.gip.xyna.utils.exceptions.XynaException;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import xact.ssh.EncryptionType;

@@ -19,11 +19,16 @@ package xact.ssh.impl;
 
 
 
+import java.security.Security;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.apache.log4j.Logger;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
+import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
@@ -36,6 +41,8 @@ import net.schmizz.sshj.transport.TransportException;
 
 public class SSHConnectionServiceOperationImpl implements ExtendedDeploymentTask {
 
+  private static final Logger logger = CentralFactoryLogging.getLogger(SSHConnectionServiceOperationImpl.class);
+
 
   private static Map<Long, TransientConnectionData> openConnections =
       Collections.synchronizedMap(new HashMap<Long, TransientConnectionData>());
@@ -46,6 +53,11 @@ public class SSHConnectionServiceOperationImpl implements ExtendedDeploymentTask
 
   public void onDeployment() throws XynaException {
     SSHConnectionInstanceOperationImpl.substringLengthProperty.registerDependency(UserType.Service, "xact.ssh.SSHConnection");
+
+    if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+          int pos = Security.addProvider(new BouncyCastleProvider());
+          logger.info("Adding BouncyCastleProvider to Security at " + String.valueOf(pos));
+    }
   }
 
 

@@ -132,14 +132,14 @@
         <CodeSnippet Type="Java">SSHConnectionManagementImpl.returnConnection(managedConnection)</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="Modify keypair" Name="modifyKeypair0">
+    <Operation IsStatic="true" Label="Modify keypair" Name="modifyKeypair">
       <Input>
         <Data ID="12" Label="Old Key Attributes" ReferenceName="KeyAttributes" ReferencePath="xact.ssh" VariableName="keyAttributes12"/>
         <Data ID="13" Label="New Key Attributes" ReferenceName="KeyAttributes" ReferencePath="xact.ssh" VariableName="keyAttributes13"/>
       </Input>
       <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java">SSHConnectionManagementImpl.modifyKeypair0(keyAttributes12, keyAttributes13)</CodeSnippet>
+        <CodeSnippet Type="Java">SSHConnectionManagementImpl.modifyKeypair(keyAttributes12, keyAttributes13)</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Add key files with key attributes" Name="addKeyFilesWithKeyAttributes">

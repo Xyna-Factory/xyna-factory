@@ -211,7 +211,7 @@ public class SSHConnectionManagementServiceOperationImpl implements ExtendedDepl
   }
 
 
-  public void modifyKeypair0(KeyAttributes oldkeyAttributes, KeyAttributes newkeyAttributes) {
+  public void modifyKeypair(KeyAttributes oldkeyAttributes, KeyAttributes newkeyAttributes) {
     String identity = "";
     String typeclass = null;
     long priority = 0;
@@ -221,7 +221,7 @@ public class SSHConnectionManagementServiceOperationImpl implements ExtendedDepl
     if (newkeyAttributes.getPriority() != 0) {
       priority = newkeyAttributes.getPriority();
     }
-    if ((newkeyAttributes.getTypeclass() != null)) { //&& (! newkeyAttributes.getTypeclass().isBlank())) {
+    if ((newkeyAttributes.getTypeclass() != null)) {
       typeclass = newkeyAttributes.getTypeclass();
     }
     SSHConnectionManagementRepositoryAccess.modifyKeyPair(oldkeyAttributes.getIdentity(), identity, priority, typeclass);

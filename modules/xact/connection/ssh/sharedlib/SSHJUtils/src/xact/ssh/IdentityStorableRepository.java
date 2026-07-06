@@ -22,6 +22,7 @@ import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -248,7 +249,7 @@ public class IdentityStorableRepository implements XynaIdentityRepository {
   
   class KeyComparator implements java.util.Comparator<IdentityStorable> {
       public int compare(IdentityStorable a, IdentityStorable b) {
-          return ((int) b.getPriority() - (int) a.getPriority());
+          return Long.compare(b.getPriority(), a.getPriority());
       }
   }
   
@@ -386,7 +387,7 @@ public class IdentityStorableRepository implements XynaIdentityRepository {
 
   public String generateIdentity(byte[] publicKey) {
     //Hash should match "echo -n "..." | base64 -d | sha256sum"
-    byte[] decodedBytes = java.util.Base64.getDecoder().decode(publicKey);
+    byte[] decodedBytes = Base64.getDecoder().decode(publicKey);
     return generateName(decodedBytes);
   }
 

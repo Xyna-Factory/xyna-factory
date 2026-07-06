@@ -30,7 +30,6 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.security.Security;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -91,6 +90,7 @@ import xact.connection.ReadTimeout;
 import xact.connection.Response;
 import xact.connection.SendParameter;
 import xact.ssh.AuthenticationMethod;
+import xact.ssh.AuthenticationMode;
 import xact.ssh.EncryptionType;
 import xact.ssh.FactoryUtils;
 import xact.ssh.HostKeyAliasMapping;
@@ -98,6 +98,7 @@ import xact.ssh.HostKeyCheckingMode;
 import xact.ssh.HostKeyStorableRepository;
 import xact.ssh.IdentityStorableRepository;
 import xact.ssh.ProxyParameter;
+import xact.ssh.PublicKey;
 import xact.ssh.SSHConnection;
 import xact.ssh.SSHConnectionInstanceOperation;
 import xact.ssh.SSHConnectionParameter;
@@ -335,8 +336,6 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
     try {
       // TODO Default Settings unsupported vs login-server
 
-      Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
- 
       // Client uses only socketFactory.createSocket() and overrides with setConnectTimeout and setTimeout
       if (connectionTimeout >= 0) {
         client.setConnectTimeout(connectionTimeout);
@@ -446,12 +445,12 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
     List<KeyProvider> kpl = new ArrayList<KeyProvider>();
 
     //Assumption: The first public key entry contains the (optional) prioritized key alias.
-    List<? extends xact.ssh.AuthenticationMode> authenticationModes = conParams.getAuthenticationModes();
+    List<? extends AuthenticationMode> authenticationModes = conParams.getAuthenticationModes();
     List<String> aliasNameList = new ArrayList<String>();
     String keyAlias = null;
-    for (xact.ssh.AuthenticationMode element : authenticationModes) {
+    for (AuthenticationMode element : authenticationModes) {
       if (AuthenticationMethod.getByXynaRepresentation(element).getIdentifiers()[0].equalsIgnoreCase(AuthenticationMethod.PUBLICKEY.getIdentifiers()[0])) {
-        xact.ssh.PublicKey publickey = (xact.ssh.PublicKey) element;
+        PublicKey publickey = (PublicKey) element;
         if ((publickey.getIdentity() != null) && (! publickey.getIdentity().isBlank())) {
           aliasNameList.add(publickey.getIdentity());
         }
@@ -727,15 +726,16 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
     List<Named<MAC>> macs = createMacList(getSSHConnectionParameter().getMessageAuthenticationCodes());
     config.setMACFactories(macs);
 
-    boolean ciphersSet = getSSHConnectionParameter().getCiphers() != null && !getSSHConnectionParameter().getCiphers().isEmpty();
-    List<Named<Cipher>> ciphers = ciphersSet ? createCiphers(getSSHConnectionParameter().getCiphers()) : config.getCipherFactories();
+    List<Named<Cipher>> ciphers = createCiphers(getSSHConnectionParameter().getCiphers());
     config.setCipherFactories(ciphers);
+    
+    List<Named<KeyExchange>> kex = createKexList(getSSHConnectionParameter().getKeyExchangeMethods());
+    config.setKeyExchangeFactories(kex);
   }
 
   private List<Named<KeyExchange>> createKexList(List<String> kexMethods) {
     if(kexMethods == null || kexMethods.isEmpty()) {
-      // allow all supported kex methods if none are specified
-      return (client.getTransport().getConfig().getKeyExchangeFactories());
+      return FactoryUtils.createKexListDefault();
     }
     List<Named<KeyExchange>> result = new ArrayList<>();
     for(String kex : kexMethods) {
@@ -749,6 +749,9 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
   }
 
   private List<Named<Cipher>> createCiphers(List<String> ciphers) {
+    if(ciphers == null || ciphers.isEmpty()) {
+      return FactoryUtils.createCipherListDefault();
+    }
     List<Named<Cipher>> result = new ArrayList<>();
     for(String cipher: ciphers) {
       var cipherSupplier = FactoryUtils.CipherFactories.get(cipher);

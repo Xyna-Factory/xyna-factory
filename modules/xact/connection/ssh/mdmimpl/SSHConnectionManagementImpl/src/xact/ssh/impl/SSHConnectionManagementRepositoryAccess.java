@@ -34,6 +34,8 @@ import xact.ssh.EncryptionType;
 import xact.ssh.HostKeyStorableRepository;
 import xact.ssh.IdentityStorable;
 import xact.ssh.IdentityStorableRepository;
+import xact.ssh.KeyAttributes;
+import xact.ssh.KeyPair;
 import xact.ssh.SSHConnectionManagement;
 import xact.ssh.XynaHostKeyRepository;
 import xact.ssh.XynaIdentityRepository;
@@ -146,34 +148,29 @@ public class SSHConnectionManagementRepositoryAccess {
   }
 
 
-  private static void add(Optional<String> name, EncryptionType type, byte[] privateKey, byte[] publicKey, Optional<String> passphrase) {
-    identityRepo.add(name, type, privateKey, publicKey, passphrase);
-  }
-
-
   private static void addWithAttributes(Optional<String> name, EncryptionType type, byte[] privateKey, byte[] publicKey, Optional<String> passphrase, long priority, String typeclass) {
     identityRepo.addWithAttributes(name, type, privateKey, publicKey, passphrase, priority, typeclass);
   }
 
 
-  public static List<xact.ssh.KeyPair> getPublicKey(EncryptionType encryptionType) {
+  public static List<KeyPair> getPublicKey(EncryptionType encryptionType) {
     try {
-      List<xact.ssh.KeyPair> keys = new ArrayList<xact.ssh.KeyPair>();
+      List<KeyPair> keys = new ArrayList<KeyPair>();
       
       Collection<IdentityStorable> storables = identityRepo.getAllIdentities();
 
       for (IdentityStorable identity : storables) {
-        xact.ssh.KeyPair element = new xact.ssh.KeyPair();
+        KeyPair element = new KeyPair();
         KeyProvider keyproviderIdentity = identityRepo.storableToKeyProvider(identity);
         if (encryptionType == null || encryptionType == EncryptionType.UNKNOWN
             || encryptionType.getSshStringRepresentation().equals(keyproviderIdentity.getType().toString())) {
           String publicKey = new String(identity.getPublickey(), "UTF-8");
-          xact.ssh.KeyAttributes attributes = new xact.ssh.KeyAttributes();
-          attributes.setIdentity(identity.getName());
-          attributes.setPriority(identity.getPriority());
-          attributes.setTypeclass(identity.getTypeclass());
-          element.setPublicKey(publicKey.trim());
-          element.setKeyAttributes(attributes);
+          KeyAttributes attributes = new KeyAttributes();
+          attributes.unversionedSetIdentity(identity.getName());
+          attributes.unversionedSetPriority(identity.getPriority());
+          attributes.unversionedSetTypeclass(identity.getTypeclass());
+          element.unversionedSetPublicKey(publicKey.trim());
+          element.unversionedSetKeyAttributes(attributes);
           keys.add(element);
         }
       }
