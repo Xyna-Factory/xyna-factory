@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,10 +34,7 @@ import com.gip.xyna.xprc.exceptions.XPRC_XmlParsingException;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
 import xact.connection.Command;
-import xact.connection.CommandResponseTuple;
-import xact.connection.DetectedError;
 import xact.connection.DeviceType;
-import xact.connection.ManagedConnection;
 import xact.connection.ReadTimeout;
 import xact.connection.SendParameter;
 import xact.connection.netconf.NetConfDeviceType;

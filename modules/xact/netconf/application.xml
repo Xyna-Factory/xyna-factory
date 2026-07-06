@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="NetConf" factoryVersion="" versionName="1.0.1" xmlVersion="1.1">
+--><Application applicationName="NetConf" factoryVersion="" versionName="1.0.3" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Tools zur Benutzung des NETCONF-Protokolls</Description>
     <Description Lang="EN">Tools for using the NETCONF protocol</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>SSH</ApplicationName>
-        <VersionName>2.0.39</VersionName>
+        <VersionName>2.0.40</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>

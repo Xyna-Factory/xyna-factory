@@ -36,6 +36,11 @@ public class OrderInformation implements Serializable{
     this.destinationKey = xo.getDestinationKey();
   }
 
+  public OrderInformation(Long orderId) {
+    this.orderId = orderId;
+    this.rootOrderId = null;
+    this.destinationKey = null;
+  }
   
   public OrderInformation(Long orderId, Long rootOrderId, String orderType) {
     this.orderId = orderId;

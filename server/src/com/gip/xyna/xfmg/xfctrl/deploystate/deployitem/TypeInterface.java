@@ -22,7 +22,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaExceptionBase;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemIdentificationBase;
@@ -147,7 +147,7 @@ public class TypeInterface extends DeploymentItemIdentificationBase implements D
       }
     }
     InterfaceResolutionContext resCtx = InterfaceResolutionContext.resCtx.get();
-    Optional<TypeInterface> typeInHierarchy = Optional.of(typeInterface);
+    Optional<TypeInterface> typeInHierarchy = Optional.ofNullable(typeInterface);
     while (typeInHierarchy.isPresent()) {
       if (matches(typeInHierarchy.get())) {
         return true;

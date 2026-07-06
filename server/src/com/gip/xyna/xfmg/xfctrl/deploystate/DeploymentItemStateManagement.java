@@ -20,7 +20,7 @@ package com.gip.xyna.xfmg.xfctrl.deploystate;
 import java.util.List;
 import java.util.Set;
 
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemState.DeploymentLocation;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemState.DeploymentTransition;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemStateManagementImpl.StateTransition;
@@ -51,9 +51,21 @@ public interface DeploymentItemStateManagement {
   public void collectUsingObjectsInContext(String fqName, DeploymentContext ctx, long revision);
   
   public void undeploy(String fqName, DeploymentContext ctx, long revision);
+
+  /**
+  * @deprecated use java.util.Optional instead
+  */
+  @Deprecated
+  public void deployFinished(String fqName, DeploymentTransition transition, boolean copiedXMLFromSaved, com.gip.xyna.utils.collections.Optional<Throwable> deploymentException, long revision);
   
   public void deployFinished(String fqName, DeploymentTransition transition, boolean copiedXMLFromSaved, Optional<Throwable> deploymentException, long revision);
 
+  /**
+  * @deprecated use java.util.Optional instead
+  */
+  @Deprecated
+  public void buildFinished(String fqName, com.gip.xyna.utils.collections.Optional<Throwable> buildException, long revision);
+  
   public void buildFinished(String fqName, Optional<Throwable> buildException, long revision);
 
   public void discoverItems(long revision);

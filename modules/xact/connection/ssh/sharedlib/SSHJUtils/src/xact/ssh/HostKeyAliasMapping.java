@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,6 @@ package xact.ssh;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.List;
-import java.util.LinkedList;
-
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
@@ -52,19 +49,6 @@ public class HostKeyAliasMapping {
     }
 
   } );
-
-
-  private static List<String> listAlias() {
-    List<String> list = new LinkedList<String>();
-    Alias.forEach((id, object) -> list.add(id));
-    return list;
-  }
-
-
-  private static void clearAlias() {
-    Alias.clear();
-    logger.info("SSH App: HostKeyAliasMapping - Clear HashMap");
-  }
 
 
   private static void putAlias(String id, AliasEntry aliasEntry) {
@@ -105,11 +89,6 @@ public class HostKeyAliasMapping {
       logger.trace("Error in getAlias",e);
       return response;
     }
-  }
-
-
-  private static long sizeAlias() {
-    return Alias.size();
   }
 
 

@@ -28,7 +28,7 @@ import java.util.Map;
 import org.easymock.classextension.EasyMock;
 import org.junit.Test;
 
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentContext;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemInterface;
@@ -181,7 +181,7 @@ public class TestDeploymentItemStatus extends TestDeploymentItemBuildSetup {
     assertEquals("Object should appear as fresh save.", DisplayState.SAVED, dis_B.deriveDisplayState());
     
     registry.collectUsingObjectsInContext(di_B.getName(), emptyCtx());
-    registry.deployFinished(di_B.getName(), DeploymentTransition.ROLLBACK, true, Optional.of(new NullPointerException()));
+    registry.deployFinished(di_B.getName(), DeploymentTransition.ROLLBACK, true, Optional.ofNullable(new NullPointerException()));
     dis_B = registry.get(di_B.getName());
     assertEquals("Object should still appear as saved after rollback.", DisplayState.SAVED, dis_B.deriveDisplayState());
     
@@ -191,7 +191,7 @@ public class TestDeploymentItemStatus extends TestDeploymentItemBuildSetup {
     assertEquals("Object should appear as deployed.", DisplayState.DEPLOYED, dis_B.deriveDisplayState());
     
     registry.collectUsingObjectsInContext(di_B.getName(), emptyCtx());
-    registry.deployFinished(di_B.getName(), DeploymentTransition.ROLLBACK, true, Optional.of(new NullPointerException()));
+    registry.deployFinished(di_B.getName(), DeploymentTransition.ROLLBACK, true, Optional.ofNullable(new NullPointerException()));
     dis_B = registry.get(di_B.getName());
     assertEquals("Object should still appear as deployed after rollback.", DisplayState.DEPLOYED, dis_B.deriveDisplayState());
     
@@ -200,7 +200,7 @@ public class TestDeploymentItemStatus extends TestDeploymentItemBuildSetup {
     assertEquals("Object should appear as changed.", DisplayState.CHANGED, dis_B.deriveDisplayState());
     
     registry.collectUsingObjectsInContext(di_B.getName(), emptyCtx());
-    registry.deployFinished(di_B.getName(), DeploymentTransition.ROLLBACK, true, Optional.of(new NullPointerException()));
+    registry.deployFinished(di_B.getName(), DeploymentTransition.ROLLBACK, true, Optional.ofNullable(new NullPointerException()));
     dis_B = registry.get(di_B.getName());
     assertEquals("Object should still appear as changed after rollback.", DisplayState.CHANGED, dis_B.deriveDisplayState());
   }
@@ -214,7 +214,7 @@ public class TestDeploymentItemStatus extends TestDeploymentItemBuildSetup {
     assertEquals("Object should appear as fresh save.", DisplayState.SAVED, dis_B.deriveDisplayState());
     
     registry.collectUsingObjectsInContext(di_B.getName(), emptyCtx());
-    registry.deployFinished(di_B.getName(), DeploymentTransition.ERROR_DURING_ROLLBACK, true, Optional.of(new NullPointerException()));
+    registry.deployFinished(di_B.getName(), DeploymentTransition.ERROR_DURING_ROLLBACK, true, Optional.ofNullable(new NullPointerException()));
     dis_B = registry.get(di_B.getName());
     assertEquals("Object should appear as incomplete.", DisplayState.INCOMPLETE, dis_B.deriveDisplayState());
     
@@ -224,7 +224,7 @@ public class TestDeploymentItemStatus extends TestDeploymentItemBuildSetup {
     assertEquals("Object should appear as deployed.", DisplayState.DEPLOYED, dis_B.deriveDisplayState());
     
     registry.collectUsingObjectsInContext(di_B.getName(), emptyCtx());
-    registry.deployFinished(di_B.getName(), DeploymentTransition.ERROR_DURING_ROLLBACK, true, Optional.of(new NullPointerException()));
+    registry.deployFinished(di_B.getName(), DeploymentTransition.ERROR_DURING_ROLLBACK, true, Optional.ofNullable(new NullPointerException()));
     dis_B = registry.get(di_B.getName());
     assertEquals("Object should appear as incomplete.", DisplayState.INCOMPLETE, dis_B.deriveDisplayState());
     
@@ -1032,14 +1032,14 @@ public class TestDeploymentItemStatus extends TestDeploymentItemBuildSetup {
       if (subMap == null) {
         result = Optional.empty();
       } else {
-        result = Optional.of(subMap.get(fqName));
+        result = Optional.ofNullable(subMap.get(fqName));
       }
       if (!result.isPresent()) {
         subMap = additionalObjectsForCodeRegeneration.get(type);
         if (subMap == null) {
           result = Optional.empty();
         } else {
-          result = Optional.of(subMap.get(fqName));
+          result = Optional.ofNullable(subMap.get(fqName));
         }
       }
       return result;

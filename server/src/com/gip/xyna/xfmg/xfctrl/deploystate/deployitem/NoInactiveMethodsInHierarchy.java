@@ -17,7 +17,7 @@
  */
 package com.gip.xyna.xfmg.xfctrl.deploystate.deployitem;
 
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemInterface;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemState;
@@ -37,7 +37,7 @@ public class NoInactiveMethodsInHierarchy implements DeploymentItemInterface, In
   private Optional<Pair<TypeInterface, OperationInterface>> findFirstInactiveOperation() {
 
     InterfaceResolutionContext context = InterfaceResolutionContext.resCtx.get();
-    Optional<TypeInterface> supertype = Optional.of(context.getLocalType());
+    Optional<TypeInterface> supertype = Optional.ofNullable(context.getLocalType());
     while (supertype.isPresent()) {
       DeploymentItemState dis = context.resolve(supertype.get());
       if (dis == null) {
@@ -47,7 +47,7 @@ public class NoInactiveMethodsInHierarchy implements DeploymentItemInterface, In
       PublishedInterfaces publInt = dis.getPublishedInterfaces(context.getLocation());
       OperationInterface oi = publInt.getFirstInactiveOperation();
       if (oi != null) {
-        return Optional.of(Pair.of(supertype.get(), oi));
+        return Optional.ofNullable(Pair.of(supertype.get(), oi));
       }
       
       supertype = publInt.getSupertype();
