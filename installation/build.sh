@@ -371,8 +371,16 @@ compose_templateMechanismStandalone() {
 compose_func_lib() {
   cd $SCRIPT_DIR/../release
   cp -r ../prerequisites/installation/install/func_lib .
+  replace_token_release_number
 }
 
+replace_token_release_number() {
+  cd $SCRIPT_DIR/../release
+  RELEASE_NUMBER=$(cat ${SCRIPT_DIR}/delivery/delivery.properties | grep ^release.number | cut -d'=' -f2)
+  DELIVERY_NAME=$(cat ${SCRIPT_DIR}/delivery/delivery.properties | grep ^delivery.name | cut -d'=' -f2)
+  sed -i "s|TOKEN_RELEASE_NUMBER|${RELEASE_NUMBER}|g" ./func_lib/func_lib.sh
+  sed -i "s|TOKEN_RELEASE_NAME|${DELIVERY_NAME}|g" ./func_lib/func_lib.sh
+}
 
 compose_etc() {
   cd $SCRIPT_DIR/../release
@@ -610,6 +618,11 @@ build() {
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 . ${SCRIPT_DIR}/build.env
 GIT_BRANCH_XYNA_MODELLER=""
+
+if [[ -z "$1" || "$1" == "help" || "$1" == "-h" || "$1" == "--help" ]]; then
+  print_help
+  exit 0
+fi
 
 check_dependencies
 prepare_build

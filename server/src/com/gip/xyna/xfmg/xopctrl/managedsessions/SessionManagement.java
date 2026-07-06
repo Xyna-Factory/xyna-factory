@@ -43,7 +43,7 @@ import com.gip.xyna.FunctionGroup;
 import com.gip.xyna.FutureExecution;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.XynaFactoryPath;
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.XynaFactoryManagement;
@@ -207,7 +207,16 @@ public class SessionManagement extends FunctionGroup implements IPropertyChangeL
   
   @Deprecated
   public SessionCredentials getNewSession(User user, boolean force) throws PersistenceLayerException, XFMG_DuplicateSessionException {
-    return createSession(new XynaUserCredentials(user.getName(), user.getPassword()), new Optional<String>(user.getRole()), force);
+    return createSession(new XynaUserCredentials(user.getName(), user.getPassword()), Optional.ofNullable(user.getRole()), force);
+  }
+  
+
+  /**
+  * @deprecated use java.util.Optional instead
+  */
+  @Deprecated
+  public SessionCredentials createSession(XynaUserCredentials credentials, com.gip.xyna.utils.collections.Optional<String> roleName, boolean force) throws PersistenceLayerException, XFMG_DuplicateSessionException {
+    return this.createSession(credentials, (java.util.Optional<String>) roleName.adapt(), force);
   }
   
   
@@ -227,6 +236,16 @@ public class SessionManagement extends FunctionGroup implements IPropertyChangeL
     return createSession(credentials, roleName, force, areMultipleSessionsAllowed(role));
   }
 
+
+  /**
+  * @deprecated use java.util.Optional instead
+  */
+  @Deprecated
+  public SessionCredentials createSession(XynaUserCredentials credentials, com.gip.xyna.utils.collections.Optional<String> roleName, boolean force, boolean multipleSessionsAllowed) throws PersistenceLayerException, XFMG_DuplicateSessionException {
+    return this.createSession(credentials, (java.util.Optional<String>) roleName.adapt(), force, multipleSessionsAllowed);
+  }
+  
+  
   public SessionCredentials createSession(XynaUserCredentials credentials, Optional<String> roleName, boolean force, boolean multipleSessionsAllowed) throws PersistenceLayerException, XFMG_DuplicateSessionException {
     
     if (!force && !multipleSessionsAllowed) {

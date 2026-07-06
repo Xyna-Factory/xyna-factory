@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemInterface;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemInterface.MatchableInterface;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemState;

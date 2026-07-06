@@ -20,7 +20,7 @@ package com.gip.xyna.xfmg.xfctrl.deploystate.deployitem;
 import java.util.Set;
 import java.util.Stack;
 
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemIdentifier;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemInterface;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemInterface.MatchableInterface;

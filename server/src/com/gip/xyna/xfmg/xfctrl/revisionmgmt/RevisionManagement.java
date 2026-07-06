@@ -37,7 +37,7 @@ import com.gip.xyna.FileUtils;
 import com.gip.xyna.FunctionGroup;
 import com.gip.xyna.FutureExecution;
 import com.gip.xyna.XynaFactory;
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.utils.misc.CycleUtils;
 import com.gip.xyna.utils.misc.CycleUtils.CycleController;

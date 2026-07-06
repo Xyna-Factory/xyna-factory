@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -102,14 +102,14 @@ public class OneAccessPromptExtraction extends PromptExtractor {
   private final static OneAccessPromptExtraction oape = new OneAccessPromptExtraction();
   
   // just return the extracted prompt
-  private String extractPrompt_example1(String response) {
+  public String extractPrompt_example1(String response) {
     PromptExtract extract = oape.extractPrompt(response);
     return extract.getExtract();
   }
   
   
   // return a unique identifier for each matching rule
-  private String extractPrompt_example2(String response) {
+  public String extractPrompt_example2(String response) {
     PromptExtract extract = oape.extractPrompt(response);
     if (extract.getMatchingRule() instanceof OneAccessRule) {
       return extract.getMatchingRule().toString(); // OneAccessRule.toString equals their name used during Enum-Declaration
@@ -120,7 +120,7 @@ public class OneAccessPromptExtraction extends PromptExtractor {
   
   
   // adjust result according to matched rule, commented XynaFactory-access given as example what would have been possible in a modelled type
-  private String extractPrompt_example3(String response) {
+  public String extractPrompt_example3(String response) {
     xact.ssh.cli.prompt.PromptExtract extract = oape.extractPrompt(response);
     if (extract.getMatchingRule() instanceof xact.ssh.cli.prompt.examples.oneAccess.OneAccessPromptExtraction.OneAccessRule) {
       xact.ssh.cli.prompt.examples.oneAccess.OneAccessPromptExtraction.OneAccessRule oneAccessRule =

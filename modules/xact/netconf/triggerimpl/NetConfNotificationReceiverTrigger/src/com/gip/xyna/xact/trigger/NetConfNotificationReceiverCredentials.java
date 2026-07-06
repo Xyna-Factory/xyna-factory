@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,14 +25,11 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
-import com.gip.xyna.XynaFactory;
-
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
 import net.schmizz.sshj.userauth.method.AuthMethod;
@@ -44,7 +41,6 @@ import xact.ssh.EncryptionType;
 import xact.ssh.HostKeyHashMap;
 import xact.ssh.HostKeyStorableRepository;
 import xact.ssh.IdentityStorableRepository;
-import xact.ssh.SupportedHostNameFeature;
 import xact.ssh.XynaHostKeyRepository;
 import xact.ssh.XynaIdentityRepository;
 
@@ -56,9 +52,7 @@ public class NetConfNotificationReceiverCredentials {
   }
 
   private static Logger logger = CentralFactoryLogging.getLogger(NetConfNotificationReceiverTriggerConnection.class);
-  
-  private static final String PROPERTY_NAME_SUPPORTED_FEATURES = "xact.ssh.hostkeys.supportedfeatures";
-  
+
   private BasicCredentials basicCred;
   protected XynaIdentityRepository idRepo;
 
@@ -67,13 +61,6 @@ public class NetConfNotificationReceiverCredentials {
     this.basicCred = basicCred;
   }
 
-  
-  private Set<SupportedHostNameFeature> getSupportedFeatures() {
-    String val = XynaFactory.getInstance().getFactoryManagement().getProperty(PROPERTY_NAME_SUPPORTED_FEATURES);
-    return SupportedHostNameFeature.fromStringList(val);
-  }
-  
-
   private Optional<String> getAlgoType(String socket_host, int socket_port) {
     Optional<String> algoTypeOpt = Optional.empty();
     int port = socket_port;
@@ -81,7 +68,7 @@ public class NetConfNotificationReceiverCredentials {
     if (logger.isDebugEnabled()) {
       logger.debug("NetConfNotificationReceiver: getAlgoType: " + socket_host + " " + socket_port);
     }
-    XynaHostKeyRepository hostRepo = new HostKeyStorableRepository(getSupportedFeatures());
+    XynaHostKeyRepository hostRepo = new HostKeyStorableRepository(HostKeyStorableRepository.SUPPORTED_FEATURES_PROP.get());
     List<String> algoList = hostRepo.findExistingAlgorithms(hostname, port);
 
     if (algoList.size() > 0) {
@@ -114,7 +101,7 @@ public class NetConfNotificationReceiverCredentials {
 
   protected SSHClient initSSHClient() {
     SSHClient client = new SSHClient();
-    XynaHostKeyRepository hostRepo = new HostKeyStorableRepository(getSupportedFeatures());
+    XynaHostKeyRepository hostRepo = new HostKeyStorableRepository(HostKeyStorableRepository.SUPPORTED_FEATURES_PROP.get());
     client.addHostKeyVerifier(hostRepo);
 
     client.getTransport().getConfig().setKeyAlgorithms(SshjKeyAlgorithm.extractFactories(basicCred.getKeyAlgorithms()));
@@ -176,14 +163,14 @@ public class NetConfNotificationReceiverCredentials {
 
   public void injectHostKeyHash(String socket_host, String hostkeyAlias) {
     if ((hostkeyAlias != null) && (!hostkeyAlias.isEmpty())) {
-      HostKeyStorableRepository tmpHostRepo = new HostKeyStorableRepository(getSupportedFeatures());
+      HostKeyStorableRepository tmpHostRepo = new HostKeyStorableRepository(HostKeyStorableRepository.SUPPORTED_FEATURES_PROP.get());
       tmpHostRepo.injectHostKey(hostkeyAlias);
       if (logger.isDebugEnabled()) {
         logger.debug("SSHConnectionInstanceOperationImpl prepAuthentification - conParams.getHostKeyAlias():" +
                      HostKeyHashMap.getNumberOfKeys(hostkeyAlias));
       }
     } else {
-      HostKeyStorableRepository tmpHostRepo = new HostKeyStorableRepository(getSupportedFeatures());
+      HostKeyStorableRepository tmpHostRepo = new HostKeyStorableRepository(HostKeyStorableRepository.SUPPORTED_FEATURES_PROP.get());
       tmpHostRepo.injectHostKey(socket_host);
     }
   }
