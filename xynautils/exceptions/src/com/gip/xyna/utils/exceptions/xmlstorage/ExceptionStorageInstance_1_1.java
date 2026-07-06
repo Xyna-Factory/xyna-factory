@@ -65,6 +65,7 @@ public class ExceptionStorageInstance_1_1 extends ExceptionStorageInstance {
 
         JavaClass jc = new JavaClass(entry.getPath(), entry.getName());
         jc.setFqClassNameAdapter(fqClassNameAdapter);
+        jc.addClassAnnotation("@SuppressWarnings(\"serial\")");
         
         baseClassName = jc.setSuperClass(baseClassName);
         if (entry.isAbstract()) {
@@ -165,8 +166,9 @@ public class ExceptionStorageInstance_1_1 extends ExceptionStorageInstance {
         if (entry.getBaseExceptionName() != null) {
           refreshArgsMethod.addLine("super.refreshArgs()");
         }
-        refreshArgsMethod.addLine("String[] args = getArgs()");
-        
+        if(entry.getParameter().size() > 0) {
+          refreshArgsMethod.addLine("String[] args = getArgs()");
+        }
         if (!entry.isAbstract()) {
           constructorAllParasNoException.addListElement("\"" + entry.getCode() + "\"");
           constructorAllParasWithException.addListElement("\"" + entry.getCode() + "\"");
