@@ -1,0 +1,6 @@
+{
+  "tests":
+  [
+    "foreach_inner_connection.json"
+  ]
+}
