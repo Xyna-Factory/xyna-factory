@@ -46,6 +46,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Stack;
 import java.util.TreeSet;
@@ -54,6 +55,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -2597,7 +2599,8 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
   public static enum XMOMODSNameImportSetting {
     ABORT_ON_COLLISION("abort"),
     ALLOW_REGENERATION("allow"),
-    EXCLUDE("exclude");
+    EXCLUDE("exclude"),
+    STRICT("strict");
     
     private final String name;
     
@@ -3647,6 +3650,9 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       output(statusOutputStream, msg);
     } else {
       GenerationBaseCache parseAdditionalCache = new GenerationBaseCache();
+      if(allowStorableNameGeneration == XMOMODSNameImportSetting.STRICT) {
+        validateNoMissingXmomOdsEntries(statusOutputStream, parseAdditionalCache, applicationXml, xmomEntries, revision);
+      }
       for (XMOMStorableXmlEntry entry : applicationXml.getXmomStorableEntries()) {
         Collection<XMOMStorableXmlEntry> entriesToRegister;
         if (entry.getFqPath() == null) {
@@ -3713,6 +3719,116 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
     } catch (Exception e) {
       logger.warn("Failed to configure ordertypes.", e);
     }
+  }
+
+
+  private void validateNoMissingXmomOdsEntries(PrintStream statusOutputStream, GenerationBaseCache parseAdditionalCache,
+                                               ApplicationXmlEntry applicationXml, List<ApplicationEntryStorable> xmomEntries,
+                                               Long revision) {
+
+    if (logger.isDebugEnabled()) {
+      logger.debug("validating for missing Xmom Ods Entries");
+    }
+    boolean success = true;
+    List<XMOMStorableXmlEntry> paths = applicationXml.getXmomStorableEntries();
+    Set<DOM> domsThatCacheSubtypes = new HashSet<DOM>();
+    DOM dom;
+    // iterate over dataTypes in application
+    List<ApplicationEntryStorable> datatypes = null;
+    datatypes = xmomEntries.stream().filter(x -> Objects.equals(x.getTypeAsEnum(), ApplicationEntryType.DATATYPE)).collect(Collectors.toList());
+    for (ApplicationEntryStorable datatype : datatypes) {
+      // create xmomOdsNames required for the types
+      try {
+        dom = DOM.getInstance(datatype.getName(), revision);
+        dom.parseGeneration(true, true);
+      } catch (Exception e) {
+        throw new RuntimeException("Error creating dom for " + datatype.getName(), e);
+      }
+      if (!dom.isInheritedFromStorable()) {
+        if (logger.isDebugEnabled()) {
+          logger.debug(dom.getFqClassName() + " is not a storable.");
+        }
+        continue;
+      }
+
+      Set<String> expectedFqPaths = XMOMODSMappingUtils.discoverPaths(domsThatCacheSubtypes, dom, parseAdditionalCache);
+      Set<String> expectedPaths = completeExpectedFqPathsAndDiscoverPaths(expectedFqPaths);
+      if (logger.isDebugEnabled()) {
+        logger.debug("expected fqpaths for " + dom.getFqClassName() + ": " + String.join(", ", expectedFqPaths));
+        logger.debug("expected paths for   " + dom.getFqClassName() + ": " + String.join(", ", expectedPaths));
+      }
+      // validate that each expected entry has a mapping in applicationXml
+      for (String fqPath : expectedFqPaths) {
+        if (!containsXmomOdsMappingFqPath(paths, fqPath, dom.getOriginalFqName())) {
+          success = false;
+          output(statusOutputStream, String.format("Missing xmomodsmapping for fqpath '%s' in storable '%s'", fqPath, dom.getOriginalFqName()));
+        }
+      }
+      for (String path : expectedPaths) {
+        if (!containsXmomOdsMappingPath(paths, path, dom.getOriginalFqName())) {
+          success = false;
+          output(statusOutputStream, String.format("Missing xmomodsmapping for path '%s' in storable '%s'", path, dom.getOriginalFqName()));
+        }
+      }
+    }
+    if (!success) {
+      throw new RuntimeException("Some Xmom Ods Mapping Entries are missing.");
+    }
+  }
+
+
+  private boolean containsXmomOdsMappingPath(List<XMOMStorableXmlEntry> paths, String path, String domFqXmlName) {
+    for (XMOMStorableXmlEntry entry : paths) {
+      if (Objects.equals(entry.getPath(), path) && Objects.equals(entry.getXmlName(), domFqXmlName)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+  private Set<String> completeExpectedFqPathsAndDiscoverPaths(Set<String> expectedFqPaths) {
+    Set<String> result = new HashSet<>();
+    for (String expectedFqPath : new HashSet<String>(expectedFqPaths)) {
+      if (expectedFqPath.endsWith("[]")) {
+        //primitive list
+        expectedFqPaths.remove(expectedFqPath);
+        result.add(expectedFqPath); //table mapping
+        result.add(expectedFqPath.substring(0, expectedFqPath.length() - 2));
+        result.add(String.format("%s.%s", expectedFqPath, "idx"));
+        String name = expectedFqPath.toLowerCase().subSequence(0, expectedFqPath.length() - 2).toString();
+        int idx = name.lastIndexOf(".");
+        name = idx == -1 ? name : name.substring(idx);
+        result.add(String.format("%s.%s", expectedFqPath, name));
+        result.add(String.format("%s.%s", expectedFqPath, "parentuid"));
+        result.add(String.format("%s.%s", expectedFqPath, "pk"));
+      } else if (expectedFqPath.endsWith("}")) {
+        //complex member
+        result.add(expectedFqPath.isBlank() ? "typename" : expectedFqPath + ".typename");
+      } else if (expectedFqPath.matches("^(.*\\[\\]\\{[a-z,A-Z,\\d,\\.]+})\\.[a-z,A-Z,\\d]+$")) {
+        //complex list
+        String fqPath = expectedFqPath.substring(0, expectedFqPath.lastIndexOf("."));
+        expectedFqPaths.add(fqPath); //table mapping
+        expectedFqPaths.add(String.format("%s.%s", fqPath, "idx"));
+        expectedFqPaths.add(String.format("%s.%s", fqPath, "parentuid"));
+        expectedFqPaths.add(String.format("%s.%s", fqPath, "typename"));
+        expectedFqPaths.add(String.format("%s.%s", fqPath, "unid"));
+      }
+    }
+
+    result.add("typename");
+    result.add(""); //table mapping
+    return result;
+  }
+
+
+  private boolean containsXmomOdsMappingFqPath(List<XMOMStorableXmlEntry> paths, String fqPath, String domFqXmlName) {
+    for (XMOMStorableXmlEntry entry : paths) {
+      if (Objects.equals(entry.getFqPath(), fqPath) && Objects.equals(entry.getXmlName(), domFqXmlName)) {
+        return true;
+      }
+    }
+    return false;
   }
 
 
