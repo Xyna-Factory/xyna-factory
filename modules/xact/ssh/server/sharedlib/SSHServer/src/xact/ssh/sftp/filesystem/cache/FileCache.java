@@ -44,13 +44,14 @@ public class FileCache {
 
     private static final Logger logger = CentralFactoryLogging.getLogger(FileCache.class);
 
-    public final static FileCache INSTANCE = new FileCache();
-
     private static ScheduledExecutorService cacheTimeouts = Executors.newSingleThreadScheduledExecutor();
     private final static ConcurrentHashMap<CacheKey, CacheEntry<XynaBackedFile>> cache = new ConcurrentHashMap<CacheKey, CacheEntry<XynaBackedFile>>();
 
     private final static List<AccessLogEntry> EVENT_LOG = new ArrayList<AccessLogEntry>();
     private final static XynaPropertyInt EVENT_LOG_MAX_SIZE = new XynaPropertyInt("xact.sftp.eventlog.size", 50);
+
+    public final static FileCache INSTANCE = new FileCache();
+
 
     public static synchronized void startCleanUp() {
         if (cacheTimeouts != null)

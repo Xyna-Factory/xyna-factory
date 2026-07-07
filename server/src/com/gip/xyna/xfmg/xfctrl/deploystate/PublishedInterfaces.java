@@ -26,7 +26,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemInterface.MatchableInterface;
 import com.gip.xyna.xfmg.xfctrl.deploystate.deployitem.MemberVariableInterface;
 import com.gip.xyna.xfmg.xfctrl.deploystate.deployitem.OperationInterface;
@@ -88,7 +88,7 @@ public class PublishedInterfaces {
 
   public Optional<TypeInterface> getSupertype() {
     if (superType != null) {
-      return Optional.of(TypeInterface.of(superType));
+      return Optional.ofNullable(TypeInterface.of(superType));
     }
     return Optional.empty();
   }

@@ -102,7 +102,7 @@ import com.gip.xyna.utils.collections.ConcurrentMapWithObjectRemovalSupport;
 import com.gip.xyna.utils.collections.ConcurrentMapWithObjectRemovalSupport.ValueProcessor;
 import com.gip.xyna.utils.collections.LruCache;
 import com.gip.xyna.utils.collections.ObjectWithRemovalSupport;
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.collections.Triple;
 import com.gip.xyna.utils.collections.WeakIdentityHashMap;
@@ -2437,7 +2437,7 @@ public abstract class GenerationBase {
                   if (error.getKey().equals(object.getFqClassName()) && dism != null) {
                     DeploymentItemState dis = dism.get(object.getFqClassName(), object.getRevision());
                     if (dis != null) {
-                      dis.setBuildError(Optional.of(error.getValue()));
+                      dis.setBuildError(Optional.ofNullable(error.getValue()));
                     }
                   }
                 }
@@ -4843,9 +4843,9 @@ public abstract class GenerationBase {
           if (dism != null) {
             Optional<Throwable> exception;
             if (exceptions != null && exceptions.size() > 0) {
-              exception = Optional.of(exceptions.get(exceptions.size() - 1));
+              exception = Optional.ofNullable(exceptions.get(exceptions.size() - 1));
             } else {
-              exception = Optional.<Throwable>of(new XPRC_MDMDeploymentException(GenerationBase.this.fqClassName));
+              exception = Optional.<Throwable>ofNullable(new XPRC_MDMDeploymentException(GenerationBase.this.fqClassName));
             }
             if (mode == DeploymentMode.deployBackup) {
               dism.deployFinished(originalFqName, DeploymentTransition.ERROR_DURING_ROLLBACK, mode.shouldCopyXMLFromSavedToDeployed, exception, revision);

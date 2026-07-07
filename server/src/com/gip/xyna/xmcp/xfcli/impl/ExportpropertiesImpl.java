@@ -194,7 +194,7 @@ public class ExportpropertiesImpl extends XynaCommandImplementation<Exportproper
 
     List<XynaPropertyWithDefaultValue> filteredProps = new ArrayList<XynaPropertyWithDefaultValue>(properties);
     filteredProps.removeIf(prop -> (prop.getValue() == null && !inclUnchanged) ||
-                                   (filter != null && !prop.getName().matches(filter)));
+                                   (filter != null && !filter.isEmpty() && !prop.getName().matches(filter)));
 
     Collections.sort(filteredProps, (o1, o2) -> o1.getName().compareTo(o2.getName()));
 

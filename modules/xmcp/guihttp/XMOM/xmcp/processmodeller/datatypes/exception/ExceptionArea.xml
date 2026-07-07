@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="VariableArea" BaseTypePath="xmcp.processmodeller.datatypes" Label="Exception Area" TypeName="ExceptionArea" TypePath="xmcp.processmodeller.datatypes.exception" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="VariableArea" BaseTypePath="xmcp.processmodeller.datatypes" Label="Exception Area" TypeName="ExceptionArea" TypePath="xmcp.processmodeller.datatypes.exception" Version="1.8">
   <Meta>
     <Documentation>xmcp.processmodeller.datatypes.ContainerArea</Documentation>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>

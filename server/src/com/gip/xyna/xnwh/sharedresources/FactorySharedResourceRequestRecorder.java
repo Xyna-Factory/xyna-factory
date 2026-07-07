@@ -133,6 +133,13 @@ public class FactorySharedResourceRequestRecorder implements SharedResourceReque
       logger.debug(String.format(requestEndPattern, requestId, requestTime));
     }
 
+    if (result == null) {
+      if (logger.isWarnEnabled()) {
+        logger.warn(String.format("Shared Resource Request returned null! RequestType: %s Resource: %s", requestType, resourceType));
+      }
+      return;
+    }
+
     // keep track of number of successful and failed requests per type and resource
     ResultType resultType = result.isSuccess() ? ResultType.SUCCESS : ResultType.FAILURE;
     PushStatistics<Long, LongStatisticsValue> statistics = getOrCreateRequestStatistics(resourceType, requestType, resultType);

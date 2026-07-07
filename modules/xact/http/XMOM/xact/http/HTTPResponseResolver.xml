@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="HTTP Response Resolver" TypeName="HTTPResponseResolver" TypePath="xact.http" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>HTTPResponseResolverImpl.jar</Libraries>
+  <Service Label="HTTP Response Resolver" TypeName="HTTPResponseResolver">
+    <Operation IsStatic="true" Label="Resolve Response" Name="resolveResponse">
+      <Input>
+        <Data ID="1" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document1"/>
+        <Data ID="3" Label="Send Parameter" ReferenceName="SendParameter" ReferencePath="xact.http" VariableName="sendParameter3"/>
+        <Data ID="6" Label="dir" VariableName="file6" ReferenceName="File" ReferencePath="base">
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="2" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document2"/>
+        <Data ID="4" Label="Header" ReferenceName="Header" ReferencePath="xact.http" VariableName="header4"/>
+        <Data ID="5" Label="HTTP Status Code" ReferenceName="HTTPStatusCode" ReferencePath="xact.http.enums.statuscode" VariableName="hTTPStatusCode5"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.http.HTTPResponseResolverImpl.resolveResponse(document1, sendParameter3, file6);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

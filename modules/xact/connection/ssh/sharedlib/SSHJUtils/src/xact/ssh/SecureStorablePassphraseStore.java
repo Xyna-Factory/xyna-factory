@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,20 +19,14 @@ package xact.ssh;
 
 
 
-import org.apache.log4j.Logger;
-
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.exceptions.XynaException;
-import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.securestorage.SecureStorage;
-import com.gip.xyna.xnwh.securestorage.SecuredStorable;
 
 
 
 public class SecureStorablePassphraseStore implements PassphraseStore {
 
-  private final static Logger logger = CentralFactoryLogging.getLogger(SecureStorablePassphraseStore.class);
 
 
   public void store(String identityName, String passphrase) {

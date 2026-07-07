@@ -49,7 +49,7 @@ import com.gip.xyna.Section;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.XynaRuntimeException;
 import com.gip.xyna.exceptions.Ex_FileWriteException;
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.utils.collections.SerializablePair;
 import com.gip.xyna.utils.collections.Triple;
 import com.gip.xyna.utils.exceptions.XynaException;

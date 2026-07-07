@@ -22,7 +22,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase.XMOMType;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
@@ -63,7 +63,7 @@ public class DeploymentContext {
   public Optional<DeploymentMode> getDeploymentMode(XMOMType type, String fqXmlName, long revision) {
     GenerationBase gb = cacheReference.getFromCache(fqXmlName, revision);
     if (gb != null && getXMOMTypeByInstance(gb).equals(type) && gb.getRevision() == revision) {
-      return Optional.of(gb.getDeploymentMode());
+      return Optional.ofNullable(gb.getDeploymentMode());
     } else {
       Map<XMOMType, Map<String, DeploymentMode>> revisionMap = additionalObjectsForCodeRegeneration.get(revision);
       if (revisionMap == null) {
@@ -73,7 +73,7 @@ public class DeploymentContext {
       if (subMap == null) {
         return Optional.empty();
       } else {
-        return Optional.of(subMap.get(fqXmlName));
+        return Optional.ofNullable(subMap.get(fqXmlName));
       }
     }
   }

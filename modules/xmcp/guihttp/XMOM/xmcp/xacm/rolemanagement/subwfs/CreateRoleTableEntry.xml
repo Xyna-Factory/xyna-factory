@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="494" Label="Create RoleTableEntry" TypeName="CreateRoleTableEntry" TypePath="xmcp.xacm.rolemanagement.subwfs" Version="1.8">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="494" Label="Create RoleTableEntry" TypeName="CreateRoleTableEntry" TypePath="xmcp.xacm.rolemanagement.subwfs" Version="1.8">
   <Meta>
     <FixedDetailOptions>highDetailsMode,openDocumentation,showDetailAreas</FixedDetailOptions>
   </Meta>

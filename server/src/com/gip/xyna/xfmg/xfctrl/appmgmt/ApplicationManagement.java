@@ -23,7 +23,7 @@ import java.io.PrintStream;
 import java.util.EnumSet;
 import java.util.List;
 
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.xdev.ProjectCreationOrChangeProvider.RepositoryEvent;
 import com.gip.xyna.xfmg.exceptions.XFMG_CouldNotBuildNewVersionForApplication;
 import com.gip.xyna.xfmg.exceptions.XFMG_CouldNotBuildWorkingSet;
@@ -53,6 +53,13 @@ public interface ApplicationManagement {
 
   public void stopApplication(String applicationName, String versionName, boolean clusterwide)
       throws XFMG_CouldNotStopApplication;
+  
+  /**
+  * @deprecated use java.util.Optional instead
+  */
+  @Deprecated
+  public void stopApplication(String applicationName, String versionName, boolean clusterwide, com.gip.xyna.utils.collections.Optional<EnumSet<OrderEntranceType>> onlyDisableEntranceTypes)
+                  throws XFMG_CouldNotStopApplication;
   
   public void stopApplication(String applicationName, String versionName, boolean clusterwide, Optional<EnumSet<OrderEntranceType>> onlyDisableEntranceTypes)
                   throws XFMG_CouldNotStopApplication;

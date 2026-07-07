@@ -32,7 +32,7 @@ import java.util.zip.ZipInputStream;
 
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.exceptions.Ex_FileAccessException;
-import com.gip.xyna.utils.collections.Optional;
+import java.util.Optional;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.trigger.Filter;
 import com.gip.xyna.xact.trigger.FilterInformation;
@@ -1061,6 +1061,15 @@ public class XynaMultiChannelPortalSecurityLayer extends XynaMultiChannelPortal 
     else {
       throw new XFMG_ACCESS_VIOLATION("getNewSession", role.getName());
     }
+  }
+  
+
+  /**
+  * @deprecated use java.util.Optional instead
+  */
+  @Deprecated
+  public SessionCredentials createSession(XynaUserCredentials credentials, com.gip.xyna.utils.collections.Optional<String> roleName, boolean force, Role role) throws XynaException {
+    return this.createSession(credentials, (java.util.Optional<String>) roleName.adapt(), force, role);
   }
   
   
