@@ -34,6 +34,7 @@ import org.apache.log4j.Logger;
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xnwh.exceptions.XNWH_SharedResourceInstanceAlreadyExists;
 import com.gip.xyna.xnwh.exceptions.XNWH_SharedResourceInstanceDoesNotExist;
 import com.gip.xyna.xnwh.sharedresources.KryoSerializedSharedResourceDefinition;
@@ -209,7 +210,12 @@ public class CMSharedResource implements CapacityManagementInterface {
     if (allocInfo.capNameInsufficent != null) {
       return createCapacityAllocationResultInsufficient(allocInfo);
     }
-    throw new IllegalStateException("Allocation failed, but could not determine reason. Result: " + result + ", allocInfo: " + allocInfo);
+    if (logger.isWarnEnabled()) {
+      logger.warn("Capacity allocation failed, but could not determine reason. Result: " + result + ", allocInfo: " + allocInfo);
+    }
+    Exception orgEx = result.getException();
+    XynaException ex = orgEx != null && orgEx instanceof XynaException ? (XynaException)orgEx : null;
+    return new CapacityAllocationResult(allocInfo.totalCapacityMap.keySet().stream().findFirst().orElse("<UNKNOWN>"), ex);
   }
 
 
@@ -869,9 +875,11 @@ public class CMSharedResource implements CapacityManagementInterface {
           + ", transferCapacityMap=" + transferCapacityMap //
           + ", orderId=" + orderId //
           + ", orderType=" + orderType //
-          + ", ids=" + ids + '}';
+          + ", ids=" + ids + ", capNameOfMissing='" + capNameOfMissing //
+          + "', capNameOfDisabled='" + capNameOfDisabled //
+          + "', capNameInsufficent='" + capNameInsufficent //
+          + '}';
     }
   }
-
 
 }
