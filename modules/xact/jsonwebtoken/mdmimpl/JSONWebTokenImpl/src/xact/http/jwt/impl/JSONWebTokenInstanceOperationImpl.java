@@ -78,7 +78,7 @@ public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy im
   
   
   @Override
-  public xact.http.jwt.JSONWebToken extractFromHeader(Header header, Text key, Text prefix) {
+  public JSONWebToken extractFromHeader(Header header, Text key, Text prefix) {
     String name = key.getText();
     String token = null;
     if( name != null ) {
@@ -91,7 +91,7 @@ public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy im
         }
       }
     }
-    return new xact.http.jwt.JSONWebToken.Builder().token(token).instance();
+    return new JSONWebToken.Builder().token(token).instance();
   }
 
   @Override
@@ -102,7 +102,7 @@ public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy im
         token = f.getValue().substring("Bearer ".length()).trim();
       }
     }
-    return new xact.http.jwt.JSONWebToken.Builder().token(token).instance();
+    return new JSONWebToken.Builder().token(token).instance();
   }
 
 
@@ -111,7 +111,7 @@ public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy im
     String token = this.getInstanceVar().getToken();
     UnsecureJWTParser jwt = new UnsecureJWTParser().parseToken(token);
     JWTClaims claims = extractClaimsFromJwsUnsecured(token);
-    return new xact.http.jwt.JSONWebToken.Builder()
+    return new JSONWebToken.Builder()
         .token(token)
         .jWTHeader(toHeader(jwt.getHeader()))
         .jWTClaims(claims)
@@ -150,7 +150,7 @@ public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy im
   
   
   @Override
-  public xact.http.jwt.JSONWebToken validateAndParseJWSToken(Key key) throws JWTException {
+  public JSONWebToken validateAndParseJWSToken(Key key) throws JWTException {
     String token = this.getInstanceVar().getToken();
     Jws<Claims> jws = null;
     try {
@@ -159,7 +159,7 @@ public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy im
       throw new JWTException(e.getMessage(), "validateAndParseJWSToken", "", e);
     }
 
-    return new xact.http.jwt.JSONWebToken.Builder()
+    return new JSONWebToken.Builder()
         .token(token)
         .jWTHeader(toHeader(jws.getHeader()))
         .jWTClaims(toClaims(jws.getPayload()))
@@ -181,7 +181,7 @@ public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy im
     } catch( Exception e) {
       throw new JWTException(e.getMessage(), "createAndSignJWSToken", "", e);
     }
-    return new xact.http.jwt.JSONWebToken.Builder().token(token).jWTHeader(header).jWTClaims(claims).instance();
+    return new JSONWebToken.Builder().token(token).jWTHeader(header).jWTClaims(claims).instance();
   }
  
 
@@ -269,7 +269,7 @@ public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy im
   }
   
   private JWTHeader toHeader(io.jsonwebtoken.Header header) {
-    JWTHeader.Builder builder =  new xact.http.jwt.JWTHeader.Builder();
+    JWTHeader.Builder builder =  new JWTHeader.Builder();
 
     ArrayList<PrivateClaim> pcs = new ArrayList<PrivateClaim>();
     ObjectMapper mapper = new ObjectMapper();
@@ -308,7 +308,7 @@ public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy im
   }
 
 
-  private java.security.PublicKey createPublicKey(Key key) throws JWTException {
+  private PublicKey createPublicKey(Key key) throws JWTException {
     try {
       byte[] decodedKey = Base64.getDecoder().decode(key.getKey());
       KeyFactory kf = KeyFactory.getInstance("RSA");
