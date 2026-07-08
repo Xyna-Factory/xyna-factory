@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -281,7 +282,7 @@ public abstract class TableObject<T extends Storable, X extends MemoryRowData<T>
         AtomicBulkUpdate nextUpdate = e.getValue();
         Comparable oldValue = (Comparable) previousValue.getValueByColString(e.getKey().getName());
         Comparable newValue = (Comparable) storable.getValueByColString(e.getKey().getName());
-        if (oldValue != null && oldValue.compareTo(newValue) != 0 || oldValue == null && newValue != null) {
+        if (!Objects.equals(oldValue, newValue)) {
           nextUpdate.update(oldValue, newValue, rd);
         }
       }
