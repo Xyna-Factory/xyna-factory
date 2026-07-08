@@ -53,6 +53,7 @@ import com.gip.xyna.xprc.xsched.CapacityInformation;
 import com.gip.xyna.xprc.xsched.CapacityManagement;
 import com.gip.xyna.xprc.xsched.CapacityManagement.CapacityProblemReaction;
 import com.gip.xyna.xprc.xsched.CapacityManagement.State;
+import com.gip.xyna.xprc.xsched.capacities.SharedResourceFreeCapacitiesRequest.CapacityMethod;
 import com.gip.xyna.xprc.xsched.ExtendedCapacityUsageInformation;
 import com.gip.xyna.xprc.xsched.SchedulingData;
 import com.gip.xyna.xprc.xsched.scheduling.CapacityReservation;
@@ -70,10 +71,12 @@ public class CMSharedResource implements CapacityManagementInterface {
   private final SharedResourceManagement srm;
 
   private final Set<Long> skipUndoSet = new HashSet<>();
+  private final CMSharedResourceConsistencyManagement consistencyMgmt;
 
 
   public CMSharedResource() {
     srm = XynaFactory.getInstance().getXynaNetworkWarehouse().getSharedResourceManagement();
+    consistencyMgmt = new CMSharedResourceConsistencyManagement(this::processFreecapacityRequest);
   }
 
 
@@ -355,55 +358,75 @@ public class CMSharedResource implements CapacityManagementInterface {
 
   @Override
   public boolean freeTransferableCapacities(XynaOrderServerExtension xo) {
+    return freeTransferableCapaictiesInternal(xo.getId(), true);
+  }
+
+
+  private boolean freeTransferableCapaictiesInternal(long orderId, boolean queueOnError) {
     SharedResourceRequestResult<SharedResourceCapacity> readResult = srm.readAll(XYNA_CAP_SR_DEF);
     if (!readResult.isSuccess() || readResult.getResources() == null) {
       logger.error("could not read capacities.", readResult.getException());
+      if (queueOnError) {
+        consistencyMgmt.queueRequest(new SharedResourceFreeCapacitiesRequest(CapacityMethod.transferable, orderId));
+      }
       return false;
     }
 
     Long now = System.currentTimeMillis();
-    List<String> ids = getIds(readResult.getResources(), xo.getId());
+    List<String> ids = getIds(readResult.getResources(), orderId);
 
     Function<SharedResourceInstance<SharedResourceCapacity>, SharedResourceInstance<SharedResourceCapacity>> update;
     update = (x) -> {
-      Order order = x.getValue().orders.get(xo.getId());
+      Order order = x.getValue().orders.get(orderId);
       x.getValue().inuse -= order.transferableCapacityInstances;
       order.transferableCapacityInstances = 0;
       if (order.capacityInstances == 0 && order.receivedTransferableCapacityInstances == 0) {
-        x.getValue().orders.remove(xo.getId());
+        x.getValue().orders.remove(orderId);
       }
       return new SharedResourceInstance<>(x.getId(), now, x.getValue());
     };
     SharedResourceRequestResult<SharedResourceCapacity> updateResult = srm.update(XYNA_CAP_SR_DEF, ids, update);
+    if (!updateResult.isSuccess() && queueOnError) {
+      consistencyMgmt.queueRequest(new SharedResourceFreeCapacitiesRequest(CapacityMethod.transferable, orderId));
+    }
     return updateResult.isSuccess();
   }
 
 
   @Override
   public boolean freeCapacities(XynaOrderServerExtension xo) {
+    return freeCapacitiesInternal(xo.getId(), true);
+  }
+
+  private boolean freeCapacitiesInternal(long orderId, boolean queueOnError) {
     SharedResourceRequestResult<SharedResourceCapacity> readResult = srm.readAll(XYNA_CAP_SR_DEF);
     if (!readResult.isSuccess() || readResult.getResources() == null) {
       logger.error("could not read capacities.", readResult.getException());
+      if (queueOnError) {
+        consistencyMgmt.queueRequest(new SharedResourceFreeCapacitiesRequest(CapacityMethod.free, orderId));
+      }
       return false;
     }
 
     Long now = System.currentTimeMillis();
-    List<String> ids = getIds(readResult.getResources(), xo.getId());
+    List<String> ids = getIds(readResult.getResources(), orderId);
 
     Function<SharedResourceInstance<SharedResourceCapacity>, SharedResourceInstance<SharedResourceCapacity>> update;
     update = (x) -> {
-      Order order = x.getValue().orders.get(xo.getId());
+      Order order = x.getValue().orders.get(orderId);
       x.getValue().inuse -= order.capacityInstances;
       order.capacityInstances = 0;
       if (order.transferableCapacityInstances == 0 && order.receivedTransferableCapacityInstances == 0) {
-        x.getValue().orders.remove(xo.getId());
+        x.getValue().orders.remove(orderId);
       }
       return new SharedResourceInstance<>(x.getId(), now, x.getValue());
     };
     SharedResourceRequestResult<SharedResourceCapacity> updateResult = srm.update(XYNA_CAP_SR_DEF, ids, update);
+    if (!updateResult.isSuccess() && queueOnError) {
+      consistencyMgmt.queueRequest(new SharedResourceFreeCapacitiesRequest(CapacityMethod.force, orderId));
+    }
     return updateResult.isSuccess();
   }
-
 
   @Override
   public boolean transferCapacities(XynaOrderServerExtension xo, TransferCapacities transferCapacities) {
@@ -447,8 +470,13 @@ public class CMSharedResource implements CapacityManagementInterface {
 
   @Override
   public boolean forceFreeCapacities(long orderId) {
+    return forceFreeCapacitiesInternal(orderId, true);
+  }
+
+  private boolean forceFreeCapacitiesInternal(long orderId, boolean queueOnError) {
     SharedResourceRequestResult<SharedResourceCapacity> readResult = srm.readAll(XYNA_CAP_SR_DEF);
-    if (!readResult.isSuccess()) {
+    if (!readResult.isSuccess() && queueOnError) {
+      consistencyMgmt.queueRequest(new SharedResourceFreeCapacitiesRequest(CapacityMethod.force, orderId));
       return false;
     }
     List<SharedResourceInstance<SharedResourceCapacity>> resources = readResult.getResources();
@@ -461,11 +489,13 @@ public class CMSharedResource implements CapacityManagementInterface {
       return true;
     }
     List<String> ids = resources.stream().map(x -> x.getId()).collect(Collectors.toList());
+    OrderMissingContainer container = new OrderMissingContainer();
     Long now = System.currentTimeMillis();
     Function<SharedResourceInstance<SharedResourceCapacity>, SharedResourceInstance<SharedResourceCapacity>> update;
     update = (x) -> {
       Order order = x.getValue().orders.get(orderId);
       if (order == null) {
+        container.missing = true;
         return null;
       }
       x.getValue().inuse -= order.capacityInstances + order.transferableCapacityInstances + order.receivedTransferableCapacityInstances;
@@ -475,6 +505,11 @@ public class CMSharedResource implements CapacityManagementInterface {
     };
 
     SharedResourceRequestResult<SharedResourceCapacity> updateResult = srm.update(XYNA_CAP_SR_DEF, ids, update);
+    //if capacities could not be freed, and it is not because of a missing Order
+    //an order might be missing, if it was freed from another factory
+    if (!updateResult.isSuccess() && !container.missing && queueOnError) {
+      consistencyMgmt.queueRequest(new SharedResourceFreeCapacitiesRequest(CapacityMethod.force, orderId));
+    }
     return updateResult.isSuccess();
   }
 
@@ -709,7 +744,7 @@ public class CMSharedResource implements CapacityManagementInterface {
 
   @Override
   public void close() {
-    //ntbd
+    consistencyMgmt.stop();
   }
 
 
@@ -740,7 +775,20 @@ public class CMSharedResource implements CapacityManagementInterface {
       throw new IllegalArgumentException("Cardinality may not be negative");
     }
   }
+  
+  private boolean processFreecapacityRequest(SharedResourceFreeCapacitiesRequest request) {
+    switch(request.getMethod()) {
+      case force: return forceFreeCapacitiesInternal(request.getOrderId(), false);
+      case free: return freeCapacitiesInternal(request.getOrderId(), false);
+      case transferable: return freeTransferableCapaictiesInternal(request.getOrderId(), false);
+      default: return false;
+    }
+  }
 
+  private static class OrderMissingContainer {
+    
+    boolean missing;
+  }
 
   private static class AllocationContainer {
 
