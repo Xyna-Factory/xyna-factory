@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -143,6 +143,36 @@ aes256-gcm@openssh.com,
 arcfour,
 arcfour128,
 arcfour256</Documentation>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="key exchange methods" VariableName="keyExchangeMethods">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Set to null or an empty list for legacy behavior.
+
+Possible values:
+diffie-hellman-group1-sha1,
+diffie-hellman-group14-sha1,
+diffie-hellman-group14-sha256,
+diffie-hellman-group14-sha256-@ssh.com,
+diffie-hellman-group15-sha256,
+diffie-hellman-group15-sha256-@ssh.com,
+diffie-hellman-group15-sha384-@ssh.com,
+diffie-hellman-group15-sha512,
+diffie-hellman-group16-sha256,
+diffie-hellman-group16-sha384-@ssh.com,
+diffie-hellman-group16-sha512,
+diffie-hellman-group16-sha512-@ssh.com,
+diffie-hellman-group17-sha512,
+diffie-hellman-group18-sha512,
+diffie-hellman-group18-sha512-@ssh.com,
+diffie-hellman-group-exchange-sha1,
+diffie-hellman-group-exchange-sha256
+ecdh-sha2-nistp256,
+ecdh-sha2-nistp384,
+ecdh-sha2-nistp521,
+curve25519-sha256,
+curve25519-sha256@libssh.org</Documentation>
     </Meta>
   </Data>
   <Service Label="SSH connection parameter" TypeName="SSHConnectionParameter">
