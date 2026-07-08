@@ -113,7 +113,7 @@ public class SSHConnectionManagementRepositoryAccess {
           if (! newidentity.isBlank()) {
             identity.setName(newidentity);
           }
-          if (typeclass != null) { //if (! typeclass.isBlank()) {
+          if (typeclass != null) {
             identity.setTypeclass(typeclass);
           }
           if (priority != 0) {
