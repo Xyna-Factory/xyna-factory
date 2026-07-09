@@ -15,25 +15,32 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package xact.http.impl;
+package xact.http.jwt.auth.impl;
 
 
-import xact.http.HTTPResponseResolver;
-import xact.http.HTTPResponseResolverSuperProxy;
+
+import java.lang.ClassNotFoundException;
+
+import xact.http.jwt.auth.JSONWebTokenAuthenticationSuperProxy;
+import xact.http.jwt.auth.JSONWebTokenAuthentication;
 
 
-public class HTTPResponseResolverInstanceOperationImpl extends HTTPResponseResolverSuperProxy {
+
+public class JSONWebTokenAuthenticationInstanceOperationImpl extends JSONWebTokenAuthenticationSuperProxy {
 
   private static final long serialVersionUID = 1L;
 
-  public HTTPResponseResolverInstanceOperationImpl(HTTPResponseResolver instanceVar) {
+
+  public JSONWebTokenAuthenticationInstanceOperationImpl(JSONWebTokenAuthentication instanceVar) {
     super(instanceVar);
   }
+
 
   private void writeObject(java.io.ObjectOutputStream s) throws java.io.IOException {
     //change if needed to store instance context
     s.defaultWriteObject();
   }
+
 
   private void readObject(java.io.ObjectInputStream s) throws java.io.IOException, ClassNotFoundException {
     //change if needed to restore instance-context during deserialization of order
