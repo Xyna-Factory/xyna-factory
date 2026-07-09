@@ -88,7 +88,7 @@ public class GetAuditRequestProcessor {
     }
   }
 
-  public GetAuditResponse processGetAuditRequest(Long orderId) throws NoAuditData {
+  public GetAuditResponse processGetAuditRequest(Long orderId, Long parentId) throws NoAuditData {
     try {
       return createGetAuditResponse(MonitorAudit.fromLocalOrder(orderId));
     } catch (Throwable ex) {
