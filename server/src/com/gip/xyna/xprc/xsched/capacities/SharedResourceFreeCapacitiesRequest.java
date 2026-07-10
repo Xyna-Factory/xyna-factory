@@ -15,45 +15,40 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package com.gip.xyna.xnwh.sharedresources;
+package com.gip.xyna.xprc.xsched.capacities;
 
 
 
-import java.util.List;
+public class SharedResourceFreeCapacitiesRequest {
 
-
-
-public class SharedResourceRequestResult<T> {
-
-  private final boolean success;
-  private final Exception exception;
-  private final List<SharedResourceInstance<T>> resources;
-
-
-  public SharedResourceRequestResult(boolean success, Exception exception, List<SharedResourceInstance<T>> resources) {
-    this.success = success;
-    this.exception = exception;
-    this.resources = resources;
+  /* package */ enum CapacityMethod {
+    free, force, transferable
   }
 
 
-  public boolean isSuccess() {
-    return success;
+  private final CapacityMethod method;
+  private final Long orderId;
+
+
+  public SharedResourceFreeCapacitiesRequest(CapacityMethod method, Long orderId) {
+    this.method = method;
+    this.orderId = orderId;
   }
 
 
-  public Exception getException() {
-    return exception;
+  public CapacityMethod getMethod() {
+    return method;
   }
 
 
-  public List<SharedResourceInstance<T>> getResources() {
-    return resources;
+  public Long getOrderId() {
+    return orderId;
   }
 
 
   @Override
   public String toString() {
-    return "SharedResourceRequestResult [success=" + success + ", exception=" + exception + ", resources=" + resources + "]";
+    return String.format("[%d - %s]", orderId, method);
   }
+
 }
