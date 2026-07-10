@@ -66,7 +66,7 @@ public class OIDCSigningKeyResolver implements Locator<Key> {
 
   @Override
   public Key locate(Header header) {
-    String kid = (header instanceof ProtectedHeader) ? ((ProtectedHeader) header).getKeyId() : "";
+    String keyId = (header instanceof ProtectedHeader) ? ((ProtectedHeader) header).getKeyId() : "";
     try {
       long now = System.currentTimeMillis();
       if (now > keyCacheExpiryMs) {
@@ -76,16 +76,16 @@ public class OIDCSigningKeyResolver implements Locator<Key> {
           logger.debug("JWK key cache cleared/reset.");
         }
       }
-      return keyCache.computeIfAbsent(kid, k -> {
+      return keyCache.computeIfAbsent(keyId, k -> {
         try {
           Jwk jwk = getOrCreateProvider().get(k.isEmpty() ? null : k);
           return jwk.getPublicKey();
         } catch (Exception e) {
-          throw new IllegalStateException("Failed to fetch JWK for kid='" + k + "'", e);
+          throw new IllegalStateException("Failed to fetch JWK for keyId='" + k + "'", e);
         }
       });
     } catch (Exception e) {
-      throw new IllegalStateException("No matching key found in JWKS for kid='" + kid + "'", e);
+      throw new IllegalStateException("No matching key found in JWKS for keyId='" + keyId + "'", e);
     }
   }
 
