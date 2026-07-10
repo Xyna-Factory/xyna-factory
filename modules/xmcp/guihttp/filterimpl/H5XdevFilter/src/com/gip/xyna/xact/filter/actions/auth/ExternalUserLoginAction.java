@@ -21,6 +21,7 @@ package com.gip.xyna.xact.filter.actions.auth;
 
 import java.rmi.RemoteException;
 import java.security.cert.CertificateException;
+
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
@@ -77,12 +78,24 @@ public class ExternalUserLoginAction implements FilterAction {
   }
   
   private XMOMGui xmomgui;
-  
+  private static String headerName = SSL_CLIENT_CERT;
+  private static ExternalAuthType loginType = ExternalAuthType.CLIENT_CERT;
+
+  public static enum ExternalAuthType {
+    CLIENT_CERT, JSON_WEB_TOKEN;
+  }
+
   public ExternalUserLoginAction(XMOMGui xmomgui) {
     this.xmomgui = xmomgui;
   }
 
+  public static void setExternalAuthType(ExternalAuthType type) {
+    loginType = type;
+  }
 
+  public static void setAuthTokenHeaderName(String value) {
+    headerName = value.toLowerCase();
+  }
 
   @Override
   public boolean match(URLPath url, Method method) {
@@ -98,9 +111,21 @@ public class ExternalUserLoginAction implements FilterAction {
 
   public static Pair<Boolean, ExternalUserInfo> getExternalUserInfoOrFail(JsonFilterActionInstance jfai, HTTPTriggerConnection tc)
       throws XynaException {
-    String client_cert = tc.getHeader().getProperty(SSL_CLIENT_CERT);
+    String header = tc.getHeader().getProperty(headerName);
     try {
-      ExternalUserInfo eui = ExternalUserInfo.createFromClientCertificate(client_cert);
+      if (logger.isDebugEnabled()) {
+        logger.debug("getting user info for " + loginType + " from " + headerName + " with value " + header);
+      }
+      ExternalUserInfo eui;
+      switch (loginType) {
+        case JSON_WEB_TOKEN:
+          String jwtHeader = header == null ? null : header.replaceFirst("Bearer\\s+", "");
+          eui = ExternalUserInfo.createFromJWT(jwtHeader);
+          break;
+        case CLIENT_CERT:
+        default:
+          eui = ExternalUserInfo.createFromClientCertificate(header);
+      }
       return Pair.of(false, eui);
     } catch (RuntimeException e) {
       Utils.logError("Unexpected failure", e);
