@@ -20,8 +20,6 @@ package xact.http.jwt.auth.impl;
 
 
 import java.io.Serializable;
-import java.rmi.RemoteException;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
