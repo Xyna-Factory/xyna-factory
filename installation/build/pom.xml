@@ -558,6 +558,12 @@
               <scope>runtime</scope>
             </dependency>
             <dependency>
+              <groupId>com.auth0</groupId>
+              <artifactId>jwks-rsa</artifactId>
+              <version>0.24.1</version>
+              <scope>compile</scope>
+            </dependency>
+            <dependency>
               <groupId>io.jsonwebtoken</groupId>
               <artifactId>jjwt-api</artifactId>
               <version>0.12.6</version>
