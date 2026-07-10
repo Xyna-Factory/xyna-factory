@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,50 +16,68 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="JSONWebToken" factoryVersion="" versionName="1.0.3" xmlVersion="1.1">
-  <ApplicationInfo>
-    <Description Lang="DE">Tools um JSON Web Tokens zu erzeugen, zu parsen und zu bearbeiten</Description>
-    <Description Lang="EN">Tools for creating, parsing and working with JSON Web Tokens</Description>
-    <RuntimeContextRequirements>
-      <RuntimeContextRequirement>
-        <ApplicationName>Http</ApplicationName>
-        <VersionName>1.5.10</VersionName>
-      </RuntimeContextRequirement>
-    </RuntimeContextRequirements>
-  </ApplicationInfo>
-  <SharedLibs>
-    <SharedLib implicitDependency="false">
-      <SharedLib>JWT</SharedLib>
-    </SharedLib>
-  </SharedLibs>
-  <XMOMEntries>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xact.http.jwt.JSONWebToken</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="true">
-      <FqName>xact.http.jwt.JWTClaims</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="true">
-      <FqName>xact.http.jwt.JWTException</FqName>
-      <Type>EXCEPTION</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="true">
-      <FqName>xact.http.jwt.JWTHeader</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="true">
-      <FqName>xact.http.jwt.Key</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xact.http.jwt.KeyGenerator</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="true">
-      <FqName>xact.http.jwt.PrivateClaim</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-  </XMOMEntries>
+<Application applicationName="JSONWebToken" factoryVersion="" versionName="1.0.4" xmlVersion="1.1">
+    <ApplicationInfo>
+        <Description Lang="DE">Tools um JSON Web Tokens zu erzeugen, zu parsen und zu bearbeiten</Description>
+        <Description Lang="EN">Tools for creating, parsing and working with JSON Web Tokens</Description>
+        <RuntimeContextRequirements>
+            <RuntimeContextRequirement>
+                <ApplicationName>Http</ApplicationName>
+                <VersionName>1.5.10</VersionName>
+            </RuntimeContextRequirement>
+            <RuntimeContextRequirement>
+                <ApplicationName>UserSessionMgmt</ApplicationName>
+                <VersionName>1.0.3</VersionName>
+            </RuntimeContextRequirement>
+        </RuntimeContextRequirements>
+    </ApplicationInfo>
+    <Ordertypes>
+        <Ordertype implicitDependency="true">
+            <DestinationKey>xact.http.jwt.auth.AuthenticateWithJWT</DestinationKey>
+            <OrderContextMapping>true</OrderContextMapping>
+        </Ordertype>
+    </Ordertypes>
+    <SharedLibs>
+        <SharedLib implicitDependency="false">
+            <SharedLib>JWT</SharedLib>
+        </SharedLib>
+    </SharedLibs>
+    <XMOMEntries>
+        <XMOMEntry implicitDependency="false">
+            <FqName>xact.http.jwt.JSONWebToken</FqName>
+            <Type>DATATYPE</Type>
+        </XMOMEntry>
+        <XMOMEntry implicitDependency="true">
+            <FqName>xact.http.jwt.JWTClaims</FqName>
+            <Type>DATATYPE</Type>
+        </XMOMEntry>
+        <XMOMEntry implicitDependency="true">
+            <FqName>xact.http.jwt.JWTException</FqName>
+            <Type>EXCEPTION</Type>
+        </XMOMEntry>
+        <XMOMEntry implicitDependency="true">
+            <FqName>xact.http.jwt.JWTHeader</FqName>
+            <Type>DATATYPE</Type>
+        </XMOMEntry>
+        <XMOMEntry implicitDependency="true">
+            <FqName>xact.http.jwt.Key</FqName>
+            <Type>DATATYPE</Type>
+        </XMOMEntry>
+        <XMOMEntry implicitDependency="false">
+            <FqName>xact.http.jwt.KeyGenerator</FqName>
+            <Type>DATATYPE</Type>
+        </XMOMEntry>
+        <XMOMEntry implicitDependency="true">
+            <FqName>xact.http.jwt.PrivateClaim</FqName>
+            <Type>DATATYPE</Type>
+        </XMOMEntry>
+        <XMOMEntry implicitDependency="false">
+            <FqName>xact.http.jwt.auth.AuthenticateWithJWT</FqName>
+            <Type>WORKFLOW</Type>
+        </XMOMEntry>
+        <XMOMEntry implicitDependency="false">
+            <FqName>xact.http.jwt.auth.JSONWebTokenAuthentication</FqName>
+            <Type>DATATYPE</Type>
+        </XMOMEntry>
+    </XMOMEntries>
 </Application>
