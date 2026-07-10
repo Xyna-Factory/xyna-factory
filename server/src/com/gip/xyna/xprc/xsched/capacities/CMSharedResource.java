@@ -98,14 +98,14 @@ public class CMSharedResource implements CapacityManagementInterface {
     AllocateCapacitiesInformationContainer allocInfo;
     allocInfo = AllocateCapacitiesInformationContainer.createAllocateCapacitiesInformationContainer(orderInformation, schedulingData);
     Function<SharedResourceInstance<SharedResourceCapacity>, SharedResourceInstance<SharedResourceCapacity>> update;
-    update = (x) -> {
+    update = (currentResource) -> {
       allocInfo.reset();
-      if (capacityDisabled(x, allocInfo) || capacityInsufficient(x, allocInfo)) {
+      if (capacityDisabled(currentResource, allocInfo) || capacityInsufficient(currentResource, allocInfo)) {
         return null;
       }
 
-      allocRegularCapacities(x, allocInfo);
-      return new SharedResourceInstance<>(x.getId(), now, x.getValue());
+      allocRegularCapacities(currentResource, allocInfo);
+      return new SharedResourceInstance<>(currentResource.getId(), now, currentResource.getValue());
     };
     SharedResourceRequestResult<SharedResourceCapacity> result = srm.update(XYNA_CAP_SR_DEF, allocInfo.ids, update);
     if (!result.isSuccess() && result.getException() instanceof XNWH_SharedResourceInstanceDoesNotExist
@@ -140,19 +140,19 @@ public class CMSharedResource implements CapacityManagementInterface {
       int cardinality = schedulingData.getMultiAllocationCapacities().getCapacities().get(0).getCardinality();
       int maxWantAllocations = schedulingData.getMultiAllocationCapacities().getMaxAllocation() - minAllocs;
       //only one capacity to allocate
-      update = (x) -> {
+      update = (currentResource) -> {
         allocInfo.reset();
-        int free = x.getValue().cardinality - x.getValue().inuse;
+        int free = currentResource.getValue().cardinality - currentResource.getValue().inuse;
         int maxPosAllocations = free / cardinality;
         int maxAllocations = Math.min(maxWantAllocations, maxPosAllocations) * cardinality;
-        x.getValue().inuse += maxAllocations;
-        x.getValue().orders.get(allocInfo.orderId).capacityInstances += transferable ? 0 : maxAllocations;
-        x.getValue().orders.get(allocInfo.orderId).transferableCapacityInstances += transferable ? maxAllocations : 0;
+        currentResource.getValue().inuse += maxAllocations;
+        currentResource.getValue().orders.get(allocInfo.orderId).capacityInstances += transferable ? 0 : maxAllocations;
+        currentResource.getValue().orders.get(allocInfo.orderId).transferableCapacityInstances += transferable ? maxAllocations : 0;
         if (logger.isDebugEnabled()) {
           logger.debug("allocated " + maxAllocations + " multi capacities for order " + allocInfo.orderId);
         }
         allocationContainer.allocations = Math.max(minAllocs, maxAllocations + minAllocs);
-        return x;
+        return currentResource;
       };
       srm.update(XYNA_CAP_SR_DEF, allocInfo.ids, update);
     } else {
@@ -176,18 +176,18 @@ public class CMSharedResource implements CapacityManagementInterface {
     for (Capacity cap : multiAlloc.getCapacities()) {
       allocMap.put(cap.getCapName(), cap.getCardinality());
     }
-    update = (x) -> {
+    update = (currentResource) -> {
       allocInfo.reset();
-      int cardinality = allocMap.get(x.getId());
-      int free = x.getValue().cardinality - x.getValue().inuse;
+      int cardinality = allocMap.get(currentResource.getId());
+      int free = currentResource.getValue().cardinality - currentResource.getValue().inuse;
       if (free / cardinality <= 0) {
         return null;
       }
       boolean transferable = multiAlloc.isTransferable();
-      x.getValue().inuse += cardinality;
-      x.getValue().orders.get(allocInfo.orderId).capacityInstances += transferable ? 0 : cardinality;
-      x.getValue().orders.get(allocInfo.orderId).transferableCapacityInstances += transferable ? cardinality : 0;
-      return x;
+      currentResource.getValue().inuse += cardinality;
+      currentResource.getValue().orders.get(allocInfo.orderId).capacityInstances += transferable ? 0 : cardinality;
+      currentResource.getValue().orders.get(allocInfo.orderId).transferableCapacityInstances += transferable ? cardinality : 0;
+      return currentResource;
     };
     for (int i = multiAlloc.getMinAllocation(); i < multiAlloc.getMaxAllocation(); i++) {
       SharedResourceRequestResult<SharedResourceCapacity> result = srm.update(XYNA_CAP_SR_DEF, allocInfo.ids, update);
@@ -343,11 +343,11 @@ public class CMSharedResource implements CapacityManagementInterface {
     Long orderId = orderInformation.getOrderId();
     List<String> ids = getIds(readResult.getResources(), orderId);
     Function<SharedResourceInstance<SharedResourceCapacity>, SharedResourceInstance<SharedResourceCapacity>> update;
-    update = (x) -> {
-      Order order = x.getValue().orders.get(orderId);
-      x.getValue().inuse -= order.capacityInstances + order.transferableCapacityInstances;
-      x.getValue().orders.remove(orderId);
-      return new SharedResourceInstance<>(x.getId(), now, x.getValue());
+    update = (currentResoruce) -> {
+      Order order = currentResoruce.getValue().orders.get(orderId);
+      currentResoruce.getValue().inuse -= order.capacityInstances + order.transferableCapacityInstances;
+      currentResoruce.getValue().orders.remove(orderId);
+      return new SharedResourceInstance<>(currentResoruce.getId(), now, currentResoruce.getValue());
     };
     SharedResourceRequestResult<SharedResourceCapacity> updateResult = srm.update(XYNA_CAP_SR_DEF, ids, update);
     if (!updateResult.isSuccess()) {
@@ -376,14 +376,14 @@ public class CMSharedResource implements CapacityManagementInterface {
     List<String> ids = getIds(readResult.getResources(), orderId);
 
     Function<SharedResourceInstance<SharedResourceCapacity>, SharedResourceInstance<SharedResourceCapacity>> update;
-    update = (x) -> {
-      Order order = x.getValue().orders.get(orderId);
-      x.getValue().inuse -= order.transferableCapacityInstances;
+    update = (currentResource) -> {
+      Order order = currentResource.getValue().orders.get(orderId);
+      currentResource.getValue().inuse -= order.transferableCapacityInstances;
       order.transferableCapacityInstances = 0;
       if (order.capacityInstances == 0 && order.receivedTransferableCapacityInstances == 0) {
-        x.getValue().orders.remove(orderId);
+        currentResource.getValue().orders.remove(orderId);
       }
-      return new SharedResourceInstance<>(x.getId(), now, x.getValue());
+      return new SharedResourceInstance<>(currentResource.getId(), now, currentResource.getValue());
     };
     SharedResourceRequestResult<SharedResourceCapacity> updateResult = srm.update(XYNA_CAP_SR_DEF, ids, update);
     if (!updateResult.isSuccess() && queueOnError) {
@@ -412,14 +412,14 @@ public class CMSharedResource implements CapacityManagementInterface {
     List<String> ids = getIds(readResult.getResources(), orderId);
 
     Function<SharedResourceInstance<SharedResourceCapacity>, SharedResourceInstance<SharedResourceCapacity>> update;
-    update = (x) -> {
-      Order order = x.getValue().orders.get(orderId);
-      x.getValue().inuse -= order.capacityInstances;
+    update = (currentResource) -> {
+      Order order = currentResource.getValue().orders.get(orderId);
+      currentResource.getValue().inuse -= order.capacityInstances;
       order.capacityInstances = 0;
       if (order.transferableCapacityInstances == 0 && order.receivedTransferableCapacityInstances == 0) {
-        x.getValue().orders.remove(orderId);
+        currentResource.getValue().orders.remove(orderId);
       }
-      return new SharedResourceInstance<>(x.getId(), now, x.getValue());
+      return new SharedResourceInstance<>(currentResource.getId(), now, currentResource.getValue());
     };
     SharedResourceRequestResult<SharedResourceCapacity> updateResult = srm.update(XYNA_CAP_SR_DEF, ids, update);
     if (!updateResult.isSuccess() && queueOnError) {
@@ -438,29 +438,30 @@ public class CMSharedResource implements CapacityManagementInterface {
     Long fromOrderId = transferCapacities.getFromOrderId();
     List<String> ids = transferCapacities.getCapacities().stream().map(x -> x.getCapName()).collect(Collectors.toList());
     Function<SharedResourceInstance<SharedResourceCapacity>, SharedResourceInstance<SharedResourceCapacity>> update;
-    update = (x) -> {
-      Order oldOrder = x.getValue().orders.get(fromOrderId);
+    update = (currentResource) -> {
+      Order oldOrder = currentResource.getValue().orders.get(fromOrderId);
       if (oldOrder == null) {
         if (logger.isDebugEnabled()) {
           logger.debug("Could not transfer capacities from " + fromOrderId + " to " + xo.getId() + " because " + fromOrderId
-              + " does not hold any capacities of type " + x.getId());
+              + " does not hold any capacities of type " + currentResource.getId());
         }
         return null;
       }
-      if (oldOrder.transferableCapacityInstances < capacitiesToTransferMap.get(x.getId())) {
+      if (oldOrder.transferableCapacityInstances < capacitiesToTransferMap.get(currentResource.getId())) {
         if (logger.isDebugEnabled()) {
           logger.debug("Could not transfer capacities from " + fromOrderId + " to " + xo.getId() + " because " + fromOrderId
-              + " does not hold enough capacities of type " + x.getId() + " (" + capacitiesToTransferMap.get(x.getId())
+              + " does not hold enough capacities of type " + currentResource.getId() 
+              + " (" + capacitiesToTransferMap.get(currentResource.getId())
               + " are required, but only " + oldOrder.transferableCapacityInstances + " are held");
         }
         return null;
       }
-      oldOrder.transferableCapacityInstances -= capacitiesToTransferMap.get(x.getId());
-      Order newOrder = x.getValue().orders.computeIfAbsent(xo.getId(), (y) -> new Order());
-      newOrder.receivedTransferableCapacityInstances = capacitiesToTransferMap.get(x.getId());
+      oldOrder.transferableCapacityInstances -= capacitiesToTransferMap.get(currentResource.getId());
+      Order newOrder = currentResource.getValue().orders.computeIfAbsent(xo.getId(), (y) -> new Order());
+      newOrder.receivedTransferableCapacityInstances = capacitiesToTransferMap.get(currentResource.getId());
       newOrder.orderType = xo.getDestinationKey().getOrderType();
 
-      return new SharedResourceInstance<>(x.getId(), now, x.getValue());
+      return new SharedResourceInstance<>(currentResource.getId(), now, currentResource.getValue());
     };
 
     SharedResourceRequestResult<SharedResourceCapacity> updateResult = srm.update(XYNA_CAP_SR_DEF, ids, update);
@@ -492,16 +493,16 @@ public class CMSharedResource implements CapacityManagementInterface {
     OrderMissingContainer container = new OrderMissingContainer();
     Long now = System.currentTimeMillis();
     Function<SharedResourceInstance<SharedResourceCapacity>, SharedResourceInstance<SharedResourceCapacity>> update;
-    update = (x) -> {
-      Order order = x.getValue().orders.get(orderId);
+    update = (currentResoruce) -> {
+      Order order = currentResoruce.getValue().orders.get(orderId);
       if (order == null) {
         container.missing = true;
         return null;
       }
-      x.getValue().inuse -= order.capacityInstances + order.transferableCapacityInstances + order.receivedTransferableCapacityInstances;
-      x.getValue().orders.remove(orderId);
+      currentResoruce.getValue().inuse -= order.capacityInstances + order.transferableCapacityInstances + order.receivedTransferableCapacityInstances;
+      currentResoruce.getValue().orders.remove(orderId);
 
-      return new SharedResourceInstance<CMSharedResource.SharedResourceCapacity>(x.getId(), now, x.getValue());
+      return new SharedResourceInstance<CMSharedResource.SharedResourceCapacity>(currentResoruce.getId(), now, currentResoruce.getValue());
     };
 
     SharedResourceRequestResult<SharedResourceCapacity> updateResult = srm.update(XYNA_CAP_SR_DEF, ids, update);
@@ -548,17 +549,17 @@ public class CMSharedResource implements CapacityManagementInterface {
     SharedResourceInstance<SharedResourceCapacity> newInstance = new SharedResourceInstance<>(newName, now, newValue);
     //disable old capacity -> no changes allowed - but remember old value -> to recreate correct state
     Function<SharedResourceInstance<SharedResourceCapacity>, SharedResourceInstance<SharedResourceCapacity>> update;
-    update = (x) -> {
-      if (x.getValue().inuse != 0) {
+    update = (currentResource) -> {
+      if (currentResource.getValue().inuse != 0) {
         logger.info("Tried to rename a capacity that is in use - oldName: " + oldName);
         return null;
       }
-      newInstance.getValue().cardinality = x.getValue().cardinality;
-      newInstance.getValue().inuse = x.getValue().inuse;
-      newInstance.getValue().orders = x.getValue().orders;
-      newInstance.getValue().stateString = x.getValue().stateString;
-      x.getValue().stateString = State.DISABLED.toString();
-      return new SharedResourceInstance<SharedResourceCapacity>(x.getId(), x.getCreated(), x.getValue());
+      newInstance.getValue().cardinality = currentResource.getValue().cardinality;
+      newInstance.getValue().inuse = currentResource.getValue().inuse;
+      newInstance.getValue().orders = currentResource.getValue().orders;
+      newInstance.getValue().stateString = currentResource.getValue().stateString;
+      currentResource.getValue().stateString = State.DISABLED.toString();
+      return new SharedResourceInstance<SharedResourceCapacity>(currentResource.getId(), currentResource.getCreated(), currentResource.getValue());
     };
 
     SharedResourceRequestResult<SharedResourceCapacity> updateResult = srm.update(XYNA_CAP_SR_DEF, List.of(oldName), update);
@@ -592,11 +593,11 @@ public class CMSharedResource implements CapacityManagementInterface {
     assertCapacityCardinality(newOverallCardinality);
     Function<SharedResourceInstance<SharedResourceCapacity>, SharedResourceInstance<SharedResourceCapacity>> update;
     ChangeCardinalityExceptionContainer container = new ChangeCardinalityExceptionContainer();
-    update = (x) -> {
+    update = (currentResource) -> {
       container.exShangeState = null;
       container.exTooMany = null;
-      if (x.getValue().inuse > newOverallCardinality) {
-        String state = x.getValue().stateString;
+      if (currentResource.getValue().inuse > newOverallCardinality) {
+        String state = currentResource.getValue().stateString;
         String active = State.ACTIVE.toString();
         String disabled = State.DISABLED.toString();
         container.exShangeState = active.equals(state) ? new XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryChangeState() : null;
@@ -604,8 +605,8 @@ public class CMSharedResource implements CapacityManagementInterface {
         logger.info("Can not change cardinality to the desired value, too many capacities in use");
         return null; //abort update
       }
-      x.getValue().cardinality = newOverallCardinality;
-      return new SharedResourceInstance<SharedResourceCapacity>(x.getId(), x.getCreated(), x.getValue());
+      currentResource.getValue().cardinality = newOverallCardinality;
+      return new SharedResourceInstance<SharedResourceCapacity>(currentResource.getId(), currentResource.getCreated(), currentResource.getValue());
     };
 
     SharedResourceRequestResult<SharedResourceCapacity> updateResult = srm.update(XYNA_CAP_SR_DEF, List.of(capName), update);
@@ -625,9 +626,9 @@ public class CMSharedResource implements CapacityManagementInterface {
   public boolean changeState(String capName, State newState) {
     Function<SharedResourceInstance<SharedResourceCapacity>, SharedResourceInstance<SharedResourceCapacity>> update;
     Long now = System.currentTimeMillis();
-    update = (x) -> {
-      x.getValue().stateString = newState.toString();
-      return new SharedResourceInstance<SharedResourceCapacity>(x.getId(), now, x.getValue());
+    update = (currentResource) -> {
+      currentResource.getValue().stateString = newState.toString();
+      return new SharedResourceInstance<SharedResourceCapacity>(currentResource.getId(), now, currentResource.getValue());
     };
 
     SharedResourceRequestResult<SharedResourceCapacity> updateResult = srm.update(XYNA_CAP_SR_DEF, List.of(capName), update);
