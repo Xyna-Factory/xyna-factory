@@ -63,10 +63,6 @@ Role in architecture:
 - Delegates JWT claim validation and role extraction to the JSONWebToken application.
 - Translates successful `AuthenticationResult` into a local Xyna `Role`.
 
-Note:
-
-- `JWTUserAuthentication` is order-backed and no longer performs a separate role-list API step for UI selection.
-
 ---
 
 ### 1.3 `JSONWebTokenAuthenticationServiceOperationImpl`
@@ -244,7 +240,7 @@ Recommended test matrix:
 7. `JWT` + no extractable role + configured `defaultRole` -> default role selected
 8. `HEADER` + valid claims -> success without network access
 9. `HEADER` + missing/invalid claims -> failure
-10. H5Xdev info endpoint returns no role list fields
+
 
 ---
 
