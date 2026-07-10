@@ -72,7 +72,9 @@ public class OIDCSigningKeyResolver implements Locator<Key> {
       if (now > keyCacheExpiryMs) {
         keyCache.clear();
         keyCacheExpiryMs = now + TimeUnit.HOURS.toMillis(24);
-        logger.debug("JWK key cache cleared/reset.");
+        if (logger.isDebugEnabled()) {
+          logger.debug("JWK key cache cleared/reset.");
+        }
       }
       return keyCache.computeIfAbsent(kid, k -> {
         try {
@@ -92,7 +94,9 @@ public class OIDCSigningKeyResolver implements Locator<Key> {
     if (jwkProvider == null) {
       String jwksUri = resolveJwksUri();
       jwkProvider = new JwkProviderBuilder(new URL(jwksUri)).cached(false).rateLimited(false).build();
-      logger.info("JwkProvider initialized for: " + jwksUri);
+      if (logger.isInfoEnabled()) {
+        logger.info("JwkProvider initialized for: " + jwksUri);
+      }
     }
     return jwkProvider;
   }
@@ -101,7 +105,9 @@ public class OIDCSigningKeyResolver implements Locator<Key> {
   private String resolveJwksUri() throws Exception {
     if (domainSpecificData.getJwksUri().isPresent()) {
       String uri = domainSpecificData.getJwksUri().get();
-      logger.debug("Using configured jwksUri: " + uri);
+      if (logger.isDebugEnabled()) {
+        logger.debug("Using configured jwksUri: " + uri);
+      }
       return uri;
     }
 
@@ -113,7 +119,9 @@ public class OIDCSigningKeyResolver implements Locator<Key> {
     String issuer = issuers.get(0);
     String discoveryUrl = issuer.endsWith("/") ? issuer + ".well-known/openid-configuration" : issuer + "/.well-known/openid-configuration";
 
-    logger.debug("Fetching OIDC Discovery document: " + discoveryUrl);
+    if (logger.isDebugEnabled()) {
+      logger.debug("Fetching OIDC Discovery document: " + discoveryUrl);
+    }
     HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
     HttpResponse<String> response =
         client.send(HttpRequest.newBuilder().uri(URI.create(discoveryUrl)).timeout(Duration.ofSeconds(10)).GET().build(),
@@ -126,7 +134,9 @@ public class OIDCSigningKeyResolver implements Locator<Key> {
     if (jwksUri == null) {
       throw new IllegalStateException("No 'jwks_uri' in OIDC Discovery response from " + discoveryUrl);
     }
-    logger.info("Discovered jwksUri: " + jwksUri);
+    if (logger.isInfoEnabled()) {
+      logger.info("Discovered jwksUri: " + jwksUri);
+    }
     return jwksUri;
   }
 
