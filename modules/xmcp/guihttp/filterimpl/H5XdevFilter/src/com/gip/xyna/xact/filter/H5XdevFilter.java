@@ -380,7 +380,7 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     allFilterActions.add(new IndexAction(allFilterActions, applicationVersion, NAME, BASE_PATH));
 
     allFilterActions.add(new LoginAction(xmomGui));
-    allFilterActions.add(new InfoAction(xmomGui));
+    allFilterActions.add(new InfoAction());
     allFilterActions.add(new LogoutAction());
     allFilterActions.add(new ExternalUserLoginInformationAction());
     allFilterActions.add(new ExternalUserLoginAction(xmomGui));
