@@ -67,16 +67,26 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     Map<String, Class<?>> result = new HashMap<>();
     result.put("boolean", boolean.class);
     result.put("Boolean", Boolean.class);
+    result.put("java.lang.Boolean", Boolean.class);
     result.put("byte", byte.class);
     result.put("Byte", Byte.class);
+    result.put("java.lang.Byte", Byte.class);
     result.put("double", double.class);
     result.put("Double", Double.class);
+    result.put("java.lang.Double", Double.class);
     result.put("int", int.class);
     result.put("Integer", Integer.class);
+    result.put("java.lang.Integer", Integer.class);
     result.put("long", long.class);
     result.put("Long", Long.class);
-    result.put("Sting", String.class);
+    result.put("java.lang.Long", Long.class);
+    result.put("float", float.class);
+    result.put("Float", Float.class);
+    result.put("java.lang.Float", Float.class);
+    result.put("String", String.class);
+    result.put("java.lang.String", String.class);
     result.put("List", List.class);
+    result.put("java.util.List", List.class);
     return result;
   }
 
@@ -369,10 +379,10 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     //primitive
     Class<?> c = typeConversionMap.get(type);
     if (c != null && !(c.isAssignableFrom(value.getClass()))) {
-      if (value.getClass() == Double.class && c == Float.class) {
+      if (value.getClass() == Double.class && (c == Float.class || c == float.class)) {
         value = (float) ((double) value);
       }
-      if (value.getClass() == Long.class && c == int.class) {
+      if (value.getClass() == Long.class && (c == int.class || c == Integer.class)) {
         value = (int) ((long) value);
       }
     }
