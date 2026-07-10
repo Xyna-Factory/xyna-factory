@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,17 @@ import xact.ssh.impl.SSHConnectionManagementRepositoryAccess;
 public class AddkeypairImpl extends XynaCommandImplementation<Addkeypair> {
 
   public void execute(OutputStream statusOutputStream, Addkeypair payload) throws XynaException {
-    SSHConnectionManagementRepositoryAccess.addKeyPair(payload.getPrivatekey(), payload.getPublickey(), payload.getPassphrase());
+    String typeclass = "";
+    Integer priority = 0;
+    if (payload.getPriority() != null) {
+        try {
+          priority = Integer.parseInt(payload.getPriority());
+        } catch (NumberFormatException e) { /* ntbd */ }
+    }
+    if (payload.getTypeclass() != null) {
+      typeclass = payload.getTypeclass();
+    }
+    SSHConnectionManagementRepositoryAccess.addKeyPair(payload.getPrivatekey(), payload.getPublickey(), payload.getPassphrase(), "", priority, typeclass);
   }
 
 }

@@ -22,7 +22,7 @@
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>GuiHttp</ApplicationName>
-        <VersionName>1.5.3</VersionName>
+        <VersionName>1.5.5</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>XyPilotMetricsDefaults</ApplicationName>

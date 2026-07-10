@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,12 @@ public interface XynaIdentityRepository {
   public KeyProvider storableToKeyProvider(IdentityStorable identity);
   
   public IdentityStorable add(Optional<String> name, EncryptionType keyType, byte[] privateKey, byte[] publicKey, Optional<String> passphrase);
+  
+  public IdentityStorable overwrite(IdentityStorable newIdentity);
+  
+  public IdentityStorable addWithAttributes(Optional<String> name, EncryptionType keyType, byte[] privateKey, byte[] publicKey, Optional<String> passphrase, long priority, String typeclass);
+  
+  public String generateIdentity(byte[] publicKey);
   
   public Collection<IdentityStorable> removeKey(EncryptionType type, Optional<String> publickey);
   
