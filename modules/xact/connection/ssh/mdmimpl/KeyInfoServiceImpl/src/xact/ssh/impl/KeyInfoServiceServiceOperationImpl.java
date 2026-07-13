@@ -218,7 +218,7 @@ public class KeyInfoServiceServiceOperationImpl implements ExtendedDeploymentTas
         return;
       }
 
-      // Ed25519 (fixed 256 bit for public)
+      // Ed25519 (fixed 256 bit for private)
       if (alg.equals(EdECObjectIdentifiers.id_Ed25519)) {
         this.algorithm = "Ed25519";
         this.bitLength = 256;

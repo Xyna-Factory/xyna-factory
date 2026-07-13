@@ -37,7 +37,6 @@
       </Output>
       <Meta>
         <Documentation>Uses a Base64 blob representation of an SSH Key to classify the key according to algorithm and bitlength and whether it is a private or public key.
-This method needs to be ported into the SSH App.
 
 Currently supports:
 - OpenSSH Base64 formats
