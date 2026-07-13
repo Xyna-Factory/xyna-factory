@@ -555,9 +555,8 @@ public class OrderInstanceBackup extends ClusteredStorable<OrderInstanceBackup> 
     return created;
   }
   
-  @SuppressWarnings("unused")
-  private void setCreated(long startTime) {
-    // value set in constructor should not be changed
+  public void setCreated(long created) {
+    this.created = created;
   }
 
 }
