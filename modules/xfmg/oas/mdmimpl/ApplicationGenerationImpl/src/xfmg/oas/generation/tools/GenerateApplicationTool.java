@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -110,16 +110,16 @@ public class GenerateApplicationTool {
     String workspace = applicationGenerationParameter1.getWorkspaceName();
     statusHandler.setAppType(AppType.DATA_MODEL);
     String targetRtc = createAndImportApplication(correlatedXynaOrder, "xmom-data-model", target + "_datatypes", specFile,
-                               workspace, statusHandler);
+                               workspace, false, statusHandler);
     statusHandler.storeTargetRtc(targetRtc);
     if (applicationGenerationParameter1.getGenerateProvider()) {
       statusHandler.setAppType(AppType.PROVIDER);
-      createAndImportApplication(correlatedXynaOrder, "xmom-server", target + "_provider", specFile, workspace,
+      createAndImportApplication(correlatedXynaOrder, "xmom-server", target + "_provider", specFile, workspace, false,
                                  statusHandler);
     }
     if (applicationGenerationParameter1.getGenerateClient()) {
       statusHandler.setAppType(AppType.CLIENT);
-      createAndImportApplication(correlatedXynaOrder, "xmom-client", target + "_client", specFile, workspace,
+      createAndImportApplication(correlatedXynaOrder, "xmom-client", target + "_client", specFile, workspace, applicationGenerationParameter1.getGenerateMockOption(),
                                  statusHandler);
     }
     statusHandler.storeStatusSuccess();
@@ -127,11 +127,11 @@ public class GenerateApplicationTool {
 
   
   private String createAndImportApplication(XynaOrderServerExtension correlatedXynaOrder, String generator,
-                                          String target, String specFile, String workspace,
+                                          String target, String specFile, String workspace, boolean generateMock,
                                           OasImportStatusHandler statusHandler) {
     OasAppBuilder oasAppBuilder = new OasAppBuilder();
     String result = null;
-    try (OASApplicationData data = oasAppBuilder.createOasApp(generator, target, specFile, statusHandler)) {
+    try (OASApplicationData data = oasAppBuilder.createOasApp(generator, target, specFile, generateMock, statusHandler)) {
       statusHandler.storeStatusAppImport();
       if(workspace == null || workspace.isBlank()) {
         importApplicationAsApplication(correlatedXynaOrder, data.getId());
