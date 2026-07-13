@@ -139,6 +139,13 @@ public class SSHFileTransferServiceOperationImpl implements ExtendedDeploymentTa
       if( session != null ) {
         session.disconnect();
       }
+      if( triple.getSecond() != null ) {
+        try {
+          triple.getSecond().close();
+        } catch( IOException e ) {
+          logger.warn("Could not close output stream for "+ (triple.getThird() == null ? "Managed file" : triple.getThird()), e);
+        }
+      }
     }
   }
 
