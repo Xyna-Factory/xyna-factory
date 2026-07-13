@@ -1005,7 +1005,13 @@ public class XSORMemory implements Interconnectable {
         success = true;
       } finally {
         if (!success) {
-          pkIndex.replace(newXSORPayload.getPrimaryKey(), oldObjectIndex, newObjectIndex);
+          if (oldObjectIndex < 0) {
+            // CREATE case: no previous mapping existed, remove the one we added
+            pkIndex.delete(newXSORPayload.getPrimaryKey(), newObjectIndex);
+          } else {
+            // UPDATE case: restore the previous mapping
+            pkIndex.replace(newXSORPayload.getPrimaryKey(), oldObjectIndex, newObjectIndex);
+          }
         }
       }
     }

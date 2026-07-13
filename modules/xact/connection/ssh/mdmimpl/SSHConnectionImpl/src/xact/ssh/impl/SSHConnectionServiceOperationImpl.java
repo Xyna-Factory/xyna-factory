@@ -19,11 +19,17 @@ package xact.ssh.impl;
 
 
 
+import java.security.Security;
+import java.security.Provider;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.apache.log4j.Logger;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
+import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
@@ -36,6 +42,8 @@ import net.schmizz.sshj.transport.TransportException;
 
 public class SSHConnectionServiceOperationImpl implements ExtendedDeploymentTask {
 
+  private static final Logger logger = CentralFactoryLogging.getLogger(SSHConnectionServiceOperationImpl.class);
+
 
   private static Map<Long, TransientConnectionData> openConnections =
       Collections.synchronizedMap(new HashMap<Long, TransientConnectionData>());
@@ -46,6 +54,34 @@ public class SSHConnectionServiceOperationImpl implements ExtendedDeploymentTask
 
   public void onDeployment() throws XynaException {
     SSHConnectionInstanceOperationImpl.substringLengthProperty.registerDependency(UserType.Service, "xact.ssh.SSHConnection");
+
+    Provider existingProvider = Security.getProvider(BouncyCastleProvider.PROVIDER_NAME);
+    if (existingProvider != null) {
+      ClassLoader existingLoader = existingProvider.getClass().getClassLoader();
+      ClassLoader ourLoader = SSHConnectionServiceOperationImpl.class.getClassLoader();
+      if (existingLoader != ourLoader) {
+        boolean isAncestor = false;
+        ClassLoader cl = ourLoader;
+        while (cl != null) {
+          if (cl == existingLoader) {
+            isAncestor = true;
+            break;
+          }
+          cl = cl.getParent();
+        }
+        if (!isAncestor) {
+          logger.info("Replacing BouncyCastleProvider loaded by classloader " + existingLoader + " with the one from classloader " + ourLoader);
+          Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
+          int pos = Security.addProvider(new BouncyCastleProvider());
+          logger.info("Added BouncyCastleProvider to Security at " + String.valueOf(pos));
+        } else {
+          logger.info("BouncyCastleProvider is already registered by an ancestor classloader. No replacement needed.");
+        }
+      }
+    } else {
+      int pos = Security.addProvider(new BouncyCastleProvider());
+      logger.info("Adding BouncyCastleProvider to Security at " + String.valueOf(pos));
+    }
   }
 
 
@@ -58,6 +94,18 @@ public class SSHConnectionServiceOperationImpl implements ExtendedDeploymentTask
       }
     }
     SSHConnectionInstanceOperationImpl.substringLengthProperty.unregister();
+
+    java.security.Provider existingProvider = Security.getProvider(BouncyCastleProvider.PROVIDER_NAME);
+    if (existingProvider != null) {
+      ClassLoader existingLoader = existingProvider.getClass().getClassLoader();
+      ClassLoader ourLoader = SSHConnectionServiceOperationImpl.class.getClassLoader();
+      if (existingLoader == ourLoader) {
+        Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
+        logger.info("Removed BouncyCastleProvider from Security on undeployment since it was registered by this classloader.");
+      } else {
+        logger.info("BouncyCastleProvider was not registered by this classloader (" + existingLoader + "), keeping it.");
+      }
+    }
   }
 
 

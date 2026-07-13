@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package xact.ssh.generatekeypackage;
 
 
 
+import java.nio.charset.StandardCharsets;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -38,7 +39,7 @@ public class ExtdKeyGeneration {
 
 
   public static void generateKeyPair(Integer keySize, String passPhrase, boolean overWriteExisting, EncryptionType type,
-                                     XynaIdentityRepository identityRepo) {
+                                     XynaIdentityRepository identityRepo, String identity, long priority, String typeclass) {
 
     if ((passPhrase != null) && (!passPhrase.isEmpty())) {
       logger.warn("Error in generateKeyPair: passphrase not implemented!");
@@ -57,15 +58,56 @@ public class ExtdKeyGeneration {
         keyPair = ExtdKeyGenerationHelperClass.transformKeyPairDSA(Pair);
       }
 
+      if ((identity == null) || (identity.isBlank())) {
+          identity = generateAlias(identityRepo, keyPair.getPublicKey());
+      }
+
       if (keyPair != null) {
         byte[] pubByte = keyPair.getPublicKey().getBytes();
         byte[] prvByte = keyPair.getPrivateKey().getBytes();
-        writeKey(prvByte, pubByte, type, passPhrase, overWriteExisting, identityRepo);
+        writeKey(prvByte, pubByte, type, passPhrase, overWriteExisting, identityRepo, identity, priority, typeclass);
       } else {
         logger.warn("Error in generateKeyPair: No keypair generated!");
         NoSuchAlgorithmException e = new NoSuchAlgorithmException();
         throw new RuntimeException(e);
       }
+
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+
+  }
+
+
+  private static String generateAlias(XynaIdentityRepository identityRepo, String publickey) {
+    String adjustedPublickey= publickey;
+    String[] subelements = publickey.trim().split("\\s+");
+    if (subelements.length<2) {
+      adjustedPublickey = publickey.trim();
+    } else {
+      adjustedPublickey = subelements[1].trim();
+    }
+    byte[] bytepublic = adjustedPublickey.getBytes(StandardCharsets.UTF_8);
+    String identity = identityRepo.generateIdentity(bytepublic);
+    return identity;
+  }
+
+
+  public static void generateKeyPair(Integer keySize, String passPhrase, boolean overWriteExisting, EncryptionType type,
+                                     XynaIdentityRepository identityRepo) {
+    generateKeyPair(keySize, passPhrase, overWriteExisting, type, identityRepo, "", 0, "");
+  }
+
+
+  public static void writeKey(byte[] privateKeyBlob, byte[] publicKeyBlob, EncryptionType encryptionTypeValue, String passphrase,
+                              boolean overwriteExisting, XynaIdentityRepository identityRepo, String identity, long priority, String typeclass) {
+
+    try {
+      if (overwriteExisting) {
+        identityRepo.clearAll();
+      }
+
+      identityRepo.addWithAttributes(Optional.ofNullable(identity), encryptionTypeValue, privateKeyBlob, publicKeyBlob, Optional.ofNullable(passphrase), priority, typeclass);
 
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -82,7 +124,7 @@ public class ExtdKeyGeneration {
         identityRepo.clearAll();
       }
 
-      identityRepo.add(Optional.empty(), encryptionTypeValue, publicKeyBlob, privateKeyBlob, Optional.ofNullable(passphrase));
+      identityRepo.add(Optional.empty(), encryptionTypeValue, privateKeyBlob, publicKeyBlob, Optional.ofNullable(passphrase));
 
     } catch (Exception e) {
       throw new RuntimeException(e);

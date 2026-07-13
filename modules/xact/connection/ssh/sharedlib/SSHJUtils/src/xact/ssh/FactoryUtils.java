@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,20 +19,29 @@
 package xact.ssh;
 
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import com.hierynomus.sshj.key.KeyAlgorithm;
 import com.hierynomus.sshj.transport.cipher.BlockCiphers;
+import com.hierynomus.sshj.transport.cipher.ChachaPolyCiphers;
 import com.hierynomus.sshj.transport.cipher.GcmCiphers;
 import com.hierynomus.sshj.transport.cipher.StreamCiphers;
+import com.hierynomus.sshj.key.KeyAlgorithm;
 import com.hierynomus.sshj.transport.mac.Macs;
+import com.hierynomus.sshj.transport.kex.DHGroups;
+import com.hierynomus.sshj.transport.kex.ExtInfoClientFactory;
+import com.hierynomus.sshj.transport.kex.ExtendedDHGroups;
 
 import net.schmizz.sshj.common.Factory.Named;
 import net.schmizz.sshj.transport.cipher.Cipher;
+import net.schmizz.sshj.transport.kex.KeyExchange;
 import net.schmizz.sshj.transport.mac.MAC;
-
+import net.schmizz.sshj.transport.kex.Curve25519SHA256;
+import net.schmizz.sshj.transport.kex.DHGexSHA1;
+import net.schmizz.sshj.transport.kex.DHGexSHA256;
+import net.schmizz.sshj.transport.kex.ECDHNistP;
 
 public final class FactoryUtils {
 
@@ -43,7 +52,8 @@ public final class FactoryUtils {
                     Map.entry("aes128-cbc", BlockCiphers::AES128CBC),
                     Map.entry("aes192-cbc", BlockCiphers::AES192CBC),
                     Map.entry("aes256-cbc", BlockCiphers::AES256CBC),
-                    Map.entry("blowfish-cbc", BlockCiphers::BlowfishCTR),
+                    Map.entry("blowfish-ctr", BlockCiphers::BlowfishCTR),
+                    Map.entry("blowfish-cbc", BlockCiphers::BlowfishCBC),
                     Map.entry("twofish128-ctr", BlockCiphers::Twofish128CTR),
                     Map.entry("twofish192-ctr", BlockCiphers::Twofish192CTR),
                     Map.entry("twofish256-ctr", BlockCiphers::Twofish256CTR),
@@ -105,10 +115,34 @@ public final class FactoryUtils {
                     Map.entry("hmac-sha2-512", Macs::HMACSHA2512),
                     Map.entry("hmac-sha2-512-etm@openssh.com", Macs::HMACSHA2512Etm)
                     );
-
   
+  public static final Map<String, Supplier<Named<KeyExchange>>> kexFactories = 
+      Map.ofEntries(Map.entry("diffie-hellman-group14-sha1", DHGroups::Group14SHA1),
+                    Map.entry("diffie-hellman-group14-sha256", DHGroups::Group14SHA256),
+                    Map.entry("diffie-hellman-group15-sha512", DHGroups::Group15SHA512),
+                    Map.entry("diffie-hellman-group16-sha512", DHGroups::Group16SHA512),
+                    Map.entry("diffie-hellman-group17-sha512", DHGroups::Group17SHA512),
+                    Map.entry("diffie-hellman-group18-sha512", DHGroups::Group18SHA512),
+                    Map.entry("diffie-hellman-group1-sha1", DHGroups::Group1SHA1),                   
+                    Map.entry("diffie-hellman-group14-sha256-@ssh.com", ExtendedDHGroups::Group14SHA256AtSSH),
+                    Map.entry("diffie-hellman-group15-sha256", ExtendedDHGroups::Group15SHA256),
+                    Map.entry("diffie-hellman-group15-sha256-@ssh.com", ExtendedDHGroups::Group15SHA256AtSSH),
+                    Map.entry("diffie-hellman-group15-sha384-@ssh.com", ExtendedDHGroups::Group15SHA384AtSSH),
+                    Map.entry("diffie-hellman-group16-sha256", ExtendedDHGroups::Group16SHA256),
+                    Map.entry("diffie-hellman-group16-sha384-@ssh.com", ExtendedDHGroups::Group16SHA384AtSSH),
+                    Map.entry("diffie-hellman-group16-sha512-@ssh.com", ExtendedDHGroups::Group16SHA512AtSSH),
+                    Map.entry("diffie-hellman-group18-sha512-@ssh.com", ExtendedDHGroups::Group18SHA512AtSSH),
+                    Map.entry("diffie-hellman-group-exchange-sha1", () -> new DHGexSHA1.Factory()),
+                    Map.entry("diffie-hellman-group-exchange-sha256", () -> new DHGexSHA256.Factory()),
+                    Map.entry("ecdh-sha2-nistp256", () -> new ECDHNistP.Factory256()),
+                    Map.entry("ecdh-sha2-nistp384", () -> new ECDHNistP.Factory384()),
+                    Map.entry("ecdh-sha2-nistp521", () -> new ECDHNistP.Factory521()),
+                    Map.entry("curve25519-sha256@libssh.org", () -> new Curve25519SHA256.FactoryLibSsh()),
+                    Map.entry("curve25519-sha256", () -> new Curve25519SHA256.Factory())
+                    );
+
   public static List<Named<KeyAlgorithm>> createKeyAlgsListDefault() {
-    return java.util.Arrays.<net.schmizz.sshj.common.Factory.Named<com.hierynomus.sshj.key.KeyAlgorithm>> asList(
+    return Arrays.<Named<com.hierynomus.sshj.key.KeyAlgorithm>> asList(
                          com.hierynomus.sshj.key.KeyAlgorithms.SSHDSA(),
                          com.hierynomus.sshj.key.KeyAlgorithms.SSHRSA(),
                          com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp521(), //This KeyAlgorithm is necessary
@@ -120,7 +154,7 @@ public final class FactoryUtils {
   
   
   public static List<Named<MAC>> createMacListDefault() {
-    return java.util.Arrays.<net.schmizz.sshj.common.Factory.Named<MAC>> asList(
+    return Arrays.<Named<MAC>> asList(
                            Macs.HMACSHA2256(),
                            Macs.HMACSHA2256Etm(),
                            Macs.HMACSHA2512(),
@@ -138,6 +172,37 @@ public final class FactoryUtils {
                            Macs.HMACRIPEMD16096(),
                            Macs.HMACRIPEMD160OpenSsh()
                            );
+  }
+
+
+  public static List<Named<Cipher>> createCipherListDefault() {
+    return Arrays.<Named<Cipher>> asList(ChachaPolyCiphers.CHACHA_POLY_OPENSSH(), BlockCiphers.AES128CBC(), BlockCiphers.AES128CTR(),
+                                         BlockCiphers.AES192CBC(), BlockCiphers.AES192CTR(), BlockCiphers.AES256CBC(),
+                                         BlockCiphers.AES256CTR(), GcmCiphers.AES128GCM(), GcmCiphers.AES256GCM(),
+                                         BlockCiphers.BlowfishCBC(), BlockCiphers.BlowfishCTR(), BlockCiphers.Cast128CBC(),
+                                         BlockCiphers.Cast128CTR(), BlockCiphers.IDEACBC(), BlockCiphers.IDEACTR(),
+                                         BlockCiphers.Serpent128CBC(), BlockCiphers.Serpent128CTR(), BlockCiphers.Serpent192CBC(),
+                                         BlockCiphers.Serpent192CTR(), BlockCiphers.Serpent256CBC(), BlockCiphers.Serpent256CTR(),
+                                         BlockCiphers.TripleDESCBC(), BlockCiphers.TripleDESCTR(), BlockCiphers.Twofish128CBC(),
+                                         BlockCiphers.Twofish128CTR(), BlockCiphers.Twofish192CBC(), BlockCiphers.Twofish192CTR(),
+                                         BlockCiphers.Twofish256CBC(), BlockCiphers.Twofish256CTR(), BlockCiphers.TwofishCBC(),
+                                         StreamCiphers.Arcfour(), StreamCiphers.Arcfour128(), StreamCiphers.Arcfour256()
+                                        );
+  }
+
+
+  public static List<Named<KeyExchange>> createKexListDefault() {
+    return Arrays.<Named<KeyExchange>> asList(new Curve25519SHA256.Factory(), new Curve25519SHA256.FactoryLibSsh(),
+                                              new DHGexSHA256.Factory(), new ECDHNistP.Factory521(), new ECDHNistP.Factory384(),
+                                              new ECDHNistP.Factory256(), new DHGexSHA1.Factory(), DHGroups.Group1SHA1(),
+                                              DHGroups.Group14SHA1(), DHGroups.Group14SHA256(), DHGroups.Group15SHA512(),
+                                              DHGroups.Group16SHA512(), DHGroups.Group17SHA512(), DHGroups.Group18SHA512(),
+                                              ExtendedDHGroups.Group14SHA256AtSSH(), ExtendedDHGroups.Group15SHA256(),
+                                              ExtendedDHGroups.Group15SHA256AtSSH(), ExtendedDHGroups.Group15SHA384AtSSH(),
+                                              ExtendedDHGroups.Group16SHA256(), ExtendedDHGroups.Group16SHA384AtSSH(),
+                                              ExtendedDHGroups.Group16SHA512AtSSH(), ExtendedDHGroups.Group18SHA512AtSSH(),
+                                              new ExtInfoClientFactory()
+                                            );
   }
 
 }
