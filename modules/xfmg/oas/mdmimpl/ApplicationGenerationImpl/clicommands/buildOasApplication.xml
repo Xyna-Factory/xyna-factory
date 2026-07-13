@@ -1,6 +1,6 @@
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,4 +21,5 @@
   <Argument Name="path" Description="Path to the specification file" />
   <BoolOption Name="p" LongName="buildProvider" Description="Create a provider application as well" Optional="true"/>
   <BoolOption Name="c" LongName="buildClient" Description="Create a client application as well" Optional="true"/>
+  <BoolOption Name="m" LongName="generateMockOption" Description="Create option to use mock in client" Optional="true"/>
 </XynaCommandLineCommand>
