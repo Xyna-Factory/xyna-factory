@@ -34,7 +34,7 @@ public class NetConfNotificationReceiverConfigurationParameter extends FilterCon
   private static final long serialVersionUID = 1L;
 
   public static final StringParameter<String> ORDER_TYPE =
-      StringParameter.typeString("order-type").documentation(Documentation.de("Vom Filter zu startender Order-Type")
+      StringParameter.typeString("ordertype").documentation(Documentation.de("Vom Filter zu startender Order-Type")
           .en("Order type the filter will try to start").build()).mandatory().build();
   public static final StringParameter<String> WORKSPACE =
       StringParameter.typeString("workspace").documentation(Documentation.de("Workspace des Order-Types")
