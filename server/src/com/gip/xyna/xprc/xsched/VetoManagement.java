@@ -110,7 +110,7 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
       new XynaPropertyEnum<VetoManagementAlgorithmType>("xprc.veto.algorithm", VetoManagementAlgorithmType.class, 
           VetoManagementAlgorithmType.SeparateThread  )
       .setDefaultDocumentation(DocumentationLanguage.EN, "Requires factory restart.\nVetoManagementAlgorithm: "+ VetoManagementAlgorithmType.documentation(DocumentationLanguage.EN))
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Benötigt Neustart der Factory.\nVetoManagementAlgorithm: "+ VetoManagementAlgorithmType.documentation(DocumentationLanguage.DE));
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Benï¿½tigt Neustart der Factory.\nVetoManagementAlgorithm: "+ VetoManagementAlgorithmType.documentation(DocumentationLanguage.DE));
   
 
   private class RMIClusterStateChangeHandler implements ClusterStateChangeHandler {
@@ -124,7 +124,7 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
 
     public synchronized void onChange(ClusterState newState) {
       logger.info("VetoManagement.RMIClusterStateChangeHandler.onChange " + newState );
-      //VetoManagement ist nur über RMI geclustert.
+      //VetoManagement ist nur ï¿½ber RMI geclustert.
       this.clusterState = newState;
       if( vetoManagementAlgorithmType != null && vetoManagementAlgorithmType.isClusterable() ) {
         switchAlgorithmClusteredLocal();
@@ -158,7 +158,7 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
       case DISCONNECTED:
       case NEVER_CONNECTED:
         //TODO Sinnvollerweise konfigurierbar Local oder Unsupported, da hier beide 
-        //Clusterknoten laufen können und damit Vetos doppelt vergeben könnten
+        //Clusterknoten laufen kï¿½nnen und damit Vetos doppelt vergeben kï¿½nnten
         cm = ClusterMode.Local; //ClusterMode.Unsupported;
         break;
       default: //INIT, SHUTDOWN, STARTING, SYNC_PARTNER, SYNC_SLAVE
@@ -407,7 +407,7 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
           try {
             if (veto.isAdministrative()) {
               vmAlgorithm.allocateAdministrativeVeto(new AdministrativeVeto(veto.getName(), veto.getDocumentation(), now));
-            } else if (veto.isShared()) {
+            } else if (veto.isAllocatedShared()) {
               for (Long sharedOrderId : veto.getSharedOrderIds()) {
                 OrderInformation orderInfo = new OrderInformation(sharedOrderId);
                 vmAlgorithm.allocateVetos(orderInfo, Collections.emptyList(), List.of(veto.getName()), now);

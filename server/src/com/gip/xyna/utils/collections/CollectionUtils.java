@@ -50,7 +50,7 @@ import java.util.Set;
 public class CollectionUtils {
     
   /**
-   * Transformation: die Methode transform berechnet aus dem übergebenen From-Object das To-Object.
+   * Transformation: die Methode transform berechnet aus dem ï¿½bergebenen From-Object das To-Object.
    *
    * @param <F> From-Typ
    * @param <T> To-Typ
@@ -60,7 +60,7 @@ public class CollectionUtils {
   }
   
   /**
-   * Filter: Rückgabe gibt an, ob Value in der Ausgabe erscheint (true)
+   * Filter: Rï¿½ckgabe gibt an, ob Value in der Ausgabe erscheint (true)
    *
    * @param <T> type
    */
@@ -82,7 +82,7 @@ public class CollectionUtils {
   }
   
   /**
-   * Transformiert alle Elemente aus from und trägt diese in to ein
+   * Transformiert alle Elemente aus from und trï¿½gt diese in to ein
    * @param from
    * @param transformation
    * @param to
@@ -106,7 +106,7 @@ public class CollectionUtils {
   }
  
   /**
-   * Transformiert alle Elemente aus from und trägt diese in to ein
+   * Transformiert alle Elemente aus from und trï¿½gt diese in to ein
    * @param from
    * @param transformation
    * @param to
@@ -121,7 +121,7 @@ public class CollectionUtils {
   }
   
   /**
-   * Filtert alle Elemente aus from und trägt diese in to ein
+   * Filtert alle Elemente aus from und trï¿½gt diese in to ein
    * @param from
    * @param filter
    * @return
@@ -135,7 +135,19 @@ public class CollectionUtils {
     }
     return to;
   }
-  
+
+  /**
+   * Konkateniert zwei Collections zu einer neuen Liste.
+   * @param a
+   * @param b
+   * @return
+   */
+  public static <T> List<T> concat(Collection<T> a, Collection<T> b) {
+    List<T> c = new ArrayList<T>(a.size() + b.size());
+    c.addAll(a);
+    c.addAll(b);
+    return c;
+  }
   
   /**
    * Gruppiert alle Elemente aus from in die Map to mit dem Gruppierungskriterium grouping
@@ -168,7 +180,7 @@ public class CollectionUtils {
 
   
   /**
-   * Transformiert die Values der übergebenen Map und liefert eine neue Map zurück.
+   * Transformiert die Values der ï¿½bergebenen Map und liefert eine neue Map zurï¿½ck.
    * @param from
    * @param transformation
    * @return
@@ -180,7 +192,7 @@ public class CollectionUtils {
   }
 
   /**
-   * Transformiert die Values der übergebenen Map in die zweite übergebene Map.
+   * Transformiert die Values der ï¿½bergebenen Map in die zweite ï¿½bergebene Map.
    * @param from
    * @param transformation
    * @param to
@@ -195,8 +207,8 @@ public class CollectionUtils {
   }
   
   /**
-   * Transformiert die Values der übergebenen Map und liefert eine neue Map zurück; die neue Map enthält 
-   * nur die Einträge, für die die Transformation als Ergebnis keine null liefert.
+   * Transformiert die Values der ï¿½bergebenen Map und liefert eine neue Map zurï¿½ck; die neue Map enthï¿½lt 
+   * nur die Eintrï¿½ge, fï¿½r die die Transformation als Ergebnis keine null liefert.
    * @param from
    * @param transformation
    * @return
@@ -208,8 +220,8 @@ public class CollectionUtils {
   }
   
   /**
-   * Transformiert die Values der übergebenen Map in die zweite übergebene Map; die zweite Map erhält 
-   * nur die Einträge, für die die Transformation als Ergebnis keine null liefert.
+   * Transformiert die Values der ï¿½bergebenen Map in die zweite ï¿½bergebene Map; die zweite Map erhï¿½lt 
+   * nur die Eintrï¿½ge, fï¿½r die die Transformation als Ergebnis keine null liefert.
    * @param from
    * @param transformation
    * @param to
@@ -227,7 +239,7 @@ public class CollectionUtils {
   }
 
   /**
-   * Gibt die Mengen-Differenz Menge(all) ohne Menge(without) zurück.
+   * Gibt die Mengen-Differenz Menge(all) ohne Menge(without) zurï¿½ck.
    * @param all
    * @param without
    * @return
@@ -239,7 +251,7 @@ public class CollectionUtils {
   }
 
   /**
-   * Liefert die Werte aus der Map für die angegeben Keys.
+   * Liefert die Werte aus der Map fï¿½r die angegeben Keys.
    * @param map
    * @param keys
    * @return

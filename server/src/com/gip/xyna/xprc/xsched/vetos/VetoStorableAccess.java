@@ -31,15 +31,11 @@ import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.CollectionUtils;
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
-import com.gip.xyna.xnwh.exceptions.XNWH_UnsupportedPersistenceLayerFeatureException;
 import com.gip.xyna.xnwh.persistence.CentralComponentConnectionCache.DedicatedConnection;
-import com.gip.xyna.xnwh.persistence.Command;
 import com.gip.xyna.xnwh.persistence.ODS;
 import com.gip.xyna.xnwh.persistence.ODSConnection;
 import com.gip.xyna.xnwh.persistence.ODSConnectionType;
-import com.gip.xyna.xnwh.persistence.Parameter;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
-import com.gip.xyna.xnwh.persistence.PreparedCommand;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoException;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoResultOneException;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableOneException;
@@ -58,15 +54,6 @@ public class VetoStorableAccess implements VetoManagementInterface {
   private static final Logger logger = CentralFactoryLogging.getLogger(VetoStorableAccess.class);
 
   private ODS ods;
-  private boolean useMemoryFallbackForPreparedStatements = false;
-  
-  private PreparedCommand preparedDeletionByOrderId;
-  private PreparedCommand preparedDeletionByOrderIdAndBinding;
-
-  private static final String deleteByOrderIdSqlString = "delete from " + VetoInformationStorable.TABLE_NAME
-      + " where " + VetoInformationStorable.COL_USING_ORDER_ID + " = ? ";
-  private static final String deleteByOrderIdAndBindingSqlString = "delete from " + VetoInformationStorable.TABLE_NAME
-  + " where " + VetoInformationStorable.COL_USING_ORDER_ID + " = ? AND " + VetoInformationStorable.COL_BINDING + " = ?";
 
   private int ownBinding;
   
@@ -103,80 +90,42 @@ public class VetoStorableAccess implements VetoManagementInterface {
     }
   }
 
-  public boolean deleteVetosByOrderId(long orderId) throws PersistenceLayerException {
-    if (useMemoryFallbackForPreparedStatements) {
-      return deleteVetosByOrderIdInMemory(orderId);
-    } else {
-      return deleteVetosByOrderIdWithPreparedStatement(orderId);
-    }
+  public boolean freeVetosByOrderId(long orderId) throws PersistenceLayerException {
+    return freeVetosByOrderIdInMemory(orderId);
   }
 
-  public boolean deleteVetosByOrderIdAndBinding(long orderId) throws PersistenceLayerException {
-    if (useMemoryFallbackForPreparedStatements) {
-      return deleteVetosByOrderIdAndBindingInMemory(orderId, ownBinding);
-    } else {
-      return deleteVetosByOrderIdAndBindingWithPreparedStatement(orderId, ownBinding);
-    }
-  }
-  
-
-  private boolean deleteVetosByOrderIdWithPreparedStatement(final long orderId) throws PersistenceLayerException {
-    ODSConnection con = ods.openConnection();
-    try {
-      if (preparedDeletionByOrderId == null) {
-        try {
-          preparedDeletionByOrderId = con.prepareCommand(new Command(deleteByOrderIdSqlString, VetoInformationStorable.TABLE_NAME), true);
-        } catch (XNWH_UnsupportedPersistenceLayerFeatureException e) {
-          logger.warn("Vetos are not configured on a PersistenceLayer with support for PreparedCommands.");
-          useMemoryFallbackForPreparedStatements = true;
-          return deleteVetosByOrderIdInMemory(orderId);
-        }
-      }
-      int affectedRows = con.executeDML(preparedDeletionByOrderId, new Parameter(orderId));
-      con.commit();
-      return affectedRows > 0;
-    } finally {
-      finallyClose(con);
-    }
-  }
-  
-  
-  private boolean deleteVetosByOrderIdAndBindingWithPreparedStatement(final long orderId, final long binding) throws PersistenceLayerException {
-    ODSConnection con = ods.openConnection();
-    
-    try {
-      if (preparedDeletionByOrderIdAndBinding == null) {
-        try {
-          preparedDeletionByOrderIdAndBinding =
-              con.prepareCommand(new Command(deleteByOrderIdAndBindingSqlString, VetoInformationStorable.TABLE_NAME), true);
-        } catch (XNWH_UnsupportedPersistenceLayerFeatureException e) {
-          logger.warn("Vetos are not configured on a PersistenceLayer with support for PreparedCommands.");
-          useMemoryFallbackForPreparedStatements = true;
-          return deleteVetosByOrderIdInMemory(orderId);
-        }
-      }
-      
-      int affectedRows = con.executeDML(preparedDeletionByOrderIdAndBinding, new Parameter(orderId, binding));
-      con.commit();
-      return affectedRows > 0;
-    } finally {
-      finallyClose(con);
-    }
-  }
-
-
-  private boolean deleteVetosByOrderIdInMemory(final long orderId) throws PersistenceLayerException {
-    List<VetoInformationStorable> vetosToFree = new ArrayList<VetoInformationStorable>();
+  private boolean freeVetosByOrderIdInMemory(final long orderId) throws PersistenceLayerException {
+    List<VetoInformationStorable> vetosToUpdate = new ArrayList<VetoInformationStorable>();
+    List<VetoInformationStorable> vetosToDelete = new ArrayList<VetoInformationStorable>();
     ODSConnection con = ods.openConnection();
     try {
       Collection<VetoInformationStorable> vetos = con.loadCollection(VetoInformationStorable.class);
       for (VetoInformationStorable vis : vetos) {
-        if (vis.getUsingOrderId() == orderId) {
-          vetosToFree.add(vis);
+        if (vis.isAllocatedShared() && vis.getSharedOrderIds().contains(orderId)) {
+          vis.removeSharedOrderId(orderId);
+          if (vis.getSharedOrderIds().isEmpty()) {
+            vetosToDelete.add(vis);
+          } else {
+            vetosToUpdate.add(vis);
+          }
+        } else if (vis.isPendingExclusiveAllocation() && vis.getPendingExclusiveOrderId() == orderId) {
+          if (vis.getSharedOrderIds().isEmpty()) {
+            vetosToDelete.add(vis);
+          } else {
+            vis.setPendingExclusiveOrderId(null);
+            vetosToUpdate.add(vis);
+          }
+        } else if (vis.isAllocatedExclusive() && vis.getUsingOrderId() == orderId) {
+          vetosToDelete.add(vis);
         }
       }
-      if (vetosToFree.size() > 0) {
-        con.delete(vetosToFree);
+      if (vetosToUpdate.size() > 0 || vetosToDelete.size() > 0) {
+        if (vetosToUpdate.size() > 0) {
+          con.persistCollection(vetosToUpdate);
+        }
+        if (vetosToDelete.size() > 0) {
+          con.delete(vetosToDelete);
+        }
         con.commit();
         return true;
       } else {
@@ -186,34 +135,6 @@ public class VetoStorableAccess implements VetoManagementInterface {
       finallyClose(con);
     }
   }
-  
-  
-  private boolean deleteVetosByOrderIdAndBindingInMemory(final long orderId, final long binding)
-      throws PersistenceLayerException {
-    List<VetoInformationStorable> vetosToFree = new ArrayList<VetoInformationStorable>();
-    ODSConnection con = ods.openConnection();
-
-    try {
-      Collection<VetoInformationStorable> vetos = con.loadCollection(VetoInformationStorable.class);
-
-      for (VetoInformationStorable vis : vetos) {
-        if ((vis.getUsingOrderId() == orderId) && (vis.getBinding() == binding)) {
-          vetosToFree.add(vis);
-        }
-      }
-
-      if (vetosToFree.size() > 0) {
-        con.delete(vetosToFree);
-        con.commit();
-        return true;
-      } else {
-        return false;
-      }
-    } finally {
-      finallyClose(con);
-    }
-  }
-
 
   private void finallyClose(ODSConnection con) {
     if (con != null) {
@@ -241,7 +162,7 @@ public class VetoStorableAccess implements VetoManagementInterface {
       return WarehouseRetryExecutor.buildCriticalExecutor().
           connectionDedicated(DedicatedConnection.XynaScheduler).
           storable(VetoInformationStorable.class).
-          execute( new AllocateVetos(orderInformation, exclusiveVetos) );
+          execute( new AllocateVetos(orderInformation, exclusiveVetos, sharedVetos) );
     } catch ( PersistenceLayerException e ) {
       logger.warn("Error while trying to allocate Vetos", e);
       return VetoAllocationResult.FAILED;
@@ -259,7 +180,7 @@ public class VetoStorableAccess implements VetoManagementInterface {
 
   public boolean freeVetos(OrderInformation orderInformation) {
     try {
-      return deleteVetosByOrderId(orderInformation.getOrderId());
+      return freeVetosByOrderId(orderInformation.getOrderId());
     } catch (PersistenceLayerException e) {
       logger.error("Error while trying to deallocate vetos.", e);
       return false;
@@ -268,7 +189,7 @@ public class VetoStorableAccess implements VetoManagementInterface {
   
   public boolean freeVetosForced(long orderId) {
     try {
-      return deleteVetosByOrderId(orderId);
+      return freeVetosByOrderId(orderId);
     } catch (PersistenceLayerException e) {
       logger.error("Error while trying to force deallocation of vetos.", e);
       return false;
@@ -278,37 +199,44 @@ public class VetoStorableAccess implements VetoManagementInterface {
   
 
   private class AllocateVetos implements WarehouseRetryExecutableNoException<VetoAllocationResult> {
-    private List<String> vetos;
     private OrderInformation orderInformation;
+    private List<String> exclusiveVetos;
+    private List<String> sharedVetos = Collections.emptyList();
 
-    public AllocateVetos(OrderInformation orderInformation, List<String> vetos ) {
-      this.vetos = vetos;
+    public AllocateVetos(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos) {
       this.orderInformation = orderInformation;
+      this.exclusiveVetos = exclusiveVetos;
+      this.sharedVetos = sharedVetos;
     }
 
     public VetoAllocationResult executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-      VetoAllocationResult var = allocateVetos(con, vetos, orderInformation);
+      VetoAllocationResult var = allocateVetos(con, exclusiveVetos, sharedVetos, orderInformation);
       con.commit();
       return var;
     }
-    
   }
 
 
-  private VetoAllocationResult allocateVetos(ODSConnection con, List<String> vetos, OrderInformation orderInformation) throws PersistenceLayerException {
+  private VetoAllocationResult allocateVetos(ODSConnection con, List<String> exclusiveVetos, List<String> sharedVetos, OrderInformation orderInformation) throws PersistenceLayerException {
 
     long usingOrderId = orderInformation.getOrderId();
     //Liste der Veto-DB-Objekte erzeugen
     SortedMap<String, VetoInformationStorable> viss = new TreeMap<String, VetoInformationStorable>();
-    for (String veto : vetos) {
+    for (String veto : exclusiveVetos) {
       if( veto == null || veto.length() == 0 ) {
         return new VetoAllocationResult(new XPRC_VetonameMustNotBeEmpty());
       }
       viss.put(veto, new VetoInformationStorable(veto, orderInformation, System.currentTimeMillis(), ownBinding));
     }
+    for (String veto : sharedVetos) {
+      if( veto == null || veto.length() == 0 ) {
+        return new VetoAllocationResult(new XPRC_VetonameMustNotBeEmpty());
+      }
+      viss.put(veto, new VetoInformationStorable(veto, List.of(usingOrderId), System.currentTimeMillis(), ownBinding)); 
+    }
 
     //Pruefen, ob Vetos bereits in Verwendung sind
-    VetoAllocationResult var = checkVetos(usingOrderId, con, viss.values());
+    VetoAllocationResult var = checkVetos(con, viss.values());
     if (var != null) {
       //Vetos sind bereits belegt, dies melden
       return var;
@@ -324,7 +252,7 @@ public class VetoStorableAccess implements VetoManagementInterface {
         logger.debug("Failed to insert new Vetos, checking again...");
 
         //Bei welchem Veto ist nun der andere schneller gewesen?
-        var = checkVetos(usingOrderId, con, viss.values());
+        var = checkVetos(con, viss.values());
         if (var != null) {
           return var; //Meldung der bereits belegten Vetos
         } else {
@@ -345,17 +273,34 @@ public class VetoStorableAccess implements VetoManagementInterface {
     //nichts zu tun
   }
 
-  private VetoAllocationResult checkVetos(long ownOrderId, ODSConnection con, Collection<VetoInformationStorable> viss)
+  private boolean hasAlreadyAllocatedVeto(VetoInformationStorable vis, VetoInformationStorable existingVis) {
+    assert vis.getVetoName().equals(existingVis.getVetoName()) : "Veto names or bindings do not match: " + vis + " vs. " + existingVis;
+    // This can happen if the order was resumed from backup, it will always try to reallocate as it could have released
+    // but would no be continued from a previous checkpoint
+    return (existingVis.isAllocatedExclusive() && vis.isAllocatedExclusive() && existingVis.getUsingOrderId() == vis.getUsingOrderId()) ||
+           (existingVis.isAllocatedShared() && vis.isAllocatedShared() && existingVis.getSharedOrderIds().containsAll(vis.getSharedOrderIds())) ||
+           (existingVis.isPendingExclusiveAllocation() && vis.isPendingExclusiveAllocation() && existingVis.getPendingExclusiveOrderId() == vis.getPendingExclusiveOrderId());
+  }
+
+  private boolean checkVeto(VetoInformationStorable vis, VetoInformationStorable existingVis) {
+    return hasAlreadyAllocatedVeto(vis, existingVis) || // the order does not change the veto allocation
+          (existingVis.isAllocatedShared() && vis.isAllocatedShared()) || // shared => shared: the order wants to share the veto and it is already shared
+          (existingVis.isAllocatedShared() && vis.isAllocatedExclusive()) || // shared => pendingExclusive: the order wants to allocate the veto exclusively and it is shared
+          ( // pendingExclusive => exclusive: 
+            // the order that has the pending exclusive allocation now wants to allocate it exclusively and no shared allocations exist
+            existingVis.isPendingExclusiveAllocation() && vis.isAllocatedExclusive() &&
+            existingVis.getPendingExclusiveOrderId() == vis.getUsingOrderId() && existingVis.getSharedOrderIds().isEmpty()
+          );
+  }
+
+  private VetoAllocationResult checkVetos(ODSConnection con, Collection<VetoInformationStorable> viss)
       throws PersistenceLayerException {
     for (VetoInformationStorable vis : viss) {
       try {
         VetoInformationStorable existingVis = new VetoInformationStorable(vis.getVetoName(), vis.getBinding());
         con.queryOneRow(existingVis);
-        // This can happen if the order was resumed from backup, it will always try to reallocate as it could have released
-        // but would no be continued from a previous checkpoint
-        if (existingVis.getUsingOrderId() != ownOrderId) {
-          //Veto ist bereits in Verwendung
-          return new VetoAllocationResult(VetoInformationStorable.toVetoInformation.transform(existingVis) );
+        if (!checkVeto(vis, existingVis)) {
+          return new VetoAllocationResult(VetoInformationStorable.toVetoInformation.transform(existingVis));
         }
       } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
         // fully expected, veto is not used by anyone else
@@ -380,7 +325,8 @@ public class VetoStorableAccess implements VetoManagementInterface {
         // query using a new object to make sure that the passed object is not changed
         VetoInformationStorable existingVis = new VetoInformationStorable(vis.getVetoName(), vis.getBinding());
         con.queryOneRow(existingVis);
-        if (existingVis.getUsingOrderId() == ownOrderId) {
+          
+        if (hasAlreadyAllocatedVeto(vis, existingVis)) {
           // veto has already been allocated. this can happen e.g. in a case in which one cluster node crashes and the
           // other tries to resume an order that had allocated a veto on the crashed node before. this is a more reasonable
           // solution than deleting all allocated vetos once one node crashed because than the resumed order could not be
@@ -392,12 +338,45 @@ public class VetoStorableAccess implements VetoManagementInterface {
                 + ">. This is probably due to a resuming an order from orderBackup during Startup or OrderMigration.");
           }
           continue;
-        } else {
+        } 
+        
+        if (existingVis.isAllocatedShared()) {
+          if (vis.isAllocatedShared()) {
+            // shared => shared: the order wants to share the veto and it is already shared
+            con.persistObject(new VetoInformationStorable(
+                vis.getVetoName(), 
+                CollectionUtils.concat(existingVis.getSharedOrderIds(), vis.getSharedOrderIds()),
+                System.currentTimeMillis(),
+                vis.getBinding()
+            ));
+          }
+          if (vis.isAllocatedExclusive()) {
+            // shared => pendingExclusive: the order wants to allocate the veto exclusively and it is currently shared
+            con.persistObject(new VetoInformationStorable(
+                vis.getVetoName(),
+                vis.getUsingOrderId(),
+                System.currentTimeMillis(),
+                vis.getBinding()
+            ));
+          }
+        } else if ( 
+            existingVis.isPendingExclusiveAllocation() && vis.isAllocatedExclusive() &&
+            existingVis.getPendingExclusiveOrderId() == vis.getUsingOrderId() && existingVis.getSharedOrderIds().isEmpty()
+          ) {
+          // pendingExclusive => exclusive: 
+          // the order that has the pending exclusive allocation now wants to allocate it exclusively and no shared allocations exist anymore
+          con.persistObject(new VetoInformationStorable(
+              vis.getVetoName(),
+              vis.getUsingOrder(),
+              System.currentTimeMillis(),
+              vis.getBinding()
+          ));
+        } else {   
           con.rollback();
           return false;
         }
       } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
-        // veto does not exist, try to create it
+        // veto does not exist try to create it
         boolean alreadyExists = con.persistObject(vis);
         if (alreadyExists) {
           //Veto existiert nun doch schon und kann daher nicht neu eingetragen werden
@@ -409,7 +388,6 @@ public class VetoStorableAccess implements VetoManagementInterface {
     //alle Vetos erfolgreich eingetragen
     con.commit();
     return true;
-
   }
 
   
@@ -423,18 +401,29 @@ public class VetoStorableAccess implements VetoManagementInterface {
 
     public void executeAndCommit(ODSConnection con)
         throws PersistenceLayerException, XPRC_AdministrativeVetoAllocationDenied {
+
       if (con.persistObject(veto)) {
         con.rollback();
         try {
           con.queryOneRow(veto);
+          if (veto.isAllocatedShared()) {
+            // shared => pendingExclusive: the order wants to allocate the administrative veto and it is currently shared
+            con.persistObject(new VetoInformationStorable(
+                veto.getVetoName(),
+                veto.getUsingOrderId(),
+                System.currentTimeMillis(),
+                veto.getBinding()
+            ));
+          } else {
+            // currently allocated exclusively or pending exclusive allocation, cannot allocate administrative veto
+            throw new XPRC_AdministrativeVetoAllocationDenied(veto.getVetoName(), veto.getUsingOrderId());
+          }
         } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
           throw new XPRC_AdministrativeVetoAllocationDenied(veto.getVetoName(), 0L);
         }
-        throw new XPRC_AdministrativeVetoAllocationDenied(veto.getVetoName(), veto.getUsingOrderId());
       }
       con.commit();
     }
-    
   }
 
   public void allocateAdministrativeVeto(AdministrativeVeto av) throws XPRC_AdministrativeVetoAllocationDenied, PersistenceLayerException {
