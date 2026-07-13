@@ -124,7 +124,7 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
 
     public synchronized void onChange(ClusterState newState) {
       logger.info("VetoManagement.RMIClusterStateChangeHandler.onChange " + newState );
-      //VetoManagement ist nur ï¿½ber RMI geclustert.
+      //VetoManagement ist nur über RMI geclustert.
       this.clusterState = newState;
       if( vetoManagementAlgorithmType != null && vetoManagementAlgorithmType.isClusterable() ) {
         switchAlgorithmClusteredLocal();
@@ -158,7 +158,7 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
       case DISCONNECTED:
       case NEVER_CONNECTED:
         //TODO Sinnvollerweise konfigurierbar Local oder Unsupported, da hier beide 
-        //Clusterknoten laufen kï¿½nnen und damit Vetos doppelt vergeben kï¿½nnten
+        //Clusterknoten laufen können und damit Vetos doppelt vergeben könnten
         cm = ClusterMode.Local; //ClusterMode.Unsupported;
         break;
       default: //INIT, SHUTDOWN, STARTING, SYNC_PARTNER, SYNC_SLAVE
