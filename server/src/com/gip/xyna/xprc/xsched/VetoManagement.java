@@ -157,7 +157,7 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
         break;
       case DISCONNECTED:
       case NEVER_CONNECTED:
-        //TODO Sinnvollerweise konfigurierbar Local oder Unsupported, da hier beide 
+        //TODO Sinnvollerweise konfigurierbar Local oder Unsupported, da hier beide
         //Clusterknoten laufen können und damit Vetos doppelt vergeben könnten
         cm = ClusterMode.Local; //ClusterMode.Unsupported;
         break;

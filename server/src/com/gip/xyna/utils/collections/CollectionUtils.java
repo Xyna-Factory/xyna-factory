@@ -50,7 +50,7 @@ import java.util.Set;
 public class CollectionUtils {
     
   /**
-   * Transformation: die Methode transform berechnet aus dem ï¿½bergebenen From-Object das To-Object.
+   * Transformation: die Methode transform berechnet aus dem übergebenen From-Object das To-Object.
    *
    * @param <F> From-Typ
    * @param <T> To-Typ
@@ -60,7 +60,7 @@ public class CollectionUtils {
   }
   
   /**
-   * Filter: Rï¿½ckgabe gibt an, ob Value in der Ausgabe erscheint (true)
+   * Filter: Rückgabe gibt an, ob Value in der Ausgabe erscheint (true)
    *
    * @param <T> type
    */
@@ -220,7 +220,7 @@ public class CollectionUtils {
   }
   
   /**
-   * Transformiert die Values der übergebenen Map in die zweite übergebene Map; die zweite Map erhält 
+   * Transformiert die Values der übergebenen Map in die zweite übergebene Map; die zweite Map erhält
    * nur die Einträge, für die die Transformation als Ergebnis keine null liefert.
    * @param from
    * @param transformation
