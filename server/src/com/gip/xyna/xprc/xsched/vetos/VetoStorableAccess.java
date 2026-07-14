@@ -91,10 +91,6 @@ public class VetoStorableAccess implements VetoManagementInterface {
   }
 
   public boolean freeVetosByOrderId(long orderId) throws PersistenceLayerException {
-    return freeVetosByOrderIdInMemory(orderId);
-  }
-
-  private boolean freeVetosByOrderIdInMemory(final long orderId) throws PersistenceLayerException {
     List<VetoInformationStorable> vetosToUpdate = new ArrayList<VetoInformationStorable>();
     List<VetoInformationStorable> vetosToDelete = new ArrayList<VetoInformationStorable>();
     ODSConnection con = ods.openConnection();
@@ -343,12 +339,18 @@ public class VetoStorableAccess implements VetoManagementInterface {
         if (existingVis.isAllocatedShared()) {
           if (vis.isAllocatedShared()) {
             // shared => shared: the order wants to share the veto and it is already shared
-            con.persistObject(new VetoInformationStorable(
+            VetoInformationStorable updatedVis = new VetoInformationStorable(
                 vis.getVetoName(), 
-                CollectionUtils.concat(existingVis.getSharedOrderIds(), vis.getSharedOrderIds()),
+                existingVis.getSharedOrderIds(),
                 System.currentTimeMillis(),
                 vis.getBinding()
-            ));
+            );
+            boolean canAdd = updatedVis.addSharedOrderIds(vis.getSharedOrderIds());
+            if (!canAdd) {
+              con.rollback();
+              return false;
+            }
+            con.persistObject(updatedVis);
           }
           if (vis.isAllocatedExclusive()) {
             // shared => pendingExclusive: the order wants to allocate the veto exclusively and it is currently shared

@@ -104,10 +104,15 @@ public class VetoInformation implements Serializable {
     if( administrative ) {
       return "VetoInformation("+name+": "+documentation+": "+created+")";
     } else {
-      if( binding != 0 ) {
-        return "VetoInformation("+binding+"-"+name+": "+usingOrder+": "+created+")";
+      String identifier = binding != 0 ? binding+"-"+name : name;
+      if (isAllocatedExclusive()) {
+        return "VetoInformation("+identifier+": allocated exclusive to "+usingOrder+": "+created+")";
+      } else if (isAllocatedShared()) {
+        return "VetoInformation("+identifier+": allocated shared by "+sharedOrderIds+": "+created+")";
+      } else if (isPendingExclusiveAllocation()) {
+        return "VetoInformation("+identifier+": pending exclusive allocation to "+pendingExclusiveOrderId+": "+created+")";
       } else {
-        return "VetoInformation("+name+": "+usingOrder+": "+created+")";
+        return "VetoInformation("+identifier+": unallocated: "+created+")";
       }
     }
   } 

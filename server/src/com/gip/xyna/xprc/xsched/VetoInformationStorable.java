@@ -50,6 +50,8 @@ public class VetoInformationStorable extends ClusteredStorable<VetoInformationSt
 
   private static final long serialVersionUID = -3562898639780808778L;
 
+  private static final int MAX_SHARED_ORDER_IDS_LENGTH = 10000;
+
 
   @Column(name = COL_VETO_NAME, size = 100)
   private String vetoName;
@@ -59,7 +61,7 @@ public class VetoInformationStorable extends ClusteredStorable<VetoInformationSt
   private Long usingRootOrderId;
   @Column(name = COL_USING_ORDERTYPE)
   private String usingOrdertype;
-  @Column(name = COL_SHARED_ORDER_IDS)
+  @Column(name = COL_SHARED_ORDER_IDS, size = MAX_SHARED_ORDER_IDS_LENGTH)
   private String sharedOrderIds;
   @Column(name = COL_PENDING_EXCLUSIVE_ORDER_ID)
   private Long pendingExclusiveOrderId;
@@ -98,8 +100,8 @@ public class VetoInformationStorable extends ClusteredStorable<VetoInformationSt
       this.usingRootOrderId = orderInformation.getRootOrderId();
       this.usingOrdertype = orderInformation.getOrderType();
     }
-    if (sharedOrderIds != null && !sharedOrderIds.isEmpty()) {
-      this.sharedOrderIds = String.join(",", sharedOrderIds.stream().map(String::valueOf).toArray(String[]::new));
+    if (!setSharedOrderIds(sharedOrderIds)) {
+      throw new IllegalArgumentException("Shared order IDs exceed maximum length");
     }
     this.pendingExclusiveOrderId = pendingExclusiveOrderId;
     this.documentation = documentation;
@@ -152,18 +154,23 @@ public class VetoInformationStorable extends ClusteredStorable<VetoInformationSt
     return Arrays.stream(parts).map(Long::valueOf).collect(Collectors.toList());
   }
 
-  public void setSharedOrderIds(List<Long> sharedOrderIds) {
+  public boolean setSharedOrderIds(List<Long> sharedOrderIds) {
     if (sharedOrderIds == null || sharedOrderIds.isEmpty()) {
       this.sharedOrderIds = null;
     } else {
-      this.sharedOrderIds = String.join(",", sharedOrderIds.stream().map(String::valueOf).toArray(String[]::new));
+      String stringifiedOrderIds = String.join(",", sharedOrderIds.stream().map(String::valueOf).toArray(String[]::new));
+      if (stringifiedOrderIds.length() > MAX_SHARED_ORDER_IDS_LENGTH) {
+        return false;
+      }
+      this.sharedOrderIds = stringifiedOrderIds;
     }
+    return true;
   }
 
-  public void addSharedOrderId(Long orderId) {
+  public boolean addSharedOrderIds(List<Long> orderIds) {
     List<Long> sharedOrderIds = getSharedOrderIds();
-    sharedOrderIds.add(orderId);
-    setSharedOrderIds(sharedOrderIds);
+    sharedOrderIds.addAll(orderIds);
+    return setSharedOrderIds(sharedOrderIds);
   }
 
   public void removeSharedOrderId(Long orderId) {
