@@ -223,7 +223,7 @@ POST /auth/externalUserLogin
   -domainTypeSpecificData \
   ordertype=xact.http.jwt.auth.AuthenticateWithJWT \
   application=JSONWebToken \
-  version=1.0.4 \
+  version=1.0.5 \
   trustedIssuers=https://idp.example.com/realms/master \
   intendedAudience=account \
   authValidationMode=JWT \
@@ -239,7 +239,7 @@ POST /auth/externalUserLogin
   -domainTypeSpecificData \
   ordertype=xact.http.jwt.auth.AuthenticateWithJWT \
   application=JSONWebToken \
-  version=1.0.4 \
+  version=1.0.5 \
   trustedIssuers=https://idp.example.com/realms/master \
   intendedAudience=account \
   authValidationMode=HEADER \
@@ -254,7 +254,7 @@ POST /auth/externalUserLogin
   -domainTypeSpecificData \
   ordertype=xact.http.jwt.auth.AuthenticateWithJWT \
   application=JSONWebToken \
-  version=1.0.4 \
+  version=1.0.5 \
   trustedIssuers=https://idp.example.com/realms/master \
   intendedAudience=account \
   authValidationMode=JWT \
