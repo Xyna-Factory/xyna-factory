@@ -47,6 +47,7 @@ import xact.http.jwt.auth.JSONWebTokenAuthenticationServiceOperation;
 public class JSONWebTokenAuthenticationServiceOperationImpl implements ExtendedDeploymentTask, JSONWebTokenAuthenticationServiceOperation {
 
   private static final String ORDER_CONTEXT_KEY_JWT_TOKEN = "xfmg.xopctrl.jwt.token";
+  private static final String ORDER_CONTEXT_KEY_SELECTED_ROLE = "xfmg.xopctrl.jwt.selectedRole";
   private static final Logger logger = CentralFactoryLogging.getLogger(JSONWebTokenAuthenticationServiceOperationImpl.class);
 
 
@@ -107,9 +108,29 @@ public class JSONWebTokenAuthenticationServiceOperationImpl implements ExtendedD
       // get roles from token claim, with DomainSpecificData do JWTAuthenticationLogic.resolveAvailableRoles()
       JWTDomainSpecificData dsd = (JWTDomainSpecificData) domain.getDomainSpecificData();
       List<String> roles = JWTAuthenticationLogic.resolveAvailableRoles(dsd, token);
+
+      // check if caller requested a specific role (from GUI dropdown)
+      Serializable selectedRoleValue = ctx.get(ORDER_CONTEXT_KEY_SELECTED_ROLE);
+      String requestedRole = selectedRoleValue instanceof String ? ((String) selectedRoleValue).trim() : null;
+
       String role = null;
       String roleSource = null;
-      if (roles != null && !roles.isEmpty()) {
+
+      if (requestedRole != null && !requestedRole.isEmpty()) {
+        // verify requested role is actually present in JWT claims ? prevents spoofing
+        if (roles != null && roles.contains(requestedRole)) {
+          role = requestedRole;
+          roleSource = "selectedRole (verified)";
+        } else {
+          // role was requested but not found in claims ? reject
+          logger.warn(
+              "authenticate: requested selectedRole '" + requestedRole + "' not present in JWT claims " + roles + " ? login rejected");
+          AuthenticationResult result = new AuthenticationResult();
+          result.setSuccess(false);
+          return result;
+        }
+      } else if (roles != null && !roles.isEmpty()) {
+        // no selectedRole -> use highest-priority extracted role (original behavior backward compatibility old gui)
         role = roles.get(0);
         roleSource = "extractedRoles";
       } else {
