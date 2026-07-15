@@ -20,6 +20,8 @@ package xact.http.jwt.auth.impl;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -37,6 +39,7 @@ import com.gip.xyna.xfmg.xopctrl.usermanagement.jwt.JWTDomainSpecificData;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 import com.gip.xyna.xprc.xpce.OrderContext;
 
+import base.Text;
 import xact.http.jwt.auth.JSONWebTokenAuthenticationServiceOperation;
 
 
@@ -131,6 +134,38 @@ public class JSONWebTokenAuthenticationServiceOperationImpl implements ExtendedD
       AuthenticationResult result = new AuthenticationResult();
       result.setSuccess(false);
       return result;
+    }
+  }
+
+
+  @Override
+  public List<? extends Text> resolveAvailableRoles(XynaOrderServerExtension arg0, DomainName arg1) {
+    OrderContext ctx = arg0.getOrderContext();
+    Domain domain = resolveDomain(arg1 == null ? null : arg1.getName());
+    if (domain == null || domain.getDomainTypeAsEnum() != DomainType.JWT || !(domain.getDomainSpecificData() instanceof JWTDomainSpecificData)) {
+      return Collections.emptyList();
+    }
+    try {
+      Serializable tokenValue = ctx.get(ORDER_CONTEXT_KEY_JWT_TOKEN);
+      String token = tokenValue instanceof String ? (String) tokenValue : null;
+      if (token == null || token.isEmpty()) {
+        return Collections.emptyList();
+      }
+
+      JWTDomainSpecificData dsd = (JWTDomainSpecificData) domain.getDomainSpecificData();
+      List<String> roles = JWTAuthenticationLogic.resolveAvailableRoles(dsd, token);
+      if (roles == null || roles.isEmpty()) {
+        return Collections.emptyList();
+      }
+      List<Text> textRoles = new ArrayList<>(roles.size());
+      for (String role : roles) {
+        if (role != null) {
+          textRoles.add(new Text(role));
+        }
+      }
+      return textRoles;
+    } catch (XFMG_UserAuthenticationFailedException e) {
+      return Collections.emptyList();
     }
   }
 

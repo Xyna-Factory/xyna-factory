@@ -36,6 +36,10 @@
             <DestinationKey>xact.http.jwt.auth.AuthenticateWithJWT</DestinationKey>
             <OrderContextMapping>true</OrderContextMapping>
         </Ordertype>
+        <Ordertype implicitDependency="true">
+            <DestinationKey>xact.http.jwt.auth.ResolveAvailableRolesWithJWT</DestinationKey>
+            <OrderContextMapping>true</OrderContextMapping>
+        </Ordertype>
     </Ordertypes>
     <SharedLibs>
         <SharedLib implicitDependency="false">
@@ -73,6 +77,10 @@
         </XMOMEntry>
         <XMOMEntry implicitDependency="false">
             <FqName>xact.http.jwt.auth.AuthenticateWithJWT</FqName>
+            <Type>WORKFLOW</Type>
+        </XMOMEntry>
+        <XMOMEntry implicitDependency="false">
+            <FqName>xact.http.jwt.auth.ResolveAvailableRolesWithJWT</FqName>
             <Type>WORKFLOW</Type>
         </XMOMEntry>
         <XMOMEntry implicitDependency="false">
