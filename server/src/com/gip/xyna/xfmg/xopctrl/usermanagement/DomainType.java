@@ -256,6 +256,10 @@ public enum DomainType {
       Optional<String> defaultRole = (defaultRoleList != null && !defaultRoleList.isEmpty())
           ? Optional.of(defaultRoleList.get(0))
           : Optional.empty();
+      List<String> rolesResolverOrdertypeList = specifics.get("rolesResolverOrdertype");
+      Optional<String> rolesResolverOrdertype = (rolesResolverOrdertypeList != null && !rolesResolverOrdertypeList.isEmpty())
+          ? Optional.of(rolesResolverOrdertypeList.get(0))
+          : Optional.empty();
 
       JWTDomainSpecificData.AuthValidationMode authValidationMode = null;
       List<String> validationModeList = specifics.get("authValidationMode");
@@ -269,7 +273,7 @@ public enum DomainType {
       }
 
       JWTDomainSpecificData data = new JWTDomainSpecificData(trustedIssuers, intendedAudience, roleClaimPath, defaultRole,
-          rolePrefix, roleSuffix, roleOrder, jwksUri, ordertype.get(0), revision);
+          rolePrefix, roleSuffix, roleOrder, jwksUri, ordertype.get(0), rolesResolverOrdertype, revision);
       if (authValidationMode != null) {
         data.setAuthValidationMode(authValidationMode);
       }

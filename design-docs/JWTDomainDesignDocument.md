@@ -37,7 +37,11 @@ Configuration attributes:
 - `Optional<String> roleSuffix`
 - `List<String> roleOrder` (optional, case-sensitive role priority list)
 - `Optional<String> jwksUri` (optional, otherwise OIDC discovery is used)
+- `Optional<String> rolesResolverOrdertype` (optional, default: `xact.http.jwt.auth.ResolveAvailableRolesWithJWT`)
 - `AuthValidationMode authValidationMode` with values `HEADER|JWT` (default: `JWT`)
+
+`rolesResolverOrdertype` uses the same `RuntimeContext`/revision source as the JWT `ordertype`
+(from `application+version` or `workspace`).
 
 **Supported Authentication Modes:**
 
@@ -173,6 +177,7 @@ Optional:
 - `roleSuffix`
 - `roleOrder`
 - `jwksUri`
+- `rolesResolverOrdertype` (default: `xact.http.jwt.auth.ResolveAvailableRolesWithJWT`)
 - `authValidationMode` (default: `JWT`)
 
 Invalid values for `authValidationMode` raise `IllegalArgumentException`.
@@ -187,7 +192,7 @@ Invalid values for `authValidationMode` raise `IllegalArgumentException`.
      - `username`
      - `userdisplayname`
      - `externaldomains` (legacy, for backward compatibility)
-     - `domains` - list of `{ name, roles[] }` with available roles per domain, resolved via `ResolveAvailableRolesWithJWT` workflow
+     - `domains` - list of `{ name, roles[] }` with available roles per domain, resolved via `rolesResolverOrdertype` (or default `ResolveAvailableRolesWithJWT`)
 
 2. `/auth/externalUserLogin`
    - Reads JWT token from configured header (for example `OIDC_access_token`).

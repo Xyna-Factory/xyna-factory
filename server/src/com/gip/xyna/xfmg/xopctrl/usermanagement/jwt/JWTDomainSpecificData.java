@@ -25,12 +25,14 @@ import com.gip.xyna.XynaFactory;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 import com.gip.xyna.xfmg.xopctrl.DomainTypeSpecificData;
+import com.gip.xyna.xfmg.xopctrl.usermanagement.RolesResolver;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 
-public class JWTDomainSpecificData implements DomainTypeSpecificData {
+public class JWTDomainSpecificData implements DomainTypeSpecificData, RolesResolver {
 
-    private static final long serialVersionUID = 7177523157271609582L;
+    private static final long serialVersionUID = 1L;
+    private static final String DEFAULT_ROLES_RESOLVER_ORDERTYPE = "xact.http.jwt.auth.ResolveAvailableRolesWithJWT";
 
     public enum AuthValidationMode {
         HEADER,
@@ -47,6 +49,7 @@ public class JWTDomainSpecificData implements DomainTypeSpecificData {
     private String jwksUri;
     private String authValidationMode = AuthValidationMode.JWT.name();
     private String associatedOrdertype;
+    private String rolesResolverOrdertype;
     private long revision;
     private transient RuntimeContext runtimeContext;
 
@@ -56,7 +59,7 @@ public class JWTDomainSpecificData implements DomainTypeSpecificData {
                                  Optional<String> roleClaimPath, Optional<String> defaultRole,
                                  Optional<String> rolePrefix, Optional<String> roleSuffix,
                                  List<String> roleOrder, Optional<String> jwksUri,
-                                 String associatedOrdertype, long revision) {
+                                 String associatedOrdertype, Optional<String> rolesResolverOrdertype, long revision) {
         this.trustedIssuers = trustedIssuers;
         this.intendedAudience = intendedAudience;
         this.roleClaimPath = roleClaimPath.orElse(null);
@@ -66,6 +69,7 @@ public class JWTDomainSpecificData implements DomainTypeSpecificData {
         this.roleOrder = roleOrder;
         this.jwksUri = jwksUri.orElse(null);
         this.associatedOrdertype = associatedOrdertype;
+        this.rolesResolverOrdertype = rolesResolverOrdertype.orElse(null);
         this.revision = revision;
     }
 
@@ -87,6 +91,20 @@ public class JWTDomainSpecificData implements DomainTypeSpecificData {
 
     public void setAssociatedOrdertype(String associatedOrdertype) {
         this.associatedOrdertype = associatedOrdertype;
+    }
+
+    @Override
+    public Optional<String> getRolesResolverOrdertype() {
+        String configured = rolesResolverOrdertype != null ? rolesResolverOrdertype.trim() : null;
+        if (configured == null || configured.isEmpty()) {
+            return Optional.of(DEFAULT_ROLES_RESOLVER_ORDERTYPE);
+        }
+        return Optional.of(configured);
+    }
+
+    public void setRolesResolverOrdertype(Optional<String> rolesResolverOrdertype) {
+        String configured = rolesResolverOrdertype.map(String::trim).orElse(null);
+        this.rolesResolverOrdertype = (configured == null || configured.isEmpty()) ? null : configured;
     }
 
     public long getRevision() {
@@ -112,6 +130,16 @@ public class JWTDomainSpecificData implements DomainTypeSpecificData {
             }
         }
         return runtimeContext;
+    }
+
+    @Override
+    public RuntimeContext getRolesResolverRuntimeContext() {
+        return getRuntimeContext();
+    }
+
+    @Override
+    public String getRolesResolverOrderContextKey() {
+        return "xfmg.xopctrl.jwt.token";
     }
 
     public List<String> getTrustedIssuers() {
@@ -198,6 +226,12 @@ public class JWTDomainSpecificData implements DomainTypeSpecificData {
             .append("JWKS URI: ").append(getJwksUri().orElse("Not Configured (auto-discover)")).append("\n");
         output.append(UserManagement.INDENT_FOR_DOMAIN_SPECIFIC_DATA)
             .append("Associated Order Type: ").append(associatedOrdertype).append(" @rev_").append(revision).append("\n");
+        output.append(UserManagement.INDENT_FOR_DOMAIN_SPECIFIC_DATA)
+            .append("Roles Resolver Order Type: ")
+            .append(rolesResolverOrdertype != null ? rolesResolverOrdertype : DEFAULT_ROLES_RESOLVER_ORDERTYPE)
+            .append(rolesResolverOrdertype != null ? "" : " (default)").append("\n");
+        output.append(UserManagement.INDENT_FOR_DOMAIN_SPECIFIC_DATA)
+            .append("Roles Resolver Runtime Context: @rev_").append(revision).append(" (same as associated)").append("\n");
     }
 
 }
