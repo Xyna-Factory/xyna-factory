@@ -222,13 +222,13 @@ public class VetoStorableAccess implements VetoManagementInterface {
       if( veto == null || veto.length() == 0 ) {
         return new VetoAllocationResult(new XPRC_VetonameMustNotBeEmpty());
       }
-      viss.put(veto, new VetoInformationStorable(veto, orderInformation, System.currentTimeMillis(), ownBinding));
+      viss.put(veto, VetoInformationStorable.createExclusive(veto, orderInformation, System.currentTimeMillis(), ownBinding));
     }
     for (String veto : sharedVetos) {
       if( veto == null || veto.length() == 0 ) {
         return new VetoAllocationResult(new XPRC_VetonameMustNotBeEmpty());
       }
-      viss.put(veto, new VetoInformationStorable(veto, List.of(usingOrderId), System.currentTimeMillis(), ownBinding)); 
+      viss.put(veto, VetoInformationStorable.createShared(veto, List.of(usingOrderId), System.currentTimeMillis(), ownBinding));
     }
 
     //Pruefen, ob Vetos bereits in Verwendung sind
@@ -339,7 +339,7 @@ public class VetoStorableAccess implements VetoManagementInterface {
         if (existingVis.isAllocatedShared()) {
           if (vis.isAllocatedShared()) {
             // shared => shared: the order wants to share the veto and it is already shared
-            VetoInformationStorable updatedVis = new VetoInformationStorable(
+            VetoInformationStorable updatedVis = VetoInformationStorable.createShared(
                 vis.getVetoName(), 
                 existingVis.getSharedOrderIds(),
                 System.currentTimeMillis(),
@@ -354,8 +354,9 @@ public class VetoStorableAccess implements VetoManagementInterface {
           }
           if (vis.isAllocatedExclusive()) {
             // shared => pendingExclusive: the order wants to allocate the veto exclusively and it is currently shared
-            con.persistObject(new VetoInformationStorable(
+            con.persistObject(VetoInformationStorable.createPendingExclusive(
                 vis.getVetoName(),
+                vis.getSharedOrderIds(),
                 vis.getUsingOrderId(),
                 System.currentTimeMillis(),
                 vis.getBinding()
@@ -367,7 +368,7 @@ public class VetoStorableAccess implements VetoManagementInterface {
           ) {
           // pendingExclusive => exclusive: 
           // the order that has the pending exclusive allocation now wants to allocate it exclusively and no shared allocations exist anymore
-          con.persistObject(new VetoInformationStorable(
+          con.persistObject(VetoInformationStorable.createExclusive(
               vis.getVetoName(),
               vis.getUsingOrder(),
               System.currentTimeMillis(),
@@ -410,8 +411,9 @@ public class VetoStorableAccess implements VetoManagementInterface {
           con.queryOneRow(veto);
           if (veto.isAllocatedShared()) {
             // shared => pendingExclusive: the order wants to allocate the administrative veto and it is currently shared
-            con.persistObject(new VetoInformationStorable(
+            con.persistObject(VetoInformationStorable.createPendingExclusive(
                 veto.getVetoName(),
+                veto.getSharedOrderIds(),
                 veto.getUsingOrderId(),
                 System.currentTimeMillis(),
                 veto.getBinding()

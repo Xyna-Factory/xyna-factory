@@ -70,26 +70,26 @@ public class VetoInformationStorable extends ClusteredStorable<VetoInformationSt
   @Column(name = COL_CREATED)
   private Long created;
   
+
+  public static VetoInformationStorable createShared(String vetoName, List<Long> sharedOrderIds, Long created, int binding) {
+    return new VetoInformationStorable(vetoName, null, sharedOrderIds, null, null, created, binding);
+  }
+
+  public static VetoInformationStorable createExclusive(String vetoName, OrderInformation orderInformation, Long created, int binding) {
+    return new VetoInformationStorable(vetoName, orderInformation, null, null, null, created, binding);
+  }
+
+  public static VetoInformationStorable createPendingExclusive(String vetoName, List<Long> sharedOrderIds, Long pendingExclusiveOrderId, Long created, int binding) {
+    return new VetoInformationStorable(vetoName, null, sharedOrderIds, pendingExclusiveOrderId, null, created, binding);
+  }
   
   public VetoInformationStorable() {
     super(XynaClusteringServicesManagement.DEFAULT_BINDING_NO_CLUSTER);
   }
 
-
+  
   public VetoInformationStorable(String vetoName, int binding) {
     this(vetoName, null, null, null, null, null, binding);
-  }
-  
-  public VetoInformationStorable(String vetoName, OrderInformation orderInformation, Long created, int binding) {
-    this(vetoName, orderInformation, null, null, null, created, binding);
-  }
-
-  public VetoInformationStorable(String vetoName, List<Long> sharedOrderIds, Long created, int binding) {
-    this(vetoName, null, sharedOrderIds, null, null, created, binding);
-  }
-
-  public VetoInformationStorable(String vetoName, Long pendingExclusiveOrderId, Long created, int binding) {
-    this(vetoName, null, null, pendingExclusiveOrderId, null, created, binding);
   }
 
   public VetoInformationStorable(String vetoName, OrderInformation orderInformation, List<Long> sharedOrderIds, Long pendingExclusiveOrderId, String documentation, Long created, int binding) {
