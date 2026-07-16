@@ -71,7 +71,7 @@ Because the authentication infrastructure only provides a single `password` fiel
 
 ```
 password = "selectedRole\0jwtToken"   (if role was selected)
-password = "jwtToken"                 (if no role was selected ? backward compatible)
+password = "jwtToken"                 (if no role was selected - backward compatible)
 ```
 
 `\0` is safe here because JWT tokens are base64url-encoded and never contain this character.
@@ -106,8 +106,8 @@ Role:
 
 Public service surface:
 
-- `authenticate(...)` ? used in the order-backed auth flow
-- `resolveAvailableRoles(...)` ? called by `ResolveAvailableRolesWithJWT` workflow to populate the role dropdown in the GUI
+- `authenticate(...)` - used in the order-backed auth flow
+- `resolveAvailableRoles(...)` - called by `ResolveAvailableRolesWithJWT` workflow to populate the role dropdown in the GUI
 
 ---
 
@@ -187,7 +187,7 @@ Invalid values for `authValidationMode` raise `IllegalArgumentException`.
      - `username`
      - `userdisplayname`
      - `externaldomains` (legacy, for backward compatibility)
-     - `domains` ? list of `{ name, roles[] }` with available roles per domain, resolved via `ResolveAvailableRolesWithJWT` workflow
+     - `domains` - list of `{ name, roles[] }` with available roles per domain, resolved via `ResolveAvailableRolesWithJWT` workflow
 
 2. `/auth/externalUserLogin`
    - Reads JWT token from configured header (for example `OIDC_access_token`).
@@ -196,7 +196,7 @@ Invalid values for `authValidationMode` raise `IllegalArgumentException`.
    - Calls `authorizeSession(...)`.
    - For JWT domains, `JWTUserAuthentication.authenticateUserInternally(...)` is used.
    - Role selection strategy (in `authenticate`):
-     - **With `selectedRole`**: verified against JWT claims ? used if valid, rejected if not present
+     - **With `selectedRole`**: verified against JWT claims - used if valid, rejected if not present
      - **Without `selectedRole`**: highest-priority extracted role, then `defaultRole` (original behavior, fully backward compatible)
 
 **Frontend flow (role dropdown):**
