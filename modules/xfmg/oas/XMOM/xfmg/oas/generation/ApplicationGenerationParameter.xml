@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,11 @@
   <Data Label="Workspace Name" VariableName="workspaceName">
     <Meta>
       <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="generate Mock Option" VariableName="generateMockOption">
+    <Meta>
+      <Type>Boolean</Type>
     </Meta>
   </Data>
 </DataType>

@@ -1,6 +1,6 @@
 {{!
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,25 +27,15 @@ BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype">
 {{>property}}
     {{/params}}
   <Service Label="{{sendLabel}}" TypeName="{{sendRefName}}">
-    <Operation Label="Send Request" Name="sendRequest" IsStatic="false">
-      <Input>
-        <Data ID="1" Label="HTTP Connection" VariableName="hTTPConnection1" ReferenceName="HTTPConnection" ReferencePath="xact.http"/>
-        <Data ID="2" Label="Send Parameter" VariableName="sendParameter2" ReferenceName="SendParameter" ReferencePath="xact.http"/>
-      </Input>
+    <Operation Label="Get Request" Name="getRequest" IsStatic="false">
+      <Input />
       <Output>
-        <Data ID="3" Label="HTTP Status Code" VariableName="hTTPStatusCode3" ReferenceName="HTTPStatusCode" ReferencePath="xact.http.enums.statuscode"/>
-        <Data ID="4" Label="Header" VariableName="header4" ReferenceName="Header" ReferencePath="xact.http"/>
+        <Data ID="50" Label="Document" VariableName="document50" ReferenceName="Document" ReferencePath="xact.templates"/>
       </Output>
-      <Throws>
-        <Exception ID="5" Label="Unexpected HTTP Response Exception" VariableName="unexpectedHTTPResponseException5" ReferenceName="UnexpectedHTTPResponseException" ReferencePath="xact.http.exceptions"/>
-        <Exception ID="6" Label="Http Exception" VariableName="httpException6" ReferenceName="HttpException" ReferencePath="xact.http.exceptions"/>
-        <Exception ID="7" Label="Timeout Exception" VariableName="timeoutException7" ReferenceName="TimeoutException" ReferencePath="xact.http.exceptions"/>
-        <Exception ID="8" Label="Connection Already Closed Exception" VariableName="connectionAlreadyClosedException8" ReferenceName="ConnectionAlreadyClosedException" ReferencePath="xact.http.exceptions"/>
-      </Throws>
       <SourceCode>
         <CodeSnippet Type="Java">
 {{^hasBody}}
-return xact.http.HTTPService.send(hTTPConnection1, sendParameter2);
+return null;
 {{/hasBody}}
 {{#hasBody}}
 xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
@@ -96,8 +86,34 @@ body = new xact.templates.Document();
 body.setText(text);
 {{/isPrimitive}}
 
-return xact.http.HTTPService.sendDocument(hTTPConnection1, sendParameter2, body);
+return body;
 {{/bodyParams}}
+{{/hasBody}}
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="Send Request" Name="sendRequest" IsStatic="false">
+      <Input>
+        <Data ID="1" Label="HTTP Connection" VariableName="hTTPConnection1" ReferenceName="HTTPConnection" ReferencePath="xact.http"/>
+        <Data ID="2" Label="Send Parameter" VariableName="sendParameter2" ReferenceName="SendParameter" ReferencePath="xact.http"/>
+      </Input>
+      <Output>
+        <Data ID="3" Label="HTTP Status Code" VariableName="hTTPStatusCode3" ReferenceName="HTTPStatusCode" ReferencePath="xact.http.enums.statuscode"/>
+        <Data ID="4" Label="Header" VariableName="header4" ReferenceName="Header" ReferencePath="xact.http"/>
+      </Output>
+      <Throws>
+        <Exception ID="5" Label="Unexpected HTTP Response Exception" VariableName="unexpectedHTTPResponseException5" ReferenceName="UnexpectedHTTPResponseException" ReferencePath="xact.http.exceptions"/>
+        <Exception ID="6" Label="Http Exception" VariableName="httpException6" ReferenceName="HttpException" ReferencePath="xact.http.exceptions"/>
+        <Exception ID="7" Label="Timeout Exception" VariableName="timeoutException7" ReferenceName="TimeoutException" ReferencePath="xact.http.exceptions"/>
+        <Exception ID="8" Label="Connection Already Closed Exception" VariableName="connectionAlreadyClosedException8" ReferenceName="ConnectionAlreadyClosedException" ReferencePath="xact.http.exceptions"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+{{^hasBody}}
+return xact.http.HTTPService.send(hTTPConnection1, sendParameter2);
+{{/hasBody}}
+{{#hasBody}}
+return xact.http.HTTPService.sendDocument(hTTPConnection1, sendParameter2, getRequest());
 {{/hasBody}}
         </CodeSnippet>
       </SourceCode>
