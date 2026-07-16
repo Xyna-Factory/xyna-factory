@@ -356,7 +356,7 @@ public class VetoStorableAccess implements VetoManagementInterface {
             // shared => pendingExclusive: the order wants to allocate the veto exclusively and it is currently shared
             con.persistObject(VetoInformationStorable.createPendingExclusive(
                 vis.getVetoName(),
-                vis.getSharedOrderIds(),
+                existingVis.getSharedOrderIds(),
                 vis.getUsingOrderId(),
                 System.currentTimeMillis(),
                 vis.getBinding()
