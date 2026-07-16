@@ -117,20 +117,20 @@ public class JSONWebTokenAuthenticationServiceOperationImpl implements ExtendedD
       String roleSource = null;
 
       if (requestedRole != null && !requestedRole.isEmpty()) {
-        // verify requested role is actually present in JWT claims ? prevents spoofing
+        // verify requested role is actually present in JWT claims - prevents spoofing
         if (roles != null && roles.contains(requestedRole)) {
           role = requestedRole;
           roleSource = "selectedRole (verified)";
         } else {
-          // role was requested but not found in claims ? reject
+          // role was requested but not found in claims -> reject
           logger.warn(
-              "authenticate: requested selectedRole '" + requestedRole + "' not present in JWT claims " + roles + " ? login rejected");
+              "authenticate: requested selectedRole '" + requestedRole + "' not present in JWT claims " + roles + " - login rejected");
           AuthenticationResult result = new AuthenticationResult();
           result.setSuccess(false);
           return result;
         }
       } else if (roles != null && !roles.isEmpty()) {
-        // no selectedRole -> use highest-priority extracted role (original behavior backward compatibility old gui)
+        // no selectedRole -> use highest-priority extracted role
         role = roles.get(0);
         roleSource = "extractedRoles";
       } else {
