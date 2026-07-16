@@ -127,6 +127,8 @@ public class ExternalUserLoginInformationAction implements FilterAction {
     List<String> domainNames = new ArrayList<>();
     List<Map<String, Object>> domainsList = new ArrayList<>();
 
+    String preferredDomainName = null;
+
     for (Domain d : XynaFactory.getInstance().getFactoryManagement().getDomains()) {
       if (d.getDomainTypeAsEnum() != DomainType.LOCAL) {
         domainNames.add(d.getName());
@@ -138,7 +140,38 @@ public class ExternalUserLoginInformationAction implements FilterAction {
         domainInfo.put(DOMAIN_NAME, d.getName());
         domainInfo.put(DOMAIN_ROLES, roles);
         domainsList.add(domainInfo);
+
+        // Check if this domain has a preferred domain setting
+        if (preferredDomainName == null && d.getDomainSpecificData() instanceof com.gip.xyna.xfmg.xopctrl.usermanagement.jwt.JWTDomainSpecificData) {
+          com.gip.xyna.xfmg.xopctrl.usermanagement.jwt.JWTDomainSpecificData jwtData =
+              (com.gip.xyna.xfmg.xopctrl.usermanagement.jwt.JWTDomainSpecificData) d.getDomainSpecificData();
+          java.util.Optional<String> pref = jwtData.getPreferredDomain();
+          if (pref.isPresent()) {
+            preferredDomainName = pref.get();
+          }
+        }
       }
+    }
+
+    // Sort domains: preferred domain first if configured
+    if (preferredDomainName != null && !preferredDomainName.isEmpty()) {
+      Map<String, Object> preferredDomainInfo = null;
+      for (Map<String, Object> domainInfo : domainsList) {
+        if (preferredDomainName.equals(domainInfo.get(DOMAIN_NAME))) {
+          preferredDomainInfo = domainInfo;
+          break;
+        }
+      }
+      if (preferredDomainInfo != null) {
+        domainsList.remove(preferredDomainInfo);
+        domainsList.add(0, preferredDomainInfo);
+      }
+    }
+
+    // Keep externaldomains in the same order as domains.
+    domainNames.clear();
+    for (Map<String, Object> domainInfo : domainsList) {
+      domainNames.add((String) domainInfo.get(DOMAIN_NAME));
     }
 
     jb.addStringListAttribute(EXTERNAL_DOMAINS, domainNames);
@@ -176,63 +209,12 @@ public class ExternalUserLoginInformationAction implements FilterAction {
       return roles;
     }
 
-    try {
-      String resolveRolesWorkflow = null;
-      RuntimeContext runtimeContext = null;
-      String rolesResolverOrderContextKey = null;
-
-      if (!(domainSpecificData instanceof RolesResolver)) {
-        return roles;
-      }
-
-      RolesResolver resolverConfig = (RolesResolver) domainSpecificData;
-      resolveRolesWorkflow = resolverConfig.getRolesResolverOrdertype().orElse(null);
-      runtimeContext = resolverConfig.getRolesResolverRuntimeContext();
-      rolesResolverOrderContextKey = resolverConfig.getRolesResolverOrderContextKey();
-
-      if (resolveRolesWorkflow == null || resolveRolesWorkflow.isEmpty() || runtimeContext == null || rolesResolverOrderContextKey == null || rolesResolverOrderContextKey.isEmpty()) {
-        return roles;
-      }
-
-      // Call configured resolve-available-roles workflow.
-      // Credential is injected via OrderContext, aligned with JWTUserAuthentication.generateAuthOrder.
-      DomainName domainNameObj = new DomainName(domain.getName());
-      DestinationKey destKey = new DestinationKey(resolveRolesWorkflow, runtimeContext);
-      XynaOrderCreationParameter xocp = new XynaOrderCreationParameter(destKey, domainNameObj);
-      XynaOrderServerExtension xose = new XynaOrderServerExtension(xocp);
-      xose.setNewOrderContext();
-      xose.getOrderContext().set(rolesResolverOrderContextKey, token);
-
-      XynaOrderServerExtension resultOrder =
-          XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().startOrderSynchronous(xose);
-
-      GeneralXynaObject output = resultOrder.getOutputPayload();
-      if (output instanceof List<?>) {
-        for (Object itemObj : (List<?>) output) {
-          if (itemObj instanceof GeneralXynaObject) {
-            Object textVal = ((GeneralXynaObject) itemObj).get("text");
-            if (textVal instanceof String && !((String) textVal).isEmpty()) {
-              roles.add((String) textVal);
-            }
-          }
-        }
-      } else if (output instanceof Container) {
-        Container c = (Container) output;
-        for (int i = 0; i < c.size(); i++) {
-          GeneralXynaObject item = c.get(i);
-          if (item != null) {
-            Object textVal = item.get("text");
-            if (textVal instanceof String && !((String) textVal).isEmpty()) {
-              roles.add((String) textVal);
-            }
-          }
-        }
-      }
-    } catch (Exception e) {
-      logger.debug("Could not resolve available roles for domain '" + domain.getName() + "': " + e.getMessage());
+    if (!(domainSpecificData instanceof RolesResolver)) {
+      return roles;
     }
 
-    return roles;
+    RolesResolver resolverConfig = (RolesResolver) domainSpecificData;
+    return resolverConfig.resolveAvailableRoles(domain.getName(), token);
   }
 
 

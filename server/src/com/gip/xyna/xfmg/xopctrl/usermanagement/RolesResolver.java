@@ -45,5 +45,14 @@ public interface RolesResolver {
    * OrderContext key under which credential data for the resolver workflow is passed.
    */
   String getRolesResolverOrderContextKey();
+
+  /**
+   * Resolves available login roles for the given domain using the configured RolesResolver workflow.
+   * 
+   * @param domainName Name of the domain for which roles are resolved
+   * @param credential Credential/token to pass to the resolver workflow
+   * @return List of available role names, empty if resolution fails or workflow not configured
+   */
+  java.util.List<String> resolveAvailableRoles(String domainName, String credential);
 }
 

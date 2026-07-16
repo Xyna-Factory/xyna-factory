@@ -42,7 +42,7 @@
         <Data ID="3" Label="Domain Name" ReferenceName="DomainName" ReferencePath="xfmg.xopctrl" VariableName="domainName3"/>
       </Input>
       <Output>
-        <Data ID="4" IsList="true" Label="Roles" ReferenceName="Text" ReferencePath="base" VariableName="text4"/>
+        <Data ID="4" IsList="true" Label="Roles" ReferenceName="Role" ReferencePath="xfmg.xopctrl" VariableName="role4"/>
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return xact.http.jwt.auth.JSONWebTokenAuthenticationImpl.resolveAvailableRoles(correlatedXynaOrder, domainName3);</CodeSnippet>

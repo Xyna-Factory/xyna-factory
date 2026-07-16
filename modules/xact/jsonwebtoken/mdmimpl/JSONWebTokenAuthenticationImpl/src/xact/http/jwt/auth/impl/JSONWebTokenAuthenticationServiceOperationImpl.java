@@ -39,7 +39,7 @@ import com.gip.xyna.xfmg.xopctrl.usermanagement.jwt.JWTDomainSpecificData;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 import com.gip.xyna.xprc.xpce.OrderContext;
 
-import base.Text;
+import xfmg.xopctrl.Role;
 import xact.http.jwt.auth.JSONWebTokenAuthenticationServiceOperation;
 
 
@@ -160,7 +160,7 @@ public class JSONWebTokenAuthenticationServiceOperationImpl implements ExtendedD
 
 
   @Override
-  public List<? extends Text> resolveAvailableRoles(XynaOrderServerExtension arg0, DomainName arg1) {
+  public List<? extends Role> resolveAvailableRoles(XynaOrderServerExtension arg0, DomainName arg1) {
     OrderContext ctx = arg0.getOrderContext();
     Domain domain = resolveDomain(arg1 == null ? null : arg1.getName());
     if (domain == null || domain.getDomainTypeAsEnum() != DomainType.JWT || !(domain.getDomainSpecificData() instanceof JWTDomainSpecificData)) {
@@ -178,13 +178,15 @@ public class JSONWebTokenAuthenticationServiceOperationImpl implements ExtendedD
       if (roles == null || roles.isEmpty()) {
         return Collections.emptyList();
       }
-      List<Text> textRoles = new ArrayList<>(roles.size());
-      for (String role : roles) {
-        if (role != null) {
-          textRoles.add(new Text(role));
+      List<Role> roleObjects = new ArrayList<>(roles.size());
+      for (String roleName : roles) {
+        if (roleName != null) {
+          Role r = new Role();
+          r.setName(roleName);
+          roleObjects.add(r);
         }
       }
-      return textRoles;
+      return roleObjects;
     } catch (XFMG_UserAuthenticationFailedException e) {
       return Collections.emptyList();
     }
