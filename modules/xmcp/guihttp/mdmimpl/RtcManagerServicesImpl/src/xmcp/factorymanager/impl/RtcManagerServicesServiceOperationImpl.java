@@ -172,6 +172,8 @@ import xfmg.xfctrl.nodemgmt.ConnectException;
 import xfmg.xopctrl.UserAuthenticationRight;
 import xmcp.DeEncoder;
 import xmcp.factorymanager.RtcManagerServicesServiceOperation;
+import xmcp.factorymanager.impl.RtcManagerServicesServiceOperationImpl.DependencyType;
+import xmcp.factorymanager.impl.RtcManagerServicesServiceOperationImpl.HierarchicalDependency;
 import xmcp.factorymanager.rtcmanager.AbortOrders;
 import xmcp.factorymanager.rtcmanager.ApplicationDefinition;
 import xmcp.factorymanager.rtcmanager.ApplicationDefinitionDetails;
@@ -1123,7 +1125,7 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
 
       List<ApplicationElement> result = adElements.stream()
       .filter(tableHelper.filter())
-      .filter(ae -> includeAssigned(request) || !DependencyType.explicit.name().equals(ae.getDependencyType()))
+      .filter(ae -> request.getIncludeUnassigned() || !DependencyType.explicit.name().equals(ae.getDependencyType()))
       .collect(Collectors.toList());
       //tableHelper.sort(result);
       return tableHelper.limit(result);
@@ -2731,20 +2733,7 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
 
     return applicationDefinitions;
   }
-
-  private boolean includeAssigned(GetApplicationContentRequest request) {
-    try {
-      Object includeAssigned = request.get("includeAssigned");
-      if (includeAssigned instanceof Boolean) {
-        return ((Boolean) includeAssigned).booleanValue();
-      }
-    } catch (com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException e) {
-      logger.debug("GetApplicationContentRequest has no includeAssigned field in this revision");
-    }
-    return true;
-  }
-  
-  
+    
   private Sort defaultSort(TableInfo ti) {
     for (TableColumn tc : ti.getColumns()) {
       TableHelper.Sort sort = TableHelper.createSortIfValid(tc.getPath(), tc.getSort());
