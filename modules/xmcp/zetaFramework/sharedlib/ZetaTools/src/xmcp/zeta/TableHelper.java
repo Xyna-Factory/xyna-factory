@@ -38,7 +38,7 @@ import com.gip.xyna.xnwh.selection.parsing.SearchRequestBean;
 
 
 /**
- * TableHelper zur Unterst�tzung beim Filtern und Sortieren von Tabellen.
+ * TableHelper zur Unterst?tzung beim Filtern und Sortieren von Tabellen.
  * <br>
  * <b>Initialisierung:</b><br>
  * <code>
@@ -66,22 +66,22 @@ import com.gip.xyna.xnwh.selection.parsing.SearchRequestBean;
  * </code>
  * <br>
  * <b>Filtern:</b><br>
- * Der TableHelper bringt bereits mehrere FilterFunctions mit, die automatisch verwendet werden, wenn f�r den Pfad nichts konfiguriert wurde.<br>
+ * Der TableHelper bringt bereits mehrere FilterFunctions mit, die automatisch verwendet werden, wenn f?r den Pfad nichts konfiguriert wurde.<br>
  * Eingebaute FilterFunctions auf Basis des zu filternden Datatyps:
  * <li>String</li>
  * <li>Integer</li>
  * <li>Long</li>
  * <li>Double</li>
  * <li>Boolean</li>
- * �ber die Methode <code>addFilterFunction(String path, Function<T, Boolean> filterFunction)</code> k�nnen zus�tzliche FilterFunctions hinzugef�gt werden.
+ * ?ber die Methode <code>addFilterFunction(String path, Function<T, Boolean> filterFunction)</code> k?nnen zus?tzliche FilterFunctions hinzugef?gt werden.
  * <br>
  * <b>Sortieren:</b><br>
- * �hnlich wie beim Filtern bringt der TableHelper auch schon Funktionen zum Sortieren anhand des Datentyps mit.<br>
+ * ?hnlich wie beim Filtern bringt der TableHelper auch schon Funktionen zum Sortieren anhand des Datentyps mit.<br>
  * <li>String</li>
  * <li>Comparable</li>
  * Anwendung: <code>tableHelper.sort(result);</code><br>
  * <br>
- * <b>Anzahl der Listeintr�ge limitieren:</b><br>
+ * <b>Anzahl der Listeintr?ge limitieren:</b><br>
  * <code>result = tableHelper.limit(result);</code>
  *
  * @param <T>
@@ -189,7 +189,7 @@ public class TableHelper<T, I> {
   }
   
   /**
-   * Checkt ob das Value eine g�ltige Sortierfunktion ist.
+   * Checkt ob das Value eine g?ltige Sortierfunktion ist.
    * @param value
    * @return
    */
@@ -221,14 +221,14 @@ public class TableHelper<T, I> {
 
 
   /**
-   * Filterkonfiguration f�r optinale Filter, die zus�tzlich zu via filterConfig festgelegtem Filter matchen m�ssen.
+   * Filterkonfiguration f?r optinale Filter, die zus?tzlich zu via filterConfig festgelegtem Filter matchen m?ssen.
    * 
-   * Ein Eintrag kommt dabei durch die gesamte Filterung, falls f�r ihn gilt:
+   * Ein Eintrag kommt dabei durch die gesamte Filterung, falls f?r ihn gilt:
    * matchesFilterFunction AND (matchesOptionalFilter0 operand matchesOptionalFilter1 operand ...)
    * 
    * Hierbei wird operand mittels des zweiten Parameters dieser Methode festgelegt.
-   * @param secondaryFilterFunctions Liste von sekund�ren Filtern
-   * @param operand logischer Operand zwischen den sekund�ren Filtern - Hinweis: DB-Filterung bei OR wird noch nicht unterst�tzt, s. Methode filter(...)
+   * @param secondaryFilterFunctions Liste von sekund?ren Filtern
+   * @param operand logischer Operand zwischen den sekund?ren Filtern - Hinweis: DB-Filterung bei OR wird noch nicht unterst?tzt, s. Methode filter(...)
    */
   public TableHelper<T, I> secondaryFilterConfig(List<Function<I, List<Filter>>> filterFunctions, LogicalOperand operand) {
     this.secondaryFilterFunctions = filterFunctions;
@@ -239,7 +239,7 @@ public class TableHelper<T, I> {
 
   /**
    * Limitkonfiguration
-   * @param limitFunction Liefert ein Integer zur Limitierung der Ergebnisse. -1 f�r alle Ergebnisse.
+   * @param limitFunction Liefert ein Integer zur Limitierung der Ergebnisse. -1 f?r alle Ergebnisse.
    * @return
    */
   public TableHelper<T, I> limitConfig(Function<I, Integer> limitFunction) {
@@ -272,8 +272,8 @@ public class TableHelper<T, I> {
 
 
   /**
-   * F�gt dem TableHelper eine SelectFunction hinzu.<br>
-   * Alle Spalten, durch den TableHelper unterst�tzt werden sollen, ben�tigen eine selectFunction.
+   * F?gt dem TableHelper eine SelectFunction hinzu.<br>
+   * Alle Spalten, durch den TableHelper unterst?tzt werden sollen, ben?tigen eine selectFunction.
    * @param path Path aus der TableInfo
    * @param selectFunction Function um das Value anhand des Path zu ermitteln
    * @return
@@ -285,7 +285,7 @@ public class TableHelper<T, I> {
 
 
   /**
-   * F�gt dem TableHelper eine Optionale FilterFunction hinzu.
+   * F?gt dem TableHelper eine Optionale FilterFunction hinzu.
    * @param path Path aus der TableInfo
    * @param filterFunction Filterfunction zum Filtern des Value.
    * @return
@@ -297,7 +297,7 @@ public class TableHelper<T, I> {
 
 
   /**
-   * F�gt dem TableHelper einen optionalen Comparator hinzu, der bei dem entsprechenden Value verwendet wird.
+   * F?gt dem TableHelper einen optionalen Comparator hinzu, der bei dem entsprechenden Value verwendet wird.
    * @param path
    * @param comparator
    * @return
@@ -371,7 +371,7 @@ public class TableHelper<T, I> {
 
 
   /**
-   * Filtert die Eintr�ge anhand der FilterColumn in der TableInfo.
+   * Filtert die Eintr?ge anhand der FilterColumn in der TableInfo.
    * @return
    */
   public Predicate<T> filter() {
@@ -717,8 +717,8 @@ public class TableHelper<T, I> {
   }
   
   /**
-   * Testet ob es m�glich ist das DB-Select zu limitieren.
-   * Dies ist nur m�glich, wenn alle Gui-Spalten mit aktivem Filter und die Sortierspalte ein Mapping zur DB haben.
+   * Testet ob es m?glich ist das DB-Select zu limitieren.
+   * Dies ist nur m?glich, wenn alle Gui-Spalten mit aktivem Filter und die Sortierspalte ein Mapping zur DB haben.
    * @return
    */
   private boolean dbLimitAllowed() {
@@ -738,7 +738,7 @@ public class TableHelper<T, I> {
 
 
   /**
-   * F�gt der SearchRequestBean die Filter hinzu.
+   * F?gt der SearchRequestBean die Filter hinzu.
    * @param searchRequest
    */
   public void filter(SearchRequestBean searchRequest) {
@@ -777,7 +777,7 @@ public class TableHelper<T, I> {
 
 
   /**
-   * Sortiert die �bergebene Liste.
+   * Sortiert die ?bergebene Liste.
    * @param result
    */
   public void sort(List<T> result) {
