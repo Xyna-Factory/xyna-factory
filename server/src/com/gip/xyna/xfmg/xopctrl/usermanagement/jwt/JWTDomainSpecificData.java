@@ -61,7 +61,6 @@ public class JWTDomainSpecificData implements DomainTypeSpecificData, RolesResol
   private String associatedOrdertype;
   private String rolesResolverOrdertype;
   private long revision;
-  private String preferredDomain;
   private transient RuntimeContext runtimeContext;
 
 
@@ -72,7 +71,7 @@ public class JWTDomainSpecificData implements DomainTypeSpecificData, RolesResol
   public JWTDomainSpecificData(List<String> trustedIssuers, List<String> intendedAudience, Optional<String> roleClaimPath,
                                Optional<String> defaultRole, Optional<String> rolePrefix, Optional<String> roleSuffix,
                                List<String> roleOrder, Optional<String> jwksUri, String associatedOrdertype,
-                               Optional<String> rolesResolverOrdertype, long revision, Optional<String> preferredDomain) {
+                               Optional<String> rolesResolverOrdertype, long revision) {
     this.trustedIssuers = trustedIssuers;
     this.intendedAudience = intendedAudience;
     this.roleClaimPath = roleClaimPath.orElse(null);
@@ -84,7 +83,6 @@ public class JWTDomainSpecificData implements DomainTypeSpecificData, RolesResol
     this.associatedOrdertype = associatedOrdertype;
     this.rolesResolverOrdertype = rolesResolverOrdertype.orElse(null);
     this.revision = revision;
-    this.preferredDomain = preferredDomain.orElse(null);
   }
 
 
@@ -254,16 +252,6 @@ public class JWTDomainSpecificData implements DomainTypeSpecificData, RolesResol
   }
 
 
-  public Optional<String> getPreferredDomain() {
-    return Optional.ofNullable(preferredDomain);
-  }
-
-
-  public void setPreferredDomain(Optional<String> preferredDomain) {
-    this.preferredDomain = preferredDomain.orElse(null);
-  }
-
-
   @Override
   public void appendInformation(StringBuilder output) {
     output.append(UserManagement.INDENT_FOR_DOMAIN_SPECIFIC_DATA).append("Trusted Issuers: ").append(trustedIssuers).append("\n");
@@ -291,8 +279,6 @@ public class JWTDomainSpecificData implements DomainTypeSpecificData, RolesResol
         .append(rolesResolverOrdertype != null && !rolesResolverOrdertype.trim().isEmpty() ? "" : " (default)").append("\n");
     output.append(UserManagement.INDENT_FOR_DOMAIN_SPECIFIC_DATA).append("Runtime Context (for both order types): @rev_").append(revision)
         .append("\n");
-    output.append(UserManagement.INDENT_FOR_DOMAIN_SPECIFIC_DATA).append("Preferred Domain: ")
-        .append(getPreferredDomain().orElse("Not Configured")).append("\n");
   }
 
 

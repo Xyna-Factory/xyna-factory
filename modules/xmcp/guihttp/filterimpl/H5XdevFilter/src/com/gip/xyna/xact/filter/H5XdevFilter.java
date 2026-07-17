@@ -487,6 +487,7 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
 
       ExternalUserLoginAction.setExternalAuthType(config.getExternalAuthType());
       ExternalUserLoginAction.setAuthTokenHeaderName(config.getExternalAuthHeader());
+      ExternalUserLoginInformationAction.setPreferredDomainName(config.getPreferredDomain());
     }
 
     return createXynaOrder(tc);

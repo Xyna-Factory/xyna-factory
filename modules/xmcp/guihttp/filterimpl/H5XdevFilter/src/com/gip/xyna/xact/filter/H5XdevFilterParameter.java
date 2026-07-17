@@ -44,11 +44,19 @@ public class H5XdevFilterParameter extends FilterConfigurationParameter {
                   .build())
           .optional().defaultValue("SSL_CLIENT_CERT").build();
 
+  public static final StringParameter<String> PREFERRED_DOMAIN = StringParameter.typeString("preferredDomain")
+          .documentation(Documentation
+                  .de("Bevorzugte Domain, die bei der Login-Auswahl zuerst herangezogen wird.")
+                  .en("Preferred domain first processed in the login selection.")
+                  .build())
+          .optional().defaultValue("").build();
+
   protected static final List<StringParameter<?>> ALL_PARAMETERS = 
-    StringParameter.asList( AUTH_TYPE, AUTH_HEADER );
+    StringParameter.asList( AUTH_TYPE, AUTH_HEADER, PREFERRED_DOMAIN );
 
   private ExternalAuthType authType;
   private String authHeader;
+  private String preferredDomain;
 
   @Override
   public List<StringParameter<?>> getAllStringParameters() {
@@ -60,6 +68,7 @@ public class H5XdevFilterParameter extends FilterConfigurationParameter {
     H5XdevFilterParameter param = new H5XdevFilterParameter();
     param.authType = AUTH_TYPE.getFromMap(paramMap);
     param.authHeader = AUTH_HEADER.getFromMap(paramMap);
+    param.preferredDomain = PREFERRED_DOMAIN.getFromMap(paramMap);
     return param;
   }
 
@@ -71,11 +80,16 @@ public class H5XdevFilterParameter extends FilterConfigurationParameter {
     return authHeader;
   }
 
+  public String getPreferredDomain() {
+    return preferredDomain;
+  }
+
   @Override
   public String toString() {
     return "H5XdevFilterParameter{" +
             "authType=" + authType +
             ", authHeader='" + authHeader + '\'' +
+            ", preferredDomain='" + preferredDomain + '\'' +
             '}';
 }
 }

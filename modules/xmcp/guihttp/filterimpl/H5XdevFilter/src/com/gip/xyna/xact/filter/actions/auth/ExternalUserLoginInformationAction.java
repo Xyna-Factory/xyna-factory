@@ -22,10 +22,6 @@ package com.gip.xyna.xact.filter.actions.auth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.log4j.Logger;
-
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.exceptions.XynaException;
@@ -92,13 +88,17 @@ import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
  */
 public class ExternalUserLoginInformationAction implements FilterAction {
 
-  private static final Logger logger = CentralFactoryLogging.getLogger(ExternalUserLoginInformationAction.class);
-
   private static final String USERNAME = "username";
   private static final String DISPLAY_NAME = "userdisplayname";
   private static final String EXTERNAL_DOMAINS = "externaldomains";
   private static final String DOMAIN_NAME = "name";
   private static final String DOMAIN_ROLES = "roles";
+  private static volatile String preferredDomainName = "";
+
+
+  public static void setPreferredDomainName(String preferredDomain) {
+    preferredDomainName = preferredDomain == null ? "" : preferredDomain.trim();
+  }
 
 
   public boolean match(URLPath url, Method method) {
@@ -127,8 +127,6 @@ public class ExternalUserLoginInformationAction implements FilterAction {
     List<String> domainNames = new ArrayList<>();
     List<Map<String, Object>> domainsList = new ArrayList<>();
 
-    String preferredDomainName = null;
-
     for (Domain d : XynaFactory.getInstance().getFactoryManagement().getDomains()) {
       if (d.getDomainTypeAsEnum() != DomainType.LOCAL) {
         domainNames.add(d.getName());
@@ -140,16 +138,6 @@ public class ExternalUserLoginInformationAction implements FilterAction {
         domainInfo.put(DOMAIN_NAME, d.getName());
         domainInfo.put(DOMAIN_ROLES, roles);
         domainsList.add(domainInfo);
-
-        // Check if this domain has a preferred domain setting
-        if (preferredDomainName == null && d.getDomainSpecificData() instanceof com.gip.xyna.xfmg.xopctrl.usermanagement.jwt.JWTDomainSpecificData) {
-          com.gip.xyna.xfmg.xopctrl.usermanagement.jwt.JWTDomainSpecificData jwtData =
-              (com.gip.xyna.xfmg.xopctrl.usermanagement.jwt.JWTDomainSpecificData) d.getDomainSpecificData();
-          java.util.Optional<String> pref = jwtData.getPreferredDomain();
-          if (pref.isPresent()) {
-            preferredDomainName = pref.get();
-          }
-        }
       }
     }
 
