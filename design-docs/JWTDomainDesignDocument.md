@@ -40,8 +40,8 @@ Configuration attributes:
 - `Optional<String> rolesResolverOrdertype` (optional, default: `xact.http.jwt.auth.ResolveAvailableRolesWithJWT`)
 - `AuthValidationMode authValidationMode` with values `HEADER|JWT` (default: `JWT`)
 
-`rolesResolverOrdertype` uses the same `RuntimeContext`/revision source as the JWT `ordertype`
-(from `application+version` or `workspace`).
+Both `associatedOrdertype` and `rolesResolverOrdertype` use the same `RuntimeContext`/revision source
+(from `application+version`).
 
 **Supported Authentication Modes:**
 
@@ -177,7 +177,6 @@ Optional:
 - `roleOrder`
 - `jwksUri`
 - `rolesResolverOrdertype` (default: `xact.http.jwt.auth.ResolveAvailableRolesWithJWT`)
-- `preferredDomain`
 - `authValidationMode` (default: `JWT`)
 
 Invalid values for `authValidationMode` raise `IllegalArgumentException`.
@@ -193,7 +192,7 @@ Invalid values for `authValidationMode` raise `IllegalArgumentException`.
      - `userdisplayname`
      - `externaldomains` (legacy, for backward compatibility)
      - `domains` - list of `{ name, roles[] }` with available roles per domain, resolved via `rolesResolverOrdertype` (or default `ResolveAvailableRolesWithJWT`); role names are extracted from `xfmg.xopctrl.Role` objects returned by the workflow
-   - If any configured JWT domain has `preferredDomain` set, that domain is moved to the first position in the `domains` list.
+   - Domain order is determined by the H5XdevFilter's `preferredDomain` parameter: if set, that domain appears first in the list.
 
 2. `/auth/externalUserLogin`
    - Reads JWT token from configured header (for example `OIDC_access_token`).
@@ -270,21 +269,24 @@ POST /auth/externalUserLogin
 
 `roleOrder` is matched in configured order (case-sensitive) after normalization.
 
-### 3.4 With preferred domain
+### 3.4 With H5XdevFilter preferred domain configuration
 
 ```bash
-./xynafactory.sh setdomaintypespecificdata \
-  -domainName JWT_DOMAIN \
-  -domainTypeSpecificData \
-  application=JSONWebToken \
-  version=1.0.5 \
-  trustedIssuers=https://idp.example.com/realms/master \
-  intendedAudience=account \
-  preferredDomain=JWT_DOMAIN
+./xynafactory.sh deployfilter \
+  -filterName H5XdevFilter \
+  -filterInstanceName H5XdevFilterinstance \
+  -triggerInstanceName HttpTrigger \
+  -applicationName GuiHttp \
+  -versionName 1.5.5 \
+  -configurationParameter \
+    externalAuthType=JSON_WEB_TOKEN \
+    externalAuthHeader=OIDC_access_token \
+    preferredDomain=JWT_DOMAIN
 ```
 
-`preferredDomain` causes the named domain to appear first in the login form's domain dropdown,
-regardless of the order in which domains are registered in Xyna.
+`preferredDomain` is a filter-level parameter (not domain-specific). It causes the named domain 
+to appear first in the login form's domain dropdown, regardless of registration order. 
+If not set or empty, the natural domain order is preserved.
 
 ---
 
