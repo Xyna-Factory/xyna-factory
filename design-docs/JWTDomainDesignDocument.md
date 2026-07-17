@@ -163,14 +163,13 @@ Operational note:
 
 Required:
 
-- `ordertype`
 - `trustedIssuers`
 - `intendedAudience`
+- `application` + `version` (runtime context for revision lookup)
 
 Optional:
 
-- `application` (together with `version`) or `workspace` for runtime context / revision lookup
-- `version` (together with `application`)
+- `ordertype` (default: `xact.http.jwt.auth.AuthenticateWithJWT`)
 - `roleClaimPath`
 - `defaultRole`
 - `rolePrefix`
@@ -178,6 +177,7 @@ Optional:
 - `roleOrder`
 - `jwksUri`
 - `rolesResolverOrdertype` (default: `xact.http.jwt.auth.ResolveAvailableRolesWithJWT`)
+- `preferredDomain`
 - `authValidationMode` (default: `JWT`)
 
 Invalid values for `authValidationMode` raise `IllegalArgumentException`.
@@ -192,7 +192,8 @@ Invalid values for `authValidationMode` raise `IllegalArgumentException`.
      - `username`
      - `userdisplayname`
      - `externaldomains` (legacy, for backward compatibility)
-     - `domains` - list of `{ name, roles[] }` with available roles per domain, resolved via `rolesResolverOrdertype` (or default `ResolveAvailableRolesWithJWT`)
+     - `domains` - list of `{ name, roles[] }` with available roles per domain, resolved via `rolesResolverOrdertype` (or default `ResolveAvailableRolesWithJWT`); role names are extracted from `xfmg.xopctrl.Role` objects returned by the workflow
+   - If any configured JWT domain has `preferredDomain` set, that domain is moved to the first position in the `domains` list.
 
 2. `/auth/externalUserLogin`
    - Reads JWT token from configured header (for example `OIDC_access_token`).
@@ -226,7 +227,6 @@ POST /auth/externalUserLogin
 ./xynafactory.sh setdomaintypespecificdata \
   -domainName JWT_DOMAIN \
   -domainTypeSpecificData \
-  ordertype=xact.http.jwt.auth.AuthenticateWithJWT \
   application=JSONWebToken \
   version=1.0.5 \
   trustedIssuers=https://idp.example.com/realms/master \
@@ -236,13 +236,14 @@ POST /auth/externalUserLogin
   defaultRole=PortalUser
 ```
 
+`ordertype` is omitted here ? `xact.http.jwt.auth.AuthenticateWithJWT` is used by default.
+
 ### 3.2 Proxy-validated (`HEADER`)
 
 ```bash
 ./xynafactory.sh setdomaintypespecificdata \
   -domainName JWT_DOMAIN \
   -domainTypeSpecificData \
-  ordertype=xact.http.jwt.auth.AuthenticateWithJWT \
   application=JSONWebToken \
   version=1.0.5 \
   trustedIssuers=https://idp.example.com/realms/master \
@@ -257,7 +258,6 @@ POST /auth/externalUserLogin
 ./xynafactory.sh setdomaintypespecificdata \
   -domainName JWT_DOMAIN \
   -domainTypeSpecificData \
-  ordertype=xact.http.jwt.auth.AuthenticateWithJWT \
   application=JSONWebToken \
   version=1.0.5 \
   trustedIssuers=https://idp.example.com/realms/master \
@@ -269,6 +269,22 @@ POST /auth/externalUserLogin
 ```
 
 `roleOrder` is matched in configured order (case-sensitive) after normalization.
+
+### 3.4 With preferred domain
+
+```bash
+./xynafactory.sh setdomaintypespecificdata \
+  -domainName JWT_DOMAIN \
+  -domainTypeSpecificData \
+  application=JSONWebToken \
+  version=1.0.5 \
+  trustedIssuers=https://idp.example.com/realms/master \
+  intendedAudience=account \
+  preferredDomain=JWT_DOMAIN
+```
+
+`preferredDomain` causes the named domain to appear first in the login form's domain dropdown,
+regardless of the order in which domains are registered in Xyna.
 
 ---
 
