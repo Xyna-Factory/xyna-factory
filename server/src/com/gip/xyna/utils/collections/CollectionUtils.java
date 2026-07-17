@@ -135,7 +135,19 @@ public class CollectionUtils {
     }
     return to;
   }
-  
+
+  /**
+   * Konkateniert zwei Collections zu einer neuen Liste.
+   * @param a
+   * @param b
+   * @return
+   */
+  public static <T> List<T> concat(Collection<T> a, Collection<T> b) {
+    List<T> c = new ArrayList<T>(a.size() + b.size());
+    c.addAll(a);
+    c.addAll(b);
+    return c;
+  }
   
   /**
    * Gruppiert alle Elemente aus from in die Map to mit dem Gruppierungskriterium grouping
@@ -208,7 +220,7 @@ public class CollectionUtils {
   }
   
   /**
-   * Transformiert die Values der übergebenen Map in die zweite übergebene Map; die zweite Map erhält 
+   * Transformiert die Values der übergebenen Map in die zweite übergebene Map; die zweite Map erhält
    * nur die Einträge, für die die Transformation als Ergebnis keine null liefert.
    * @param from
    * @param transformation

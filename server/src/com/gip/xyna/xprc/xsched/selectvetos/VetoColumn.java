@@ -24,6 +24,8 @@ public enum VetoColumn {
   USINGORDERID("usingOrderId"),
   USINGROOTORDERID("usingRootOrderId"),
   USINGORDERTYPE("usingOrdertype"),
+  SHAREDORDERIDS("sharedOrderIds"),
+  PENDINGEXCLUSIVEORDERID("pendingExclusiveOrderId"),
   DOCUMENTATION("documentation"),
   CREATED("created");
   
