@@ -36,6 +36,7 @@ import com.gip.xyna.xprc.XynaOrderServerExtension;
 import com.gip.xyna.xprc.xprcods.orderarchive.OrderArchive.SearchMode;
 import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstance;
 import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstanceColumn;
+import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstanceStatus;
 import com.gip.xyna.xprc.xprcods.orderarchive.selectorder.OrderInstanceSelect;
 import xmcp.processmonitor.datatypes.OrderOverviewEntry;
 import xmcp.processmonitor.datatypes.RuntimeContext;
@@ -92,6 +93,9 @@ public class OrderOverview {
     if (searchRequestBean.getFilterEntries() == null) {
       searchRequestBean.setFilterEntries(new HashMap<String, String>());
     }
+
+    // Keep status filtering in-memory because UI filters grouped status values.
+    searchRequestBean.getFilterEntries().remove(OrderInstanceColumn.C_STATUS.getColumnName());
 
     searchRequestBean.getFilterEntries().put(OrderInstanceColumn.C_INTERNAL_ORDER.getColumnName(), Boolean.FALSE.toString()); // hide suspend/resume orders
 
@@ -216,8 +220,7 @@ public class OrderOverview {
     OrderOverviewEntry curEntry = new OrderOverviewEntry();
     curEntry.setId(order.getId());
     curEntry.setPriority(order.getPriority());
-    curEntry.setStatus(order.getStatusAsString());
-//    curEntry.setStatus(sqlToGuiStatus(order.getStatusAsString())); TODO
+    curEntry.setStatus(normalizeStatus(order.getStatusAsString()));
     curEntry.setTypeName(order.getOrderType());
     curEntry.setMonitoringLevel(order.getMonitoringLevel());
     curEntry.setCustomFields(new CustomFields(order.getCustom0(), order.getCustom1(), order.getCustom2(), order.getCustom3()));
@@ -237,5 +240,19 @@ public class OrderOverview {
       curEntry.setRootId(Long.toString(order.getRootId()));
     }
     return curEntry;
+  }
+
+
+  private static String normalizeStatus(String statusName) {
+    if (statusName == null) {
+      return "";
+    }
+    try {
+      return OrderInstanceStatus.fromString(statusName).getStatusGroup().name();
+    } catch (IllegalArgumentException e) { }
+    try {
+      return OrderInstanceStatus.valueOf(statusName).getStatusGroup().name();
+    } catch (IllegalArgumentException e) { }
+    return statusName;
   }
 }

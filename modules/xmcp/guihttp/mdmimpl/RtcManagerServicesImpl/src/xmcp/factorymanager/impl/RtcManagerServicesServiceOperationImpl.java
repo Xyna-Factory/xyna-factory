@@ -1123,6 +1123,7 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
 
       List<ApplicationElement> result = adElements.stream()
       .filter(tableHelper.filter())
+      .filter(ae -> includeAssigned(request) || !DependencyType.explicit.name().equals(ae.getDependencyType()))
       .collect(Collectors.toList());
       //tableHelper.sort(result);
       return tableHelper.limit(result);
@@ -2707,7 +2708,7 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
       TableInfo ti = new TableInfo(null, null, null, true, null, null, null, false);
       xmcp.factorymanager.rtcmanager.RuntimeContext ad = new xmcp.factorymanager.rtcmanager.ApplicationDefinition(adi.getState().name(), adi.getName(), prepareSourceVersion(adi.getVersion()), adi.getParentWorkspace().getName());
       checkRight(correlatedXynaOrder, UserManagement.ScopedRight.APPLICATION_DEFINITION, Action.list, ad);
-      GetApplicationContentRequest gacr = new GetApplicationContentRequest(ad, true, false, false);
+      GetApplicationContentRequest gacr = new GetApplicationContentRequest(ad, true, false, false, true);
       List<? extends ApplicationElement> content = getApplicationContent(correlatedXynaOrder, ti, gacr);
 
       List<String> fqnsInAD = new ArrayList<>();
@@ -2729,6 +2730,18 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
     }
 
     return applicationDefinitions;
+  }
+
+  private boolean includeAssigned(GetApplicationContentRequest request) {
+    try {
+      Object includeAssigned = request.get("includeAssigned");
+      if (includeAssigned instanceof Boolean) {
+        return ((Boolean) includeAssigned).booleanValue();
+      }
+    } catch (com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException e) {
+      logger.debug("GetApplicationContentRequest has no includeAssigned field in this revision");
+    }
+    return true;
   }
   
   
