@@ -12,7 +12,7 @@ The mode is selected through domain-specific data (`setdomaintypespecificdata`).
 
 - JWT domain setup for the order-backed flow also requires an `ordertype` and optionally a runtime context (`application` + `version` or `workspace`) to resolve the revision.
 - The JSONWebToken application exposes `authenticate` for this flow.
-- It is possible for the JWT domain to choose a role in the login form via dropdown. For old gui versions, the fallback takes place in the `resolveAvailableRoles` method of the domain. For new gui versions, the fallback takes place.
+- It is possible for the JWT domain to choose a role in the login form via dropdown. For new gui versions, the role selection is part of the login request and validated server-side.
 - If no role was selected, role selection is done internally during authentication: normalize -> apply `roleOrder` -> first role -> `defaultRole` fallback.
 
 ---
@@ -235,7 +235,7 @@ POST /auth/externalUserLogin
   defaultRole=PortalUser
 ```
 
-`ordertype` is omitted here ? `xact.http.jwt.auth.AuthenticateWithJWT` is used by default.
+`ordertype` is omitted here and `xact.http.jwt.auth.AuthenticateWithJWT` is used by default.
 
 ### 3.2 Proxy-validated (`HEADER`)
 

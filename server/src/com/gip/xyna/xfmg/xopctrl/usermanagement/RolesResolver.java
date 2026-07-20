@@ -27,7 +27,7 @@ import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 
 /**
  * Optional capability for DomainTypeSpecificData implementations that can resolve
- * available login roles through a dedicated workflow.
+ * available login roles.
  */
 public interface RolesResolver {
 
@@ -47,11 +47,11 @@ public interface RolesResolver {
   String getRolesResolverOrderContextKey();
 
   /**
-   * Resolves available login roles for the given domain using the configured RolesResolver workflow.
+   * Resolves available login roles for the given domain.
    * 
    * @param domainName Name of the domain for which roles are resolved
-   * @param credential Credential/token to pass to the resolver workflow
-   * @return List of available role names, empty if resolution fails or workflow not configured
+   * @param credential Credential/token used to determine available roles
+   * @return List of available role names, empty if resolution fails or no roles available
    */
   java.util.List<String> resolveAvailableRoles(String domainName, String credential);
 }
