@@ -19,6 +19,7 @@ package com.gip.xyna.xact.filter;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import com.gip.xyna.utils.misc.Documentation;
 import com.gip.xyna.utils.misc.StringParameter;
 import com.gip.xyna.xact.exceptions.XACT_InvalidFilterConfigurationParameterValueException;
@@ -94,6 +95,25 @@ public class H5XdevFilterParameter extends FilterConfigurationParameter {
     param.authHeader = AUTH_HEADER.getDefaultValue();
     param.preferredDomain = PREFERRED_DOMAIN.getDefaultValue();
     return param;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!(obj instanceof H5XdevFilterParameter)) {
+      return false;
+    }
+    H5XdevFilterParameter that = (H5XdevFilterParameter) obj;
+    return authType == that.authType
+        && Objects.equals(authHeader, that.authHeader)
+        && Objects.equals(preferredDomain, that.preferredDomain);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(authType, authHeader, preferredDomain);
   }
 
   @Override
