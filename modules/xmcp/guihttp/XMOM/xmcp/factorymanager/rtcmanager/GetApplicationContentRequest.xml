@@ -35,4 +35,9 @@
       <Type>boolean</Type>
     </Meta>
   </Data>
+  <Data Label="Show assigned" VariableName="includeAssigned">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
 </DataType>
