@@ -109,7 +109,6 @@ public class ExternalUserLoginAction implements ConfigurableFilterAction {
 
   /**
    * Config-aware entry point called by H5XdevFilter.
-   * Casts the config to H5XdevFilterParameter and delegates to the actual logic.
    */
   @Override
   public FilterActionInstance actWithConfig(URLPath url, HTTPTriggerConnection tc, H5XdevFilterParameter config) throws XynaException {
