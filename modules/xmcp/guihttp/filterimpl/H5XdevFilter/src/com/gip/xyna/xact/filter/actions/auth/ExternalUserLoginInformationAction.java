@@ -26,23 +26,18 @@ import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.utils.misc.JsonBuilder;
+import com.gip.xyna.xact.filter.ConfigurableFilterAction;
 import com.gip.xyna.xact.filter.FilterAction;
+import com.gip.xyna.xact.filter.H5XdevFilterParameter;
 import com.gip.xyna.xact.filter.HTMLBuilder.HTMLPart;
 import com.gip.xyna.xact.filter.JsonFilterActionInstance;
 import com.gip.xyna.xact.filter.URLPath;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
-import com.gip.xyna.xdev.xfractmod.xmdm.Container;
-import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
-import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 import com.gip.xyna.xfmg.xopctrl.DomainTypeSpecificData;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.Domain;
-import com.gip.xyna.xfmg.xopctrl.usermanagement.DomainName;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.DomainType;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.RolesResolver;
-import com.gip.xyna.xprc.XynaOrderCreationParameter;
-import com.gip.xyna.xprc.XynaOrderServerExtension;
-import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
 
 
 
@@ -86,19 +81,13 @@ import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
  * <Error-Response>
  *
  */
-public class ExternalUserLoginInformationAction implements FilterAction {
+public class ExternalUserLoginInformationAction implements ConfigurableFilterAction {
 
   private static final String USERNAME = "username";
   private static final String DISPLAY_NAME = "userdisplayname";
   private static final String EXTERNAL_DOMAINS = "externaldomains";
   private static final String DOMAIN_NAME = "name";
   private static final String DOMAIN_ROLES = "roles";
-  private static volatile String preferredDomainName = "";
-
-
-  public static void setPreferredDomainName(String preferredDomain) {
-    preferredDomainName = preferredDomain == null ? "" : preferredDomain.trim();
-  }
 
 
   public boolean match(URLPath url, Method method) {
@@ -106,10 +95,28 @@ public class ExternalUserLoginInformationAction implements FilterAction {
   }
 
 
+  /**
+   * Config-aware entry point called by H5XdevFilter.
+   */
+  @Override
+  public FilterActionInstance actWithConfig(URLPath url, HTTPTriggerConnection tc, H5XdevFilterParameter config) throws XynaException {
+    return doAct(url, tc, config);
+  }
+
+
+  /**
+   * Legacy entry point - called when no config is passed (backward compatibility).
+   */
+  @Override
   public FilterActionInstance act(URLPath url, HTTPTriggerConnection tc) throws XynaException {
+    return doAct(url, tc, H5XdevFilterParameter.createDefaultConfig());
+  }
+
+
+  private FilterActionInstance doAct(URLPath url, HTTPTriggerConnection tc, H5XdevFilterParameter config) throws XynaException {
     JsonFilterActionInstance jfai = new JsonFilterActionInstance();
 
-    Pair<Boolean, ExternalUserInfo> p = ExternalUserLoginAction.getExternalUserInfoOrFail(jfai, tc);
+    Pair<Boolean, ExternalUserInfo> p = ExternalUserLoginAction.getExternalUserInfoOrFail(jfai, tc, config);
     if (p.getFirst()) {
       return jfai;
     }
@@ -118,6 +125,8 @@ public class ExternalUserLoginInformationAction implements FilterAction {
       jfai.sendJson(tc, "{}");
       return jfai;
     }
+
+    String preferredDomainName = config.getPreferredDomain() != null ? config.getPreferredDomain().trim() : "";
 
     JsonBuilder jb = new JsonBuilder();
     jb.startObject();

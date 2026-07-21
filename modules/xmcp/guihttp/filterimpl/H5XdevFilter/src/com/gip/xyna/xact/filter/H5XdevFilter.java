@@ -28,6 +28,7 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.filter.CallStatistics.StatisticsEntry;
+import com.gip.xyna.xact.filter.ConfigurableFilterAction;
 import com.gip.xyna.xact.filter.FilterAction.FilterActionInstance;
 import com.gip.xyna.xact.filter.actions.*;
 import com.gip.xyna.xact.filter.actions.auth.ChangePasswordAction;
@@ -484,10 +485,6 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
       }
 
       config = (H5XdevFilterParameter)params;
-
-      ExternalUserLoginAction.setExternalAuthType(config.getExternalAuthType());
-      ExternalUserLoginAction.setAuthTokenHeaderName(config.getExternalAuthHeader());
-      ExternalUserLoginInformationAction.setPreferredDomainName(config.getPreferredDomain());
     }
 
     return createXynaOrder(tc);
@@ -530,7 +527,11 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     try {
       for (FilterAction fa : allFilterActions) {
         if (matchAction(fa, url, tc.getMethodEnum())) {
-          filterActionInstance = fa.act(url, tc);
+          if (fa instanceof ConfigurableFilterAction) {
+            filterActionInstance = ((ConfigurableFilterAction) fa).actWithConfig(url, tc, config);
+          } else {
+            filterActionInstance = fa.act(url, tc);
+          }
           if (filterActionInstance == null) {
             continue;
           }

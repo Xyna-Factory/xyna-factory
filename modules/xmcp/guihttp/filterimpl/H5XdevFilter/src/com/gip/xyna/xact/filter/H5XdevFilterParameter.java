@@ -84,6 +84,18 @@ public class H5XdevFilterParameter extends FilterConfigurationParameter {
     return preferredDomain;
   }
 
+  /**
+   * Creates a config instance populated with all parameter default values.
+   * Used as fallback when act() is called without a config (backward compatibility).
+   */
+  public static H5XdevFilterParameter createDefaultConfig() {
+    H5XdevFilterParameter param = new H5XdevFilterParameter();
+    param.authType = AUTH_TYPE.getDefaultValue();
+    param.authHeader = AUTH_HEADER.getDefaultValue();
+    param.preferredDomain = PREFERRED_DOMAIN.getDefaultValue();
+    return param;
+  }
+
   @Override
   public String toString() {
     return "H5XdevFilterParameter{" +
