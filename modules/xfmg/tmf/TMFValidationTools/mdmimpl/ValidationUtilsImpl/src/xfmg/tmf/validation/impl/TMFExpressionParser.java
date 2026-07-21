@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,11 +85,12 @@ public class TMFExpressionParser {
         idx = n.lastIdx;
         break;
       case '$' :
+      case '%' :
         n = parseInteger(expr, idx + 1);
         if (n.value.startsWith("-")) {
           throw new RuntimeException("Negative variable index not allowed at idx " + idx + ": " + expr);
         }
-        n = new SyntaxTreeNode(null, null, "$" + n.value, n.lastIdx);
+        n = new SyntaxTreeNode(null, null, c + n.value, n.lastIdx);
         idx = n.lastIdx;
         break;
       case '-' :
@@ -135,10 +136,9 @@ public class TMFExpressionParser {
           idx += len;
           c = expr.charAt(idx);
           if (c != '(') {
-            throw new RuntimeException("Expected opening parenthesis at index " + idx + ": <<" + expr + 
-                                       ">>. A function called \"" + f.getName()+ "\" is known, but no other "
-                                           + "function with the same prefix. Possible Causes: Typo, Workflow "
-                                           + "function missing (wrong signature, wrong Xyna Property/Path)");
+            throw new RuntimeException("Expected opening parenthesis at index " + idx + ": <<" + expr + ">>. A function called \""
+                + f.getName() + "\" is known, but no other " + "function with the same prefix. Possible Causes: Typo, Workflow "
+                + "function missing (wrong signature, wrong Xyna Property/Path)");
           }
           c = expr.charAt(++idx);
           List<SyntaxTreeNode> args = new ArrayList<>();
