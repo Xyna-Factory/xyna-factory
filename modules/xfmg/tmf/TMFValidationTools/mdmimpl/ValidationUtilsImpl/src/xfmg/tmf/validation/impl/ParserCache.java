@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,8 +41,10 @@ import com.gip.xyna.xprc.xfractwfe.generation.WF;
 
 import xfmg.tmf.validation.impl.builtinfunctions.ConcatFunction;
 import xfmg.tmf.validation.impl.builtinfunctions.EvalFunction;
+import xfmg.tmf.validation.impl.builtinfunctions.FilterFunction;
 import xfmg.tmf.validation.impl.builtinfunctions.IfNullFunction;
 import xfmg.tmf.validation.impl.builtinfunctions.LengthFunction;
+import xfmg.tmf.validation.impl.builtinfunctions.MapFunction;
 import xfmg.tmf.validation.impl.builtinfunctions.MatchFunction;
 import xfmg.tmf.validation.impl.builtinfunctions.NotFunction;
 import xfmg.tmf.validation.impl.builtinfunctions.PropertyFunction;
@@ -72,6 +74,8 @@ public class ParserCache {
       functions.add(new PropertyFunction());
       functions.add(new IfNullFunction());
       functions.add(new MatchFunction());
+      functions.add(new FilterFunction());
+      functions.add(new MapFunction());
       for (WorkflowInfo wi : findWorkflowFunctions(revision)) {
         functions.add(new WorkflowFunction(wi));
       }

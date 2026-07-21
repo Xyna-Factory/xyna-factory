@@ -19,7 +19,9 @@ package xfmg.tmf.validation.impl.builtinfunctions;
 
 
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import xfmg.tmf.validation.impl.ConversionUtils;
 import xfmg.tmf.validation.impl.SyntaxTreeNode;
@@ -28,36 +30,48 @@ import xfmg.tmf.validation.impl.functioninterfaces.TMFDirectFunction;
 
 
 
-public class LengthFunction implements TMFDirectFunction {
+/*
+ * similar to FilterFunction: map list elements to new list with different elements
+ */
+public class MapFunction implements TMFDirectFunction {
 
   @Override
-  public Object eval(TMFExpressionContext context, Object[] args) {
-    Object o = args[0];
-    if (o == null) {
-      return 0;
-    }
-    if (o instanceof List) {
-      return ((List<?>) o).size();
+  public Object eval(final TMFExpressionContext context, Object[] args) {
+    List<?> list = ConversionUtils.getList(args[0]);
+    if (args[1] instanceof SyntaxTreeNode) {
+      SyntaxTreeNode n = (SyntaxTreeNode) args[1];
+      return list.stream().map(el -> {
+        context.add(el);
+        try {
+          return n.eval(context);
+        } finally {
+          context.pop();
+        }
+      }).collect(Collectors.toList());
     } else {
-      String s = ConversionUtils.getString(o);
-      if (s == null) {
-        return 0;
+      Boolean b = ConversionUtils.getBoolean(args[1]);
+      if (b == null) {
+        throw new RuntimeException("MAP expression is null");
       }
-      return s.length();
+      if (b) {
+        return args[0];
+      } else {
+        return Collections.emptyList();
+      }
     }
   }
 
 
   @Override
   public String getName() {
-    return "LEN";
+    return "MAP";
   }
 
 
   @Override
   public void validate(SyntaxTreeNode parent, SyntaxTreeNode[] args) {
-    if (args.length != 1) {
-      throw new RuntimeException(getName() + " expected exactly one argument but got " + args.length);
+    if (args.length < 2 || args.length > 2) {
+      throw new RuntimeException("MAP needs 2 args: list, expression");
     }
   }
 
