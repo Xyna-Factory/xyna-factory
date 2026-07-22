@@ -15,7 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="JSON Web Token Authentication" TypeName="JSONWebTokenAuthentication" TypePath="xact.http.jwt.auth" Version="1.8">
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="JSON Web Token Authentication" TypeName="JSONWebTokenAuthentication" TypePath="xact.http.jwt.auth" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
@@ -34,6 +35,17 @@
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return xact.http.jwt.auth.JSONWebTokenAuthenticationImpl.authenticate(correlatedXynaOrder, domainName2);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Resolve Available Roles" Name="resolveAvailableRoles" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="3" Label="Domain Name" ReferenceName="DomainName" ReferencePath="xfmg.xopctrl" VariableName="domainName3"/>
+      </Input>
+      <Output>
+        <Data ID="4" IsList="true" Label="Roles" ReferenceName="Role" ReferencePath="xfmg.xopctrl" VariableName="role4"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xact.http.jwt.auth.JSONWebTokenAuthenticationImpl.resolveAvailableRoles(correlatedXynaOrder, domainName3);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

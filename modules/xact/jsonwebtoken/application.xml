@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="JSONWebToken" factoryVersion="" versionName="1.0.4" xmlVersion="1.1">
+<Application applicationName="JSONWebToken" factoryVersion="" versionName="1.0.5" xmlVersion="1.1">
     <ApplicationInfo>
         <Description Lang="DE">Tools um JSON Web Tokens zu erzeugen, zu parsen und zu bearbeiten</Description>
         <Description Lang="EN">Tools for creating, parsing and working with JSON Web Tokens</Description>
@@ -34,6 +34,10 @@
     <Ordertypes>
         <Ordertype implicitDependency="true">
             <DestinationKey>xact.http.jwt.auth.AuthenticateWithJWT</DestinationKey>
+            <OrderContextMapping>true</OrderContextMapping>
+        </Ordertype>
+        <Ordertype implicitDependency="true">
+            <DestinationKey>xact.http.jwt.auth.ResolveAvailableRolesWithJWT</DestinationKey>
             <OrderContextMapping>true</OrderContextMapping>
         </Ordertype>
     </Ordertypes>
@@ -73,6 +77,10 @@
         </XMOMEntry>
         <XMOMEntry implicitDependency="false">
             <FqName>xact.http.jwt.auth.AuthenticateWithJWT</FqName>
+            <Type>WORKFLOW</Type>
+        </XMOMEntry>
+        <XMOMEntry implicitDependency="false">
+            <FqName>xact.http.jwt.auth.ResolveAvailableRolesWithJWT</FqName>
             <Type>WORKFLOW</Type>
         </XMOMEntry>
         <XMOMEntry implicitDependency="false">
