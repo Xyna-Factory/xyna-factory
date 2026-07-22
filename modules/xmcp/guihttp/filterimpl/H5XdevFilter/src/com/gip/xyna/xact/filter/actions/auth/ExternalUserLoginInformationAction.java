@@ -21,13 +21,11 @@ package com.gip.xyna.xact.filter.actions.auth;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.utils.misc.JsonBuilder;
 import com.gip.xyna.xact.filter.ConfigurableFilterAction;
-import com.gip.xyna.xact.filter.FilterAction;
 import com.gip.xyna.xact.filter.H5XdevFilterParameter;
 import com.gip.xyna.xact.filter.HTMLBuilder.HTMLPart;
 import com.gip.xyna.xact.filter.JsonFilterActionInstance;
@@ -90,6 +88,15 @@ public class ExternalUserLoginInformationAction implements ConfigurableFilterAct
   private static final String DOMAIN_ROLES = "roles";
 
 
+  /**
+   * Typed wrapper for domain roles to avoid casts and type warnings.
+   */
+  private static class DomainRoles {
+    String name;
+    List<String> roles;
+  }
+
+
   public boolean match(URLPath url, Method method) {
     return url.getPath().startsWith("/auth/externalUserLoginInformation") && Method.GET == method;
   }
@@ -134,7 +141,7 @@ public class ExternalUserLoginInformationAction implements ConfigurableFilterAct
     jb.addStringAttribute(DISPLAY_NAME, eui.externalUserDisplayName);
 
     List<String> domainNames = new ArrayList<>();
-    List<Map<String, Object>> domainsList = new ArrayList<>();
+    List<DomainRoles> domainsList = new ArrayList<>();
 
     for (Domain d : XynaFactory.getInstance().getFactoryManagement().getDomains()) {
       if (d.getDomainTypeAsEnum() != DomainType.LOCAL) {
@@ -143,18 +150,18 @@ public class ExternalUserLoginInformationAction implements ConfigurableFilterAct
         // Get available roles for this domain
         List<String> roles = getAvailableRolesForDomain(d, eui);
 
-        Map<String, Object> domainInfo = new java.util.LinkedHashMap<>();
-        domainInfo.put(DOMAIN_NAME, d.getName());
-        domainInfo.put(DOMAIN_ROLES, roles);
+        DomainRoles domainInfo = new DomainRoles();
+        domainInfo.name = d.getName();
+        domainInfo.roles = roles;
         domainsList.add(domainInfo);
       }
     }
 
     // Sort domains: preferred domain first if configured
     if (preferredDomainName != null && !preferredDomainName.isEmpty()) {
-      Map<String, Object> preferredDomainInfo = null;
-      for (Map<String, Object> domainInfo : domainsList) {
-        if (preferredDomainName.equals(domainInfo.get(DOMAIN_NAME))) {
+      DomainRoles preferredDomainInfo = null;
+      for (DomainRoles domainInfo : domainsList) {
+        if (preferredDomainName.equals(domainInfo.name)) {
           preferredDomainInfo = domainInfo;
           break;
         }
@@ -167,8 +174,8 @@ public class ExternalUserLoginInformationAction implements ConfigurableFilterAct
 
     // Keep externaldomains in the same order as domains.
     domainNames.clear();
-    for (Map<String, Object> domainInfo : domainsList) {
-      domainNames.add((String) domainInfo.get(DOMAIN_NAME));
+    for (DomainRoles domainInfo : domainsList) {
+      domainNames.add(domainInfo.name);
     }
 
     jb.addStringListAttribute(EXTERNAL_DOMAINS, domainNames);
@@ -177,11 +184,10 @@ public class ExternalUserLoginInformationAction implements ConfigurableFilterAct
     if (!domainsList.isEmpty()) {
       jb.nextObjectAsAttribute("domains");
       jb.startList();
-      for (Map<String, Object> domainInfo : domainsList) {
+      for (DomainRoles domainInfo : domainsList) {
         jb.startObject();
-        jb.addStringAttribute(DOMAIN_NAME, (String) domainInfo.get(DOMAIN_NAME));
-        @SuppressWarnings("unchecked") List<String> roles = (List<String>) domainInfo.get(DOMAIN_ROLES);
-        jb.addStringListAttribute(DOMAIN_ROLES, roles);
+        jb.addStringAttribute(DOMAIN_NAME, domainInfo.name);
+        jb.addStringListAttribute(DOMAIN_ROLES, domainInfo.roles);
         jb.endObject();
       }
       jb.endList();
