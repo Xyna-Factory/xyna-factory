@@ -115,7 +115,6 @@ public class JWTDomainSpecificData implements DomainTypeSpecificData, RolesResol
   }
 
 
-  @Override
   public Optional<String> getRolesResolverOrdertype() {
     String configured = rolesResolverOrdertype != null ? rolesResolverOrdertype.trim() : null;
     if (configured == null || configured.isEmpty()) {
@@ -160,13 +159,11 @@ public class JWTDomainSpecificData implements DomainTypeSpecificData, RolesResol
   }
 
 
-  @Override
   public RuntimeContext getRolesResolverRuntimeContext() {
     return getRuntimeContext();
   }
 
 
-  @Override
   public String getRolesResolverOrderContextKey() {
     return "xfmg.xopctrl.jwt.token";
   }

@@ -51,21 +51,6 @@ public class JWTRolesResolver implements RolesResolver {
   }
 
   @Override
-  public Optional<String> getRolesResolverOrdertype() {
-    return Optional.ofNullable(rolesResolverOrdertype);
-  }
-
-  @Override
-  public RuntimeContext getRolesResolverRuntimeContext() {
-    return runtimeContext;
-  }
-
-  @Override
-  public String getRolesResolverOrderContextKey() {
-    return orderContextKey;
-  }
-
-  @Override
   public List<String> resolveAvailableRoles(String domainName, String credential) {
     List<String> roleNames = new ArrayList<>();
 

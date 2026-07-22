@@ -32,21 +32,6 @@ import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 public interface RolesResolver {
 
   /**
-   * Optional ordertype used to resolve available roles for login.
-   */
-  Optional<String> getRolesResolverOrdertype();
-
-  /**
-   * Runtime context where the resolve workflow is located.
-   */
-  RuntimeContext getRolesResolverRuntimeContext();
-
-  /**
-   * OrderContext key under which credential data for the resolver workflow is passed.
-   */
-  String getRolesResolverOrderContextKey();
-
-  /**
    * Resolves available login roles for the given domain.
    * 
    * @param domainName Name of the domain for which roles are resolved
