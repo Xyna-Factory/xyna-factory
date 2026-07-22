@@ -90,9 +90,7 @@ public class JSONWebTokenAuthenticationServiceOperationImpl implements ExtendedD
     OrderContext ctx = arg0.getOrderContext();
     Domain domain = resolveDomain(arg1 == null ? null : arg1.getName());
     if (domain == null || domain.getDomainTypeAsEnum() != DomainType.JWT || !(domain.getDomainSpecificData() instanceof JWTDomainSpecificData)) {
-      AuthenticationResult result = new AuthenticationResult();
-      result.setSuccess(false);
-      return result;
+      return new AuthenticationResult.Builder().success(false).instance();
     }
 
     // get token from OrderContext and check
@@ -100,9 +98,7 @@ public class JSONWebTokenAuthenticationServiceOperationImpl implements ExtendedD
       Serializable tokenValue = ctx.get(ORDER_CONTEXT_KEY_JWT_TOKEN);
       String token = tokenValue instanceof String ? (String) tokenValue : null;
       if (token == null || token.isEmpty()) {
-        AuthenticationResult result = new AuthenticationResult();
-        result.setSuccess(false);
-        return result;
+        return new AuthenticationResult.Builder().success(false).instance();
       }
 
       // get roles from token claim, with DomainSpecificData do JWTAuthenticationLogic.resolveAvailableRoles()
@@ -125,9 +121,7 @@ public class JSONWebTokenAuthenticationServiceOperationImpl implements ExtendedD
           // role was requested but not found in claims -> reject
           logger.warn(
               "authenticate: requested selectedRole '" + requestedRole + "' not present in JWT claims " + roles + " - login rejected");
-          AuthenticationResult result = new AuthenticationResult();
-          result.setSuccess(false);
-          return result;
+          return new AuthenticationResult.Builder().success(false).instance();
         }
       } else if (roles != null && !roles.isEmpty()) {
         // no selectedRole -> use highest-priority extracted role
@@ -138,23 +132,16 @@ public class JSONWebTokenAuthenticationServiceOperationImpl implements ExtendedD
         roleSource = "defaultRole";
       }
       if (role == null || role.trim().isEmpty()) {
-        AuthenticationResult result = new AuthenticationResult();
-        result.setSuccess(false);
-        return result;
+        return new AuthenticationResult.Builder().success(false).instance();
       }
 
       if (logger.isDebugEnabled()) {
         logger.debug("authenticate: using role '" + role.trim() + "' for login (source=" + roleSource + ")");
       }
 
-      AuthenticationResult result = new AuthenticationResult();
-      result.setSuccess(true);
-      result.setRole(role.trim());
-      return result;
+      return new AuthenticationResult.Builder().success(true).role(role.trim()).instance();
     } catch (XFMG_UserAuthenticationFailedException e) {
-      AuthenticationResult result = new AuthenticationResult();
-      result.setSuccess(false);
-      return result;
+      return new AuthenticationResult.Builder().success(false).instance();
     }
   }
 
@@ -182,7 +169,7 @@ public class JSONWebTokenAuthenticationServiceOperationImpl implements ExtendedD
       for (String roleName : roles) {
         if (roleName != null) {
           Role r = new Role();
-          r.setName(roleName);
+          r.unversionedSetName(roleName);
           roleObjects.add(r);
         }
       }
