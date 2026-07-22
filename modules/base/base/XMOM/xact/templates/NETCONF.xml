@@ -1,21 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
- * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
 <DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="XML" BaseTypePath="xact.templates" IsAbstract="false" Label="NETCONF" TypeName="NETCONF" TypePath="xact.templates" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
@@ -60,19 +43,61 @@
         <CodeSnippet Type="Java">if ("1.1".equals(version)) {
         String MSG_END = "\n##\n";
         if (!response.endsWith(MSG_END)) {
+            logger.warn("NETCONF 1.1 response is still missing its ending message '##'...");
             return false;
         }
+        // currently there are two patterns:
+	 // - with \n before #
+        // - without \n before #
+        // seems that in rare cases the router counts the \n to its chunk, but does not print it for chunk separation afterwards (router bug?)
+        // -&gt; therefore: invent a fallback pattern without the newline and take it into account during response index counting
         java.util.regex.Pattern CHUNK_SIZE_PATTERN = java.util.regex.Pattern.compile("^\\n#(\\d+)\\n.*");
+        java.util.regex.Pattern CHUNK_SIZE_PATTERN_WO_LF = java.util.regex.Pattern.compile("^#(\\d+)\\n.*");
         java.util.regex.Matcher matcher;
+        java.util.regex.Matcher matcher_wo_lf;
+        boolean fallback = false;
         int responseIndex = 0;
         do {
             matcher = CHUNK_SIZE_PATTERN.matcher(response.substring(responseIndex));
+            matcher_wo_lf = CHUNK_SIZE_PATTERN_WO_LF.matcher(response.substring(responseIndex));
             if (!matcher.find()) {
-                break;
+                // nominal pattern did not match, maybe it can be saved with the fallback pattern
+                if(matcher_wo_lf.find()){
+                    if(logger.isDebugEnabled()){
+                        logger.debug("Saved matching without LF at line beginning (fallback pattern)...");
+                    }
+                    fallback = true;
+                }
+                else {
+                    if(logger.isDebugEnabled()){
+                        logger.debug("do-while broken");
+                    }
+                    break;
+                }
             }
-            String group = matcher.group(1);
+            String group;
+            if(fallback){
+                group = matcher_wo_lf.group(1);
+            }
+            else {
+                group = matcher.group(1);
+            }
             int chunkSize = Integer.valueOf(group);
-            responseIndex += 3 + group.length() + chunkSize; // 3 -&gt; \n# before chunk-size and \n after chunk-size
+            if(fallback){
+                responseIndex += 2 + group.length() + chunkSize; // 2 -&gt; # + chunk-size and \n after chunk-size - reduced fallback pattern
+            }
+            else {
+                responseIndex += 3 + group.length() + chunkSize; // 3 -&gt; \n# before chunk-size and \n after chunk-size
+            }
+
+            if(logger.isDebugEnabled()){
+                logger.debug("...responseIndex: " + responseIndex);
+                logger.debug("...chunkSize: " + chunkSize);
+                logger.debug("...true response length: " + response.length());
+                logger.debug("...MSG_END length: " + MSG_END.length());
+            }
+            // reset fallback marker
+            fallback = false;
         } while (responseIndex &lt;= response.length() - MSG_END.length());
         return responseIndex == response.length() - MSG_END.length();
     } else {
@@ -115,21 +140,50 @@
         <CodeSnippet Type="Java">if ("1.1".equals(version)) {
         String MSG_END = "\n##\n";
         StringBuilder contentBuilder = new StringBuilder();
+        // currently there are two patterns:
+	 // - with \n before #
+        // - without \n before #
+        // seems that in rare cases the router counts the \n to its chunk, but does not print it for chunk separation afterwards (router bug?)
+        // -&gt; therefore: invent a fallback pattern without the newline and take it into account during response index counting
         java.util.regex.Pattern CHUNK_SIZE_PATTERN = java.util.regex.Pattern.compile("^\\n#(\\d+)\\n");
+        java.util.regex.Pattern CHUNK_SIZE_PATTERN_WO_LF = java.util.regex.Pattern.compile("^#(\\d+)\\n");
         java.util.regex.Matcher matcher;
+        java.util.regex.Matcher matcher_wo_lf;
+        boolean fallback = false;
         int responseIndex = 0;
 
         while (responseIndex &lt; response.getResponse().getContent().length() - MSG_END.length()) {
             matcher = CHUNK_SIZE_PATTERN.matcher(response.getResponse().getContent().substring(responseIndex));
+            matcher_wo_lf = CHUNK_SIZE_PATTERN_WO_LF.matcher(response.getResponse().getContent().substring(responseIndex));
             if (!matcher.find()) {
-              throw new RuntimeException("invalid response @" + responseIndex + " , response: " + response.getResponse().getContent());
+                // nominal pattern did not match, maybe it can be saved with the fallback pattern
+                if(matcher_wo_lf.find()){
+                    if(logger.isDebugEnabled()){
+                        logger.debug("Saved matching without LF at line beginning (fallback pattern)...");
+                    }
+                    fallback = true;
+                }
+                else{
+                    throw new RuntimeException("invalid response @" + responseIndex + " , response: " + response.getResponse().getContent());
+                }
             }
-            String group = matcher.group(1);
+            String group;
+            int paragraph_correction = 3;
+            if(fallback){
+                group = matcher_wo_lf.group(1);
+                paragraph_correction = 2;
+            }
+            else{
+                group = matcher.group(1);
+            }
             int chunkSize = Integer.valueOf(group);
-            int fromIndex = responseIndex + 3 + group.length();
+            int fromIndex = responseIndex + paragraph_correction + group.length();
             int toIndex = fromIndex + chunkSize;
             contentBuilder.append(response.getResponse().getContent().substring(fromIndex, toIndex));
             responseIndex = toIndex;
+
+            // reset fallback marker
+            fallback = false;
         }
         response.getResponse().setContent(contentBuilder.toString());
     } else {
