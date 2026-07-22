@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
+/*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2026 Xyna GmbH, Germany
  *
@@ -15,29 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="External User Login Request" TypeName="ExternalUserLoginRequest" TypePath="xmcp.auth" Version="1.8">
-  <Meta>
-    <IsServiceGroupOnly>false</IsServiceGroupOnly>
-  </Meta>
-  <Data Label="Force" VariableName="force">
-    <Meta>
-      <Type>Boolean</Type>
-    </Meta>
-  </Data>
-  <Data Label="Domain" VariableName="domain">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="Path" VariableName="path">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="Selected Role" VariableName="selectedRole">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-</DataType>
+ */
+package com.gip.xyna.xfmg.xopctrl.usermanagement;
+
+
+
+import java.util.Optional;
+
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
+
+
+
+/**
+ * Optional capability for DomainTypeSpecificData implementations that can resolve
+ * available login roles.
+ */
+public interface RolesResolver {
+
+  /**
+   * Resolves available login roles for the given domain.
+   * 
+   * @param domainName Name of the domain for which roles are resolved
+   * @param credential Credential/token used to determine available roles
+   * @return List of available role names, empty if resolution fails or no roles available
+   */
+  java.util.List<String> resolveAvailableRoles(String domainName, String credential);
+}
+

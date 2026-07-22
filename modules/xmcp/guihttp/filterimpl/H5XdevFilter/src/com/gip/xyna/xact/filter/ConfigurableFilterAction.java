@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
+/*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2026 Xyna GmbH, Germany
  *
@@ -15,29 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="External User Login Request" TypeName="ExternalUserLoginRequest" TypePath="xmcp.auth" Version="1.8">
-  <Meta>
-    <IsServiceGroupOnly>false</IsServiceGroupOnly>
-  </Meta>
-  <Data Label="Force" VariableName="force">
-    <Meta>
-      <Type>Boolean</Type>
-    </Meta>
-  </Data>
-  <Data Label="Domain" VariableName="domain">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="Path" VariableName="path">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="Selected Role" VariableName="selectedRole">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-</DataType>
+ */
+package com.gip.xyna.xact.filter;
+
+import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xact.filter.FilterAction.FilterActionInstance;
+import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
+
+/**
+ * Marker interface for FilterActions that are aware of the filter configuration.
+ * H5XdevFilter calls actWithConfig() instead of act() for actions implementing this interface.
+ * All other actions remain untouched.
+ */
+public interface ConfigurableFilterAction extends FilterAction {
+
+  FilterActionInstance actWithConfig(URLPath url, HTTPTriggerConnection tc, H5XdevFilterParameter config)
+      throws XynaException;
+
+}
+
