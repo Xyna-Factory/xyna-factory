@@ -172,6 +172,8 @@ import xfmg.xfctrl.nodemgmt.ConnectException;
 import xfmg.xopctrl.UserAuthenticationRight;
 import xmcp.DeEncoder;
 import xmcp.factorymanager.RtcManagerServicesServiceOperation;
+import xmcp.factorymanager.impl.RtcManagerServicesServiceOperationImpl.DependencyType;
+import xmcp.factorymanager.impl.RtcManagerServicesServiceOperationImpl.HierarchicalDependency;
 import xmcp.factorymanager.rtcmanager.AbortOrders;
 import xmcp.factorymanager.rtcmanager.ApplicationDefinition;
 import xmcp.factorymanager.rtcmanager.ApplicationDefinitionDetails;
@@ -1123,6 +1125,7 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
 
       List<ApplicationElement> result = adElements.stream()
       .filter(tableHelper.filter())
+      .filter(ae -> request.getIncludeUnassigned() || !DependencyType.explicit.name().equals(ae.getDependencyType()))
       .collect(Collectors.toList());
       //tableHelper.sort(result);
       return tableHelper.limit(result);
@@ -2707,7 +2710,7 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
       TableInfo ti = new TableInfo(null, null, null, true, null, null, null, false);
       xmcp.factorymanager.rtcmanager.RuntimeContext ad = new xmcp.factorymanager.rtcmanager.ApplicationDefinition(adi.getState().name(), adi.getName(), prepareSourceVersion(adi.getVersion()), adi.getParentWorkspace().getName());
       checkRight(correlatedXynaOrder, UserManagement.ScopedRight.APPLICATION_DEFINITION, Action.list, ad);
-      GetApplicationContentRequest gacr = new GetApplicationContentRequest(ad, true, false, false);
+      GetApplicationContentRequest gacr = new GetApplicationContentRequest(ad, true, false, false, true);
       List<? extends ApplicationElement> content = getApplicationContent(correlatedXynaOrder, ti, gacr);
 
       List<String> fqnsInAD = new ArrayList<>();
@@ -2730,8 +2733,7 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
 
     return applicationDefinitions;
   }
-  
-  
+    
   private Sort defaultSort(TableInfo ti) {
     for (TableColumn tc : ti.getColumns()) {
       TableHelper.Sort sort = TableHelper.createSortIfValid(tc.getPath(), tc.getSort());
