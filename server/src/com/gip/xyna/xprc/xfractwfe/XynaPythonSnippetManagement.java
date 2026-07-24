@@ -32,6 +32,7 @@ import com.gip.xyna.xprc.xfractwfe.base.RevisionChangeUnDeploymentHandler;
 import com.gip.xyna.xprc.xfractwfe.python.Context;
 import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreter;
 import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreterFactory;
+import com.gip.xyna.xprc.xfractwfe.python.PythonMdmConfig;
 import com.gip.xyna.xprc.xfractwfe.python.PythonMdmGeneration;
 import com.gip.xyna.xprc.xfractwfe.python.PythonProjectGeneration;
 import com.gip.xyna.xprc.xfractwfe.python.jep.JepInterpreterFactory;
@@ -100,7 +101,8 @@ public class XynaPythonSnippetManagement extends Section {
   }
   
   public String createPythonMdm(Long revision, boolean withImpl, boolean typeHints) {
-    return mdmGeneration.createPythonMdm(revision, withImpl, typeHints);
+    boolean genDocu = (!withImpl) && typeHints;
+    return mdmGeneration.createPythonMdm(revision, new PythonMdmConfig().genImpl(withImpl).genTypeHints(typeHints).genDocu(genDocu));
   }
   
   public void exportPythonMdm(Long revision, String destination) throws Exception {

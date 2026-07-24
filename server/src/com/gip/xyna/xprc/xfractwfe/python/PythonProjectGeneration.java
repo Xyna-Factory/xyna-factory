@@ -43,13 +43,21 @@ import com.gip.xyna.xprc.exceptions.XPRC_MDMDeploymentException;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.PythonOperation;
+import com.gip.xyna.xprc.xfractwfe.python.DocumentationHandler.AddEmptyLine;
+import com.gip.xyna.xprc.xfractwfe.python.DocumentationHandler.PythonDocuConfig;
 import com.gip.xyna.xprc.xfractwfe.python.PythonGeneration.MethodInformation;
 
 
 
 public class PythonProjectGeneration {
 
+  public static class DomInfo {
+    public List<MethodInformation> methods;
+    public String domDcumentation;
+  }
+  
   protected transient Logger logger;
+  private DocumentationHandler docHandler = new DocumentationHandler();
 
 
   public InputStream getPythonServiceImplTemplate(String baseDir, String fqClassNameDOM, Long revision,
@@ -110,24 +118,26 @@ public class PythonProjectGeneration {
 
   private String generateImplPy(String fqClassNameDOM, Long revision) {
     StringBuilder sb = new StringBuilder();
-
     String pythonClassName = PythonGeneration.convertToPythonFqn(fqClassNameDOM);
+    DomInfo domInfo = loadXynaMethodInfo(fqClassNameDOM, revision);
+    PythonDocuConfig config = new PythonDocuConfig().genDocu(true);
+    
     sb.append("import mdm\n\n");
     sb.append("class " + pythonClassName + "Impl:\n");
+    sb.append(docHandler.buildDocumentationString(domInfo.domDcumentation, 2, AddEmptyLine.YES, config));
     sb.append("  def __init__(self, this: mdm." + pythonClassName + "):\n");
     sb.append("    self.this = this\n\n");
 
-    List<MethodInformation> methods = loadXynaMethodInfo(fqClassNameDOM, revision);
-
+    List<MethodInformation> methods = domInfo.methods;
     for (MethodInformation info : methods) {
-      generateServices(sb, info);
+      generateServices(sb, info, config);
     }
 
     return sb.toString();
   }
 
 
-  private void generateServices(StringBuilder sb, MethodInformation info) {
+  private void generateServices(StringBuilder sb, MethodInformation info, PythonDocuConfig config) {
     sb.append("  def " + info.name + "(self ");
     if (info.argumentsWithTypes != null && !info.argumentsWithTypes.isEmpty()) {
       sb.append(", ");
@@ -143,12 +153,13 @@ public class PythonProjectGeneration {
       sb.append(" -> " + info.returnType);
     }
     sb.append(":\n");
+    sb.append(docHandler.buildDocumentationString(info.documentation, 4, AddEmptyLine.NO, config));
     sb.append("    # TODO implementation\n");
     sb.append("    pass\n\n");
   }
 
 
-  private List<MethodInformation> loadXynaMethodInfo(String fqn, Long revision) {
+  private DomInfo loadXynaMethodInfo(String fqn, Long revision) {
     DomOrExceptionGenerationBase doe;
     try {
       doe = DOM.getOrCreateInstance(fqn, new GenerationBaseCache(), revision);
@@ -161,9 +172,12 @@ public class PythonProjectGeneration {
     // TODO Abfrage erweitern && o.implementedInLib()
     List<Operation> operations =
         ((DOM) doe).getOperations().stream().filter(o -> o instanceof PythonOperation).collect(Collectors.toList());
-    List<MethodInformation> result = PythonGeneration.loadOperations(operations, true);
+    List<MethodInformation> methods = PythonGeneration.loadOperations(operations, true);
 
-    return result;
+    DomInfo ret = new DomInfo();
+    ret.domDcumentation = doe.getDocumentation();
+    ret.methods = methods;
+    return ret;
   }
 
 }
