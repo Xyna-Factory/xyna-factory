@@ -740,6 +740,11 @@ public class RepositoryManagementImpl {
 
   public static String removeRepositoryConnection(String workspace, boolean full, boolean delete) {
     List<? extends RepositoryConnectionStorable> storables = loadRepositoryConnections();
+
+    if (full && (workspace != null && !workspace.isBlank())) {
+      throw new RuntimeException("Aborting repository connection removal. Both workspace and full-flag is set!");
+    }
+
     if (!full) {
       storables.removeIf(storable -> !storable.getWorkspacename().equals(workspace));
     }
