@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,16 @@
  */
 package xfmg.tmf.validation.impl.builtinfunctions;
 
+
+
+import java.util.List;
+
 import xfmg.tmf.validation.impl.ConversionUtils;
 import xfmg.tmf.validation.impl.SyntaxTreeNode;
 import xfmg.tmf.validation.impl.TMFExpressionContext;
 import xfmg.tmf.validation.impl.functioninterfaces.TMFDirectFunction;
+
+
 
 public class ConcatFunction implements TMFDirectFunction {
 
@@ -28,15 +34,23 @@ public class ConcatFunction implements TMFDirectFunction {
   public Object eval(TMFExpressionContext context, Object[] args) {
     StringBuilder sb = new StringBuilder();
     for (Object o : args) {
-      sb.append(ConversionUtils.ifNull(ConversionUtils.getString(o), ""));
+      if (o instanceof List) {
+        for (Object el : (List<?>) o) {
+          sb.append(ConversionUtils.ifNull(ConversionUtils.getString(el), ""));
+        }
+      } else {
+        sb.append(ConversionUtils.ifNull(ConversionUtils.getString(o), ""));
+      }
     }
     return sb.toString();
   }
+
 
   @Override
   public String getName() {
     return "CONCAT";
   }
+
 
   @Override
   public void validate(SyntaxTreeNode parent, SyntaxTreeNode[] args) {

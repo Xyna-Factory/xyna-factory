@@ -113,7 +113,7 @@ public class VM_CachedStorable implements VetoManagementInterface {
   public boolean freeVetos(OrderInformation orderInformation) {
     long orderId = orderInformation.getOrderId();
     try {
-      vetoStorableAccess.deleteVetosByOrderId(orderId);
+      vetoStorableAccess.freeVetosByOrderId(orderId);
     } catch (PersistenceLayerException e) {
       logger.warn("Error while trying to deallocate vetos.", e);
     } 
@@ -122,7 +122,7 @@ public class VM_CachedStorable implements VetoManagementInterface {
   
   public boolean freeVetosForced(long orderId) {
     try {
-      vetoStorableAccess.deleteVetosByOrderId(orderId);
+      vetoStorableAccess.freeVetosByOrderId(orderId);
     } catch (PersistenceLayerException e) {
       logger.warn("Error while trying to force deallocation of vetos.", e);
     } 

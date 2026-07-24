@@ -30,15 +30,18 @@ public class VetoInformation implements Serializable {
   private final String name;
   private final OrderInformation usingOrder;
   private final List<Long> sharedOrderIds;
+  private final Long pendingExclusiveOrderId;
   private final boolean administrative;
   private final int binding;
   private final Long created;
   private String documentation;
   
+  
   public VetoInformation(AdministrativeVeto administrativeVeto, Long created, int binding) {
     this.name = administrativeVeto.getName();
     this.usingOrder = null;
     this.sharedOrderIds = Collections.emptyList();
+    this.pendingExclusiveOrderId = null;
     this.administrative = true;
     this.binding =  binding;
     this.created = created;
@@ -49,15 +52,37 @@ public class VetoInformation implements Serializable {
     this.name = name;
     this.usingOrder = usingOrder;
     this.sharedOrderIds = Collections.emptyList();
+    this.pendingExclusiveOrderId = null;
     this.administrative = false;
     this.binding =  binding;
     this.created = created;
   }
 
-  public VetoInformation(String name, OrderInformation usingOrder, List<Long> sharedOrderIds, String documentation, Long created, int binding) {
+  public VetoInformation(String name, Long pendingExclusiveOrderId, Long created, int binding) {
+    this.name = name;
+    this.usingOrder = null;
+    this.sharedOrderIds = Collections.emptyList();
+    this.pendingExclusiveOrderId = pendingExclusiveOrderId;
+    this.administrative = false;
+    this.binding =  binding;
+    this.created = created;
+  }
+
+  public VetoInformation(String name, List<Long> sharedOrderIds, Long created, int binding) {
+    this.name = name;
+    this.usingOrder = null;
+    this.sharedOrderIds = sharedOrderIds;
+    this.pendingExclusiveOrderId = null;
+    this.administrative = false;
+    this.binding =  binding;
+    this.created = created;
+  }
+
+  public VetoInformation(String name, OrderInformation usingOrder, List<Long> sharedOrderIds, Long pendingExclusiveOrderId, String documentation, Long created, int binding) {
     this.name = name;
     this.usingOrder = usingOrder;
     this.sharedOrderIds = sharedOrderIds;
+    this.pendingExclusiveOrderId = pendingExclusiveOrderId;
     this.documentation = documentation;
     this.administrative = AdministrativeVeto.ADMIN_VETO_ORDERID.equals(usingOrder.getOrderId());
     this.binding = binding;
@@ -68,6 +93,7 @@ public class VetoInformation implements Serializable {
     this.name = name;
     this.usingOrder = null;
     this.sharedOrderIds = Collections.emptyList();
+    this.pendingExclusiveOrderId = null;
     this.administrative = false;
     this.binding = 0;
     this.created = null;
@@ -78,10 +104,15 @@ public class VetoInformation implements Serializable {
     if( administrative ) {
       return "VetoInformation("+name+": "+documentation+": "+created+")";
     } else {
-      if( binding != 0 ) {
-        return "VetoInformation("+binding+"-"+name+": "+usingOrder+": "+created+")";
+      String identifier = binding != 0 ? binding+"-"+name : name;
+      if (isAllocatedExclusive()) {
+        return "VetoInformation("+identifier+": allocated exclusive to "+usingOrder+": "+created+")";
+      } else if (isAllocatedShared()) {
+        return "VetoInformation("+identifier+": allocated shared by "+sharedOrderIds+": "+created+")";
+      } else if (isPendingExclusiveAllocation()) {
+        return "VetoInformation("+identifier+": pending exclusive allocation to "+pendingExclusiveOrderId+": "+created+")";
       } else {
-        return "VetoInformation("+name+": "+usingOrder+": "+created+")";
+        return "VetoInformation("+identifier+": unallocated: "+created+")";
       }
     }
   } 
@@ -156,8 +187,20 @@ public class VetoInformation implements Serializable {
     return sharedOrderIds;
   }
 
-  public boolean isShared() {
-    return !sharedOrderIds.isEmpty();
+  public Long getPendingExclusiveOrderId() {
+    return pendingExclusiveOrderId;
+  }
+
+  public boolean isAllocatedExclusive() {
+    return usingOrder != null && sharedOrderIds.isEmpty() && pendingExclusiveOrderId == null;
+  }
+
+  public boolean isAllocatedShared() {
+    return usingOrder == null && !sharedOrderIds.isEmpty() && pendingExclusiveOrderId == null;
+  }
+
+  public boolean isPendingExclusiveAllocation() {
+    return usingOrder == null && pendingExclusiveOrderId != null;
   }
 
   public static Transformation<VetoInformation, String> extractName = new Transformation<VetoInformation, String>() {
