@@ -119,7 +119,8 @@ public class GenerateApplicationTool {
     }
     if (applicationGenerationParameter1.getGenerateClient()) {
       statusHandler.setAppType(AppType.CLIENT);
-      createAndImportApplication(correlatedXynaOrder, "xmom-client", target + "_client", specFile, workspace, applicationGenerationParameter1.getGenerateMockOption(),
+      boolean generateMock = applicationGenerationParameter1.getGenerateMockOption() == null ? false : applicationGenerationParameter1.getGenerateMockOption();
+      createAndImportApplication(correlatedXynaOrder, "xmom-client", target + "_client", specFile, workspace, generateMock,
                                  statusHandler);
     }
     statusHandler.storeStatusSuccess();
