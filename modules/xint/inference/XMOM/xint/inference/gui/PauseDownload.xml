@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Pause Download" TypeName="PauseDownload" TypePath="xint.inference.gui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Pause Download" Name="PauseDownload">
+    <Input>
+      <Data ID="45" Label="Download" ReferenceName="Download" ReferencePath="xint.inference" VariableName="download45"/>
+    </Input>
+    <Output/>
+    <ServiceReference ID="27" Label="Inference Server Mgmt" ReferenceName="InferenceServerMgmt.InferenceServerMgmt" ReferencePath="xint.inference">
+      <Source RefID="26"/>
+      <Target RefID="26"/>
+    </ServiceReference>
+    <Function ID="26" Label="Pause Running Request">
+      <Source RefID="27"/>
+      <Source RefID="45"/>
+      <Target RefID="27"/>
+      <Invoke Operation="pauseRunningRequest" ServiceID="27">
+        <Source RefID="45"/>
+      </Invoke>
+      <Receive ServiceID="27"/>
+    </Function>
+    <Assign ID="1"/>
+  </Operation>
+</Service>

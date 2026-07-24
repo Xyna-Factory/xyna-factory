@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Manage Download Definition" TypeName="ManageDownloadDefinition" TypePath="xint.inference.gui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Manage Download Definition" Name="ManageDownloadDefinition">
+    <Input>
+      <Data ID="66" Label="Download" ReferenceName="Download" ReferencePath="xint.inference" VariableName="download66"/>
+    </Input>
+    <Output>
+      <Data ID="18" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition18"/>
+      <Data ID="79" Label="Download" ReferenceName="Download" ReferencePath="xint.inference" VariableName="download79"/>
+    </Output>
+    <ServiceReference ID="654" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="653"/>
+      <Target RefID="653"/>
+    </ServiceReference>
+    <Function ID="653" Label="get Own RuntimeContext">
+      <Source RefID="654"/>
+      <Target RefID="654"/>
+      <Target RefID="656"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="654"/>
+      <Receive ServiceID="654">
+        <Target RefID="656"/>
+      </Receive>
+    </Function>
+    <Mappings ID="88" Label="Mapping">
+      <Output>
+        <Data ID="97" Label="status - tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition97">
+          <Source RefID="88"/>
+        </Data>
+        <Target RefID="98"/>
+      </Output>
+      <Mapping>%0%.label="Status"</Mapping>
+      <Mapping>%0%.dataPath="%0%.status"</Mapping>
+    </Mappings>
+    <Mappings ID="153" Label="Mapping">
+      <Output>
+        <Data ID="154" Label="progress - tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition154"/>
+        <Target RefID="191"/>
+      </Output>
+      <Mapping>%0%.label="Progress"</Mapping>
+      <Mapping>%0%.dataPath="%0%.progress"</Mapping>
+    </Mappings>
+    <Mappings ID="172" Label="Mapping">
+      <Output>
+        <Data ID="173" Label="requestId - tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition173"/>
+        <Target RefID="209"/>
+      </Output>
+      <Mapping>%0%.label="Request Id"</Mapping>
+      <Mapping>%0%.dataPath="%0%.requestId"</Mapping>
+    </Mappings>
+    <Mappings ID="134" Label="Mapping">
+      <Output>
+        <Data ID="135" Label="type - tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition135"/>
+        <Target RefID="136"/>
+      </Output>
+      <Mapping>%0%.label="Type"</Mapping>
+      <Mapping>%0%.dataPath="%0%.downloadType"</Mapping>
+    </Mappings>
+    <Mappings ID="115" Label="Mapping">
+      <Output>
+        <Data ID="116" Label="url - tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition116"/>
+        <Target RefID="200"/>
+      </Output>
+      <Mapping>%0%.label="Url"</Mapping>
+      <Mapping>%0%.dataPath="%0%.url"</Mapping>
+    </Mappings>
+    <Choice ID="498" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="66"/>
+      <Target RefID="554"/>
+      <Input>
+        <Data ID="571" Label="Download" ReferenceName="Download" ReferencePath="xint.inference" VariableName="download571">
+          <Source RefID="498"/>
+        </Data>
+        <Source RefID="66"/>
+      </Input>
+      <Case ID="499" Label="true" Premise="%0%.status==&quot;running&quot;">
+        <Mappings ID="524" Label="Mapping">
+          <Input>
+            <Data ID="673" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext673">
+              <Source RefID="524"/>
+            </Data>
+            <Source RefID="656"/>
+          </Input>
+          <Output>
+            <Data ID="525" Label="pause - sobd" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition525"/>
+            <Target RefID="553"/>
+          </Output>
+          <Mapping>%1%.label="Pause"</Mapping>
+          <Mapping>%1%.serviceRTC=%0%</Mapping>
+          <Mapping>%1%.serviceFQN="xint.inference.gui.PauseDownload"</Mapping>
+          <Mapping>%1%.synchronously="true"</Mapping>
+          <Mapping>%1%.onStartorderResultEvent["0"].eventId="xyna_inference_download_update"</Mapping>
+          <Mapping>%1%.onStartorderResultEvent["1"].eventId="xyna_inference_download_close"</Mapping>
+        </Mappings>
+        <Assign ID="502">
+          <Source RefID="553"/>
+          <Target RefID="554"/>
+          <Copy>
+            <Source RefID="553"/>
+            <Target RefID="554"/>
+          </Copy>
+        </Assign>
+        <Data ID="553" Label="abort - sobd" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition553"/>
+      </Case>
+      <Case ID="500" Label="false">
+        <Mappings ID="513" Label="Mapping">
+          <Input>
+            <Data ID="690" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext690">
+              <Source RefID="513"/>
+            </Data>
+            <Source RefID="656"/>
+          </Input>
+          <Output>
+            <Data ID="514" Label="resume - sobd" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition514"/>
+            <Target RefID="544"/>
+          </Output>
+          <Mapping>%1%.label="Resume"</Mapping>
+          <Mapping>%1%.serviceRTC=%0%</Mapping>
+          <Mapping>%1%.serviceFQN="xint.inference.gui.ResumeDownload"</Mapping>
+          <Mapping>%1%.onStartorderResultEvent["0"].eventId="xyna_inference_download_update"</Mapping>
+          <Mapping>%1%.onStartorderResultEvent["1"].eventId="xyna_inference_download_close"</Mapping>
+        </Mappings>
+        <Assign ID="504">
+          <Source RefID="544"/>
+          <Target RefID="554"/>
+          <Copy>
+            <Source RefID="544"/>
+            <Target RefID="554"/>
+          </Copy>
+        </Assign>
+        <Data ID="544" Label="start - sobd" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition544"/>
+      </Case>
+    </Choice>
+    <Mappings ID="471" Label="Mapping">
+      <Input>
+        <Data ID="1173" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext1173">
+          <Source RefID="471"/>
+        </Data>
+        <Source RefID="656"/>
+      </Input>
+      <Output>
+        <Data ID="480" Label="abort - sobd" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition480">
+          <Source RefID="471"/>
+        </Data>
+        <Target RefID="481"/>
+      </Output>
+      <Mapping>%1%.label="Abort Download"</Mapping>
+      <Mapping>%1%.serviceRTC=%0%</Mapping>
+      <Mapping>%1%.serviceFQN="xint.inference.gui.AbortDownload"</Mapping>
+      <Mapping>%1%.synchronously="true"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="xyna_inference_download_update"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["1"].eventId="xyna_inference_download_close"</Mapping>
+    </Mappings>
+    <Mappings ID="31" Label="Mapping">
+      <Input>
+        <Data ID="378" Label="status - tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition378">
+          <Source RefID="31"/>
+        </Data>
+        <Source RefID="98">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="387" Label="progress - tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition387">
+          <Source RefID="31"/>
+        </Data>
+        <Source RefID="191">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="396" Label="requestId - tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition396">
+          <Source RefID="31"/>
+        </Data>
+        <Source RefID="209">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="405" Label="type - tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition405">
+          <Source RefID="31"/>
+        </Data>
+        <Source RefID="136">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="414" Label="url - tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition414">
+          <Source RefID="31"/>
+        </Data>
+        <Source RefID="200">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="707" Label="resume pause - sobd" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition707">
+          <Source RefID="31"/>
+        </Data>
+        <Source RefID="554">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="724" Label="abort - sobd" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition724">
+          <Source RefID="31"/>
+        </Data>
+        <Source RefID="481">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="40" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition40">
+          <Source RefID="31"/>
+        </Data>
+        <Target RefID="41"/>
+      </Output>
+      <Mapping>%7%.label="Manage Download"</Mapping>
+      <Mapping>%7%.closable="true"</Mapping>
+      <Mapping>%7%.children["0"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%0%</Mapping>
+      <Mapping>%7%.children["1"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%1%</Mapping>
+      <Mapping>%7%.children["2"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%2%</Mapping>
+      <Mapping>%7%.children["3"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%3%</Mapping>
+      <Mapping>%7%.children["4"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%4%</Mapping>
+      <Mapping>%7%.footer.leftArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%5%</Mapping>
+      <Mapping>%7%.footer.rightArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%6%</Mapping>
+      <Mapping>%7%.triggerClose.eventId="xyna_inference_download_close"</Mapping>
+    </Mappings>
+    <Data ID="41" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition41">
+      <Source RefID="31"/>
+    </Data>
+    <Data ID="98" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition98">
+      <Source RefID="88"/>
+    </Data>
+    <Data ID="136" Label="url - tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition136"/>
+    <Data ID="191" Label="progress - tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition191"/>
+    <Data ID="200" Label="url - tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition200"/>
+    <Data ID="209" Label="requestId - tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition209"/>
+    <Data ID="481" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition481">
+      <Source RefID="471"/>
+    </Data>
+    <Data ID="554" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition554">
+      <Source RefID="498"/>
+    </Data>
+    <Data ID="656" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext656">
+      <Source RefID="653"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="41"/>
+      <Source RefID="66"/>
+      <Target RefID="18"/>
+      <Target RefID="79"/>
+      <Copy>
+        <Source RefID="41"/>
+        <Target RefID="18"/>
+      </Copy>
+      <Copy>
+        <Source RefID="66"/>
+        <Target RefID="79"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

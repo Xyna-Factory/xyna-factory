@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Download Model" TypeName="DownloadModel" TypePath="xint.inference.gui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Download Model" Name="DownloadModel">
+    <Input>
+      <Data ID="39" Label="Download Url" ReferenceName="DownloadUrl" ReferencePath="xint.inference" VariableName="downloadUrl39"/>
+    </Input>
+    <Output/>
+    <ServiceReference ID="20" Label="Inference Server Mgmt" ReferenceName="InferenceServerMgmt.InferenceServerMgmt" ReferencePath="xint.inference">
+      <Source RefID="19"/>
+      <Target RefID="19"/>
+    </ServiceReference>
+    <Function ID="19" Label="Download Model">
+      <Source RefID="20"/>
+      <Source RefID="39"/>
+      <Target RefID="20"/>
+      <Target RefID="22"/>
+      <Invoke Operation="downloadModel" ServiceID="20">
+        <Source RefID="39"/>
+      </Invoke>
+      <Receive ServiceID="20">
+        <Target RefID="22"/>
+      </Receive>
+    </Function>
+    <Data ID="22" Label="Request Id" ReferenceName="RequestId" ReferencePath="xint.inference" VariableName="requestId22">
+      <Source RefID="19"/>
+    </Data>
+    <Assign ID="1"/>
+  </Operation>
+</Service>
