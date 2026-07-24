@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Inference Server Mgmt Definition" TypeName="InferenceServerMgmtDefinition" TypePath="xint.inference.gui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Inference Server Mgmt Definition" Name="InferenceServerMgmtDefinition">
+    <Input/>
+    <Output>
+      <Data ID="18" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition18"/>
+    </Output>
+    <ServiceReference ID="410" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="409"/>
+      <Target RefID="409"/>
+    </ServiceReference>
+    <Function ID="409" Label="get Own RuntimeContext">
+      <Source RefID="410"/>
+      <Target RefID="410"/>
+      <Target RefID="412"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="410"/>
+      <Receive ServiceID="410">
+        <Target RefID="412"/>
+      </Receive>
+    </Function>
+    <Mappings ID="952" Label="Create Inference Server Configuration Button">
+      <Input>
+        <Data ID="1101" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext1101">
+          <Source RefID="952"/>
+        </Data>
+        <Source RefID="412"/>
+      </Input>
+      <Output>
+        <Data ID="969" Label="Create Server Config - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition969">
+          <Source RefID="952"/>
+        </Data>
+        <Target RefID="970"/>
+      </Output>
+      <Mapping>%1%.label="Create..."</Mapping>
+      <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%0%</Mapping>
+      <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xint.inference.gui.CreateNewInferenceServerConfigDefinition"</Mapping>
+    </Mappings>
+    <Mappings ID="108" Label="Server Configurations Table">
+      <Input>
+        <Data ID="429" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext429">
+          <Source RefID="108"/>
+        </Data>
+        <Source RefID="412"/>
+      </Input>
+      <Input>
+        <Data ID="1036" Label="Create Server Config - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition1036">
+          <Source RefID="108"/>
+        </Data>
+        <Source RefID="970"/>
+      </Input>
+      <Output>
+        <Data ID="117" Label="ServerConfigs -Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition117">
+          <Source RefID="108"/>
+        </Data>
+        <Target RefID="118"/>
+      </Output>
+      <Mapping>%2%.label="Inference Server Configurations"</Mapping>
+      <Mapping>%2%.tableWorkflowRTC=%0%</Mapping>
+      <Mapping>%2%.tableWorkflowFQN="xint.inference.gui.ServerConfigurationsTableInfo"</Mapping>
+      <Mapping>%2%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%1%</Mapping>
+      <Mapping>%2%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%0%</Mapping>
+      <Mapping>%2%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xint.inference.gui.ManageInferenceServerConfigDefinition"</Mapping>
+      <Mapping>%2%.triggerRefresh.eventId="xyna_inference_config_update"</Mapping>
+    </Mappings>
+    <Mappings ID="2355" Label="Download Models Button">
+      <Input>
+        <Data ID="2843" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext2843">
+          <Source RefID="2355"/>
+        </Data>
+        <Source RefID="412"/>
+      </Input>
+      <Output>
+        <Data ID="2380" Label="Download Model - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition2380">
+          <Source RefID="2355"/>
+        </Data>
+        <Target RefID="2381"/>
+      </Output>
+      <Mapping>%1%.label="Download..."</Mapping>
+      <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%0%</Mapping>
+      <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xint.inference.gui.DownloadModelDefinition"</Mapping>
+    </Mappings>
+    <Mappings ID="171" Label="Models Table">
+      <Input>
+        <Data ID="446" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext446">
+          <Source RefID="171"/>
+        </Data>
+        <Source RefID="412"/>
+      </Input>
+      <Input>
+        <Data ID="2430" Label="Download Model - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition2430">
+          <Source RefID="171"/>
+        </Data>
+        <Source RefID="2381">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="180" Label="Models -Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition180">
+          <Source RefID="171"/>
+        </Data>
+        <Target RefID="181"/>
+      </Output>
+      <Mapping>%2%.label="Available Models"</Mapping>
+      <Mapping>%2%.tableWorkflowRTC=%0%</Mapping>
+      <Mapping>%2%.tableWorkflowFQN="xint.inference.gui.AvailableModelsTableInfo"</Mapping>
+      <Mapping>%2%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%1%</Mapping>
+      <Mapping>%2%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%0%</Mapping>
+      <Mapping>%2%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xint.inference.gui.ModelDetailsDefinition"</Mapping>
+      <Mapping>%2%.triggerRefresh.eventId="xyna_inference_models_update"</Mapping>
+    </Mappings>
+    <Mappings ID="2527" Label="Download Inference Server Button">
+      <Input>
+        <Data ID="3240" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext3240">
+          <Source RefID="2527"/>
+        </Data>
+        <Source RefID="412"/>
+      </Input>
+      <Output>
+        <Data ID="2528" Label="Download Inference Server - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition2528"/>
+        <Target RefID="2529"/>
+      </Output>
+      <Mapping>%1%.label="Download..."</Mapping>
+      <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%0%</Mapping>
+      <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xint.inference.gui.DownloadInferenceServerDefinition"</Mapping>
+    </Mappings>
+    <Mappings ID="318" Label="Servers Table">
+      <Input>
+        <Data ID="463" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext463">
+          <Source RefID="318"/>
+        </Data>
+        <Source RefID="412"/>
+      </Input>
+      <Input>
+        <Data ID="2578" Label="Download Inference Server - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition2578">
+          <Source RefID="318"/>
+        </Data>
+        <Source RefID="2529">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="190" Label="Servers -Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition190">
+          <Source RefID="171"/>
+        </Data>
+        <Target RefID="327"/>
+      </Output>
+      <Mapping>%2%.label="Available Servers"</Mapping>
+      <Mapping>%2%.tableWorkflowRTC=%0%</Mapping>
+      <Mapping>%2%.tableWorkflowFQN="xint.inference.gui.AvailableInferenceServersTableInfo"</Mapping>
+      <Mapping>%2%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%1%</Mapping>
+      <Mapping>%2%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%0%</Mapping>
+      <Mapping>%2%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xint.inference.gui.InferenceServerDetailsDefinition"</Mapping>
+      <Mapping>%2%.triggerRefresh.eventId="xyna_inference_servers_update"</Mapping>
+    </Mappings>
+    <Mappings ID="1918" Label="History button">
+      <Input>
+        <Data ID="2282" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext2282">
+          <Source RefID="1918"/>
+        </Data>
+        <Source RefID="412"/>
+      </Input>
+      <Output>
+        <Data ID="1943" Label="history - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition1943">
+          <Source RefID="1918"/>
+        </Data>
+        <Target RefID="1944"/>
+      </Output>
+      <Mapping>%1%.label="History..."</Mapping>
+      <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%0%</Mapping>
+      <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xint.inference.gui.RequestHistoryDefinition"</Mapping>
+    </Mappings>
+    <Mappings ID="31" Label="Create Final Form">
+      <Input>
+        <Data ID="91" Label="ServerConfigs -Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition91">
+          <Source RefID="31"/>
+        </Data>
+        <Source RefID="118">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="216" Label="Models -Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition216">
+          <Source RefID="127"/>
+        </Data>
+        <Source RefID="181">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="225" Label="Servers -Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition225">
+          <Source RefID="127"/>
+        </Data>
+        <Source RefID="327">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="1993" Label="history - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition1993">
+          <Source RefID="31"/>
+        </Data>
+        <Source RefID="1944">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="40" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition40">
+          <Source RefID="31"/>
+        </Data>
+        <Target RefID="41"/>
+      </Output>
+      <Mapping>%4%.label="Inference Server Mgmt"</Mapping>
+      <Mapping>%4%.children["0"]#cast("xmcp.forms.datatypes.TablePanelDefinition")=%0%</Mapping>
+      <Mapping>%4%.children["1"]#cast("xmcp.forms.datatypes.TablePanelDefinition")=%2%</Mapping>
+      <Mapping>%4%.children["2"]#cast("xmcp.forms.datatypes.TablePanelDefinition")=%1%</Mapping>
+      <Mapping>%4%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%3%</Mapping>
+    </Mappings>
+    <Data ID="41" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition41">
+      <Source RefID="31"/>
+    </Data>
+    <Data ID="118" Label="ServerConfigs -Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition118">
+      <Source RefID="108"/>
+    </Data>
+    <Data ID="181" Label="ServerConfigs -Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition181">
+      <Source RefID="171"/>
+    </Data>
+    <Data ID="327" Label="Servers -Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition327">
+      <Source RefID="171"/>
+    </Data>
+    <Data ID="412" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext412">
+      <Source RefID="409"/>
+    </Data>
+    <Data ID="970" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition970">
+      <Source RefID="952"/>
+    </Data>
+    <Data ID="1944" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition1944">
+      <Source RefID="1918"/>
+    </Data>
+    <Data ID="2381" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition2381">
+      <Source RefID="2355"/>
+    </Data>
+    <Data ID="2529" Label="Download Model - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition2529"/>
+    <Assign ID="1">
+      <Source RefID="41"/>
+      <Target RefID="18"/>
+      <Copy>
+        <Source RefID="41">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="18"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

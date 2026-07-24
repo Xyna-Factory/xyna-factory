@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Inference Server Mgmt" TypeName="InferenceServerMgmt" TypePath="xint.inference" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>InferenceServerMgmtImpl.jar</Libraries>
+  <Service Label="Inference Server Mgmt" TypeName="InferenceServerMgmt">
+    <Operation IsStatic="true" Label="Download Model" Name="downloadModel">
+      <Input>
+        <Data ID="1" Label="Download Url" ReferenceName="DownloadUrl" ReferencePath="xint.inference" VariableName="downloadUrl1"/>
+      </Input>
+      <Output>
+        <Data ID="2" Label="Request Id" ReferenceName="RequestId" ReferencePath="xint.inference" VariableName="requestId2"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return InferenceServerMgmtImpl.downloadModel(downloadUrl1);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Delete Model" Name="deleteModel">
+      <Input>
+        <Data ID="3" Label="Model" ReferenceName="Model" ReferencePath="xint.inference" VariableName="model3"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">InferenceServerMgmtImpl.deleteModel(model3);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="List Models" Name="listModels">
+      <Input/>
+      <Output>
+        <Data ID="5" IsList="true" Label="Model" ReferenceName="Model" ReferencePath="xint.inference" VariableName="model5"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return InferenceServerMgmtImpl.listModels();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get History" Name="getHistory">
+      <Input>
+        <Data ID="7" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo7"/>
+      </Input>
+      <Output>
+        <Data ID="6" Label="Request History Entry" ReferenceName="RequestHistoryEntry" ReferencePath="xint.inference" VariableName="requestHistoryEntry6"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return InferenceServerMgmtImpl.getHistory(tableInfo7);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Running Requests" Name="getRunningRequests">
+      <Input/>
+      <Output>
+        <Data ID="10" IsList="true" Label="Request History Entry" ReferenceName="RequestHistoryEntry" ReferencePath="xint.inference" VariableName="requestHistoryEntry10"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return InferenceServerMgmtImpl.getRunningRequests();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Download Inference Server" Name="downloadInferenceServer">
+      <Input>
+        <Data ID="11" Label="Download Url" ReferenceName="DownloadUrl" ReferencePath="xint.inference" VariableName="downloadUrl11"/>
+      </Input>
+      <Output>
+        <Data ID="12" Label="Request Id" ReferenceName="RequestId" ReferencePath="xint.inference" VariableName="requestId12"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return InferenceServerMgmtImpl.downloadInferenceServer(downloadUrl11);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Delete Inference Server" Name="deleteInferenceServer">
+      <Input>
+        <Data ID="13" Label="Inference Server" ReferenceName="InferenceServer" ReferencePath="xint.inference" VariableName="inferenceServer13"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">InferenceServerMgmtImpl.deleteInferenceServer(inferenceServer13);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Start Inference Server" Name="startInferenceServer">
+      <Input>
+        <Data ID="14" Label="Inference Server Configuration" ReferenceName="InferenceServerConfiguration" ReferencePath="xint.inference" VariableName="inferenceServerConfiguration14"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">InferenceServerMgmtImpl.startInferenceServer(inferenceServerConfiguration14);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Stop Inference Server" Name="stopInferenceServer">
+      <Input>
+        <Data ID="15" Label="Inference Server Configuration" ReferenceName="InferenceServerConfiguration" ReferencePath="xint.inference" VariableName="inferenceServerConfiguration15"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">InferenceServerMgmtImpl.stopInferenceServer(inferenceServerConfiguration15);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="List Inference Servers" Name="listInferenceServers">
+      <Input/>
+      <Output>
+        <Data ID="16" IsList="true" Label="Inference Server" ReferenceName="InferenceServer" ReferencePath="xint.inference" VariableName="inferenceServer16"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return InferenceServerMgmtImpl.listInferenceServers();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="List Inference Server Configurations" Name="listInferenceServerConfigurations">
+      <Input/>
+      <Output>
+        <Data ID="17" IsList="true" Label="Inference Server Configuration" ReferenceName="InferenceServerConfiguration" ReferencePath="xint.inference" VariableName="inferenceServerConfiguration17"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return InferenceServerMgmtImpl.listInferenceServerConfigurations();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

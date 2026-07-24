@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Application applicationName="InferenceServerMgmt" factoryVersion="" versionName="1.0.0" xmlVersion="1.1">
+  <ApplicationInfo>
+    <RuntimeContextRequirements>
+      <RuntimeContextRequirement>
+        <ApplicationName>ZetaFramework</ApplicationName>
+        <VersionName>0.6.67</VersionName>
+      </RuntimeContextRequirement>
+    </RuntimeContextRequirements>
+  </ApplicationInfo>
+  <Ordertypes>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.CreateInferenceServerConfiguration</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.AbortDownload</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.ActiveRequestsTableInfo</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.AvailableInferenceServersTableInfo</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.AvailableModelsTableInfo</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.ClearHistory</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.CreateInferenceServerConfigDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.CreateNewInferenceServerConfigDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.DeleteInferenceServer</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.DeleteInferenceServerConfiguration</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.DeleteModel</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.DownloadDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.DownloadInferenceServer</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.DownloadInferenceServerDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.DownloadModel</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.DownloadModelDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.InferenceServerDetailsDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.InferenceServerMgmtDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.ManageDownloadDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.ManageInferenceServerConfigDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.ModelDetailsDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.PauseDownload</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.RequestHistoryDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.RequestHistoryTableInfo</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.ResumeDownload</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.ServerConfigurationsTableInfo</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.StartInferenceServerConfiguration</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xint.inference.gui.StopInferenceServerConfiguration</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+  </Ordertypes>
+  <XMOMEntries>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.CreateInferenceServerConfiguration</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xint.inference.Download</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xint.inference.DownloadUrl</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xint.inference.InferenceManagementActionFailedException</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xint.inference.InferenceServer</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xint.inference.InferenceServerConfiguration</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xint.inference.InferenceServerConfigurationCreationData</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xint.inference.InferenceServerMgmt</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xint.inference.Model</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xint.inference.RequestHistoryEntry</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xint.inference.RequestId</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.gui.AbortDownload</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.gui.ActiveRequestsTableInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.gui.AvailableInferenceServersTableInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.gui.AvailableModelsTableInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.gui.ClearHistory</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.gui.CreateInferenceServerConfigDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.gui.CreateNewInferenceServerConfigDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.gui.DeleteInferenceServer</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.gui.DeleteInferenceServerConfiguration</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.gui.DeleteModel</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xint.inference.gui.DownloadDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.gui.DownloadInferenceServer</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.gui.DownloadInferenceServerDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.gui.DownloadModel</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.gui.DownloadModelDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.gui.InferenceServerDetailsDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.gui.InferenceServerMgmtDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.gui.ManageDownloadDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.gui.ManageInferenceServerConfigDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.gui.ModelDetailsDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.gui.PauseDownload</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.gui.RequestHistoryDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.gui.RequestHistoryTableInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.gui.ResumeDownload</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.gui.ServerConfigurationsTableInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.gui.StartInferenceServerConfiguration</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.inference.gui.StopInferenceServerConfiguration</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+  </XMOMEntries>
+</Application>
