@@ -22,8 +22,8 @@ package com.gip.xyna.xprc.xfractwfe.python;
 public class PythonMdmConfig {
   
   private boolean genImpl = false;
-  private boolean genTypeHints = true;
-  private boolean genDocu = true;
+  private boolean genTypeHints = false;
+  private boolean genDocu = false;
   
   public boolean isGenImpl() {
     return genImpl;
