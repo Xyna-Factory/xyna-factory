@@ -63,7 +63,7 @@ public class InferenceServerMgmtServiceOperationImpl implements ExtendedDeployme
           .setDefaultDocumentation(DocumentationLanguage.EN, "Base path for storing inference servers")
           .setDefaultDocumentation(DocumentationLanguage.DE, "Basis Pfad unter dem Inference Server abgelegt werden");
 
-  public static final XynaPropertyString MODEL_PATH = new XynaPropertyString("xint.inference.mode_path", "../ai/models")
+  public static final XynaPropertyString MODEL_PATH = new XynaPropertyString("xint.inference.model_path", "../ai/models")
       .setDefaultDocumentation(DocumentationLanguage.EN, "Path for storing models")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Pfad unter dem Modelle gespreicht werden");
 
