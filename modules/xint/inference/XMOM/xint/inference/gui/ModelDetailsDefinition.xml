@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Model Details Definition" TypeName="ModelDetailsDefinition" TypePath="xint.inference.gui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Model Details Definition" Name="ModelDetailsDefinition">
+    <Input>
+      <Data ID="58" Label="Model" ReferenceName="Model" ReferencePath="xint.inference" VariableName="model58"/>
+    </Input>
+    <Output>
+      <Data ID="18" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition18"/>
+      <Data ID="255" Label="Model" ReferenceName="Model" ReferencePath="xint.inference" VariableName="model255"/>
+    </Output>
+    <ServiceReference ID="467" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="466"/>
+      <Target RefID="466"/>
+    </ServiceReference>
+    <Function ID="466" Label="get Own RuntimeContext">
+      <Source RefID="467"/>
+      <Target RefID="467"/>
+      <Target RefID="469"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="467"/>
+      <Receive ServiceID="467">
+        <Target RefID="469"/>
+      </Receive>
+    </Function>
+    <Mappings ID="92" Label="Mapping">
+      <Output>
+        <Data ID="101" Label="name - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition101">
+          <Source RefID="92"/>
+        </Data>
+        <Target RefID="102"/>
+      </Output>
+      <Mapping>%0%.label="Name"</Mapping>
+      <Mapping>%0%.dataPath="%0%.name"</Mapping>
+    </Mappings>
+    <Mappings ID="128" Label="Mapping">
+      <Output>
+        <Data ID="137" Label="size - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition137">
+          <Source RefID="128"/>
+        </Data>
+        <Target RefID="138"/>
+      </Output>
+      <Mapping>%0%.label="Size"</Mapping>
+      <Mapping>%0%.dataPath="%0%.size"</Mapping>
+    </Mappings>
+    <Mappings ID="180" Label="Mapping">
+      <Input>
+        <Data ID="486" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext486">
+          <Source RefID="180"/>
+        </Data>
+        <Source RefID="469"/>
+      </Input>
+      <Output>
+        <Data ID="189" Label="Delete - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition189">
+          <Source RefID="180"/>
+        </Data>
+        <Target RefID="190"/>
+      </Output>
+      <Mapping>%1%.label="Delete"</Mapping>
+      <Mapping>%1%.serviceRTC=%0%</Mapping>
+      <Mapping>%1%.serviceFQN="xint.inference.gui.DeleteModel"</Mapping>
+      <Mapping>%1%.synchronously="true"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="xyna_inference_model_close"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["1"].eventId="xyna_inference_models_update"</Mapping>
+      <Mapping>%1%.showResult="true"</Mapping>
+    </Mappings>
+    <Mappings ID="31" Label="Mapping">
+      <Input>
+        <Data ID="71" Label="Model" ReferenceName="Model" ReferencePath="xint.inference" VariableName="model71">
+          <Source RefID="31"/>
+        </Data>
+        <Source RefID="58"/>
+      </Input>
+      <Input>
+        <Data ID="119" Label="name - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition119">
+          <Source RefID="31"/>
+        </Data>
+        <Source RefID="102">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="155" Label="size - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition155">
+          <Source RefID="31"/>
+        </Data>
+        <Source RefID="138">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="292" Label="Delete - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition292">
+          <Source RefID="31"/>
+        </Data>
+        <Source RefID="190"/>
+      </Input>
+      <Output>
+        <Data ID="40" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition40">
+          <Source RefID="31"/>
+        </Data>
+        <Target RefID="41"/>
+      </Output>
+      <Mapping>%4%.label=%0%.name</Mapping>
+      <Mapping>%4%.children["0"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%1%</Mapping>
+      <Mapping>%4%.children["1"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%2%</Mapping>
+      <Mapping>%4%.children["2"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%3%</Mapping>
+      <Mapping>%4%.triggerClose.eventId="xyna_inference_model_close"</Mapping>
+      <Mapping>%4%.closable="true"</Mapping>
+    </Mappings>
+    <Data ID="41" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition41">
+      <Source RefID="31"/>
+    </Data>
+    <Data ID="102" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition102">
+      <Source RefID="92"/>
+    </Data>
+    <Data ID="138" Label="name - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition138">
+      <Source RefID="128"/>
+    </Data>
+    <Data ID="190" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition190">
+      <Source RefID="180"/>
+    </Data>
+    <Data ID="469" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext469">
+      <Source RefID="466"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="41"/>
+      <Source RefID="58"/>
+      <Target RefID="18"/>
+      <Target RefID="255"/>
+      <Copy>
+        <Source RefID="41"/>
+        <Target RefID="18"/>
+      </Copy>
+      <Copy>
+        <Source RefID="58"/>
+        <Target RefID="255"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Download Inference Server" TypeName="DownloadInferenceServer" TypePath="xint.inference.gui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Download Inference Server" Name="DownloadInferenceServer">
+    <Input>
+      <Data ID="18" Label="Download Url" ReferenceName="DownloadUrl" ReferencePath="xint.inference" VariableName="downloadUrl18"/>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Inference Management Action Failed Exception" ReferenceName="InferenceManagementActionFailedException" ReferencePath="xint.inference" VariableName="inferenceManagementActionFailedException82"/>
+    </Throws>
+    <ServiceReference ID="33" Label="Inference Server Mgmt" ReferenceName="InferenceServerMgmt.InferenceServerMgmt" ReferencePath="xint.inference">
+      <Source RefID="32"/>
+      <Target RefID="32"/>
+    </ServiceReference>
+    <Function ID="32" Label="Download Inference Server">
+      <Source RefID="33"/>
+      <Source RefID="18"/>
+      <Target RefID="33"/>
+      <Target RefID="35"/>
+      <Invoke Operation="downloadInferenceServer" ServiceID="33">
+        <Source RefID="18"/>
+      </Invoke>
+      <Receive ServiceID="33">
+        <Target RefID="35"/>
+      </Receive>
+    </Function>
+    <Data ID="35" Label="Request Id" ReferenceName="RequestId" ReferencePath="xint.inference" VariableName="requestId35">
+      <Source RefID="32"/>
+    </Data>
+    <Assign ID="1"/>
+  </Operation>
+</Service>

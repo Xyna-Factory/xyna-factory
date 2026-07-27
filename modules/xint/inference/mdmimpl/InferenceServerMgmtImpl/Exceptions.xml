@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ <!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1"
+              Name="ExceptionStore" Version="1.0">
+  <Description>Exceptions. Use "ant genCodeClass" to generate corresponding Java classes.</Description>
+  <!-- This import gives the possibility to inherit from server exceptions... -->
+  <Import File="${BLACK_SERVER_HOME}/Exceptions.xml" />
+  <!--  Example  -->
+  
+  <!-- 
+  <ExceptionType Code="MYPROJECT-00001" TypeName="MyException" TypePath="com.gip.xyna.utils.exceptions" >
+    <Data Label="label" VariableName="labelVar">
+    	<Meta>
+    		<Type>String</Type>
+    	</Meta>
+    </Data>
+    <Data Label="label2" VariableName="labelVar2">
+    	<Meta>
+    		<Type>String</Type>
+    	</Meta>
+    </Data>
+    <MessageText Language="EN">exception message with labels %0% and %1%.</MessageText>
+    <MessageText Language="DE">Fehlernachricht mit Labels %0% und %1%.</MessageText>
+  </ExceptionType>
+   -->
+</ExceptionStore>
