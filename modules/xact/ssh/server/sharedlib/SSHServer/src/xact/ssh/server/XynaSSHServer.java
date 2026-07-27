@@ -238,7 +238,7 @@ public class XynaSSHServer {
       logger.info("address " + host + " unknown in network configuration management.");
     }
 
-    // return if it is a litteral IP
+    // return if it is a literal IP
     try {
       return InetAddress.getByName(host);
     } catch(UnknownHostException e) {
