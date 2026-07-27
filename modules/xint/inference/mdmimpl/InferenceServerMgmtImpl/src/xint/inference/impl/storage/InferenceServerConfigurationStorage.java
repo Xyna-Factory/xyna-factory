@@ -143,7 +143,10 @@ public class InferenceServerConfigurationStorage {
   private static InferenceServerConfigurationStorable convert(InferenceServerConfigurationCreationData entry) {
     InferenceServerConfigurationStorable result = new InferenceServerConfigurationStorable();
     String[] parts = entry.getId().split("/");
-    String additionals = entry.getAdditionalParameters() == null ? null : entry.getAdditionalParameters().replace("\n", " ");
+    String additionals = entry.getAdditionalParameters() == null ? null : entry.getAdditionalParameters().replace("\n", " ").trim();
+    if (additionals.isBlank()) {
+      additionals = null;
+    }
     result.setAdditionalParameters(additionals);
     result.setContextWindowSize(entry.getContextWindowSize());
     result.setDescription(entry.getDescription());

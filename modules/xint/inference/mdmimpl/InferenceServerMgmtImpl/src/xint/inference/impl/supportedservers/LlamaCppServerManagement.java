@@ -264,7 +264,7 @@ public class LlamaCppServerManagement implements InferenceServerManagement {
   @Override
   public boolean start(long requestId, InferenceServerConfiguration serverConfig) {
     InferenceServerManagementRequestHistoryStorage storage = new InferenceServerManagementRequestHistoryStorage();
-    
+
     try {
       String shell = System.getProperty("SHELL");
       if (shell == null || shell.isBlank()) {
@@ -274,18 +274,27 @@ public class LlamaCppServerManagement implements InferenceServerManagement {
       String pathToBin = new File(pathForVersion, "llama-server").toPath().toAbsolutePath().normalize().toString();
       String arguments = createArguments(serverConfig);
       String program = String.format("%s %s &", pathToBin, arguments);
-      
-      new ProcessBuilder(shell, "-c", program).start();
+
+      new ProcessBuilder(shell, "-c", program).redirectError(ProcessBuilder.Redirect.DISCARD).start();
+      if (logger.isDebugEnabled()) {
+        logger.debug(String.format("Starting server: %s -c '%s'", shell, program));
+      }
       if (!checkHealth(serverConfig.getPort())) {
         if (logger.isWarnEnabled()) {
           logger.warn("Could not start server " + serverConfig + " reqId: " + requestId + ", because healthcheck failed");
         }
         throw new RuntimeException("service did not start correctly");
       } else {
-        Long pid = getPid(serverConfig, ProcessInteraction.listProcesses());
+        List<ProcessInfo> info = ProcessInteraction.listProcesses();
+        Long pid = getPid(serverConfig, info);
         if (pid == null) {
           if (logger.isWarnEnabled()) {
-            logger.warn("Could not start server " + serverConfig + " reqId: " + requestId + ", because pid could not be found");
+            logger.warn("Could not start server " + serverConfig.getId() + " reqId: " + requestId + ", because pid could not be found");
+          }
+          if (logger.isDebugEnabled()) {
+            for (ProcessInfo inf : info) {
+              logger.debug("\tProcess: " + inf.toString());
+            }
           }
           throw new RuntimeException("service did not start correctly");
         }

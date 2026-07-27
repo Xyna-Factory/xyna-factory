@@ -54,5 +54,9 @@ public class ProcessInfo {
     return args;
   }
 
+  @Override
+  public String toString() {
+    return String.format("[%d] [%s] [%s]", pid, command, String.join(" ", args));
+  }
 
 }

@@ -17,8 +17,8 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><Application applicationName="InferenceServerMgmt" factoryVersion="" versionName="1.0.0" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">Factory Manager UI zum managen von Inference Servern</Description>
-    <Description Lang="EN">Factory Manager ZU to manage inference servers</Description>
+    <Description Lang="DE">Factory Manager UI zum Managen von Inference Servern</Description>
+    <Description Lang="EN">Factory Manager UI to manage inference servers</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>ZetaFramework</ApplicationName>
