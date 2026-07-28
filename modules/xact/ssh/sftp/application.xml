@@ -16,18 +16,18 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="SFTPServer" comment="" factoryVersion="" versionName="2.0.0" xmlVersion="1.1">
+<Application applicationName="SFTPServer" comment="" factoryVersion="" versionName="2.0.1" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Erzeuge Dateien per Workflow ausgelöst durch SCP oder SFTP.</Description>
     <Description Lang="EN">Create files via Workflow triggered by SCP or SFTP.</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>
-        <VersionName>1.1.4</VersionName>
+        <VersionName>1.1.5</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>SSHServer</ApplicationName>
-        <VersionName>2.0.1</VersionName>
+        <VersionName>2.0.2</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
