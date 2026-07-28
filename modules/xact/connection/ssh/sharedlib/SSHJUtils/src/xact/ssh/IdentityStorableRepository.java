@@ -22,6 +22,7 @@ import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -66,14 +67,20 @@ public class IdentityStorableRepository implements XynaIdentityRepository {
     passphraseStore = new SecureStorablePassphraseStore();
   }
   
-  
   public IdentityStorable add(Optional<String> name, EncryptionType keyType, byte[] privateKey, byte[] publicKey, Optional<String> passphrase) {
+      long priority = 0;
+      String typeclass = "";
+      IdentityStorable newIdentity = addWithAttributes(name, keyType, privateKey, publicKey, passphrase, priority, typeclass);
+      return newIdentity;
+  }
+  
+  public IdentityStorable addWithAttributes(Optional<String> name, EncryptionType keyType, byte[] privateKey, byte[] publicKey, Optional<String> passphrase, long priority, String typeclass) {
     byte[] adjustedPrivateKey = privateKey;
     
     //Legacy from JSCH implementation
     boolean success = true;
     
-    IdentityStorable newIdentity = keyPairToStorable(name, keyType, adjustedPrivateKey, publicKey);
+    IdentityStorable newIdentity = keyPairToStorable(name, keyType, adjustedPrivateKey, publicKey, priority, typeclass);
     identityLock.writeLock().lock();
     try {
       Collection<IdentityStorable> identities;
@@ -119,6 +126,27 @@ public class IdentityStorableRepository implements XynaIdentityRepository {
     return newIdentity;
   }
   
+  public IdentityStorable overwrite(IdentityStorable newIdentity) {
+    identityLock.writeLock().lock();
+    try {
+      ODSConnection con = ods.openConnection(ODSConnectionType.DEFAULT);
+      try {
+        con.persistObject(newIdentity);
+        con.commit();
+      } catch (PersistenceLayerException e) {
+        throw new RuntimeException("", e);
+      } finally {
+        try {
+          con.closeConnection();
+        } catch (PersistenceLayerException e) {
+          logger.debug("Error while trying to close connection",e);
+        }
+      }
+    } finally {
+      identityLock.writeLock().unlock();
+    }
+    return newIdentity;
+  }
   
   public Collection<IdentityStorable> removeKey(EncryptionType type, Optional<String> publickey) {
     identityLock.writeLock().lock();
@@ -219,6 +247,12 @@ public class IdentityStorableRepository implements XynaIdentityRepository {
   }
   
   
+  class KeyComparator implements java.util.Comparator<IdentityStorable> {
+      public int compare(IdentityStorable a, IdentityStorable b) {
+          return Long.compare(b.getPriority(), a.getPriority());
+      }
+  }
+  
   public Collection<IdentityStorable> getAllIdentities() {
 
     identityLock.readLock().lock();
@@ -226,7 +260,8 @@ public class IdentityStorableRepository implements XynaIdentityRepository {
       ODSConnection con = ods.openConnection(ODSConnectionType.DEFAULT);
       try {
         Collection<IdentityStorable> identities = con.loadCollection(IdentityStorable.class);
-        Collection<IdentityStorable> adjustedIdentities = new ArrayList<>();
+        Collection<IdentityStorable> adjustedIdentitiesCollection = new ArrayList<>();
+        ArrayList<IdentityStorable> adjustedIdentities = new ArrayList<IdentityStorable>();
         
         //If adjustments should be necessary, please implement them here.
         for (IdentityStorable identity : identities) {
@@ -236,9 +271,13 @@ public class IdentityStorableRepository implements XynaIdentityRepository {
           adjustedIdentity.setType(identity.getType());
           adjustedIdentity.setPublickey(identity.getPublickey());
           adjustedIdentity.setPrivatekey(identity.getPrivatekey());
+          adjustedIdentity.setPriority(identity.getPriority());
+          adjustedIdentity.setTypeclass(identity.getTypeclass());
           adjustedIdentities.add(adjustedIdentity);
         }
-        return adjustedIdentities;
+        Collections.sort(adjustedIdentities, new KeyComparator());
+        adjustedIdentitiesCollection.addAll(adjustedIdentities);
+        return adjustedIdentitiesCollection;
       } catch (PersistenceLayerException e) {
         throw new RuntimeException("", e);
       } finally {
@@ -264,6 +303,16 @@ public class IdentityStorableRepository implements XynaIdentityRepository {
   }
 
 
+  private List<KeyProvider> addFirst(List<KeyProvider> list, KeyProvider firstelement) {
+    List<KeyProvider> result = new ArrayList<KeyProvider>();
+    if (firstelement != null) {
+      result.add(firstelement);
+    }
+    result.addAll(list);
+    return result;
+  }
+
+
   @Override
   public List<KeyProvider> getKey(String name, Optional<String> type) {
     identityLock.readLock().lock();
@@ -273,6 +322,8 @@ public class IdentityStorableRepository implements XynaIdentityRepository {
       for (IdentityStorable identity : storables) {
         if (name != null) {
           if (identity.getName().equalsIgnoreCase(name)) {
+             result=addFirst(result,storableToKeyProvider(identity));
+          } else {
             if (type.isPresent()) {
               if (type.get().equals(identity.getType())) {
                 result.add(storableToKeyProvider(identity));
@@ -327,11 +378,17 @@ public class IdentityStorableRepository implements XynaIdentityRepository {
       }
   }
   
-  private static IdentityStorable keyPairToStorable(Optional<String> name, EncryptionType format, byte[] privateKey, byte[] publicKey) {
+  private static IdentityStorable keyPairToStorable(Optional<String> name, EncryptionType format, byte[] privateKey, byte[] publicKey, long priority, String typeclass) {
      return new IdentityStorable(name.orElse(generateName(publicKey)),
                                 format.getStringRepresentation(),
-                                privateKey,
-                                publicKey);
+                                publicKey,
+                                privateKey, priority, typeclass);
+  }
+
+  public String generateIdentity(byte[] publicKey) {
+    //Hash should match "echo -n "..." | base64 -d | sha256sum"
+    byte[] decodedBytes = Base64.getDecoder().decode(publicKey);
+    return generateName(decodedBytes);
   }
 
   private static String generateName(byte[] publicKey) {

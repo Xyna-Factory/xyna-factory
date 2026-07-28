@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,6 +93,7 @@ public class XmomClientGenerator extends DefaultCodegen {
 
     // replace spaces, "-", "." with underscores in info.title
     info.setTitle(sanitizeName(info.getTitle()));
+    additionalProperties.put("infoTitle", info.getTitle());
 
     Map<String, Object> vendorExtentions = info.getExtensions();
 
@@ -263,6 +264,8 @@ public class XmomClientGenerator extends DefaultCodegen {
   public XmomClientGenerator() {
     super();
 
+    cliOptions.add(CliOption.newBoolean("generateMock", "generates requestWorkflowWithProcessing to contain a toggleable mock."));
+
     // set the output folder here
     outputFolder = "generated-code/xmom-client";
 
@@ -315,6 +318,17 @@ public class XmomClientGenerator extends DefaultCodegen {
 
     typeMapping.clear();
     XynaModelUtils.getTypeMapping().forEach(typeMapping::putIfAbsent);
+  }
+
+
+  @Override
+  public void processOpts() {
+    super.processOpts();
+    if (Boolean.TRUE.equals(additionalProperties.get("generateMock"))) {
+      //swap template file
+      apiTemplateFiles.remove("requestWorkflowWithProcessing.mustache");
+      apiTemplateFiles.put("requestWorkflowWithProcessing_mock.mustache", "_requestWorkflowWithProcessing_toSplit.xml");
+    }
   }
 
   /**

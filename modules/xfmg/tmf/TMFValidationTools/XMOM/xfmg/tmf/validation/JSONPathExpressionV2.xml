@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ expression ::= "(" expression ")" |
                         expression infix expression |
 						pathref
 function ::= builtin | userdefined
-builtin ::= "EVAL" | "LEN" | "NOT" | "CONCAT" | "PROPERTY" | "ISNULL" | "MATCH"
+builtin ::= "EVAL" | "LEN" | "NOT" | "CONCAT" | "PROPERTY" | "ISNULL" | "MATCH" | "FILTER" | "MAP"
 infix ::= "+" | "-" | "*" | "/" | "<" | ">" | ">=" | "<=" | "==" | "!=" | "=~" | "~=" | "AND" | "&&" | "OR" | "||" 
 value ::= "\"" string "\"" | number | "true" | "false"
 pathref ::= "$" integer
@@ -43,14 +43,18 @@ pathref ::= "$" integer
 Quotations and backslashes in strings have to be escaped with backslash
 number can be float (i.e. negative and with negative exponent. Example: -3.4e-4)
 
-EVAL([<json>, ] pathref)
-EVAL expects either one argument as pathref ($n referring to the n-th entry of the list of json paths) or a json as an additional first argument. If no json is provided, the default json is used to evaluate the expression.
+EVAL([<json> | %<number>, ] pathref)
+EVAL expects either one argument as pathref ($n referring to the n-th entry of the array of json paths) or a json as an additional first argument. 
+If no json is provided, the default json is used to evaluate the expression. If used inside FILTER/MAP, %1 can be used to specify the json 
+to be the array-element, the function is iterating over. Nesting: If the _second_ argument of FILTER/MAP contains other FILTER/MAP invocations, this number
+represents the nesting-depth. %0 refers to the global input json, %1 to the json of the FILTER/MAP iteration, %2 to the same if nested once, and 
+so on. Example: COUNT(FILTER(EVAL("$.list"), EVAL(%1, "$.attr")=="val"))) -> Count the number of array elements under $.list that fulfill .attr="val"
 
 LEN returns the length of the argument, either length of array or length of string.
 
 NOT negates the argument, assuming it is of type (or convertable to) boolean
 
-CONCAT concatenates all arguments as strings
+CONCAT concatenates all arguments as strings. concats all array elements of arguments that are arrays.
 
 PROPERTY<propertyName>[, <defaultValue>])
 PROPERTY returns the value of the xyna property given by the first argument. A second argument is optional for the default value to be returned if the property is not set (or null).
@@ -64,6 +68,10 @@ Is the same as
 <value> =~ <regex>
 and 
 <regex> ~= <value>
+
+FILTER(<array>, <boolean expression>) returns new array of the elements for which the expression is true
+MAP(<array>, <expression>) returns new array consisting of evaluating expression for each input array element
+For both FILTER and MAP see EVAL(%<number>, ) syntax for how to access the array elements in the expression.
 
 Operator precedence of infix functions: ("(",")") (*/) (+-) (>,...) (==,!=,~=,=~) (AND,&&) (OR,||)
 

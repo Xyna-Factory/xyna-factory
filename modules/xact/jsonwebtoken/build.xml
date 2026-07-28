@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,9 @@
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/KeyGeneratorImpl">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/JSONWebTokenAuthenticationImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
         <antcall target="build-application" />
     </target>
 
@@ -43,6 +46,7 @@
         <antcall target="create-mdm-jar" />
         <supply-mdm-jar type="mdmimpl" name="JSONWebTokenImpl" />
         <supply-mdm-jar type="mdmimpl" name="KeyGeneratorImpl" />
+        <supply-mdm-jar type="mdmimpl" name="JSONWebTokenAuthenticationImpl" />
         <delete file="${basedir}/mdm.jar" />
     </target>
 

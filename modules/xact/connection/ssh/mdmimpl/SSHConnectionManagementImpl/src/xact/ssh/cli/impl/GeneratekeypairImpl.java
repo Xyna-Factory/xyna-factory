@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,13 +31,23 @@ public class GeneratekeypairImpl extends XynaCommandImplementation<Generatekeypa
 
   public void execute(OutputStream statusOutputStream, Generatekeypair payload) throws XynaException {
     Integer keysize = null;
+    Integer priority = 0;
+    String typeclass = "";
     if (payload.getKeysize() != null) {
       try {
         keysize = Integer.parseInt(payload.getKeysize());
       } catch (NumberFormatException e) { /* ntbd */ }
     }
+    if (payload.getPriority() != null) {
+        try {
+          priority = Integer.parseInt(payload.getPriority());
+        } catch (NumberFormatException e) { /* ntbd */ }
+    }
+    if (payload.getTypeclass() != null) {
+        typeclass = payload.getTypeclass();
+    }
     EncryptionType type = EncryptionType.getByStringRepresentation(payload.getEncryptiontype());
-    SSHConnectionManagementRepositoryAccess.generateKeyPair(type, keysize, payload.getPassphrase(), payload.getOverwrite());
+    SSHConnectionManagementRepositoryAccess.generateKeyPair(type, keysize, payload.getPassphrase(), payload.getOverwrite(), "", priority, typeclass);
   }
 
 }

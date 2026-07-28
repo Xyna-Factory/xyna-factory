@@ -28,6 +28,7 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.filter.CallStatistics.StatisticsEntry;
+import com.gip.xyna.xact.filter.ConfigurableFilterAction;
 import com.gip.xyna.xact.filter.FilterAction.FilterActionInstance;
 import com.gip.xyna.xact.filter.actions.*;
 import com.gip.xyna.xact.filter.actions.auth.ChangePasswordAction;
@@ -66,6 +67,7 @@ import com.gip.xyna.xact.filter.xmom.datatypes.json.GuiHttpPluginManagement;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
 import com.gip.xyna.xdev.xfractmod.xmdm.ConnectionFilter;
+import com.gip.xyna.xdev.xfractmod.xmdm.FilterConfigurationParameter;
 import com.gip.xyna.xdev.xfractmod.xmdm.EventListener;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.RevisionOrderControl;
@@ -143,6 +145,13 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
   public static final XynaPropertyBoolean SUPPRESS_STACKTRACES = new XynaPropertyBoolean("xmcp.guihttp.suppress_stacktraces", false)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Remove stacktraces from error responses.")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Entferne Stacktraces aus Fehlern in Antwortnachrichten.");
+
+  private H5XdevFilterParameter config;
+
+  @Override
+  public FilterConfigurationParameter createFilterConfigurationTemplate() {
+    return new H5XdevFilterParameter();
+  }
 
   private static class WorkspaceRevisionBuilder implements XynaPropertyBuilds.Builder<Long> {
 
@@ -372,7 +381,7 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     allFilterActions.add(new IndexAction(allFilterActions, applicationVersion, NAME, BASE_PATH));
 
     allFilterActions.add(new LoginAction(xmomGui));
-    allFilterActions.add(new InfoAction(xmomGui));
+    allFilterActions.add(new InfoAction());
     allFilterActions.add(new LogoutAction());
     allFilterActions.add(new ExternalUserLoginInformationAction());
     allFilterActions.add(new ExternalUserLoginAction(xmomGui));
@@ -467,6 +476,19 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     XmomUndoRedoHistory.UNDO_LIMIT.unregister();
   }
 
+  @Override
+  public FilterResponse createXynaOrder(HTTPTriggerConnection tc, FilterConfigurationParameter params) throws XynaException {
+
+    if (params != null && !params.equals(config)) {
+      if (logger.isInfoEnabled()) {
+        logger.info("Updating H5Xdev filter configuration: " + (config != null ? config : "none") + " => "+ params);
+      }
+
+      config = (H5XdevFilterParameter)params;
+    }
+
+    return createXynaOrder(tc);
+  }
 
   /**
    * Analyzes TriggerConnection and creates XynaOrder if it accepts the connection.
@@ -505,7 +527,11 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     try {
       for (FilterAction fa : allFilterActions) {
         if (matchAction(fa, url, tc.getMethodEnum())) {
-          filterActionInstance = fa.act(url, tc);
+          if (fa instanceof ConfigurableFilterAction) {
+            filterActionInstance = ((ConfigurableFilterAction) fa).actWithConfig(url, tc, config);
+          } else {
+            filterActionInstance = fa.act(url, tc);
+          }
           if (filterActionInstance == null) {
             continue;
           }

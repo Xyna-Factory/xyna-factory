@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="SSH" comment="" factoryVersion="" versionName="2.0.40" xmlVersion="1.1">
+<Application applicationName="SSH" comment="" factoryVersion="" versionName="2.0.42" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">SSH Connections verwenden (NETCONF, Shell)</Description>
     <Description Lang="EN">Manage SSH connections (NETCONF, Shell)</Description>
@@ -62,6 +62,18 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xact.ssh.KeyFileName</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.ssh.KeyAttributes</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.ssh.KeyInfo</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.ssh.KeyInfoService</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">

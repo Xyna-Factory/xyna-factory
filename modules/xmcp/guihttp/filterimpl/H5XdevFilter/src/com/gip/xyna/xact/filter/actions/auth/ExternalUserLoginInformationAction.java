@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,68 +21,80 @@ package com.gip.xyna.xact.filter.actions.auth;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.utils.misc.JsonBuilder;
-import com.gip.xyna.xact.filter.FilterAction;
+import com.gip.xyna.xact.filter.ConfigurableFilterAction;
+import com.gip.xyna.xact.filter.H5XdevFilterParameter;
 import com.gip.xyna.xact.filter.HTMLBuilder.HTMLPart;
 import com.gip.xyna.xact.filter.JsonFilterActionInstance;
 import com.gip.xyna.xact.filter.URLPath;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
+import com.gip.xyna.xfmg.xopctrl.DomainTypeSpecificData;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.Domain;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.DomainType;
+import com.gip.xyna.xfmg.xopctrl.usermanagement.RolesResolver;
 
 
 
 /**
  * http (reverse) proxy schickt client zertifikat als payload an xyna. z.b. könnte das der apache machen.
  * vgl https://tomcat.apache.org/tomcat-8.5-doc/api/org/apache/catalina/valves/SSLValve.html (beschreibung, wie das im tomcat terminiert)
- * 
+ *
  * beispiel request:
  * GET /FractalModeller/ HTTP/1.1
-Host: 10.0.10.141:7443
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101 Firefox/52.0
-Accept: text/html,application/xhtml+xml,application/xml;q=0.9,* /*;q=0.8
-Accept-Language: de,en-US;q=0.7,en;q=0.3
-Accept-Encoding: gzip, deflate, br
-DNT: 1
-Upgrade-Insecure-Requests: 1
-If-Modified-Since: Mon, 06 Aug 2018 07:44:55 GMT
-If-None-Match: W/"4416-1533541495000"
-Cache-Control: max-age=0
-SSL_CLIENT_CERT: -----BEGIN CERTIFICATE----- MIIDiTCCAnECCQDtSB9W0GaqOTANBgkqhkiG9w0BAQUFADCBgzELMAkGA1UEBhMC REUxGDAWBgNVBAgMD1JoZWlubGFuZCBQZmFsejEOMAwGA1UEBwwFTWFpbnoxDDAK BgNVBAoMA0dJUDEMMAoGA1UECwwDREVWMREwDwYDVQQDDAh2bWxpbjA1NzEbMBkG CSqGSIb3DQEJARYMYXhlbEBoaWVyLmRlMB4XDTE1MDYxMjEyMTQzNVoXDTI1MDQy MDEyMTQzNVowgYgxDzANBgNVBAMMBkxldmVsMTEOMAwGA1UECwwFVXNlcnMxETAP BgNVBAsMCEN1c3RvbWVyMRkwFwYKCZImiZPyLGQBGRYJbmdzc20tZ2lwMRIwEAYK CZImiZPyLGQBGRYCenoxIzAhBgkqhkiG9w0BCQEWFEdJUC5MZXZlbDFAZ2lwLmxv Y2FsMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyIFBkqZqSg4aylyI Uyv7lwklN60mLPwPP6Wksz+QE8Btfv8L6sFcoSzzHYwhDg5Tn5sD10p9WX9z0Mta mWg69oRtOiGbfJwswWZvCF1qD2U+bhiADsBlPdrFnjjYk8kaNGlamX+kLqv5mdK6 cStILuqj5nXlpZ8kidqJAuyh5EQoD8c26t3lSlFMo9Sa+Rz8HrVkM8xGCq24FS+G F6tvLFGxHegeWUR4Ty+luzFK9CHJhsXcB9CyPsPe1ibWp7i94CSazKv6YcLid3ZE 6k4S8XCJhh9s01zVAG0eP34V765XqCeZNnxVIA4xsUV6/P1PCqrCCPY2OJGMykF1 OClGgQIDAQABMA0GCSqGSIb3DQEBBQUAA4IBAQC2qk2h6UIAmLZQSrQkleiFRzIP EAMvBttVUpIksHoUEVeKiNajhJFjDsAN0DXnzzlCW2GiJyQXulbiI1rHCqMRK0b6 WSst7/HMV2xBsmAEYGrMNDtLpcjEkttwbEwRm8rtIquqQolp+XOPyRPEqXLe2wtz j2MfO9lCe5Tj89XInFW8sj9F4SwNWHCjOyoYBENy1I2dhfUG0UcG1sWQcVAggKQO fleYGSpS6DaENp9sttR0M0OxDVYuygqBG767jZaAHxdjykzgiEyO2tLCOzfTIUN3 0npArZ96b9p7pELz93RZJdQZCqopp9we5kITqxjSkN15QHuah6Vyq23hOUhb -----END CERTIFICATE----- 
-SSL_CIPHER: ECDHE-RSA-AES128-GCM-SHA256
-SSL_SESSION_ID: 90247e6aeb59ea2f424e656497dc29369a5d1b6b27b766b79f8561a6d2d118fb
-SSL_CIPHER_USEKEYSIZE: 128
-X-Forwarded-For: 
-X-Forwarded-Host: 
-X-Forwarded-Server: 
-Connection: Keep-Alive
- * 
+ Host: 10.0.10.141:7443
+ User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101 Firefox/52.0
+ Accept: text/html,application/xhtml+xml,application/xml;q=0.9,* /*;q=0.8
+ Accept-Language: de,en-US;q=0.7,en;q=0.3
+ Accept-Encoding: gzip, deflate, br
+ DNT: 1
+ Upgrade-Insecure-Requests: 1
+ If-Modified-Since: Mon, 06 Aug 2018 07:44:55 GMT
+ If-None-Match: W/"4416-1533541495000"
+ Cache-Control: max-age=0
+ SSL_CLIENT_CERT: -----BEGIN CERTIFICATE----- MIIDiTCCAnECCQDtSB9W0GaqOTANBgkqhkiG9w0BAQUFADCBgzELMAkGA1UEBhMC REUxGDAWBgNVBAgMD1JoZWlubGFuZCBQZmFsejEOMAwGA1UEBwwFTWFpbnoxDDAK BgNVBAoMA0dJUDEMMAoGA1UECwwDREVWMREwDwYDVQQDDAh2bWxpbjA1NzEbMBkG CSqGSIb3DQEJARYMYXhlbEBoaWVyLmRlMB4XDTE1MDYxMjEyMTQzNVoXDTI1MDQy MDEyMTQzNVowgYgxDzANBgNVBAMMBkxldmVsMTEOMAwGA1UECwwFVXNlcnMxETAP BgNVBAsMCEN1c3RvbWVyMRkwFwYKCZImiZPyLGQBGRYJbmdzc20tZ2lwMRIwEAYK CZImiZPyLGQBGRYCenoxIzAhBgkqhkiG9w0BCQEWFEdJUC5MZXZlbDFAZ2lwLmxv Y2FsMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyIFBkqZqSg4aylyI Uyv7lwklN60mLPwPP6Wksz+QE8Btfv8L6sFcoSzzHYwhDg5Tn5sD10p9WX9z0Mta mWg69oRtOiGbfJwswWZvCF1qD2U+bhiADsBlPdrFnjjYk8kaNGlamX+kLqv5mdK6 cStILuqj5nXlpZ8kidqJAuyh5EQoD8c26t3lSlFMo9Sa+Rz8HrVkM8xGCq24FS+G F6tvLFGxHegeWUR4Ty+luzFK9CHJhsXcB9CyPsPe1ibWp7i94CSazKv6YcLid3ZE 6k4S8XCJhh9s01zVAG0eP34V765XqCeZNnxVIA4xsUV6/P1PCqrCCPY2OJGMykF1 OClGgQIDAQABMA0GCSqGSIb3DQEBBQUAA4IBAQC2qk2h6UIAmLZQSrQkleiFRzIP EAMvBttVUpIksHoUEVeKiNajhJFjDsAN0DXnzzlCW2GiJyQXulbiI1rHCqMRK0b6 WSst7/HMV2xBsmAEYGrMNDtLpcjEkttwbEwRm8rtIquqQolp+XOPyRPEqXLe2wtz j2MfO9lCe5Tj89XInFW8sj9F4SwNWHCjOyoYBENy1I2dhfUG0UcG1sWQcVAggKQO fleYGSpS6DaENp9sttR0M0OxDVYuygqBG767jZaAHxdjykzgiEyO2tLCOzfTIUN3 0npArZ96b9p7pELz93RZJdQZCqopp9we5kITqxjSkN15QHuah6Vyq23hOUhb -----END CERTIFICATE-----
+ SSL_CIPHER: ECDHE-RSA-AES128-GCM-SHA256
+ SSL_SESSION_ID: 90247e6aeb59ea2f424e656497dc29369a5d1b6b27b766b79f8561a6d2d118fb
+ SSL_CIPHER_USEKEYSIZE: 128
+ X-Forwarded-For:
+ X-Forwarded-Host:
+ X-Forwarded-Server:
+ Connection: Keep-Alive
+ *
  *
  * Response:
  * {
  "username":"ME.Level1@myCorp.local",
  "userdisplayname":"ME.Level1",
  "externaldomains": ["MY_DOMAIN"]
-  }
- * 
+ }
+ *
  * Response wenn kein Zert vorhanden:
  * {}
- * 
+ *
  * Response bei ungültigem Zert:
  * <Error-Response>
- * 
+ *
  */
-public class ExternalUserLoginInformationAction implements FilterAction {
-
+public class ExternalUserLoginInformationAction implements ConfigurableFilterAction {
 
   private static final String USERNAME = "username";
   private static final String DISPLAY_NAME = "userdisplayname";
   private static final String EXTERNAL_DOMAINS = "externaldomains";
+  private static final String DOMAIN_NAME = "name";
+  private static final String DOMAIN_ROLES = "roles";
+
+
+  /**
+   * Typed wrapper for domain roles to avoid casts and type warnings.
+   */
+  private static class DomainRoles {
+    String name;
+    List<String> roles;
+  }
 
 
   public boolean match(URLPath url, Method method) {
@@ -90,10 +102,28 @@ public class ExternalUserLoginInformationAction implements FilterAction {
   }
 
 
+  /**
+   * Config-aware entry point called by H5XdevFilter.
+   */
+  @Override
+  public FilterActionInstance actWithConfig(URLPath url, HTTPTriggerConnection tc, H5XdevFilterParameter config) throws XynaException {
+    return doAct(url, tc, config);
+  }
+
+
+  /**
+   * Legacy entry point - called when no config is passed (backward compatibility).
+   */
+  @Override
   public FilterActionInstance act(URLPath url, HTTPTriggerConnection tc) throws XynaException {
+    return doAct(url, tc, H5XdevFilterParameter.createDefaultConfig());
+  }
+
+
+  private FilterActionInstance doAct(URLPath url, HTTPTriggerConnection tc, H5XdevFilterParameter config) throws XynaException {
     JsonFilterActionInstance jfai = new JsonFilterActionInstance();
 
-    Pair<Boolean, ExternalUserInfo> p = ExternalUserLoginAction.getExternalUserInfoOrFail(jfai, tc);
+    Pair<Boolean, ExternalUserInfo> p = ExternalUserLoginAction.getExternalUserInfoOrFail(jfai, tc, config);
     if (p.getFirst()) {
       return jfai;
     }
@@ -103,22 +133,91 @@ public class ExternalUserLoginInformationAction implements FilterAction {
       return jfai;
     }
 
+    String preferredDomainName = config.getPreferredDomain() != null ? config.getPreferredDomain().trim() : "";
+
     JsonBuilder jb = new JsonBuilder();
     jb.startObject();
     jb.addStringAttribute(USERNAME, eui.externalUserName);
     jb.addStringAttribute(DISPLAY_NAME, eui.externalUserDisplayName);
 
-    List<String> domains = new ArrayList<>();
+    List<String> domainNames = new ArrayList<>();
+    List<DomainRoles> domainsList = new ArrayList<>();
+
     for (Domain d : XynaFactory.getInstance().getFactoryManagement().getDomains()) {
       if (d.getDomainTypeAsEnum() != DomainType.LOCAL) {
-        domains.add(d.getName());
+        domainNames.add(d.getName());
+
+        // Get available roles for this domain
+        List<String> roles = getAvailableRolesForDomain(d, eui);
+
+        DomainRoles domainInfo = new DomainRoles();
+        domainInfo.name = d.getName();
+        domainInfo.roles = roles;
+        domainsList.add(domainInfo);
       }
     }
-    jb.addStringListAttribute(EXTERNAL_DOMAINS, domains);
+
+    // Sort domains: preferred domain first if configured
+    if (preferredDomainName != null && !preferredDomainName.isEmpty()) {
+      DomainRoles preferredDomainInfo = null;
+      for (DomainRoles domainInfo : domainsList) {
+        if (preferredDomainName.equals(domainInfo.name)) {
+          preferredDomainInfo = domainInfo;
+          break;
+        }
+      }
+      if (preferredDomainInfo != null) {
+        domainsList.remove(preferredDomainInfo);
+        domainsList.add(0, preferredDomainInfo);
+      }
+    }
+
+    // Keep externaldomains in the same order as domains.
+    domainNames.clear();
+    for (DomainRoles domainInfo : domainsList) {
+      domainNames.add(domainInfo.name);
+    }
+
+    jb.addStringListAttribute(EXTERNAL_DOMAINS, domainNames);
+
+    // Add detailed domain information with roles
+    if (!domainsList.isEmpty()) {
+      jb.nextObjectAsAttribute("domains");
+      jb.startList();
+      for (DomainRoles domainInfo : domainsList) {
+        jb.startObject();
+        jb.addStringAttribute(DOMAIN_NAME, domainInfo.name);
+        jb.addStringListAttribute(DOMAIN_ROLES, domainInfo.roles);
+        jb.endObject();
+      }
+      jb.endList();
+    }
+
     jb.endObject();
 
     jfai.sendJson(tc, jb.toString());
     return jfai;
+  }
+
+
+  private List<String> getAvailableRolesForDomain(Domain domain, ExternalUserInfo eui) {
+    List<String> roles = new ArrayList<>();
+    DomainTypeSpecificData domainSpecificData = domain.getDomainSpecificData();
+    if (domainSpecificData == null) {
+      return roles;
+    }
+
+    String token = eui.externalUserPassword;
+    if (token == null || token.isEmpty()) {
+      return roles;
+    }
+
+    if (!(domainSpecificData instanceof RolesResolver)) {
+      return roles;
+    }
+
+    RolesResolver resolverConfig = (RolesResolver) domainSpecificData;
+    return resolverConfig.resolveAvailableRoles(domain.getName(), token);
   }
 
 

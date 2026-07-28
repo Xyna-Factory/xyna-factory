@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,17 +69,17 @@ import xfmg.oas.generation.impl.ApplicationGenerationServiceOperationImpl;
 public class OasAppBuilder {
 
   
-  public OASApplicationData createOasApp(String generator, String target, String specFile) {
-    return createOasApp(generator, target, specFile, new OasImportStatusHandler());
+  public OASApplicationData createOasApp(String generator, String target, String specFile, boolean generateMock) {
+    return createOasApp(generator, target, specFile, generateMock, new OasImportStatusHandler());
   }
 
   
-  public OASApplicationData createOasApp(String generator, String target, String specFile,
+  public OASApplicationData createOasApp(String generator, String target, String specFile, boolean generateMock,
                                          OasImportStatusHandler statusHandler) {
     List<File> files = new ArrayList<>();
     statusHandler.storeStatusParsing();
     
-    callGenerator(generator, target, specFile);
+    callGenerator(generator, target, specFile, generateMock);
     
     statusHandler.storeStatusAppBinaryGen();
     separateFiles(target);
@@ -126,14 +126,14 @@ public class OasAppBuilder {
     }
   }
 
-  public void createOasAppOffline(String generator, String targetDir, String specFile) {
+  public void createOasAppOffline(String generator, String targetDir, String specFile, boolean generateMock) {
     try {
       Path tmpDir = Files.createTempDirectory("oasmain");
       File tmpDirFile = tmpDir.toFile();
       try {
         String tmpDirAsString = tmpDir.toString();
 
-        callGenerator(generator, tmpDirAsString, specFile);
+        callGenerator(generator, tmpDirAsString, specFile, generateMock);
         separateFiles(tmpDirAsString);
         String appName = createAppFileNameFromXml(tmpDirAsString);
 
@@ -151,7 +151,7 @@ public class OasAppBuilder {
   }
 
   
-  private void callGenerator(String generatorName, String target, String specFile) {
+  private void callGenerator(String generatorName, String target, String specFile, boolean generateMock) {
     final CodegenConfigurator configurator = new CodegenConfigurator()
         .setGeneratorName(generatorName)
         .setInputSpec(specFile)
@@ -159,6 +159,7 @@ public class OasAppBuilder {
                                ApplicationGenerationServiceOperationImpl.createListWrappers.get() : true)
         .addAdditionalProperty("x-createListWrappers", XynaFactory.isFactoryServer() ? 
                                ApplicationGenerationServiceOperationImpl.createListWrappers.get() : true)
+        .addAdditionalProperty("generateMock", generateMock)
         .setOutputDir(target);
     
       final ClientOptInput clientOptInput = configurator.toClientOptInput();

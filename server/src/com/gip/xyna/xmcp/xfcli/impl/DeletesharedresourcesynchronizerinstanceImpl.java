@@ -38,11 +38,11 @@ public class DeletesharedresourcesynchronizerinstanceImpl extends XynaCommandImp
     List<String> sharedResourceTypes = srm.deleteSharedResourceSynchronizer(instanceName);
     writeToCommandLine(statusOutputStream, "Successfully deleted shared resource synchronizer instance " + instanceName);
     if (sharedResourceTypes.isEmpty()) {
-      writeToCommandLine(statusOutputStream, "It was not configured on any shared resource types");
+      writeToCommandLine(statusOutputStream, ". It was not configured on any shared resource types");
       return;
     }
     String types = String.join(", ", sharedResourceTypes);
-    writeToCommandLine(statusOutputStream, "It was configured to these shared resource types: " + types);
+    writeToCommandLine(statusOutputStream, ". It was configured to these shared resource types: " + types);
   }
 
 }

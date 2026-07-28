@@ -157,7 +157,7 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
         break;
       case DISCONNECTED:
       case NEVER_CONNECTED:
-        //TODO Sinnvollerweise konfigurierbar Local oder Unsupported, da hier beide 
+        //TODO Sinnvollerweise konfigurierbar Local oder Unsupported, da hier beide
         //Clusterknoten laufen können und damit Vetos doppelt vergeben könnten
         cm = ClusterMode.Local; //ClusterMode.Unsupported;
         break;
@@ -407,7 +407,7 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
           try {
             if (veto.isAdministrative()) {
               vmAlgorithm.allocateAdministrativeVeto(new AdministrativeVeto(veto.getName(), veto.getDocumentation(), now));
-            } else if (veto.isShared()) {
+            } else if (veto.isAllocatedShared()) {
               for (Long sharedOrderId : veto.getSharedOrderIds()) {
                 OrderInformation orderInfo = new OrderInformation(sharedOrderId);
                 vmAlgorithm.allocateVetos(orderInfo, Collections.emptyList(), List.of(veto.getName()), now);

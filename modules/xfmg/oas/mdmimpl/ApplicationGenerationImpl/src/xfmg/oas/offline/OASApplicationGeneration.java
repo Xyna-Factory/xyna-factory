@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ public class OASApplicationGeneration {
   public static void main(String[] args) {
     if (args.length != 3) {
       System.out.println("Generates Xyna Applications representing datamodel & client from Open API yaml schema.");
-      System.out.println("Parameters: <Open API yaml schema file> <Generation Target (\"datamodel\", \"client\", \"provider\", \"all\")> " + 
+      System.out.println("Parameters: <Open API yaml schema file> <Generation Target (\"datamodel\", \"client\", \"client-with-mock\", \"provider\", \"all\", \"all-with-clientmock\")> " + 
                          "<Target directory (where generated application files will be placed)>");
       System.exit(2);
     }
@@ -43,20 +43,29 @@ public class OASApplicationGeneration {
     }
     switch (args[1]) {
       case "all" :
-        new OasAppBuilder().createOasAppOffline("xmom-client", target, yaml);
-        new OasAppBuilder().createOasAppOffline("xmom-server", target, yaml);
-        new OasAppBuilder().createOasAppOffline("xmom-data-model", target, yaml);
+        new OasAppBuilder().createOasAppOffline("xmom-client", target, yaml, false);
+        new OasAppBuilder().createOasAppOffline("xmom-server", target, yaml, false);
+        new OasAppBuilder().createOasAppOffline("xmom-data-model", target, yaml, false);
+        break;
+      case "all-with-clientmock" :
+        new OasAppBuilder().createOasAppOffline("xmom-client", target, yaml, true);
+        new OasAppBuilder().createOasAppOffline("xmom-server", target, yaml, false);
+        new OasAppBuilder().createOasAppOffline("xmom-data-model", target, yaml, false);
         break;
       case "provider" :
-        new OasAppBuilder().createOasAppOffline("xmom-server", target, yaml);
-        new OasAppBuilder().createOasAppOffline("xmom-data-model", target, yaml);
+        new OasAppBuilder().createOasAppOffline("xmom-server", target, yaml, false);
+        new OasAppBuilder().createOasAppOffline("xmom-data-model", target, yaml, false);
         break;
       case "client" :
-        new OasAppBuilder().createOasAppOffline("xmom-client", target, yaml);
-        new OasAppBuilder().createOasAppOffline("xmom-data-model", target, yaml);
+        new OasAppBuilder().createOasAppOffline("xmom-client", target, yaml, false);
+        new OasAppBuilder().createOasAppOffline("xmom-data-model", target, yaml, false);
+        break;
+      case "client-with-mock" :
+        new OasAppBuilder().createOasAppOffline("xmom-client", target, yaml, true);
+        new OasAppBuilder().createOasAppOffline("xmom-data-model", target, yaml, false);
         break;
       case "datamodel" :
-        new OasAppBuilder().createOasAppOffline("xmom-data-model", target, yaml);
+        new OasAppBuilder().createOasAppOffline("xmom-data-model", target, yaml, false);
         break;
       default :
         System.out.println("Unexpected Generation Target: \"" + args[1] + "\".");

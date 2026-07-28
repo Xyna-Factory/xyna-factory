@@ -215,6 +215,11 @@ public class HTTPResponseResolverServiceOperationImpl implements ExtendedDeploym
         } else {
           return null;
         }
+      } else if (source.equals("body")) {
+        if (request == null) {
+          return null;
+        }
+        return request.getText();
       }
       return null;
     }
@@ -393,7 +398,7 @@ public class HTTPResponseResolverServiceOperationImpl implements ExtendedDeploym
       HTTPResponse resp = new HTTPResponse();
       resp.responseBody = "";
       resp.responseCode = 404;
-      resp.reason = "Not found";
+      resp.reason = "Not Found";
       return resp;
     }
   }
@@ -441,7 +446,8 @@ public class HTTPResponseResolverServiceOperationImpl implements ExtendedDeploym
             //deleted? should be handled by another event that is just not processed yet
             return null;
           }
-        } else if (ce.erroneous) {
+        }
+        if (ce.erroneous) {
           return null;
         }
         if (e.getValue().fc.matches(request, sendParameter)) {

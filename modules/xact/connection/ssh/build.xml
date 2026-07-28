@@ -53,6 +53,9 @@
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/SSHShellConnectionImpl">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/KeyInfoServiceImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
         
         <antcall target="build-application" />
     </target>
@@ -64,6 +67,7 @@
         <supply-mdm-jar type="mdmimpl" name="SSHFileTransferImpl" />
         <supply-mdm-jar type="mdmimpl" name="SSHNETCONFConnectionImpl" />
         <supply-mdm-jar type="mdmimpl" name="SSHShellConnectionImpl" />
+        <supply-mdm-jar type="mdmimpl" name="KeyInfoServiceImpl" />
         <delete file="${basedir}/mdm.jar" />
     </target>
 
