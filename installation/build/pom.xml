@@ -34,6 +34,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        <bom.dir>.</bom.dir>
     </properties>
 
     <dependencyManagement>
@@ -186,7 +187,7 @@
             <dependency>
                 <groupId>com.healthmarketscience.rmiio</groupId>
                 <artifactId>rmiio</artifactId>
-                <version>2.1.2</version>
+                <version>2.0.2</version>
             </dependency>
             <dependency>
                 <groupId>com.hierynomus</groupId>
@@ -588,4 +589,16 @@
           </dependency>
         </dependencies>
     </dependencyManagement>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>2.4.0</version>
+                <configuration>
+                    <licensesConfigFile>${bom.dir}/license_override.xml</licensesConfigFile>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

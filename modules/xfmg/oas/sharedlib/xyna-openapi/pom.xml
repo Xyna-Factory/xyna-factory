@@ -86,6 +86,7 @@
 
     </dependencies>
     <properties>
+        <bom.dir>../../../../../installation/build/</bom.dir>
         <junit-version>4.13.2</junit-version>
     </properties>
 
