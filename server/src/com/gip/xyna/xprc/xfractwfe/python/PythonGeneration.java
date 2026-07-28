@@ -41,8 +41,9 @@ public class PythonGeneration {
 
     public String fqn; //original
     public String parent; //original
-    public List<Pair<String, String>> members;
+    public List<MemberInformation> members;
     public List<MethodInformation> methods;
+    public String documentation;
   }
 
   public static class MethodInformation {
@@ -51,8 +52,14 @@ public class PythonGeneration {
     public String returnType;
     public boolean isStatic;
     public List<Pair<String, String>> argumentsWithTypes;
+    public String documentation;
   }
 
+  public static class MemberInformation {
+    public String name;
+    public String typeName;
+    public String documentation;
+  }
 
   public static final Map<PrimitiveType, String> PRIMITIVE_TYPES_MAPPING = setupPrimitiveTypes();
 
@@ -92,6 +99,7 @@ public class PythonGeneration {
       info.name = op.getNameWithoutVersion();
       info.returnType = createReturnTypeFromOutputVars(op.getOutputVars(), addMdmPath);
       info.argumentsWithTypes = createArgumentsWithTypes(op.getInputVars(), addMdmPath);
+      info.documentation = op.getDocumentation();
       result.add(info);
     }
     return result;

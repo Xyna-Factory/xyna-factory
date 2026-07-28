@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Download Model Definition" TypeName="DownloadModelDefinition" TypePath="xint.inference.gui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Download Model Definition" Name="DownloadModelDefinition">
+    <Input/>
+    <Output>
+      <Data ID="10" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition10"/>
+      <Data ID="611" Label="Download Url" ReferenceName="DownloadUrl" ReferencePath="xint.inference" VariableName="downloadUrl611"/>
+    </Output>
+    <ServiceReference ID="355" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="354"/>
+      <Target RefID="354"/>
+    </ServiceReference>
+    <ServiceReference ID="106" Label="Download Definition" ReferenceName="DownloadDefinition" ReferencePath="xint.inference.gui">
+      <Source RefID="105"/>
+      <Target RefID="105"/>
+    </ServiceReference>
+    <Function ID="354" Label="get Own RuntimeContext">
+      <Source RefID="355"/>
+      <Target RefID="355"/>
+      <Target RefID="357"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="355"/>
+      <Receive ServiceID="355">
+        <Target RefID="357"/>
+      </Receive>
+    </Function>
+    <Mappings ID="126" Label="Mapping">
+      <Input>
+        <Data ID="382" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext382">
+          <Source RefID="126"/>
+        </Data>
+        <Source RefID="357"/>
+      </Input>
+      <Output>
+        <Data ID="143" Label="start download - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition143">
+          <Source RefID="126"/>
+        </Data>
+        <Target RefID="144"/>
+      </Output>
+      <Mapping>%1%.label="Start Download"</Mapping>
+      <Mapping>%1%.serviceRTC=%0%</Mapping>
+      <Mapping>%1%.serviceFQN="xint.inference.gui.DownloadModel"</Mapping>
+      <Mapping>%1%.synchronously="true"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="xyna_inference_download_update"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["1"].eventId="xyna_inference_download_clear"</Mapping>
+    </Mappings>
+    <Function ID="105" Label="Download Definition">
+      <Source RefID="106"/>
+      <Source RefID="144"/>
+      <Target RefID="106"/>
+      <Target RefID="108"/>
+      <Target RefID="109"/>
+      <Invoke Operation="DownloadDefinition" ServiceID="106">
+        <Source RefID="144"/>
+      </Invoke>
+      <Receive ServiceID="106">
+        <Target RefID="108"/>
+        <Target RefID="109"/>
+      </Receive>
+    </Function>
+    <Mappings ID="23" Label="Mapping">
+      <Input>
+        <Data ID="90" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition90">
+          <Source RefID="23"/>
+        </Data>
+        <Source RefID="108"/>
+      </Input>
+      <Output>
+        <Data ID="32" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition32">
+          <Source RefID="23"/>
+        </Data>
+        <Target RefID="33"/>
+      </Output>
+      <Mapping>%1%~=%0%</Mapping>
+      <Mapping>%1%.label="Download Model"</Mapping>
+    </Mappings>
+    <Data ID="33" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition33">
+      <Source RefID="23"/>
+    </Data>
+    <Data ID="108" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition108">
+      <Source RefID="105"/>
+    </Data>
+    <Data ID="109" Label="Download Url" ReferenceName="DownloadUrl" ReferencePath="xint.inference" VariableName="downloadUrl109">
+      <Source RefID="105"/>
+    </Data>
+    <Data ID="144" Label="start download - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition144">
+      <Source RefID="126"/>
+    </Data>
+    <Data ID="357" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext357">
+      <Source RefID="354"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="33"/>
+      <Source RefID="109"/>
+      <Target RefID="10"/>
+      <Target RefID="611"/>
+      <Copy>
+        <Source RefID="33">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="10"/>
+      </Copy>
+      <Copy>
+        <Source RefID="109"/>
+        <Target RefID="611"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
