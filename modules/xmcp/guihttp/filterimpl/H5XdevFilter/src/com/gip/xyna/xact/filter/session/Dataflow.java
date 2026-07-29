@@ -2194,7 +2194,7 @@ public class Dataflow {
         index = currentStep.getInputVars().indexOf(input.getIdentifiedVariable());
       
       if(index == -1)
-        throw new RuntimeException("input not found");
+        throw new RuntimeException("input not found " + currentStep + "(" + input.getIdentifiedVariable().getId() + ")");
       
       String varId = currentStep.getInputVarIds()[index];
       AVariableIdentification existingLink = findExistingLink(varId, providers);
@@ -2203,7 +2203,7 @@ public class Dataflow {
       //isConnectedToList
       InputConnection inputConnection = connections.get(input);
       if(existingLink != null && !existingLink.getIdentifiedVariable().isList() && isConnectedToList(existingLink, connections) &&
-          inputConnection.getConnectionForLane(0).getLinkState() == LinkstateIn.AMBIGUE)
+          inputConnection.getConnectionForLane(0).getLinkState() == LinkstateIn.AMBIGUE && currentStep.getParentStep() instanceof StepForeach)
       {
         //remove existingLink.getIdentifiedVariable()
         reresolveInputVars = reresolveInputVars | removeObsoleteForeachVariable(existingLink, currentStep, providers, connections);
