@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Request History Definition" TypeName="RequestHistoryDefinition" TypePath="xint.inference.gui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Request History Definition" Name="RequestHistoryDefinition">
+    <Input/>
+    <Output>
+      <Data ID="486" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition486"/>
+    </Output>
+    <ServiceReference ID="132" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="131"/>
+      <Target RefID="131"/>
+    </ServiceReference>
+    <Function ID="131" Label="get Own RuntimeContext">
+      <Source RefID="132"/>
+      <Target RefID="132"/>
+      <Target RefID="134"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="132"/>
+      <Receive ServiceID="132">
+        <Target RefID="134"/>
+      </Receive>
+    </Function>
+    <Mappings ID="575" Label="Active Requests/Downloads Table">
+      <Input>
+        <Data ID="577" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext577"/>
+        <Source RefID="134"/>
+      </Input>
+      <Output>
+        <Data ID="578" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition578"/>
+        <Target RefID="595"/>
+      </Output>
+      <Mapping>%1%.label="Downloads"</Mapping>
+      <Mapping>%1%.tableWorkflowRTC=%0%</Mapping>
+      <Mapping>%1%.tableWorkflowFQN="xint.inference.gui.ActiveRequestsTableInfo"</Mapping>
+      <Mapping>%1%.dataPath="%%"</Mapping>
+      <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%0%</Mapping>
+      <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xint.inference.gui.ManageDownloadDefinition"</Mapping>
+      <Mapping>%1%.triggerRefresh.eventId="xyna_inference_download_update"</Mapping>
+    </Mappings>
+    <Mappings ID="256" Label="clear history button">
+      <Input>
+        <Data ID="452" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext452">
+          <Source RefID="256"/>
+        </Data>
+        <Source RefID="134"/>
+      </Input>
+      <Output>
+        <Data ID="273" Label="clear history - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition273">
+          <Source RefID="256"/>
+        </Data>
+        <Target RefID="274"/>
+      </Output>
+      <Mapping>%1%.label="Clear History"</Mapping>
+      <Mapping>%1%.serviceRTC=%0%</Mapping>
+      <Mapping>%1%.serviceFQN="xint.inference.gui.ClearHistory"</Mapping>
+      <Mapping>%1%.synchronously="true"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="xyna_inference_history_update"</Mapping>
+      <Mapping>%1%.showResult="true"</Mapping>
+    </Mappings>
+    <Mappings ID="23" Label="history table">
+      <Input>
+        <Data ID="151" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext151">
+          <Source RefID="23"/>
+        </Data>
+        <Source RefID="134"/>
+      </Input>
+      <Input>
+        <Data ID="307" Label="clear history - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition307">
+          <Source RefID="23"/>
+        </Data>
+        <Source RefID="274"/>
+      </Input>
+      <Output>
+        <Data ID="32" Label="history - Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition32">
+          <Source RefID="23"/>
+        </Data>
+        <Target RefID="33"/>
+      </Output>
+      <Mapping>%2%.label="Request History"</Mapping>
+      <Mapping>%2%.tableWorkflowRTC=%0%</Mapping>
+      <Mapping>%2%.tableWorkflowFQN="xint.inference.gui.RequestHistoryTableInfo"</Mapping>
+      <Mapping>%2%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
+      <Mapping>%2%.triggerRefresh.eventId="xyna_inference_history_update"</Mapping>
+    </Mappings>
+    <Mappings ID="469" Label="Mapping">
+      <Input>
+        <Data ID="692" Label="active - Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition692">
+          <Source RefID="469"/>
+        </Data>
+        <Source RefID="595">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="741" Label="history - Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition741">
+          <Source RefID="469"/>
+        </Data>
+        <Source RefID="33">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="524" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition524">
+          <Source RefID="469"/>
+        </Data>
+        <Target RefID="525"/>
+      </Output>
+      <Mapping>%2%.children["0"]#cast("xmcp.forms.datatypes.TablePanelDefinition")=%0%</Mapping>
+      <Mapping>%2%.children["1"]#cast("xmcp.forms.datatypes.TablePanelDefinition")=%1%</Mapping>
+      <Mapping>%2%.closable="true"</Mapping>
+      <Mapping>%2%.label="History"</Mapping>
+    </Mappings>
+    <Data ID="33" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition33">
+      <Source RefID="23"/>
+    </Data>
+    <Data ID="134" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext134">
+      <Source RefID="131"/>
+    </Data>
+    <Data ID="274" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition274">
+      <Source RefID="256"/>
+    </Data>
+    <Data ID="525" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition525">
+      <Source RefID="469"/>
+    </Data>
+    <Data ID="595" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition595"/>
+    <Assign ID="1">
+      <Source RefID="525"/>
+      <Target RefID="486"/>
+      <Copy>
+        <Source RefID="525">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="486"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

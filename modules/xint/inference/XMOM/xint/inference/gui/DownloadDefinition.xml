@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Download Definition" TypeName="DownloadDefinition" TypePath="xint.inference.gui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Download Definition" Name="DownloadDefinition">
+    <Input>
+      <Data ID="86" Label="start download - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition86"/>
+    </Input>
+    <Output>
+      <Data ID="18" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition18"/>
+      <Data ID="44" Label="Download Url" ReferenceName="DownloadUrl" ReferencePath="xint.inference" VariableName="downloadUrl44"/>
+    </Output>
+    <ServiceReference ID="358" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="357"/>
+      <Target RefID="357"/>
+    </ServiceReference>
+    <Function ID="357" Label="get Own RuntimeContext">
+      <Source RefID="358"/>
+      <Target RefID="358"/>
+      <Target RefID="360"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="358"/>
+      <Receive ServiceID="358">
+        <Target RefID="360"/>
+      </Receive>
+    </Function>
+    <Mappings ID="57" Label="Mapping">
+      <Output>
+        <Data ID="66" Label="Download Url" ReferenceName="DownloadUrl" ReferencePath="xint.inference" VariableName="downloadUrl66">
+          <Source RefID="57"/>
+        </Data>
+        <Target RefID="67"/>
+      </Output>
+    </Mappings>
+    <Mappings ID="136" Label="Mapping">
+      <Output>
+        <Data ID="126" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition126">
+          <Source RefID="57"/>
+        </Data>
+        <Target RefID="145"/>
+      </Output>
+      <Mapping>%0%.label="Url"</Mapping>
+      <Mapping>%0%.dataPath="%0%.url"</Mapping>
+    </Mappings>
+    <Mappings ID="253" Label="Mapping">
+      <Input>
+        <Data ID="377" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext377">
+          <Source RefID="253"/>
+        </Data>
+        <Source RefID="360"/>
+      </Input>
+      <Output>
+        <Data ID="262" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition262">
+          <Source RefID="253"/>
+        </Data>
+        <Target RefID="263"/>
+      </Output>
+      <Mapping>%1%.label="Active Downloads"</Mapping>
+      <Mapping>%1%.tableWorkflowRTC=%0%</Mapping>
+      <Mapping>%1%.tableWorkflowFQN="xint.inference.gui.ActiveRequestsTableInfo"</Mapping>
+      <Mapping>%1%.dataPath="%%"</Mapping>
+      <Mapping>%1%.triggerRefresh.eventId="xyna_inference_download_update"</Mapping>
+      <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%0%</Mapping>
+      <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xint.inference.gui.ManageDownloadDefinition"</Mapping>
+    </Mappings>
+    <Mappings ID="31" Label="Mapping">
+      <Input>
+        <Data ID="154" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition154">
+          <Source RefID="31"/>
+        </Data>
+        <Source RefID="145"/>
+      </Input>
+      <Input>
+        <Data ID="203" Label="start download - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition203">
+          <Source RefID="31"/>
+        </Data>
+        <Source RefID="86"/>
+      </Input>
+      <Input>
+        <Data ID="236" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition236">
+          <Source RefID="31"/>
+        </Data>
+        <Source RefID="263"/>
+      </Input>
+      <Output>
+        <Data ID="76" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition76">
+          <Source RefID="31"/>
+        </Data>
+        <Target RefID="77"/>
+      </Output>
+      <Mapping>%3%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
+      <Mapping>%3%.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
+      <Mapping>%3%.children["2"]#cast("xmcp.forms.datatypes.TablePanelDefinition")=%2%</Mapping>
+      <Mapping>%3%.closable="true"</Mapping>
+      <Mapping>%3%.triggerClearDataChangeState.eventId="xyna_inference_download_clear"</Mapping>
+    </Mappings>
+    <Data ID="67" Label="Download Url" ReferenceName="DownloadUrl" ReferencePath="xint.inference" VariableName="downloadUrl67">
+      <Source RefID="57"/>
+    </Data>
+    <Data ID="77" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition77">
+      <Source RefID="31"/>
+    </Data>
+    <Data ID="145" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition145">
+      <Source RefID="57"/>
+    </Data>
+    <Data ID="263" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition263">
+      <Source RefID="253"/>
+    </Data>
+    <Data ID="360" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext360">
+      <Source RefID="357"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="77"/>
+      <Source RefID="67"/>
+      <Target RefID="18"/>
+      <Target RefID="44"/>
+      <Copy>
+        <Source RefID="77">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="18"/>
+      </Copy>
+      <Copy>
+        <Source RefID="67"/>
+        <Target RefID="44"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
