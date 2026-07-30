@@ -337,6 +337,7 @@ public class HTTPForwardingFilter extends ConnectionFilter<HTTPTriggerConnection
       }
       if (header.getHeaderField() != null) {
         for (HeaderField hf : header.getHeaderField()) {
+          if (hf == null) { continue; }
           if (hf.getName().equalsIgnoreCase("content-type")) {
             mime = hf.getValue();
             continue;
@@ -345,7 +346,7 @@ public class HTTPForwardingFilter extends ConnectionFilter<HTTPTriggerConnection
             //wird bei send response ermittelt!
             continue;
           }
-          responseHeader.put(hf.getName(), hf.getValue());
+          responseHeader.put(hf.getName(), hf.getValue() == null ? "" : hf.getValue());
         }
       }
     }

@@ -23,7 +23,7 @@
         <RuntimeContextRequirements>
             <RuntimeContextRequirement>
                 <ApplicationName>Http</ApplicationName>
-                <VersionName>1.5.11</VersionName>
+        <VersionName>1.5.12</VersionName>
             </RuntimeContextRequirement>
             <RuntimeContextRequirement>
                 <ApplicationName>UserSessionMgmt</ApplicationName>
