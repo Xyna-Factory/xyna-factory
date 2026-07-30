@@ -20,7 +20,7 @@
 
     <!-- this is the absolute path to the root -->
     <pathconvert property="root.dir">
-        <path location="${basedir}/../../../" />
+        <path location="${basedir}/../../../../" />
     </pathconvert>
     <property name="target.dir" value="${basedir}/deploy/" />
     <property name="application.dir" value="${basedir}" />

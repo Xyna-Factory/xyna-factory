@@ -26,7 +26,7 @@
     <property name="tmp.metainf.services.dir" value="${tmp.metainf.dir}/services" />
     <!-- this is the absolute path to the root -->
     <pathconvert property="root.dir" >
-        <path location="${basedir}/../../../../../../.."/>
+        <path location="${basedir}/../../../../../../../.."/>
     </pathconvert>
 
     <import file="${root.dir}/installation/build/macros.xml" />
