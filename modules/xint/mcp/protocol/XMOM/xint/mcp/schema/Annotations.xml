@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Annotations" TypeName="Annotations" TypePath="xint.mcp.schema" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data IsList="true" Label="Audience" VariableName="audience">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>An array indicating the intended audience(s) for this resource. Valid values are "user" and "assistant". For example, ["user", "assistant"] indicates content useful for both.</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Priority" VariableName="priority">
+    <Meta>
+      <Type>double</Type>
+      <Documentation>A number from 0.0 to 1.0 indicating the importance of this resource. A value of 1 means “most important” (effectively required), while 0 means “least important” (entirely optional).</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Last Modified" VariableName="lastModified">
+    <Meta>
+      <Type>Long</Type>
+      <Documentation>Timestamp indicating when the resource was last modified.
+
+Will be formatted as ISO 8601 timestamp.</Documentation>
+    </Meta>
+  </Data>
+</DataType>
