@@ -100,18 +100,6 @@
                         <groupId>org.rrd4j</groupId>
                         <artifactId>rrd4j</artifactId>
                 </dependency>
-                <!--
-                <dependency>
-                        <groupId>com.gip.xyna</groupId>
-                        <artifactId>XynaJavaSerializationPersistenceLayer</artifactId>
-                        <exclusions>
-                                <exclusion>
-                                        <groupId>*</groupId>
-                                        <artifactId>*</artifactId>
-                                </exclusion>
-                        </exclusions>
-                </dependency>
-                -->
                 <dependency>
                         <groupId>com.gip.xyna</groupId>
                         <artifactId>xynautils-database</artifactId>
