@@ -187,30 +187,31 @@ public enum DomainType {
     @Override
     public JWTDomainSpecificData generateDomainTypeSpecificData(Map<String, List<String>> specifics) {
       List<String> ordertype = specifics.get(JWT_SPECIFIC_ORDERTYPE_PARAMETER_IDENTIFIER);
-      if (ordertype == null || ordertype.isEmpty()) {
-        throw new IllegalArgumentException("No ordertype for authentification!");
-      } else if (ordertype.size() > 1) {
+      if (ordertype != null && ordertype.size() > 1) {
         throw new IllegalArgumentException("Too many ordertypes!");
       }
+      String configuredOrdertype = (ordertype == null || ordertype.isEmpty()) ? null : ordertype.get(0);
+      if (configuredOrdertype != null && configuredOrdertype.trim().isEmpty()) {
+        configuredOrdertype = null;
+      }
 
-      long revision = -1;
       List<String> applications = specifics.get(JWT_SPECIFIC_APPLICATION_PARAMETER_IDENTIFIER);
       List<String> versions = specifics.get(JWT_SPECIFIC_VERSION_PARAMETER_IDENTIFIER);
-      List<String> workspaces = specifics.get(JWT_SPECIFIC_WORKSPACE_PARAMETER_IDENTIFIER);
-      RuntimeContext rc = null;
-      if (applications != null && !applications.isEmpty() && versions != null && !versions.isEmpty()) {
-        rc = new Application(applications.get(0), versions.get(0));
-      } else if (workspaces != null && !workspaces.isEmpty()) {
-        rc = new Workspace(workspaces.get(0));
+      if (applications == null || applications.isEmpty() || versions == null || versions.isEmpty()) {
+        throw new IllegalArgumentException("Missing runtime context for JWT domain: both application and version are required.");
       }
-      if (rc != null) {
-        RevisionManagement revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
-        try {
-          revision = revisionManagement.getRevision(rc);
-        } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
-          CentralFactoryLogging.getLogger(UserManagement.class).warn("Failed to retrieve revision for RuntimeContext " + rc, e);
-          throw new RuntimeException(e);
-        }
+      if (applications.size() > 1 || versions.size() > 1) {
+        throw new IllegalArgumentException("Too many application/version values for JWT runtime context.");
+      }
+
+      RuntimeContext rc = new Application(applications.get(0), versions.get(0));
+      long revision;
+      RevisionManagement revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
+      try {
+        revision = revisionManagement.getRevision(rc);
+      } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
+        CentralFactoryLogging.getLogger(UserManagement.class).warn("Failed to retrieve revision for RuntimeContext " + rc, e);
+        throw new RuntimeException(e);
       }
 
       List<String> trustedIssuers = specifics.get("trustedIssuers");
@@ -256,6 +257,10 @@ public enum DomainType {
       Optional<String> defaultRole = (defaultRoleList != null && !defaultRoleList.isEmpty())
           ? Optional.of(defaultRoleList.get(0))
           : Optional.empty();
+      List<String> rolesResolverOrdertypeList = specifics.get("rolesResolverOrdertype");
+      Optional<String> rolesResolverOrdertype = (rolesResolverOrdertypeList != null && !rolesResolverOrdertypeList.isEmpty())
+          ? Optional.of(rolesResolverOrdertypeList.get(0))
+          : Optional.empty();
 
       JWTDomainSpecificData.AuthValidationMode authValidationMode = null;
       List<String> validationModeList = specifics.get("authValidationMode");
@@ -269,7 +274,7 @@ public enum DomainType {
       }
 
       JWTDomainSpecificData data = new JWTDomainSpecificData(trustedIssuers, intendedAudience, roleClaimPath, defaultRole,
-          rolePrefix, roleSuffix, roleOrder, jwksUri, ordertype.get(0), revision);
+          rolePrefix, roleSuffix, roleOrder, jwksUri, configuredOrdertype, rolesResolverOrdertype, revision);
       if (authValidationMode != null) {
         data.setAuthValidationMode(authValidationMode);
       }

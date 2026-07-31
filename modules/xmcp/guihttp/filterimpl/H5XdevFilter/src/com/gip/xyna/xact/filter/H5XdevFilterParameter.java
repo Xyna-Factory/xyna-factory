@@ -19,6 +19,7 @@ package com.gip.xyna.xact.filter;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import com.gip.xyna.utils.misc.Documentation;
 import com.gip.xyna.utils.misc.StringParameter;
 import com.gip.xyna.xact.exceptions.XACT_InvalidFilterConfigurationParameterValueException;
@@ -44,11 +45,19 @@ public class H5XdevFilterParameter extends FilterConfigurationParameter {
                   .build())
           .optional().defaultValue("SSL_CLIENT_CERT").build();
 
+  public static final StringParameter<String> PREFERRED_DOMAIN = StringParameter.typeString("preferredDomain")
+          .documentation(Documentation
+                  .de("Bevorzugte Domain, die bei der Login-Auswahl zuerst herangezogen wird.")
+                  .en("Preferred domain first processed in the login selection.")
+                  .build())
+          .optional().defaultValue("").build();
+
   protected static final List<StringParameter<?>> ALL_PARAMETERS = 
-    StringParameter.asList( AUTH_TYPE, AUTH_HEADER );
+    StringParameter.asList( AUTH_TYPE, AUTH_HEADER, PREFERRED_DOMAIN );
 
   private ExternalAuthType authType;
   private String authHeader;
+  private String preferredDomain;
 
   @Override
   public List<StringParameter<?>> getAllStringParameters() {
@@ -60,6 +69,7 @@ public class H5XdevFilterParameter extends FilterConfigurationParameter {
     H5XdevFilterParameter param = new H5XdevFilterParameter();
     param.authType = AUTH_TYPE.getFromMap(paramMap);
     param.authHeader = AUTH_HEADER.getFromMap(paramMap);
+    param.preferredDomain = PREFERRED_DOMAIN.getFromMap(paramMap);
     return param;
   }
 
@@ -71,11 +81,47 @@ public class H5XdevFilterParameter extends FilterConfigurationParameter {
     return authHeader;
   }
 
+  public String getPreferredDomain() {
+    return preferredDomain;
+  }
+
+  /**
+   * Creates a config instance populated with all parameter default values.
+   * Used as fallback when act() is called without a config (backward compatibility).
+   */
+  public static H5XdevFilterParameter createDefaultConfig() {
+    H5XdevFilterParameter param = new H5XdevFilterParameter();
+    param.authType = AUTH_TYPE.getDefaultValue();
+    param.authHeader = AUTH_HEADER.getDefaultValue();
+    param.preferredDomain = PREFERRED_DOMAIN.getDefaultValue();
+    return param;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!(obj instanceof H5XdevFilterParameter)) {
+      return false;
+    }
+    H5XdevFilterParameter that = (H5XdevFilterParameter) obj;
+    return authType == that.authType
+        && Objects.equals(authHeader, that.authHeader)
+        && Objects.equals(preferredDomain, that.preferredDomain);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(authType, authHeader, preferredDomain);
+  }
+
   @Override
   public String toString() {
     return "H5XdevFilterParameter{" +
             "authType=" + authType +
             ", authHeader='" + authHeader + '\'' +
+            ", preferredDomain='" + preferredDomain + '\'' +
             '}';
 }
 }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,6 +53,10 @@ public class EvalFunction implements TMFDirectFunction {
     if (args.length == 1) {
       return outputhandling(context.eval(ConversionUtils.getString(args[0])));
     } else if (args.length == 2) {
+      if (args[0] != null && args[0].toString().startsWith("%")) {
+        return outputhandling(context.eval(Integer.valueOf(ConversionUtils.getString(args[0]).substring(1)),
+                                           ConversionUtils.getString(args[1])));
+      }
       return outputhandling(context.eval(ConversionUtils.ifNull(ConversionUtils.getString(args[0]), "{}"),
                                          ConversionUtils.getString(args[1])));
     }

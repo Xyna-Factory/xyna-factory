@@ -12,7 +12,8 @@ The mode is selected through domain-specific data (`setdomaintypespecificdata`).
 
 - JWT domain setup for the order-backed flow also requires an `ordertype` and optionally a runtime context (`application` + `version` or `workspace`) to resolve the revision.
 - The JSONWebToken application exposes `authenticate` for this flow.
-- Role selection is done internally during authentication: normalize -> apply `roleOrder` -> first role -> `defaultRole` fallback.
+- It is possible for the JWT domain to choose a role in the login form via dropdown. For new gui versions, the role selection is part of the login request and validated server-side.
+- If no role was selected, role selection is done internally during authentication: normalize -> apply `roleOrder` -> first role -> `defaultRole` fallback.
 
 ---
 
@@ -36,7 +37,11 @@ Configuration attributes:
 - `Optional<String> roleSuffix`
 - `List<String> roleOrder` (optional, case-sensitive role priority list)
 - `Optional<String> jwksUri` (optional, otherwise OIDC discovery is used)
+- `Optional<String> rolesResolverOrdertype` (optional, default: `xact.http.jwt.auth.ResolveAvailableRolesWithJWT`)
 - `AuthValidationMode authValidationMode` with values `HEADER|JWT` (default: `JWT`)
+
+Both `associatedOrdertype` and `rolesResolverOrdertype` use the same `RuntimeContext`/revision source
+(from `application+version`).
 
 **Supported Authentication Modes:**
 
@@ -60,8 +65,28 @@ Role in architecture:
 
 - Creates an auth order for JWT domains.
 - Stores JWT token in order context under `xfmg.xopctrl.jwt.token`.
+- If a `selectedRole` was passed by the caller, stores it in order context under `xfmg.xopctrl.jwt.selectedRole`.
 - Delegates JWT claim validation and role extraction to the JSONWebToken application.
 - Translates successful `AuthenticationResult` into a local Xyna `Role`.
+
+**selectedRole encoding:**
+
+Because the authentication infrastructure only provides a single `password` field, an optional `selectedRole` is encoded into the password string using a `\0` separator:
+
+```
+password = "selectedRole\0jwtToken"   (if role was selected)
+password = "jwtToken"                 (if no role was selected - backward compatible)
+```
+
+`\0` is safe here because JWT tokens are base64url-encoded and never contain this character.
+`generateAuthOrder` splits on `\0` and sets both context keys independently.
+
+Order context keys:
+
+| Key | Value |
+|---|---|
+| `xfmg.xopctrl.jwt.token` | the actual JWT token |
+| `xfmg.xopctrl.jwt.selectedRole` | the role chosen by the user (optional) |
 
 ---
 
@@ -77,14 +102,16 @@ Role:
 - Resolves domain and validates domain type (`JWT`).
 - Calls `JWTAuthenticationLogic.resolveAvailableRoles(...)` internally.
 - Chooses role with this strategy:
-  1. first role from ordered/normalized role list
-  2. otherwise `defaultRole`
-  3. otherwise authentication failure
+  1. If `xfmg.xopctrl.jwt.selectedRole` is set **and** the role is present in the JWT claims -> use selected role *(verified, cannot be spoofed)*
+  2. If `selectedRole` is set but **not** present in JWT claims -> authentication failure (reject)
+  3. If no `selectedRole` -> first role from ordered/normalized role list
+  4. otherwise `defaultRole`
+  5. otherwise authentication failure
 
 Public service surface:
 
-- `authenticate(...)` only
-- No public `resolveAvailableRoles(...)` operation is used in this architecture.
+- `authenticate(...)` - used in the order-backed auth flow
+- `resolveAvailableRoles(...)` - called by `ResolveAvailableRolesWithJWT` workflow to populate the role dropdown in the GUI
 
 ---
 
@@ -136,20 +163,20 @@ Operational note:
 
 Required:
 
-- `ordertype`
 - `trustedIssuers`
 - `intendedAudience`
+- `application` + `version` (runtime context for revision lookup)
 
 Optional:
 
-- `application` (together with `version`) or `workspace` for runtime context / revision lookup
-- `version` (together with `application`)
+- `ordertype` (default: `xact.http.jwt.auth.AuthenticateWithJWT`)
 - `roleClaimPath`
 - `defaultRole`
 - `rolePrefix`
 - `roleSuffix`
 - `roleOrder`
 - `jwksUri`
+- `rolesResolverOrdertype` (default: `xact.http.jwt.auth.ResolveAvailableRolesWithJWT`)
 - `authValidationMode` (default: `JWT`)
 
 Invalid values for `authValidationMode` raise `IllegalArgumentException`.
@@ -160,16 +187,34 @@ Invalid values for `authValidationMode` raise `IllegalArgumentException`.
 
 1. `/auth/externalUserLoginInformation`
    - Reads external identity from configured header/certificate.
-   - Returns only:
+   - Returns:
      - `username`
      - `userdisplayname`
-     - `externaldomains`
+     - `externaldomains` (legacy, for backward compatibility)
+     - `domains` - list of `{ name, roles[] }` with available roles per domain, resolved via `rolesResolverOrdertype` (or default `ResolveAvailableRolesWithJWT`); role names are extracted from `xfmg.xopctrl.Role` objects returned by the workflow
+   - Domain order is determined by the H5XdevFilter's `preferredDomain` parameter: if set, that domain appears first in the list.
 
 2. `/auth/externalUserLogin`
    - Reads JWT token from configured header (for example `OIDC_access_token`).
+   - Accepts optional `selectedRole` field in the request body.
+   - If `selectedRole` is present, encodes it into the password as `selectedRole\0jwtToken`.
    - Calls `authorizeSession(...)`.
    - For JWT domains, `JWTUserAuthentication.authenticateUserInternally(...)` is used.
-   - Role is selected internally during auth processing (no user-side role choice).
+   - Role selection strategy (in `authenticate`):
+     - **With `selectedRole`**: verified against JWT claims - used if valid, rejected if not present
+     - **Without `selectedRole`**: highest-priority extracted role, then `defaultRole` (original behavior, fully backward compatible)
+
+**Frontend flow (role dropdown):**
+
+```
+GET /auth/externalUserLoginInformation
+  -> Response: { domains: [{ name, roles[] }] }
+  -> GUI renders role dropdown (only if roles.length > 0)
+
+POST /auth/externalUserLogin
+  -> Body: { domain, force, path, selectedRole? }
+  -> selectedRole is verified server-side against JWT claims
+```
 
 ---
 
@@ -181,9 +226,8 @@ Invalid values for `authValidationMode` raise `IllegalArgumentException`.
 ./xynafactory.sh setdomaintypespecificdata \
   -domainName JWT_DOMAIN \
   -domainTypeSpecificData \
-  ordertype=xact.http.jwt.auth.AuthenticateWithJWT \
   application=JSONWebToken \
-  version=1.0.4 \
+  version=1.0.5 \
   trustedIssuers=https://idp.example.com/realms/master \
   intendedAudience=account \
   authValidationMode=JWT \
@@ -191,15 +235,16 @@ Invalid values for `authValidationMode` raise `IllegalArgumentException`.
   defaultRole=PortalUser
 ```
 
+`ordertype` is omitted here and `xact.http.jwt.auth.AuthenticateWithJWT` is used by default.
+
 ### 3.2 Proxy-validated (`HEADER`)
 
 ```bash
 ./xynafactory.sh setdomaintypespecificdata \
   -domainName JWT_DOMAIN \
   -domainTypeSpecificData \
-  ordertype=xact.http.jwt.auth.AuthenticateWithJWT \
   application=JSONWebToken \
-  version=1.0.4 \
+  version=1.0.5 \
   trustedIssuers=https://idp.example.com/realms/master \
   intendedAudience=account \
   authValidationMode=HEADER \
@@ -212,9 +257,8 @@ Invalid values for `authValidationMode` raise `IllegalArgumentException`.
 ./xynafactory.sh setdomaintypespecificdata \
   -domainName JWT_DOMAIN \
   -domainTypeSpecificData \
-  ordertype=xact.http.jwt.auth.AuthenticateWithJWT \
   application=JSONWebToken \
-  version=1.0.4 \
+  version=1.0.5 \
   trustedIssuers=https://idp.example.com/realms/master \
   intendedAudience=account \
   authValidationMode=JWT \
@@ -224,6 +268,25 @@ Invalid values for `authValidationMode` raise `IllegalArgumentException`.
 ```
 
 `roleOrder` is matched in configured order (case-sensitive) after normalization.
+
+### 3.4 With H5XdevFilter preferred domain configuration
+
+```bash
+./xynafactory.sh deployfilter \
+  -filterName H5XdevFilter \
+  -filterInstanceName H5XdevFilterinstance \
+  -triggerInstanceName HttpTrigger \
+  -applicationName GuiHttp \
+  -versionName 1.5.5 \
+  -configurationParameter \
+    externalAuthType=JSON_WEB_TOKEN \
+    externalAuthHeader=OIDC_access_token \
+    preferredDomain=JWT_DOMAIN
+```
+
+`preferredDomain` is a filter-level parameter (not domain-specific). It causes the named domain 
+to appear first in the login form's domain dropdown, regardless of registration order. 
+If not set or empty, the natural domain order is preserved.
 
 ---
 
@@ -249,3 +312,5 @@ Recommended test matrix:
 - `JWT` is the safest default mode.
 - `HEADER` assumes a trusted reverse proxy (for example Apache with `mod_auth_openidc`) validates tokens and prevents header spoofing.
 - Role prioritization via `roleOrder` is applied after prefix/suffix normalization and is case-sensitive.
+- **`selectedRole` cannot be spoofed**: even if a client sends an manipulated `selectedRole`, it is always verified against the roles extracted from the (validated) JWT claims. A role not present in the token's claims causes an immediate authentication failure.
+- The `\0` encoding for `selectedRole` in the password field is an internal transport detail with no security implications, as the password is never persisted or exposed outside the authentication chain.
