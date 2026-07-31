@@ -29,13 +29,6 @@
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="Audience" VariableName="audience">
-    <Meta>
-      <Type>String</Type>
-      <Documentation>Deprecated.
-Use audienceArray instead; or audienceSingle in case that the json should contain a single value instead of a list</Documentation>
-    </Meta>
-  </Data>
   <Data Label="Expiration" ReferenceName="AbsoluteDate" ReferencePath="base.date" VariableName="expiration"/>
   <Data Label="Not Before" ReferenceName="AbsoluteDate" ReferencePath="base.date" VariableName="notBefore"/>
   <Data Label="Issued At" ReferenceName="AbsoluteDate" ReferencePath="base.date" VariableName="issuedAt"/>
