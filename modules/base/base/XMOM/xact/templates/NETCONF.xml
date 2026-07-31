@@ -38,7 +38,7 @@
         <CodeSnippet Type="Java">final String NETCONF_ERROR_TAG = "rpc-error";
 
 if (response.getResponse().getContent().contains("&lt;" + NETCONF_ERROR_TAG)
-        || response.getResponse().getContent().contains(":rpc-error")) {
+        || response.getResponse().getContent().contains(":" + NETCONF_ERROR_TAG)) {
     throw new DetectedError(response.getCommand(), response.getResponse());
 }</CodeSnippet>
       </SourceCode>
