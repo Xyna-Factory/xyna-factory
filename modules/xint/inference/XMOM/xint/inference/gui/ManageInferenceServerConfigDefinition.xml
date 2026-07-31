@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Manage Inference Server Config Definition" TypeName="ManageInferenceServerConfigDefinition" TypePath="xint.inference.gui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Manage Inference Server Config Definition" Name="ManageInferenceServerConfigDefinition">
+    <Input>
+      <Data ID="22" Label="Inference Server Configuration" ReferenceName="InferenceServerConfiguration" ReferencePath="xint.inference" VariableName="inferenceServerConfiguration22"/>
+    </Input>
+    <Output>
+      <Data ID="35" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition35"/>
+      <Data ID="119" Label="Inference Server Configuration" ReferenceName="InferenceServerConfiguration" ReferencePath="xint.inference" VariableName="inferenceServerConfiguration119"/>
+    </Output>
+    <ServiceReference ID="1236" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="1235"/>
+      <Target RefID="1235"/>
+    </ServiceReference>
+    <Function ID="1235" Label="get Own RuntimeContext">
+      <Source RefID="1236"/>
+      <Target RefID="1236"/>
+      <Target RefID="1238"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="1236"/>
+      <Receive ServiceID="1236">
+        <Target RefID="1238"/>
+      </Receive>
+    </Function>
+    <Mappings ID="76" Label="Mapping">
+      <Output>
+        <Data ID="85" Label="id - Tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition85">
+          <Source RefID="76"/>
+        </Data>
+        <Target RefID="86"/>
+      </Output>
+      <Mapping>%0%.label="Id"</Mapping>
+      <Mapping>%0%.dataPath="%0%.id"</Mapping>
+    </Mappings>
+    <Mappings ID="465" Label="Mapping">
+      <Output>
+        <Data ID="466" Label="pid - Tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition466"/>
+        <Target RefID="467"/>
+      </Output>
+      <Mapping>%0%.label="Pid"</Mapping>
+      <Mapping>%0%.dataPath="%0%.pid"</Mapping>
+    </Mappings>
+    <Mappings ID="233" Label="Mapping">
+      <Output>
+        <Data ID="234" Label="state - Tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition234"/>
+        <Target RefID="235"/>
+      </Output>
+      <Mapping>%0%.label="State"</Mapping>
+      <Mapping>%0%.dataPath="%0%.state"</Mapping>
+    </Mappings>
+    <Mappings ID="333" Label="Mapping">
+      <Output>
+        <Data ID="334" Label="serverVersion - Tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition334"/>
+        <Target RefID="335"/>
+      </Output>
+      <Mapping>%0%.label="Server Version"</Mapping>
+      <Mapping>%0%.dataPath="%0%.serverVersion"</Mapping>
+    </Mappings>
+    <Mappings ID="590" Label="Mapping">
+      <Output>
+        <Data ID="591" Label="port - Tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition591"/>
+        <Target RefID="592"/>
+      </Output>
+      <Mapping>%0%.label="Port"</Mapping>
+      <Mapping>%0%.dataPath="%0%.port"</Mapping>
+    </Mappings>
+    <Mappings ID="674" Label="Mapping">
+      <Output>
+        <Data ID="675" Label="model - Tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition675"/>
+        <Target RefID="676"/>
+      </Output>
+      <Mapping>%0%.label="Model"</Mapping>
+      <Mapping>%0%.dataPath="%0%.model"</Mapping>
+    </Mappings>
+    <Mappings ID="766" Label="Mapping">
+      <Output>
+        <Data ID="767" Label="desc - Tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition767"/>
+        <Target RefID="768"/>
+      </Output>
+      <Mapping>%0%.label="Description"</Mapping>
+      <Mapping>%0%.dataPath="%0%.description"</Mapping>
+    </Mappings>
+    <Mappings ID="1866" Label="Mapping">
+      <Output>
+        <Data ID="1867" Label="context - Tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition1867"/>
+        <Target RefID="1868"/>
+      </Output>
+      <Mapping>%0%.label="Context Window Size"</Mapping>
+      <Mapping>%0%.dataPath="%0%.contextWindowSize"</Mapping>
+    </Mappings>
+    <Mappings ID="1885" Label="Mapping">
+      <Output>
+        <Data ID="1886" Label="additional - Tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition1886"/>
+        <Target RefID="1887"/>
+      </Output>
+      <Mapping>%0%.label="Additional Parameters"</Mapping>
+      <Mapping>%0%.dataPath="%0%.additionalParameters"</Mapping>
+    </Mappings>
+    <Choice ID="920" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="22"/>
+      <Target RefID="1032"/>
+      <Meta>
+        <OuterConditionPart>%0%.state==?</OuterConditionPart>
+      </Meta>
+      <Input>
+        <Data ID="952" Label="Inference Server Configuration" ReferenceName="InferenceServerConfiguration" ReferencePath="xint.inference" VariableName="inferenceServerConfiguration952">
+          <Source RefID="920"/>
+        </Data>
+        <Source RefID="22"/>
+      </Input>
+      <Case ID="977" Label="" Premise="%0%.state==&quot;online&quot;">
+        <Mappings ID="1029" Label="Mapping">
+          <Input>
+            <Data ID="1312" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext1312">
+              <Source RefID="1029"/>
+            </Data>
+            <Source RefID="1238"/>
+          </Input>
+          <Output>
+            <Data ID="1030" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1030"/>
+            <Target RefID="1031"/>
+          </Output>
+          <Mapping>%1%.label="Stop"</Mapping>
+          <Mapping>%1%.serviceRTC=%0%</Mapping>
+          <Mapping>%1%.serviceFQN="xint.inference.gui.StopInferenceServerConfiguration"</Mapping>
+        </Mappings>
+        <Assign ID="979">
+          <Source RefID="1031"/>
+          <Target RefID="1032"/>
+          <Copy>
+            <Source RefID="1031"/>
+            <Target RefID="1032"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="988" Label="" Premise="%0%.state==&quot;offline&quot;">
+        <Mappings ID="1018" Label="Mapping">
+          <Input>
+            <Data ID="1263" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext1263">
+              <Source RefID="1018"/>
+            </Data>
+            <Source RefID="1238"/>
+          </Input>
+          <Output>
+            <Data ID="1019" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1019"/>
+            <Target RefID="1020"/>
+          </Output>
+          <Mapping>%1%.label="Start"</Mapping>
+          <Mapping>%1%.serviceRTC=%0%</Mapping>
+          <Mapping>%1%.serviceFQN="xint.inference.gui.StartInferenceServerConfiguration"</Mapping>
+        </Mappings>
+        <Assign ID="990">
+          <Source RefID="1020"/>
+          <Target RefID="1032"/>
+          <Copy>
+            <Source RefID="1020"/>
+            <Target RefID="1032"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="921" IsDefault="true" Label="default">
+        <Mappings ID="932" Label="Mapping">
+          <Output>
+            <Data ID="941" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition941">
+              <Source RefID="932"/>
+            </Data>
+            <Target RefID="942"/>
+          </Output>
+          <Mapping>%0%.label="Start"</Mapping>
+          <Mapping>%0%.disabled="true"</Mapping>
+        </Mappings>
+        <Assign ID="923">
+          <Source RefID="942"/>
+          <Target RefID="1032"/>
+          <Copy>
+            <Source RefID="942"/>
+            <Target RefID="1032"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Mappings ID="1449" Label="Mapping">
+      <Input>
+        <Data ID="1466" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1466">
+          <Source RefID="1449"/>
+        </Data>
+        <Source RefID="1032"/>
+      </Input>
+      <Output>
+        <Data ID="1483" Label="start-stop - SOBD" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1483">
+          <Source RefID="1449"/>
+        </Data>
+        <Target RefID="1484"/>
+      </Output>
+      <Mapping>%1%~=%0%</Mapping>
+      <Mapping>%1%.synchronously="true"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="xyna_inference_config_update"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["1"].eventId="xyna_inference_config_close"</Mapping>
+      <Mapping>%1%.showResult="true"</Mapping>
+    </Mappings>
+    <Mappings ID="1501" Label="Mapping">
+      <Input>
+        <Data ID="1696" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext1696">
+          <Source RefID="1501"/>
+        </Data>
+        <Source RefID="1238"/>
+      </Input>
+      <Output>
+        <Data ID="1518" Label="delete - SOBD" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1518">
+          <Source RefID="1501"/>
+        </Data>
+        <Target RefID="1519"/>
+      </Output>
+      <Mapping>%1%.label="Delete"</Mapping>
+      <Mapping>%1%.synchronously="true"</Mapping>
+      <Mapping>%1%.serviceRTC=%0%</Mapping>
+      <Mapping>%1%.serviceFQN="xint.inference.gui.DeleteInferenceServerConfiguration"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="xyna_inference_config_update"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["1"].eventId="xyna_inference_config_close"</Mapping>
+      <Mapping>%1%.showResult="true"</Mapping>
+    </Mappings>
+    <Mappings ID="48" Label="Mapping">
+      <Input>
+        <Data ID="67" Label="Inference Server Configuration" ReferenceName="InferenceServerConfiguration" ReferencePath="xint.inference" VariableName="inferenceServerConfiguration67">
+          <Source RefID="48"/>
+        </Data>
+        <Source RefID="22"/>
+      </Input>
+      <Input>
+        <Data ID="156" Label="id - Tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition156">
+          <Source RefID="48"/>
+        </Data>
+        <Source RefID="86">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="500" Label="pid - Tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition500">
+          <Source RefID="48"/>
+        </Data>
+        <Source RefID="467">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="268" Label="state - Tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition268">
+          <Source RefID="48"/>
+        </Data>
+        <Source RefID="235">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="392" Label="serverVersion - Tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition392">
+          <Source RefID="48"/>
+        </Data>
+        <Source RefID="335">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="625" Label="port - Tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition625">
+          <Source RefID="48"/>
+        </Data>
+        <Source RefID="592">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="709" Label="model - Tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition709">
+          <Source RefID="48"/>
+        </Data>
+        <Source RefID="676">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="801" Label="desc - Tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition801">
+          <Source RefID="48"/>
+        </Data>
+        <Source RefID="768">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="2016" Label="context - Tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition2016">
+          <Source RefID="48"/>
+        </Data>
+        <Source RefID="1868">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="2033" Label="additional - Tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition2033">
+          <Source RefID="48"/>
+        </Data>
+        <Source RefID="1887">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="1137" Label="start-stop - SOBD" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1137">
+          <Source RefID="48"/>
+        </Data>
+        <Source RefID="1484">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="1849" Label="delete - SOBD" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1849">
+          <Source RefID="48"/>
+        </Data>
+        <Source RefID="1519">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="57" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition57">
+          <Source RefID="48"/>
+        </Data>
+        <Target RefID="58"/>
+      </Output>
+      <Mapping>%12%.label=%0%.id</Mapping>
+      <Mapping>%12%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%11%</Mapping>
+      <Mapping>%12%.children["0"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%1%</Mapping>
+      <Mapping>%12%.children["1"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%2%</Mapping>
+      <Mapping>%12%.children["2"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%3%</Mapping>
+      <Mapping>%12%.children["3"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%4%</Mapping>
+      <Mapping>%12%.children["4"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%5%</Mapping>
+      <Mapping>%12%.children["5"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%6%</Mapping>
+      <Mapping>%12%.children["6"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%8%</Mapping>
+      <Mapping>%12%.children["7"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%9%</Mapping>
+      <Mapping>%12%.children["8"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%7%</Mapping>
+      <Mapping>%12%.children["9"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%10%</Mapping>
+      <Mapping>%12%.closable="true"</Mapping>
+      <Mapping>%12%.triggerClose.eventId="xyna_inference_config_close"</Mapping>
+    </Mappings>
+    <Data ID="58" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition58">
+      <Source RefID="48"/>
+    </Data>
+    <Data ID="86" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition86">
+      <Source RefID="76"/>
+    </Data>
+    <Data ID="235" Label="id - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition235"/>
+    <Data ID="335" Label="state - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition335"/>
+    <Data ID="467" Label="id - Tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition467"/>
+    <Data ID="592" Label="state - Tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition592"/>
+    <Data ID="676" Label="port - Tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition676"/>
+    <Data ID="768" Label="model - Tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition768"/>
+    <Data ID="942" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition942">
+      <Source RefID="932"/>
+    </Data>
+    <Data ID="1020" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1020"/>
+    <Data ID="1031" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1031"/>
+    <Data ID="1032" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1032">
+      <Source RefID="920"/>
+    </Data>
+    <Data ID="1238" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext1238">
+      <Source RefID="1235"/>
+    </Data>
+    <Data ID="1484" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1484">
+      <Source RefID="1449"/>
+    </Data>
+    <Data ID="1519" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1519">
+      <Source RefID="1501"/>
+    </Data>
+    <Data ID="1868" Label="desc - Tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition1868"/>
+    <Data ID="1887" Label="desc - Tid" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition1887"/>
+    <Assign ID="1">
+      <Source RefID="58"/>
+      <Source RefID="22"/>
+      <Target RefID="35"/>
+      <Target RefID="119"/>
+      <Copy>
+        <Source RefID="58"/>
+        <Target RefID="35"/>
+      </Copy>
+      <Copy>
+        <Source RefID="22"/>
+        <Target RefID="119"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

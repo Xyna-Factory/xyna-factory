@@ -522,7 +522,11 @@ public abstract class XynaDispatcher extends FunctionGroup {
         Long revision = dds.getRevision();
         switch (dds.getDestinationTypeAsEnum()) {
           case XYNA_FRACTAL_WORKFLOW :
-            dv = new FractalWorkflowDestination(dds.getDestinationValue());
+            String dvString = dds.getDestinationValue();
+            if ((dvString == null) || (dvString.isBlank())) {
+              dvString = DESTINATION_EMPTY_WORKFLOW.getFQName();
+            }
+            dv = new FractalWorkflowDestination(dvString);
             break;
           case JAVA_DESTINATION :
             throw new RuntimeException("Java destinations may not be configured.");

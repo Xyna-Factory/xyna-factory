@@ -41,6 +41,8 @@ import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.DomOrExceptionGenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
+import com.gip.xyna.xprc.xfractwfe.python.DocumentationHandler.AddEmptyLine;
+import com.gip.xyna.xprc.xfractwfe.python.PythonGeneration.MemberInformation;
 import com.gip.xyna.xprc.xfractwfe.python.PythonGeneration.MethodInformation;
 import com.gip.xyna.xprc.xfractwfe.python.PythonGeneration.XynaObjectInformation;
 import com.gip.xyna.xprc.xfractwfe.python.PythonThreadManagement.PythonKeywordsThread;
@@ -49,7 +51,7 @@ import com.gip.xyna.xprc.xfractwfe.python.PythonThreadManagement.PythonKeywordsT
 
 public class PythonMdmGeneration {
 
-
+  private DocumentationHandler docHandler = new DocumentationHandler();
   public static final String LOAD_MODULE_SNIPPET = setupLoadModuleSnippet();
   public final List<String> pythonKeywords = new ArrayList<String>();
 
@@ -122,23 +124,23 @@ public class PythonMdmGeneration {
   }
 
 
-  public String createPythonMdm(Long revision, boolean withImpl, boolean typeHints) {
-    if(withImpl == true && typeHints == false ) {
-      return cache.computeIfAbsent(revision, x -> createPythonMdmString(x, withImpl, typeHints));
+  public String createPythonMdm(Long revision, PythonMdmConfig config) {
+    if (config.isGenImpl() && (!config.isGenTypeHints()) && (!config.isGenDoku())) {
+      return cache.computeIfAbsent(revision, x -> createPythonMdmString(x, config));
     }
-    return createPythonMdmString(revision, withImpl, typeHints);
+    return createPythonMdmString(revision, config);
   }
   
-  private String createPythonMdmString(Long revision, boolean withImpl, boolean typeHints) {
+  private String createPythonMdmString(Long revision, PythonMdmConfig config) {
     if (pythonKeywords.isEmpty()) {
       loadPythonKeywords();
     }
     StringBuilder sb = new StringBuilder();
-    fillDefaults(sb, withImpl, typeHints);
+    fillDefaults(sb, config);
     XMOMDatabaseSearchResult objects = searchXmomDbForObjects(revision);
     List<XynaObjectInformation> objectsSorted = convertAndSortSearchResult(objects.getResult(), revision);
     for (XynaObjectInformation object : objectsSorted) {
-      addXynaObjectToMdm(sb, object, withImpl, typeHints);
+      addXynaObjectToMdm(sb, object, config);
     }
     return sb.toString();
   }
@@ -203,24 +205,24 @@ public class PythonMdmGeneration {
   }
 
 
-  private void fillDefaults(StringBuilder sb, boolean withImpl, boolean typeHints) {
-    fillImports(sb, withImpl);
-    fillBaseObject(sb, "XynaObject", "DATATYPE", null, withImpl, typeHints);
-    fillBaseObject(sb, "XynaException", "EXCEPTION", "Exception", withImpl, typeHints);
-    fillConvertToPythonObject(sb, withImpl, typeHints);
-    fillConvertToPythonValue(sb, withImpl, typeHints);
+  private void fillDefaults(StringBuilder sb, PythonMdmConfig config) {
+    fillImports(sb, config.isGenImpl());
+    fillBaseObject(sb, "XynaObject", "DATATYPE", null, config);
+    fillBaseObject(sb, "XynaException", "EXCEPTION", "Exception", config);
+    fillConvertToPythonObject(sb, config);
+    fillConvertToPythonValue(sb, config);
   }
 
 
-  private void fillConvertToPythonValue(StringBuilder sb, boolean withImpl, boolean typeHints) {
+  private void fillConvertToPythonValue(StringBuilder sb, PythonMdmConfig config) {
     sb.append("def convert_to_python_value(value");
-    typeHint(sb, ": any", typeHints);
+    typeHint(sb, ": any", config.isGenTypeHints());
     sb.append(", multiple");
-    typeHint(sb, ": bool", typeHints);
+    typeHint(sb, ": bool", config.isGenTypeHints());
     sb.append(")");
-    typeHint(sb, " -> any", typeHints);
+    typeHint(sb, " -> any", config.isGenTypeHints());
     sb.append(":\n");
-    if(!withImpl) {
+    if(!config.isGenImpl()) {
       sb.append("  pass\n\n");
       return;
     }
@@ -252,7 +254,7 @@ public class PythonMdmGeneration {
   }
 
 
-  private void fillBaseObject(StringBuilder sb, String name, String xynaType, String parent, boolean withImpl, boolean typeHints) {
+  private void fillBaseObject(StringBuilder sb, String name, String xynaType, String parent, PythonMdmConfig config) {
     sb.append("class ");
     sb.append(name);
     if (parent != null) {
@@ -263,7 +265,7 @@ public class PythonMdmGeneration {
     sb.append(":\n");
     sb.append("  _context = None\n");
     sb.append("  def __init__(self, fqn");
-    typeHint(sb, ": str", typeHints);
+    typeHint(sb, ": str", config.isGenTypeHints());
     sb.append("):\n");
     sb.append("    self._fqn = fqn\n");
     sb.append("    self._xynatype = \"");
@@ -271,27 +273,27 @@ public class PythonMdmGeneration {
     sb.append("\"\n\n");
 
     sb.append("  def set(self, field_name");
-    typeHint(sb, ": str", typeHints);
+    typeHint(sb, ": str", config.isGenTypeHints());
     sb.append(", value");
-    typeHint(sb, ": any", typeHints);
+    typeHint(sb, ": any", config.isGenTypeHints());
     sb.append(")");
-    typeHint(sb, " -> None", typeHints);
+    typeHint(sb, " -> None", config.isGenTypeHints());
     sb.append(":\n");
     sb.append("    if field_name != \"_fqn\" and field_name !=\"_xynatype\":\n");
     sb.append("      setattr(self, field_name, value)\n\n");
   }
 
 
-  private void fillConvertToPythonObject(StringBuilder sb, boolean withImpl, boolean typeHints) {
-    if (withImpl) {
+  private void fillConvertToPythonObject(StringBuilder sb, PythonMdmConfig config) {
+    if (config.isGenImpl()) {
       fillSetField(sb);
     }
     sb.append("def convert_to_python_object(obj");
-    typeHint(sb, ": dict[str, any]", typeHints);
+    typeHint(sb, ": dict[str, any]", config.isGenTypeHints());
     sb.append(")");
-    typeHint(sb, " -> XynaObject | XynaException", typeHints);
+    typeHint(sb, " -> XynaObject | XynaException", config.isGenTypeHints());
     sb.append(":\n");
-    if (!withImpl) {
+    if (!config.isGenImpl()) {
       sb.append("  pass\n\n");
       return;
     }
@@ -348,22 +350,24 @@ public class PythonMdmGeneration {
   }
 
 
-  private void addXynaObjectToMdm(StringBuilder sb, XynaObjectInformation info, boolean withImpl, boolean typeHints) {
+  private void addXynaObjectToMdm(StringBuilder sb, XynaObjectInformation info, PythonMdmConfig config) {
     sb.append("class ");
     sb.append(PythonGeneration.convertToPythonFqn(info.fqn));
     sb.append("(");
     sb.append(PythonGeneration.convertToPythonFqn(info.parent));
     sb.append("):\n");
+    sb.append(docHandler.buildDocumentationString(info.documentation, 2, AddEmptyLine.YES, config));
     sb.append("  def __init__(self, fqn");
-    typeHint(sb, ": str", typeHints);
+    typeHint(sb, ": str", config.isGenTypeHints());
     sb.append(" = \"").append(info.fqn).append("\"):\n");
     sb.append("    super().__init__(fqn)\n");
 
     if (info.members != null && !info.members.isEmpty()) {
-      for (Pair<String, String> member : info.members) {
+      for (MemberInformation member : info.members) {
+        sb.append(docHandler.buildDocumentationString(member, 4, AddEmptyLine.NO, config));
         sb.append("    self.");
-        appendAndEscapeIfKeyword(member.getFirst(), sb);
-        typeHint(sb, ": " + member.getSecond(), typeHints);
+        appendAndEscapeIfKeyword(member.name, sb);
+        typeHint(sb, ": " + member.typeName, config.isGenTypeHints());
         sb.append(" = None\n");
       }
     }
@@ -372,7 +376,7 @@ public class PythonMdmGeneration {
 
     if (info.methods != null && !info.methods.isEmpty()) {
       for (MethodInformation method : info.methods) {
-        addXynaObjectMethod(sb, info.fqn, method, withImpl, typeHints);
+        addXynaObjectMethod(sb, info.fqn, method, config);
       }
     }
     sb.append("\n");
@@ -386,7 +390,7 @@ public class PythonMdmGeneration {
     }
   }
 
-  private void addXynaObjectMethod(StringBuilder sb, String fqn, MethodInformation info, boolean withImpl, boolean typeHints) {
+  private void addXynaObjectMethod(StringBuilder sb, String fqn, MethodInformation info, PythonMdmConfig config) {
     sb.append("  def ");
     appendAndEscapeIfKeyword(info.name, sb);
     sb.append("(");
@@ -399,17 +403,18 @@ public class PythonMdmGeneration {
       }
       for (Pair<String, String> argument : info.argumentsWithTypes) {
         appendAndEscapeIfKeyword(argument.getFirst(), sb);
-        typeHint(sb, ": " + argument.getSecond(), typeHints);
+        typeHint(sb, ": " + argument.getSecond(), config.isGenTypeHints());
         sb.append(", ");
       }
       sb.setLength(sb.length() - 2); //remove last ", "
     }
     sb.append(")");
     if (info.returnType != null) {
-      typeHint(sb, " -> " + info.returnType, typeHints);
+      typeHint(sb, " -> " + info.returnType, config.isGenTypeHints());
     }
     sb.append(":\n");
-    if (!withImpl) {
+    sb.append(docHandler.buildDocumentationString(info.documentation, 4, AddEmptyLine.NO, config));
+    if (!config.isGenImpl()) {
       sb.append("    pass\n\n");
       return;
     }
@@ -461,6 +466,7 @@ public class PythonMdmGeneration {
       if (!isException) {
         result.methods = PythonGeneration.loadOperations(((DOM) doe).getOperations());
       }
+      result.documentation = doe.getDocumentation();
     } catch (Exception e) {
       return null;
     }
@@ -478,8 +484,12 @@ public class PythonMdmGeneration {
   }
 
 
-  private Pair<String, String> toMemberInfo(AVariable avar) {
-    return new Pair<String, String>(avar.getVarName(), PythonGeneration.getPythonTypeOfVariable(avar));
+  private MemberInformation toMemberInfo(AVariable avar) {
+    MemberInformation ret = new MemberInformation();
+    ret.name = avar.getVarName();
+    ret.typeName = PythonGeneration.getPythonTypeOfVariable(avar);
+    ret.documentation = avar.getDocumentation();
+    return ret;
   }
 
 
@@ -496,7 +506,7 @@ public class PythonMdmGeneration {
 
 
   public void exportPythonMdm(Long revision, String destination) throws Exception {
-    String data = createPythonMdm(revision, false, true);
+    String data = createPythonMdm(revision, new PythonMdmConfig().genImpl(false).genTypeHints(true).genDocu(true));
     try (PrintWriter bos = new PrintWriter(destination + "/mdm.py")) {
       bos.write(data);
     }
