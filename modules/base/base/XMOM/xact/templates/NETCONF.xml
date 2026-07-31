@@ -92,26 +92,25 @@ if (response.getResponse().getContent().contains("&lt;" + NETCONF_ERROR_TAG)
         }
 
         pos += 2;
-        byte[] data = responseBytes;
 
         // Read decimal chunk size until terminating '\n'
         int sizeStart = pos;
-        while (pos &lt; data.length &amp;&amp; data[pos] != '\n') {
-            if (data[pos] &lt; '0' || data[pos] &gt; '9') {
+        while (pos &lt; responseBytes.length &amp;&amp; responseBytes[pos] != '\n') {
+            if (responseBytes[pos] &lt; '0' || responseBytes[pos] &gt; '9') {
                 throw new RuntimeException(
                         "Invalid chunk size at byte offset " + pos);
             }
             pos++;
         }
 
-        if (pos &gt;= data.length) {
+        if (pos &gt;= responseBytes.length) {
             throw new RuntimeException(
                     "Unexpected end of data while reading chunk size");
         }
 
         int chunkSize = Integer.parseInt(
                 new String(
-                        data,
+                        responseBytes,
                         sizeStart,
                         pos - sizeStart,
                         java.nio.charset.StandardCharsets.US_ASCII));
@@ -128,7 +127,7 @@ if (response.getResponse().getContent().contains("&lt;" + NETCONF_ERROR_TAG)
         // Skip terminating '\n' after chunk size
         pos++;
 
-        if (pos + chunkSize &gt; data.length) {
+        if (pos + chunkSize &gt; responseBytes.length) {
             throw new RuntimeException(
                     "Chunk exceeds available data: size="
                             + chunkSize
