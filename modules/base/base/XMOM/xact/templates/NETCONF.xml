@@ -36,9 +36,11 @@
       </Throws>
       <SourceCode>
         <CodeSnippet Type="Java">final String NETCONF_ERROR_TAG = "rpc-error";
-      if (response.getResponse().getContent().contains("&lt;" + NETCONF_ERROR_TAG + "&gt;")) {
-        throw new DetectedError(response.getCommand(), response.getResponse());
-      }</CodeSnippet>
+
+if (response.getResponse().getContent().contains("&lt;" + NETCONF_ERROR_TAG)
+        || response.getResponse().getContent().contains(":rpc-error")) {
+    throw new DetectedError(response.getCommand(), response.getResponse());
+}</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="false" Label="is response complete" Name="isResponseComplete">
@@ -58,27 +60,91 @@
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">if ("1.1".equals(version)) {
-        String MSG_END = "\n##\n";
-        if (!response.endsWith(MSG_END)) {
-            return false;
+
+    // return immediately, if no MSG_END is found
+    if (!response.endsWith("\n##\n")) {
+        return false;
+    }
+
+    final java.nio.charset.Charset UTF_8 = java.nio.charset.StandardCharsets.UTF_8;
+    final byte[] MSG_END       = "\n##\n".getBytes(UTF_8);
+    final byte[] responseBytes = response.getBytes(UTF_8);
+
+    int pos = 0;
+    while (pos &lt; responseBytes.length) {
+
+        // End-of-message marker: \n##\n
+        if (pos + 4 &lt;= responseBytes.length
+                &amp;&amp; responseBytes[pos] == '\n'
+                &amp;&amp; responseBytes[pos + 1] == '#'
+                &amp;&amp; responseBytes[pos + 2] == '#'
+                &amp;&amp; responseBytes[pos + 3] == '\n') {
+            pos += 4;
+            break;
         }
-        java.util.regex.Pattern CHUNK_SIZE_PATTERN = java.util.regex.Pattern.compile("^\\n#(\\d+)\\n.*");
-        java.util.regex.Matcher matcher;
-        int responseIndex = 0;
-        do {
-            matcher = CHUNK_SIZE_PATTERN.matcher(response.substring(responseIndex));
-            if (!matcher.find()) {
-                break;
+
+        // Chunk header must start with: \n#
+        if (pos + 2 &gt; responseBytes.length
+                || responseBytes[pos] != '\n'
+                || responseBytes[pos + 1] != '#') {
+            throw new RuntimeException(
+                    "Invalid NETCONF 1.1 chunk header at byte offset " + pos);
+        }
+
+        pos += 2;
+        byte[] data = responseBytes;
+
+        // Read decimal chunk size until terminating '\n'
+        int sizeStart = pos;
+        while (pos &lt; data.length &amp;&amp; data[pos] != '\n') {
+            if (data[pos] &lt; '0' || data[pos] &gt; '9') {
+                throw new RuntimeException(
+                        "Invalid chunk size at byte offset " + pos);
             }
-            String group = matcher.group(1);
-            int chunkSize = Integer.valueOf(group);
-            responseIndex += 3 + group.length() + chunkSize; // 3 -&gt; \n# before chunk-size and \n after chunk-size
-        } while (responseIndex &lt;= response.length() - MSG_END.length());
-        return responseIndex == response.length() - MSG_END.length();
-    } else {
-        String text = response.trim();
-        return text.endsWith("]]&gt;]]&gt;");
-    }</CodeSnippet>
+            pos++;
+        }
+
+        if (pos &gt;= data.length) {
+            throw new RuntimeException(
+                    "Unexpected end of data while reading chunk size");
+        }
+
+        int chunkSize = Integer.parseInt(
+                new String(
+                        data,
+                        sizeStart,
+                        pos - sizeStart,
+                        java.nio.charset.StandardCharsets.US_ASCII));
+
+        // Prevent malformed frames from causing endless parsing loops
+        if (chunkSize &lt;= 0) {
+            throw new RuntimeException(
+                    "Invalid NETCONF 1.1 chunk size "
+                            + chunkSize
+                            + " at byte offset "
+                            + sizeStart);
+        }
+
+        // Skip terminating '\n' after chunk size
+        pos++;
+
+        if (pos + chunkSize &gt; data.length) {
+            throw new RuntimeException(
+                    "Chunk exceeds available data: size="
+                            + chunkSize
+                            + ", offset="
+                            + pos);
+        }
+
+        // Advance by octets, not characters
+        pos += chunkSize;
+    }
+
+    return pos == responseBytes.length;
+} else {
+    String text = response.trim();
+    return text.endsWith("]]&gt;]]&gt;");
+}</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="false" Label="partition commands" Name="partitionCommands">
@@ -89,19 +155,26 @@
         <Data ID="8" IsList="true" Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">List&lt; ? extends Command&gt; commands = super.partitionCommands(document);
-    if ("1.1".equals(version)) {
-      for (Command c : commands) {
-        c.setContent("\n#" + c.getContent().length() + "\n" + c.getContent());
-      }
-      Command lastCommand = commands.get(commands.size()-1);
-      lastCommand.setContent(lastCommand.getContent() + "\n##\n");
-    } else {
-      for (Command c : commands) {
-        c.setContent(c.getContent() + "]]&gt;]]&gt;");
-      }
+        <CodeSnippet Type="Java">List&lt;? extends Command&gt; commands = super.partitionCommands(document);
+
+if ("1.1".equals(version)) {
+    for (Command c : commands) {
+        int byteLength = c.getContent()
+                .getBytes(java.nio.charset.StandardCharsets.UTF_8)
+                .length;
+
+        c.setContent("\n#" + byteLength + "\n" + c.getContent());
     }
-    return commands;</CodeSnippet>
+
+    Command lastCommand = commands.get(commands.size() - 1);
+    lastCommand.setContent(lastCommand.getContent() + "\n##\n");
+} else {
+    for (Command c : commands) {
+        c.setContent(c.getContent() + "]]&gt;]]&gt;");
+    }
+}
+
+return commands;</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="false" Label="remove document type specifics" Name="removeDocumentTypeSpecifics">
@@ -113,32 +186,96 @@
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">if ("1.1".equals(version)) {
-        String MSG_END = "\n##\n";
-        StringBuilder contentBuilder = new StringBuilder();
-        java.util.regex.Pattern CHUNK_SIZE_PATTERN = java.util.regex.Pattern.compile("^\\n#(\\d+)\\n");
-        java.util.regex.Matcher matcher;
-        int responseIndex = 0;
+    byte[] data = response.getResponse().getContent()
+            .getBytes(java.nio.charset.StandardCharsets.UTF_8);
 
-        while (responseIndex &lt; response.getResponse().getContent().length() - MSG_END.length()) {
-            matcher = CHUNK_SIZE_PATTERN.matcher(response.getResponse().getContent().substring(responseIndex));
-            if (!matcher.find()) {
-              throw new RuntimeException("invalid response @" + responseIndex + " , response: " + response.getResponse().getContent());
+    java.io.ByteArrayOutputStream payload = new java.io.ByteArrayOutputStream();
+
+    int pos = 0;
+
+    while (pos &lt; data.length) {
+
+        // End-of-message marker: \n##\n
+        if (pos + 4 &lt;= data.length
+                &amp;&amp; data[pos] == '\n'
+                &amp;&amp; data[pos + 1] == '#'
+                &amp;&amp; data[pos + 2] == '#'
+                &amp;&amp; data[pos + 3] == '\n') {
+            pos += 4;
+            break;
+        }
+
+        // Chunk header must start with: \n#
+        if (pos + 2 &gt; data.length
+                || data[pos] != '\n'
+                || data[pos + 1] != '#') {
+            throw new RuntimeException(
+                    "Invalid NETCONF 1.1 chunk header at byte offset " + pos);
+        }
+
+        pos += 2;
+
+        // Read decimal chunk size until terminating '\n'
+        int sizeStart = pos;
+        while (pos &lt; data.length &amp;&amp; data[pos] != '\n') {
+            if (data[pos] &lt; '0' || data[pos] &gt; '9') {
+                throw new RuntimeException(
+                        "Invalid chunk size at byte offset " + pos);
             }
-            String group = matcher.group(1);
-            int chunkSize = Integer.valueOf(group);
-            int fromIndex = responseIndex + 3 + group.length();
-            int toIndex = fromIndex + chunkSize;
-            contentBuilder.append(response.getResponse().getContent().substring(fromIndex, toIndex));
-            responseIndex = toIndex;
+            pos++;
         }
-        response.getResponse().setContent(contentBuilder.toString());
-    } else {
-        String trimmedResponse = response.getResponse().getContent().trim();
-        if (trimmedResponse.endsWith("]]&gt;]]&gt;")) {
-          response.getResponse().setContent(trimmedResponse.substring(0, trimmedResponse.length() - "]]&gt;]]&gt;".length()));
+
+        if (pos &gt;= data.length) {
+            throw new RuntimeException(
+                    "Unexpected end of data while reading chunk size");
         }
+
+        int chunkSize = Integer.parseInt(
+                new String(
+                        data,
+                        sizeStart,
+                        pos - sizeStart,
+                        java.nio.charset.StandardCharsets.US_ASCII));
+
+        // Prevent malformed frames from causing endless parsing loops
+        if (chunkSize &lt;= 0) {
+            throw new RuntimeException(
+                    "Invalid NETCONF 1.1 chunk size "
+                            + chunkSize
+                            + " at byte offset "
+                            + sizeStart);
+        }
+
+        // Skip terminating '\n' after chunk size
+        pos++;
+
+        if (pos + chunkSize &gt; data.length) {
+            throw new RuntimeException(
+                    "Chunk exceeds available data: size="
+                            + chunkSize
+                            + ", offset="
+                            + pos);
+        }
+
+        payload.write(data, pos, chunkSize);
+
+        // Advance by octets, not characters
+        pos += chunkSize;
     }
-    return response;</CodeSnippet>
+
+    response.getResponse().setContent(
+            payload.toString(java.nio.charset.StandardCharsets.UTF_8));
+} else {
+    String trimmedResponse = response.getResponse().getContent().trim();
+    if (trimmedResponse.endsWith("]]&gt;]]&gt;")) {
+        response.getResponse().setContent(
+                trimmedResponse.substring(
+                        0,
+                        trimmedResponse.length() - "]]&gt;]]&gt;".length()));
+    }
+}
+
+return response;</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
