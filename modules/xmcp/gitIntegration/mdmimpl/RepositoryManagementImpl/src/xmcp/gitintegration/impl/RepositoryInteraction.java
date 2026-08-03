@@ -65,6 +65,7 @@ import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
+import org.eclipse.jgit.lib.RepositoryState;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
@@ -99,7 +100,6 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.DeploymentMode;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.WorkflowProtectionMode;
 
 import base.Text;
-import xmcp.gitintegration.Flag;
 import xmcp.gitintegration.WorkspaceContent;
 import xmcp.gitintegration.WorkspaceContentDifferences;
 import xmcp.gitintegration.WorkspaceObjectManagement;
@@ -409,6 +409,13 @@ public class RepositoryInteraction {
 
     try (Git git = new Git(repo)) {
       container = fillGitDataContainer(git, repo, repository, user);
+
+      if (repo.getRepositoryState() == RepositoryState.MERGING) {
+        container.creds = null;
+        container.warnings.add("Pull aborted. Repository is in merging state.");
+        return createPullOutput(container, dryrun);
+      }
+
       if (dryrun) {
         container.creds = null;
         print(container);
@@ -847,28 +854,6 @@ public class RepositoryInteraction {
   }
 
 
-  private List<String> findOpenDifferenceListIds(String repository) {
-    List<? extends RepositoryConnectionStorable> connections = RepositoryManagementImpl.loadConnectionsForSingleRepository(repository);
-
-    if (logger.isDebugEnabled()) {
-      logger.debug("searching for open lists for repository: " + repository + "...");
-      logger.debug("found " + connections.size() + " connections...");
-    }
-
-    List<String> connectedWorkspaces = connections.stream().map(x -> x.getWorkspacename()).collect(Collectors.toList());
-
-    if (logger.isDebugEnabled()) {
-      logger.debug("found " + connectedWorkspaces.size() + " connected workspaces...");
-    }
-
-    List<String> openDifferenceListIds = new ArrayList<>();
-    for (String connectedWorkspace : connectedWorkspaces) {
-      openDifferenceListIds.addAll(listOpenDifferencesLists(connectedWorkspace));
-    }
-    return openDifferenceListIds;
-  }
-
-
   private void processPulls(Git git, Repository repository, GitDataContainer container) throws Exception {
     boolean stashRequired = !container.lAddrAddReverts.isEmpty() || container.localDiffs.size() > container.revert.size();
     if(stashRequired) {
@@ -1250,14 +1235,6 @@ public class RepositoryInteraction {
     if (logger.isDebugEnabled()) {
       logger.debug("executed push.");
     }
-  }
-
-
-  private List<String> listOpenDifferencesLists(String connectedWorkspace) {
-    Workspace ws = new Workspace(connectedWorkspace);
-    List<? extends WorkspaceContentDifferences> list = WorkspaceObjectManagement.listOpenWorkspaceDifferencesLists(ws, new Flag(false));
-    List<String> result = list.stream().map(x -> String.valueOf(x.getListId())).collect(Collectors.toList());
-    return result;
   }
 
 
