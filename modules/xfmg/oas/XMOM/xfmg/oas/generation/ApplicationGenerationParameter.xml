@@ -39,4 +39,9 @@
       <Type>Boolean</Type>
     </Meta>
   </Data>
+  <Data Label="generate Mock Option" VariableName="generateDataCaptureOption">
+    <Meta>
+      <Type>Boolean</Type>
+    </Meta>
+  </Data>
 </DataType>
