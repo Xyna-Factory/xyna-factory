@@ -27,7 +27,7 @@
 	</pathconvert>
 
 	<property name="target.dir" value="${basedir}/deploy/" />
-    <property name="oas.dir" value="${root.dir}/modules/xfmg/oas" />
+    <property name="oas.dir" value="${root.dir}/modules/xfmg/oas/oasAppManagement" />
 
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
 		<classpath>
