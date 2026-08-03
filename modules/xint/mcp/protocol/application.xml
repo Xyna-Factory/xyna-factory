@@ -15,8 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="ModelContextProtocol" factoryVersion="" versionName="0.0.1" xmlVersion="1.1">
+--><Application applicationName="ModelContextProtocol" factoryVersion="" versionName="1.0.0" xmlVersion="1.1">
   <ApplicationInfo>
+    <Description Lang="DE">Datentypen für das Model Context Protocol</Description>
+    <Description Lang="EN">Datatypes for the model context protocol</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Json</ApplicationName>

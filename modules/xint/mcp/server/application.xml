@@ -15,19 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="McpServer" factoryVersion="" versionName="0.0.1" xmlVersion="1.1">
+--><Application applicationName="McpServer" factoryVersion="" versionName="1.0.0" xmlVersion="1.1">
   <ApplicationInfo>
+    <Description Lang="DE">Model Context Protocol Server</Description>
+    <Description Lang="EN">Model context protocol server</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Http</ApplicationName>
         <VersionName>1.5.11</VersionName>
+      </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>ModelContextProtocol</ApplicationName>
-        <VersionName>0.0.1</VersionName>
-      </RuntimeContextRequirement>
-      </RuntimeContextRequirement>
-      <RuntimeContextRequirement>
-        <WorkspaceName>ModelContextProtocol</WorkspaceName>
+        <VersionName>1.0.0</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
