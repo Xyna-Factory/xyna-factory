@@ -71,6 +71,11 @@ public class McpPrimitivesData {
     tools = tmpTools;
     prompts = tmpPrompts;
     resources = tmpResources;
+
+    if (logger.isDebugEnabled()) {
+      logger.debug("Created/Updated available mcp primitives for revision " + revision);
+    }
+
   }
 
 

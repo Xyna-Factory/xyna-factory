@@ -67,6 +67,28 @@ public class RequestValidation {
         McpServerFilter.sendUnknownSessionIdResponse(tc);
         return false;
       }
+    } else {
+      JSONValue id = obj.getMember("id");
+      JSONValue val = McpServerFilter.getNestedValue(obj, "params", "protocolVersion");
+      String protocolVersionString = val == null ? null : val.getStringOrNumberValue();
+      if (!McpServerFilter.SUPPORTED_VERSIONS.contains(protocolVersionString)) {
+        JsonBuilder jb = new JsonBuilder();
+        jb.startObject();
+        jb.addStringAttribute("jsonrpc", "2.0");
+        McpServerFilter.addIdToBuilder(jb, id);
+        jb.addObjectAttribute("error");
+        jb.addNumberAttribute("code", -32602);
+        jb.addStringAttribute("message", "Unsupported protocol version");
+        jb.addObjectAttribute("data");
+        jb.addStringListAttribute("supported", McpServerFilter.SUPPORTED_VERSIONS);
+        jb.addStringAttribute("requested", protocolVersionString);
+        jb.endObject();
+        jb.endObject();
+        jb.endObject();
+        McpServerFilter.send(tc, HTTPTriggerConnection.HTTP_BADREQUEST, McpMethodHandler.MIME_JSON, null, jb.toString());
+        return false;
+      }
+
     }
     return true;
   }
@@ -139,11 +161,40 @@ public class RequestValidation {
     }
     return true;
   }
-  
+
+
   private static boolean validateMirroredHeaders(RequestValidationData data) {
-    //TODO:
-    //mcp-protocol-version
-    //mcp-method
+    JSONObject obj = data.getObj();
+    JSONValue id = data.getObj().getMember("id");
+    JSONValue val;
+
+    String protocolVersionHeader = data.getTc().getHeader().getProperty(McpMethodHandler.PROTOCOL_VERSION_HEADER.toLowerCase());
+    val = McpServerFilter.getNestedValue(obj, "params", "_meta", "io.modelcontextprotocol/protocolVersion");
+    String version = val == null ? null : val.getStringOrNumberValue();
+    if (!Objects.equals(protocolVersionHeader, version)) {
+      McpServerFilter.sendBadRequestResponse(data.getTc(), id, -32020, "Header Mismatch: " + McpMethodHandler.PROTOCOL_VERSION_HEADER);
+      return false;
+    }
+
+    String methodHeader = data.getTc().getHeader().getProperty(McpMethodHandler.MCP_METHOD_HEADER.toLowerCase());
+    val = obj.getMember("method");
+    String method = val == null ? null : val.getStringOrNumberValue();
+    if (!Objects.equals(methodHeader, method)) {
+      McpServerFilter.sendBadRequestResponse(data.getTc(), id, -32020, "Header Mismatch: " + McpMethodHandler.MCP_METHOD_HEADER);
+      return false;
+    }
+
+    if (method.equals("tools/call") || method.equals("resources/read") || method.equals("prompts/get")) {
+      String nameHeader = data.getTc().getHeader().getProperty(McpMethodHandler.MCP_NAME_HEADER.toLowerCase());
+      val = McpServerFilter.getNestedValue(obj, "params", "name");
+      String paramName = val == null ? null : val.getStringOrNumberValue();
+      val = McpServerFilter.getNestedValue(obj, "params", "uri");
+      String paramUri = val == null ? null : val.getStringOrNumberValue();
+      if ((paramName != null && !Objects.equals(nameHeader, paramName)) || (paramUri != null && !Objects.equals(nameHeader, paramUri))) {
+        McpServerFilter.sendBadRequestResponse(data.getTc(), id, -32020, "Header Mismatch: " + McpMethodHandler.MCP_NAME_HEADER);
+        return false;
+      }
+    }
     return true;
   }
 

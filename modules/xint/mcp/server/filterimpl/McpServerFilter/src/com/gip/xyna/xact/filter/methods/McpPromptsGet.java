@@ -42,8 +42,8 @@ public class McpPromptsGet implements McpMethodHandler {
   public void process(McpRequestData data) {
     JsonBuilder jb = new JsonBuilder();
     McpPrimitivesData primitives = data.getPrimitivesData();
-    String name = data.getPayload().getMember("params").getObjectValue().getMember("name").getStringOrNumberValue();
-    JSONValue argumentsValue = data.getPayload().getMember("params").getObjectValue().getMember("arguments");
+    String name = McpServerFilter.getNestedValue(data.getPayload(), "params", "name").getStringOrNumberValue();
+    JSONValue argumentsValue = McpServerFilter.getNestedValue(data.getPayload(), "params", "arguments");
     JSONObject arguments = null;
     if (argumentsValue != null && Objects.equals("OBJECT", argumentsValue.getType())) {
       arguments = argumentsValue.getObjectValue();
@@ -59,7 +59,18 @@ public class McpPromptsGet implements McpMethodHandler {
     }
 
     if (result == null) {
-      //TODO: not found
+      jb.startObject();
+      jb.addStringAttribute("jsonrpc", "2.0");
+      McpServerFilter.addIdToBuilder(jb, data.getPayload().getMember("id"));
+      jb.addObjectAttribute("error");
+      jb.addNumberAttribute("code", -32602);
+      jb.addStringAttribute("message", "Invalid params: prompt not found");
+      jb.addObjectAttribute("data");
+      jb.addStringAttribute("name", "nonexistent_prompt");
+      jb.endObject();
+      jb.endObject();
+      jb.endObject();
+      McpServerFilter.send(data.getTc(), HTTPTriggerConnection.HTTP_OK, MIME_JSON, null, jb.toString());
     }
 
     jb.startObject();

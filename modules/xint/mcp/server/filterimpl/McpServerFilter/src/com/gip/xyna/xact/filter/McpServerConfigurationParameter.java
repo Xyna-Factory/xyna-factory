@@ -18,6 +18,8 @@
  */
 package com.gip.xyna.xact.filter;
 
+
+
 import java.util.List;
 import java.util.Map;
 import com.gip.xyna.utils.misc.Documentation;
@@ -25,36 +27,39 @@ import com.gip.xyna.utils.misc.StringParameter;
 import com.gip.xyna.xact.exceptions.XACT_InvalidFilterConfigurationParameterValueException;
 import com.gip.xyna.xdev.xfractmod.xmdm.FilterConfigurationParameter;
 
+
+
 public class McpServerConfigurationParameter extends FilterConfigurationParameter {
 
   private static final long serialVersionUID = 1L;
 
-  public static final StringParameter<String> ENDPOINT = 
-    StringParameter.typeString("endpoint").
-    documentation( Documentation.
-        de("MCPServer Endpunkt").
-        en("Endpoint of the MCP Server").build() ).
-    optional().defaultValue("/mcp").build();
+  public static final StringParameter<String> ENDPOINT = //
+      StringParameter.typeString("endpoint"). //
+          documentation(Documentation. //
+              de("MCPServer Endpunkt"). //
+              en("Endpoint of the MCP Server").build()) //
+          .optional().defaultValue("/mcp").build(); //
 
-  protected static final List<StringParameter<?>> ALL_PARAMETERS = 
-    StringParameter.asList( ENDPOINT );
+  protected static final List<StringParameter<?>> ALL_PARAMETERS = StringParameter.asList(ENDPOINT);
 
   private String endpoint;
+
 
   @Override
   public List<StringParameter<?>> getAllStringParameters() {
     return ALL_PARAMETERS;
   }
 
-   @Override
+
+  @Override
   public McpServerConfigurationParameter build(Map<String, Object> paramMap) throws XACT_InvalidFilterConfigurationParameterValueException {
     McpServerConfigurationParameter param = new McpServerConfigurationParameter();
     param.endpoint = ENDPOINT.getFromMap(paramMap);
     return param;
   }
 
+
   public String getEndpoint() {
     return endpoint;
   }
-
 }

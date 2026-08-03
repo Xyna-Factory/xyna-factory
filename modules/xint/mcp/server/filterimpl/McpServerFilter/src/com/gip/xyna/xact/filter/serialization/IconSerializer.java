@@ -17,19 +17,25 @@
  */
 package com.gip.xyna.xact.filter.serialization;
 
+
+
 import com.gip.xyna.utils.misc.JsonBuilder;
 import com.gip.xyna.utils.misc.JsonSerializable;
 
 import xint.mcp.schema.Icon;
 
-public  class IconSerializer implements JsonSerializable {
+
+
+public class IconSerializer implements JsonSerializable {
 
   private final Icon icon;
-  
+
+
   public IconSerializer(Icon icon) {
     this.icon = icon;
   }
-  
+
+
   @Override
   public void toJson(JsonBuilder jb) {
     jb.addStringAttribute("src", icon.getSrc());
@@ -37,5 +43,5 @@ public  class IconSerializer implements JsonSerializable {
     jb.addStringListAttribute("sizes", icon.getSizes());
     jb.addStringAttribute("theme", icon.getTheme());
   }
-  
+
 }

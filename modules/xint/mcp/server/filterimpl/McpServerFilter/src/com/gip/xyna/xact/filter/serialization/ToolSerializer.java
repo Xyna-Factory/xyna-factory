@@ -17,38 +17,47 @@
  */
 package com.gip.xyna.xact.filter.serialization;
 
+
+
 import com.gip.xyna.utils.misc.JsonBuilder;
 import com.gip.xyna.utils.misc.JsonSerializable;
+import com.gip.xyna.xact.filter.methods.McpMethodHandler.Era;
 
 import xint.mcp.schema.Icon;
 import xint.mcp.schema.Tool;
 import xint.mcp.schema.ToolAnnotations;
 
+
+
 public class ToolSerializer implements JsonSerializable {
 
   private final Tool tool;
-  
-  public ToolSerializer(Tool tool) {
+  private final Era era;
+
+
+  public ToolSerializer(Tool tool, Era era) {
     this.tool = tool;
+    this.era = era;
   }
-  
+
+
   @Override
   public void toJson(JsonBuilder jb) {
     jb.addStringAttribute("name", tool.getName());
     jb.addStringAttribute("title", tool.getTitel());
     jb.addStringAttribute("description", tool.getDescription());
     jb.addObjectAttribute("inputSchema", new JsonObjectSerializer(tool.getInputSchema()));
-    if(tool.getOutputSchema() != null) {
+    if (era == Era.MODERN && tool.getOutputSchema() != null) {
       jb.addObjectAttribute("outputSchema", new JsonObjectSerializer(tool.getOutputSchema()));
     }
-    if(tool.getIcons() != null && !tool.getIcons().isEmpty()) {
+    if (tool.getIcons() != null && !tool.getIcons().isEmpty()) {
       jb.addListAttribute("icons");
-      for(Icon icon : tool.getIcons()) {
+      for (Icon icon : tool.getIcons()) {
         jb.addObjectListElement(new IconSerializer(icon));
       }
       jb.endList();
     }
-    if(tool.getAnnotations() != null) {
+    if (era == Era.MODERN && tool.getAnnotations() != null) {
       ToolAnnotations annotations = tool.getAnnotations();
       jb.addObjectAttribute("annotations");
       jb.addStringAttribute("title", annotations.getTitle());
@@ -59,5 +68,5 @@ public class ToolSerializer implements JsonSerializable {
       jb.endObject();
     }
   }
-  
+
 }

@@ -17,6 +17,8 @@
  */
 package com.gip.xyna.xact.filter.methods;
 
+
+
 import com.gip.xyna.utils.misc.JsonBuilder;
 import com.gip.xyna.xact.filter.McpPrimitivesData;
 import com.gip.xyna.xact.filter.McpServerFilter;
@@ -25,7 +27,9 @@ import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 
 import xint.mcp.schema.Prompt;
 
-public class McpListPrompts implements McpMethodHandler  {
+
+
+public class McpPromptsList implements McpMethodHandler {
 
   @Override
   public void process(McpRequestData data) {
@@ -39,13 +43,12 @@ public class McpListPrompts implements McpMethodHandler  {
       sb.addStringAttribute("resultType", "complete");
     }
     sb.addListAttribute("prompts");
-    
-    for(Prompt prompt : primitives.getPrompts()) {
+
+    for (Prompt prompt : primitives.getPrompts()) {
       sb.addObjectListElement(new PromptSerializer(prompt));
     }
-    
+
     sb.endList();
-    sb.addStringAttribute("nextCursor", null);
     if (data.getEra() == Era.MODERN) {
       sb.addNumberAttribute("ttlMs", 300_000);
       sb.addStringAttribute("cacheScope", "public");

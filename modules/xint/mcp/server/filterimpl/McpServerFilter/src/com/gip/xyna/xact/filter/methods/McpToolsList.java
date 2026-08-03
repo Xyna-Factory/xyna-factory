@@ -45,11 +45,10 @@ public class McpToolsList implements McpMethodHandler {
     jb.addListAttribute("tools");
 
     for (Tool tool : primitives.getTools()) {
-      jb.addObjectListElement(new ToolSerializer(tool));
+      jb.addObjectListElement(new ToolSerializer(tool, data.getEra()));
     }
 
     jb.endList();
-    jb.addStringAttribute("nextCursor", null);
     if (data.getEra() == Era.MODERN) {
       jb.addNumberAttribute("ttlMs", 300_000);
       jb.addStringAttribute("cacheScope", "public");

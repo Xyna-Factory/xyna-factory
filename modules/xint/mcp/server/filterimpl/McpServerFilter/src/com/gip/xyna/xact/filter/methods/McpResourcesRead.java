@@ -54,7 +54,18 @@ public class McpResourcesRead implements McpMethodHandler {
     }
 
     if (result == null) {
-      //resource not found
+      jb.startObject();
+      jb.addStringAttribute("jsonrpc", "2.0");
+      McpServerFilter.addIdToBuilder(jb, data.getPayload().getMember("id"));
+      jb.addObjectAttribute("error");
+      jb.addNumberAttribute("code", -32602);
+      jb.addStringAttribute("message", "Invalid params: resource not found");
+      jb.addObjectAttribute("data");
+      jb.addStringAttribute("name", "nonexistent_resource");
+      jb.endObject();
+      jb.endObject();
+      jb.endObject();
+      McpServerFilter.send(data.getTc(), HTTPTriggerConnection.HTTP_OK, MIME_JSON, null, jb.toString());
     }
 
     jb.startObject();
@@ -75,6 +86,7 @@ public class McpResourcesRead implements McpMethodHandler {
       jb.addNumberAttribute("ttlMs", 300_000);
       jb.addStringAttribute("cacheScope", "public");
     }
+    jb.endObject();
     jb.endObject();
     McpServerFilter.send(data.getTc(), HTTPTriggerConnection.HTTP_OK, MIME_JSON, null, jb.toString());
   }

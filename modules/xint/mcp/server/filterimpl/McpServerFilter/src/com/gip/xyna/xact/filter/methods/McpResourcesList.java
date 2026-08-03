@@ -50,7 +50,6 @@ public class McpResourcesList implements McpMethodHandler {
 
 
     jb.endList();
-    jb.addStringAttribute("nextCursor", null);
     if (data.getEra() == Era.MODERN) {
       jb.addNumberAttribute("ttlMs", 300_000);
       jb.addStringAttribute("cacheScope", "public");

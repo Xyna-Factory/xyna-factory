@@ -30,6 +30,7 @@ import com.gip.xyna.xact.filter.serialization.JsonObjectSerializer;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 
 import xfmg.xfctrl.datamodel.json.JSONObject;
+import xfmg.xfctrl.datamodel.json.JSONValue;
 import xint.mcp.schema.Content;
 import xint.mcp.schema.Tool;
 import xint.mcp.schema.ToolCallResult;
@@ -40,46 +41,71 @@ public class McpToolsCall implements McpMethodHandler {
 
   @Override
   public void process(McpRequestData data) {
-    JsonBuilder sb = new JsonBuilder();
+    JsonBuilder jb = new JsonBuilder();
     String toolName = data.getPayload().getMember("params").getObjectValue().getMember("name").getStringOrNumberValue();
-    JSONObject arguments = data.getPayload().getMember("params").getObjectValue().getMember("arguments").getObjectValue();
+    JSONValue arsValue = McpServerFilter.getNestedValue(data.getPayload(), "params", "arguments");    
+    JSONObject arguments = arsValue == null ? new JSONObject.Builder().instance() : arsValue.getObjectValue();
     McpPrimitivesData primitives = data.getPrimitivesData();
 
     List<Tool> tools = primitives.getTools();
     ToolCallResult result = null;
     for (Tool tool : tools) {
       if (Objects.equals(tool.getName(), toolName)) {
-        //TODO: validate input against schema
         try {
           result = tool.call(arguments);
           break;
         } catch (Exception e) {
-          //TODO: error result
+          jb.startObject();
+          jb.addStringAttribute("jsonrpc", "2.0");
+          McpServerFilter.addIdToBuilder(jb, data.getPayload().getMember("id"));
+          jb.addObjectAttribute("error");
+          jb.addNumberAttribute("code", -32603);
+          jb.addStringAttribute("message", "Internal error");
+          jb.addObjectAttribute("data");
+          jb.addStringAttribute("reason", "Unhandled exception while executing tool");
+          jb.addStringAttribute("tool", tool.getName());
+          McpServerFilter.addIdToBuilder(jb, data.getPayload().getMember("id"), "requestId");
+          jb.endObject();
+          jb.endObject();
+          jb.endObject();
+          McpServerFilter.send(data.getTc(), HTTPTriggerConnection.HTTP_OK, MIME_JSON, null, jb.toString());
         }
       }
     }
-    
-    if(result == null) {
-      //ToDO: no tool found
+
+    if (result == null) {
+      jb.startObject();
+      jb.addStringAttribute("jsonrpc", "2.0");
+      McpServerFilter.addIdToBuilder(jb, data.getPayload().getMember("id"));
+      jb.addObjectAttribute("error");
+      jb.addNumberAttribute("code", -32602);
+      jb.addStringAttribute("message", "Invalid params: tool not found");
+      jb.addObjectAttribute("data");
+      jb.addStringAttribute("name", "nonexistent_tool");
+      jb.endObject();
+      jb.endObject();
+      jb.endObject();
+      McpServerFilter.send(data.getTc(), HTTPTriggerConnection.HTTP_OK, MIME_JSON, null, jb.toString());
     }
-    sb.startObject();
-    sb.addStringAttribute("jsonrpc", "2.0");
-    McpServerFilter.addIdToBuilder(sb, data.getPayload().getMember("id"));
-    sb.addObjectAttribute("result");
-    sb.addListAttribute("content");
-    if(result.getContent() != null) {
-      for(Content content : result.getContent()) {
-        sb.addObjectListElement(new ContentSerializer(content));
+
+    jb.startObject();
+    jb.addStringAttribute("jsonrpc", "2.0");
+    McpServerFilter.addIdToBuilder(jb, data.getPayload().getMember("id"));
+    jb.addObjectAttribute("result");
+    jb.addListAttribute("content");
+    if (result.getContent() != null) {
+      for (Content content : result.getContent()) {
+        jb.addObjectListElement(new ContentSerializer(content));
       }
     }
-    sb.endList();
-    if(result.getStructuredContent() != null) {
-      sb.addObjectAttribute("structuredContent", new JsonObjectSerializer(result.getStructuredContent()));
+    jb.endList();
+    if (result.getStructuredContent() != null) {
+      jb.addObjectAttribute("structuredContent", new JsonObjectSerializer(result.getStructuredContent()));
     }
-    sb.addBooleanAttribute("isError", result.getIsError());
-    sb.endObject();
-    sb.endObject();
-    McpServerFilter.send(data.getTc(), HTTPTriggerConnection.HTTP_OK, MIME_JSON, null, sb.toString());
+    jb.addBooleanAttribute("isError", result.getIsError());
+    jb.endObject();
+    jb.endObject();
+    McpServerFilter.send(data.getTc(), HTTPTriggerConnection.HTTP_OK, MIME_JSON, null, jb.toString());
   }
 
 }

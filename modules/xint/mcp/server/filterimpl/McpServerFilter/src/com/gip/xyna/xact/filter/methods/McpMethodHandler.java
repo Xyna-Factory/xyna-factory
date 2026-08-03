@@ -35,6 +35,9 @@ public interface McpMethodHandler {
 
   public static final String SESSIONID_HEADER = "Mcp-Session-Id";
   public static final String MIME_JSON = "application/json";
+  public static final String PROTOCOL_VERSION_HEADER = "MCP-Protocol-Version";
+  public static final String MCP_METHOD_HEADER = "Mcp-Method";
+  public static final String MCP_NAME_HEADER = "Mcp-Name";
 
 
   void process(McpRequestData data);
@@ -47,10 +50,7 @@ public interface McpMethodHandler {
 
     public static Era determineEra(JSONObject obj) {
       JSONValue val = McpServerFilter.getNestedValue(obj, "params", "_meta", "io.modelcontextprotocol/protocolVersion");
-      if (val == null) {
-        return Era.LEGACY;
-      }
-      return Era.MODERN;
+      return val == null ? Era.LEGACY : Era.MODERN;
     }
   }
 

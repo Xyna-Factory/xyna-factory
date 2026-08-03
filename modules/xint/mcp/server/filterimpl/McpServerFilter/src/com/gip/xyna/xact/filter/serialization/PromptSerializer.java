@@ -17,6 +17,8 @@
  */
 package com.gip.xyna.xact.filter.serialization;
 
+
+
 import com.gip.xyna.utils.misc.JsonBuilder;
 import com.gip.xyna.utils.misc.JsonSerializable;
 
@@ -24,29 +26,33 @@ import xint.mcp.schema.Icon;
 import xint.mcp.schema.Prompt;
 import xint.mcp.schema.PromptArgument;
 
+
+
 public class PromptSerializer implements JsonSerializable {
 
   private final Prompt prompt;
-  
+
+
   public PromptSerializer(Prompt prompt) {
     this.prompt = prompt;
   }
+
 
   @Override
   public void toJson(JsonBuilder jb) {
     jb.addStringAttribute("name", prompt.getName());
     jb.addStringAttribute("title", prompt.getTitle());
     jb.addStringAttribute("description", prompt.getDescription());
-    if(prompt.getArguments() != null) {
+    if (prompt.getArguments() != null) {
       jb.addListAttribute("arguments");
-      for(PromptArgument argument : prompt.getArguments()) {
+      for (PromptArgument argument : prompt.getArguments()) {
         jb.addObjectListElement(new PromtArgumentSerializer(argument));
       }
       jb.endList();
     }
-    if(prompt.getIcons() != null) {
+    if (prompt.getIcons() != null) {
       jb.addListAttribute("icons");
-      for(Icon icon : prompt.getIcons()) {
+      for (Icon icon : prompt.getIcons()) {
         jb.addObjectListElement(new IconSerializer(icon));
       }
       jb.endList();

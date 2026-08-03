@@ -41,16 +41,19 @@ public class McpInitialize implements McpMethodHandler {
   private static Logger logger = CentralFactoryLogging.getLogger(McpInitialize.class);
 
   private final String version;
-  
+
+
   public McpInitialize() {
     version = McpServerFilter.getRtcVersion(getClass().getClassLoader());
   }
+
 
   @Override
   public void process(McpRequestData data) {
     JSONObject obj = data.getPayload();
     HTTPTriggerConnection tc = data.getTc();
     JSONObject clientInfo = obj.getMember("params").getObjectValue().getMember("clientInfo").getObjectValue();
+    String protocolVersion = obj.getMember("params").getObjectValue().getMember("protocolVersion").getStringOrNumberValue();
     String clientInfoName = clientInfo.getMember("name").getStringOrNumberValue();
     String clientInfoVersion = clientInfo.getMember("version").getStringOrNumberValue();
     JsonBuilder sb = new JsonBuilder();
@@ -58,31 +61,34 @@ public class McpInitialize implements McpMethodHandler {
     sb.addStringAttribute("jsonrpc", "2.0");
     McpServerFilter.addIdToBuilder(sb, obj.getMember("id"));
     sb.addObjectAttribute("result");
-    sb.addStringAttribute("protocolVersion", "2025-03-26");
+    sb.addStringAttribute("protocolVersion", protocolVersion);
     sb.addObjectAttribute("capabilities");
 
     sb.addObjectAttribute("prompts");
+    sb.addBooleanAttribute("listChanged", false);
+
     sb.endObject();
 
     sb.addObjectAttribute("resources");
+    sb.addBooleanAttribute("listChanged", false);
     sb.endObject();
     sb.addObjectAttribute("tools");
+    sb.addBooleanAttribute("listChanged", false);
+
     sb.endObject();
 
     sb.endObject();
-    
+
     sb.addObjectAttribute("serverInfo");
     sb.addStringAttribute("name", "XynaMcpServer");
     sb.addStringAttribute("version", version);
     sb.endObject();
-    
-    //sb.addStringAttribute("instructions", "");
+
     sb.endObject();
     sb.endObject();
 
     String sessionId = UUID.randomUUID().toString();
-    McpLegacySession session = new McpLegacySession(sessionId, false, clientInfoName, clientInfoVersion);
-
+    McpLegacySession session = new McpLegacySession(sessionId, false, clientInfoName, clientInfoVersion, protocolVersion);
     try {
       byte[] msgBytes = sb.toString().getBytes(Charset.forName("UTF8"));
       long size = Long.valueOf(msgBytes.length);

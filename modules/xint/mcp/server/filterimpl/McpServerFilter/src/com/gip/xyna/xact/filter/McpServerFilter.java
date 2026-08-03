@@ -20,7 +20,7 @@ package com.gip.xyna.xact.filter;
 
 
 import com.gip.xyna.xact.filter.methods.McpInitialize;
-import com.gip.xyna.xact.filter.methods.McpListPrompts;
+import com.gip.xyna.xact.filter.methods.McpPromptsList;
 import com.gip.xyna.xact.filter.methods.McpMethodHandler;
 import com.gip.xyna.xact.filter.methods.McpMethodHandler.Era;
 import com.gip.xyna.xact.filter.methods.McpMethodHandler.McpRequestData;
@@ -92,7 +92,7 @@ public class McpServerFilter extends ConnectionFilter<HTTPTriggerConnection> {
   private static final McpToolsCall METHOD_TOOLS_CALL = new McpToolsCall();
   private static final McpResourcesList METHOD_RESOURCES_LIST = new McpResourcesList();
   private static final McpResourcesRead METHOD_RESOURCES_READ = new McpResourcesRead();
-  private static final McpListPrompts METHOD_PROMPTS_LIST = new McpListPrompts();
+  private static final McpPromptsList METHOD_PROMPTS_LIST = new McpPromptsList();
   private static final McpPromptsGet METHOD_PROMPTS_GET = new McpPromptsGet();
 
 
@@ -164,7 +164,7 @@ public class McpServerFilter extends ConnectionFilter<HTTPTriggerConnection> {
     try {
       obj = JSONObject.fromJson(new Document.Builder().text(payload).instance());
     } catch (Exception e) {
-      tc.sendErrorResponse("400 Bad Request", "Invalid Json"); //TODO: check specification
+      sendBadRequestResponse(tc, null, -32700, "Invalid Json");
       return FilterResponse.responsibleWithoutXynaorder();
     }
 
@@ -192,7 +192,9 @@ public class McpServerFilter extends ConnectionFilter<HTTPTriggerConnection> {
       try {
         tc.sendResponse("");
       } catch (SocketNotAvailableException e) {
-
+        if (logger.isWarnEnabled()) {
+          logger.warn("Could not send deleteSession response to client. SessionId: " + sessionId, e);
+        }
       }
     } else {
       sendUnknownSessionIdResponse(tc);
@@ -213,7 +215,7 @@ public class McpServerFilter extends ConnectionFilter<HTTPTriggerConnection> {
     McpPrimitivesData primitivesData = infoPerTrigger.get(tc.getTrigger().hashCode());
 
     if (logger.isDebugEnabled()) {
-      logger.debug(String.format("processing request %s, [%s]", method, era));
+      logger.debug(String.format("processing [%s] request %s", era, method));
     }
 
     McpRequestData data = new McpRequestData(tc, obj, legacySessions, session, primitivesData, era);
@@ -269,8 +271,6 @@ public class McpServerFilter extends ConnectionFilter<HTTPTriggerConnection> {
    */
   @Override
   public void onResponse(GeneralXynaObject response, HTTPTriggerConnection tc) {
-    //TODO implementation
-    //TODO update dependency xml file
   }
 
 
@@ -280,8 +280,6 @@ public class McpServerFilter extends ConnectionFilter<HTTPTriggerConnection> {
    * @param tc corresponding triggerconnection
    */
   public void onError(XynaException[] e, HTTPTriggerConnection tc) {
-    //TODO implementation
-    //TODO update dependency xml file
   }
 
 
@@ -289,9 +287,7 @@ public class McpServerFilter extends ConnectionFilter<HTTPTriggerConnection> {
    * @return description of this filter
    */
   public String getClassDescription() {
-    //TODO implementation
-    //TODO update dependency xml file
-    return null;
+    return "Model Context Protocol Server Filter";
   }
 
 
@@ -439,20 +435,25 @@ public class McpServerFilter extends ConnectionFilter<HTTPTriggerConnection> {
   }
 
 
-  public static void addIdToBuilder(JsonBuilder jb, JSONValue idValue) {
+  public static void addIdToBuilder(JsonBuilder jb, JSONValue idValue, String name) {
     if (idValue == null) {
       return;
     }
     if ("NUMBER".equals(idValue.getType())) {
       String idAsString = idValue.getStringOrNumberValue();
       if (idAsString.contains(".")) {
-        jb.addNumberAttribute("id", Double.valueOf(idAsString));
+        jb.addNumberAttribute(name, Double.valueOf(idAsString));
       } else {
-        jb.addNumberAttribute("id", Long.valueOf(idAsString));
+        jb.addNumberAttribute(name, Long.valueOf(idAsString));
       }
     } else {
-      jb.addStringAttribute("id", idValue.getStringOrNumberValue());
+      jb.addStringAttribute(name, idValue.getStringOrNumberValue());
     }
+  }
+
+
+  public static void addIdToBuilder(JsonBuilder jb, JSONValue idValue) {
+    addIdToBuilder(jb, idValue, "id");
   }
 
 

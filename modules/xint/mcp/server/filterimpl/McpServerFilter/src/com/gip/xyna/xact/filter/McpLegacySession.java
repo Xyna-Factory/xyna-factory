@@ -25,18 +25,22 @@ public class McpLegacySession {
   private boolean initialized;
   private String clientInfoName;
   private String clientInfoVersion;
+  private String protocolVersion;
 
 
-  public McpLegacySession(String sessionId, boolean initialized, String clientInfoName, String clientInfoVersion) {
+  public McpLegacySession(String sessionId, boolean initialized, String clientInfoName, String clientInfoVersion, String protocolVersion) {
     this.sessionId = sessionId;
     this.initialized = initialized;
     this.clientInfoName = clientInfoName;
     this.clientInfoVersion = clientInfoVersion;
+    this.protocolVersion = protocolVersion;
   }
+
 
   public String getSessionId() {
     return sessionId;
   }
+
 
   public boolean isInitialized() {
     return initialized;
@@ -65,5 +69,10 @@ public class McpLegacySession {
 
   public void setClientInfoVersion(String clientInfoVersion) {
     this.clientInfoVersion = clientInfoVersion;
+  }
+
+
+  public String getProtocolVersion() {
+    return protocolVersion;
   }
 }

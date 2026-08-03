@@ -32,8 +32,9 @@ import xfmg.xfctrl.datamodel.json.JSONObject;
 
 
 public class McpPing implements McpMethodHandler {
-  
+
   private static Logger logger = CentralFactoryLogging.getLogger(McpPing.class);
+
 
   @Override
   public void process(McpRequestData data) {
@@ -49,7 +50,7 @@ public class McpPing implements McpMethodHandler {
     try {
       tc.sendResponse(sb.toString());
     } catch (SocketNotAvailableException e) {
-      if(logger.isWarnEnabled()) {
+      if (logger.isWarnEnabled()) {
         logger.warn("Could not send response to client!", e);
       }
     }
