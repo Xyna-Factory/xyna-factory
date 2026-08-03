@@ -271,6 +271,7 @@ public class {{filterName}} extends ConnectionFilter<HTTPTriggerConnection> {
       }
       if (header.getHeaderField() != null) {
         for (HeaderField hf : header.getHeaderField()) {
+          if (hf == null) { continue; }
           if (hf.getName().equalsIgnoreCase("content-type")) {
             mime = hf.getValue();
             continue;
@@ -278,7 +279,7 @@ public class {{filterName}} extends ConnectionFilter<HTTPTriggerConnection> {
           if (hf.getName().equalsIgnoreCase("content-length")) {
             continue;
           }
-          responseHeader.put(hf.getName(), hf.getValue());
+          responseHeader.put(hf.getName(), hf.getValue() == null ? "" : hf.getValue());
         }
       }
     }

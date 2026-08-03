@@ -65,19 +65,22 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
       throw new RuntimeException(errors.toString());
     }
 
-    createAppAndPrintId(statusOutputStream, "xmom-data-model", target + "_datatypes", specFile, "datamodel", false);
+    createAppAndPrintId(statusOutputStream, "xmom-data-model", target + "_datatypes", specFile, "datamodel", false, false);
     if (payload.getBuildProvider()) {
-      createAppAndPrintId(statusOutputStream, "xmom-server", target + "_provider", specFile, "provider", false);
+      createAppAndPrintId(statusOutputStream, "xmom-server", target + "_provider", specFile, "provider", false, false);
     }
     if (payload.getBuildClient()) {
-      createAppAndPrintId(statusOutputStream, "xmom-client", target + "_client", specFile, "client", payload.getGenerateMockOption());
+      createAppAndPrintId(statusOutputStream, "xmom-client", target + "_client", specFile, "client",
+                          payload.getGenerateMockOption(),
+                          payload.getGenerateDataCaptureOption());
     }
     writeToCommandLine(statusOutputStream, "Done.");
   }
   
   
-  private void createAppAndPrintId(OutputStream statusOutputStream, String generator, String target, String specFile, String type, boolean generateMock) {
-    try (OASApplicationData appData = _builder.createOasApp(generator, target, specFile, generateMock)) {
+  private void createAppAndPrintId(OutputStream statusOutputStream, String generator, String target, String specFile, String type,
+                                   boolean generateMock, boolean generateDataCapture) {
+    try (OASApplicationData appData = _builder.createOasApp(generator, target, specFile, generateMock, generateDataCapture)) {
       writeToCommandLine(statusOutputStream, type + " ManagedFileId: " + appData.getId() + " ");
     } catch (IOException e) {
       writeToCommandLine(statusOutputStream, "Could not clean up temporary files for " + type);
