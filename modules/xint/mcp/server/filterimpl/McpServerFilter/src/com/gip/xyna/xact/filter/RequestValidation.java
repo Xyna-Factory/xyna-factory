@@ -24,13 +24,14 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
-import com.gip.xyna.utils.misc.JsonBuilder;
 import com.gip.xyna.xact.filter.methods.McpMethodHandler;
 import com.gip.xyna.xact.filter.methods.McpMethodHandler.Era;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 
 import xfmg.xfctrl.datamodel.json.JSONObject;
 import xfmg.xfctrl.datamodel.json.JSONValue;
+
+import static com.gip.xyna.xact.filter.ErrorMessages.ErrorCodes;
 
 
 
@@ -60,11 +61,11 @@ public class RequestValidation {
     String method = obj.getMember("method").getStringOrNumberValue();
     if (!"initialize".equals(method)) {
       if (sessionOpt == null) {
-        McpServerFilter.sendMissingSessionIdResponse(tc);
+        ErrorMessages.sendMissingSessionIdResponse(tc);
         return false;
       }
       if (sessionOpt.isEmpty()) {
-        McpServerFilter.sendUnknownSessionIdResponse(tc);
+        ErrorMessages.sendUnknownSessionIdResponse(tc);
         return false;
       }
     } else {
@@ -72,20 +73,7 @@ public class RequestValidation {
       JSONValue val = McpServerFilter.getNestedValue(obj, "params", "protocolVersion");
       String protocolVersionString = val == null ? null : val.getStringOrNumberValue();
       if (!McpServerFilter.SUPPORTED_VERSIONS.contains(protocolVersionString)) {
-        JsonBuilder jb = new JsonBuilder();
-        jb.startObject();
-        jb.addStringAttribute("jsonrpc", "2.0");
-        McpServerFilter.addIdToBuilder(jb, id);
-        jb.addObjectAttribute("error");
-        jb.addNumberAttribute("code", -32602);
-        jb.addStringAttribute("message", "Unsupported protocol version");
-        jb.addObjectAttribute("data");
-        jb.addStringListAttribute("supported", McpServerFilter.SUPPORTED_VERSIONS);
-        jb.addStringAttribute("requested", protocolVersionString);
-        jb.endObject();
-        jb.endObject();
-        jb.endObject();
-        McpServerFilter.send(tc, HTTPTriggerConnection.HTTP_BADREQUEST, McpMethodHandler.MIME_JSON, null, jb.toString());
+        ErrorMessages.sendUnsupportedProtocolVersion(tc, id, protocolVersionString);
         return false;
       }
 
@@ -100,16 +88,16 @@ public class RequestValidation {
     JSONValue id = obj.getMember("id");
     JSONValue jsonRpc = obj.getMember("jsonrpc");
     if (jsonRpc == null) {
-      McpServerFilter.sendBadRequestResponse(tc, id, -32600, "Invalid params: missing required jsonRpc field");
+      ErrorMessages.sendBadRequestResponse(tc, id, ErrorCodes.JSON_RPC_INVALID_REQUEST, "Invalid params: missing required jsonRpc field");
       return false;
     }
     if (!Objects.equals("2.0", jsonRpc.getStringOrNumberValue())) {
-      McpServerFilter.sendBadRequestResponse(tc, id, -32600, "Invalid params: jsonrpc is not 2.0");
+      ErrorMessages.sendBadRequestResponse(tc, id, ErrorCodes.JSON_RPC_INVALID_REQUEST, "Invalid params: jsonrpc is not 2.0");
       return false;
     }
 
     if (id == null || id.getStringOrNumberValue() == null || id.getStringOrNumberValue().isEmpty()) {
-      McpServerFilter.sendBadRequestResponse(tc, id, -32600, "Invalid params: id not set");
+      ErrorMessages.sendBadRequestResponse(tc, id, ErrorCodes.JSON_RPC_INVALID_REQUEST, "Invalid params: id not set");
       return false;
     }
 
@@ -123,40 +111,30 @@ public class RequestValidation {
     JSONValue id = obj.getMember("id");
     JSONValue _meta = McpServerFilter.getNestedValue(obj, "params", "_meta");
     if (_meta == null || _meta.getObjectValue() == null) {
-      McpServerFilter.sendBadRequestResponse(tc, id, -32602, "Invalid params: params/_meta missing");
+      ErrorMessages.sendBadRequestResponse(tc, id, ErrorCodes.JSON_RPC_INVALID_PARAMS, "Invalid params: params/_meta missing");
       return false;
     }
     JSONValue protocolVersion = _meta.getObjectValue().getMember("io.modelcontextprotocol/protocolVersion");
     if (protocolVersion == null) {
-      McpServerFilter.sendBadRequestResponse(tc, id, -32602, "Invalid params: io.modelcontextprotocol/protocolVersion missing in _meta");
+      ErrorMessages.sendBadRequestResponse(tc, id, ErrorCodes.JSON_RPC_INVALID_PARAMS,
+                                           "Invalid params: io.modelcontextprotocol/protocolVersion missing in _meta");
       return false;
     }
     String protocolVersionString = protocolVersion.getStringOrNumberValue();
     if (protocolVersionString == null || !McpServerFilter.SUPPORTED_VERSIONS.contains(protocolVersionString)) {
-      JsonBuilder jb = new JsonBuilder();
-      jb.startObject();
-      jb.addStringAttribute("jsonrpc", "2.0");
-      McpServerFilter.addIdToBuilder(jb, id);
-      jb.addObjectAttribute("error");
-      jb.addNumberAttribute("code", -32022);
-      jb.addStringAttribute("message", "Unsupported protocol version");
-      jb.addObjectAttribute("data");
-      jb.addStringListAttribute("supported", McpServerFilter.SUPPORTED_VERSIONS);
-      jb.addStringAttribute("requested", protocolVersionString);
-      jb.endObject();
-      jb.endObject();
-      jb.endObject();
-      McpServerFilter.send(tc, HTTPTriggerConnection.HTTP_BADREQUEST, McpMethodHandler.MIME_JSON, null, jb.toString());
+      ErrorMessages.sendUnsupportedProtocolVersion(tc, id, protocolVersionString);
       return false;
     }
 
     JSONValue clientCaps = _meta.getObjectValue().getMember("io.modelcontextprotocol/clientCapabilities");
     if (clientCaps == null) {
-      McpServerFilter.sendBadRequestResponse(tc, id, -32602, "Invalid params: io.modelcontextprotocol/clientCapabilities missing in _meta");
+      ErrorMessages.sendBadRequestResponse(tc, id, ErrorCodes.JSON_RPC_INVALID_PARAMS,
+                                           "Invalid params: io.modelcontextprotocol/clientCapabilities missing in _meta");
       return false;
     }
     if (!Objects.equals("OBJECT", clientCaps.getType())) {
-      McpServerFilter.sendBadRequestResponse(tc, id, -32602, "Invalid params: io.modelcontextprotocol/clientCapabilities not an object");
+      ErrorMessages.sendBadRequestResponse(tc, id, ErrorCodes.JSON_RPC_INVALID_PARAMS,
+                                           "Invalid params: io.modelcontextprotocol/clientCapabilities not an object");
       return false;
     }
     return true;
@@ -172,7 +150,8 @@ public class RequestValidation {
     val = McpServerFilter.getNestedValue(obj, "params", "_meta", "io.modelcontextprotocol/protocolVersion");
     String version = val == null ? null : val.getStringOrNumberValue();
     if (!Objects.equals(protocolVersionHeader, version)) {
-      McpServerFilter.sendBadRequestResponse(data.getTc(), id, -32020, "Header Mismatch: " + McpMethodHandler.PROTOCOL_VERSION_HEADER);
+      ErrorMessages.sendBadRequestResponse(data.getTc(), id, ErrorCodes.MCP_HEADER_MISMATCH,
+                                           "Header Mismatch: " + McpMethodHandler.PROTOCOL_VERSION_HEADER);
       return false;
     }
 
@@ -180,7 +159,8 @@ public class RequestValidation {
     val = obj.getMember("method");
     String method = val == null ? null : val.getStringOrNumberValue();
     if (!Objects.equals(methodHeader, method)) {
-      McpServerFilter.sendBadRequestResponse(data.getTc(), id, -32020, "Header Mismatch: " + McpMethodHandler.MCP_METHOD_HEADER);
+      ErrorMessages.sendBadRequestResponse(data.getTc(), id, ErrorCodes.MCP_HEADER_MISMATCH,
+                                           "Header Mismatch: " + McpMethodHandler.MCP_METHOD_HEADER);
       return false;
     }
 
@@ -191,7 +171,8 @@ public class RequestValidation {
       val = McpServerFilter.getNestedValue(obj, "params", "uri");
       String paramUri = val == null ? null : val.getStringOrNumberValue();
       if ((paramName != null && !Objects.equals(nameHeader, paramName)) || (paramUri != null && !Objects.equals(nameHeader, paramUri))) {
-        McpServerFilter.sendBadRequestResponse(data.getTc(), id, -32020, "Header Mismatch: " + McpMethodHandler.MCP_NAME_HEADER);
+        ErrorMessages.sendBadRequestResponse(data.getTc(), id, ErrorCodes.MCP_HEADER_MISMATCH,
+                                             "Header Mismatch: " + McpMethodHandler.MCP_NAME_HEADER);
         return false;
       }
     }

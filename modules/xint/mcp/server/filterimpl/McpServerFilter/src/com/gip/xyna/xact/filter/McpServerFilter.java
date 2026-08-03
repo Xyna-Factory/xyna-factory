@@ -76,13 +76,6 @@ public class McpServerFilter extends ConnectionFilter<HTTPTriggerConnection> {
 
   public static final List<String> SUPPORTED_VERSIONS = List.of("2026-07-28", "2025-11-25");
 
-  private static final byte[] UNKNOWN_SESSIONID_RESPONSE = createUnknownSessionIdResponse();
-  private static final long UNKNOWN_SESSIONID_REPONSE_SIZE = UNKNOWN_SESSIONID_RESPONSE.length;
-
-
-  private static final byte[] MISSING_SESSIONID_RESPONSE = createMissingSessionIdResponse();
-  private static final long MISSING_SESSIONID_REPONSE_SIZE = MISSING_SESSIONID_RESPONSE.length;
-
 
   private static final McpServerDiscover MRTHOD_SERVER_DISCOVER = new McpServerDiscover();
   private static final McpInitialize METHOD_INITIALIZE = new McpInitialize();
@@ -156,7 +149,7 @@ public class McpServerFilter extends ConnectionFilter<HTTPTriggerConnection> {
     }
 
     if (tc.getMethodEnum() == Method.GET) {
-      sendNoAsync(tc, payload);
+      sendNoAsync(tc);
       return FilterResponse.responsibleWithoutXynaorder();
     }
 
@@ -164,17 +157,25 @@ public class McpServerFilter extends ConnectionFilter<HTTPTriggerConnection> {
     try {
       obj = JSONObject.fromJson(new Document.Builder().text(payload).instance());
     } catch (Exception e) {
-      sendBadRequestResponse(tc, null, -32700, "Invalid Json");
+      ErrorMessages.sendBadRequestResponse(tc, null, ErrorMessages.ErrorCodes.JSON_RPC_PARSE_ERROR, "Invalid Json");
       return FilterResponse.responsibleWithoutXynaorder();
     }
 
-    processRequest(tc, obj);
-
+    try {
+      processRequest(tc, obj);
+    } catch (Exception e) {
+      ErrorMessages.sendInternalError(tc, obj.getMember("id"), "processing request");
+      if (logger.isWarnEnabled()) {
+        JSONValue method = obj.getMember("method");
+        String methodString = method == null ? null : method.getStringOrNumberValue();
+        logger.warn("Uncaught exception processing method '" + methodString + "' - payload: " + obj.toJson().getText(), e);
+      }
+    }
     return FilterResponse.responsibleWithoutXynaorder();
   }
 
 
-  private void sendNoAsync(HTTPTriggerConnection tc, String payload) {
+  private void sendNoAsync(HTTPTriggerConnection tc) {
     Properties properties = new Properties();
     properties.setProperty("Allow", "POST");
     send(tc, "405 Method Not Allowed", McpMethodHandler.MIME_JSON, properties, "");
@@ -185,7 +186,7 @@ public class McpServerFilter extends ConnectionFilter<HTTPTriggerConnection> {
     String sessionId = tc.getHeader().getProperty(McpMethodHandler.SESSIONID_HEADER.toLowerCase(), null);
 
     if (sessionId == null) {
-      sendUnknownSessionIdResponse(tc);
+      ErrorMessages.sendUnknownSessionIdResponse(tc);
     }
 
     if (legacySessions.remove(sessionId) != null) {
@@ -197,7 +198,7 @@ public class McpServerFilter extends ConnectionFilter<HTTPTriggerConnection> {
         }
       }
     } else {
-      sendUnknownSessionIdResponse(tc);
+      ErrorMessages.sendUnknownSessionIdResponse(tc);
     }
   }
 
@@ -249,7 +250,7 @@ public class McpServerFilter extends ConnectionFilter<HTTPTriggerConnection> {
       case "server/discover" :
         MRTHOD_SERVER_DISCOVER.process(data);
       default :
-        sendMethodNotFoundResponse(tc, obj.getMember("id"), method);
+        ErrorMessages.sendMethodNotFoundResponse(tc, obj.getMember("id"), method);
         break;
     }
   }
@@ -347,83 +348,6 @@ public class McpServerFilter extends ConnectionFilter<HTTPTriggerConnection> {
       return false;
     }
     return true;
-  }
-
-
-  private static byte[] createUnknownSessionIdResponse() {
-    JsonBuilder sb = new JsonBuilder();
-    sb.startObject();
-    sb.addStringAttribute("jsonrpc", "2.0");
-    sb.addObjectAttribute("error");
-    sb.addIntegerAttribute("code", -32600);
-    sb.addStringAttribute("message", "Invalid Request: unknown or expired session");
-    sb.endObject();
-    sb.endObject();
-    return sb.toString().getBytes(Charset.forName("UTF8"));
-  }
-
-
-  public static void sendUnknownSessionIdResponse(HTTPTriggerConnection tc) {
-    send(tc, //
-         HTTPTriggerConnection.HTTP_UNAUTHORIZED, //
-         McpMethodHandler.MIME_JSON, //
-         null, // 
-         UNKNOWN_SESSIONID_RESPONSE, //
-         UNKNOWN_SESSIONID_REPONSE_SIZE);
-  }
-
-
-  public static void sendMissingSessionIdResponse(HTTPTriggerConnection tc) {
-    send(tc, //
-         HTTPTriggerConnection.HTTP_UNAUTHORIZED, //
-         McpMethodHandler.MIME_JSON, //
-         null, // 
-         MISSING_SESSIONID_RESPONSE, //
-         MISSING_SESSIONID_REPONSE_SIZE);
-  }
-
-
-  public static void sendBadRequestResponse(HTTPTriggerConnection tc, JSONValue id, int code, String message) {
-    JsonBuilder sb = new JsonBuilder();
-    sb.startObject();
-    sb.addStringAttribute("jsonrpc", "2.0");
-    addIdToBuilder(sb, id);
-    sb.addObjectAttribute("error");
-    sb.addNumberAttribute("code", code);
-    sb.addStringAttribute(message, message);
-    sb.endObject();
-    sb.endObject();
-    send(tc, HTTPTriggerConnection.HTTP_BADREQUEST, McpMethodHandler.MIME_JSON, null, sb.toString());
-  }
-
-
-  private void sendMethodNotFoundResponse(HTTPTriggerConnection tc, JSONValue id, String method) {
-    JsonBuilder sb = new JsonBuilder();
-    sb.startObject();
-    sb.addStringAttribute("jsonrpc", "2.0");
-    addIdToBuilder(sb, id);
-    sb.addObjectAttribute("error");
-    sb.addNumberAttribute("code", -32601);
-    sb.addStringAttribute("message", "Method not found");
-    sb.addObjectAttribute("data");
-    sb.addStringAttribute("method", method);
-    sb.endObject();
-    sb.endObject();
-    sb.endObject();
-    send(tc, HTTPTriggerConnection.HTTP_OK, McpMethodHandler.MIME_JSON, null, sb.toString());
-  }
-
-
-  private static byte[] createMissingSessionIdResponse() {
-    JsonBuilder sb = new JsonBuilder();
-    sb.startObject();
-    sb.addStringAttribute("jsonrpc", "2.0");
-    sb.addObjectAttribute("error");
-    sb.addIntegerAttribute("code", -32600);
-    sb.addStringAttribute("message", "Invalid Request: missing Mcp-session-id header");
-    sb.endObject();
-    sb.endObject();
-    return sb.toString().getBytes(Charset.forName("UTF8"));
   }
 
 

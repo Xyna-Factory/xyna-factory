@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.gip.xyna.utils.misc.JsonBuilder;
+import com.gip.xyna.xact.filter.ErrorMessages;
 import com.gip.xyna.xact.filter.McpPrimitivesData;
 import com.gip.xyna.xact.filter.McpServerFilter;
 import com.gip.xyna.xact.filter.serialization.PromptMessageSerializer;
@@ -59,18 +60,8 @@ public class McpPromptsGet implements McpMethodHandler {
     }
 
     if (result == null) {
-      jb.startObject();
-      jb.addStringAttribute("jsonrpc", "2.0");
-      McpServerFilter.addIdToBuilder(jb, data.getPayload().getMember("id"));
-      jb.addObjectAttribute("error");
-      jb.addNumberAttribute("code", -32602);
-      jb.addStringAttribute("message", "Invalid params: prompt not found");
-      jb.addObjectAttribute("data");
-      jb.addStringAttribute("name", "nonexistent_prompt");
-      jb.endObject();
-      jb.endObject();
-      jb.endObject();
-      McpServerFilter.send(data.getTc(), HTTPTriggerConnection.HTTP_OK, MIME_JSON, null, jb.toString());
+      ErrorMessages.sendPrimitiveNotFound(data.getTc(), data.getPayload().getMember("id"), "prompt", name);
+      return;
     }
 
     jb.startObject();
@@ -88,7 +79,6 @@ public class McpPromptsGet implements McpMethodHandler {
     jb.endList();
     jb.endObject();
     jb.endObject();
-
 
     McpServerFilter.send(data.getTc(), HTTPTriggerConnection.HTTP_OK, MIME_JSON, null, jb.toString());
   }

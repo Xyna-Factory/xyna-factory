@@ -19,11 +19,40 @@
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
+        <ApplicationName>Http</ApplicationName>
+        <VersionName>1.5.11</VersionName>
+      <RuntimeContextRequirement>
         <ApplicationName>ModelContextProtocol</ApplicationName>
         <VersionName>0.0.1</VersionName>
       </RuntimeContextRequirement>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <WorkspaceName>ModelContextProtocol</WorkspaceName>
+      </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
-  <XMOMEntries>
-  </XMOMEntries>
+  <Filters>
+    <Filter implicitDependency="false">
+      <Name>McpServerFilter</Name>
+      <JarFiles>McpServerFilter/McpServerFilter.jar:</JarFiles>
+      <FqFilterClassname>com.gip.xyna.xact.filter.McpServerFilter</FqFilterClassname>
+      <TriggerName>Http</TriggerName>
+      <SharedLibs/>
+    </Filter>
+  </Filters>
+  <FilterInstances>
+    <FilterInstance implicitDependency="false">
+      <Name>McpServerFilter</Name>
+      <FilterName>McpServerFilter</FilterName>
+      <TriggerInstanceName>Http</TriggerInstanceName>
+      <FilterConfigurationParameter>endpoint=/mcp</FilterConfigurationParameter>
+    </FilterInstance>
+  </FilterInstances>
+  <TriggerInstances>
+    <TriggerInstance implicitDependency="true">
+      <Name>Http</Name>
+      <TriggerName>Http</TriggerName>
+      <StartParameter>port=3000:</StartParameter>
+    </TriggerInstance>
+  </TriggerInstances>
 </Application>

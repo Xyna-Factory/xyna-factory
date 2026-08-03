@@ -22,7 +22,11 @@ package com.gip.xyna.xact.filter.methods;
 import java.util.List;
 import java.util.Objects;
 
+import org.apache.log4j.Logger;
+
+import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.misc.JsonBuilder;
+import com.gip.xyna.xact.filter.ErrorMessages;
 import com.gip.xyna.xact.filter.McpPrimitivesData;
 import com.gip.xyna.xact.filter.McpServerFilter;
 import com.gip.xyna.xact.filter.serialization.ContentSerializer;
@@ -39,11 +43,14 @@ import xint.mcp.schema.ToolCallResult;
 
 public class McpToolsCall implements McpMethodHandler {
 
+  private static Logger logger = CentralFactoryLogging.getLogger(McpToolsCall.class);
+
+
   @Override
   public void process(McpRequestData data) {
     JsonBuilder jb = new JsonBuilder();
     String toolName = data.getPayload().getMember("params").getObjectValue().getMember("name").getStringOrNumberValue();
-    JSONValue arsValue = McpServerFilter.getNestedValue(data.getPayload(), "params", "arguments");    
+    JSONValue arsValue = McpServerFilter.getNestedValue(data.getPayload(), "params", "arguments");
     JSONObject arguments = arsValue == null ? new JSONObject.Builder().instance() : arsValue.getObjectValue();
     McpPrimitivesData primitives = data.getPrimitivesData();
 
@@ -55,37 +62,18 @@ public class McpToolsCall implements McpMethodHandler {
           result = tool.call(arguments);
           break;
         } catch (Exception e) {
-          jb.startObject();
-          jb.addStringAttribute("jsonrpc", "2.0");
-          McpServerFilter.addIdToBuilder(jb, data.getPayload().getMember("id"));
-          jb.addObjectAttribute("error");
-          jb.addNumberAttribute("code", -32603);
-          jb.addStringAttribute("message", "Internal error");
-          jb.addObjectAttribute("data");
-          jb.addStringAttribute("reason", "Unhandled exception while executing tool");
-          jb.addStringAttribute("tool", tool.getName());
-          McpServerFilter.addIdToBuilder(jb, data.getPayload().getMember("id"), "requestId");
-          jb.endObject();
-          jb.endObject();
-          jb.endObject();
-          McpServerFilter.send(data.getTc(), HTTPTriggerConnection.HTTP_OK, MIME_JSON, null, jb.toString());
+          ErrorMessages.sendInternalError(data.getTc(), data.getPayload().getMember("id"), "executing tool");
+          if (logger.isWarnEnabled()) {
+            logger.warn("Uncaught error executing tool " + toolName + " arguments: " + arguments.toJson().getText(), e);
+          }
+          return;
         }
       }
     }
 
     if (result == null) {
-      jb.startObject();
-      jb.addStringAttribute("jsonrpc", "2.0");
-      McpServerFilter.addIdToBuilder(jb, data.getPayload().getMember("id"));
-      jb.addObjectAttribute("error");
-      jb.addNumberAttribute("code", -32602);
-      jb.addStringAttribute("message", "Invalid params: tool not found");
-      jb.addObjectAttribute("data");
-      jb.addStringAttribute("name", "nonexistent_tool");
-      jb.endObject();
-      jb.endObject();
-      jb.endObject();
-      McpServerFilter.send(data.getTc(), HTTPTriggerConnection.HTTP_OK, MIME_JSON, null, jb.toString());
+      ErrorMessages.sendPrimitiveNotFound(data.getTc(), data.getPayload().getMember("id"), "tool", toolName);
+      return;
     }
 
     jb.startObject();
