@@ -52,6 +52,7 @@ import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.ProjectCreationOrChangeProvider.SingleRepositoryEvent;
 import com.gip.xyna.xdev.exceptions.XDEV_CodeAccessInitializationException;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
+import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObjectList;
@@ -1125,7 +1126,7 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
 
       List<ApplicationElement> result = adElements.stream()
       .filter(tableHelper.filter())
-      .filter(ae -> request.getIncludeUnassigned() || !DependencyType.explicit.name().equals(ae.getDependencyType()))
+      .filter(ae -> includeAssigned(request) || !DependencyType.explicit.name().equals(ae.getDependencyType()))
       .collect(Collectors.toList());
       //tableHelper.sort(result);
       return tableHelper.limit(result);
@@ -2753,6 +2754,15 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
     )
     .map(tc -> new TableHelper.Filter(tc.getPath(), tc.getFilter()))
     .collect(Collectors.toList());
+  }
+
+  private boolean includeAssigned(GetApplicationContentRequest request) {
+    try {
+      Object val = request.get("includeAssigned");
+      return val == null || (Boolean) val;
+    } catch (InvalidObjectPathException e) {
+      return true;
+    }
   }
   
 }
