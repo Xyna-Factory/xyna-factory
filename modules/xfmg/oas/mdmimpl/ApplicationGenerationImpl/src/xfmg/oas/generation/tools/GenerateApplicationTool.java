@@ -110,18 +110,19 @@ public class GenerateApplicationTool {
     String workspace = applicationGenerationParameter1.getWorkspaceName();
     statusHandler.setAppType(AppType.DATA_MODEL);
     String targetRtc = createAndImportApplication(correlatedXynaOrder, "xmom-data-model", target + "_datatypes", specFile,
-                               workspace, false, statusHandler);
+                               workspace, false, false, statusHandler);
     statusHandler.storeTargetRtc(targetRtc);
     if (applicationGenerationParameter1.getGenerateProvider()) {
       statusHandler.setAppType(AppType.PROVIDER);
       createAndImportApplication(correlatedXynaOrder, "xmom-server", target + "_provider", specFile, workspace, false,
-                                 statusHandler);
+                                 false, statusHandler);
     }
     if (applicationGenerationParameter1.getGenerateClient()) {
       statusHandler.setAppType(AppType.CLIENT);
       boolean generateMock = applicationGenerationParameter1.getGenerateMockOption() == null ? false : applicationGenerationParameter1.getGenerateMockOption();
+      boolean generateDataCapture = applicationGenerationParameter1.getGenerateDataCaptureOption() == null ? false : applicationGenerationParameter1.getGenerateDataCaptureOption();
       createAndImportApplication(correlatedXynaOrder, "xmom-client", target + "_client", specFile, workspace, generateMock,
-                                 statusHandler);
+                                 generateDataCapture, statusHandler);
     }
     statusHandler.storeStatusSuccess();
   }
@@ -129,10 +130,10 @@ public class GenerateApplicationTool {
   
   private String createAndImportApplication(XynaOrderServerExtension correlatedXynaOrder, String generator,
                                           String target, String specFile, String workspace, boolean generateMock,
-                                          OasImportStatusHandler statusHandler) {
+                                          boolean generateDataCapture, OasImportStatusHandler statusHandler) {
     OasAppBuilder oasAppBuilder = new OasAppBuilder();
     String result = null;
-    try (OASApplicationData data = oasAppBuilder.createOasApp(generator, target, specFile, generateMock, statusHandler)) {
+    try (OASApplicationData data = oasAppBuilder.createOasApp(generator, target, specFile, generateMock, generateDataCapture, statusHandler)) {
       statusHandler.storeStatusAppImport();
       if(workspace == null || workspace.isBlank()) {
         importApplicationAsApplication(correlatedXynaOrder, data.getId());

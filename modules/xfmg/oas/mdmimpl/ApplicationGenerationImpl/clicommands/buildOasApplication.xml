@@ -22,4 +22,5 @@
   <BoolOption Name="p" LongName="buildProvider" Description="Create a provider application as well" Optional="true"/>
   <BoolOption Name="c" LongName="buildClient" Description="Create a client application as well" Optional="true"/>
   <BoolOption Name="m" LongName="generateMockOption" Description="Create option to use mock in client" Optional="true"/>
+  <BoolOption Name="d" LongName="generateDataCaptureOption" Description="Create option for client to capture communication data" Optional="true"/>
 </XynaCommandLineCommand>
