@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Create New Inference Server Config Definition" TypeName="CreateNewInferenceServerConfigDefinition" TypePath="xint.inference.gui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Create New Inference Server Config Definition" Name="CreateNewInferenceServerConfigDefinition">
+    <Input/>
+    <Output>
+      <Data ID="144" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition144"/>
+      <Data ID="165" Label="Inference Server Configuration Creation Data" ReferenceName="InferenceServerConfigurationCreationData" ReferencePath="xint.inference" VariableName="inferenceServerConfigurationCreationData165"/>
+      <Data ID="186" IsList="true" Label="Inference Server" ReferenceName="InferenceServer" ReferencePath="xint.inference" VariableName="inferenceServer186"/>
+      <Data ID="207" IsList="true" Label="Model" ReferenceName="Model" ReferencePath="xint.inference" VariableName="model207"/>
+    </Output>
+    <ServiceReference ID="15" Label="Create Inference Server Config Definition" ReferenceName="CreateInferenceServerConfigDefinition" ReferencePath="xint.inference.gui">
+      <Source RefID="14"/>
+      <Target RefID="14"/>
+    </ServiceReference>
+    <Mappings ID="37" Label="Mapping">
+      <Output>
+        <Data ID="54" Label="Inference Server Configuration Creation Data" ReferenceName="InferenceServerConfigurationCreationData" ReferencePath="xint.inference" VariableName="inferenceServerConfigurationCreationData54">
+          <Source RefID="37"/>
+        </Data>
+        <Target RefID="55"/>
+      </Output>
+    </Mappings>
+    <Function ID="14" Label="Create Inference Server Config Definition">
+      <Source RefID="15"/>
+      <Source RefID="55"/>
+      <Target RefID="15"/>
+      <Target RefID="17"/>
+      <Target RefID="18"/>
+      <Target RefID="19"/>
+      <Target RefID="20"/>
+      <Invoke Operation="CreateInferenceServerConfigDefinition" ServiceID="15">
+        <Source RefID="55"/>
+      </Invoke>
+      <Receive ServiceID="15">
+        <Target RefID="17"/>
+        <Target RefID="18"/>
+        <Target RefID="19"/>
+        <Target RefID="20"/>
+      </Receive>
+    </Function>
+    <Data ID="17" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition17">
+      <Source RefID="14"/>
+    </Data>
+    <Data ID="18" Label="Inference Server Configuration Creation Data" ReferenceName="InferenceServerConfigurationCreationData" ReferencePath="xint.inference" VariableName="inferenceServerConfigurationCreationData18">
+      <Source RefID="14"/>
+    </Data>
+    <Data ID="19" IsList="true" Label="Inference Server" ReferenceName="InferenceServer" ReferencePath="xint.inference" VariableName="inferenceServer19">
+      <Source RefID="14"/>
+    </Data>
+    <Data ID="20" IsList="true" Label="Model" ReferenceName="Model" ReferencePath="xint.inference" VariableName="model20">
+      <Source RefID="14"/>
+    </Data>
+    <Data ID="55" Label="Inference Server Configuration Creation Data" ReferenceName="InferenceServerConfigurationCreationData" ReferencePath="xint.inference" VariableName="inferenceServerConfigurationCreationData55">
+      <Source RefID="37"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="17"/>
+      <Source RefID="18"/>
+      <Source RefID="19"/>
+      <Source RefID="20"/>
+      <Target RefID="144"/>
+      <Target RefID="165"/>
+      <Target RefID="186"/>
+      <Target RefID="207"/>
+      <Copy>
+        <Source RefID="17"/>
+        <Target RefID="144"/>
+      </Copy>
+      <Copy>
+        <Source RefID="18">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="165"/>
+      </Copy>
+      <Copy>
+        <Source RefID="19"/>
+        <Target RefID="186"/>
+      </Copy>
+      <Copy>
+        <Source RefID="20"/>
+        <Target RefID="207"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
