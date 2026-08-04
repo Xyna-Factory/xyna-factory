@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<licenseSummary>
+  <dependencies>
+    <dependency>
+      <groupId>com.healthmarketscience.rmiio</groupId>
+      <artifactId>rmiio</artifactId>
+      <version>2.0.2</version>
+      <licenses>
+        <license>
+          <name>GNU Lesser General Public License v2.1</name>
+          <url>https://ftp.gnu.org/gnu/Licenses/lgpl-2.1.txt</url>
+        </license>
+      </licenses>
+    </dependency>
+    
+    <dependency>
+      <groupId>concurrent</groupId>
+      <artifactId>concurrent</artifactId>
+      <version>1.3.3</version>
+      <licenses>
+        <license>
+          <name>concurrent-Public domain, Sun Microsoystems</name>
+          <url>http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html</url>
+          <comments>All classes are released to the public domain and may be used for any purpose whatsoever without permission or acknowledgment. Portions of the CopyOnWriteArrayList and ConcurrentReaderHashMap classes are adapted from Sun JDK source code. These are copyright of Sun Microsystems, Inc, and are used with their kind permission, &lt;a href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/sun-u.c.license.pdf"&gt;as described in this license&lt;/a&gt;.</comments>
+        </license>
+      </licenses>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.mysql</groupId>
+      <artifactId>mysql-connector-j</artifactId>
+      <version>9.6.0</version>
+      <licenses>
+        <license>
+          <name>The GNU General Public License, v2</name>
+          <url>https://ftp.gnu.org/gnu/Licenses/gpl-2.0.txt</url>
+          <comments>For detailed license information see the LICENSE file in this distribution.</comments>
+        </license>
+        <license>
+          <name>Universal FOSS Exception, v1.0</name>
+          <url>https://oss.oracle.com/licenses/universal-foss-exception/</url>
+          <comments>For detailed license information see the LICENSE file in this distribution.</comments>
+        </license>
+      </licenses>
+    </dependency>
+    
+    <dependency>
+      <groupId>javax.sip</groupId>
+      <artifactId>jain-sip-api</artifactId>
+      <version>1.2</version>
+      <licenses>
+        <license>
+          <name>JSIP-Spec-License.pdf</name>
+          <url>https://github.com/RestComm/jain-sip/blob/master/licenses/JSIP%20Spec%20License.pdf</url>
+        </license>
+        <license>
+          <name>NIST-CONDITIONS-OF-USE.txt</name>
+          <url>https://github.com/RestComm/jain-sip/blob/master/licenses/NIST-CONDITIONS-OF-USE.txt</url>
+        </license>
+        <license>
+          <name>jain-sip-README.txt</name>
+          <url>https://github.com/RestComm/jain-sip/blob/master/licenses/README.txt</url>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>javax.sip</groupId>
+      <artifactId>jain-sip-ri</artifactId>
+      <version>1.2.146</version>
+      <licenses>
+        <license>
+          <name>JSIP-Spec-License.pdf</name>
+          <url>https://github.com/RestComm/jain-sip/blob/master/licenses/JSIP%20Spec%20License.pdf</url>
+        </license>
+        <license>
+          <name>NIST-CONDITIONS-OF-USE.txt</name>
+          <url>https://github.com/RestComm/jain-sip/blob/master/licenses/NIST-CONDITIONS-OF-USE.txt</url>
+        </license>
+        <license>
+          <name>jain-sip-README.txt</name>
+          <url>https://github.com/RestComm/jain-sip/blob/master/licenses/README.txt</url>
+        </license>
+      </licenses>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-j2ee-management_1.0_spec</artifactId>
+      <version>1.0</version>
+      <licenses>  
+        <license>
+          <name>geronimo-j2ee-management_1.0_spec-LICENSE.txt</name>
+          <url>https://github.com/apache/geronimo-specs/blob/geronimo-j2ee-management_1.0_spec-1.1/LICENSE.txt</url>
+          <comments></comments>
+        </license>
+      </licenses>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.mariadb.jdbc</groupId>
+      <artifactId>mariadb-java-client</artifactId>
+      <version>3.5.6</version>
+      <licenses>
+        <license>
+          <name>lgpl-2.1.txt</name>
+          <url>https://ftp.gnu.org/gnu/Licenses/lgpl-2.1.txt</url>
+        </license>
+      </licenses>
+    </dependency>
+    
+    <dependency>
+      <groupId>asm</groupId>
+      <artifactId>asm</artifactId>
+      <version>3.2</version>
+      <licenses>
+        <license>
+          <name>asm-BSD-license.html</name>
+          <url>https://asm.ow2.io/license.html</url>
+        </license>
+      </licenses>
+    </dependency>
+    
+    <dependency>
+      <groupId>black.ninia</groupId>
+      <artifactId>jep</artifactId>
+      <version>4.2.0</version>
+      <licenses>
+        <license>
+          <name>The zlib-libpng License</name>
+          <url>https://opensource.org/license/zlib</url>
+        </license>
+      </licenses>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.esotericsoftware</groupId>
+      <artifactId>kryo</artifactId>
+      <version>5.0.0</version>
+      <licenses>
+        <license>
+          <name>BSD-3-Clause</name>
+          <url>https://opensource.org/license/BSD-3-Clause</url>
+          <comments>3-Clause BSD License</comments>
+        </license>
+      </licenses>
+    </dependency>
+    
+    <dependency>
+      <groupId>javax.activation</groupId>
+      <artifactId>activation</artifactId>
+      <version>1.1</version>
+      <licenses>
+        <license>
+          <name>glassfish-LICENSE</name>
+          <url>https://javaee.github.io/glassfish/LICENSE</url>
+          <comments>javax.activation-Common Development and Distribution License (CDDL) v1.0</comments>
+        </license>
+      </licenses>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.jvnet.mimepull</groupId>
+      <artifactId>mimepull</artifactId>
+      <version>1.9.8</version>
+      <licenses>
+        <license>
+          <name>glassfish-LICENSE</name>
+          <url>https://javaee.github.io/glassfish/LICENSE</url>
+          <distribution>repo</distribution>
+          <comments>CDDL 1.1</comments>
+        </license>
+        <license>
+          <name>glassfish-LICENSE</name>
+          <url>https://javaee.github.io/glassfish/LICENSE</url>
+          <distribution>repo</distribution>
+          <comments>GPL2 w/ CPE</comments>
+        </license>
+      </licenses>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.jvnet.staxex</groupId>
+      <artifactId>stax-ex</artifactId>
+      <version>1.8</version>
+      <licenses>
+        <license>
+          <name>glassfish-LICENSE</name>
+          <url>https://javaee.github.io/glassfish/LICENSE</url>
+          <distribution>repo</distribution>
+          <comments>Dual license consisting of the CDDL v1.1 and GPL v2</comments>
+        </license>
+      </licenses>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.sun.mail</groupId>
+      <artifactId>javax.mail</artifactId>
+      <version>1.5.6</version>
+      <licenses>
+        <license>
+          <name>glassfish-LICENSE</name>
+          <url>https://javaee.github.io/glassfish/LICENSE</url>
+          <distribution>repo</distribution>
+          <comments>CDDL/GPLv2+CE. CDDL or GPL version 2 plus the Classpath Exception</comments>
+        </license>
+      </licenses>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.mindrot</groupId>
+      <artifactId>jbcrypt</artifactId>
+      <version>0.4</version>
+      <licenses>
+        <license>
+          <name>ISC</name>
+          <url>https://opensource.org/license/isc</url>
+        </license>
+      </licenses>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.github.albfernandez</groupId>
+      <artifactId>juniversalchardet</artifactId>
+      <version>2.4.0</version>
+      <licenses>
+        <license>
+          <name>Mozilla Public License Version 1.1</name>
+          <url>https://www.mozilla.org/en-US/MPL/1.1/</url>
+          <file>mozilla public license version 1.1 - 1.1.html</file>
+        </license>
+        <license>
+          <name>GENERAL PUBLIC LICENSE, version 3 (GPL-3.0)</name>
+          <url>https://ftp.gnu.org/gnu/Licenses/gpl-3.0.txt</url>
+        </license>
+        <license>
+          <name>GNU LESSER GENERAL PUBLIC LICENSE, version 3 (LGPL-3.0)</name>
+          <url>https://ftp.gnu.org/gnu/Licenses/lgpl-3.0.txt</url>
+        </license>
+      </licenses>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.github.java-json-tools</groupId>
+      <artifactId>btf</artifactId>
+      <version>1.3</version>
+      <licenses>
+        <license>
+          <name>Lesser General Public License, version 3 or greater</name>
+          <url>https://ftp.gnu.org/gnu/Licenses/lgpl-3.0.txt</url>
+          <distribution>repo</distribution>
+        </license>
+        <license>
+          <name>Apache Software License, version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+          <distribution>repo</distribution>
+          <file>apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.github.java-json-tools</groupId>
+      <artifactId>jackson-coreutils</artifactId>
+      <version>2.0</version>
+      <licenses>
+        <license>
+          <name>Lesser General Public License, version 3 or greater</name>
+          <url>https://ftp.gnu.org/gnu/Licenses/lgpl-3.0.txt</url>
+          <distribution>repo</distribution>
+        </license>
+        <license>
+          <name>Apache Software License, version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+          <distribution>repo</distribution>
+          <file>apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.github.java-json-tools</groupId>
+      <artifactId>jackson-coreutils-equivalence</artifactId>
+      <version>1.0</version>
+      <licenses>
+        <license>
+          <name>Lesser General Public License, version 3 or greater</name>
+          <url>https://ftp.gnu.org/gnu/Licenses/lgpl-3.0.txt</url>
+          <distribution>repo</distribution>
+        </license>
+        <license>
+          <name>Apache Software License, version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+          <distribution>repo</distribution>
+          <file>apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.github.java-json-tools</groupId>
+      <artifactId>json-patch</artifactId>
+      <version>1.13</version>
+      <licenses>
+        <license>
+          <name>Lesser General Public License, version 3 or greater</name>
+          <url>https://ftp.gnu.org/gnu/Licenses/lgpl-3.0.txt</url>
+          <distribution>repo</distribution>
+        </license>
+        <license>
+          <name>Apache Software License, version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+          <distribution>repo</distribution>
+          <file>apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.github.java-json-tools</groupId>
+      <artifactId>json-schema-core</artifactId>
+      <version>1.2.14</version>
+      <licenses>
+        <license>
+          <name>Lesser General Public License, version 3 or greater</name>
+          <url>https://ftp.gnu.org/gnu/Licenses/lgpl-3.0.txt</url>
+          <distribution>repo</distribution>
+        </license>
+        <license>
+          <name>Apache Software License, version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+          <distribution>repo</distribution>
+          <file>apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.github.java-json-tools</groupId>
+      <artifactId>json-schema-validator</artifactId>
+      <version>2.2.14</version>
+      <licenses>
+        <license>
+          <name>Lesser General Public License, version 3 or greater</name>
+          <url>https://ftp.gnu.org/gnu/Licenses/lgpl-3.0.txt</url>
+          <distribution>repo</distribution>
+        </license>
+        <license>
+          <name>Apache Software License, version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+          <distribution>repo</distribution>
+          <file>apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.github.java-json-tools</groupId>
+      <artifactId>msg-simple</artifactId>
+      <version>1.2</version>
+      <licenses>
+        <license>
+          <name>Lesser General Public License, version 3 or greater</name>
+          <url>https://ftp.gnu.org/gnu/Licenses/lgpl-3.0.txt</url>
+          <distribution>repo</distribution>
+        </license>
+        <license>
+          <name>Apache Software License, version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+          <distribution>repo</distribution>
+          <file>apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.github.java-json-tools</groupId>
+      <artifactId>uri-template</artifactId>
+      <version>0.10</version>
+      <licenses>
+        <license>
+          <name>Lesser General Public License, version 3 or greater</name>
+          <url>https://ftp.gnu.org/gnu/Licenses/lgpl-3.0.txt</url>
+          <distribution>repo</distribution>
+        </license>
+        <license>
+          <name>Apache Software License, version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+          <distribution>repo</distribution>
+          <file>apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.github.spotbugs</groupId>
+      <artifactId>spotbugs-annotations</artifactId>
+      <version>4.7.3</version>
+      <licenses>
+        <license>
+          <name>GNU LESSER GENERAL PUBLIC LICENSE, Version 2.1</name>
+          <url>https://ftp.gnu.org/gnu/Licenses/lgpl-2.1.txt</url>
+        </license>
+      </licenses>
+    </dependency>
+        
+  </dependencies>
+</licenseSummary>

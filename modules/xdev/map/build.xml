@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,18 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="SSHTools" comment="" factoryVersion="" versionName="1.0.1" xmlVersion="1.1">
-  <ApplicationInfo>
-    <Description Lang="DE">SSHTools für die Gerätetypen</Description>
-    <Description Lang="EN">SSHTools for devicetypes</Description>
-  </ApplicationInfo>
-  <SharedLibs>
-    <SharedLib implicitDependency="true">
-      <SharedLib>sshtools</SharedLib>
-    </SharedLib>
-  </SharedLibs>
-</Application>
+<project name="build" default="build" basedir=".">
+
+    <!-- this is the absolute path to the root -->
+    <pathconvert property="root.dir">
+        <path location="${basedir}/../../../" />
+    </pathconvert>
+    <property name="target.dir" value="${basedir}/deploy/" />
+
+    <target name="build">
+        <ant antfile="build.xml" target="build" inheritAll="false" dir="sharedlib/TypeMapping">
+            <property name="target.dir" value="${target.dir}" />
+        </ant>
+    </target>
+
+</project>

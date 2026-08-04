@@ -16,14 +16,14 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="LDAP" comment="" factoryVersion="" versionName="1.0.6" xmlVersion="1.1">
+<Application applicationName="LDAP" comment="" factoryVersion="" versionName="1.0.7" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Tools für Interaktion mit LDAP Services</Description>
     <Description Lang="EN">Tools for interacting with LDAP services</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>
-        <VersionName>1.1.5</VersionName>
+        <VersionName>1.1.6</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
