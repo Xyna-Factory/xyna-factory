@@ -218,7 +218,7 @@ public class HTTPResponseResolverServiceOperationImpl implements ExtendedDeploym
             } else {
               sb.append("&");
             }
-            sb.append(q.getValue());
+            sb.append(q.getAttribute()).append("=").append(q.getValue());
           }
         }
         if (sendParameter.getURLPath().getFragment() != null) {
