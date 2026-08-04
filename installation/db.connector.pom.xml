@@ -30,6 +30,7 @@
 	<version>1.0.0</version>
 	<packaging>pom</packaging>
 	<properties>
+		<bom.dir>./build</bom.dir>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
