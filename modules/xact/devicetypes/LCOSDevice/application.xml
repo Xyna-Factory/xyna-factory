@@ -26,10 +26,6 @@
         <ApplicationName>Connection</ApplicationName>
         <VersionName>1.0.16</VersionName>
       </RuntimeContextRequirement>
-      <!--RuntimeContextRequirement>
-        <ApplicationName>SSHTools</ApplicationName>
-        <VersionName>1.1</VersionName>
-      </RuntimeContextRequirement-->
     </RuntimeContextRequirements>
    </ApplicationInfo>
    <XMOMEntries>
