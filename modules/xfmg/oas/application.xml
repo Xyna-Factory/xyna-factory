@@ -211,6 +211,10 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.datatype.client.HTTPCapture</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
       <FqName>xmcp.oas.datatype.provider.JSONParserErrorResponse</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
