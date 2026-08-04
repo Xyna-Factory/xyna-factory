@@ -403,5 +403,29 @@
       </licenses>
     </dependency>
         
+    <dependency>
+      <groupId>net.java.dev.jna</groupId>
+      <artifactId>jna</artifactId>
+      <version>5.12.1</version>
+      <licenses>
+        <license>
+          <name>LGPL-2.1</name>
+          <url>https://ftp.gnu.org/gnu/Licenses/lgpl-2.1.txt</url>
+          <comments>Java Native Access (JNA) is licensed under the LGPL, version 2.1 or
+        later, or the Apache License, version 2.0. You can freely decide which
+        license you want to apply to the project.</comments>
+        </license>
+        <license>
+          <name>Apache-2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache-2.0 - license-2.0.txt</file>
+          <comments>Java Native Access (JNA) is licensed under the LGPL, version 2.1 or
+        later, or the Apache License, version 2.0. You can freely decide which
+        license you want to apply to the project.</comments>
+        </license>
+      </licenses>
+    </dependency>
+
   </dependencies>
 </licenseSummary>
