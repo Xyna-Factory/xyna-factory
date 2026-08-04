@@ -32,6 +32,18 @@ print_help() {
   echo "Usage: $0 install_gitintegration_libs (depends on build)"
 }
 
+adapt_licenses_xml() {
+  echo "Adding header to licenses.xml..."
+  LICENSE_DIR=${SCRIPT_DIR}/../release/third_parties
+  LICENSES_XML="${LICENSE_DIR}/licenses.xml"
+  LICENSE_HEADER_FILE=${SCRIPT_DIR}/build/licenses_header.txt
+  TMP_FILE="${LICENSE_DIR}/tmp.licenses.xml"
+
+  sed -i 's/<?xml.*?>//; s/<licenseSummary>//' ${LICENSES_XML} 
+  cat ${LICENSE_HEADER_FILE} ${LICENSES_XML} > ${TMP_FILE}
+  mv  ${TMP_FILE} ${LICENSES_XML}
+}
+
 check_dependencies() {
   echo "checking dependencies..."
   java --version
@@ -314,6 +326,7 @@ compose_connectors() {
   mvn -f db.connector.pom.xml -DoutputDirectory="${SCRIPT_DIR}/../release/third_parties" dependency:copy-dependencies -DexcludeTransitive=true
   mvn -f db.connector.pom.xml license:download-licenses -DlicensesOutputDirectory=${SCRIPT_DIR}/../release/third_parties -DlicensesOutputFile=${SCRIPT_DIR}/../release/third_parties/licenses.xml -DlicensesConfigFile=${SCRIPT_DIR}/db_connector_license_config.xml -DlicensesOutputFileEol=LF
   cp ${SCRIPT_DIR}/prepare_db_connector_jars.sh ${SCRIPT_DIR}/../release
+  adapt_licenses_xml
 }
 
 compose_readmefile() {
@@ -357,6 +370,7 @@ compose_thirdparties() {
   # run license downloads (bom must have name "pom.xml")
   mvn license:download-licenses -f third_parties.pom.xml -DlicensesOutputDirectory=$SCRIPT_DIR/../release/third_parties -DlicensesOutputFile=$SCRIPT_DIR/../release/third_parties/licenses.xml
   echo "license-download done"
+  adapt_licenses_xml
 }
 
 #TODO: buildTemplateMechanismStandalone is a target in installation/build/build.xml

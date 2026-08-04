@@ -30,10 +30,10 @@ ALL_DATAMODELTYPES=("mib","tr069","xsd");
 GUIHTTP_APP="GuiHttp"
 #ACHTUNG: Version auch bei addRequirement zu default workspace berücksichtigen
 ALL_APPLICATIONS="Base Processing"; #Default-Applications, die immer installiert sein sollten
-APPMGMTVERSION=1.0.11
-GUIHTTPVERSION=1.5.9
-SNMPSTATVERSION=1.0.4
-PROCESSINGVERSION=1.0.28
+APPMGMTVERSION=1.0.12
+GUIHTTPVERSION=1.5.10
+SNMPSTATVERSION=1.0.5
+PROCESSINGVERSION=1.0.29
 ALL_REPOSITORYACCESSES=("svn");
 INSTANCE_NUMBER="1" #1 ist default
 
