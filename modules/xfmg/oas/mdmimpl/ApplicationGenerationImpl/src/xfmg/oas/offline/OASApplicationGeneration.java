@@ -28,49 +28,76 @@ import xfmg.oas.generation.tools.OasAppBuilder;
 
 public class OASApplicationGeneration {
 
+  private static void validateClientOptions(boolean generateMock, boolean generateDataCapture) {
+
+    if (generateMock || generateDataCapture) {
+      System.out.println("--generateMock and --generateDataCapture are only valid for client generation.");
+      System.exit(3);
+    }
+  }
+
+
   public static void main(String[] args) {
-    if (args.length != 3) {
+
+    if (args.length < 3) {
       System.out.println("Generates Xyna Applications representing datamodel & client from Open API yaml schema.");
-      System.out.println("Parameters: <Open API yaml schema file> <Generation Target (\"datamodel\", \"client\", \"client-with-mock\", \"provider\", \"all\", \"all-with-clientmock\")> " + 
-                         "<Target directory (where generated application files will be placed)>");
+      System.out.println("Parameters: <Open API yaml schema file> "
+              + "<Generation Target (\"datamodel\", \"client\", \"provider\", \"all\")> "
+              + "<Target directory (where generated application files will be placed)> "
+              + "[--generateMock] [--generateDataCapture]");
       System.exit(2);
     }
+
     String yaml = args[0];
+    String generationTarget = args[1];
     String target = args[2];
+
+    boolean generateMock = false;
+    boolean generateDataCapture = false;
+
+    for (int i = 3; i < args.length; i++) {
+      switch (args[i]) {
+        case "--generateMock" :
+          generateMock = true;
+          break;
+        case "--generateDataCapture" :
+          generateDataCapture = true;
+          break;
+        default :
+          System.out.println("Unknown option: " + args[i]);
+          System.exit(2);
+      }
+    }
+
     if (!Files.exists(Path.of(target)) || !Files.isDirectory(Path.of(target))) {
-      System.out.println("");
+      System.out.println("Target parameter must be an existing directory");
       System.exit(4);
     }
-    switch (args[1]) {
+
+    switch (generationTarget) {
       case "all" :
-        new OasAppBuilder().createOasAppOffline("xmom-client", target, yaml, false);
-        new OasAppBuilder().createOasAppOffline("xmom-server", target, yaml, false);
-        new OasAppBuilder().createOasAppOffline("xmom-data-model", target, yaml, false);
-        break;
-      case "all-with-clientmock" :
-        new OasAppBuilder().createOasAppOffline("xmom-client", target, yaml, true);
-        new OasAppBuilder().createOasAppOffline("xmom-server", target, yaml, false);
-        new OasAppBuilder().createOasAppOffline("xmom-data-model", target, yaml, false);
+        new OasAppBuilder().createOasAppOffline("xmom-client", target, yaml, generateMock, generateDataCapture);
+        new OasAppBuilder().createOasAppOffline("xmom-server", target, yaml, false, false);
+        new OasAppBuilder().createOasAppOffline("xmom-data-model", target, yaml, false, false);
         break;
       case "provider" :
-        new OasAppBuilder().createOasAppOffline("xmom-server", target, yaml, false);
-        new OasAppBuilder().createOasAppOffline("xmom-data-model", target, yaml, false);
+        validateClientOptions(generateMock, generateDataCapture);
+        new OasAppBuilder().createOasAppOffline("xmom-server", target, yaml, false, false);
+        new OasAppBuilder().createOasAppOffline("xmom-data-model", target, yaml, false, false);
         break;
       case "client" :
-        new OasAppBuilder().createOasAppOffline("xmom-client", target, yaml, false);
-        new OasAppBuilder().createOasAppOffline("xmom-data-model", target, yaml, false);
-        break;
-      case "client-with-mock" :
-        new OasAppBuilder().createOasAppOffline("xmom-client", target, yaml, true);
-        new OasAppBuilder().createOasAppOffline("xmom-data-model", target, yaml, false);
+        new OasAppBuilder().createOasAppOffline("xmom-client", target, yaml, generateMock, generateDataCapture);
+        new OasAppBuilder().createOasAppOffline("xmom-data-model", target, yaml, false, false);
         break;
       case "datamodel" :
-        new OasAppBuilder().createOasAppOffline("xmom-data-model", target, yaml, false);
+        validateClientOptions(generateMock, generateDataCapture);
+        new OasAppBuilder().createOasAppOffline("xmom-data-model", target, yaml, false, false);
         break;
       default :
-        System.out.println("Unexpected Generation Target: \"" + args[1] + "\".");
+        System.out.println("Unexpected Generation Target: \"" + generationTarget + "\".");
         System.exit(3);
     }
+
     System.out.println("Created applications in directory <" + target + "> successfully.");
   }
 
