@@ -23,7 +23,7 @@
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>
-        <VersionName>1.1.5</VersionName>
+        <VersionName>1.1.6</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
