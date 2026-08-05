@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,9 @@ package com.gip.xyna.xact.filter.actions.auth;
 
 
 
+import org.apache.log4j.Logger;
+
+import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.filter.FilterAction;
 import com.gip.xyna.xact.filter.HTMLBuilder.HTMLPart;
@@ -26,6 +29,8 @@ import com.gip.xyna.xact.filter.JsonFilterActionInstance;
 import com.gip.xyna.xact.filter.URLPath;
 import com.gip.xyna.xact.filter.actions.PathElements;
 import com.gip.xyna.xact.filter.actions.auth.utils.AuthUtils;
+import com.gip.xyna.xact.filter.session.SessionBasedData;
+import com.gip.xyna.xact.filter.session.XMOMGui;
 import com.gip.xyna.xact.filter.session.XMOMGuiReply.Status;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
@@ -35,6 +40,15 @@ import com.gip.xyna.xfmg.xopctrl.usermanagement.XynaPlainSessionCredentials;
 
 
 public class InfoAction implements FilterAction {
+
+  private static Logger logger = CentralFactoryLogging.getLogger(InfoAction.class);
+
+  private final XMOMGui xmomgui;
+
+
+  public InfoAction(XMOMGui xmomgui) {
+    this.xmomgui = xmomgui;
+  }
 
 
   public boolean match(URLPath url, Method method) {
@@ -47,15 +61,25 @@ public class InfoAction implements FilterAction {
 
     XynaPlainSessionCredentials creds = AuthUtils.readCredentialsFromRequest(tc);
     String sessionId = creds.getSessionId();
-    String token = creds.getToken();
 
-    if (sessionId == null || token == null) {
+    if (sessionId == null) {
       AuthUtils.replyError(tc, jfai, Status.unauthorized, new RuntimeException());
       return jfai;
     }
 
+
+    SessionBasedData data = xmomgui.getSessionBasedData(sessionId);
+    if (data != null) {
+      logger.debug("returning token for local session");
+      String sdj = AuthUtils.getSessionDetailsJson(sessionId, data.getSession().getToken());
+      jfai.sendJson(tc, sdj);
+      return jfai;
+    }
+
+    logger.debug("session not found locally, checking session database");
+
     try {
-      String sdj = AuthUtils.getSessionDetailsJson(sessionId, token);
+      String sdj = AuthUtils.getSessionDetailsJson(sessionId);
       jfai.sendJson(tc, sdj);
       return jfai;
     } catch (XFMG_UnknownSessionIDException e) {
