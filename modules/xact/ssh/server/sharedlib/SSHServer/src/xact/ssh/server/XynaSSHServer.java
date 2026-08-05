@@ -57,6 +57,7 @@ import com.gip.xyna.xnwh.persistence.ODSConnectionType;
 import com.gip.xyna.xnwh.persistence.ODSImpl;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 
+import xact.ssh.server.SSHServerParameter;
 import xact.ssh.server.auth.ClientKeyStorable;
 import xact.ssh.server.auth.ClientPasswordStorable;
 import xact.ssh.server.auth.XynaAuthenticator;
@@ -83,7 +84,9 @@ public class XynaSSHServer {
   }
 
   @SuppressWarnings("unchecked")
-  public void init(SSHServerParameter sp, SFTPSubsystemParameter sftp, XynaBackedFileProvider xbfp) {
+  public void init(SSHServerParameter sp, SFTPSubsystemParameter sftp, XynaBackedFileProvider xbfp)
+      throws XACT_InterfaceNoIPv6ConfiguredException, XACT_NetworkInterfaceNotFoundException, XACT_InterfaceNoIPConfiguredException,
+      UnknownHostException {
 
     this.xbfp = xbfp;
 
@@ -92,9 +95,9 @@ public class XynaSSHServer {
     sshd = SshServer.setUpDefaultServer();
 
     sshd.setSignatureFactories(
-        (List<NamedFactory<Signature>>) (List<?>) NamedFactory.setUpBuiltinFactories(true, sp.getAuthAlgoFactories()));
-    sshd.setKeyExchangeFactories(NamedFactory.setUpTransformedFactories(true,
-        sp.getKexFactories(), ServerBuilder.DH2KEX));
+      (List<NamedFactory<Signature>>) (List<?>) NamedFactory.setUpBuiltinFactories(true, sp.getAuthAlgoFactories()));
+    sshd.setKeyExchangeFactories(NamedFactory.setUpTransformedFactories(true, 
+      sp.getKexFactories(), ServerBuilder.DH2KEX));
 
     sshd.setMacFactories((List<NamedFactory<Mac>>) (List<?>) NamedFactory.setUpBuiltinFactories(true, sp.getMacFactories()));
     sshd.setCipherFactories(
@@ -107,8 +110,10 @@ public class XynaSSHServer {
       hkp.setAlgorithm(sp.getHostkeyAlgorithm());
       hkp.setKeySize(sp.getHostkeySize());
 
+      String ip = getIP(sp.getHost()).getHostAddress();
+      sshd.setHost(ip);
+
       sshd.setPort(sp.getPort());
-      sshd.setHost(sp.getHost());
       sshd.setKeyPairProvider(hkp);
 
       boolean alwaysAuthenticated = sp.getAlwaysAuth();
@@ -232,6 +237,14 @@ public class XynaSSHServer {
     if (logger.isInfoEnabled()) {
       logger.info("address " + host + " unknown in network configuration management.");
     }
+
+    // return if it is a literal IP
+    try {
+      return InetAddress.getByName(host);
+    } catch(UnknownHostException e) {
+      // continue assuming it is an interface or internal name
+    }
+
     // else: abwärtskompatibel:
     boolean ipv6 = false;
     boolean useLocalAddresses = false;
