@@ -15,14 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="InferenceServerMgmt" factoryVersion="" versionName="1.0.0" xmlVersion="1.1">
+--><Application applicationName="InferenceServerMgmt" factoryVersion="" versionName="1.0.1" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Factory Manager UI zum Managen von Inference Servern</Description>
     <Description Lang="EN">Factory Manager UI to manage inference servers</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>ZetaFramework</ApplicationName>
-        <VersionName>0.6.67</VersionName>
+        <VersionName>0.6.69</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
