@@ -21,7 +21,7 @@
         <groupId>com.gip.xyna</groupId>
         <artifactId>bom</artifactId>
         <version>1.0.0</version>
-        <relativePath>../../../../../installation/build/pom.xml</relativePath>
+        <relativePath>../../../../../../installation/build/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gip.xyna</groupId>
@@ -29,7 +29,7 @@
     <version>1.0.0</version>
     <packaging>pom</packaging>
     <properties>
-        <bom.dir>../../../../../installation/build</bom.dir>
+        <bom.dir>../../../../../../installation/build</bom.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>

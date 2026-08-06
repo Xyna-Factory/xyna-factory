@@ -23,7 +23,7 @@
 
     <!-- this is the absolute path to the root -->
     <pathconvert property="root.dir" >
-        <path location="${basedir}/../../../../../../.."/>
+        <path location="${basedir}/../../../../../../../.."/>
     </pathconvert>
     <property name="generator.utils.dir" value="${basedir}/../../generator-utils" />
     <property name="tmp.metainf.dir" value="${basedir}/classes/meta_inf" />
