@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Resource" TypeName="Resource" TypePath="xint.mcp.schema" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data IsList="true" Label="Icons" ReferenceName="Icon" ReferencePath="xint.mcp.schema" VariableName="icons">
+    <Meta>
+      <Documentation>Optional set of sized icons that the client can display in a user interface.</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Name" VariableName="name">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Intended for programmatic or logical use, but used as a display name in past specs or fallback (if title isn’t present).</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Title" VariableName="title">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Intended for UI and end-user contexts — optimized to be human-readable and easily understood, even by those unfamiliar with domain-specific terminology.
+
+If not provided, the name should be used for display (except for Tool, where annotations.title should be given precedence over using name, if present).</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Uri" VariableName="uri">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>The URI of this resource.</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Description" VariableName="description">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>A description of what this resource represents.</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Mime Type" VariableName="mimeType">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Annotations" ReferenceName="Annotations" ReferencePath="xint.mcp.schema" VariableName="annotations"/>
+  <Data Label="Size" VariableName="size">
+    <Meta>
+      <Type>long</Type>
+      <Documentation>The size of the raw resource content, in bytes (i.e., before base64 encoding or any tokenization), if known</Documentation>
+    </Meta>
+  </Data>
+  <Service Label="Resource" TypeName="Resource">
+    <Operation IsStatic="false" Label="Read" Name="read">
+      <Input>
+        <Data ID="4" Label="Read Resource Request Params" ReferenceName="ReadResourceRequestParams" ReferencePath="xint.mcp.schema" VariableName="readResourceRequestParams4"/>
+      </Input>
+      <Output>
+        <Data ID="7" Label="Read Resource Result" ReferenceName="ReadResourceResult" ReferencePath="xint.mcp.schema" VariableName="readResourceResult7"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return null;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

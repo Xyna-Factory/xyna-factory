@@ -16,16 +16,23 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="build" default="build-all" basedir=".">
-    
-    <property name="target.dir" value="${basedir}/deploy/" />
-    <import file="../buildModule.xml" />
-    
-    <target name="build-all">
-        <buildModule target="build"     dir="regexp"     target.dir="${target.dir}/xint" />
-        <buildModule target="build"     dir="crypto"     target.dir="${target.dir}/xint" />
-        <buildModule target="build"     dir="inference"  target.dir="${target.dir}/xint" />
-        <buildModule target="build-all" dir="mcp"        target.dir="${target.dir}/xint" />
+<project name="build" default="build" basedir=".">
+
+    <!-- this is the absolute path to the root -->
+    <pathconvert property="root.dir">
+        <path location="${basedir}/../../../../" />
+    </pathconvert>
+    <property name="target.dir" value="${basedir}/deploy" />
+
+
+    <target name="build">
+        
+        <antcall target="build-application" />
     </target>
-    
+
+    <target name="prepare-mdm-jar">
+    </target>
+
+    <import file="${root.dir}/installation/build/buildApplication.xml" />
+
 </project>
