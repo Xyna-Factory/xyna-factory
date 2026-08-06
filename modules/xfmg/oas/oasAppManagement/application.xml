@@ -21,20 +21,20 @@
     <Description Lang="EN">Graphic user interface and functionality for automatic generation of ready-to-use HTTP API applications based on OpenAPI yaml-files</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
+        <ApplicationName>OAS_Base</ApplicationName>
+        <VersionName>1.7.33</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
         <ApplicationName>FileMgmt</ApplicationName>
-        <VersionName>1.0.11</VersionName>
+        <VersionName>1.0.12</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>Http</ApplicationName>
-        <VersionName>1.5.9</VersionName>
+        <VersionName>1.5.14</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>Json</ApplicationName>
-        <VersionName>1.5.3</VersionName>
-      </RuntimeContextRequirement>
-      <RuntimeContextRequirement>
-        <ApplicationName>OAS_Base</ApplicationName>
-        <VersionName>1.7.25.2</VersionName>
+        <VersionName>1.5.4</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>XynaPropertyMgmt</ApplicationName>
@@ -42,7 +42,7 @@
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>ZetaFramework</ApplicationName>
-        <VersionName>0.6.66</VersionName>
+        <VersionName>0.6.69</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
