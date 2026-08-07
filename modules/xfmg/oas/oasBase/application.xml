@@ -54,7 +54,7 @@
   </Ordertypes>
   <SharedLibs>
     <SharedLib implicitDependency="false">
-      <SharedLib>xyna-openapi</SharedLib>
+      <SharedLib>oasValidators</SharedLib>
     </SharedLib>
   </SharedLibs>
   <XMOMEntries>
