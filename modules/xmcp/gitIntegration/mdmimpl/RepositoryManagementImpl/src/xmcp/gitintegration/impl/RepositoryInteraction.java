@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -433,7 +433,7 @@ public class RepositoryInteraction {
         container.creds = null;
         PullOutput output = createPullOutput(container, dryrun);
         output.unversionedSetException(e.getMessage());
-        logger.error(e);
+        logger.error("Exception during pull", e);
         return output;
       } else {
         PullOutput.Builder output = new PullOutput.Builder();
@@ -656,7 +656,7 @@ public class RepositoryInteraction {
           toDeployByRevision.putIfAbsent(revision, new ArrayList<ObjectToDeploy>());
           toDeployByRevision.get(revision).add(new ObjectToDeploy(fqn, filePath));
         }
-      } catch (XynaException e) {
+      } catch (Exception e) {
         exceptions.add(new Triple<>(exec.execType, workspace, fqn));
       }
     }
