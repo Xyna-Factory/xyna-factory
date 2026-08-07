@@ -19,7 +19,7 @@
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <SharedLibraries>xyna-openapi</SharedLibraries>
+  <SharedLibraries>oasValidators</SharedLibraries>
   <Service Label="OAS Base Type" TypeName="OASBaseType">
     <Operation IsAbstract="true" IsStatic="false" Label="Validate" Name="validate">
       <Input/>
