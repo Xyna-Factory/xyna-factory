@@ -213,6 +213,7 @@ import com.gip.xyna.xprc.xpce.monitoring.EngineSpecificStepHandlerManager;
 import com.gip.xyna.xprc.xpce.planning.Capacity;
 import com.gip.xyna.xprc.xprcods.XynaProcessingODS;
 import com.gip.xyna.xprc.xprcods.capacitymapping.CapacityMappingStorable;
+import com.gip.xyna.xprc.xprcods.orderarchive.OrderBackupManagement;
 import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstance;
 import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstanceBackup;
 import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstanceDetails;
@@ -2315,6 +2316,12 @@ public class UpdateGeneratedClasses {
                   
                   @Override
                   public XynaPythonSnippetManagement getXynaPythonSnippetManagement() {
+                    return null;
+                  }
+
+
+                  @Override
+                  public OrderBackupManagement getOrderBackupManagement() {
                     return null;
                   }
                 };
