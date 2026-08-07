@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<licenseSummary>
+<!--
+License Reference Notes
+During the build process, Xyna collects license information for third-party open source components from the corresponding Maven metadata.
+
+For a small number of dependencies, the license information published in the original Maven artifacts is incomplete, outdated, or references URLs that are no longer accessible. To ensure that the applicable license texts remain available as part of the software distribution, selected license references are overridden during the build process.
+
+These overrides are limited to replacing or correcting license reference URLs (for example, by using an alternative official source or an updated location of the same license text) or correcting obvious formatting issues in the published metadata. In some cases, locally generated filenames or display names may also differ from the original Maven metadata to improve traceability between a third-party component and its corresponding license file.
+
+These adjustments do not modify, replace, or reinterpret the applicable license terms of the respective third-party software. The original licensing of each component remains solely determined by the copyright holder and the license accompanying that component.
+
+If any discrepancy is identified between a referenced license copy and the license distributed by the original copyright holder, the latter shall prevail.
+
+Implementation Note
+All manually maintained license reference overrides are documented in the project's build configuration to provide transparency and traceability.
+-->

@@ -195,6 +195,7 @@ public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy im
     s.defaultReadObject();
   }
 
+  @SuppressWarnings("deprecation")
   private void fillWithClaims(JwtBuilder jwtBuilder, JWTClaims claims) {
     jwtBuilder.expiration(toDate(claims.getExpiration()))
       .issuedAt(toDate(claims.getIssuedAt()))
@@ -213,6 +214,8 @@ public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy im
         }
       }
     } else if (claims.getAudienceSingle() != null) {
+      //call to .single() is deprecated and jwtBuilder.audience().add() should be used instead
+      //however, older systems may only accept an audience string instead of an array
       jwtBuilder.audience().single(claims.getAudienceSingle());
     }
     if( claims.getPrivateClaim() != null ) {

@@ -1828,6 +1828,11 @@ public class Dataflow {
   private List<AVariableIdentification> analyzeStepFunction(StepFunction currentStep, List<AVariableIdentification> providers, Map<AVariableIdentification, InputConnection> connections) {
     Step compensationStep = currentStep.getCompensateStep();
     
+    //analyze RemoteDestination parameters
+    if(currentStep.getRemoteDispatchingParameter() != null) {
+      analyzeRemoteDestination(currentStep, providers, connections);
+    }
+    
     //if detached, do not add output
     //there can't be compensation or Exceptions
     if(currentStep.isExecutionDetached())
@@ -1839,11 +1844,6 @@ public class Dataflow {
       List<AVariableIdentification> compensationProviders = new ArrayList<AVariableIdentification>(providers);
       compensationProviders.addAll(identifyVariables(currentStep).getVariables(VarUsageType.output));
       analyzeDataflow(compensationStep, compensationProviders, connections);
-    }
-    
-    //analyze RemoteDestination parameters
-    if(currentStep.getRemoteDispatchingParameter() != null) {
-      analyzeRemoteDestination(currentStep, providers, connections);
     }
     
     IdentifiedVariables identifiedVariables = identifyVariables(currentStep);
