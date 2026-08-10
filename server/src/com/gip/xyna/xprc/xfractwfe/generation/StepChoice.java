@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
@@ -1721,10 +1722,20 @@ public class StepChoice extends Step implements Distinction, FormulaContainer {
 
   public void replaceExpression(int caseNo, String expression) {
     // remove delimiters that have been added to simplify handling in GUI
-    String complexName = expression.replaceAll(Pattern.quote(FORMULA_GUI_DELIMITER_START), "")
-                                   .replaceAll(Pattern.quote(FORMULA_GUI_DELIMITER_END), "");
-
-    cases.get(caseNo).setComplexName(complexName);
+    StringTokenizer st = new StringTokenizer(expression, "\"", true);
+    StringBuilder complexName = new StringBuilder();
+    boolean inQuotes = false;
+    while (st.hasMoreTokens()) {
+      String token = st.nextToken();
+      if ("\"".equals(token)) {
+        inQuotes = !inQuotes;
+      } else if (!inQuotes) {
+        token = token.replaceAll(Pattern.quote(FORMULA_GUI_DELIMITER_START), "")
+                     .replaceAll(Pattern.quote(FORMULA_GUI_DELIMITER_END), "");
+      }
+      complexName.append(token);
+    }
+    cases.get(caseNo).setComplexName(complexName.toString());
     parseFormulas();
   }
 
