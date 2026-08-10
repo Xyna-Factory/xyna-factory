@@ -30,9 +30,13 @@ import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -55,6 +59,7 @@ import com.gip.xyna.xact.filter.session.GenerationBaseObject;
 import com.gip.xyna.xact.filter.session.XMOMLoader;
 import com.gip.xyna.xact.filter.util.Utils;
 import com.gip.xyna.xact.filter.util.WorkflowUtils;
+import com.gip.xyna.xdev.xlibdev.repository.RepositoryManagement;
 import com.gip.xyna.xfmg.xfctrl.filemgmt.FileManagement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
@@ -85,6 +90,9 @@ public class MonitorAudit {
   
   private static FileManagement fileManagement = 
       XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getFileManagement();
+
+  private static RepositoryManagement repositoryManagement =
+      XynaFactory.getInstance().getXynaDevelopment().getXynaLibraryDevelopment().getRepositoryManagement();
   
   private static final DateTimeFormatter dateformatterDot = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss");
   private static final DateTimeFormatter dateformatterDash = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
@@ -244,9 +252,7 @@ public class MonitorAudit {
   
 
   private static TemporalAccessor parseDateTime(String input) {
-    DateTimeFormatter df;
-    for (int i = 0; i < dateformatters.length; i++) {
-      df = dateformatters[i];
+    for (DateTimeFormatter df : dateformatters) {
       try {
         return df.parse(input);
       } catch (DateTimeParseException e) {
@@ -258,8 +264,13 @@ public class MonitorAudit {
   
   
   public static MonitorAudit fromLocalOrder(long orderId) throws XynaException {
-  
-    return fromLocalOrder(orderId, t -> {
+    return fromLocalOrder(orderId, (Long) null);
+  }
+
+
+  public static MonitorAudit fromLocalOrder(long orderId, Long parentId) throws XynaException {
+
+    return fromLocalOrder(orderId, parentId, t -> {
       try {
         return AuditPreprocessing.filterAudit(t);
       } catch (ParserConfigurationException | SAXException | TransformerException | TransformerFactoryConfigurationError e) {
@@ -270,47 +281,37 @@ public class MonitorAudit {
   
   
   public static MonitorAudit fromLocalOrder(long orderId, Function<String, String> filter) throws XynaException {
-    OrderInstanceDetails details = multiChannelPortal.getOrderInstanceDetails(orderId);
+    return fromLocalOrder(orderId, null, filter);
+  }
+
+
+  public static MonitorAudit fromLocalOrder(long orderId, Long parentOrderId, Function<String, String> filter) throws XynaException {
+    OrderInstanceDetails childDetails = null;
+    try {
+      childDetails = multiChannelPortal.getOrderInstanceDetails(orderId);
+    } catch (XynaException e) {
+      if(parentOrderId == null || parentOrderId <= 0 || parentOrderId == orderId) {
+        throw e;
+      }
+    }
+
     MonitorAudit a = new MonitorAudit();
     a.imported = false;
-    a.orderId = details.getId();
-    a.guiOrderId = String.valueOf(details.getId());
-    a.runtimeContext = details.getRuntimeContext();
-    a.orderType = details.getOrderType();
-    a.startTime = details.getStartTime();
-    a.lastUpdate = details.getLastUpdate();
-    a.status = details.getStatusAsString();
-    a.priority = details.getPriority();
-    try {
-      a.monitoringLevel = details.getMonitoringLevel();
-    } catch (NullPointerException npe) {
-      Utils.logError("NullPointerException at getMonitoringLevel()", null);
-    }
-    a.parentId = details.getParentId();
+    a.orderId = orderId;
+    a.guiOrderId = String.valueOf(a.orderId);
+    a.parentId = childDetails != null ? childDetails.getParentId() : parentOrderId;
     a.guiParentOrderId = String.valueOf(a.parentId >= 0 ? a.parentId : 0);
-    a.executionType = details.getExecutionType();
-    a.exceptions = details.getExceptions();
-    a.custom0 = details.getCustom0();
-    a.custom1 = details.getCustom1();
-    a.custom2 = details.getCustom2();
-    a.custom3 = details.getCustom3();
-    
-    if(details.getAuditDataAsXML() != null && !details.getAuditDataAsXML().isEmpty()) {
-      a.hasAuditData = true;
-      try {
-        a.auditDataXml = filter.apply(details.getAuditDataAsXML());
-      } catch (Exception e) {
-        Utils.logError("Audit prefiltering to avoid risk of OOM failed", e);
-      }
 
-      AuditXmlHelper xmlHelper = new AuditXmlHelper();
-      a.enhancedAudit = xmlHelper.auditFromXml(a.auditDataXml, false);
-      if(a.enhancedAudit != null) {
-        a.workfowFqn = a.enhancedAudit.getFqn();
-        if(a.enhancedAudit.getFqn() != null && !a.enhancedAudit.getFqn().isEmpty()) {
-          a.workfowName = a.workfowFqn.substring(a.workfowFqn.lastIndexOf('.') + 1);
-        }
+    if(childDetails != null) {
+      setOrderDetails(a, childDetails);
+      if(childDetails.getAuditDataAsXML() != null && !childDetails.getAuditDataAsXML().isEmpty()) {
+        loadAudit(a, childDetails.getAuditDataAsXML(), filter);
       }
+    }
+
+    if(a.enhancedAudit == null && parentOrderId != null && parentOrderId > 0 && parentOrderId != orderId) {
+      OrderInstanceDetails parentDetails = multiChannelPortal.getOrderInstanceDetails(parentOrderId);
+      loadChildAuditFromParent(a, orderId, parentDetails, filter);
     }
     
     a.workflow = createWFObject(a);
@@ -318,7 +319,188 @@ public class MonitorAudit {
     
     return a;
   }
-  
+
+  private static void setOrderDetails(MonitorAudit audit, OrderInstanceDetails details) {
+    audit.runtimeContext = details.getRuntimeContext();
+    audit.orderType = details.getOrderType();
+    audit.startTime = details.getStartTime();
+    audit.lastUpdate = details.getLastUpdate();
+    audit.status = details.getStatusAsString();
+    audit.priority = details.getPriority();
+    try {
+      audit.monitoringLevel = details.getMonitoringLevel();
+    } catch (NullPointerException npe) {
+      Utils.logError("NullPointerException at getMonitoringLevel()", null);
+    }
+    audit.executionType = details.getExecutionType();
+    audit.exceptions = details.getExceptions();
+    audit.custom0 = details.getCustom0();
+    audit.custom1 = details.getCustom1();
+    audit.custom2 = details.getCustom2();
+    audit.custom3 = details.getCustom3();
+  }
+
+  private static void loadAudit(MonitorAudit audit, String auditXml, Function<String, String> filter) {
+    audit.hasAuditData = true;
+    try {
+      audit.auditDataXml = filter.apply(auditXml);
+    } catch (Exception e) {
+      Utils.logError("Audit prefiltering to avoid risk of OOM failed", e);
+      audit.auditDataXml = auditXml;
+    }
+
+    AuditXmlHelper xmlHelper = new AuditXmlHelper();
+    audit.enhancedAudit = xmlHelper.auditFromXml(audit.auditDataXml, false);
+    setWorkflowName(audit);
+  }
+
+  private static void loadChildAuditFromParent(MonitorAudit audit, long childOrderId, OrderInstanceDetails parentDetails,
+                                                Function<String, String> filter) throws XynaException {
+    String parentAuditXml = parentDetails.getAuditDataAsXML();
+    if(parentAuditXml == null || parentAuditXml.isEmpty()) {
+      return;
+    }
+
+    String filteredParentAuditXml;
+    try {
+      filteredParentAuditXml = filter.apply(parentAuditXml);
+    } catch (Exception e) {
+      Utils.logError("Parent audit prefiltering to avoid risk of OOM failed", e);
+      filteredParentAuditXml = parentAuditXml;
+    }
+
+    AuditXmlHelper xmlHelper = new AuditXmlHelper();
+    EnhancedAudit parentAudit = xmlHelper.auditFromXml(filteredParentAuditXml, false);
+    if(parentAudit == null || parentAudit.getAudit() == null) {
+      return;
+    }
+
+    Document parentWorkflow = XMLUtils.parseString(parentAudit.getAudit());
+    Element childParameter = findParameterForOrder(parentWorkflow.getDocumentElement(), childOrderId);
+    Element function = childParameter != null && childParameter.getParentNode() instanceof Element
+        ? (Element) childParameter.getParentNode() : null;
+    if(function == null || !EL.FUNCTION.equals(getElementName(function))) {
+      return;
+    }
+
+    Element invoke = XMLUtils.getChildElementByName(function, EL.INVOKE);
+    String serviceId = invoke != null ? invoke.getAttribute(ATT.SERVICEID) : null;
+    Element serviceReference = XMLUtils.getChildElementsRecursively(parentWorkflow.getDocumentElement(), EL.SERVICEREFERENCE).stream()
+        .filter(element -> serviceId != null && serviceId.equals(element.getAttribute(ATT.ID)))
+        .findFirst().orElse(null);
+    String childWorkflowFqn = getReferenceFqn(serviceReference);
+    if(childWorkflowFqn == null) {
+      return;
+    }
+
+    RuntimeContext childRuntimeContext = getImportRuntimeContext(parentAudit, childWorkflowFqn);
+    if(childRuntimeContext == null) {
+      childRuntimeContext = parentAudit.getWorkflowContext() != null ? parentAudit.getWorkflowContext() : parentDetails.getRuntimeContext();
+    }
+
+    String childWorkflowXml = repositoryManagement.getXMLFromRepository(childRuntimeContext,
+                                                                         parentAudit.getRepositoryRevision(),
+                                                                         childWorkflowFqn);
+    Document childWorkflow = XMLUtils.parseString(childWorkflowXml);
+    Element operation = XMLUtils.getChildElementByName(childWorkflow.getDocumentElement(), EL.OPERATION);
+    if(operation == null) {
+      return;
+    }
+    Element rootParameter = (Element) childWorkflow.importNode(childParameter, true);
+    materializeObjectReferences(rootParameter, getObjectsByInstanceId(parentWorkflow), new HashSet<>());
+    rootParameter.setAttribute(ATT.INSTANCE_ID, Long.toString(childOrderId));
+    rootParameter.setAttribute(ATT.PARENTORDER_ID, Long.toString(parentDetails.getId()));
+    operation.appendChild(rootParameter);
+
+    audit.auditDataXml = XMLUtils.getXMLString(childWorkflow.getDocumentElement(), false);
+    audit.enhancedAudit = new EnhancedAudit(parentAudit.getVersion(), audit.auditDataXml, childWorkflowFqn,
+                                            parentAudit.getImports(), parentAudit.getRepositoryRevision(), childRuntimeContext);
+    audit.hasAuditData = true;
+    audit.runtimeContext = childRuntimeContext;
+    audit.orderType = childWorkflowFqn;
+    audit.executionType = ExecutionType.XYNA_FRACTAL_WORKFLOW.name();
+    setWorkflowName(audit);
+  }
+
+  private static Element findParameterForOrder(Element root, long orderId) {
+    String orderIdString = Long.toString(orderId);
+    return XMLUtils.getChildElementsRecursively(root, EL.PARAMETER).stream()
+        .filter(parameter -> Stream.of(parameter.getAttribute(ATT.INSTANCE_ID).split(","))
+            .map(String::trim)
+            .anyMatch(orderIdString::equals))
+        .findFirst().orElse(null);
+  }
+
+  private static Map<String, Element> getObjectsByInstanceId(Document parentWorkflow) {
+    return Stream.concat(XMLUtils.getChildElementsRecursively(parentWorkflow.getDocumentElement(), EL.DATA).stream(),
+                         XMLUtils.getChildElementsRecursively(parentWorkflow.getDocumentElement(), EL.EXCEPTION).stream())
+        .filter(element -> !element.getAttribute(ATT.OBJECT_ID).isEmpty())
+        .collect(Collectors.toMap(element -> element.getAttribute(ATT.OBJECT_ID), Function.identity(), (first, duplicate) -> first));
+  }
+
+  private static void materializeObjectReferences(Element element, Map<String, Element> objectsByInstanceId,
+                                                  Set<String> resolvingReferences) {
+    String referenceId = element.getAttribute(ATT.OBJECT_REFERENCE_ID);
+    if(!referenceId.isEmpty()) {
+      Element referencedObject = objectsByInstanceId.get(referenceId);
+      if(referencedObject == null || !resolvingReferences.add(referenceId)) {
+        return;
+      }
+      Element resolvedObject = (Element) element.getOwnerDocument().importNode(referencedObject, true);
+      materializeObjectReferences(resolvedObject, objectsByInstanceId, resolvingReferences);
+      NamedNodeMap resolvedAttributes = resolvedObject.getAttributes();
+      for(int i = 0; i < resolvedAttributes.getLength(); i++) {
+        Node attribute = resolvedAttributes.item(i);
+        element.setAttributeNS(attribute.getNamespaceURI(), attribute.getNodeName(), attribute.getNodeValue());
+      }
+      while(element.hasChildNodes()) {
+        element.removeChild(element.getFirstChild());
+      }
+      while(resolvedObject.hasChildNodes()) {
+        element.appendChild(resolvedObject.getFirstChild());
+      }
+      element.removeAttribute(ATT.OBJECT_REFERENCE_ID);
+      XMLUtils.getChildElements(element).forEach(child -> materializeObjectReferences(child, objectsByInstanceId, resolvingReferences));
+      resolvingReferences.remove(referenceId);
+      return;
+    }
+    XMLUtils.getChildElements(element).forEach(child -> materializeObjectReferences(child, objectsByInstanceId, resolvingReferences));
+  }
+
+  private static String getReferenceFqn(Element serviceReference) {
+    if(serviceReference == null) {
+      return null;
+    }
+    String typePath = serviceReference.getAttribute(ATT.REFERENCEPATH);
+    String typeName = serviceReference.getAttribute(ATT.REFERENCENAME);
+    if(typePath.isEmpty() || typeName.isEmpty()) {
+      return null;
+    }
+    return typePath + "." + typeName;
+  }
+
+  private static String getElementName(Element element) {
+    return element.getLocalName() != null ? element.getLocalName() : element.getNodeName();
+  }
+
+  private static RuntimeContext getImportRuntimeContext(EnhancedAudit parentAudit, String fqn) {
+    return parentAudit.getImports().stream()
+        .filter(auditImport -> fqn.equals(auditImport.getFqn()))
+        .findFirst()
+        .map(AuditImport::getRuntimeContext)
+        .orElse(null);
+  }
+
+  private static void setWorkflowName(MonitorAudit audit) {
+    if(audit.enhancedAudit == null) {
+      return;
+    }
+    audit.workfowFqn = audit.enhancedAudit.getFqn();
+    if(audit.workfowFqn != null && !audit.workfowFqn.isEmpty()) {
+      audit.workfowName = audit.workfowFqn.substring(audit.workfowFqn.lastIndexOf('.') + 1);
+    }
+  }
+
   public String getWorkflowXml() {
     if(enhancedAudit != null && enhancedAudit.getAudit() != null) {
       return enhancedAudit.getAudit();

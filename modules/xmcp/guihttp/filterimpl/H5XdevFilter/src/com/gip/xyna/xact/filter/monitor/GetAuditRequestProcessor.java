@@ -90,7 +90,7 @@ public class GetAuditRequestProcessor {
 
   public GetAuditResponse processGetAuditRequest(Long orderId, Long parentId) throws NoAuditData {
     try {
-      return createGetAuditResponse(MonitorAudit.fromLocalOrder(orderId));
+      return createGetAuditResponse(MonitorAudit.fromLocalOrder(orderId, parentId));
     } catch (Throwable ex) {
       return createGetAuditResponse(orderId, ex, true);
     }
