@@ -27,11 +27,11 @@
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>UserRoleManagement</ApplicationName>
-        <VersionName>1.0.8</VersionName>
+        <VersionName>1.0.9</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>ZetaFramework</ApplicationName>
-        <VersionName>0.6.67</VersionName>
+        <VersionName>0.6.69</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
