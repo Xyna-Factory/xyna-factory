@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+/*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2026 Xyna GmbH, Germany
  *
@@ -15,17 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<project name="build" default="build-all" basedir=".">
-    
-    <property name="target.dir" value="${basedir}/deploy/" />
-    <import file="../buildModule.xml" />
-    
-    <target name="build-all">
-        <buildModule target="build"     dir="regexp"     target.dir="${target.dir}/xint" />
-        <buildModule target="build"     dir="crypto"     target.dir="${target.dir}/xint" />
-        <buildModule target="build"     dir="inference"  target.dir="${target.dir}/xint" />
-        <buildModule target="build-all" dir="mcp"        target.dir="${target.dir}/xint" />
-    </target>
-    
-</project>
+ */
+package com.gip.xyna.xact.filter.serialization;
+
+
+
+import com.gip.xyna.utils.misc.JsonBuilder;
+import com.gip.xyna.utils.misc.JsonSerializable;
+
+import xint.mcp.schema.PromptMessage;
+
+
+
+public class PromptMessageSerializer implements JsonSerializable {
+
+  private final PromptMessage message;
+
+
+  public PromptMessageSerializer(PromptMessage message) {
+    this.message = message;
+  }
+
+
+  @Override
+  public void toJson(JsonBuilder jb) {
+    jb.addStringAttribute("role", message.getRole());
+    jb.addObjectAttribute("content", new ContentSerializer(message.getContent()));
+  }
+
+}
