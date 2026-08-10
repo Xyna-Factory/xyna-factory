@@ -90,6 +90,10 @@ public class PythonOperation extends CodeOperation {
 
   private void addExecuteScript(CodeBuffer cb) {
     StringBuilder pythonscript = new StringBuilder();
+    boolean throwsExceptions = (getThrownExceptions().size() > 0);
+    if (throwsExceptions) {
+      pythonscript.append("from mdm import core_exception_XynaExceptionBase").append("\\n\\n");
+    }
     List<String> escapedInputs = getInputVars().stream().map(var -> escape(var.varName)).collect(Collectors.toList());
     String input = String.join(", ", escapedInputs);
     if(!isStatic()) {
@@ -101,12 +105,26 @@ public class PythonOperation extends CodeOperation {
     impl = impl.replaceAll("\"", "\\\\\\\"");
     impl = impl.replaceAll("\n", "\\\\n");
     pythonscript.append("\\n").append(impl).append("\\n");
+    
+    pythonscript.append("\\n");
+    if (throwsExceptions) {
+      pythonscript.append("_xyna_exception_ = None").append("\\n");
+      for (AVariable var: getOutputVars()) {
+        pythonscript.append(escape(var.varName)).append(" = None\\n");
+      }
+      pythonscript.append("try:").append("\\n");
+      pythonscript.append("  ");
+    }
     String output = String.join(", ", getOutputVars().stream().map(var -> escape(var.varName)).collect(Collectors.toList()));
     if (getOutputVars().size() > 0) {
-      pythonscript.append("\\n(").append(output).append(") = ");
+      pythonscript.append("(").append(output).append(") = ");
     }
     pythonscript.append(getAdaptedNameWithoutVersion()).append("(").append(input).append(")");
-
+    pythonscript.append("\\n");
+    if (throwsExceptions) {
+      pythonscript.append("except core_exception_XynaExceptionBase as _error_:").append("\\n");
+      pythonscript.append("  _xyna_exception_ = _error_").append("\\n");
+    }
     cb.addLine("interpreter.exec(\"" + pythonscript + "\")");
   }
   
@@ -147,6 +165,17 @@ public class PythonOperation extends CodeOperation {
 
     if (!isStatic()) {
       cb.addLine("pyMgmt.updateObject(context, this, interpreter.get(\"this\"));");
+    }
+    cb.addLine("Object _xyna_exception_ = interpreter.get(\"_xyna_exception_\")");
+    if (getThrownExceptions().size() > 0) {
+      cb.addLine("if (_xyna_exception_ != null) {");
+      cb.addLine("Object _java_exception_ = pyMgmt.convertToJava(context, \"\", _xyna_exception_)");
+      for (ExceptionVariable ex : getThrownExceptions()) {
+        cb.addLine("if (_java_exception_ instanceof " + ex.getFQClassName() + ") {");
+        cb.addLine("throw (" + ex.getFQClassName() + ") _java_exception_");
+        cb.addLine("}");
+      }
+      cb.addLine("}");
     }
     for (AVariable var : getOutputVars()) {
       cb.addLine(var.varName + " = interpreter.get(\"" + escape(var.varName) + "\")");
