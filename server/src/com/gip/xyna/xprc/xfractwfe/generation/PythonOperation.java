@@ -166,8 +166,8 @@ public class PythonOperation extends CodeOperation {
     if (!isStatic()) {
       cb.addLine("pyMgmt.updateObject(context, this, interpreter.get(\"this\"));");
     }
-    cb.addLine("Object _xyna_exception_ = interpreter.get(\"_xyna_exception_\")");
     if (getThrownExceptions().size() > 0) {
+      cb.addLine("Object _xyna_exception_ = interpreter.get(\"_xyna_exception_\")");
       cb.addLine("if (_xyna_exception_ != null) {");
       cb.addLine("Object _java_exception_ = pyMgmt.convertToJava(context, \"\", _xyna_exception_)");
       for (ExceptionVariable ex : getThrownExceptions()) {
