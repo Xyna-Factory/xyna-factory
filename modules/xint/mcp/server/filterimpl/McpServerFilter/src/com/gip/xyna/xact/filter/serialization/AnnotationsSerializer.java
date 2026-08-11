@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+/*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2026 Xyna GmbH, Germany
  *
@@ -15,17 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<project name="build" default="build-all" basedir=".">
-    
-    <property name="target.dir" value="${basedir}/deploy/" />
-    <import file="../buildModule.xml" />
-    
-    <target name="build-all">
-        <buildModule target="build"     dir="regexp"     target.dir="${target.dir}/xint" />
-        <buildModule target="build"     dir="crypto"     target.dir="${target.dir}/xint" />
-        <buildModule target="build"     dir="inference"  target.dir="${target.dir}/xint" />
-        <buildModule target="build-all" dir="mcp"        target.dir="${target.dir}/xint" />
-    </target>
-    
-</project>
+ */
+package com.gip.xyna.xact.filter.serialization;
+
+
+
+import com.gip.xyna.utils.misc.JsonBuilder;
+import com.gip.xyna.utils.misc.JsonSerializable;
+
+import xint.mcp.schema.Annotations;
+
+
+
+public class AnnotationsSerializer implements JsonSerializable {
+
+  private final Annotations annotations;
+
+
+  public AnnotationsSerializer(Annotations annotations) {
+    this.annotations = annotations;
+  }
+
+
+  @Override
+  public void toJson(JsonBuilder jb) {
+    if (annotations.getAudience() != null) {
+      jb.addStringListAttribute("audience", annotations.getAudience());
+    }
+    jb.addNumberAttribute("priority", annotations.getPriority());
+    jb.addNumberAttribute("lastModified", annotations.getLastModified());
+  }
+
+}

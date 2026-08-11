@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2026 Xyna GmbH, Germany
@@ -15,17 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<project name="build" default="build-all" basedir=".">
-    
-    <property name="target.dir" value="${basedir}/deploy/" />
-    <import file="../buildModule.xml" />
-    
-    <target name="build-all">
-        <buildModule target="build"     dir="regexp"     target.dir="${target.dir}/xint" />
-        <buildModule target="build"     dir="crypto"     target.dir="${target.dir}/xint" />
-        <buildModule target="build"     dir="inference"  target.dir="${target.dir}/xint" />
-        <buildModule target="build-all" dir="mcp"        target.dir="${target.dir}/xint" />
-    </target>
-    
-</project>
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Tool Call Result" TypeName="ToolCallResult" TypePath="xint.mcp.schema" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="isError" VariableName="isError">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="Content" ReferenceName="Content" ReferencePath="xint.mcp.schema" VariableName="content"/>
+  <Data Label="Structured Content" ReferenceName="JSONObject" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="structuredContent"/>
+</DataType>

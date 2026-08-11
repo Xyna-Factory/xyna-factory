@@ -17,15 +17,16 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <project name="build" default="build-all" basedir=".">
-    
+
     <property name="target.dir" value="${basedir}/deploy/" />
-    <import file="../buildModule.xml" />
-    
+
     <target name="build-all">
-        <buildModule target="build"     dir="regexp"     target.dir="${target.dir}/xint" />
-        <buildModule target="build"     dir="crypto"     target.dir="${target.dir}/xint" />
-        <buildModule target="build"     dir="inference"  target.dir="${target.dir}/xint" />
-        <buildModule target="build-all" dir="mcp"        target.dir="${target.dir}/xint" />
+        <ant antfile="build.xml" target="build" inheritAll="false" dir="protocol">
+            <property name="target.dir" value="${target.dir}" />
+        </ant>
+        <ant antfile="build.xml" target="build" inheritAll="false" dir="server">
+            <property name="target.dir" value="${target.dir}" />
+        </ant>
     </target>
-    
+
 </project>
