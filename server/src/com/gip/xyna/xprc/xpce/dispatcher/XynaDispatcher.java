@@ -514,9 +514,16 @@ public abstract class XynaDispatcher extends FunctionGroup {
       Collection<DispatcherDestinationStorable> allDestinations =
           historyConnection.loadCollection(DispatcherDestinationStorable.class);
       for (DispatcherDestinationStorable dds: allDestinations) {
+        if ((dds.getDestinationKey() == null) || (dds.getDestinationKey().isBlank())) {
+          logger.warn("Invalid DispatcherDestination configuration: Empty key. ID = " + dds.getId());
+          continue;
+        }
         XynaDispatcher dispatcher = mapDispatcherNameToDispatcher.get(dds.getDispatcherName());
         if (dispatcher == null) {
-          throw new RuntimeException("Unsupported dispatcher name in configuration file: '" + dds.getDispatcherName() + "'");
+          //throw new RuntimeException("Unsupported dispatcher name in configuration file: '" + dds.getDispatcherName() + "'");
+          logger.warn("Invalid DispatcherDestination configuration for key = '" + dds.getDestinationKey() + "'. " +
+                      "Dispatcher name = '" + dds.getDispatcherName() + "'.");
+          continue;
         }
         DestinationValue dv;
         Long revision = dds.getRevision();
@@ -529,18 +536,29 @@ public abstract class XynaDispatcher extends FunctionGroup {
             dv = new FractalWorkflowDestination(dvString);
             break;
           case JAVA_DESTINATION :
-            throw new RuntimeException("Java destinations may not be configured.");
+            //throw new RuntimeException("Java destinations may not be configured.");
+            logger.warn("Invalid DispatcherDestination configuration for key = '" + dds.getDestinationKey() + "'. " +
+                        "Destination type Java.");
+            continue;
           case SERVICE_DESTINATION :
-            throw new RuntimeException("Service destinations may not be configured.");
+            //throw new RuntimeException("Service destinations may not be configured.");
+            logger.warn("Invalid DispatcherDestination configuration for key = '" + dds.getDestinationKey() + "'. " +
+                        "Destination type Service.");
+            //logger.warn("Service destinations are not supported for DispatcherDestination configuration.");
+            continue;
           default :
-            throw new RuntimeException("Unknown execution type: '" + dds.getDestinationType() + "'");
+            //throw new RuntimeException("Unknown execution type: '" + dds.getDestinationType() + "'");
+            logger.warn("Invalid DispatcherDestination configuration for key = '" + dds.getDestinationKey() + "'. " +
+                        "Unknown destination type: '" + dds.getDestinationType() + "'.");
+            continue;
         }
         RuntimeContext runtimeContext;
         try {
           runtimeContext = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement()
                           .getRuntimeContext(revision);
         } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
-          logger.warn("Can't get runtimeContext for revision " + revision, e);
+          logger.warn("Invalid DispatcherDestination configuration for key = '" + dds.getDestinationKey() + "'. " +
+                      "Can't get runtimeContext for revision " + revision, e);
           continue;
         }
         DestinationKey destKey = new DestinationKey(dds.getDestinationKey(), runtimeContext);
