@@ -10373,10 +10373,10 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
     Long revision;
     if (workspaceName != null) {
       revision = revisionManagement.getRevision(null, null, workspaceName);
+      getApplicationDefinitionInformation(applicationName, revision);
     } else {
       revision = revisionManagement.getRevision(applicationName, versionName, null);
     }
-    getApplicationDefinitionInformation(applicationName, revision);
     
     Collection<ApplicationEntryStorable> implicitDependencies;
     Collection<ApplicationEntryStorable> appEntries;
