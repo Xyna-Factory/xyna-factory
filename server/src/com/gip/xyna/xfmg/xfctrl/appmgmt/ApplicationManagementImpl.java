@@ -10377,7 +10377,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
     } else {
       revision = revisionManagement.getRevision(applicationName, versionName, null);
     }
-    
+
     Collection<ApplicationEntryStorable> implicitDependencies;
     Collection<ApplicationEntryStorable> appEntries;
     if (createStub) {
