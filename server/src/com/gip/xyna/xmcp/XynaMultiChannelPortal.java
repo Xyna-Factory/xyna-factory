@@ -171,7 +171,6 @@ import com.gip.xyna.xfmg.xfctrl.deploystate.deployitem.DeploymentItemBuilder;
 import com.gip.xyna.xfmg.xfctrl.nodemgmt.FactoryNodeStorable;
 import com.gip.xyna.xfmg.xfctrl.nodemgmt.RemoteDestinationManagement;
 import com.gip.xyna.xfmg.xfctrl.nodemgmt.monitoring.InterlinkSearchDispatcher;
-import com.gip.xyna.xfmg.xfctrl.queuemgmnt.Queue;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueConnectData;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueFacade;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueType;

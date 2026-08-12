@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,13 +29,22 @@ import com.gip.xyna.xnwh.persistence.Storable;
 
 
 @Persistable(primaryKey = Queue.Constant.ColName.UNIQUE_NAME, tableName = Queue.Constant.TABLE_NAME)
-public class Queue extends Storable<Queue> implements IQueue {
+class Queue extends Storable<Queue> implements IQueue {
 
   private static final long serialVersionUID = 1L;
   private static final int currentVersion = 1;
 
-  private boolean isInitialVersion() {
-    return this.version == null || this.version == 0;
+  public Queue() {
+    super();
+    this.version = currentVersion;
+  }
+
+  public boolean isInitialVersion() {
+    return isInitialVersion(this.version);
+  }
+
+  private static boolean isInitialVersion(Integer ver) {
+    return ver == null || ver == 0;
   }
 
   public static class Constant {
@@ -55,22 +64,23 @@ public class Queue extends Storable<Queue> implements IQueue {
   public static class Reader implements ResultSetReader<Queue> {
     public Queue read(ResultSet rs) throws SQLException {
       Queue queue = new Queue();
+      queue.setVersion(currentVersion);
+
       queue.setExternalName(rs.getString(Constant.ColName.EXTERNAL_NAME));
       queue.setUniqueName(rs.getString(Constant.ColName.UNIQUE_NAME));
 
       Integer savedVersion = rs.getInt(Constant.ColName.CONFIG_VERSION);
 
-      if (savedVersion == null || savedVersion == 0) {
+      if (isInitialVersion(savedVersion)) {
         Object connData = queue.readBlobbedJavaObjectFromResultSet(rs, Constant.ColName.CONNECT_DATA);
-        queue.setConnectData((QueueConnectData) connData);
+        queue.setConnectDataForCurrentVersion((QueueConnectData) connData);
         Object qType = queue.readBlobbedJavaObjectFromResultSet(rs, Constant.ColName.QUEUE_TYPE);
-        queue.setQueueType((QueueType) qType);
+        queue.setQueueTypeForCurrentVersion((QueueType) qType);
       } /* else if (savedVersion == x) {} */ else {
         queue.setConnectDataStr(rs.getString(Constant.ColName.CONNECT_DATA_STR));
         queue.setQueueTypeStr(rs.getString(Constant.ColName.QUEUE_TYPE_STR));
       }
 
-      queue.setVersion(currentVersion);
       return queue;
     }
   }
@@ -163,6 +173,10 @@ public class Queue extends Storable<Queue> implements IQueue {
 
   @Override
   public void setConnectData(QueueConnectData connectData) {
+      this.connectData = connectData;
+  }
+
+  public void setConnectDataForCurrentVersion(QueueConnectData connectData) {
     if (isInitialVersion() || connectData == null) {
       this.connectData = connectData;
     } else {
@@ -178,6 +192,15 @@ public class Queue extends Storable<Queue> implements IQueue {
 
   public String getConnectDataStr() {
     return connectDataStr;
+  }
+
+  public void setQueueTypeForCurrentVersion(QueueType queueType) {
+    if (isInitialVersion() || queueType == null) {
+      this.queueType = queueType;
+    } else {
+      this.queueType = null;
+      setQueueTypeStr(queueType.name());
+    }
   }
 
   public void setQueueTypeStr(String qt) {
@@ -202,12 +225,7 @@ public class Queue extends Storable<Queue> implements IQueue {
 
   @Override
   public void setQueueType(QueueType queueType) {
-    if (isInitialVersion() || queueType == null) {
       this.queueType = queueType;
-    } else {
-      this.queueType = null;
-      setQueueTypeStr(queueType.name());
-    }
   }
 
   public static long getSerialversionuid() {

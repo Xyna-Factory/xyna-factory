@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,8 +111,8 @@ public class QueueManagement extends FunctionGroup {
       Queue queue = new Queue();
       queue.setUniqueName(uniqueName);
       queue.setExternalName(externalName);
-      queue.setConnectData(connectData);
-      queue.setQueueType(queueType);
+      queue.setConnectDataForCurrentVersion(connectData);
+      queue.setQueueTypeForCurrentVersion(queueType);
       try {
         conn.persistObject(queue);
         conn.commit();

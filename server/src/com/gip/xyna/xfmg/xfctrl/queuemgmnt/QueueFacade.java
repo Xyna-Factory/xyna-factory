@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,7 +69,7 @@ public class QueueFacade implements IQueue {
 
     @Override
     public void setConnectData(QueueConnectData connectData) {
-        queue.setConnectData(connectData);
+        queue.setConnectDataForCurrentVersion(connectData);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class QueueFacade implements IQueue {
 
     @Override
     public void setQueueType(QueueType queueType) {
-       queue.setQueueType(queueType);
+       queue.setQueueTypeForCurrentVersion(queueType);
     }
 
     @Override

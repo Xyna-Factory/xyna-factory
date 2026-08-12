@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ public class WebSphereMQTriggerConnection extends TriggerConnection {
   */
 
 
-  public void sendToQueue(com.gip.xyna.xfmg.xfctrl.queuemgmnt.Queue queue,
+  public void sendToQueue(com.gip.xyna.xfmg.xfctrl.queuemgmnt.IQueue queue,
                                  Message message, boolean useSSL, SSLConfig sslConfig) throws JMSException {
     WebSphereMQTrigger t = (WebSphereMQTrigger) super.getTrigger();
     WebSphereMQTrigger.sendToQueue(queue, message, useSSL, sslConfig, t.getStartParameter().getUserName(), t.getStartParameter().getPassword());
