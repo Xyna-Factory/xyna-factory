@@ -18,15 +18,56 @@
 
 package com.gip.xyna.xfmg.xfctrl.queuemgmnt;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.gip.xyna.utils.collections.CSVStringList;
+import com.gip.xyna.xnwh.securestorage.SecureStorage;
 
 import junit.framework.TestCase;
 
 
 public class QueueParameterHandlingTest extends TestCase {
+
+  private static final String SECURE_STORAGE_SEEDFILE_PROPERTY = "xnwh.securestorage.seedfile";
+  private static final String SECURE_STORAGE_SEED_KEY = "securestorage.seed";
+
+  private String previousSeedFile;
+  private File seedFile;
+
+
+  protected void setUp() throws Exception {
+    super.setUp();
+
+    previousSeedFile = System.getProperty(SECURE_STORAGE_SEEDFILE_PROPERTY);
+    seedFile = File.createTempFile("queue-parameter-handling", ".properties");
+    try (FileWriter writer = new FileWriter(seedFile)) {
+      writer.write(SECURE_STORAGE_SEED_KEY + "=queue-parameter-handling-test-seed\n");
+    }
+
+    System.setProperty(SECURE_STORAGE_SEEDFILE_PROPERTY, seedFile.getAbsolutePath());
+    resetSecureStorageSeed();
+  }
+
+
+  protected void tearDown() throws Exception {
+    if (previousSeedFile == null) {
+      System.clearProperty(SECURE_STORAGE_SEEDFILE_PROPERTY);
+    } else {
+      System.setProperty(SECURE_STORAGE_SEEDFILE_PROPERTY, previousSeedFile);
+    }
+
+    resetSecureStorageSeed();
+
+    if (seedFile != null) {
+      seedFile.delete();
+    }
+
+    super.tearDown();
+  }
 
   public void testInitialVersionNullUsesLegacyBlobParameters() {
     Queue queue = new Queue();
@@ -203,18 +244,58 @@ public class QueueParameterHandlingTest extends TestCase {
     WebSphereMQConnectData connectData = createWebSphereMqConnectData("ws-host", 1414, "QM2", "CH1");
     List<String> params = new ArrayList<String>(WebSphereMQConnectStringData.fromConnectData(connectData).toParameters());
 
-    for (int i = 0; i < params.size(); i++) {
-      if (params.get(i).startsWith("channel=")) {
-        params.remove(i);
-        break;
-      }
-    }
+    removeNamedParameter(params, "channel");
 
     try {
       WebSphereMQConnectStringData.fromStringParameters(params);
       fail("Expected IllegalArgumentException for missing channel parameter");
     } catch (IllegalArgumentException expected) {
       assertTrue(expected.getMessage().contains("channel"));
+    }
+  }
+
+
+  public void testWebSphereParserRejectsMissingMandatoryPort() {
+    WebSphereMQConnectData connectData = createWebSphereMqConnectData("ws-host", 1414, "QM2", "CH1");
+    List<String> params = new ArrayList<String>(WebSphereMQConnectStringData.fromConnectData(connectData).toParameters());
+
+    removeNamedParameter(params, "port");
+
+    try {
+      WebSphereMQConnectStringData.fromStringParameters(params);
+      fail("Expected IllegalArgumentException for missing port parameter");
+    } catch (IllegalArgumentException expected) {
+      assertTrue(expected.getMessage().contains("port"));
+    }
+  }
+
+
+  public void testWebSphereParserRejectsMissingMandatoryHostname() {
+    WebSphereMQConnectData connectData = createWebSphereMqConnectData("ws-host", 1414, "QM2", "CH1");
+    List<String> params = new ArrayList<String>(WebSphereMQConnectStringData.fromConnectData(connectData).toParameters());
+
+    removeNamedParameter(params, "hostname");
+
+    try {
+      WebSphereMQConnectStringData.fromStringParameters(params);
+      fail("Expected IllegalArgumentException for missing hostname parameter");
+    } catch (IllegalArgumentException expected) {
+      assertTrue(expected.getMessage().contains("hostname"));
+    }
+  }
+
+
+  public void testWebSphereParserRejectsMissingMandatoryQueueManager() {
+    WebSphereMQConnectData connectData = createWebSphereMqConnectData("ws-host", 1414, "QM2", "CH1");
+    List<String> params = new ArrayList<String>(WebSphereMQConnectStringData.fromConnectData(connectData).toParameters());
+
+    removeNamedParameter(params, "queueManager");
+
+    try {
+      WebSphereMQConnectStringData.fromStringParameters(params);
+      fail("Expected IllegalArgumentException for missing queueManager parameter");
+    } catch (IllegalArgumentException expected) {
+      assertTrue(expected.getMessage().contains("queueManager"));
     }
   }
 
@@ -259,11 +340,79 @@ public class QueueParameterHandlingTest extends TestCase {
   }
 
 
+  public void testCreateQueueConnectDataSupportsLegacyActiveMqParameters() {
+    QueueConnectData connectData = QueueManagement.createQueueConnectData(QueueType.ACTIVE_MQ,
+                                                                           new String[] { "legacy-amq-host", "61616" });
+
+    assertTrue(connectData instanceof ActiveMQConnectData);
+    ActiveMQConnectData activeMq = (ActiveMQConnectData) connectData;
+    assertEquals("legacy-amq-host", activeMq.getHostname());
+    assertEquals(61616, activeMq.getPort());
+  }
+
+
+  public void testCreateQueueConnectDataSupportsNamedWebsphereParameters() {
+    QueueConnectData connectData = QueueManagement.createQueueConnectData(QueueType.WEBSPHERE_MQ,
+                                                                           new String[] { "queueManager=QM_TEST",
+                                                                               "hostname=mq.example.org", "port=1414",
+                                                                               "channel=DEV.ADMIN.SVRCONN" });
+
+    assertTrue(connectData instanceof WebSphereMQConnectData);
+    WebSphereMQConnectData websphereMq = (WebSphereMQConnectData) connectData;
+    assertEquals("QM_TEST", websphereMq.getQueueManager());
+    assertEquals("mq.example.org", websphereMq.getHostname());
+    assertEquals(1414, websphereMq.getPort());
+    assertEquals("DEV.ADMIN.SVRCONN", websphereMq.getChannel());
+  }
+
+
+  public void testCreateQueueConnectDataSupportsNamedOracleParametersWithoutUuid() {
+    QueueConnectData connectData = QueueManagement.createQueueConnectData(QueueType.ORACLE_AQ,
+                                                                           new String[] {
+                                                                               "user=queue_user",
+                                                                               "password=cleartext-secret",
+                                                                               "jdbc=jdbc:oracle:thin:@//db.example:1521/XE" });
+
+    assertTrue(connectData instanceof OracleAQConnectData);
+    OracleAQConnectData oracle = (OracleAQConnectData) connectData;
+    assertEquals("queue_user", oracle.getUserName());
+    assertEquals("cleartext-secret", oracle.getPassword());
+    assertEquals("jdbc:oracle:thin:@//db.example:1521/XE", oracle.getJdbcUrl());
+  }
+
+
+  public void testCreateQueueConnectDataRejectsMixedNamedAndUnnamedParameters() {
+    try {
+      QueueManagement.createQueueConnectData(QueueType.ACTIVE_MQ, new String[] { "hostname=amq.example.org", "61616" });
+      fail("Expected IllegalArgumentException for mixed named and unnamed parameters");
+    } catch (IllegalArgumentException expected) {
+      assertTrue(expected.getMessage().contains("Mixed named and unnamed"));
+    }
+  }
+
+
   private static ActiveMQConnectData createActiveMqConnectData(String hostname, int port) {
     ActiveMQConnectData data = new ActiveMQConnectData();
     data.setHostname(hostname);
     data.setPort(port);
     return data;
+  }
+
+
+  private static void removeNamedParameter(List<String> params, String parameterName) {
+    for (int i = 0; i < params.size(); i++) {
+      if (params.get(i).startsWith(parameterName + "=")) {
+        params.remove(i);
+        return;
+      }
+    }
+  }
+
+
+  private static void resetSecureStorageSeed() throws Exception {
+    Field seedField = SecureStorage.class.getDeclaredField("seed");
+    seedField.setAccessible(true);
+    seedField.set(null, null);
   }
 
 

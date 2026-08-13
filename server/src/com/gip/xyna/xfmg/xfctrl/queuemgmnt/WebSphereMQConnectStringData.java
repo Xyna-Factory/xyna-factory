@@ -220,7 +220,10 @@ public class WebSphereMQConnectStringData extends WebSphereMQConnectData {
             paramValues = StringParameter.parse(parameters).unmatchedKey(Unmatched.Ignore).with(allParams);
             WebSphereMQConnectStringData qcsd = new WebSphereMQConnectStringData(new WebSphereMQConnectData());
             qcsd.setHostname(HOSTNAME_PARAM.getFromMap(paramValues));
-            qcsd.setPort(PORT_PARAM.getFromMap(paramValues));
+            Integer port = PORT_PARAM.getFromMap(paramValues);
+            if (port != null) {
+                qcsd.setPort(port);
+            }
             qcsd.setQueueManager(QMGR_PARAM.getFromMap(paramValues));
             qcsd.setChannel(CHANNEL_PARAM.getFromMap(paramValues));
 
