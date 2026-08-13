@@ -21,6 +21,7 @@ package com.gip.xyna.xfmg.xfctrl.queuemgmnt;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -234,6 +235,49 @@ public class WebSphereMQConnectStringData extends WebSphereMQConnectData {
         } catch (StringParameterParsingException e) {
             throw new IllegalArgumentException("Unable to parse WebSphereMQ connect data parameters", e);
         }
+    }
+
+
+    public static QueueConnectData fromRegisterQueueParameters(String[] connectParams) {
+        if (connectParams == null || connectParams.length == 0) {
+            throw new IllegalArgumentException("Error: Connect parameter missing.");
+        }
+
+        if (isNamedParameterSyntax(connectParams)) {
+            return fromStringParameters(Arrays.asList(connectParams));
+        }
+
+        if (connectParams.length != 4) {
+            throw new IllegalArgumentException("Error: Wrong number of connect parameters.");
+        }
+
+        WebSphereMQConnectData connectData = new WebSphereMQConnectData();
+        connectData.setQueueManager(QueueManagement.checkParameter("queueManager", connectParams[0]));
+        connectData.setHostname(QueueManagement.checkParameter("hostname", connectParams[1]));
+        connectData.setPort(QueueManagement.checkParameter("port", connectParams[2]));
+        connectData.setChannel(QueueManagement.checkParameter("channel", connectParams[3]));
+        return connectData;
+    }
+
+
+    private static boolean isNamedParameterSyntax(String[] connectParams) {
+        int namedParameters = 0;
+        for (String param : connectParams) {
+            if (isNamedParameter(param)) {
+                namedParameters++;
+            }
+        }
+
+        if (namedParameters > 0 && namedParameters < connectParams.length) {
+            throw new IllegalArgumentException("Error: Mixed named and unnamed connect parameters are not supported.");
+        }
+
+        return namedParameters == connectParams.length;
+    }
+
+
+    private static boolean isNamedParameter(String param) {
+        return param != null && param.contains("=");
     }
 
 
