@@ -30,7 +30,7 @@ import com.gip.xyna.utils.misc.Documentation;
 
 public class QueueConnectStringData {
 
-    public static final StringParameter<String> QTYPE = StringParameter.typeString("connectDataType")
+    public static final StringParameter<QueueType> QTYPE = StringParameter.typeEnum(QueueType.class, "connectDataType")
             .label("connectDataType")
             .documentation(
                     Documentation.en("type of queue connect data").de("Art der Verbindungsdaten der Queue").build())
@@ -38,17 +38,15 @@ public class QueueConnectStringData {
 
     private static final List<StringParameter<?>> allParams = StringParameter.asList(QTYPE);
 
-    boolean externalNameIsEnv = false;
-
     public QueueConnectData fromStringParameters(String paramString) {
         List<String> params = CSVStringList.valueOf(paramString);
 
         Map<String, Object> paramValues;
         try {
             paramValues = StringParameter.parse(params).unmatchedKey(Unmatched.Ignore).with(allParams);
-            String qType = QTYPE.getFromMap(paramValues);
+            QueueType qType = QTYPE.getFromMap(paramValues);
 
-            switch (Enum.<QueueType>valueOf(QueueType.class, qType)) {
+            switch (qType) {
                 case ACTIVE_MQ:
                     return ActiveMQConnecStringtData.fromStringParameters(params);
                 case WEBSPHERE_MQ:
@@ -66,13 +64,25 @@ public class QueueConnectStringData {
     }
 
     public String fromConnectData(QueueConnectData qcd) {
+        if (qcd == null) {
+            throw new UnsupportedOperationException("Unknown QueueConnectData type: null");
+        }
+        if (qcd instanceof ActiveMQConnectData) {
+            return fromConnectData((ActiveMQConnectData) qcd);
+        }
+        if (qcd instanceof OracleAQConnectData) {
+            return fromConnectData((OracleAQConnectData) qcd);
+        }
+        if (qcd instanceof WebSphereMQConnectData) {
+            return fromConnectData((WebSphereMQConnectData) qcd);
+        }
         throw new UnsupportedOperationException(
-                "Unknonw QueueConnectData type " + qcd == null ? "null" : qcd.getClass().getCanonicalName());
+                "Unknown QueueConnectData type " + qcd.getClass().getCanonicalName());
     }
 
     public String fromConnectData(ActiveMQConnectData qcd) {
         List<String> params = new ArrayList<String>();
-        params.add(QTYPE.toNamedParameterObject(QueueType.ACTIVE_MQ.name()));
+        params.add(QTYPE.toNamedParameterObject(QueueType.ACTIVE_MQ));
         params.addAll(ActiveMQConnecStringtData.fromConnectData(qcd).toParameters());
 
         return new CSVStringList(params).serializeToString();
@@ -80,7 +90,7 @@ public class QueueConnectStringData {
 
     public String fromConnectData(OracleAQConnectData qcd) {
         List<String> params = new ArrayList<String>();
-        params.add(QTYPE.toNamedParameterObject(QueueType.ORACLE_AQ.name()));
+        params.add(QTYPE.toNamedParameterObject(QueueType.ORACLE_AQ));
         params.addAll(OracleAQConnectStringData.fromConnectData(qcd).toParameters());
 
         return new CSVStringList(params).serializeToString();
@@ -88,7 +98,7 @@ public class QueueConnectStringData {
 
     public String fromConnectData(WebSphereMQConnectData qcd) {
         List<String> params = new ArrayList<String>();
-        params.add(QTYPE.toNamedParameterObject(QueueType.WEBSPHERE_MQ.name()));
+        params.add(QTYPE.toNamedParameterObject(QueueType.WEBSPHERE_MQ));
         params.addAll(WebSphereMQConnectStringData.fromConnectData(qcd).toParameters());
 
         return new CSVStringList(params).serializeToString();

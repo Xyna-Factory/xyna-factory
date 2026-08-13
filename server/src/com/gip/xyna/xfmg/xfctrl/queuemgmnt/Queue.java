@@ -58,6 +58,7 @@ class Queue extends Storable<Queue> implements IQueue {
       public static final String CONFIG_VERSION = "version";
       public static final String CONNECT_DATA_STR = "connectDataStr";
       public static final String QUEUE_TYPE_STR = "queueTypeStr";
+      public static final String EXTERNAL_NAME_ENV = "externalNameEnv";
     }
   }
 
@@ -68,6 +69,7 @@ class Queue extends Storable<Queue> implements IQueue {
 
       queue.setExternalName(rs.getString(Constant.ColName.EXTERNAL_NAME));
       queue.setUniqueName(rs.getString(Constant.ColName.UNIQUE_NAME));
+      queue.setExternalNameEnv(rs.getString(Constant.ColName.EXTERNAL_NAME_ENV));
 
       Integer savedVersion = rs.getInt(Constant.ColName.CONFIG_VERSION);
 
@@ -108,6 +110,9 @@ class Queue extends Storable<Queue> implements IQueue {
   @Column(name = Constant.ColName.QUEUE_TYPE_STR)
   private String queueTypeStr;
 
+  @Column(name = Constant.ColName.EXTERNAL_NAME_ENV)
+  private String externalNameEnv;
+
   @Override
   public ResultSetReader<? extends Queue> getReader() {
     return new Reader();
@@ -127,6 +132,7 @@ class Queue extends Storable<Queue> implements IQueue {
     this.setQueueType(data.getQueueType());
     this.setQueueTypeStr(data.getQueueTypeStr());
     this.setVersion(data.getVersion());
+    this.setExternalNameEnv(data.getExternalNameEnv());
   }
 
 
@@ -150,6 +156,15 @@ class Queue extends Storable<Queue> implements IQueue {
   @Override
   public void setExternalName(String externalName) {
     this.externalName = externalName;
+  }
+
+  public String getExternalNameEnv() {
+    return externalNameEnv;
+  }
+
+
+  public void setExternalNameEnv(String externalNameEnv) {
+    this.externalNameEnv = externalNameEnv;
   }
 
  @Override
@@ -243,6 +258,7 @@ class Queue extends Storable<Queue> implements IQueue {
     StringBuilder s = new StringBuilder("Queue {  ");
     s.append("UniqueName : ").append(this.getUniqueName()).append(", ");
     s.append("ExternalName : ").append(this.getExternalName()).append(", ");
+    s.append("ExternalNameEnv : ").append(this.getExternalNameEnv()).append(", ");
     s.append("QueueType: ").append(this.getQueueTypeForCurrentVersion().toString()).append(", ");
     s.append("ConnectData : ").append(this.getConnectDataForCurrentVersion().toString());
     if (this.getVersion() != null) {
