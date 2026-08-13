@@ -144,7 +144,10 @@ public class ActiveMQConnecStringtData extends ActiveMQConnectData {
 
             ActiveMQConnecStringtData qcd = new ActiveMQConnecStringtData(new ActiveMQConnectData());
             qcd.setHostname(HOSTNAME_PARAM.getFromMap(paramValues));
-            qcd.setPort(PORT_PARAM.getFromMap(paramValues));
+            Integer port = PORT_PARAM.getFromMap(paramValues);
+            if (port != null) {
+                qcd.setPort(port);
+            }
 
             qcd.setHostnameEnv(HOSTNAME_ENV_PARAM.getFromMap(paramValues));
             qcd.setPortEnv(PORT_ENV_PARAM.getFromMap(paramValues));
