@@ -264,6 +264,8 @@
  <target name="buildTest" depends="build" description="buildTest" >
    <delete dir="${basedir}/classes" />
    <mkdir dir="${basedir}/classes" />
+   <mkdir dir="${basedir}/lib.test" />
+   <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/lib.test" scopes="test" />
    <javac debug="on"
           encoding="iso8859-1"
           fork="yes"
@@ -274,6 +276,11 @@
      <classpath path="${basedir}/classes" />
      <classpath>
        <fileset dir="${basedir}/lib">
+         <include name="**/*.jar" />
+       </fileset>
+     </classpath>
+     <classpath>
+       <fileset dir="${basedir}/lib.test">
          <include name="**/*.jar" />
        </fileset>
      </classpath>
