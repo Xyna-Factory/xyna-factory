@@ -18,93 +18,288 @@
 
 package com.gip.xyna.xfmg.xfctrl.queuemgmnt;
 
+
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.gip.xyna.utils.misc.StringParameter;
 import com.gip.xyna.utils.misc.StringParameter.StringParameterParsingException;
 import com.gip.xyna.utils.misc.StringParameter.Unmatched;
+import com.gip.xyna.utils.misc.EnvironmentVariable.StringEnvironmentVariable;
+import com.gip.xyna.utils.misc.EnvironmentVariable.IntegerEnvironmentVariable;
 import com.gip.xyna.utils.misc.Documentation;
+
+
 
 public class WebSphereMQConnectStringData extends WebSphereMQConnectData {
 
-      private static final StringParameter<String> HOSTNAME_PARAM 
-      = StringParameter.typeString("hostname")
-        .label("hostname")
-        .documentation(Documentation
-            .en("FQDN hostname or IP of queue manager.")
-            .de("FQDN Hostname oder IP des Queue-Managers.")
-            .build())
-        .mandatory()
-        .build();
+    private StringEnvironmentVariable hostnameEnv;
+    private IntegerEnvironmentVariable portEnv;
+    private StringEnvironmentVariable queueManagerEnv;
+    private StringEnvironmentVariable channelEnv;
 
-      private static final StringParameter<Integer> PORT_PARAM 
-      = StringParameter.typeInteger("port")
-        .label("port number")
-        .documentation(Documentation
-            .en("Port of queue manager.")
-            .de("Port des Queue-Managers.")
-            .build())
-        .mandatory()
-        .build();
 
-      private static final StringParameter<String> QMGR_PARAM 
-      = StringParameter.typeString("queueManager")
-        .label("queueManager")
-        .documentation(Documentation
-            .en("Name of the queue manager.")
-            .de("Name des Queue-Managers.")
-            .build())
-        .mandatory()
-        .build();
+    public StringEnvironmentVariable getHostnameEnv() {
+        return hostnameEnv;
+    }
 
-      private static final StringParameter<String> CHANNEL_PARAM 
-      = StringParameter.typeString("channel")
-        .label("channel")
-        .documentation(Documentation
-            .en("Name of the used channel.")
-            .de("Name des zu verwendenden Kanals.")
-            .build())
-        .mandatory()
-        .build();
 
-    public static final List<StringParameter<?>> allParams = StringParameter.asList(HOSTNAME_PARAM, PORT_PARAM, QMGR_PARAM, CHANNEL_PARAM);
+    public void setHostnameEnv(StringEnvironmentVariable hostnameEnv) {
+        this.hostnameEnv = hostnameEnv;
+    }
+
+
+    public IntegerEnvironmentVariable getPortEnv() {
+        return portEnv;
+    }
+
+
+    public void setPortEnv(IntegerEnvironmentVariable portEnv) {
+        this.portEnv = portEnv;
+    }
+
+
+    public StringEnvironmentVariable getQueueManagerEnv() {
+        return queueManagerEnv;
+    }
+
+
+    public void setQueueManagerEnv(StringEnvironmentVariable queueManagerEnv) {
+        this.queueManagerEnv = queueManagerEnv;
+    }
+
+
+    public StringEnvironmentVariable getChannelEnv() {
+        return channelEnv;
+    }
+
+
+    public void setChannelEnv(StringEnvironmentVariable channelEnv) {
+        this.channelEnv = channelEnv;
+    }
+
+
+    @Override
+    public String getHostname() {
+        if (hostnameEnv != null) {
+            return hostnameEnv.getValue().orElse(getConfiguredHostname());
+        }
+
+        return getConfiguredHostname();
+    }
+
+
+    @Override
+    public int getPort() {
+        if (portEnv != null) {
+            return portEnv.getValue().orElse(getConfiguredPort());
+        }
+
+        return getConfiguredPort();
+    }
+
+
+    @Override
+    public String getQueueManager() {
+        if (queueManagerEnv != null) {
+            return queueManagerEnv.getValue().orElse(getConfiguredQueueManager());
+        }
+
+        return getConfiguredQueueManager();
+    }
+
+
+    @Override
+    public String getChannel() {
+        if (channelEnv != null) {
+            return channelEnv.getValue().orElse(getConfiguredChannel());
+        }
+
+        return getConfiguredChannel();
+    }
+
+
+    private static final StringParameter<String> HOSTNAME_PARAM =
+            StringParameter.typeString("hostname").label("hostname").documentation(Documentation.en("FQDN hostname or IP of queue manager.")
+                    .de("FQDN Hostname oder IP des Queue-Managers.").build()).build();
+
+    private static final StringParameter<StringEnvironmentVariable> HOSTNAME_ENV_PARAM =
+            StringParameter.typeEnvironmentVariable(StringEnvironmentVariable.class, "hostnameEnv").label("hostname env var")
+                    .documentation(Documentation.en("Env var for FQDN hostname or IP of queue manager.")
+                            .de("Umgebungsvariable für FQDN Hostname oder IP des Queue-Managers.").build())
+                    .build();
+
+    private static final StringParameter<Integer> PORT_PARAM = StringParameter.typeInteger("port").label("port number")
+            .documentation(Documentation.en("Port of queue manager.").de("Port des Queue-Managers.").build()).build();
+
+    private static final StringParameter<IntegerEnvironmentVariable> PORT_ENV_PARAM = StringParameter
+            .typeEnvironmentVariable(IntegerEnvironmentVariable.class, "portEnv").label("port number env var").documentation(Documentation
+                    .en("Env var for port of queue manager.").de("Umgebungsvariable für Port des Queue-Managers.").build())
+            .build();
+
+    private static final StringParameter<String> QMGR_PARAM = StringParameter.typeString("queueManager").label("queueManager")
+            .documentation(Documentation.en("Name of the queue manager.").de("Name des Queue-Managers.").build()).build();
+
+    private static final StringParameter<StringEnvironmentVariable> QMGR_ENV_PARAM =
+            StringParameter.typeEnvironmentVariable(StringEnvironmentVariable.class, "queueManagerEnv").label("queueManager env var")
+                    .documentation(Documentation.en("Env var for name of the queue manager.")
+                            .de("Umgebungsvariable für Name des Queue-Managers.").build())
+                    .build();
+
+    private static final StringParameter<String> CHANNEL_PARAM = StringParameter.typeString("channel").label("channel")
+            .documentation(Documentation.en("Name of the used channel.").de("Name des zu verwendenden Kanals.").build()).build();
+
+    private static final StringParameter<StringEnvironmentVariable> CHANNEL_ENV_PARAM = StringParameter
+            .typeEnvironmentVariable(StringEnvironmentVariable.class, "channelEnv").label("channel env var").documentation(Documentation
+                    .en("Env var for name of the used channel.").de("Umgebungsvariable für Name des zu verwendenden Kanals.").build())
+            .build();
+
+    public static final List<StringParameter<?>> allParams =
+            Collections.unmodifiableList(StringParameter.asList(HOSTNAME_PARAM, PORT_PARAM, QMGR_PARAM, CHANNEL_PARAM, HOSTNAME_ENV_PARAM,
+                                                                PORT_ENV_PARAM, QMGR_ENV_PARAM, CHANNEL_ENV_PARAM));
+
 
     private WebSphereMQConnectStringData(WebSphereMQConnectData qcd) {
-        this.setHostname(qcd.getHostname());
-        this.setPort(qcd.getPort());
-        this.setQueueManager(qcd.getQueueManager());
-        this.setChannel(qcd.getChannel());
-    };
+        Objects.requireNonNull(qcd, "WebSphereMQConnectData must not be null");
+
+        if (qcd instanceof WebSphereMQConnectStringData) {
+            var qcsd = (WebSphereMQConnectStringData) qcd;
+            this.setHostname(qcsd.getConfiguredHostname());
+            this.setPort(qcsd.getConfiguredPort());
+            this.setQueueManager(qcsd.getConfiguredQueueManager());
+            this.setChannel(qcsd.getConfiguredChannel());
+
+            this.setHostnameEnv(qcsd.getHostnameEnv());
+            this.setPortEnv(qcsd.getPortEnv());
+            this.setQueueManagerEnv(qcsd.getQueueManagerEnv());
+            this.setChannelEnv(qcsd.getChannelEnv());
+        } else {
+            this.setHostname(qcd.getHostname());
+            this.setPort(qcd.getPort());
+            this.setQueueManager(qcd.getQueueManager());
+            this.setChannel(qcd.getChannel());
+        }
+    }
+
+
+    private String getConfiguredHostname() {
+        return super.getHostname();
+    }
+
+
+    private int getConfiguredPort() {
+        return super.getPort();
+    }
+
+
+    private String getConfiguredQueueManager() {
+        return super.getQueueManager();
+    }
+
+
+    private String getConfiguredChannel() {
+        return super.getChannel();
+    }
+
+
+    @Override
+    public String toString() {
+        return "WebSphereMQConnectStringData {hostnameEnv:" + hostnameEnv + ", portEnv:" + portEnv + ", queueManagerEnv:" + queueManagerEnv
+                + ", channelEnv:" + channelEnv + ", " + super.toString() + "}";
+    }
+
 
     public static WebSphereMQConnectStringData fromStringParameters(List<String> parameters) {
         Map<String, Object> paramValues;
         try {
             paramValues = StringParameter.parse(parameters).unmatchedKey(Unmatched.Ignore).with(allParams);
-            WebSphereMQConnectData qcd = new WebSphereMQConnectData();
-            qcd.setHostname(HOSTNAME_PARAM.getFromMap(paramValues));
-            qcd.setPort(PORT_PARAM.getFromMap(paramValues));
-            qcd.setQueueManager(QMGR_PARAM.getFromMap(paramValues));
-            qcd.setChannel(CHANNEL_PARAM.getFromMap(paramValues));
+            WebSphereMQConnectStringData qcsd = new WebSphereMQConnectStringData(new WebSphereMQConnectData());
+            qcsd.setHostname(HOSTNAME_PARAM.getFromMap(paramValues));
+            qcsd.setPort(PORT_PARAM.getFromMap(paramValues));
+            qcsd.setQueueManager(QMGR_PARAM.getFromMap(paramValues));
+            qcsd.setChannel(CHANNEL_PARAM.getFromMap(paramValues));
 
-            return new WebSphereMQConnectStringData(qcd);
+            qcsd.setHostnameEnv(HOSTNAME_ENV_PARAM.getFromMap(paramValues));
+            qcsd.setPortEnv(PORT_ENV_PARAM.getFromMap(paramValues));
+            qcsd.setQueueManagerEnv(QMGR_ENV_PARAM.getFromMap(paramValues));
+            qcsd.setChannelEnv(CHANNEL_ENV_PARAM.getFromMap(paramValues));
+
+            validateMandatoryValueOrEnv(qcsd);
+
+            return qcsd;
         } catch (StringParameterParsingException e) {
-
+            throw new IllegalArgumentException("Unable to parse WebSphereMQ connect data parameters", e);
         }
-        return null;
     }
 
+
+    private static void validateMandatoryValueOrEnv(WebSphereMQConnectStringData qcsd) {
+        requireTextValueOrEnvVar("hostname", qcsd.getHostname(), qcsd.getHostnameEnv());
+        requirePositiveIntValueOrEnvVar("port", qcsd.getPort(), qcsd.getPortEnv());
+        requireTextValueOrEnvVar("queueManager", qcsd.getQueueManager(), qcsd.getQueueManagerEnv());
+        requireTextValueOrEnvVar("channel", qcsd.getChannel(), qcsd.getChannelEnv());
+    }
+
+
+    private static void requireTextValueOrEnvVar(String parameterName, String value, StringEnvironmentVariable envVar) {
+        if (!hasText(value) && envVar == null) {
+            throw new IllegalArgumentException("Missing mandatory parameter '" + parameterName + "': provide either '" + parameterName
+                    + "' or '" + parameterName + "Env'.");
+        }
+    }
+
+
+    private static void requirePositiveIntValueOrEnvVar(String parameterName, int value, IntegerEnvironmentVariable envVar) {
+        if (value <= 0 && envVar == null) {
+            throw new IllegalArgumentException("Missing mandatory parameter '" + parameterName + "': provide either '" + parameterName
+                    + "' or '" + parameterName + "Env'.");
+        }
+    }
+
+
+    private static boolean hasText(String value) {
+        return value != null && !value.trim().isEmpty();
+    }
+
+
     public static WebSphereMQConnectStringData fromConnectData(WebSphereMQConnectData qcd) {
+        Objects.requireNonNull(qcd, "WebSphereMQConnectData must not be null");
         return new WebSphereMQConnectStringData(qcd);
     }
 
+
     public List<String> toParameters() {
-        List<String> params = new ArrayList<String>();
-        params.add(HOSTNAME_PARAM.toNamedParameterObject(getHostname()));
-        params.add(PORT_PARAM.toNamedParameterObject(getPort()));
-        params.add(QMGR_PARAM.toNamedParameterObject(getQueueManager()));
-        params.add(CHANNEL_PARAM.toNamedParameterObject(getChannel()));
+        List<String> params = new ArrayList<>();
+        // Serialize explicitly configured base values and keep env-var references separate.
+        if (getConfiguredHostname() != null) {
+            params.add(HOSTNAME_PARAM.toNamedParameterObject(getConfiguredHostname()));
+        }
+        if (getConfiguredPort() > 0) {
+            params.add(PORT_PARAM.toNamedParameterObject(getConfiguredPort()));
+        }
+        if (getConfiguredQueueManager() != null) {
+            params.add(QMGR_PARAM.toNamedParameterObject(getConfiguredQueueManager()));
+        }
+        if (getConfiguredChannel() != null) {
+            params.add(CHANNEL_PARAM.toNamedParameterObject(getConfiguredChannel()));
+        }
+
+        if (getHostnameEnv() != null) {
+            params.add(HOSTNAME_ENV_PARAM.toNamedParameterObject(getHostnameEnv()));
+        }
+        if (getPortEnv() != null) {
+            params.add(PORT_ENV_PARAM.toNamedParameterObject(getPortEnv()));
+        }
+        if (getQueueManagerEnv() != null) {
+            params.add(QMGR_ENV_PARAM.toNamedParameterObject(getQueueManagerEnv()));
+        }
+        if (getChannelEnv() != null) {
+            params.add(CHANNEL_ENV_PARAM.toNamedParameterObject(getChannelEnv()));
+        }
 
         return params;
     }
