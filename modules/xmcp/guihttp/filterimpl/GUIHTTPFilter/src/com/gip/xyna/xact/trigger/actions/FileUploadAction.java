@@ -33,6 +33,7 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.trigger.FilterAction;
+import com.gip.xyna.xact.trigger.GUIHTTPFilterParameter;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xdev.xfractmod.xmdm.ConnectionFilter.FilterResponse;
 import com.gip.xyna.xfmg.xfctrl.filemgmt.FileManagement;
@@ -45,6 +46,17 @@ public class FileUploadAction implements FilterAction {
 
   
   private static Logger logger = CentralFactoryLogging.getLogger(FileUploadAction.class);
+  private long fileUploadSizeLimit = -1;
+  
+  @Override
+  public void init(GUIHTTPFilterParameter param) {
+    if (param == null) { return; }
+    if (param.getFileUploadSizeLimitKB() < 0) {
+      fileUploadSizeLimit = -1;
+    } else {
+      fileUploadSizeLimit = 1024L * (long) param.getFileUploadSizeLimitKB();
+    }
+  }
   
   public boolean match(String uri, String method) {
     return uri.startsWith("/upload");
@@ -70,6 +82,9 @@ public class FileUploadAction implements FilterAction {
     
     
     FileUpload upload = new FileUpload();
+    if (fileUploadSizeLimit >= 0) {
+      upload.setFileSizeMax(fileUploadSizeLimit);
+    }
     
     StringBuilder response = new StringBuilder();
      

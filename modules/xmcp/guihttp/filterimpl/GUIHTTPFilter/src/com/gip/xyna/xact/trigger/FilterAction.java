@@ -50,5 +50,6 @@ public interface FilterAction {
    */
   void appendForm(StringBuilder sb, String string);
 
-   
+  default void init(GUIHTTPFilterParameter param) {}
+  
 }

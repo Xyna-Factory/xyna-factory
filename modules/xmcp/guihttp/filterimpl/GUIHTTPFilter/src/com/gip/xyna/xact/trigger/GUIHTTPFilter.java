@@ -34,6 +34,7 @@ import com.gip.xyna.xact.trigger.actions.FileUploadAction;
 import com.gip.xyna.xact.trigger.actions.IndexAction;
 import com.gip.xyna.xact.trigger.actions.SendCrossDomainXmlAction;
 import com.gip.xyna.xdev.xfractmod.xmdm.ConnectionFilter;
+import com.gip.xyna.xdev.xfractmod.xmdm.FilterConfigurationParameter;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 
 
@@ -63,6 +64,27 @@ public class GUIHTTPFilter extends ConnectionFilter<HTTPTriggerConnection> {
     allFilterActions.add( new IndexAction(allFilterActions) );
   }
   
+  private GUIHTTPFilterParameter filterParam = new GUIHTTPFilterParameter();
+
+  
+  @Override
+  public FilterConfigurationParameter createFilterConfigurationTemplate() {
+    return new GUIHTTPFilterParameter();
+  }
+
+  
+  @Override
+  public FilterResponse createXynaOrder(HTTPTriggerConnection tc, FilterConfigurationParameter input) throws XynaException {
+    if ((input != null) && !input.equals(filterParam)) {
+      if (logger.isInfoEnabled()) {
+        logger.info("Updating GUIHTTP filter configuration: " + (filterParam != null ? filterParam : "none") + " => "+ input);
+      }
+      filterParam = (GUIHTTPFilterParameter)input;
+    }
+    return createXynaOrder(tc);
+  }
+
+  
   /**
    * Analyzes TriggerConnection and creates XynaOrder if it accepts the connection.
    * The method return a FilterResponse object, which can include the XynaOrder if the filter is responsibleb for the request.
@@ -87,6 +109,7 @@ public class GUIHTTPFilter extends ConnectionFilter<HTTPTriggerConnection> {
     String method = tc.getMethod();
     for( FilterAction fa : allFilterActions ) {
       if( fa.match(uri, method) ) {
+        fa.init(filterParam);
         return fa.act( logger, tc );
       }
     }
