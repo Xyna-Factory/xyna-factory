@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 import com.gip.xyna.utils.misc.EnvironmentVariable.StringEnvironmentVariable;
 import com.gip.xyna.utils.misc.Documentation;
@@ -39,6 +40,17 @@ public class OracleAQConnectStringData extends OracleAQConnectData {
     private StringEnvironmentVariable jdbcEnv;
     private StringEnvironmentVariable userEnv;
     private StringEnvironmentVariable passwordEnv;
+    private String uuid;
+
+
+    public String getUuid() {
+        return uuid;
+    }
+
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
 
     public StringEnvironmentVariable getJdbcEnv() {
@@ -127,8 +139,13 @@ public class OracleAQConnectStringData extends OracleAQConnectData {
                     .en("Env var for password of the DB user.").de("Umgebungsvariable für Passwort des DB Nutzers.").build())
             .build();
 
+    private static final StringParameter<String> UUID_PARAM = StringParameter.typeString("uuid").label("uuid")
+            .documentation(Documentation.en("Unique identifier for the secret used to encrypt the password.")
+                    .de("Eindeutige Kennung für das Secret zur Verschlüsselung des Passworts.").build())
+            .build();
+
     public static final List<StringParameter<?>> allParams = Collections.unmodifiableList(StringParameter
-            .asList(JDBC_PARAM, USER_PARAM, PASSWORD_PARAM, JDBC_ENV_PARAM, USER_ENV_PARAM, PASSWORD_ENV_PARAM));
+            .asList(UUID_PARAM, JDBC_PARAM, USER_PARAM, PASSWORD_PARAM, JDBC_ENV_PARAM, USER_ENV_PARAM, PASSWORD_ENV_PARAM));
 
 
     private OracleAQConnectStringData(OracleAQConnectData qcd) {
@@ -139,6 +156,7 @@ public class OracleAQConnectStringData extends OracleAQConnectData {
             this.setJdbcUrl(qcsd.getConfiguredJdbcUrl());
             this.setUserName(qcsd.getConfiguredUserName());
             this.setPassword(qcsd.getConfiguredPassword());
+            this.setUuid(qcsd.getUuid());
 
             this.setJdbcEnv(qcsd.getJdbcEnv());
             this.setUserEnv(qcsd.getUserEnv());
@@ -177,10 +195,16 @@ public class OracleAQConnectStringData extends OracleAQConnectData {
         Map<String, Object> paramValues;
         try {
             paramValues = StringParameter.parse(parameters).unmatchedKey(Unmatched.Ignore).with(allParams);
+            String uuid = UUID_PARAM.getFromMap(paramValues);
+            if (uuid == null || uuid.trim().isEmpty()) {
+                throw new IllegalArgumentException("Missing mandatory UUID parameter for OracleAQ connection data.");
+            }
+
             OracleAQConnectStringData qcd = new OracleAQConnectStringData(new OracleAQConnectData());
             qcd.setJdbcUrl(JDBC_PARAM.getFromMap(paramValues));
             qcd.setUserName(USER_PARAM.getFromMap(paramValues));
-            qcd.setPassword(PASSWORD_PARAM.getFromMap(paramValues));
+            qcd.setPassword(QueueConnectStringData.decryptPassword(uuid, PASSWORD_PARAM.getFromMap(paramValues)));
+            qcd.setUuid(uuid);
 
             qcd.setJdbcEnv(JDBC_ENV_PARAM.getFromMap(paramValues));
             qcd.setUserEnv(USER_ENV_PARAM.getFromMap(paramValues));
@@ -222,7 +246,12 @@ public class OracleAQConnectStringData extends OracleAQConnectData {
 
 
     public List<String> toParameters() {
+        if (getUuid() == null || getUuid().trim().isEmpty()) {
+            setUuid(UUID.randomUUID().toString());
+        }
+
         List<String> params = new ArrayList<String>();
+        params.add(UUID_PARAM.toNamedParameterObject(getUuid()));
         if (getConfiguredJdbcUrl() != null) {
             params.add(JDBC_PARAM.toNamedParameterObject(getConfiguredJdbcUrl()));
         }
@@ -230,7 +259,7 @@ public class OracleAQConnectStringData extends OracleAQConnectData {
             params.add(USER_PARAM.toNamedParameterObject(getConfiguredUserName()));
         }
         if (getConfiguredPassword() != null) {
-            params.add(PASSWORD_PARAM.toNamedParameterObject(getConfiguredPassword()));
+            params.add(PASSWORD_PARAM.toNamedParameterObject(QueueConnectStringData.encryptPassword(getUuid(), getConfiguredPassword())));
         }
 
         if (getJdbcEnv() != null) {
