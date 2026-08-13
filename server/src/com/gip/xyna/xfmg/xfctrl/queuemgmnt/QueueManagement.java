@@ -198,47 +198,15 @@ public class QueueManagement extends FunctionGroup {
   }
 
   public static QueueConnectData createQueueConnectData(QueueType qtype, String[] connectParams) throws IllegalArgumentException {
-    QueueConnectData result = null;
-
     if (qtype == QueueType.ORACLE_AQ) {
-      if (connectParams.length != 3) {
-        throw new IllegalArgumentException("Error: Connect parameter missing.");
-      }
-      checkParameter("userName", connectParams[0]);
-      checkParameter("password", connectParams[1]);
-      checkParameter("jdbcUrl", connectParams[2]);
-      OracleAQConnectData connectData = new OracleAQConnectData();
-      connectData.setUserName(connectParams[0]);
-      connectData.setPassword(connectParams[1]);
-      connectData.setJdbcUrl(connectParams[2]);
-
-      result = connectData;
+      return OracleAQConnectStringData.fromRegisterQueueParameters(connectParams);
     } else if (qtype == QueueType.WEBSPHERE_MQ) {
-      if (connectParams.length != 4) {
-        throw new IllegalArgumentException("Error: Wrong number of connect parameters.");
-      }
-      WebSphereMQConnectData connectData = new WebSphereMQConnectData();
-      connectData.setQueueManager(checkParameter("queueManager", connectParams[0]));
-      connectData.setHostname(checkParameter("hostname", connectParams[1]));
-      connectData.setPort(checkParameter("port", connectParams[2]));
-      connectData.setChannel(checkParameter("channel", connectParams[3]));
-      result = connectData;
+      return WebSphereMQConnectStringData.fromRegisterQueueParameters(connectParams);
     } else if (qtype == QueueType.ACTIVE_MQ) {
-      if (connectParams.length != 2) {
-        throw new IllegalArgumentException("Error: Wrong number of connect parameters.");
-      }
-      ActiveMQConnectData connectData = new ActiveMQConnectData();
-      connectData.setHostname(checkParameter("hostname", connectParams[0]));
-      String portVal = checkParameter("port", connectParams[1]);
-      try {
-        connectData.setPort(Integer.parseInt(portVal));
-      } catch (Exception e) {
-        throw new IllegalArgumentException("Error: Cannot parse int: " + portVal);
-      }
-      result = connectData;
+      return ActiveMQConnecStringtData.fromRegisterQueueParameters(connectParams);
     }
 
-    return result;
+    throw new IllegalArgumentException("Error: Unknown queue type " + qtype);
   }
 
   public static String checkParameter(String name, String value) {
