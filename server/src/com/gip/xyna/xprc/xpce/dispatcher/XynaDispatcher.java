@@ -534,10 +534,10 @@ public abstract class XynaDispatcher extends FunctionGroup {
             break;
           case JAVA_DESTINATION :
             throw new RuntimeException("Invalid DispatcherDestination configuration for key = '" + dds.getDestinationKey() +
-                                       "' and ID = " + dds.getId() + ". Destination type Java not dupported.");
+                                       "' and ID = " + dds.getId() + ". Destination type Java not supported.");
           case SERVICE_DESTINATION :
             throw new RuntimeException("Invalid DispatcherDestination configuration for key = '" + dds.getDestinationKey() +
-                                       "' and ID = " + dds.getId() + ". Destination type Service not dupported.");
+                                       "' and ID = " + dds.getId() + ". Destination type Service not supported.");
           default :
             throw new RuntimeException("Invalid DispatcherDestination configuration for key = '" + dds.getDestinationKey() +
                                        "' and ID = " + dds.getId() + ". Unknown destination type: '" + dds.getDestinationType() + "'.");
