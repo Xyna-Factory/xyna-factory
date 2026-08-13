@@ -147,6 +147,22 @@ public class QueueParameterHandlingTest extends TestCase {
   }
 
 
+  public void testCurrentVersionEncryptsOracleAQPasswordInCsvString() {
+    QueueConnectStringData converter = new QueueConnectStringData();
+    String serialized = converter.fromConnectData(createOracleAqConnectData("jdbc:oracle:thin:@//db.example:1521/XE", "queue_user", "super-secret"));
+
+    assertTrue(serialized.contains("password="));
+    assertFalse(serialized.contains("super-secret"));
+
+    QueueConnectData resolvedConnectData = converter.fromStringParameters(serialized);
+    assertTrue(resolvedConnectData instanceof OracleAQConnectData);
+    OracleAQConnectData oracle = (OracleAQConnectData) resolvedConnectData;
+    assertEquals("jdbc:oracle:thin:@//db.example:1521/XE", oracle.getJdbcUrl());
+    assertEquals("queue_user", oracle.getUserName());
+    assertEquals("super-secret", oracle.getPassword());
+  }
+
+
   public void testCurrentVersionConvertsWebSphereMQConnectDataToStringAndReadsItBack() {
     Queue queue = new Queue();
     queue.setVersion(1);
