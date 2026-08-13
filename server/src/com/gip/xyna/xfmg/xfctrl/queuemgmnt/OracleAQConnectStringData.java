@@ -21,6 +21,7 @@ package com.gip.xyna.xfmg.xfctrl.queuemgmnt;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -216,6 +217,85 @@ public class OracleAQConnectStringData extends OracleAQConnectData {
         } catch (StringParameterParsingException e) {
             throw new IllegalArgumentException("Unable to parse OracleAQ connect data parameters", e);
         }
+    }
+
+
+    public static QueueConnectData fromRegisterQueueParameters(String[] connectParams) {
+        if (connectParams == null || connectParams.length == 0) {
+            throw new IllegalArgumentException("Error: Connect parameter missing.");
+        }
+
+        if (isNamedParameterSyntax(connectParams)) {
+            List<String> namedParams = new ArrayList<String>(Arrays.asList(connectParams));
+            Map<String, Object> paramValues;
+            try {
+                paramValues = StringParameter.parse(namedParams).unmatchedKey(Unmatched.Ignore)
+                        .with(StringParameter.asList(UUID_PARAM, PASSWORD_PARAM));
+            } catch (StringParameterParsingException e) {
+                throw new IllegalArgumentException("Unable to parse OracleAQ connect data parameters", e);
+            }
+
+            String uuid = UUID_PARAM.getFromMap(paramValues);
+            String password = PASSWORD_PARAM.getFromMap(paramValues);
+
+            if (!hasText(uuid)) {
+                uuid = UUID.randomUUID().toString();
+            }
+            String encryptedPassword = hasText(password) ? QueueConnectStringData.encryptPassword(uuid, password) : null;
+
+            List<String> normalizedParams = new ArrayList<String>();
+            normalizedParams.add(UUID_PARAM.toNamedParameterObject(uuid));
+
+            for (String parameter : namedParams) {
+                if (parameter != null && parameter.startsWith(UUID_PARAM.getName() + "=")) {
+                    continue;
+                }
+
+                if (parameter != null && parameter.startsWith(PASSWORD_PARAM.getName() + "=")) {
+                    if (encryptedPassword != null) {
+                        normalizedParams.add(PASSWORD_PARAM.toNamedParameterObject(encryptedPassword));
+                    } else {
+                        normalizedParams.add(parameter);
+                    }
+                    continue;
+                }
+
+                normalizedParams.add(parameter);
+            }
+
+            return fromStringParameters(normalizedParams);
+        }
+
+        if (connectParams.length != 3) {
+            throw new IllegalArgumentException("Error: Connect parameter missing.");
+        }
+
+        OracleAQConnectData connectData = new OracleAQConnectData();
+        connectData.setUserName(QueueManagement.checkParameter("userName", connectParams[0]));
+        connectData.setPassword(QueueManagement.checkParameter("password", connectParams[1]));
+        connectData.setJdbcUrl(QueueManagement.checkParameter("jdbcUrl", connectParams[2]));
+        return connectData;
+    }
+
+
+    private static boolean isNamedParameterSyntax(String[] connectParams) {
+        int namedParameters = 0;
+        for (String param : connectParams) {
+            if (isNamedParameter(param)) {
+                namedParameters++;
+            }
+        }
+
+        if (namedParameters > 0 && namedParameters < connectParams.length) {
+            throw new IllegalArgumentException("Error: Mixed named and unnamed connect parameters are not supported.");
+        }
+
+        return namedParameters == connectParams.length;
+    }
+
+
+    private static boolean isNamedParameter(String param) {
+        return param != null && param.contains("=");
     }
 
 
