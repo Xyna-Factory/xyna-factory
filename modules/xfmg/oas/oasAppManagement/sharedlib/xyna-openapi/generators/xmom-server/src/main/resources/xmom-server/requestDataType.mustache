@@ -53,6 +53,9 @@ return result.getResult();
         <Data ID="2" Label="{{parameterLabel}}" VariableName="{{parameterVarName}}2"
         ReferenceName="{{parameterRefName}}" ReferencePath="{{parameterRefPath}}"/>
       </Output>
+      <Throws>
+        <Exception Label="JSONParserException" ReferenceName="JSONParserException" ReferencePath="xmcp.oas.exception" VariableName="jsonParserException"/>
+      </Throws>
       <SourceCode>
         <CodeSnippet Type="Java">
 {{parameterRefName}} ret = new {{parameterRefName}}();
@@ -143,6 +146,7 @@ try {
                 new xmcp.oas.datatype.JsonParsingError.Builder().error("Bad request").message("Request body could not be read properly.").instance()
             ).instance()
         ).instance();
+    throw exception;
 }
 {{/hasBody}}
 return ret;
