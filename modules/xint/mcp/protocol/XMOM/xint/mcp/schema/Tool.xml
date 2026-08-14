@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Tool" TypeName="Tool" TypePath="xint.mcp.schema" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Name" VariableName="name">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Unique identifier for the tool</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Titel" VariableName="titel">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Optional human-readable name of the tool for display purposes.</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Description" VariableName="description">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Human-readable description of functionality</Documentation>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="Icons" ReferenceName="Icon" ReferencePath="xint.mcp.schema" VariableName="icons">
+    <Meta>
+      <Documentation>Optional array of icons for display in user interfaces</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Input Schema" ReferenceName="JSONObject" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="inputSchema"/>
+  <Data Label="Output Schema" ReferenceName="JSONObject" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="outputSchema"/>
+  <Data Label="Annotations" ReferenceName="ToolAnnotations" ReferencePath="xint.mcp.schema" VariableName="annotations"/>
+  <Service Label="Tool" TypeName="Tool">
+    <Operation IsStatic="false" Label="Call" Name="call">
+      <Input>
+        <Data ID="5" Label="JSON Object" ReferenceName="JSONObject" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jSONObject5"/>
+      </Input>
+      <Output>
+        <Data ID="8" Label="Tool Call Result" ReferenceName="ToolCallResult" ReferencePath="xint.mcp.schema" VariableName="toolCallResult8"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return null;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
