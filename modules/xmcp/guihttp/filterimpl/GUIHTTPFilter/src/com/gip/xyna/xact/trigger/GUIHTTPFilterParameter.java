@@ -35,7 +35,7 @@ public class GUIHTTPFilterParameter extends FilterConfigurationParameter {
   public static final StringParameter<Integer> FILE_UPLOAD_SIZE_LIMIT_KB =
     StringParameter.typeInteger("fileUploadSizeLimitKB")
                     .documentation(Documentation
-                                    .de("Limit für Datei beim Upload in Kilobyte.")
+                                    .de("Limit für Dateigröße beim Upload in Kilobyte.")
                                     .en("File upload size limit in kilobytes.")
                                     .build())
                     .optional().defaultValue(-1).build();
