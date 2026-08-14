@@ -87,6 +87,9 @@ import com.gip.xyna.xnwh.persistence.PreparedQuery;
 import com.gip.xyna.xnwh.persistence.Query;
 import com.gip.xyna.xnwh.persistence.ResultSetReader;
 import com.gip.xyna.xnwh.persistence.Storable;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceConfigurationChangeListener;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceManagement;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceSynchronizer;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutable;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoResult;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoResultOneException;
@@ -138,10 +141,15 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
   }
   
   public static final String DEFAULT_NAME = "Cron Like Scheduler";
+  public static final String XYNA_CRONLIKE_SR = "xyna.cronlikeorder";
 
   private ODS ods;
   private volatile boolean schedulingStopped = false;
   private volatile boolean hideInternalOrders = true;
+
+  private volatile boolean sharedResourceConfigured;
+  private volatile CronSharedResourceProcessing cronSharedResourceProcessing;
+  private volatile CronSharedResourceChangeListener listener;
 
 
   public CronLikeScheduler() throws XynaException {
@@ -255,6 +263,16 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
   }
   
   public void initCronLikeScheduler() {
+
+    SharedResourceManagement srm = XynaFactory.getInstance().getXynaNetworkWarehouse().getSharedResourceManagement();
+    listener = new CronSharedResourceChangeListener(this);
+    srm.addSharedResource(XYNA_CRONLIKE_SR, listener);
+    sharedResourceConfigured = srm.hasConfiguredSynchronizer(XYNA_CRONLIKE_SR);
+    if (sharedResourceConfigured) {
+      enableSharedResourceManagement();
+      return;
+    }
+
       CronLikeOrder.setAlgorithm(DefaultCronLikeOrderStartUnderlyingOrderAlgorithm.singleInstance);
       initializeTimer();
       try {
@@ -473,6 +491,10 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
       }
       boolean usingForeignConnection = (con != null);
       CLOStore cloStore = new CLOStore(cronLikeTimer,newCronLikeOrder,prio,!usingForeignConnection,uniqueKeys);
+
+      if (sharedResourceConfigured) {
+        cronSharedResourceProcessing.createCron(newCronLikeOrder.getId());
+      }
 
       try {
         if (usingForeignConnection) {
@@ -753,6 +775,10 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
    */
   private boolean removeCronLikeOrderLocaly(ODSConnection con, final Long id) throws XPRC_CronRemovalException,
       PersistenceLayerException {
+
+    if(sharedResourceConfigured) {
+      cronSharedResourceProcessing.deleteCron(id);
+    }
 
     final boolean localConnection = con == null;
 
@@ -1479,6 +1505,13 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
   }
 
 
+  private boolean checkSharedResource(CronLikeOrder order) {
+    if(!sharedResourceConfigured) {
+      return true;
+    }
+    return cronSharedResourceProcessing.checkCron(order.getId());
+  }
+
   protected void readNextFromPersistenceLayer(ODSConnection con, int readsize)
                   throws PersistenceLayerException {
 
@@ -1518,7 +1551,7 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
             Iterator<CronLikeOrder> iter = cursorList.iterator();
             while(iter.hasNext() && added < readsize) {
               CronLikeOrder order = iter.next();
-              if (order.isEnabled()) {
+              if (order.isEnabled() && checkSharedResource(order)) {
                 synchronized (copyOfCronLikeTimer.getBlockingObject()) {
                   if (copyOfCronLikeTimer.isCleared()) {
                     //falls ein anderer Thread die Queue geleert hat, muss wieder von
@@ -1790,5 +1823,34 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
         applicationManagement.changeApplicationState(runtimeContext.getName(), ((Application) runtimeContext).getVersionName(), ApplicationState.RUNNING);
       }
     }
+  }
+
+  private void enableSharedResourceManagement() {
+    sharedResourceConfigured = true;
+    cronSharedResourceProcessing.start();
+  }
+
+
+  private void disableSharedResourcemanagement() {
+    sharedResourceConfigured = false;
+    cronSharedResourceProcessing.stop();
+  }
+  
+  private static class CronSharedResourceChangeListener implements SharedResourceConfigurationChangeListener {
+    private final CronLikeScheduler mgmt;
+    
+    public CronSharedResourceChangeListener(CronLikeScheduler mgmt) {
+      this.mgmt = mgmt;
+    }
+
+    @Override
+    public void configurationChanged(SharedResourceSynchronizer from, SharedResourceSynchronizer to, boolean copyContent) {
+      if (from == null && to != null) {
+        mgmt.enableSharedResourceManagement();
+      } else {
+        mgmt.disableSharedResourcemanagement();
+      }
+    }
+
   }
 }
