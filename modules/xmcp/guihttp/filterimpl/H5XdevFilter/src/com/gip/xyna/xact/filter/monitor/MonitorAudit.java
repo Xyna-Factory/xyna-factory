@@ -106,6 +106,7 @@ public class MonitorAudit {
   private Long parentId = -1L;
   private boolean imported = false;
   private boolean hasAuditData = false;
+  private boolean onlyParentRuntimeInfo = false;
   private RuntimeContext runtimeContext;
   private String destinationType;
   private Long startTime;
@@ -420,6 +421,7 @@ public class MonitorAudit {
     audit.orderType = childWorkflowFqn;
     audit.executionType = ExecutionType.XYNA_FRACTAL_WORKFLOW.name();
     setWorkflowName(audit);
+    audit.onlyParentRuntimeInfo = true;
   }
 
   private static Element findParameterForOrder(Element root, long orderId) {
@@ -608,6 +610,10 @@ public class MonitorAudit {
   
   public boolean hasAuditData() {
     return hasAuditData;
+  }
+
+  public boolean hasOnlyParentRuntimeInfo() {
+    return onlyParentRuntimeInfo;
   }
   
   public WF getWorkflow() {
