@@ -46,11 +46,14 @@ import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyDuration;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyEnum;
+import com.gip.xyna.xfmg.xopctrl.managedsessions.ManagedSession;
 import com.gip.xyna.xfmg.xopctrl.managedsessions.SessionDetails;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.Role;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.XynaPlainSessionCredentials;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.GuiRight;
 import com.gip.xyna.xmcp.RMIChannelImpl;
+import com.gip.xyna.xnwh.persistence.ODSConnection;
+import com.gip.xyna.xnwh.persistence.ODSImpl;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xprc.exceptions.XPRC_VERSION_DETECTION_PROBLEM;
 
@@ -117,6 +120,20 @@ public class AuthUtils {
     return writeSessionDetailsJson(details, token);
   }
 
+
+  public static String getSessionDetailsJson(String sessionId) throws PersistenceLayerException, XFMG_UnknownSessionIDException {
+    ODSConnection con = ODSImpl.getInstance().openConnection();
+    ManagedSession session = new ManagedSession(sessionId, null, null);
+    try {
+      con.queryOneRow(session);
+    } catch (Exception e) {
+      throw new XFMG_UnknownSessionIDException(sessionId);
+    } finally {
+      con.closeConnection();
+    }
+    SessionDetails details = XynaFactory.getInstance().getFactoryManagementPortal().getSessionDetails(sessionId);
+    return writeSessionDetailsJson(details, session.getToken());
+  }
 
   private static String writeSessionDetailsJson(SessionDetails details, String token) {
     JsonBuilder jb = new JsonBuilder();
