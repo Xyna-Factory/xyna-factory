@@ -16,17 +16,17 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="build" default="build-all" basedir=".">
+<project name="build" default="build" basedir=".">
 
+    <!-- this is the absolute path to the root -->
+    <pathconvert property="root.dir" >
+        <path location="${basedir}/../../../../../.."/>
+    </pathconvert>
+
+    <property name="sharedLib.folder.name" value="oasValidators" />
+    <property name="sharedLib.name" value="oasValidators" />
     <property name="target.dir" value="${basedir}/deploy/" />
 
-    <target name="build-all">
-        <ant antfile="build.xml" target="build" inheritAll="false" dir="oasBase">
-            <property name="target.dir" value="${target.dir}" />
-        </ant>
-        <ant antfile="build.xml" target="build" inheritAll="false" dir="oasAppManagement">
-            <property name="target.dir" value="${target.dir}" />
-        </ant>
-    </target>
+    <import file="${root.dir}/installation/build/buildSharedLib.xml" />
 
 </project>
