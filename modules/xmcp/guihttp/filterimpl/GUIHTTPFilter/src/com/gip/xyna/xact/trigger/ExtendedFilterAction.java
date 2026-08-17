@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
+
 package com.gip.xyna.xact.trigger;
 
 import org.apache.log4j.Logger;
@@ -23,31 +24,7 @@ import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.ConnectionFilter.FilterResponse;
 
 
-/**
- *
- */
-public interface FilterAction {
+public interface ExtendedFilterAction extends FilterAction {
 
-  boolean match(String uri, String method);
-
-  /**
-   * @param logger 
-   * @param tc
-   * @return
-   * @throws XynaException 
-   * @throws InterruptedException 
-   */
-  FilterResponse act(Logger logger, HTTPTriggerConnection tc) throws XynaException;
-
-  /**
-   * @return
-   */
-  String getTitle();
-
-  /**
-   * @param sb
-   * @param string
-   */
-  void appendForm(StringBuilder sb, String string);
-
+  FilterResponse actWithConfig(Logger logger, HTTPTriggerConnection tc, GUIHTTPFilterParameter config) throws XynaException;
 }

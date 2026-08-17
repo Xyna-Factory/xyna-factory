@@ -109,7 +109,9 @@ public class GUIHTTPFilter extends ConnectionFilter<HTTPTriggerConnection> {
     String method = tc.getMethod();
     for( FilterAction fa : allFilterActions ) {
       if( fa.match(uri, method) ) {
-        fa.init(filterParam);
+        if (fa instanceof ExtendedFilterAction) {
+          return ((ExtendedFilterAction) fa).actWithConfig(logger, tc, filterParam);
+        }
         return fa.act( logger, tc );
       }
     }
