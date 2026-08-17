@@ -183,12 +183,12 @@ public class QueueManagement extends FunctionGroup {
     ODSConnection conn = ods.openConnection(ODSConnectionType.HISTORY);
     try {
       Collection<Queue> queues = conn.loadCollection(Queue.class);
-      List<Queue> queuesSorted = new ArrayList<Queue>(queues);
-      Collections.sort(queuesSorted, queueComparator);
+
       if (logger.isTraceEnabled()) {
         logger.trace("Number of registered queues: " + queues.size());
       }
-      return queuesSorted.stream().map(QueueFacade::fromQueue).collect(Collectors.toList());
+
+      return queues.stream().map(QueueFacade::fromQueue).sorted(queueComparator).collect(Collectors.toList());
     } finally {
       try {
         conn.closeConnection();
