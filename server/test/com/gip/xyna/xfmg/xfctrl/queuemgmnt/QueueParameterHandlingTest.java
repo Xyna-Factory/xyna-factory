@@ -391,6 +391,123 @@ public class QueueParameterHandlingTest extends TestCase {
   }
 
 
+  public void testOracleAQJdbcUrlWithQueryParametersRoundtrip() {
+    String jdbcUrlWithQuery = "jdbc:oracle:thin:@//db.example:1521/XE?oracle.net.connect_timeout=5000&oracle.net.read_timeout=30000";
+
+    QueueConnectStringData converter = new QueueConnectStringData();
+    String serialized = converter.fromConnectData(createOracleAqConnectData(jdbcUrlWithQuery, "queue_user", "secret"));
+
+    QueueConnectData resolvedConnectData = converter.fromStringParameters(serialized);
+    assertTrue(resolvedConnectData instanceof OracleAQConnectData);
+    OracleAQConnectData oracle = (OracleAQConnectData) resolvedConnectData;
+    assertEquals(jdbcUrlWithQuery, oracle.getJdbcUrl());
+    assertEquals("queue_user", oracle.getUserName());
+    assertEquals("secret", oracle.getPassword());
+  }
+
+
+  public void testOracleAQRegisterQueueParametersWithJdbcQueryString() {
+    String jdbcUrlWithQuery = "jdbc:oracle:thin:@//db.example:1521/XE?oracle.net.connect_timeout=5000";
+    QueueConnectData connectData = QueueManagement.createQueueConnectData(QueueType.ORACLE_AQ,
+        new String[] { "user=queue_user", "password=secret", "jdbc=" + jdbcUrlWithQuery });
+
+    assertTrue(connectData instanceof OracleAQConnectData);
+    OracleAQConnectData oracle = (OracleAQConnectData) connectData;
+    assertEquals(jdbcUrlWithQuery, oracle.getJdbcUrl());
+    assertEquals("queue_user", oracle.getUserName());
+    assertEquals("secret", oracle.getPassword());
+  }
+
+
+  public void testQueueFacadeGetExternalNameReturnsFallbackWhenExternalNameEnvIsNull() {
+    Queue queue = new Queue();
+    queue.setExternalName("static-name");
+    queue.setExternalNameEnv(null);
+
+    QueueFacade facade = QueueFacade.fromQueue(queue);
+    assertEquals("static-name", facade.getExternalName());
+  }
+
+
+  public void testQueueFacadeGetExternalNameReturnsFallbackWhenExternalNameEnvIsEmpty() {
+    Queue queue = new Queue();
+    queue.setExternalName("static-name");
+    queue.setExternalNameEnv("");
+
+    QueueFacade facade = QueueFacade.fromQueue(queue);
+    assertEquals("static-name", facade.getExternalName());
+  }
+
+
+  public void testQueueFacadeGetExternalNameReturnsFallbackWhenEnvVarIsNotSet() {
+    Queue queue = new Queue();
+    queue.setExternalName("fallback-name");
+    queue.setExternalNameEnv("XYNA_TEST_NONEXISTENT_ENV_VAR_XYZ_98765");
+
+    QueueFacade facade = QueueFacade.fromQueue(queue);
+    assertNull(System.getenv("XYNA_TEST_NONEXISTENT_ENV_VAR_XYZ_98765"));
+    assertEquals("fallback-name", facade.getExternalName());
+  }
+
+
+  public void testQueueFacadeGetExternalNameResolvesFromEnvVarWhenSet() {
+    String wellKnownEnvVar = findWellKnownEnvVar();
+    assertNotNull("No env var found for testing; test skipped", wellKnownEnvVar);
+    String expectedValue = System.getenv(wellKnownEnvVar);
+
+    Queue queue = new Queue();
+    queue.setExternalName("should-not-be-used");
+    queue.setExternalNameEnv(wellKnownEnvVar);
+
+    QueueFacade facade = QueueFacade.fromQueue(queue);
+    assertEquals(expectedValue, facade.getExternalName());
+  }
+
+
+  public void testQueueFacadeGetExternalNameEnvRoundtrip() {
+    Queue queue = new Queue();
+    queue.setExternalNameEnv("MY_QUEUE_ENV_VAR");
+
+    QueueFacade facade = QueueFacade.fromQueue(queue);
+    assertEquals("MY_QUEUE_ENV_VAR", facade.getExternalNameEnv());
+  }
+
+
+  public void testQueueExternalNameEnvPersistedAndRetrieved() {
+    Queue queue = new Queue();
+    queue.setVersion(1);
+    queue.setExternalName("direct-name");
+    queue.setExternalNameEnv("QUEUE_NAME_ENV");
+
+    assertEquals("QUEUE_NAME_ENV", queue.getExternalNameEnv());
+    assertEquals("direct-name", queue.getExternalName());
+  }
+
+
+  public void testLegacyVersionIgnoresExternalNameEnv() {
+    String wellKnownEnvVar = findWellKnownEnvVar();
+    assertNotNull("No env var found for testing; test skipped", wellKnownEnvVar);
+
+    Queue queue = new Queue();
+    queue.setVersion(0);
+    queue.setExternalName("legacy-name");
+    queue.setExternalNameEnv(wellKnownEnvVar);
+
+    // initial version must not resolve externalNameEnv
+    assertEquals("legacy-name", queue.getExternalNameForCurrentVersion());
+  }
+
+
+  private static String findWellKnownEnvVar() {
+    for (String candidate : new String[] {"PATH", "TEMP", "TMP", "HOME", "USER", "USERNAME"}) {
+      if (System.getenv(candidate) != null) {
+        return candidate;
+      }
+    }
+    return null;
+  }
+
+
   private static ActiveMQConnectData createActiveMqConnectData(String hostname, int port) {
     ActiveMQConnectData data = new ActiveMQConnectData();
     data.setHostname(hostname);
