@@ -50,4 +50,5 @@ public interface FilterAction {
    */
   void appendForm(StringBuilder sb, String string);
 
+
 }
