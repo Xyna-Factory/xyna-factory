@@ -31,7 +31,7 @@ import com.gip.xyna.xnwh.persistence.Storable;
 import com.gip.xyna.utils.misc.EnvironmentVariable;
 
 @Persistable(primaryKey = Queue.Constant.ColName.UNIQUE_NAME, tableName = Queue.Constant.TABLE_NAME)
-class Queue extends Storable<Queue> implements IQueue {
+public class Queue extends Storable<Queue> implements IQueue {
 
   private static final long serialVersionUID = 1L;
   private static final int currentVersion = 1;
