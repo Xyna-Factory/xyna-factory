@@ -20,6 +20,7 @@ package com.gip.xyna.xfmg.xopctrl.usermanagement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
@@ -39,6 +40,7 @@ import com.gip.xyna.xfmg.xopctrl.usermanagement.ldap.LDAPServer;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.ldap.LDAPUserAuthentication;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.ldap.SSLKeyAndTruststoreParameter;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.ldap.SSLKeystoreParameter;
+import com.gip.xyna.xfmg.xopctrl.usermanagement.jwt.*;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 
 
@@ -169,8 +171,116 @@ public enum DomainType {
       }
       return sslBuilder.instance();
     }
+  },
+  JWT("JWT") {
+
+    public final static String JWT_SPECIFIC_ORDERTYPE_PARAMETER_IDENTIFIER = "ordertype";
+    public final static String JWT_SPECIFIC_WORKSPACE_PARAMETER_IDENTIFIER = "workspace";
+    public final static String JWT_SPECIFIC_APPLICATION_PARAMETER_IDENTIFIER = "application";
+    public final static String JWT_SPECIFIC_VERSION_PARAMETER_IDENTIFIER = "version";
+
+    @Override
+    public JWTUserAuthentication generateAuthenticationMethod(Domain domain) {
+      return new JWTUserAuthentication(domain);
+    }
+
+    @Override
+    public JWTDomainSpecificData generateDomainTypeSpecificData(Map<String, List<String>> specifics) {
+      List<String> ordertype = specifics.get(JWT_SPECIFIC_ORDERTYPE_PARAMETER_IDENTIFIER);
+      if (ordertype != null && ordertype.size() > 1) {
+        throw new IllegalArgumentException("Too many ordertypes!");
+      }
+      String configuredOrdertype = (ordertype == null || ordertype.isEmpty()) ? null : ordertype.get(0);
+      if (configuredOrdertype != null && configuredOrdertype.trim().isEmpty()) {
+        configuredOrdertype = null;
+      }
+
+      List<String> applications = specifics.get(JWT_SPECIFIC_APPLICATION_PARAMETER_IDENTIFIER);
+      List<String> versions = specifics.get(JWT_SPECIFIC_VERSION_PARAMETER_IDENTIFIER);
+      if (applications == null || applications.isEmpty() || versions == null || versions.isEmpty()) {
+        throw new IllegalArgumentException("Missing runtime context for JWT domain: both application and version are required.");
+      }
+      if (applications.size() > 1 || versions.size() > 1) {
+        throw new IllegalArgumentException("Too many application/version values for JWT runtime context.");
+      }
+
+      RuntimeContext rc = new Application(applications.get(0), versions.get(0));
+      long revision;
+      RevisionManagement revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
+      try {
+        revision = revisionManagement.getRevision(rc);
+      } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
+        CentralFactoryLogging.getLogger(UserManagement.class).warn("Failed to retrieve revision for RuntimeContext " + rc, e);
+        throw new RuntimeException(e);
+      }
+
+      List<String> trustedIssuers = specifics.get("trustedIssuers");
+      if (trustedIssuers == null || trustedIssuers.isEmpty()) {
+        throw new IllegalArgumentException("No trusted issuers provided for JWT domain!");
+      }
+      List<String> intendedAudience = specifics.get("intendedAudience");
+      if (intendedAudience == null || intendedAudience.isEmpty()) {
+        throw new IllegalArgumentException("No intended audience provided for JWT domain!");
+      }
+      List<String> jwksUriList = specifics.get("jwksUri");
+      Optional<String> jwksUri = (jwksUriList != null && !jwksUriList.isEmpty())
+          ? Optional.of(jwksUriList.get(0))
+          : Optional.empty();
+      List<String> rolePrefixList = specifics.get("rolePrefix");
+      Optional<String> rolePrefix = (rolePrefixList != null && !rolePrefixList.isEmpty())
+          ? Optional.of(rolePrefixList.get(0))
+          : Optional.empty();
+      List<String> roleSuffixList = specifics.get("roleSuffix");
+      Optional<String> roleSuffix = (roleSuffixList != null && !roleSuffixList.isEmpty())
+          ? Optional.of(roleSuffixList.get(0))
+          : Optional.empty();
+      List<String> roleOrder = specifics.get("roleOrder");
+      if (roleOrder != null) {
+        List<String> cleanedRoleOrder = new ArrayList<String>();
+        for (String role : roleOrder) {
+          if (role != null) {
+            for (String part : role.split(",")) {
+              String trimmedRole = part.trim();
+              if (!trimmedRole.isEmpty()) {
+                cleanedRoleOrder.add(trimmedRole);
+              }
+            }
+          }
+        }
+        roleOrder = cleanedRoleOrder;
+      }
+      List<String> roleClaimPathList = specifics.get("roleClaimPath");
+      Optional<String> roleClaimPath = (roleClaimPathList != null && !roleClaimPathList.isEmpty())
+          ? Optional.of(roleClaimPathList.get(0))
+          : Optional.empty();
+      List<String> defaultRoleList = specifics.get("defaultRole");
+      Optional<String> defaultRole = (defaultRoleList != null && !defaultRoleList.isEmpty())
+          ? Optional.of(defaultRoleList.get(0))
+          : Optional.empty();
+      List<String> rolesResolverOrdertypeList = specifics.get("rolesResolverOrdertype");
+      Optional<String> rolesResolverOrdertype = (rolesResolverOrdertypeList != null && !rolesResolverOrdertypeList.isEmpty())
+          ? Optional.of(rolesResolverOrdertypeList.get(0))
+          : Optional.empty();
+
+      JWTDomainSpecificData.AuthValidationMode authValidationMode = null;
+      List<String> validationModeList = specifics.get("authValidationMode");
+      if (validationModeList != null && !validationModeList.isEmpty()) {
+        try {
+          authValidationMode = JWTDomainSpecificData.AuthValidationMode.valueOf(validationModeList.get(0).trim().toUpperCase());
+        } catch (IllegalArgumentException e) {
+          throw new IllegalArgumentException("Invalid authValidationMode: '" + validationModeList.get(0)
+              + "'. Allowed values: JWT or HEADER.");
+        }
+      }
+
+      JWTDomainSpecificData data = new JWTDomainSpecificData(trustedIssuers, intendedAudience, roleClaimPath, defaultRole,
+          rolePrefix, roleSuffix, roleOrder, jwksUri, configuredOrdertype, rolesResolverOrdertype, revision);
+      if (authValidationMode != null) {
+        data.setAuthValidationMode(authValidationMode);
+      }
+      return data;
+    }
   };
-  
 
 
   private final String name;

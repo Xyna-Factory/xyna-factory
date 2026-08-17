@@ -17,6 +17,7 @@
  */
 package com.gip.xyna.xprc.xfractwfe.python.jep;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -58,6 +59,17 @@ import jep.python.PyObject;
 
 public class JepInterpreterFactory extends PythonInterpreterFactory {
 
+  public static enum XynaTypeAttributeVal {
+    DATATYPE("DATATYPE"),
+    EXCEPTION("EXCEPTION"),
+    OTHER("OTHER");
+    private XynaTypeAttributeVal(String val) {
+      this.value = val;
+    }
+    private String value;
+    public String getValue() { return value; }
+  }
+  
   private static final Logger logger = CentralFactoryLogging.getLogger(JepInterpreterFactory.class);
 
   private static final Map<String, Class<?>> typeConversionMap = createTypeConversionMap();
@@ -67,16 +79,26 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     Map<String, Class<?>> result = new HashMap<>();
     result.put("boolean", boolean.class);
     result.put("Boolean", Boolean.class);
+    result.put("java.lang.Boolean", Boolean.class);
     result.put("byte", byte.class);
     result.put("Byte", Byte.class);
+    result.put("java.lang.Byte", Byte.class);
     result.put("double", double.class);
     result.put("Double", Double.class);
+    result.put("java.lang.Double", Double.class);
     result.put("int", int.class);
     result.put("Integer", Integer.class);
+    result.put("java.lang.Integer", Integer.class);
     result.put("long", long.class);
     result.put("Long", Long.class);
-    result.put("Sting", String.class);
+    result.put("java.lang.Long", Long.class);
+    result.put("float", float.class);
+    result.put("Float", Float.class);
+    result.put("java.lang.Float", Float.class);
+    result.put("String", String.class);
+    result.put("java.lang.String", String.class);
     result.put("List", List.class);
+    result.put("java.util.List", List.class);
     return result;
   }
 
@@ -171,10 +193,13 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     ClassLoaderDispatcher cld = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl()
         .getClassLoaderDispatcher();
     ClassLoaderBase cl;
+    XynaTypeAttributeVal xynaTypeAttributeVal = XynaTypeAttributeVal.OTHER;
     if (xynatype.equals("DATATYPE")) {
       cl = cld.findClassLoaderByType(fqn, context.revision, ClassLoaderType.MDM, true);
-    } else if (xynatype.equals("EXEPTION")) {
+      xynaTypeAttributeVal = XynaTypeAttributeVal.DATATYPE;
+    } else if (xynatype.equals("EXCEPTION")) {
       cl = cld.findClassLoaderByType(fqn, context.revision, ClassLoaderType.Exception, true);
+      xynaTypeAttributeVal = XynaTypeAttributeVal.EXCEPTION;
     } else {
       throw new UnsupportedOperationException();
     }
@@ -197,7 +222,13 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
         Class<? extends GeneralXynaObject> tmpclazz = (Class<? extends GeneralXynaObject>) cl.loadClass(fqn);
         clazz = tmpclazz;
       }
-      resultObj = clazz.getDeclaredConstructor().newInstance();
+      if (xynaTypeAttributeVal == XynaTypeAttributeVal.EXCEPTION) {
+        Constructor<? extends GeneralXynaObject> constructor = clazz.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        resultObj = constructor.newInstance();
+      } else {
+        resultObj = clazz.getDeclaredConstructor().newInstance();
+      }
 
       List<Field> allFields = new ArrayList<>(); 
       if (!(resultObj instanceof XynaObject)) {
@@ -212,6 +243,10 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
       }
       for (Field f : allFields) {
         if (Modifier.isPrivate(f.getModifiers())) {
+          if (xynaTypeAttributeVal == XynaTypeAttributeVal.EXCEPTION) {
+            if (Modifier.isStatic(f.getModifiers())) { continue; }
+            if (Modifier.isVolatile(f.getModifiers())) { continue; }
+          }
           String fieldName = f.getName();
           String pyFieldName = mgmt.getPythonKeywords().contains(fieldName) ? fieldName + "_" : fieldName;
           Object memberAttr = pyObj.getAttr(pyFieldName);
@@ -369,10 +404,10 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     //primitive
     Class<?> c = typeConversionMap.get(type);
     if (c != null && !(c.isAssignableFrom(value.getClass()))) {
-      if (value.getClass() == Double.class && c == Float.class) {
+      if (value.getClass() == Double.class && (c == Float.class || c == float.class)) {
         value = (float) ((double) value);
       }
-      if (value.getClass() == Long.class && c == int.class) {
+      if (value.getClass() == Long.class && (c == int.class || c == Integer.class)) {
         value = (int) ((long) value);
       }
     }

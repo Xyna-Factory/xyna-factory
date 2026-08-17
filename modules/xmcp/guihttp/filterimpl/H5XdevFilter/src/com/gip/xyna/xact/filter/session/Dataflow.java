@@ -1828,6 +1828,11 @@ public class Dataflow {
   private List<AVariableIdentification> analyzeStepFunction(StepFunction currentStep, List<AVariableIdentification> providers, Map<AVariableIdentification, InputConnection> connections) {
     Step compensationStep = currentStep.getCompensateStep();
     
+    //analyze RemoteDestination parameters
+    if(currentStep.getRemoteDispatchingParameter() != null) {
+      analyzeRemoteDestination(currentStep, providers, connections);
+    }
+    
     //if detached, do not add output
     //there can't be compensation or Exceptions
     if(currentStep.isExecutionDetached())
@@ -1839,11 +1844,6 @@ public class Dataflow {
       List<AVariableIdentification> compensationProviders = new ArrayList<AVariableIdentification>(providers);
       compensationProviders.addAll(identifyVariables(currentStep).getVariables(VarUsageType.output));
       analyzeDataflow(compensationStep, compensationProviders, connections);
-    }
-    
-    //analyze RemoteDestination parameters
-    if(currentStep.getRemoteDispatchingParameter() != null) {
-      analyzeRemoteDestination(currentStep, providers, connections);
     }
     
     IdentifiedVariables identifiedVariables = identifyVariables(currentStep);
@@ -2194,7 +2194,7 @@ public class Dataflow {
         index = currentStep.getInputVars().indexOf(input.getIdentifiedVariable());
       
       if(index == -1)
-        throw new RuntimeException("input not found");
+        throw new RuntimeException("input not found " + currentStep + "(" + input.getIdentifiedVariable().getId() + ")");
       
       String varId = currentStep.getInputVarIds()[index];
       AVariableIdentification existingLink = findExistingLink(varId, providers);
@@ -2203,7 +2203,7 @@ public class Dataflow {
       //isConnectedToList
       InputConnection inputConnection = connections.get(input);
       if(existingLink != null && !existingLink.getIdentifiedVariable().isList() && isConnectedToList(existingLink, connections) &&
-          inputConnection.getConnectionForLane(0).getLinkState() == LinkstateIn.AMBIGUE)
+          inputConnection.getConnectionForLane(0).getLinkState() == LinkstateIn.AMBIGUE && currentStep.getParentStep() instanceof StepForeach)
       {
         //remove existingLink.getIdentifiedVariable()
         reresolveInputVars = reresolveInputVars | removeObsoleteForeachVariable(existingLink, currentStep, providers, connections);

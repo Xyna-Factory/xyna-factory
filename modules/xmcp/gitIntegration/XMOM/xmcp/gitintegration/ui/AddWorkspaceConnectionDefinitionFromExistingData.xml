@@ -25,13 +25,13 @@
       <Data ID="1687" Label="Workspace Connection Data" ReferenceName="WorkspaceConnectionData" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceConnectionData1687"/>
       <Data ID="2674" IsList="true" Label="Indexed Repository" ReferenceName="IndexedRepository" ReferencePath="xmcp.gitintegration.ui" VariableName="indexedRepository2674"/>
     </Output>
-    <ServiceReference ID="2145" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
-      <Source RefID="2144"/>
-      <Target RefID="2144"/>
-    </ServiceReference>
     <ServiceReference ID="986" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="985"/>
       <Target RefID="985"/>
+    </ServiceReference>
+    <ServiceReference ID="2145" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="2144"/>
+      <Target RefID="2144"/>
     </ServiceReference>
     <Function ID="985" Label="get Own RuntimeContext">
       <Source RefID="986"/>
@@ -150,6 +150,7 @@
       <Mapping>%1%.onStartorderResultEvent["0"].eventId="gitintegration_add-workspace-connection_clean"</Mapping>
       <Mapping>%1%.onStartorderResultEvent["1"].eventId="gitintegration_add-workspace-connection_update"</Mapping>
       <Mapping>%1%.synchronously="true"</Mapping>
+      <Mapping>%1%.dataPath="%0%"</Mapping>
     </Mappings>
     <Mappings ID="48" Label="Create Details Panel">
       <Input>
@@ -212,7 +213,7 @@
       </Output>
       <Mapping>%6%.label="New Workspace Connection"</Mapping>
       <Mapping>%6%.dataPath="%0%"</Mapping>
-      <Mapping>%6%.children["0"]=%0%</Mapping>
+      <Mapping>%6%.children["0"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%0%</Mapping>
       <Mapping>%6%.children["1"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%1%</Mapping>
       <Mapping>%6%.children["2"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%2%</Mapping>
       <Mapping>%6%.children["3"]#cast("xmcp.forms.datatypes.CheckboxDefinition")=%3%</Mapping>

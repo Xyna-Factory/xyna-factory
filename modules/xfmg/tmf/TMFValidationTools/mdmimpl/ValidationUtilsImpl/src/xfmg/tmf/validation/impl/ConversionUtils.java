@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -157,5 +157,16 @@ public class ConversionUtils {
 
   public static <T> T ifNull(T o, T o2) {
     return o == null ? o2 : o;
+  }
+
+
+  public static List<?> getList(Object o) {
+    if (o == null) {
+      return Collections.emptyList();
+    } else if (o instanceof List) {
+      return (List<?>) o;
+    } else {
+      return Collections.singletonList(o);
+    }
   }
 }

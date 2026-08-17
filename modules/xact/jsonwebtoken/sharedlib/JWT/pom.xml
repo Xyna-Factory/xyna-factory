@@ -27,9 +27,10 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gip.xyna</groupId>
     <artifactId>JWTSharedLib</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
     <properties>
+        <bom.dir>../../../../../installation/build</bom.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
@@ -63,6 +64,11 @@
       <dependency>
         <groupId>io.jsonwebtoken</groupId>
         <artifactId>jjwt-jackson</artifactId>
+        <scope>runtime</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.auth0</groupId>
+        <artifactId>jwks-rsa</artifactId>
         <scope>runtime</scope>
       </dependency>
     </dependencies>

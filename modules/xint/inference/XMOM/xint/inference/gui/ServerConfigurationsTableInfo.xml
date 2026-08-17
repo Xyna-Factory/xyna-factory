@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Server Configurations Table Info" TypeName="ServerConfigurationsTableInfo" TypePath="xint.inference.gui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Server Configurations Table Info" Name="ServerConfigurationsTableInfo">
+    <Input>
+      <Data ID="27" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo27"/>
+    </Input>
+    <Output>
+      <Data ID="14" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo14"/>
+      <Data ID="1025" IsList="true" Label="Inference Server Configuration" ReferenceName="InferenceServerConfiguration" ReferencePath="xint.inference" VariableName="inferenceServerConfiguration1025"/>
+    </Output>
+    <ServiceReference ID="150" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="149"/>
+      <Target RefID="149"/>
+    </ServiceReference>
+    <ServiceReference ID="1141" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="1140"/>
+      <Target RefID="1140"/>
+    </ServiceReference>
+    <ServiceReference ID="1078" Label="Inference Server Mgmt" ReferenceName="InferenceServerMgmt.InferenceServerMgmt" ReferencePath="xint.inference">
+      <Source RefID="1077"/>
+      <Target RefID="1077"/>
+    </ServiceReference>
+    <Choice ID="40" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="27"/>
+      <Target RefID="229"/>
+      <Input>
+        <Data ID="55" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo55">
+          <Source RefID="40"/>
+        </Data>
+        <Source RefID="27"/>
+      </Input>
+      <Case ID="41" Label="true" Premise="%0%.bootstrap">
+        <Mappings ID="68" Label="Mapping">
+          <Output>
+            <Data ID="246" IsList="true" Label="Selected Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn246">
+              <Source RefID="68"/>
+            </Data>
+            <Target RefID="247"/>
+          </Output>
+          <Mapping>%0%["0"].name="State"</Mapping>
+          <Mapping>%0%["0"].path="state"</Mapping>
+          <Mapping>%0%["1"].name="Pid"</Mapping>
+          <Mapping>%0%["1"].path="pid"</Mapping>
+          <Mapping>%0%["2"].name="Type"</Mapping>
+          <Mapping>%0%["2"].path="type"</Mapping>
+          <Mapping>%0%["3"].name="Version"</Mapping>
+          <Mapping>%0%["3"].path="serverVersion"</Mapping>
+          <Mapping>%0%["4"].name="Port"</Mapping>
+          <Mapping>%0%["4"].path="port"</Mapping>
+          <Mapping>%0%["5"].name="Model"</Mapping>
+          <Mapping>%0%["5"].path="model"</Mapping>
+          <Mapping>%0%["6"].name="Description"</Mapping>
+          <Mapping>%0%["6"].path="description"</Mapping>
+        </Mappings>
+        <Function ID="149" Label="Build TableInfo and Select Columns">
+          <Source RefID="150"/>
+          <Source RefID="27"/>
+          <Source RefID="290"/>
+          <Source RefID="247"/>
+          <Target RefID="150"/>
+          <Target RefID="152"/>
+          <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="150">
+            <Source RefID="27"/>
+            <Source RefID="290">
+              <Meta>
+                <LinkType>Constant</LinkType>
+                <ExpectedType>xint.inference.InferenceServerConfiguration</ExpectedType>
+              </Meta>
+            </Source>
+            <Source RefID="247"/>
+          </Invoke>
+          <Receive ServiceID="150">
+            <Target RefID="152"/>
+          </Receive>
+        </Function>
+        <Assign ID="44">
+          <Source RefID="152"/>
+          <Target RefID="229"/>
+          <Copy>
+            <Source RefID="152"/>
+            <Target RefID="229"/>
+          </Copy>
+        </Assign>
+        <Data ID="152" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo152">
+          <Source RefID="149"/>
+        </Data>
+      </Case>
+      <Case ID="42" Label="false">
+        <Mappings ID="91" Label="Mapping">
+          <Input>
+            <Data ID="100" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo100">
+              <Source RefID="91"/>
+            </Data>
+            <Source RefID="27"/>
+          </Input>
+          <Output>
+            <Data ID="109" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo109">
+              <Source RefID="91"/>
+            </Data>
+            <Target RefID="110"/>
+          </Output>
+          <Mapping>%1%~=%0%</Mapping>
+        </Mappings>
+        <Assign ID="46">
+          <Source RefID="110"/>
+          <Target RefID="229"/>
+          <Copy>
+            <Source RefID="110"/>
+            <Target RefID="229"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Function ID="1077" Label="List Inference Server Configurations">
+      <Source RefID="1078"/>
+      <Target RefID="1078"/>
+      <Target RefID="1080"/>
+      <Invoke Operation="listInferenceServerConfigurations" ServiceID="1078"/>
+      <Receive ServiceID="1078">
+        <Target RefID="1080"/>
+      </Receive>
+    </Function>
+    <Function ID="1140" Label="TableHelper Sort Filter Limit">
+      <Source RefID="1141"/>
+      <Source RefID="229"/>
+      <Source RefID="1080"/>
+      <Target RefID="1141"/>
+      <Target RefID="1143"/>
+      <Invoke Operation="tableHelperSortFilterLimit" ServiceID="1141">
+        <Source RefID="229">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="1080">
+          <Meta>
+            <ExpectedType>xint.inference.InferenceServerConfiguration</ExpectedType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="1141">
+        <Target RefID="1143">
+          <Meta>
+            <ExpectedType>xint.inference.InferenceServerConfiguration</ExpectedType>
+          </Meta>
+        </Target>
+      </Receive>
+    </Function>
+    <Data ID="110" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo110">
+      <Source RefID="91"/>
+    </Data>
+    <Data ID="229" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo229">
+      <Source RefID="40"/>
+    </Data>
+    <Data ID="247" IsList="true" Label="Selected Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn247">
+      <Source RefID="68"/>
+    </Data>
+    <Data ID="290" Label="Inference Server Configuration" ReferenceName="InferenceServerConfiguration" ReferencePath="xint.inference" VariableName="const_InferenceServerConfiguration290"/>
+    <Data ID="1080" IsList="true" Label="Inference Server Configuration" ReferenceName="InferenceServerConfiguration" ReferencePath="xint.inference" VariableName="inferenceServerConfiguration1080">
+      <Source RefID="1077"/>
+    </Data>
+    <Data ID="1143" IsList="true" Label="Inference Server Configuration" ReferenceName="InferenceServerConfiguration" ReferencePath="xint.inference" VariableName="inferenceServerConfiguration1143"/>
+    <Assign ID="1">
+      <Source RefID="229"/>
+      <Source RefID="1143"/>
+      <Target RefID="14"/>
+      <Target RefID="1025"/>
+      <Copy>
+        <Source RefID="229">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="14"/>
+      </Copy>
+      <Copy>
+        <Source RefID="1143">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="1025"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

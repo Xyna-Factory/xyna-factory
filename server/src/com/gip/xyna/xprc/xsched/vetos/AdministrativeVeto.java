@@ -37,7 +37,7 @@ public class AdministrativeVeto {
   }
 
   public VetoInformationStorable toVetoInformationStorable(int currentOwnBinding) {
-    return new VetoInformationStorable(name, ADMIN_VETO_ORDER_INFORMATION, documentation, created, currentOwnBinding);
+    return new VetoInformationStorable(name, ADMIN_VETO_ORDER_INFORMATION, null, null, documentation, created, currentOwnBinding);
   }
 
   public String getName() {

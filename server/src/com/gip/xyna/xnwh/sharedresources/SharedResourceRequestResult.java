@@ -50,4 +50,10 @@ public class SharedResourceRequestResult<T> {
   public List<SharedResourceInstance<T>> getResources() {
     return resources;
   }
+
+
+  @Override
+  public String toString() {
+    return "SharedResourceRequestResult [success=" + success + ", exception=" + exception + ", resources=" + resources + "]";
+  }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,11 +24,11 @@
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Http</ApplicationName>
-        <VersionName>1.5.10</VersionName>
+        <VersionName>1.5.14</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>ZetaFramework</ApplicationName>
-        <VersionName>0.6.66</VersionName>
+        <VersionName>0.6.69</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>XynaPropertyMgmt</ApplicationName>
@@ -36,11 +36,11 @@
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>UserRoleManagement</ApplicationName>
-        <VersionName>1.0.8</VersionName>
+        <VersionName>1.0.9</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>GlobalApplicationMgmt</ApplicationName>
-        <VersionName>1.0.11</VersionName>
+        <VersionName>1.0.12</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>

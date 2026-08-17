@@ -30,7 +30,6 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.security.Security;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -76,6 +75,7 @@ import net.schmizz.sshj.transport.TransportException;
 import net.schmizz.sshj.transport.cipher.Cipher;
 import net.schmizz.sshj.transport.mac.MAC;
 import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
+import net.schmizz.sshj.transport.kex.KeyExchange;
 import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
 import net.schmizz.sshj.userauth.method.AuthMethod;
 import net.schmizz.sshj.userauth.method.AuthPassword;
@@ -90,6 +90,7 @@ import xact.connection.ReadTimeout;
 import xact.connection.Response;
 import xact.connection.SendParameter;
 import xact.ssh.AuthenticationMethod;
+import xact.ssh.AuthenticationMode;
 import xact.ssh.EncryptionType;
 import xact.ssh.FactoryUtils;
 import xact.ssh.HostKeyAliasMapping;
@@ -97,6 +98,7 @@ import xact.ssh.HostKeyCheckingMode;
 import xact.ssh.HostKeyStorableRepository;
 import xact.ssh.IdentityStorableRepository;
 import xact.ssh.ProxyParameter;
+import xact.ssh.PublicKey;
 import xact.ssh.SSHConnection;
 import xact.ssh.SSHConnectionInstanceOperation;
 import xact.ssh.SSHConnectionParameter;
@@ -334,8 +336,6 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
     try {
       // TODO Default Settings unsupported vs login-server
 
-      Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
- 
       // Client uses only socketFactory.createSocket() and overrides with setConnectTimeout and setTimeout
       if (connectionTimeout >= 0) {
         client.setConnectTimeout(connectionTimeout);
@@ -443,15 +443,34 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
   //Preservation of the Connection-App - copy of "generateKeyProvider"
   private Collection<KeyProvider> generateKeyProvider(SSHConnectionParameter conParams, XynaIdentityRepository idRepo) {
     List<KeyProvider> kpl = new ArrayList<KeyProvider>();
-    HostKeyCheckingMode checkingMode = HostKeyCheckingMode.getByXynaRepresentation(conParams.getHostKeyChecking());
-    if (checkingMode.getStringRepresentation().equalsIgnoreCase("yes") || checkingMode.getStringRepresentation().equalsIgnoreCase("ask")) {
-      kpl = idRepo.getKey(null, getAlgoType(conParams));
-    } else {
-      kpl = idRepo.getKey(null, Optional.empty());
+
+    //Assumption: The first public key entry contains the (optional) prioritized key alias.
+    List<? extends AuthenticationMode> authenticationModes = conParams.getAuthenticationModes();
+    List<String> aliasNameList = new ArrayList<String>();
+    String keyAlias = null;
+    for (AuthenticationMode element : authenticationModes) {
+      if (AuthenticationMethod.getByXynaRepresentation(element).getIdentifiers()[0].equalsIgnoreCase(AuthenticationMethod.PUBLICKEY.getIdentifiers()[0])) {
+        PublicKey publickey = (PublicKey) element;
+        if ((publickey.getIdentity() != null) && (! publickey.getIdentity().isBlank())) {
+          aliasNameList.add(publickey.getIdentity());
+        }
+      }
     }
+    if (! aliasNameList.isEmpty()) {
+      keyAlias = aliasNameList.get(0);
+    }
+
+    HostKeyCheckingMode checkingMode = HostKeyCheckingMode.getByXynaRepresentation(conParams.getHostKeyChecking());
+
+    if (checkingMode.getStringRepresentation().equalsIgnoreCase("yes") || checkingMode.getStringRepresentation().equalsIgnoreCase("ask")) {
+      kpl = idRepo.getKey(keyAlias, getAlgoType(conParams));
+    } else {
+      kpl = idRepo.getKey(keyAlias, Optional.empty());
+    }
+
     return kpl;
   }
-  
+
   private final Pattern DSA_FILTER = Pattern.compile("[dD][sS][aAsS]");
   private final Pattern RSA_FILTER = Pattern.compile("[rR][sS][aA]");
 
@@ -707,12 +726,32 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
     List<Named<MAC>> macs = createMacList(getSSHConnectionParameter().getMessageAuthenticationCodes());
     config.setMACFactories(macs);
 
-    boolean ciphersSet = getSSHConnectionParameter().getCiphers() != null && !getSSHConnectionParameter().getCiphers().isEmpty();
-    List<Named<Cipher>> ciphers = ciphersSet ? createCiphers(getSSHConnectionParameter().getCiphers()) : config.getCipherFactories();
+    List<Named<Cipher>> ciphers = createCiphers(getSSHConnectionParameter().getCiphers());
     config.setCipherFactories(ciphers);
+    
+    List<Named<KeyExchange>> kex = createKexList(getSSHConnectionParameter().getKeyExchangeMethods());
+    config.setKeyExchangeFactories(kex);
+  }
+
+  private List<Named<KeyExchange>> createKexList(List<String> kexMethods) {
+    if(kexMethods == null || kexMethods.isEmpty()) {
+      return FactoryUtils.createKexListDefault();
+    }
+    List<Named<KeyExchange>> result = new ArrayList<>();
+    for(String kex : kexMethods) {
+      var kexSupplier = FactoryUtils.kexFactories.get(kex);
+      if(kexSupplier == null) {
+        throw new RuntimeException("Unknown key exchange algorithm " + kex);
+      }
+      result.add(kexSupplier.get());
+    }
+    return result;
   }
 
   private List<Named<Cipher>> createCiphers(List<String> ciphers) {
+    if(ciphers == null || ciphers.isEmpty()) {
+      return FactoryUtils.createCipherListDefault();
+    }
     List<Named<Cipher>> result = new ArrayList<>();
     for(String cipher: ciphers) {
       var cipherSupplier = FactoryUtils.CipherFactories.get(cipher);

@@ -245,6 +245,54 @@ class HTTPResponseResolverServiceOperationImplTest {
   }
 
 
+  private static String fileContentinvalid = """
+      {
+      "fileMatch": [
+
+       { "source": "header", "op": "equals", "key": "myheader", "value": "12345677 }
+      ],
+      "responses": [
+      {
+      "match": [
+
+            { "source": "method", "op": "equals", "value": "POST" },
+            { "source": "url", "op": "regex", "value": ".*blubb.*" }
+       ],
+       "response": [7, "hello"],
+       "responseCode": 201
+      }
+      ]
+      }
+      """;
+
+
+  @Test
+  public void testInvalidSimFile() throws Ex_FileAccessException {
+
+    java.io.File f = new java.io.File("test");
+    String p = f.getAbsolutePath();
+    java.io.File simfile3 = new java.io.File("test/simfile4");
+    try {
+      FileUtils.saveToFile(new ByteArrayInputStream(fileContentinvalid.getBytes()), simfile3);
+
+      //caching?
+      List<HeaderField> headers2 = new ArrayList<>();
+      headers2.add(new HeaderField("bla", "1234"));
+      headers2.add(new HeaderField("myheader", "xxxxxxxx"));
+      SendParameter sp2 = new SendParameter(new POST(), new URLPath("pathbla/blubb", null, ""), new Header(null, headers2), null, null);
+      Container c = new HTTPResponseResolverServiceOperationImpl().resolveResponse(null, sp2, new File(p));
+      Document outputDoc = (Document) (c.get(0));
+      HTTPStatusCode code = (HTTPStatusCode) (c.get(2));
+      String expectedJsonResponse = "";
+      assertEquals(expectedJsonResponse, outputDoc.getText());
+      assertEquals(404, code.getCode());
+      assertEquals("Not Found", code.getReason());
+    } finally {
+      FileUtils.deleteFileWithRetries(simfile3);
+    }
+  }
+
+
   private JSONValue parse(String json) {
     return new JSONParser(json).parse(new JSONTokenizer().tokenize(json));
   }

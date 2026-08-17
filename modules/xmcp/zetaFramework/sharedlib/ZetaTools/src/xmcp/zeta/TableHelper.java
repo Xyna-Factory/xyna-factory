@@ -327,6 +327,25 @@ public class TableHelper<T, I> {
     if (filter == null)
       return Collections.emptyList();
 
+    if (!(filter.length() > 1 && (filter.startsWith("'") && filter.endsWith("'") || filter.startsWith("\"") && filter.endsWith("\""))) && filter.contains("|")) {
+      String[] split = filter.split("\\|");
+      List<String> alternatives = new ArrayList<>();
+      for (String alternative : split) {
+        String normalized = alternative.trim();
+        if (normalized.length() == 0) {
+          continue;
+        }
+        alternatives.add(String.join(" AND ", prepareSingleQueryFilter(normalized, isNumber)));
+      }
+      if (!alternatives.isEmpty()) {
+        return Arrays.asList(new String[] {String.join(" OR ", alternatives)});
+      }
+    }
+    return prepareSingleQueryFilter(filter, isNumber);
+  }
+
+
+  private static List<String> prepareSingleQueryFilter(String filter, boolean isNumber) {
     if(filter.contains("<") && filter.contains(">")) {
       String filterString = filter.replaceAll(" ", "");
       Pattern p = Pattern.compile("([<>][0-9\\,\\.]{1,})");
@@ -602,6 +621,30 @@ public class TableHelper<T, I> {
 
 
   private String prepareFilter(String filter) {
+    if (!(filter.length() > 1 && (filter.startsWith("'") && filter.endsWith("'") || filter.startsWith("\"") && filter.endsWith("\""))) && filter.contains("|")) {
+      String[] split = filter.split("\\|");
+      StringBuilder sb = new StringBuilder();
+      int addedAlternatives = 0;
+      for (String alternative : split) {
+        String normalized = alternative.trim();
+        if (normalized.length() == 0) {
+          continue;
+        }
+        if (addedAlternatives > 0) {
+          sb.append("|");
+        }
+        sb.append(prepareSingleFilter(normalized));
+        addedAlternatives++;
+      }
+      if (addedAlternatives > 0) {
+        return sb.toString();
+      }
+    }
+    return prepareSingleFilter(filter);
+  }
+
+
+  private String prepareSingleFilter(String filter) {
     if (filter.contains("*")) {
       boolean startsWithStart = false;
       if (filter.startsWith("*")) {
