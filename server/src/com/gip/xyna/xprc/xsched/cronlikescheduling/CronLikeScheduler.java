@@ -184,6 +184,11 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
 
   @Override
   public void shutdown() throws XynaException {
+
+    if (sharedResourceConfigured && cronSharedResourceProcessing != null) {
+      cronSharedResourceProcessing.stop();
+    }
+
     if (ods == null) {
       return; // nicht initialisiert
     }
