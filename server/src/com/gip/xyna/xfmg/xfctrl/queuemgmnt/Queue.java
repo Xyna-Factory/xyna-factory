@@ -27,6 +27,7 @@ import com.gip.xyna.xnwh.persistence.Persistable;
 import com.gip.xyna.xnwh.persistence.ResultSetReader;
 import com.gip.xyna.xnwh.persistence.Storable;
 
+import com.gip.xyna.utils.misc.EnvironmentVariable.StringEnvironmentVariable;
 
 @Persistable(primaryKey = Queue.Constant.ColName.UNIQUE_NAME, tableName = Queue.Constant.TABLE_NAME)
 class Queue extends Storable<Queue> implements IQueue {
@@ -172,10 +173,8 @@ class Queue extends Storable<Queue> implements IQueue {
       return externalName;
     }
     if (externalNameEnv != null && !externalNameEnv.isEmpty()) {
-      String envValue = System.getenv(externalNameEnv);
-      if (envValue != null) {
-        return envValue;
-      }
+      var envVar = new StringEnvironmentVariable(externalNameEnv);
+      return envVar.getValue().orElse(externalName);
     }
     return externalName;
   }
