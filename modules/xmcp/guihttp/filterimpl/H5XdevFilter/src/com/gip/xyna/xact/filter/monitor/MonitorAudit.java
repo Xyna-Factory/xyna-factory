@@ -262,11 +262,6 @@ public class MonitorAudit {
     }
     throw new RuntimeException("Unsupported DateTimeFormat: " + input);
   }
-  
-  
-  public static MonitorAudit fromLocalOrder(long orderId) throws XynaException {
-    return fromLocalOrder(orderId, (Long) null);
-  }
 
 
   public static MonitorAudit fromLocalOrder(long orderId, Long parentId) throws XynaException {
@@ -278,11 +273,6 @@ public class MonitorAudit {
         throw new RuntimeException(e);
       }
     });
-  }
-  
-  
-  public static MonitorAudit fromLocalOrder(long orderId, Function<String, String> filter) throws XynaException {
-    return fromLocalOrder(orderId, null, filter);
   }
 
 
@@ -357,6 +347,13 @@ public class MonitorAudit {
 
   private static void loadChildAuditFromParent(MonitorAudit audit, long childOrderId, OrderInstanceDetails parentDetails,
                                                 Function<String, String> filter) throws XynaException {
+
+    audit.onlyParentRuntimeInfo = true;
+
+    if (parentDetails == null) {
+      return;
+    }
+
     String parentAuditXml = parentDetails.getAuditDataAsXML();
     if(parentAuditXml == null || parentAuditXml.isEmpty()) {
       return;
@@ -390,6 +387,7 @@ public class MonitorAudit {
         .filter(element -> serviceId != null && serviceId.equals(element.getAttribute(ATT.ID)))
         .findFirst().orElse(null);
     String childWorkflowFqn = getReferenceFqn(serviceReference);
+    audit.orderType = childWorkflowFqn;
     if(childWorkflowFqn == null) {
       return;
     }
@@ -398,10 +396,15 @@ public class MonitorAudit {
     if(childRuntimeContext == null) {
       childRuntimeContext = parentAudit.getWorkflowContext() != null ? parentAudit.getWorkflowContext() : parentDetails.getRuntimeContext();
     }
+    audit.runtimeContext = childRuntimeContext;
 
     String childWorkflowXml = repositoryManagement.getXMLFromRepository(childRuntimeContext,
                                                                          parentAudit.getRepositoryRevision(),
                                                                          childWorkflowFqn);
+    if (childWorkflowXml == null || childWorkflowXml.isEmpty()) {
+      return;
+    }
+
     Document childWorkflow = XMLUtils.parseString(childWorkflowXml);
     Element operation = XMLUtils.getChildElementByName(childWorkflow.getDocumentElement(), EL.OPERATION);
     if(operation == null) {
@@ -417,11 +420,8 @@ public class MonitorAudit {
     audit.enhancedAudit = new EnhancedAudit(parentAudit.getVersion(), audit.auditDataXml, childWorkflowFqn,
                                             parentAudit.getImports(), parentAudit.getRepositoryRevision(), childRuntimeContext);
     audit.hasAuditData = true;
-    audit.runtimeContext = childRuntimeContext;
-    audit.orderType = childWorkflowFqn;
     audit.executionType = ExecutionType.XYNA_FRACTAL_WORKFLOW.name();
     setWorkflowName(audit);
-    audit.onlyParentRuntimeInfo = true;
   }
 
   private static Element findParameterForOrder(Element root, long orderId) {
