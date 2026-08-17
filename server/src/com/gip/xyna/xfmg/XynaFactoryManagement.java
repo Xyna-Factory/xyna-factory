@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -695,9 +695,9 @@ public class XynaFactoryManagement extends XynaFactoryManagementBase {
   /**
    * QueueManagement
    */
-  public void registerQueue(String uniqueName, String externalName, QueueType queueType, QueueConnectData connectData)
+  public void registerQueue(String uniqueName, String externalName, String externalNameEnv, QueueType queueType, QueueConnectData connectData)
                   throws PersistenceLayerException {
-    getXynaFactoryControl().getQueueManagement().registerQueue(uniqueName, externalName, queueType, connectData);
+    getXynaFactoryControl().getQueueManagement().registerQueue(uniqueName, externalName, externalNameEnv, queueType, connectData);
   }
 
 

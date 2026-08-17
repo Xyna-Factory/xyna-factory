@@ -104,13 +104,14 @@ public class QueueManagement extends FunctionGroup {
   }
 
 
-  public void registerQueue(String uniqueName, String externalName, QueueType queueType, QueueConnectData connectData)
+  public void registerQueue(String uniqueName, String externalName, String externalNameEnv, QueueType queueType, QueueConnectData connectData)
       throws PersistenceLayerException {
     ODSConnection conn = ods.openConnection(ODSConnectionType.HISTORY);
     try {
       Queue queue = new Queue();
       queue.setUniqueName(uniqueName);
       queue.setExternalName(externalName);
+      queue.setExternalNameEnv(externalNameEnv);
       queue.setConnectDataForCurrentVersion(connectData);
       queue.setQueueTypeForCurrentVersion(queueType);
       try {
