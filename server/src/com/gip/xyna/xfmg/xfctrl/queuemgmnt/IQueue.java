@@ -28,6 +28,10 @@ public interface IQueue {
 
     void setExternalName(String externalName);
 
+    String getExternalNameEnv();
+
+    void setExternalNameEnv(String externalNameEnv);
+
     QueueConnectData getConnectData();
 
     void setConnectData(QueueConnectData connectData);

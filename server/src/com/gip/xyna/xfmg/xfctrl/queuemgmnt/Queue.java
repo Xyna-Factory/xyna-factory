@@ -167,6 +167,19 @@ class Queue extends Storable<Queue> implements IQueue {
     this.externalNameEnv = externalNameEnv;
   }
 
+  public String getExternalNameForCurrentVersion() {
+    if (isInitialVersion()) {
+      return externalName;
+    }
+    if (externalNameEnv != null && !externalNameEnv.isEmpty()) {
+      String envValue = System.getenv(externalNameEnv);
+      if (envValue != null) {
+        return envValue;
+      }
+    }
+    return externalName;
+  }
+
  @Override
   public QueueConnectData getConnectData() {
     return connectData;

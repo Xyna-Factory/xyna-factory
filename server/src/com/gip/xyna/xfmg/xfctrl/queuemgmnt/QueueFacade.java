@@ -36,12 +36,21 @@ public class QueueFacade implements IQueue {
         return new QueueFacade(q);
     }
 
+    @Override
     public String getExternalName() {
-        return queue.getExternalName();
+        return queue.getExternalNameForCurrentVersion();
     }
 
     public void setExternalName(String name) {
         queue.setExternalName(name);
+    }
+
+    public String getExternalNameEnv() {
+        return queue.getExternalNameEnv();
+    }
+
+    public void setExternalNameEnv(String envVarName) {
+        queue.setExternalNameEnv(envVarName);
     }
 
     public Integer getVersion() {
