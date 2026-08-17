@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
+import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.collections.CSVStringList;
 import com.gip.xyna.utils.misc.StringParameter;
 import com.gip.xyna.utils.misc.StringParameter.StringParameterParsingException;
@@ -35,6 +38,8 @@ import com.gip.xyna.xnwh.securestorage.SecureStorage;
 
 
 public class QueueConnectStringData {
+
+    private static final Logger logger = CentralFactoryLogging.getLogger(QueueConnectStringData.class);
 
     private static final String SECURE_STORAGE_IDENTIFIER = "queueConnectStringData";
     private static final char PASSWORD_SEPARATOR = '|';
@@ -67,7 +72,7 @@ public class QueueConnectStringData {
                     throw new RuntimeException("Unknown queue type: " + qType);
             }
         } catch (StringParameterParsingException e) {
-            // logger.error(e);
+            logger.error("Unable to parse queue connect data string parameters.", e);
         }
 
         return null;
@@ -112,6 +117,8 @@ public class QueueConnectStringData {
             int length = Integer.parseInt(decrypted.substring(0, passwordStartIndex - 1));
             return decrypted.substring(passwordStartIndex, length + passwordStartIndex);
         } catch (XNWH_EncryptionException | NumberFormatException e) {
+            logger.error("Failed to decrypt queue connect password for uuid '" + uuid
+                    + "'. Returning encrypted input unchanged. Cause=" + e.getClass().getSimpleName(), e);
             return encryptedPassword;
         }
     }
