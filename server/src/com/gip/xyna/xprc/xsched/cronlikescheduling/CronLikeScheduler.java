@@ -269,6 +269,8 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
     srm.addSharedResource(XYNA_CRONLIKE_SR, listener);
     sharedResourceConfigured = srm.hasConfiguredSynchronizer(XYNA_CRONLIKE_SR);
     if (sharedResourceConfigured) {
+      CronLikeOrder.setAlgorithm(DefaultCronLikeOrderStartUnderlyingOrderAlgorithm.singleInstance);
+      initializeTimer();
       enableSharedResourceManagement();
       return;
     }
@@ -1826,6 +1828,9 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
   }
 
   private void enableSharedResourceManagement() {
+    if(cronSharedResourceProcessing == null) {
+      cronSharedResourceProcessing = new CronSharedResourceProcessing();
+    }
     sharedResourceConfigured = true;
     cronSharedResourceProcessing.start();
   }

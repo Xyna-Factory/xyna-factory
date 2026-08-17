@@ -19,16 +19,37 @@ package com.gip.xyna.xprc.xsched.cronlikescheduling;
 
 
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
+import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.xnwh.persistence.ODS;
+import com.gip.xyna.xnwh.persistence.ODSConnection;
+import com.gip.xyna.xnwh.persistence.ODSImpl;
+import com.gip.xyna.xnwh.persistence.Parameter;
+import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
+import com.gip.xyna.xnwh.persistence.PreparedQuery;
+import com.gip.xyna.xnwh.persistence.Query;
+import com.gip.xyna.xnwh.persistence.ResultSetReader;
 import com.gip.xyna.xnwh.sharedresources.KryoSerializedSharedResourceDefinition;
 import com.gip.xyna.xnwh.sharedresources.SharedResourceDefinition;
 import com.gip.xyna.xnwh.sharedresources.SharedResourceInstance;
 import com.gip.xyna.xnwh.sharedresources.SharedResourceManagement;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceRequestResult;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceWorkManagementThread;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceWorkManagementThread.ShareResourceNextIdAccessor;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceWorkManagementThread.SharedResourceWork;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceWorkManagementThread.SharedResourceWorkManagement;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceWorkManagementThread.SharedResourceWorkManagementThreadConfig;
 
 
 
@@ -37,28 +58,31 @@ import com.gip.xyna.xnwh.sharedresources.SharedResourceManagement;
 public class CronSharedResourceProcessing {
 
   public static final SharedResourceDefinition<SharedResourceCrons> XYNA_CRON_SR_DEF =
-      new KryoSerializedSharedResourceDefinition<>(CronLikeScheduler.XYNA_CRONLIKE_SR, SharedResourceCrons.class);
+      new KryoSerializedSharedResourceDefinition<>(CronLikeScheduler.XYNA_CRONLIKE_SR, SharedResourceCrons.class, ArrayList.class);
+
+  private static final Logger logger = CentralFactoryLogging.getLogger(CronSharedResourceProcessing.class);
 
   private final Set<Long> ourCrons;
   private final SharedResourceManagement srm;
-
-  private long ourId;
+  private SharedResourceWorkManagementThread<SharedResourceDefinition<SharedResourceCrons>, SharedResourceCrons> processingThread;
 
 
   public CronSharedResourceProcessing() {
     ourCrons = new HashSet<>();
     srm = XynaFactory.getInstance().getXynaNetworkWarehouse().getSharedResourceManagement();
-    ourId = -1l;
   }
 
 
   public void createCron(Long id) {
     //add id to the IDs we are responsible for
     ourCrons.add(id);
-    if (ourId != -1) {
-      srm.update(XYNA_CRON_SR_DEF, List.of(String.valueOf(ourId)), x -> {
+    if (processingThread.getOurId() != -1) {
+      srm.update(XYNA_CRON_SR_DEF, List.of(String.valueOf(processingThread.getOurId())), x -> {
         x.getValue().getCronIds().add(id);
-        return new SharedResourceInstance<>(String.valueOf(ourId), System.currentTimeMillis(), x.getValue());
+        if (logger.isDebugEnabled()) {
+          logger.debug("Added " + id + " to our cron ids. Our cron ids are now " + x.getValue().getCronIds());
+        }
+        return new SharedResourceInstance<>(String.valueOf(processingThread.getOurId()), System.currentTimeMillis(), x.getValue());
       });
     }
   }
@@ -68,10 +92,13 @@ public class CronSharedResourceProcessing {
     //remove id from IDs we are responsible for
     //does nothing, if we are not responsible for this cron
     ourCrons.remove(id);
-    if (ourId != -1) {
-      srm.update(XYNA_CRON_SR_DEF, List.of(String.valueOf(ourId)), x -> {
+    if (processingThread.getOurId() != -1) {
+      srm.update(XYNA_CRON_SR_DEF, List.of(String.valueOf(processingThread.getOurId())), x -> {
         x.getValue().getCronIds().remove(id);
-        return new SharedResourceInstance<>(String.valueOf(ourId), System.currentTimeMillis(), x.getValue());
+        if (logger.isDebugEnabled()) {
+          logger.debug("Removed " + id + " to our cron ids. Our cron ids are now " + x.getValue().getCronIds());
+        }
+        return new SharedResourceInstance<>(String.valueOf(processingThread.getOurId()), System.currentTimeMillis(), x.getValue());
       });
     }
   }
@@ -85,18 +112,171 @@ public class CronSharedResourceProcessing {
 
   public void start() {
     ourCrons.clear();
-    //TODO: try to set ourId
-    if (ourId != -1) {
-      srm.create(XYNA_CRON_SR_DEF,
-                 List.of(new SharedResourceInstance<>(String.valueOf(ourId), System.currentTimeMillis(), new SharedResourceCrons())));
-    }
+    SharedResourceWorkManagementThreadConfig<SharedResourceDefinition<SharedResourceCrons>, SharedResourceCrons> config;
+    ShareResourceNextIdAccessor<SharedResourceCrons> idAccess = new CronNextidMgmt();
+    SharedResourceWorkManagement workMgmt = new CronWorkManagement(ourCrons);
+    config = new SharedResourceWorkManagementThreadConfig<>("CronSharedResourceProcessing", XYNA_CRON_SR_DEF, idAccess, workMgmt, 5000);
+    processingThread = new SharedResourceWorkManagementThread<>(config);
+    processingThread.start();
   }
 
 
   public void stop() {
     ourCrons.clear();
-    if (ourId != -1) {
-      srm.delete(XYNA_CRON_SR_DEF, List.of(String.valueOf(ourId)));
+    processingThread.end();
+    processingThread.interrupt();
+    try {
+      processingThread.join();
+    } catch (InterruptedException e) {
+    }
+    processingThread.removeOurEntry();//TODO: check
+  }
+
+
+  private static class CronNextidMgmt implements ShareResourceNextIdAccessor<SharedResourceCrons> {
+
+    @Override
+    public long readId(SharedResourceCrons nextEntry) {
+      return nextEntry.cronIds.get(0);
+    }
+
+
+    @Override
+    public SharedResourceCrons createNextIdEntry(long value) {
+      return new SharedResourceCrons(value);
+    }
+
+
+    @Override
+    public SharedResourceCrons createNewEntry() {
+      return new SharedResourceCrons();
+    }
+
+
+    @Override
+    public void updateNextIdEntry(SharedResourceCrons nextIdEntry, long value) {
+      nextIdEntry.cronIds.clear();
+      nextIdEntry.cronIds.add(value);
+    }
+
+
+  }
+
+  private static class CronWorkManagement implements SharedResourceWorkManagement {
+
+    private static final ResultSetReader<? extends Long> idReader = new ResultSetReader<Long>() {
+
+      @Override
+      public Long read(ResultSet rs) throws SQLException {
+        return rs.getLong(CronLikeOrder.COL_ID);
+      }
+    };
+
+
+    private final Set<Long> ourIds;
+
+
+    public CronWorkManagement(Set<Long> ourIds) {
+      this.ourIds = ourIds;
+    }
+
+
+    @Override
+    public List<SharedResourceWork> queryWork(long ourId) {
+      List<SharedResourceWork> result = new ArrayList<>();
+
+      //find cronLikeOrders that are not associated with a factory
+      //  add them to our entry
+      //  refresh our queue
+      List<Long> allCrons = queryAllCronIds();
+      List<Long> idsWithSharedResourceEntry = querySharedResourceCronIds();
+      if (idsWithSharedResourceEntry == null) {
+        return result;
+      }
+      allCrons.removeIf(x -> idsWithSharedResourceEntry.contains(x));
+
+      if (!allCrons.isEmpty()) {
+        result.add(new AssociateCronsWork(ourId, allCrons, ourIds));
+      }
+
+      return result;
+    }
+
+
+    private List<Long> querySharedResourceCronIds() {
+      SharedResourceManagement srm = XynaFactory.getInstance().getXynaNetworkWarehouse().getSharedResourceManagement();
+      SharedResourceRequestResult<SharedResourceCrons> readResult = srm.readAll(XYNA_CRON_SR_DEF);
+      if (!readResult.isSuccess() || readResult.getResources() == null) {
+        return null;
+      }
+      List<Long> result = new ArrayList<>();
+      for (SharedResourceInstance<SharedResourceCrons> entry : readResult.getResources()) {
+        if (Objects.equals(SharedResourceWorkManagementThread.NEXT_ID_KEY, entry.getId())) {
+          continue;
+        }
+        result.addAll(entry.getValue().getCronIds());
+      }
+      return result;
+    }
+
+
+    private List<Long> queryAllCronIds() {
+      ODS ods = ODSImpl.getInstance();
+      ODSConnection con = null;
+      try {
+        con = ods.openConnection();
+        PreparedQuery<Long> query = con.prepareQuery(new Query<Long>("SELECT " + CronLikeOrder.COL_ID + " FROM " + CronLikeOrder.TABLE_NAME,
+                                                                     idReader, CronLikeOrder.TABLE_NAME));
+        return ods.openConnection().query(query, Parameter.EMPTY_PARAMETER, -1);
+      } catch (PersistenceLayerException e) {
+      } finally {
+        if (con != null) {
+          try {
+            con.closeConnection();
+          } catch (PersistenceLayerException e) {
+          }
+        }
+      }
+      return Collections.emptyList();
+    }
+  }
+
+  private static class AssociateCronsWork implements SharedResourceWork {
+
+    private final Long ourId;
+    private final List<Long> ids;
+    private final Set<Long> ourCrons;
+
+
+    public AssociateCronsWork(Long ourId, List<Long> ids, Set<Long> ourCrons) {
+      this.ourId = ourId;
+      this.ids = ids;
+      this.ourCrons = ourCrons;
+    }
+
+
+    @Override
+    public void execute() {
+      SharedResourceManagement srm = XynaFactory.getInstance().getXynaNetworkWarehouse().getSharedResourceManagement();
+      long now = System.currentTimeMillis();
+      SharedResourceRequestResult<SharedResourceCrons> success = srm.update(XYNA_CRON_SR_DEF, List.of(String.valueOf(ourId)), x -> {
+        x.getValue().cronIds.addAll(ids);
+        if (logger.isDebugEnabled()) {
+          logger.debug("Added " + ids + " to our cron ids. Our cron ids are now " + x.getValue().getCronIds());
+        }
+        return new SharedResourceInstance<>(x.getId(), now, x.getValue());
+      });
+      if (!success.isSuccess()) {
+        if (logger.isWarnEnabled()) {
+          logger.warn("Failed to associate ids " + ids + " to us.");
+        }
+        return;
+      }
+      ourCrons.addAll(ids);
+      if(logger.isDebugEnabled()) {
+        logger.debug("updated ourCrons to " + ourCrons + ". Recreating queue.");
+      }
+      XynaFactory.getInstance().getProcessing().getXynaScheduler().getCronLikeScheduler().recreateQueue();
     }
   }
 
@@ -111,10 +291,15 @@ public class CronSharedResourceProcessing {
     }
 
 
+    public SharedResourceCrons(long id) {
+      this();
+      cronIds.add(id);
+    }
+
+
     public List<Long> getCronIds() {
       return cronIds;
     }
   }
-
 
 }
