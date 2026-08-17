@@ -266,7 +266,7 @@ public class WebSphereMQConnectStringData extends WebSphereMQConnectData {
     private static boolean isNamedParameterSyntax(String[] connectParams) {
         int namedParameters = 0;
         for (String param : connectParams) {
-            if (isNamedParameter(param)) {
+            if (isNamedParameter(param, allParams)) {
                 namedParameters++;
             }
         }
@@ -279,8 +279,33 @@ public class WebSphereMQConnectStringData extends WebSphereMQConnectData {
     }
 
 
-    private static boolean isNamedParameter(String param) {
-        return param != null && param.contains("=");
+    private static boolean isNamedParameter(String param, List<StringParameter<?>> validParameters) {
+        String parameterName = extractParameterName(param);
+        if (parameterName == null) {
+            return false;
+        }
+
+        for (StringParameter<?> validParameter : validParameters) {
+            if (validParameter.getName().equals(parameterName)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    private static String extractParameterName(String param) {
+        if (param == null) {
+            return null;
+        }
+
+        int separatorIndex = param.indexOf('=');
+        if (separatorIndex <= 0) {
+            return null;
+        }
+
+        return param.substring(0, separatorIndex);
     }
 
 
