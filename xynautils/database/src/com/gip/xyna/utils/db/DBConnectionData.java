@@ -67,12 +67,13 @@ public class DBConnectionData {
   public static final String DRIVER_SQLSERVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
   public static final String DRIVER_DB2 = "com.ibm.db2.jcc.DB2Driver";
   public static final String DRIVER_MARIADB = "org.mariadb.jdbc.Driver";
+  public static final String DRIVER_POSTGRESQL = "org.postgresql.Driver";
   
   public static final String PROPERTY_USER = "user";
   public static final String PROPERTY_PASSWORD = "password";
   
   public enum Type {
-    Oracle, MySQL, DB2, SQLServer, MARIADB, Other;
+    Oracle, MySQL, DB2, SQLServer, MARIADB, POSTGRESQL, Other;
   }
   
   public static final Map<Type,String> DRIVERS;
@@ -83,6 +84,7 @@ public class DBConnectionData {
     m.put( Type.DB2, DRIVER_DB2 );
     m.put( Type.SQLServer, DRIVER_SQLSERVER);
     m.put( Type.MARIADB, DRIVER_MARIADB);
+    m.put( Type.POSTGRESQL, DRIVER_POSTGRESQL);
     DRIVERS = Collections.unmodifiableMap(m);
   }
   
@@ -107,6 +109,7 @@ public class DBConnectionData {
     this.autoCommit = cd.autoCommit;
     this.clientInfo = cd.clientInfo;
     this.classLoaderToLoadDriver = cd.classLoaderToLoadDriver;
+    this.type = cd.type;
   }
   
   /**
@@ -223,6 +226,8 @@ public class DBConnectionData {
         return Type.SQLServer;
       } else if( lowerURL.startsWith("jdbc:mariadb:") ) {
         return Type.MARIADB;
+      } else if( lowerURL.startsWith("jdbc:postgresql:")) {
+        return Type.POSTGRESQL;
       } else {
         throw new IllegalStateException( "Unknown driver for url "+url);
       }
@@ -283,6 +288,8 @@ public class DBConnectionData {
       case DB2:
         break;
       case SQLServer:
+        break;
+      case POSTGRESQL:
         break;
       case Other:
         break;
@@ -376,7 +383,7 @@ public class DBConnectionData {
       }
       if (method != null) {
         try {
-          connection = (Connection) method.invoke(c.newInstance(), local_url, properties);
+          connection = (Connection) method.invoke(c.getConstructor().newInstance(), local_url, properties);
         } catch (InvocationTargetException e) {
           Throwable cause = e.getCause();
           if (cause instanceof SQLException) {
@@ -420,7 +427,7 @@ public class DBConnectionData {
   }
   private static boolean abstractMethodError_occured = false;
 
-  private void registerDriver() throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+  private void registerDriver() throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
     if (driverRegistered(driver)) {
       return;
     }
@@ -429,7 +436,7 @@ public class DBConnectionData {
         return;
       }
       Class<?> driverClass = Class.forName(driver, true, classLoaderToLoadDriver);
-      DriverManager.registerDriver((Driver) driverClass.newInstance());
+      DriverManager.registerDriver((Driver) driverClass.getConstructor().newInstance());
     }
   }
 
