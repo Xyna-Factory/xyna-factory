@@ -32,6 +32,18 @@ print_help() {
   echo "Usage: $0 install_gitintegration_libs (depends on build)"
 }
 
+adapt_licenses_xml() {
+  echo "Adding header to licenses.xml..."
+  LICENSE_DIR=${SCRIPT_DIR}/../release/third_parties
+  LICENSES_XML="${LICENSE_DIR}/licenses.xml"
+  LICENSE_HEADER_FILE=${SCRIPT_DIR}/build/licenses_header.txt
+  TMP_FILE="${LICENSE_DIR}/tmp.licenses.xml"
+
+  sed -i 's/<?xml.*?>//; s/<licenseSummary>//' ${LICENSES_XML} 
+  cat ${LICENSE_HEADER_FILE} ${LICENSES_XML} > ${TMP_FILE}
+  mv  ${TMP_FILE} ${LICENSES_XML}
+}
+
 check_dependencies() {
   echo "checking dependencies..."
   java --version
@@ -312,8 +324,9 @@ compose_connectors() {
   mkdir -p $SCRIPT_DIR/../release/third_parties
   mvn -f db.connector.pom.xml dependency:resolve -DexcludeTransitive=true
   mvn -f db.connector.pom.xml -DoutputDirectory="${SCRIPT_DIR}/../release/third_parties" dependency:copy-dependencies -DexcludeTransitive=true
-  mvn -f db.connector.pom.xml license:download-licenses -DlicensesOutputDirectory=${SCRIPT_DIR}/../release/third_parties -DlicensesOutputFile=${SCRIPT_DIR}/../release/third_parties/licenses.xml -DlicensesConfigFile=${SCRIPT_DIR}/db_connector_license_config.xml -DlicensesOutputFileEol=LF
+  mvn -f db.connector.pom.xml license:download-licenses -DlicensesOutputDirectory=${SCRIPT_DIR}/../release/third_parties -DlicensesOutputFile=${SCRIPT_DIR}/../release/third_parties/licenses.xml -DlicensesConfigFile=${SCRIPT_DIR}/build/license_override.xml -DlicensesOutputFileEol=LF
   cp ${SCRIPT_DIR}/prepare_db_connector_jars.sh ${SCRIPT_DIR}/../release
+  adapt_licenses_xml
 }
 
 compose_readmefile() {
@@ -357,6 +370,7 @@ compose_thirdparties() {
   # run license downloads (bom must have name "pom.xml")
   mvn license:download-licenses -f third_parties.pom.xml -DlicensesOutputDirectory=$SCRIPT_DIR/../release/third_parties -DlicensesOutputFile=$SCRIPT_DIR/../release/third_parties/licenses.xml
   echo "license-download done"
+  adapt_licenses_xml
 }
 
 #TODO: buildTemplateMechanismStandalone is a target in installation/build/build.xml
@@ -371,8 +385,16 @@ compose_templateMechanismStandalone() {
 compose_func_lib() {
   cd $SCRIPT_DIR/../release
   cp -r ../prerequisites/installation/install/func_lib .
+  replace_token_release_number
 }
 
+replace_token_release_number() {
+  cd $SCRIPT_DIR/../release
+  RELEASE_NUMBER=$(cat ${SCRIPT_DIR}/delivery/delivery.properties | grep ^release.number | cut -d'=' -f2)
+  DELIVERY_NAME=$(cat ${SCRIPT_DIR}/delivery/delivery.properties | grep ^delivery.name | cut -d'=' -f2)
+  sed -i "s|TOKEN_RELEASE_NUMBER|${RELEASE_NUMBER}|g" ./func_lib/func_lib.sh
+  sed -i "s|TOKEN_RELEASE_NAME|${DELIVERY_NAME}|g" ./func_lib/func_lib.sh
+}
 
 compose_etc() {
   cd $SCRIPT_DIR/../release
@@ -610,6 +632,11 @@ build() {
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 . ${SCRIPT_DIR}/build.env
 GIT_BRANCH_XYNA_MODELLER=""
+
+if [[ -z "$1" || "$1" == "help" || "$1" == "-h" || "$1" == "--help" ]]; then
+  print_help
+  exit 0
+fi
 
 check_dependencies
 prepare_build

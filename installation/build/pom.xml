@@ -34,6 +34,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        <bom.dir>.</bom.dir>
     </properties>
 
     <dependencyManagement>
@@ -126,7 +127,7 @@
             <dependency>
                 <groupId>com.gip.xyna</groupId>
                 <artifactId>xynafactory</artifactId>
-                <version>10.8.0.0</version>
+                <version>11.0.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.gip.xyna</groupId>
@@ -151,7 +152,7 @@
             <dependency>
                 <groupId>com.gip.xyna</groupId>
                 <artifactId>xynautils-database</artifactId>
-                <version>3.0.1</version>
+                <version>3.0.2</version>
             </dependency>
             <dependency>
                 <groupId>com.gip.xyna</groupId>
@@ -507,12 +508,12 @@
             <dependency>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-cli</artifactId>
-                <version>7.21.0</version>
+                <version>7.24.0</version>
             </dependency>
             <dependency>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator</artifactId>
-                <version>7.21.0</version>
+                <version>7.24.0</version>
             </dependency>
             <dependency>
                 <groupId>org.freemarker</groupId>
@@ -542,7 +543,7 @@
             <dependency>
               <groupId>com.fasterxml.jackson.core</groupId>
               <artifactId>jackson-core</artifactId>
-              <version>2.22.0</version>
+              <version>2.22.1</version>
               <scope>runtime</scope>
             </dependency>
             <dependency>
@@ -554,8 +555,14 @@
             <dependency>
               <groupId>com.fasterxml.jackson.core</groupId>
               <artifactId>jackson-databind</artifactId>
-              <version>2.22.0</version>
+              <version>2.22.1</version>
               <scope>runtime</scope>
+            </dependency>
+            <dependency>
+              <groupId>com.auth0</groupId>
+              <artifactId>jwks-rsa</artifactId>
+              <version>0.24.1</version>
+              <scope>compile</scope>
             </dependency>
             <dependency>
               <groupId>io.jsonwebtoken</groupId>
@@ -579,7 +586,24 @@
               <groupId>org.slf4j</groupId>
               <artifactId>slf4j-nop</artifactId>
               <version>2.0.17</version>
-          </dependency>
+            </dependency>
+            <dependency>
+              <groupId>net.java.dev.jna</groupId>
+              <artifactId>jna</artifactId>
+              <version>5.12.1</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>2.4.0</version>
+                <configuration>
+                    <licensesConfigFile>${bom.dir}/license_override.xml</licensesConfigFile>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

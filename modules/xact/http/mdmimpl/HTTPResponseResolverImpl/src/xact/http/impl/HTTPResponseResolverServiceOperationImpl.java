@@ -53,6 +53,7 @@ import base.File;
 import xact.http.HTTPResponseResolverServiceOperation;
 import xact.http.HeaderField;
 import xact.http.SendParameter;
+import xact.http.URLPathQuery;
 import xact.http.enums.httpmethods.HTTPMethod;
 import xact.http.enums.statuscode.HTTPStatusCode;
 import xact.http.impl.JSONValue.Type;
@@ -206,7 +207,25 @@ public class HTTPResponseResolverServiceOperationImpl implements ExtendedDeploym
         HTTPMethod method = sendParameter.getHTTPMethod();
         return method.getClass().getSimpleName();
       } else if (source.equals("url")) {
-        return sendParameter.getURLPath().getPath();
+        StringBuilder sb = new StringBuilder();
+        sb.append(sendParameter.getURLPath().getPath());
+        if (sendParameter.getURLPath().getQuery() != null) {
+          boolean first = true;
+          for (URLPathQuery q : sendParameter.getURLPath().getQuery()) {
+            if (first) {
+              sb.append("?");
+              first = false;
+            } else {
+              sb.append("&");
+            }
+            sb.append(q.getAttribute()).append("=").append(q.getValue());
+          }
+        }
+        if (sendParameter.getURLPath().getFragment() != null) {
+          sb.append("#");
+          sb.append(sendParameter.getURLPath().getFragment());
+        }
+        return sb.toString();
       } else if (source.equals("header")) {
         Optional<? extends HeaderField> field =
             sendParameter.getHeader().getHeaderField().stream().filter(hf -> hf.getName().equals(key)).findFirst();
@@ -215,6 +234,11 @@ public class HTTPResponseResolverServiceOperationImpl implements ExtendedDeploym
         } else {
           return null;
         }
+      } else if (source.equals("body")) {
+        if (request == null) {
+          return null;
+        }
+        return request.getText();
       }
       return null;
     }
@@ -393,7 +417,7 @@ public class HTTPResponseResolverServiceOperationImpl implements ExtendedDeploym
       HTTPResponse resp = new HTTPResponse();
       resp.responseBody = "";
       resp.responseCode = 404;
-      resp.reason = "Not found";
+      resp.reason = "Not Found";
       return resp;
     }
   }
@@ -441,7 +465,8 @@ public class HTTPResponseResolverServiceOperationImpl implements ExtendedDeploym
             //deleted? should be handled by another event that is just not processed yet
             return null;
           }
-        } else if (ce.erroneous) {
+        }
+        if (ce.erroneous) {
           return null;
         }
         if (e.getValue().fc.matches(request, sendParameter)) {
@@ -493,7 +518,11 @@ public class HTTPResponseResolverServiceOperationImpl implements ExtendedDeploym
 
     public synchronized void updateAfterChanges(WatchKey wkf) {
       for (WatchEvent<?> we : wkf.pollEvents()) {
-        String relativePath = ((Path) we.context()).toString();
+        Object ctx = we.context();
+        if (ctx == null) {
+          continue;
+        }
+        String relativePath = ((Path) ctx).toString();
         if (we.kind() == StandardWatchEventKinds.ENTRY_DELETE) {
           cache.remove(relativePath);
         } else if (we.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {

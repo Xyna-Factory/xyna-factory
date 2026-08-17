@@ -32,6 +32,7 @@ import org.apache.log4j.Logger;
 import xact.connection.ManagedConnection;
 import xact.ssh.EncryptionAlgorithmType;
 import xact.ssh.EncryptionType;
+import xact.ssh.KeyAttributes;
 import xact.ssh.KeyFileName;
 import xact.ssh.KeyPair;
 import xact.ssh.KeyPairGenerationParameter;
@@ -109,8 +110,23 @@ public class SSHConnectionManagementServiceOperationImpl implements ExtendedDepl
 
   public void generateKeyPair(KeyPairGenerationParameter kpgp) {
     EncryptionType type = EncryptionType.getByXynaFqClassNamen(kpgp.getType().getClass().getName());
+    KeyAttributes keyAttributes = kpgp.getKeyAttributes();
+    String identity = "";
+    String typeclass = "";
+    long priority = 0;
+    if (keyAttributes != null) {
+      if ((keyAttributes.getIdentity() != null) && (! keyAttributes.getIdentity().isBlank())) {
+        identity = keyAttributes.getIdentity();
+      }
+      if (keyAttributes.getPriority() != 0) {
+        priority = keyAttributes.getPriority();
+      }
+      if ((keyAttributes.getTypeclass() != null) && (! keyAttributes.getTypeclass().isBlank())) {
+        typeclass = keyAttributes.getTypeclass();
+      }
+    }
     SSHConnectionManagementRepositoryAccess.generateKeyPair(type, kpgp.getKeySize(), kpgp.getPassPhrase().getContent(),
-                                                            kpgp.getOverwriteExisting());
+                                                            kpgp.getOverwriteExisting(), identity, priority, typeclass);
   }
 
 
@@ -145,10 +161,7 @@ public class SSHConnectionManagementServiceOperationImpl implements ExtendedDepl
       type = EncryptionType.getByXynaFqClassNamen(encryptionAlgorithmType.getClass().getName());
     }
     List<KeyPair> keys = new ArrayList<KeyPair>();
-    List<String> simpleKeys = SSHConnectionManagementRepositoryAccess.getPublicKey(type);
-    for (String simpleKey : simpleKeys) {
-      keys.add(new KeyPair(simpleKey, null, null));
-    }
+    keys = SSHConnectionManagementRepositoryAccess.getPublicKey(type);
     return keys;
   }
 
@@ -173,13 +186,62 @@ public class SSHConnectionManagementServiceOperationImpl implements ExtendedDepl
 
 
   public void addKeyFiles(KeyFileName publicKeyFileName, KeyFileName privateKeyFileName, PassPhrase passPhrase) {
-    SSHConnectionManagementRepositoryAccess.addKeyFiles(publicKeyFileName.getName(), privateKeyFileName.getName(), passPhrase.getContent());
+    SSHConnectionManagementRepositoryAccess.addKeyFiles(publicKeyFileName.getName(), privateKeyFileName.getName(), passPhrase.getContent(),"",0,"");
   }
 
 
   public void addKeyPair(KeyPair keyPair) {
+    KeyAttributes keyAttributes = keyPair.getKeyAttributes();
+    String identity = "";
+    String typeclass = "";
+    long priority = 0;
+    if (keyAttributes != null) {
+      if ((keyAttributes.getIdentity() != null) && (! keyAttributes.getIdentity().isBlank())) {
+        identity = keyAttributes.getIdentity();
+      }
+      if (keyAttributes.getPriority() != 0) {
+        priority = keyAttributes.getPriority();
+      }
+      if ((keyAttributes.getTypeclass() != null) && (! keyAttributes.getTypeclass().isBlank())) {
+        typeclass = keyAttributes.getTypeclass();
+      }
+    }
     SSHConnectionManagementRepositoryAccess.addKeyPair(keyPair.getPrivateKey(), keyPair.getPublicKey(),
-                                                       keyPair.getPassPhrase().getContent());
+                                                       keyPair.getPassPhrase().getContent(), identity, priority, typeclass);
+  }
+
+
+  public void modifyKeypair(KeyAttributes oldkeyAttributes, KeyAttributes newkeyAttributes) {
+    String identity = "";
+    String typeclass = null;
+    long priority = 0;
+    if ((newkeyAttributes.getIdentity() != null) && (! newkeyAttributes.getIdentity().isBlank())) {
+      identity = newkeyAttributes.getIdentity();
+    }
+    if (newkeyAttributes.getPriority() != 0) {
+      priority = newkeyAttributes.getPriority();
+    }
+    if ((newkeyAttributes.getTypeclass() != null)) {
+      typeclass = newkeyAttributes.getTypeclass();
+    }
+    SSHConnectionManagementRepositoryAccess.modifyKeyPair(oldkeyAttributes.getIdentity(), identity, priority, typeclass);
+  }
+
+
+  public void addKeyFilesWithKeyAttributes(KeyFileName publicKeyFileName, KeyFileName privateKeyFileName, PassPhrase passPhrase, KeyAttributes keyAttributes) {
+    String identity = "";
+    String typeclass = "";
+    long priority = 0;
+    if ((keyAttributes.getIdentity() != null) && (! keyAttributes.getIdentity().isBlank())) {
+      identity = keyAttributes.getIdentity();
+    }
+    if (keyAttributes.getPriority() != 0) {
+      priority = keyAttributes.getPriority();
+    }
+    if ((keyAttributes.getTypeclass() != null) && (! keyAttributes.getTypeclass().isBlank())) {
+      typeclass = keyAttributes.getTypeclass();
+    }
+    SSHConnectionManagementRepositoryAccess.addKeyFiles(publicKeyFileName.getName(), privateKeyFileName.getName(), passPhrase.getContent(), identity, priority, typeclass);
   }
 
 }

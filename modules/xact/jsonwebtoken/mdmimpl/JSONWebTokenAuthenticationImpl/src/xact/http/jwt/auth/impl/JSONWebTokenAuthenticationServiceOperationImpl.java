@@ -1,0 +1,199 @@
+/*
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ */
+package xact.http.jwt.auth.impl;
+
+
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
+import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
+import com.gip.xyna.xfmg.exceptions.XFMG_UserAuthenticationFailedException;
+import com.gip.xyna.xfmg.xopctrl.usermanagement.AuthenticationResult;
+import com.gip.xyna.xfmg.xopctrl.usermanagement.Domain;
+import com.gip.xyna.xfmg.xopctrl.usermanagement.DomainType;
+import com.gip.xyna.xfmg.xopctrl.usermanagement.DomainName;
+import com.gip.xyna.xfmg.xopctrl.usermanagement.jwt.JWTDomainSpecificData;
+import com.gip.xyna.xprc.XynaOrderServerExtension;
+import com.gip.xyna.xprc.xpce.OrderContext;
+
+import xfmg.xopctrl.Role;
+import xact.http.jwt.auth.JSONWebTokenAuthenticationServiceOperation;
+
+
+
+public class JSONWebTokenAuthenticationServiceOperationImpl implements ExtendedDeploymentTask, JSONWebTokenAuthenticationServiceOperation {
+
+  private static final String ORDER_CONTEXT_KEY_JWT_TOKEN = "xfmg.xopctrl.jwt.token";
+  private static final String ORDER_CONTEXT_KEY_SELECTED_ROLE = "xfmg.xopctrl.jwt.selectedRole";
+  private static final Logger logger = CentralFactoryLogging.getLogger(JSONWebTokenAuthenticationServiceOperationImpl.class);
+
+
+  public void onDeployment() throws XynaException {
+    // TODO do something on deployment, if required
+    // This is executed again on each classloader-reload, that is each
+    // time a dependent object is redeployed, for example a type of an input parameter.
+  }
+
+
+  public void onUndeployment() throws XynaException {
+    // TODO do something on undeployment, if required
+    // This is executed again on each classloader-unload, that is each
+    // time a dependent object is redeployed, for example a type of an input parameter.
+  }
+
+
+  public Long getOnUnDeploymentTimeout() {
+    // The (un)deployment runs in its own thread. The service may define a timeout
+    // in milliseconds, after which Thread.interrupt is called on this thread.
+    // If null is returned, the default timeout (defined by XynaProperty xyna.xdev.xfractmod.xmdm.deploymenthandler.timeout) will be used.
+    return null;
+  }
+
+
+  public BehaviorAfterOnUnDeploymentTimeout getBehaviorAfterOnUnDeploymentTimeout() {
+    // Defines the behavior of the (un)deployment after reaching the timeout and if this service ignores a Thread.interrupt.
+    // - BehaviorAfterOnUnDeploymentTimeout.EXCEPTION: Deployment will be aborted, while undeployment will log the exception and NOT abort.
+    // - BehaviorAfterOnUnDeploymentTimeout.IGNORE: (Un)Deployment will be continued in another thread asynchronously.
+    // - BehaviorAfterOnUnDeploymentTimeout.KILLTHREAD: (Un)Deployment will be continued after calling Thread.stop on the thread.
+    //   executing the (Un)Deployment.
+    // If null is returned, the factory default <IGNORE> will be used.
+    return null;
+  }
+
+
+  @Override
+  public AuthenticationResult authenticate(XynaOrderServerExtension arg0, DomainName arg1) {
+    // first check if is DomainType.JWT
+    OrderContext ctx = arg0.getOrderContext();
+    Domain domain = resolveDomain(arg1 == null ? null : arg1.getName());
+    if (domain == null || domain.getDomainTypeAsEnum() != DomainType.JWT || !(domain.getDomainSpecificData() instanceof JWTDomainSpecificData)) {
+      return new AuthenticationResult.Builder().success(false).instance();
+    }
+
+    // get token from OrderContext and check
+    try {
+      Serializable tokenValue = ctx.get(ORDER_CONTEXT_KEY_JWT_TOKEN);
+      String token = tokenValue instanceof String ? (String) tokenValue : null;
+      if (token == null || token.isEmpty()) {
+        return new AuthenticationResult.Builder().success(false).instance();
+      }
+
+      // get roles from token claim, with DomainSpecificData do JWTAuthenticationLogic.resolveAvailableRoles()
+      JWTDomainSpecificData dsd = (JWTDomainSpecificData) domain.getDomainSpecificData();
+      List<String> roles = JWTAuthenticationLogic.resolveAvailableRoles(dsd, token);
+
+      // check if caller requested a specific role (from GUI dropdown)
+      Serializable selectedRoleValue = ctx.get(ORDER_CONTEXT_KEY_SELECTED_ROLE);
+      String requestedRole = selectedRoleValue instanceof String ? ((String) selectedRoleValue).trim() : null;
+
+      String role = null;
+      String roleSource = null;
+
+      if (requestedRole != null && !requestedRole.isEmpty()) {
+        // verify requested role is actually present in JWT claims - prevents spoofing
+        if (roles != null && roles.contains(requestedRole)) {
+          role = requestedRole;
+          roleSource = "selectedRole (verified)";
+        } else {
+          // role was requested but not found in claims -> reject
+          logger.warn(
+              "authenticate: requested selectedRole '" + requestedRole + "' not present in JWT claims " + roles + " - login rejected");
+          return new AuthenticationResult.Builder().success(false).instance();
+        }
+      } else if (roles != null && !roles.isEmpty()) {
+        // no selectedRole -> use highest-priority extracted role
+        role = roles.get(0);
+        roleSource = "extractedRoles";
+      } else {
+        role = dsd.getDefaultRole().map(String::trim).filter(r -> !r.isEmpty()).orElse(null);
+        roleSource = "defaultRole";
+      }
+      if (role == null || role.trim().isEmpty()) {
+        return new AuthenticationResult.Builder().success(false).instance();
+      }
+
+      if (logger.isDebugEnabled()) {
+        logger.debug("authenticate: using role '" + role.trim() + "' for login (source=" + roleSource + ")");
+      }
+
+      return new AuthenticationResult.Builder().success(true).role(role.trim()).instance();
+    } catch (XFMG_UserAuthenticationFailedException e) {
+      return new AuthenticationResult.Builder().success(false).instance();
+    }
+  }
+
+
+  @Override
+  public List<? extends Role> resolveAvailableRoles(XynaOrderServerExtension arg0, DomainName arg1) {
+    OrderContext ctx = arg0.getOrderContext();
+    Domain domain = resolveDomain(arg1 == null ? null : arg1.getName());
+    if (domain == null || domain.getDomainTypeAsEnum() != DomainType.JWT || !(domain.getDomainSpecificData() instanceof JWTDomainSpecificData)) {
+      return Collections.emptyList();
+    }
+    try {
+      Serializable tokenValue = ctx.get(ORDER_CONTEXT_KEY_JWT_TOKEN);
+      String token = tokenValue instanceof String ? (String) tokenValue : null;
+      if (token == null || token.isEmpty()) {
+        return Collections.emptyList();
+      }
+
+      JWTDomainSpecificData dsd = (JWTDomainSpecificData) domain.getDomainSpecificData();
+      List<String> roles = JWTAuthenticationLogic.resolveAvailableRoles(dsd, token);
+      if (roles == null || roles.isEmpty()) {
+        return Collections.emptyList();
+      }
+      List<Role> roleObjects = new ArrayList<>(roles.size());
+      for (String roleName : roles) {
+        if (roleName != null) {
+          Role r = new Role();
+          r.unversionedSetName(roleName);
+          roleObjects.add(r);
+        }
+      }
+      return roleObjects;
+    } catch (XFMG_UserAuthenticationFailedException e) {
+      return Collections.emptyList();
+    }
+  }
+
+
+  private Domain resolveDomain(String domainName) {
+    if (domainName == null || domainName.isEmpty()) {
+      return null;
+    }
+    try {
+      for (Domain domain : com.gip.xyna.XynaFactory.getInstance().getFactoryManagement().getDomains()) {
+        if (domainName.equals(domain.getName())) {
+          return domain;
+        }
+      }
+    } catch (Exception e) {
+      return null;
+    }
+    return null;
+  }
+
+}

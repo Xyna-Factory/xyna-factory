@@ -15,14 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="XynaTestFactoryInfrastructure" comment="" factoryVersion="" versionName="9.0.3" xmlVersion="1.1">
+--><Application applicationName="XynaTestFactoryInfrastructure" comment="" factoryVersion="" versionName="9.0.5" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Von der Xyna Test Factory benötigte Funktionalität</Description>
     <Description Lang="EN">Functionality required by Xyna Test Factory</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Processing</ApplicationName>
-        <VersionName>1.0.28</VersionName>
+        <VersionName>1.0.29</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>RegExp</ApplicationName>
@@ -30,7 +30,7 @@
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>UserSessionMgmt</ApplicationName>
-        <VersionName>1.0.3</VersionName>
+        <VersionName>1.0.4</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>XynaPropertyMgmt</ApplicationName>
@@ -38,7 +38,7 @@
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>ZetaFramework</ApplicationName>
-        <VersionName>0.6.66</VersionName>
+        <VersionName>0.6.69</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>

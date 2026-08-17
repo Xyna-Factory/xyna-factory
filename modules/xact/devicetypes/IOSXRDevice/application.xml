@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="IOSXRDevice" comment="" factoryVersion="" versionName="1.0.1" xmlVersion="1.1">
+<Application applicationName="IOSXRDevice" comment="" factoryVersion="" versionName="1.0.2" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Cisco IOS XR Devicetype</Description>
     <Description Lang="EN">Cisco IOS XR Devicetype</Description>
@@ -24,11 +24,11 @@
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Connection</ApplicationName>
-        <VersionName>1.0.15</VersionName>
+        <VersionName>1.0.16</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>SSHTools</ApplicationName>
-        <VersionName>1.0</VersionName>
+        <VersionName>1.0.1</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
    </ApplicationInfo>

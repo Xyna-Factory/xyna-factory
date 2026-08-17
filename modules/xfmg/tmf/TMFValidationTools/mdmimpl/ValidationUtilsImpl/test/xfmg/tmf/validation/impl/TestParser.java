@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -400,8 +400,41 @@ public class TestParser {
     testMatches(JSON, "LEN(EVAL($0))==1", Arrays.asList(new String[] {"$.serviceCharacteristic[?(@.name=='charac1')]"}), null, true);
     testMatches(JSON, "LEN(EVAL($0))==2", Arrays.asList(new String[] {"$.serviceCharacteristic[?(@.name=='charac2')]"}), null, true);    
   }
-  
-  
+
+
+  @Test
+  public void testFilter() {
+    String json = """
+               { "list": [
+           { "a": 1, "b": "hello" },
+           { "a": 2, "b": " mars" },
+           { "a": 1, "b": " world" }
+         ],
+         "b": 0
+        }
+              """;
+    testMatches(json, "LEN(FILTER(EVAL($0), EVAL(%1, $1)==EVAL($2)+1))", Arrays.asList(new String[] {"$.list", "$.a", "$.b"}), null, 2);
+  }
+
+
+  @Test
+  public void testMap() {
+    String json = """
+               { "list": [
+           { "a": 1, "b": "hello" },
+           { "a": 2, "b": " mars" },
+           { "a": 1, "b": " world" }
+         ],
+         "b": 0
+        }
+              """;
+    testMatches(json, "CONCAT(MAP(FILTER(EVAL($0), EVAL(%1, $1)==EVAL($2)+1), EVAL(%1, $2)))",
+                Arrays.asList(new String[] {"$.list", "$.a", "$.b"}), null, "hello world");
+    testMatches(json, "CONCAT(MAP(EVAL($0), EVAL(%1, $1)))", Arrays.asList(new String[] {"$.list", "$.a"}), null, "121");
+    testMatches(json, "CONCAT(MAP(EVAL($0), \"a\"))", Arrays.asList(new String[] {"$.list"}), null, "aaa");
+  }
+
+
   @Test
   public void test163817() {
     testMatches(JSON, "EVAL($0)>0", Arrays.asList(new String[] {"$.serviceCharacteristic[?(@.name=='intchar2')].value"}), null, true);

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Active Requests Table Info" TypeName="ActiveRequestsTableInfo" TypePath="xint.inference.gui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Active Requests Table Info" Name="ActiveRequestsTableInfo">
+    <Input>
+      <Data ID="14" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo14"/>
+    </Input>
+    <Output>
+      <Data ID="27" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo27"/>
+      <Data ID="526" IsList="true" Label="Download" ReferenceName="Download" ReferencePath="xint.inference" VariableName="download526"/>
+    </Output>
+    <ServiceReference ID="493" Label="Inference Server Mgmt" ReferenceName="InferenceServerMgmt.InferenceServerMgmt" ReferencePath="xint.inference">
+      <Source RefID="492"/>
+      <Target RefID="492"/>
+    </ServiceReference>
+    <ServiceReference ID="677" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="676"/>
+      <Target RefID="676"/>
+    </ServiceReference>
+    <ServiceReference ID="138" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="137"/>
+      <Target RefID="137"/>
+    </ServiceReference>
+    <Choice ID="40" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="14"/>
+      <Target RefID="141"/>
+      <Input>
+        <Data ID="55" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo55">
+          <Source RefID="40"/>
+        </Data>
+        <Source RefID="14"/>
+      </Input>
+      <Case ID="41" Label="true" Premise="%0%.bootstrap">
+        <Mappings ID="158" Label="Columns">
+          <Output>
+            <Data ID="175" IsList="true" Label="Selected Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn175">
+              <Source RefID="158"/>
+            </Data>
+            <Target RefID="176"/>
+          </Output>
+          <Mapping>%0%["0"].name="Status"</Mapping>
+          <Mapping>%0%["0"].path="status"</Mapping>
+          <Mapping>%0%["1"].name="Progress"</Mapping>
+          <Mapping>%0%["1"].path="progress"</Mapping>
+          <Mapping>%0%["2"].name="Request Id"</Mapping>
+          <Mapping>%0%["2"].path="requestId"</Mapping>
+          <Mapping>%0%["3"].name="Type"</Mapping>
+          <Mapping>%0%["3"].path="downloadType"</Mapping>
+          <Mapping>%0%["4"].name="Url"</Mapping>
+          <Mapping>%0%["4"].path="url"</Mapping>
+        </Mappings>
+        <Function ID="137" Label="Build TableInfo and Select Columns">
+          <Source RefID="138"/>
+          <Source RefID="14"/>
+          <Source RefID="628"/>
+          <Source RefID="176"/>
+          <Target RefID="138"/>
+          <Target RefID="140"/>
+          <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="138">
+            <Source RefID="14"/>
+            <Source RefID="628">
+              <Meta>
+                <LinkType>Constant</LinkType>
+                <ExpectedType>xint.inference.Download</ExpectedType>
+              </Meta>
+            </Source>
+            <Source RefID="176"/>
+          </Invoke>
+          <Receive ServiceID="138">
+            <Target RefID="140"/>
+          </Receive>
+        </Function>
+        <Assign ID="44">
+          <Source RefID="140"/>
+          <Target RefID="141"/>
+          <Copy>
+            <Source RefID="140"/>
+            <Target RefID="141"/>
+          </Copy>
+        </Assign>
+        <Data ID="140" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo140">
+          <Source RefID="137"/>
+        </Data>
+      </Case>
+      <Case ID="42" Label="false">
+        <Mappings ID="80" Label="Mapping">
+          <Input>
+            <Data ID="89" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo89">
+              <Source RefID="80"/>
+            </Data>
+            <Source RefID="14"/>
+          </Input>
+          <Output>
+            <Data ID="98" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo98">
+              <Source RefID="80"/>
+            </Data>
+            <Target RefID="99"/>
+          </Output>
+          <Mapping>%1%~=%0%</Mapping>
+        </Mappings>
+        <Assign ID="46">
+          <Source RefID="99"/>
+          <Target RefID="141"/>
+          <Copy>
+            <Source RefID="99"/>
+            <Target RefID="141"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Function ID="492" Label="Get Running Requests">
+      <Source RefID="493"/>
+      <Target RefID="493"/>
+      <Target RefID="495"/>
+      <Invoke Operation="getRunningRequests" ServiceID="493"/>
+      <Receive ServiceID="493">
+        <Target RefID="495"/>
+      </Receive>
+    </Function>
+    <Function ID="676" Label="TableHelper Sort Filter Limit">
+      <Source RefID="677"/>
+      <Source RefID="141"/>
+      <Source RefID="495"/>
+      <Target RefID="677"/>
+      <Target RefID="679"/>
+      <Invoke Operation="tableHelperSortFilterLimit" ServiceID="677">
+        <Source RefID="141">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="495">
+          <Meta>
+            <ExpectedType>xint.inference.Download</ExpectedType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="677">
+        <Target RefID="679">
+          <Meta>
+            <ExpectedType>xint.inference.Download</ExpectedType>
+          </Meta>
+        </Target>
+      </Receive>
+    </Function>
+    <Data ID="99" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo99">
+      <Source RefID="80"/>
+    </Data>
+    <Data ID="141" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo141">
+      <Source RefID="40"/>
+    </Data>
+    <Data ID="176" IsList="true" Label="Selected Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn176">
+      <Source RefID="158"/>
+    </Data>
+    <Data ID="495" IsList="true" Label="Download" ReferenceName="Download" ReferencePath="xint.inference" VariableName="download495">
+      <Source RefID="492"/>
+    </Data>
+    <Data ID="628" Label="Download" ReferenceName="Download" ReferencePath="xint.inference" VariableName="const_Download628"/>
+    <Data ID="679" IsList="true" Label="Download" ReferenceName="Download" ReferencePath="xint.inference" VariableName="download679"/>
+    <Assign ID="1">
+      <Source RefID="141"/>
+      <Source RefID="679"/>
+      <Target RefID="27"/>
+      <Target RefID="526"/>
+      <Copy>
+        <Source RefID="141">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="27"/>
+      </Copy>
+      <Copy>
+        <Source RefID="679">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="526"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

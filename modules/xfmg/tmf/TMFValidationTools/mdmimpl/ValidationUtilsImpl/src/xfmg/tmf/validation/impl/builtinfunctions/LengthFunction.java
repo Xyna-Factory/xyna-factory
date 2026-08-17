@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,16 @@
  */
 package xfmg.tmf.validation.impl.builtinfunctions;
 
+
+
 import java.util.List;
 
 import xfmg.tmf.validation.impl.ConversionUtils;
 import xfmg.tmf.validation.impl.SyntaxTreeNode;
 import xfmg.tmf.validation.impl.TMFExpressionContext;
 import xfmg.tmf.validation.impl.functioninterfaces.TMFDirectFunction;
+
+
 
 public class LengthFunction implements TMFDirectFunction {
 
@@ -33,7 +37,7 @@ public class LengthFunction implements TMFDirectFunction {
       return 0;
     }
     if (o instanceof List) {
-      return ((List)o).size();
+      return ((List<?>) o).size();
     } else {
       String s = ConversionUtils.getString(o);
       if (s == null) {
@@ -43,10 +47,12 @@ public class LengthFunction implements TMFDirectFunction {
     }
   }
 
+
   @Override
   public String getName() {
     return "LEN";
   }
+
 
   @Override
   public void validate(SyntaxTreeNode parent, SyntaxTreeNode[] args) {

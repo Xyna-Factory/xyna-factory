@@ -37,7 +37,7 @@ public interface VetoManagementInterface {
    * @param vetos
    * @param urgency
    * @return
-   * @deprecated Verwende stattdessen allocateVetos(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos, long urgency)
+   * @deprecated Verwende stattdessen {@code allocateVetos(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos, long urgency)}
    */
   @Deprecated
   public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> vetos, long urgency);
@@ -57,7 +57,7 @@ public interface VetoManagementInterface {
    * Macht die Belegungen des letzten allocateVetos(...) rückgängig.
    * @param orderInformation
    * @param vetos
-   * @deprecated Verwende stattdessen undoAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos)
+   * @deprecated Verwende stattdessen {@code undoAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos)}
    */
   @Deprecated
   public void undoAllocation(OrderInformation orderInformation, List<String> vetos);
@@ -74,7 +74,7 @@ public interface VetoManagementInterface {
    * Macht die Belegungen des letzten allocateVetos(...) permanent.
    * @param orderInformation
    * @param vetos
-   * @deprecated Verwende stattdessen finalizeAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos)
+   * @deprecated Verwende stattdessen {@code finalizeAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos)}
    */
   @Deprecated
   public void finalizeAllocation(OrderInformation orderInformation, List<String> vetos);  

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Authenticate with JWT" TypeName="AuthenticateWithJWT" TypePath="xact.http.jwt.auth" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Authenticate with JWT" Name="AuthenticateWithJWT">
+    <Input>
+      <Data ID="18" Label="Domain Name" ReferenceName="DomainName" ReferencePath="xfmg.xopctrl" VariableName="domainName18"/>
+    </Input>
+    <Output>
+      <Data ID="52" Label="AuthenticationResult" ReferenceName="AuthenticationResult" ReferencePath="xfmg.xopctrl" VariableName="authenticationResult52"/>
+    </Output>
+    <ServiceReference ID="33" Label="JSON Web Token Authentication" ReferenceName="JSONWebTokenAuthentication.JSONWebTokenAuthentication" ReferencePath="xact.http.jwt.auth">
+      <Source RefID="32"/>
+      <Target RefID="32"/>
+    </ServiceReference>
+    <Function ID="32" Label="Authenticate">
+      <Source RefID="33"/>
+      <Source RefID="18"/>
+      <Target RefID="33"/>
+      <Target RefID="35"/>
+      <Invoke Operation="authenticate" ServiceID="33">
+        <Source RefID="18"/>
+      </Invoke>
+      <Receive ServiceID="33">
+        <Target RefID="35"/>
+      </Receive>
+      <Catch ExceptionID="74" ID="75">
+        <Mappings ID="89" Label="Mapping">
+          <Output>
+            <Data ID="102" Label="AuthenticationResult" ReferenceName="AuthenticationResult" ReferencePath="xfmg.xopctrl" VariableName="authenticationResult102">
+              <Source RefID="89"/>
+            </Data>
+            <Target RefID="103"/>
+          </Output>
+          <Mapping>%0%.success="false"</Mapping>
+        </Mappings>
+        <Assign>
+          <Source RefID="103"/>
+          <Target RefID="35"/>
+          <Copy>
+            <Source RefID="103"/>
+            <Target RefID="35"/>
+          </Copy>
+        </Assign>
+      </Catch>
+    </Function>
+    <Data ID="35" Label="AuthenticationResult" ReferenceName="AuthenticationResult" ReferencePath="xfmg.xopctrl" VariableName="authenticationResult35">
+      <Source RefID="32"/>
+    </Data>
+    <Data ID="103" Label="AuthenticationResult" ReferenceName="AuthenticationResult" ReferencePath="xfmg.xopctrl" VariableName="authenticationResult103">
+      <Source RefID="89"/>
+    </Data>
+    <Exception ID="74" Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception74">
+      <Source RefID="34"/>
+    </Exception>
+    <Assign ID="1">
+      <Source RefID="35"/>
+      <Target RefID="52"/>
+      <Copy>
+        <Source RefID="35"/>
+        <Target RefID="52"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

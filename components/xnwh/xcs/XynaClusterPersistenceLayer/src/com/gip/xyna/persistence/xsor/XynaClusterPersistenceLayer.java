@@ -49,6 +49,7 @@ import com.gip.xyna.xfmg.xclusteringservices.Clustered;
 import com.gip.xyna.xfmg.xclusteringservices.XynaClusteringServicesManagement;
 import com.gip.xyna.xfmg.xclusteringservices.clusterprovider.XSORClusterProvider;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
+import com.gip.xyna.xfmg.xfmon.fruntimestats.FactoryRuntimeStatistics;
 import com.gip.xyna.xfmg.xfmon.fruntimestats.path.StatisticsPath;
 import com.gip.xyna.xfmg.xfmon.fruntimestats.path.StatisticsPathImpl;
 import com.gip.xyna.xfmg.xfmon.fruntimestats.statistics.PullStatistics;
@@ -80,6 +81,7 @@ public class XynaClusterPersistenceLayer implements PersistenceLayer, Clustered 
   private final static String STATISTICS_PATH_PART_XSOR = "xsor";
   private final static String STATISTICS_PATH_PART_MAX_SIZE = "maxSize";
   private final static String STATISTICS_PATH_PART_CURRENT_SIZE = "currentSize";
+  private final static String STATISTICS_PATH_PART_QUEUE_SIZE = "queueSize";
 
   private long clusterInstanceId = -1;
   private XynaScalableObjectRepositoryInterface xsor;
@@ -191,14 +193,35 @@ public class XynaClusterPersistenceLayer implements PersistenceLayer, Clustered 
       throw new RuntimeException("", e);
     } catch (XFMG_StatisticAlreadyRegistered e) {
     }
+    
+    PullStatistics<Integer, IntegerStatisticsValue> queueLengthStatistics =
+        new PullStatistics<Integer, IntegerStatisticsValue>(basePath.append(STATISTICS_PATH_PART_QUEUE_SIZE)) {
+          @Override
+          public IntegerStatisticsValue getValueObject() {
+            return new IntegerStatisticsValue(xsorMemory.getOutgoingQueue().size());
+          }
+          @Override
+          public String getDescription() {
+            return "Current queue length of the xsor table '" + tableName + "'.";
+          }
+        };
+    try {
+      XynaFactory.getInstance().getFactoryManagement().getXynaFactoryMonitoring().getFactoryRuntimeStatistics()
+          .registerStatistic(queueLengthStatistics);
+    } catch (XFMG_InvalidStatisticsPath e) {
+      throw new RuntimeException("", e);
+    } catch (XFMG_StatisticAlreadyRegistered e) {
+    }
   }
   
   
   public void unregisterTableStatistics(final String tableName) {
     StatisticsPath basePath = getBasePath(tableName);
     try {
-      XynaFactory.getInstance().getFactoryManagement().getXynaFactoryMonitoring().getFactoryRuntimeStatistics().unregisterStatistic(basePath.append(STATISTICS_PATH_PART_MAX_SIZE));
-      XynaFactory.getInstance().getFactoryManagement().getXynaFactoryMonitoring().getFactoryRuntimeStatistics().unregisterStatistic(basePath.append(STATISTICS_PATH_PART_CURRENT_SIZE));
+      FactoryRuntimeStatistics stats = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryMonitoring().getFactoryRuntimeStatistics();
+      stats.unregisterStatistic(basePath.append(STATISTICS_PATH_PART_MAX_SIZE));
+      stats.unregisterStatistic(basePath.append(STATISTICS_PATH_PART_CURRENT_SIZE));
+      stats.unregisterStatistic(basePath.append(STATISTICS_PATH_PART_QUEUE_SIZE));
     } catch (XFMG_InvalidStatisticsPath e) {
     }
   }

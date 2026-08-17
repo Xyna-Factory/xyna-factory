@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,51 +16,17 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="build" default="build" basedir=".">
+<project name="build" default="build-all" basedir=".">
 
-    <!-- this is the absolute path to the root -->
-    <pathconvert property="root.dir">
-        <path location="${basedir}/../../../" />
-    </pathconvert>
     <property name="target.dir" value="${basedir}/deploy/" />
-    <property name="application.dir" value="${basedir}" />
-    <property name="datamodelres" value="${basedir}/sharedlib/xyna-openapi/generators/xmom-data-model/src/main/resources/xmom-data-model/" />
 
-    <target name="build">
-
-        <antcall target="prepare-mdm-jar-if-missing" />
-        
-        <antcall target="replace-appversion" />
-
-        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="sharedlib/xyna-openapi">
-            <property name="target.dir" value="${target.dir}/app" />
+    <target name="build-all">
+        <ant antfile="build.xml" target="build" inheritAll="false" dir="oasBase">
+            <property name="target.dir" value="${target.dir}" />
         </ant>
-        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/ApplicationGenerationImpl">
-            <property name="target.dir" value="${target.dir}/app" />
+        <ant antfile="build.xml" target="build" inheritAll="false" dir="oasAppManagement">
+            <property name="target.dir" value="${target.dir}" />
         </ant>
-        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/OASObjectParsingImpl">
-            <property name="target.dir" value="${target.dir}/app" />
-        </ant>
-        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/OasGuiServicesImpl">
-            <property name="target.dir" value="${target.dir}/app" />
-        </ant>
-
-        <antcall target="build-application" />
     </target>
 
-    <target name="prepare-mdm-jar">
-        <antcall target="create-mdm-jar" />
-        <supply-mdm-jar type="mdmimpl" name="ApplicationGenerationImpl" />
-        <supply-mdm-jar type="mdmimpl" name="OASObjectParsingImpl" />
-        <supply-mdm-jar type="mdmimpl" name="OasGuiServicesImpl" />
-        <delete file="${basedir}/mdm.jar" />
-    </target>
-
-    <target name="replace-appversion">
-        <xmlproperty file="application.xml" />
-        <copy file="${datamodelres}/applicationAntToken.mustache" tofile="${datamodelres}/application.mustache" overwrite="true" />
-        <replace file="${datamodelres}/application.mustache" token="$AppVersion" value="${Application(versionName)}"/>
-    </target>
-
-    <import file="${root.dir}/installation/build/buildApplication.xml" />
 </project>
