@@ -20,6 +20,7 @@ package com.gip.xyna.xfmg.xfctrl.queuemgmnt;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 import com.gip.xyna.xnwh.persistence.Column;
 import com.gip.xyna.xnwh.persistence.ColumnType;
@@ -27,7 +28,7 @@ import com.gip.xyna.xnwh.persistence.Persistable;
 import com.gip.xyna.xnwh.persistence.ResultSetReader;
 import com.gip.xyna.xnwh.persistence.Storable;
 
-import com.gip.xyna.utils.misc.EnvironmentVariable.StringEnvironmentVariable;
+import com.gip.xyna.utils.misc.EnvironmentVariable;
 
 @Persistable(primaryKey = Queue.Constant.ColName.UNIQUE_NAME, tableName = Queue.Constant.TABLE_NAME)
 class Queue extends Storable<Queue> implements IQueue {
@@ -168,16 +169,24 @@ class Queue extends Storable<Queue> implements IQueue {
     this.externalNameEnv = externalNameEnv;
   }
 
+
   public String getExternalNameForCurrentVersion() {
     if (isInitialVersion()) {
       return externalName;
     }
     if (externalNameEnv != null && !externalNameEnv.isEmpty()) {
-      var envVar = new StringEnvironmentVariable(externalNameEnv);
+      EnvironmentVariable<String> envVar = new EnvironmentVariable<String>(externalNameEnv) {
+
+        @Override
+        public Optional<String> getValue() {
+          return readValue();
+        }
+      };
       return envVar.getValue().orElse(externalName);
     }
     return externalName;
   }
+
 
  @Override
   public QueueConnectData getConnectData() {
