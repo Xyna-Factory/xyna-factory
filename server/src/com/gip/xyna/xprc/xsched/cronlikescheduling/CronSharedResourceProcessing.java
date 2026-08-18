@@ -82,30 +82,32 @@ public class CronSharedResourceProcessing {
 
 
   public void addCronResponsibility(Long id) {
-    ourCrons.add(id);
-    if (processingThread.getOurId() != -1) {
-      srm.update(XYNA_CRON_SR_DEF, List.of(String.valueOf(processingThread.getOurId())), x -> {
-        x.getValue().getCronIds().add(id);
-        if (logger.isDebugEnabled()) {
-          logger.debug("Added " + id + " to our cron ids. Our cron ids are now " + x.getValue().getCronIds());
-        }
-        return new SharedResourceInstance<>(String.valueOf(processingThread.getOurId()), System.currentTimeMillis(), x.getValue());
-      });
+    ourCrons.add(id); // always add it to our cronLikeOrders, even if we do not have shared resource connectivity
+    if (processingThread.getOurId() == -1) {
+      return;
     }
+    srm.update(XYNA_CRON_SR_DEF, List.of(String.valueOf(processingThread.getOurId())), x -> {
+      x.getValue().getCronIds().add(id);
+      if (logger.isDebugEnabled()) {
+        logger.debug("Added " + id + " to our cron ids. Our cron ids are now " + x.getValue().getCronIds());
+      }
+      return new SharedResourceInstance<>(String.valueOf(processingThread.getOurId()), System.currentTimeMillis(), x.getValue());
+    });
   }
 
 
   public void removeCronResponsibility(Long id) {
     ourCrons.remove(id);
-    if (processingThread.getOurId() != -1) {
-      srm.update(XYNA_CRON_SR_DEF, List.of(String.valueOf(processingThread.getOurId())), x -> {
-        x.getValue().getCronIds().remove(id);
-        if (logger.isDebugEnabled()) {
-          logger.debug("Removed " + id + " to our cron ids. Our cron ids are now " + x.getValue().getCronIds());
-        }
-        return new SharedResourceInstance<>(String.valueOf(processingThread.getOurId()), System.currentTimeMillis(), x.getValue());
-      });
+    if (processingThread.getOurId() == -1) {
+      return;
     }
+    srm.update(XYNA_CRON_SR_DEF, List.of(String.valueOf(processingThread.getOurId())), x -> {
+      x.getValue().getCronIds().remove(id);
+      if (logger.isDebugEnabled()) {
+        logger.debug("Removed " + id + " to our cron ids. Our cron ids are now " + x.getValue().getCronIds());
+      }
+      return new SharedResourceInstance<>(String.valueOf(processingThread.getOurId()), System.currentTimeMillis(), x.getValue());
+    });
   }
 
 

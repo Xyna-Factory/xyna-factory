@@ -30,6 +30,7 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 
 
+
 /**
  * A thread that allows multiple factories to cooperate on shared resources.<br><br>
  * 
@@ -142,7 +143,8 @@ public class SharedResourceWorkManagementThread<T extends SharedResourceDefiniti
       long lastUpdate = resource.getCreated();
       if (lastUpdate + staleThresholdMs < now) {
         if (logger.isDebugEnabled()) {
-          logger.debug("Identified Stale Entry Deletion work for entry with id " + resource.getId() + " lastUpdate: " + lastUpdate);
+          logger.debug("Identified Stale Entry Deletion work for entry of type " + resourceDef.getPath() + " with id " + resource.getId()
+              + " lastUpdate: " + lastUpdate);
         }
         result.add(new DeleteStaleEntryWork(resource.getId(), resourceDef));
       }
@@ -249,13 +251,13 @@ public class SharedResourceWorkManagementThread<T extends SharedResourceDefiniti
       }
     }
     R oldResource = nextIdAccessor.createNewEntry();
-    if(oldId != -1l) {
+    if (oldId != -1l) {
       SharedResourceRequestResult<R> readResult = srm.read(resourceDef, List.of(String.valueOf(oldId)));
-      if(readResult.isSuccess() && readResult.getResources() != null && readResult.getResources().size() == 1) {
+      if (readResult.isSuccess() && readResult.getResources() != null && readResult.getResources().size() == 1) {
         oldResource = readResult.getResources().get(0).getValue();
       }
     }
-    
+
     long now = System.currentTimeMillis();
     if (ourId != -1l) {
       srm.create(resourceDef, List.of(new SharedResourceInstance<>(String.valueOf(ourId), now, oldResource)));
@@ -343,7 +345,7 @@ public class SharedResourceWorkManagementThread<T extends SharedResourceDefiniti
     @Override
     public void execute() {
       if (logger.isDebugEnabled()) {
-        logger.debug("Deleting State entry with id " + id);
+        logger.debug("Deleting State entry with id " + id + " from " + resourceDef.getPath());
       }
       SharedResourceRequestResult<?> result =
           XynaFactory.getInstance().getXynaNetworkWarehouse().getSharedResourceManagement().delete(resourceDef, List.of(id));
