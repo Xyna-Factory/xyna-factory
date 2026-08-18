@@ -500,7 +500,7 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
       CLOStore cloStore = new CLOStore(cronLikeTimer,newCronLikeOrder,prio,!usingForeignConnection,uniqueKeys);
 
       if (sharedResourceConfigured) {
-        cronSharedResourceProcessing.createCron(newCronLikeOrder.getId());
+        cronSharedResourceProcessing.addCronResponsibility(newCronLikeOrder.getId());
       }
 
       try {
@@ -784,7 +784,7 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
       PersistenceLayerException {
 
     if(sharedResourceConfigured) {
-      cronSharedResourceProcessing.deleteCron(id);
+      cronSharedResourceProcessing.removeCronResponsibility(id);
     }
 
     final boolean localConnection = con == null;
@@ -1516,7 +1516,7 @@ public class CronLikeScheduler extends CronLikeSchedulingClusterServices impleme
     if(!sharedResourceConfigured) {
       return true;
     }
-    return cronSharedResourceProcessing.checkCron(order.getId());
+    return cronSharedResourceProcessing.isResponsibleFor(order.getId());
   }
 
   protected void readNextFromPersistenceLayer(ODSConnection con, int readsize)

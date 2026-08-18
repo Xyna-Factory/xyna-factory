@@ -30,7 +30,19 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 
 
-
+/**
+ * A thread that allows multiple factories to cooperate on shared resources.<br><br>
+ * 
+ * It keeps track of two entries for a factory:<br>
+ *   The nextId-entry is a counter that provides unique keys for the factory-entry.<br>
+ *   The factory-entry contains resource specific data<br><br>
+ * 
+ * The shared resource table is checked at regular intervals to determine which factory is responsible
+ * for executing work. There can be multiple kinds of work and this class manages cleanup work
+ * (deleting factory-entries for disconnected factories) automatically. After a factory executes work,
+ * it updates its factory-entry with a new id.
+ * 
+ */
 public class SharedResourceWorkManagementThread<T extends SharedResourceDefinition<R>, R> extends Thread {
 
   private static final Logger logger = CentralFactoryLogging.getLogger(SharedResourceWorkManagementThread.class);
@@ -38,7 +50,7 @@ public class SharedResourceWorkManagementThread<T extends SharedResourceDefiniti
   public static final String NEXT_ID_KEY = "nextId";
 
   private boolean running;
-  private final ShareResourceNextIdAccessor<R> nextIdAccessor;
+  private final ShareResourceEntryManagement<R> nextIdAccessor;
   private final SharedResourceWorkManagement workMgmt;
   private final SharedResourceDefinition<R> resourceDef;
   private final SharedResourceManagement srm;
@@ -296,7 +308,7 @@ public class SharedResourceWorkManagementThread<T extends SharedResourceDefiniti
   }
 
 
-  public static interface ShareResourceNextIdAccessor<R> {
+  public static interface ShareResourceEntryManagement<R> {
 
     long readId(R nextEntry);
 
@@ -357,12 +369,12 @@ public class SharedResourceWorkManagementThread<T extends SharedResourceDefiniti
 
     private final String name;
     private final T sharedResourceDef;
-    private final ShareResourceNextIdAccessor<R> nextIdProcessor;
+    private final ShareResourceEntryManagement<R> nextIdProcessor;
     private final SharedResourceWorkManagement workMgmt;
     private final long heartbeatIntervalMs;
 
 
-    public SharedResourceWorkManagementThreadConfig(String name, T sharedResourceDef, ShareResourceNextIdAccessor<R> nextIdProcessor,
+    public SharedResourceWorkManagementThreadConfig(String name, T sharedResourceDef, ShareResourceEntryManagement<R> nextIdProcessor,
                                                     SharedResourceWorkManagement workMgmt, long heartbeatIntervalMs) {
       this.name = name;
       this.sharedResourceDef = sharedResourceDef;

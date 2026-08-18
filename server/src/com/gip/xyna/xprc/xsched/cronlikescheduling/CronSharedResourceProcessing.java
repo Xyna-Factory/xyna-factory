@@ -38,7 +38,7 @@ import com.gip.xyna.xnwh.persistence.ODSImpl;
 import com.gip.xyna.xnwh.persistence.Parameter;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.persistence.PreparedQuery;
-import com.gip.xyna.xnwh.persistence.Query;
+import com.gip.xyna.xnwh.persistence.PreparedQueryCache;
 import com.gip.xyna.xnwh.persistence.ResultSetReader;
 import com.gip.xyna.xnwh.sharedresources.KryoSerializedSharedResourceDefinition;
 import com.gip.xyna.xnwh.sharedresources.SharedResourceDefinition;
@@ -46,15 +46,23 @@ import com.gip.xyna.xnwh.sharedresources.SharedResourceInstance;
 import com.gip.xyna.xnwh.sharedresources.SharedResourceManagement;
 import com.gip.xyna.xnwh.sharedresources.SharedResourceRequestResult;
 import com.gip.xyna.xnwh.sharedresources.SharedResourceWorkManagementThread;
-import com.gip.xyna.xnwh.sharedresources.SharedResourceWorkManagementThread.ShareResourceNextIdAccessor;
+import com.gip.xyna.xnwh.sharedresources.SharedResourceWorkManagementThread.ShareResourceEntryManagement;
 import com.gip.xyna.xnwh.sharedresources.SharedResourceWorkManagementThread.SharedResourceWork;
 import com.gip.xyna.xnwh.sharedresources.SharedResourceWorkManagementThread.SharedResourceWorkManagement;
 import com.gip.xyna.xnwh.sharedresources.SharedResourceWorkManagementThread.SharedResourceWorkManagementThreadConfig;
 
 
 
-// keeps track of which crons belong to us.
-// this prevents multiple factories from trying to execute the same cron
+/** Keeps track of which cronLikeOrders belong to us.
+*   this prevents multiple factories from trying to execute the same cronLikeOrder.<br><br>
+*   
+*   The ourCrons-member contains the IDs of all cronLikeOrders we are responsible for.
+*   When a conLikeOrder is created by this factory, it is added to ourCrons.<br><br>
+*   
+*   When it is our turn to work, we check for cronLikeOrders that are not associated with
+*   any factory. In that case, we add that cronLikeOrder to ourIds and update our
+*   shared resource management entry.
+*/
 public class CronSharedResourceProcessing {
 
   public static final SharedResourceDefinition<SharedResourceCrons> XYNA_CRON_SR_DEF =
@@ -73,8 +81,7 @@ public class CronSharedResourceProcessing {
   }
 
 
-  public void createCron(Long id) {
-    //add id to the IDs we are responsible for
+  public void addCronResponsibility(Long id) {
     ourCrons.add(id);
     if (processingThread.getOurId() != -1) {
       srm.update(XYNA_CRON_SR_DEF, List.of(String.valueOf(processingThread.getOurId())), x -> {
@@ -88,9 +95,7 @@ public class CronSharedResourceProcessing {
   }
 
 
-  public void deleteCron(Long id) {
-    //remove id from IDs we are responsible for
-    //does nothing, if we are not responsible for this cron
+  public void removeCronResponsibility(Long id) {
     ourCrons.remove(id);
     if (processingThread.getOurId() != -1) {
       srm.update(XYNA_CRON_SR_DEF, List.of(String.valueOf(processingThread.getOurId())), x -> {
@@ -104,8 +109,7 @@ public class CronSharedResourceProcessing {
   }
 
 
-  public boolean checkCron(Long id) {
-    //answers the question 'are we responsible for this id?'
+  public boolean isResponsibleFor(Long id) {
     return ourCrons.contains(id);
   }
 
@@ -113,7 +117,7 @@ public class CronSharedResourceProcessing {
   public void start() {
     ourCrons.clear();
     SharedResourceWorkManagementThreadConfig<SharedResourceDefinition<SharedResourceCrons>, SharedResourceCrons> config;
-    ShareResourceNextIdAccessor<SharedResourceCrons> idAccess = new CronNextidMgmt();
+    ShareResourceEntryManagement<SharedResourceCrons> idAccess = new CronEntryMgmt();
     SharedResourceWorkManagement workMgmt = new CronWorkManagement(ourCrons);
     config = new SharedResourceWorkManagementThreadConfig<>("CronSharedResourceProcessing", XYNA_CRON_SR_DEF, idAccess, workMgmt, 5000);
     processingThread = new SharedResourceWorkManagementThread<>(config);
@@ -129,11 +133,11 @@ public class CronSharedResourceProcessing {
       processingThread.join();
     } catch (InterruptedException e) {
     }
-    processingThread.removeOurEntry();//TODO: check
+    processingThread.removeOurEntry();
   }
 
 
-  private static class CronNextidMgmt implements ShareResourceNextIdAccessor<SharedResourceCrons> {
+  private static class CronEntryMgmt implements ShareResourceEntryManagement<SharedResourceCrons> {
 
     @Override
     public long readId(SharedResourceCrons nextEntry) {
@@ -164,6 +168,7 @@ public class CronSharedResourceProcessing {
 
   private static class CronWorkManagement implements SharedResourceWorkManagement {
 
+    private static final String sql = "SELECT " + CronLikeOrder.COL_ID + " FROM " + CronLikeOrder.TABLE_NAME;
     private static final ResultSetReader<? extends Long> idReader = new ResultSetReader<Long>() {
 
       @Override
@@ -174,29 +179,27 @@ public class CronSharedResourceProcessing {
 
 
     private final Set<Long> ourIds;
+    private final PreparedQueryCache cache;
 
 
     public CronWorkManagement(Set<Long> ourIds) {
       this.ourIds = ourIds;
+      cache = new PreparedQueryCache();
     }
 
 
     @Override
     public List<SharedResourceWork> queryWork(long ourId) {
       List<SharedResourceWork> result = new ArrayList<>();
-
-      //find cronLikeOrders that are not associated with a factory
-      //  add them to our entry
-      //  refresh our queue
-      List<Long> allCrons = queryAllCronIds();
+      List<? extends Long> candidateCrons = queryAllCronIds();
       List<Long> idsWithSharedResourceEntry = querySharedResourceCronIds();
       if (idsWithSharedResourceEntry == null) {
         return result;
       }
-      allCrons.removeIf(x -> idsWithSharedResourceEntry.contains(x));
+      candidateCrons.removeIf(x -> idsWithSharedResourceEntry.contains(x));
 
-      if (!allCrons.isEmpty()) {
-        result.add(new AssociateCronsWork(ourId, allCrons, ourIds));
+      if (!candidateCrons.isEmpty()) {
+        result.add(new AssociateCronsWork(ourId, new ArrayList<>(candidateCrons), ourIds));
       }
 
       return result;
@@ -220,14 +223,14 @@ public class CronSharedResourceProcessing {
     }
 
 
-    private List<Long> queryAllCronIds() {
+    private List<? extends Long> queryAllCronIds() {
       ODS ods = ODSImpl.getInstance();
       ODSConnection con = null;
       try {
         con = ods.openConnection();
-        PreparedQuery<Long> query = con.prepareQuery(new Query<Long>("SELECT " + CronLikeOrder.COL_ID + " FROM " + CronLikeOrder.TABLE_NAME,
-                                                                     idReader, CronLikeOrder.TABLE_NAME));
-        return ods.openConnection().query(query, Parameter.EMPTY_PARAMETER, -1);
+
+        PreparedQuery<? extends Long> query = cache.getQueryFromCache(sql, con, idReader, CronLikeOrder.TABLE_NAME);
+        return con.query(query, Parameter.EMPTY_PARAMETER, -1);
       } catch (PersistenceLayerException e) {
       } finally {
         if (con != null) {
@@ -273,7 +276,7 @@ public class CronSharedResourceProcessing {
         return;
       }
       ourCrons.addAll(ids);
-      if(logger.isDebugEnabled()) {
+      if (logger.isDebugEnabled()) {
         logger.debug("updated ourCrons to " + ourCrons + ". Recreating queue.");
       }
       XynaFactory.getInstance().getProcessing().getXynaScheduler().getCronLikeScheduler().recreateQueue();
