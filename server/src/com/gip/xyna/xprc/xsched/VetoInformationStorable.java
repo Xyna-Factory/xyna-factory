@@ -131,7 +131,7 @@ public class VetoInformationStorable extends ClusteredStorable<VetoInformationSt
   }
   
   public OrderInformation getUsingOrder() {
-    return new OrderInformation(getUsingOrderId(), getUsingRootOrderId(), getUsingOrdertype());
+    return getUsingOrderId() == null ? null : new OrderInformation(getUsingOrderId(), getUsingRootOrderId(), getUsingOrdertype());
   }
 
   public void setUsingOrder(OrderInformation orderInformation) {

@@ -31,9 +31,9 @@ GUIHTTP_APP="GuiHttp"
 #ACHTUNG: Version auch bei addRequirement zu default workspace berücksichtigen
 ALL_APPLICATIONS="Base Processing"; #Default-Applications, die immer installiert sein sollten
 APPMGMTVERSION=1.0.12
-GUIHTTPVERSION=1.5.15
+GUIHTTPVERSION=1.5.16
 SNMPSTATVERSION=1.0.5
-PROCESSINGVERSION=1.0.29
+PROCESSINGVERSION=1.0.30
 ALL_REPOSITORYACCESSES=("svn");
 INSTANCE_NUMBER="1" #1 ist default
 
