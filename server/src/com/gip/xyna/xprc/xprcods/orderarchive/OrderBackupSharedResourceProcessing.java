@@ -123,10 +123,7 @@ public class OrderBackupSharedResourceProcessing {
           List<? extends OrderInstanceBackup> candidates = con.query(query, new Parameter(bootCntId), 1000);
           List<Long> result = new ArrayList<>();
           for (OrderInstanceBackup candidate : candidates) {
-            if (candidate.getDetails() == null) {
-              continue;
-            }
-            String suspensionCause = candidate.getDetails().getSuspensionCause();
+            String suspensionCause = candidate.getDetails() == null ? null : candidate.getDetails().getSuspensionCause();
             if (candidate.getBackupCauseAsEnum() == BackupCause.SHUTDOWN
                 || Objects.equals(suspensionCause, SuspensionCause_ShutDown.name)) {
               result.add(candidate.getRootId());
