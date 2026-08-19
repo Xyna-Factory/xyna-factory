@@ -81,32 +81,32 @@ public class SharedResourceWorkManagementThread<T extends SharedResourceDefiniti
     int numberOfProcessedItems = 0;
     if (work.isEmpty()) {
       if (logger.isDebugEnabled()) {
-        logger.debug("No work to do.");
+        logger.debug("No work to do on " + resourceDef.getPath());
       }
       return;
     }
     long now = System.currentTimeMillis();
     if (logger.isDebugEnabled()) {
-      logger.debug("Found " + work.size() + " work items to process. Starting now: " + now);
+      logger.debug("Found " + work.size() + " work items to process (" + resourceDef.getPath() + "). Starting now: " + now);
     }
     for (SharedResourceWork workItem : work) {
       if (System.currentTimeMillis() - now > workPerRoundMs) {
         if (logger.isDebugEnabled()) {
-          logger.debug("Work this round exceeded limit, leaving remaining work items for the next round");
+          logger.debug("Work this round exceeded limit, leaving remaining work items for the next round - "  + resourceDef.getPath());
         }
         break;
       }
       workItem.execute();
       numberOfProcessedItems++;
       if (logger.isTraceEnabled()) {
-        logger.trace("Finished work item " + workItem + " - total work time " + (System.currentTimeMillis() - now) + "ms");
+        logger.trace("Finished work item " + workItem + " - total work time " + (System.currentTimeMillis() - now) + "ms - " + resourceDef.getPath());
       }
       if (System.currentTimeMillis() - now > heartBeatIntervalMs) {
         refreshEntry();
       }
     }
     if (logger.isDebugEnabled()) {
-      logger.debug("Updating entry after processing " + numberOfProcessedItems + " work items.");
+      logger.debug("Updating entry after processing " + numberOfProcessedItems + " work items on " + resourceDef.getPath());
     }
     updateEntry();
   }
@@ -270,18 +270,18 @@ public class SharedResourceWorkManagementThread<T extends SharedResourceDefiniti
   private void removeEntry(long oldId) {
     if (oldId == -1l) {
       if (logger.isDebugEnabled()) {
-        logger.debug("No Entry to remove. oldId is not set");
+        logger.debug("No Entry to remove. oldId is not set for " + resourceDef.getPath());
       }
       return;
     }
     SharedResourceRequestResult<R> result = srm.delete(resourceDef, List.of(String.valueOf(oldId)));
     if (!result.isSuccess()) {
       if (logger.isWarnEnabled()) {
-        logger.warn("Could not delete our entry with id " + oldId, result.getException());
+        logger.warn("Could not delete our entry with id " + oldId + " from " + resourceDef.getPath(), result.getException());
       }
     } else {
       if (logger.isDebugEnabled()) {
-        logger.debug("Successfully deleted our entry with id " + oldId);
+        logger.debug("Successfully deleted our entry with id " + oldId + " from " + resourceDef.getPath());
       }
     }
 
@@ -294,13 +294,13 @@ public class SharedResourceWorkManagementThread<T extends SharedResourceDefiniti
         srm.create(resourceDef, List.of(new SharedResourceInstance<>(NEXT_ID_KEY, now, nextIdAccessor.createNextIdEntry(0))));
     if (!result.isSuccess()) {
       if (logger.isWarnEnabled()) {
-        logger.warn("Could not create initial NextId entry.", result.getException());
+        logger.warn("Could not create initial NextId entry for " + resourceDef.getPath() + ".", result.getException());
       }
       return;
     }
     ourId = 0;
     if (logger.isDebugEnabled()) {
-      logger.debug("Initialized NextId entry. Using id: " + ourId);
+      logger.debug("Initialized NextId entry. Using id: " + ourId + " for " + resourceDef.getPath());
     }
   }
 
@@ -351,11 +351,11 @@ public class SharedResourceWorkManagementThread<T extends SharedResourceDefiniti
           XynaFactory.getInstance().getXynaNetworkWarehouse().getSharedResourceManagement().delete(resourceDef, List.of(id));
       if (!result.isSuccess()) {
         if (logger.isWarnEnabled()) {
-          logger.warn("Failed to delete stale entry with id " + id, result.getException());
+          logger.warn("Failed to delete stale entry with id " + id + " for " + resourceDef.getPath(), result.getException());
         }
       } else {
         if (logger.isDebugEnabled()) {
-          logger.debug("Sucessfully deleted stale entry with id " + id);
+          logger.debug("Sucessfully deleted stale entry with id " + id + " for " + resourceDef.getPath());
         }
       }
     }
