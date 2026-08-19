@@ -120,9 +120,12 @@ public class OrderBackupSharedResourceProcessing {
         @Override
         public List<Long> executeAndCommit(ODSConnection con) throws PersistenceLayerException {
           PreparedQuery<? extends OrderInstanceBackup> query = cache.getQueryFromCache(sql, con, reader, OrderInstanceBackup.TABLE_NAME);
-          List<? extends OrderInstanceBackup> candidates = con.query(query, new Parameter(bootCntId), -1);
+          List<? extends OrderInstanceBackup> candidates = con.query(query, new Parameter(bootCntId), 1000);
           List<Long> result = new ArrayList<>();
           for (OrderInstanceBackup candidate : candidates) {
+            if (candidate.getDetails() == null) {
+              continue;
+            }
             String suspensionCause = candidate.getDetails().getSuspensionCause();
             if (candidate.getBackupCauseAsEnum() == BackupCause.SHUTDOWN
                 || Objects.equals(suspensionCause, SuspensionCause_ShutDown.name)) {
