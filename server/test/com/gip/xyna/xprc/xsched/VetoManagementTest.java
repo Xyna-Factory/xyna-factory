@@ -412,7 +412,7 @@ public class VetoManagementTest extends TestCase {
       fail("Unexpected exception "+e);
     }
     
-    result = allocateVetos(blockedXo); //n?tig, da Scheduler hier nicht richtig funktioniert 
+    result = allocateVetos(blockedXo); //nötig, da Scheduler hier nicht richtig funktioniert 
     assertTrue("Allocation of veto should have succeded", result.isAllocated());
     
     vetos = vm.listVetos();
