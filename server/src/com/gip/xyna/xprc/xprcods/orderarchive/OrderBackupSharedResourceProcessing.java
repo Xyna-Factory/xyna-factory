@@ -65,7 +65,6 @@ public class OrderBackupSharedResourceProcessing {
     config = new SharedResourceWorkManagementThreadConfig<>("OrderBackupSharedResourceProcessing", XYNA_ORDER_BACKUP_SR_DEF, nextProcessor,
                                                             workMgmt, 60_000);
     processingThread = new SharedResourceWorkManagementThread<>(config);
-    processingThread.setDaemon(true);
     processingThread.start();
   }
 
