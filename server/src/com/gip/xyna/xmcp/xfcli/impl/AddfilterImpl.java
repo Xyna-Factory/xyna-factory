@@ -45,9 +45,6 @@ public class AddfilterImpl extends XynaCommandImplementation<Addfilter> {
 
 
   public void execute(OutputStream statusOutputStream, Addfilter payload) throws XynaException {
-
-    // TODO take into account a description
-
     Long revision = RevisionManagement.REVISION_DEFAULT_WORKSPACE;
     if (payload.getWorkspaceName() != null) {
       revision = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement()
@@ -66,7 +63,7 @@ public class AddfilterImpl extends XynaCommandImplementation<Addfilter> {
           .getActivation()
           .getActivationTrigger()
           .addFilter(payload.getFilterName(), jarFiles.toArray(new File[jarFiles.size()]), payload.getFqClassName(),
-                     payload.getTriggerName(), sharedLibs, "", revision, new SingleRepositoryEvent(revision));
+                     payload.getTriggerName(), sharedLibs, payload.getDocumentation(), revision, new SingleRepositoryEvent(revision));
       
       StringBuilder sb = new StringBuilder();
       XynaFactory.getInstance().getActivation().getActivationTrigger()

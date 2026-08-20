@@ -377,6 +377,9 @@ public class ApplicationXmlEntry {
           element = doc.createElement(ApplicationXmlHandler.TAG_SHAREDLIBS);
           element.appendChild(doc.createTextNode(entry.getSharedLibs()));
           entryElement.appendChild(element);
+          element = doc.createElement(ApplicationXmlHandler.TAG_DESCRIPTION);
+          element.appendChild(doc.createTextNode(entry.getDescription()));
+          entryElement.appendChild(element);
           listElement.appendChild(entryElement);
         }
       }
@@ -959,19 +962,21 @@ public class ApplicationXmlEntry {
     protected String fqFilterClassname;
     protected String triggerName;
     protected String sharedLibs;
+    protected String description;
 
     public FilterXmlEntry(boolean isImplicitDependency) {
       super(isImplicitDependency);
     }
     
     protected FilterXmlEntry(boolean isImplicitDependency, String name, String jarFiles, String fqFilterClassname, String triggerName,
-                             String sharedLibs) {
+                             String sharedLibs, String description) {
       super(isImplicitDependency);
       this.name = name;
       this.jarFiles = jarFiles;
       this.fqFilterClassname = fqFilterClassname;
       this.triggerName = triggerName;
       this.sharedLibs = sharedLibs;
+      this.description = description;
     }
 
     public String getName() {
@@ -998,6 +1003,10 @@ public class ApplicationXmlEntry {
       return sharedLibs;
     }
 
+    public String getDescription() {
+      return description;
+    }
+
     @Override
     public int hashCode() {
       final int prime = 31;
@@ -1007,6 +1016,7 @@ public class ApplicationXmlEntry {
       result = prime * result + ((name == null) ? 0 : name.hashCode());
       result = prime * result + ((sharedLibs == null) ? 0 : sharedLibs.hashCode());
       result = prime * result + ((triggerName == null) ? 0 : triggerName.hashCode());
+      result = prime * result + ((description == null) ? 0 : description.hashCode());
       return result;
     }
 
@@ -1049,12 +1059,18 @@ public class ApplicationXmlEntry {
       }
       else if (!triggerName.equals(other.triggerName))
         return false;
+      if (description == null) {
+        if (other.description != null)
+          return false;
+      }
+      else if (!description.equals(other.description))
+        return false;
       return true;
     }
 
     @Override
     public String toString() {
-      return "[name=" + name + ", jarFiles=" + jarFiles + ", fqFilterClassname=" + fqFilterClassname + ", triggerName=" + triggerName + ", sharedLibs=" + sharedLibs + "]";
+      return "[name=" + name + ", jarFiles=" + jarFiles + ", fqFilterClassname=" + fqFilterClassname + ", triggerName=" + triggerName + ", sharedLibs=" + sharedLibs + ", description=" + description + "]";
     }
 
     public int compareTo(XmlEntry o) {

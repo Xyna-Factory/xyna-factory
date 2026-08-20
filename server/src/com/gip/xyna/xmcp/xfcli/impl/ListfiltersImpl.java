@@ -23,7 +23,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
@@ -66,7 +69,7 @@ public class ListfiltersImpl extends XynaCommandImplementation<Listfilters> {
       appendOldFormat( output, filterInfo, payload);
     } else {
       if( ! payload.getInstancesOnly() ) {
-        FilterTableFormatter ftf = new FilterTableFormatter(filterInfo);
+        FilterTableFormatter ftf = new FilterTableFormatter(filterInfo, payload.getExcludeColumns());
         ftf.writeTableHeader(output);
         ftf.writeTableRows(output);
         output.append("\n");
@@ -350,9 +353,16 @@ public class ListfiltersImpl extends XynaCommandImplementation<Listfilters> {
     private List<String> header;
     private List<FilterColumn> columns;
     
-    public FilterTableFormatter(List<FilterInformation> filters) {
-      columns = Arrays.asList(FilterColumn.values());
-      
+    public FilterTableFormatter(List<FilterInformation> filters, String[] excludedColumns) {
+      if ((excludedColumns == null) || (excludedColumns.length < 1)) {
+        columns = Arrays.asList(FilterColumn.values());
+      } else {
+        Set<String> set = new HashSet<String>(Arrays.stream(excludedColumns).map(x -> x.toLowerCase()).
+                                                     collect(Collectors.toList()));
+        columns = Arrays.stream(FilterColumn.values()).
+                         filter(x -> !set.contains(x.getDisplayName().toLowerCase())).
+                         collect(Collectors.toList());
+      }
       header = new ArrayList<>();
       header.add( "Id" );
       for( FilterColumn fc : columns ) {

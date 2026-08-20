@@ -3861,7 +3861,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       }
       xynaActivationTrigger.addFilter(entry.getName(), unwrapToFileArray(entry.getJarFiles(), PathType.FILTER, revision, jarsFromDeployed),
                                       entry.getFqFilterClassname(), entry.getTriggerName(), unwrapToStringArray(entry.getSharedLibs()),
-                                      null, revision, new EmptyRepositoryEvent());
+                                      entry.getDescription(), revision, new EmptyRepositoryEvent());
     }
     for (TriggerInstanceXmlEntry entry : applicationXml.getTriggerInstances()) {
       if (verbose) {
@@ -5047,7 +5047,8 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
             Filter filter = xynaActivationTrigger.getFilter(revision, entry.getName(), false);
             applicationXmlEntry.getFilters().add(new FilterXmlEntry(isImplicitDependency, filter.getName(), wrapArray(filter.getJarFiles(),
                                                                                                                       "/filter/"), filter
-                                                     .getFQFilterClassName(), filter.getTriggerName(), wrapArray(filter.getSharedLibs())));
+                                                     .getFQFilterClassName(), filter.getTriggerName(), wrapArray(filter.getSharedLibs()),
+                                                     filter.getDescription()));
           } catch (XACT_FilterNotFound e) {
             logger.warn("Filter not found", e);
           }
