@@ -30,6 +30,7 @@ import com.gip.xyna.xprc.xfractwfe.XynaPythonSnippetManagement;
 import com.gip.xyna.xprc.xpce.WorkflowEngine;
 import com.gip.xyna.xprc.xpce.XynaProcessCtrlExecution;
 import com.gip.xyna.xprc.xprcods.XynaProcessingODS;
+import com.gip.xyna.xprc.xprcods.orderarchive.OrderBackupManagement;
 import com.gip.xyna.xprc.xsched.XynaScheduler;
 import com.gip.xyna.xprc.xsched.ordercancel.CancelBean;
 
@@ -52,20 +53,20 @@ public abstract class XynaProcessingBase extends Department implements XynaProce
 
 
   public abstract XynaProcessingODS getXynaProcessingODS();
-  
-  
+
+
   public abstract XynaFrequencyControl getFrequencyControl();
 
 
   public abstract BatchProcessManagement getBatchProcessManagement();
 
-  
+
   public abstract XynaXmomSerialization getXmomSerialization();
 
-  
+
   public abstract XynaPythonSnippetManagement getXynaPythonSnippetManagement();
-  
-  
+
+
   public abstract CancelBean cancelOrder(Long id, Long timeout, boolean waitForTimeout)
       throws XPRC_CancelFailedException;
 
@@ -74,4 +75,7 @@ public abstract class XynaProcessingBase extends Department implements XynaProce
 
 
   public abstract OrderStatus getOrderStatus();
+
+
+  public abstract OrderBackupManagement getOrderBackupManagement();
 }

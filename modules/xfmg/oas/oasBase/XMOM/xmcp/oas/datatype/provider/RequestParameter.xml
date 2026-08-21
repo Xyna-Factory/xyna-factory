@@ -28,6 +28,9 @@
       <Output>
         <Data ID="3" Label="Request Parameter" ReferenceName="RequestParameter" ReferencePath="xmcp.oas.datatype.provider" VariableName="requestParameter3"/>
       </Output>
+      <Throws>
+        <Exception Label="JSONParserException" ReferenceName="JSONParserException" ReferencePath="xmcp.oas.exception" VariableName="jsonParserException"/>
+      </Throws>
       <SourceCode>
         <CodeSnippet Type="Java">return this;</CodeSnippet>
       </SourceCode>
