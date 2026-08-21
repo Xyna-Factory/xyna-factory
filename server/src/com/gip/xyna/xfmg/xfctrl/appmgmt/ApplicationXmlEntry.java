@@ -1029,42 +1029,13 @@ public class ApplicationXmlEntry {
       if (getClass() != obj.getClass())
         return false;
       FilterXmlEntry other = (FilterXmlEntry) obj;
-      if (fqFilterClassname == null) {
-        if (other.fqFilterClassname != null)
-          return false;
-      }
-      else if (!fqFilterClassname.equals(other.fqFilterClassname))
-        return false;
-      if (jarFiles == null) {
-        if (other.jarFiles != null)
-          return false;
-      }
-      else if (!jarFiles.equals(other.jarFiles))
-        return false;
-      if (name == null) {
-        if (other.name != null)
-          return false;
-      }
-      else if (!name.equals(other.name))
-        return false;
-      if (sharedLibs == null) {
-        if (other.sharedLibs != null)
-          return false;
-      }
-      else if (!sharedLibs.equals(other.sharedLibs))
-        return false;
-      if (triggerName == null) {
-        if (other.triggerName != null)
-          return false;
-      }
-      else if (!triggerName.equals(other.triggerName))
-        return false;
-      if (description == null) {
-        if (other.description != null)
-          return false;
-      }
-      else if (!description.equals(other.description))
-        return false;
+      
+      if (!Objects.equals(fqFilterClassname, other.fqFilterClassname)) { return false; }
+      if (!Objects.equals(jarFiles, other.jarFiles)) { return false; }
+      if (!Objects.equals(name, other.name)) { return false; }
+      if (!Objects.equals(sharedLibs, other.sharedLibs)) { return false; }
+      if (!Objects.equals(triggerName, other.triggerName)) { return false; }
+      if (!Objects.equals(description, other.description)) { return false; }
       return true;
     }
 

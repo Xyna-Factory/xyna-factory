@@ -78,7 +78,7 @@ public class ListfiltersImpl extends XynaCommandImplementation<Listfilters> {
       List<OrderedFilterInstanceInformation> ofiis = OrderedFilterInstanceInformation.extractFromFilters( filterInfo );
       Collections.sort(ofiis, new OFIISortByName(payload.getSortByRuntimeContext()) );
        
-      FilterInstanceTableFormatter fitf = new FilterInstanceTableFormatter(ofiis);
+      FilterInstanceTableFormatter fitf = new FilterInstanceTableFormatter(ofiis, payload.getExcludeColumns());
       fitf.writeTableHeader(output);
       fitf.writeTableRows(output);
       
@@ -454,8 +454,16 @@ public class ListfiltersImpl extends XynaCommandImplementation<Listfilters> {
     private List<String> header;
     private List<FilterInstanceColumn> columns;
 
-    public FilterInstanceTableFormatter(List<OrderedFilterInstanceInformation> ofiis) {
-      columns = Arrays.asList(FilterInstanceColumn.values());
+    public FilterInstanceTableFormatter(List<OrderedFilterInstanceInformation> ofiis, String[] excludedColumns) {
+      if ((excludedColumns == null) || (excludedColumns.length < 1)) {
+        columns = Arrays.asList(FilterInstanceColumn.values());
+      } else {
+        Set<String> set = new HashSet<String>(Arrays.stream(excludedColumns).map(x -> x.toLowerCase()).
+                                                     collect(Collectors.toList()));
+        columns = Arrays.stream(FilterInstanceColumn.values()).
+                         filter(x -> !set.contains(x.getDisplayName().toLowerCase())).
+                         collect(Collectors.toList());
+      }
 
       header = new ArrayList<>();
       header.add( "Id" );
