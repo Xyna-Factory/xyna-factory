@@ -556,7 +556,10 @@ public class AllOrdersList {
         boolean isResuming = process.getState() == XynaProcessState.SUSPENDED || process.getState() == XynaProcessState.SUSPENDED_AFTER_ABORTING;
         if (!ignoreResourcesWhenResuming && isResuming ) {
           SchedulingData schedulingData = xo.getSchedulingData();
-          if ( schedulingData.needsCapacities() || ! schedulingData.getVetos().isEmpty() ) {
+            if ( schedulingData.needsCapacities()
+              || !schedulingData.getVetos().isEmpty()
+              || !schedulingData.getSharedVetos().isEmpty() 
+            ) {
             //auftrag benötigt capacities oder vetos und diese sollen beim resume nicht ignoriert werden
             //abgebrochen soll der auftrag trotzdem werden!
             xo.abortResumingOrder(false, null); //TODO cause

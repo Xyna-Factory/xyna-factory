@@ -97,7 +97,7 @@ public class VetoStorableAccess implements VetoManagementInterface {
     try {
       Collection<VetoInformationStorable> vetos = con.loadCollection(VetoInformationStorable.class);
       for (VetoInformationStorable vis : vetos) {
-        if (vis.isAllocatedShared() && vis.getSharedOrderIds().contains(orderId)) {
+        if ((vis.isAllocatedShared() || vis.isPendingExclusiveAllocation()) && vis.getSharedOrderIds().contains(orderId)) {
           vis.removeSharedOrderId(orderId);
           if (vis.getSharedOrderIds().isEmpty()) {
             vetosToDelete.add(vis);
