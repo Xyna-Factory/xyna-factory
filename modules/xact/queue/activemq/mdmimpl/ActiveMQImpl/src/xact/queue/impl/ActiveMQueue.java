@@ -51,6 +51,7 @@ import xact.queue.impl.QueueInstanceOperationImpl.MessageIdentification;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.xfmg.xfctrl.queuemgmnt.IQueue;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueManagement;
 import com.gip.xyna.xprc.xsched.timeconstraint.AbsRelTime;
 import com.gip.xyna.xprc.xsched.xynaobjects.Date;
@@ -172,7 +173,7 @@ public class ActiveMQueue {
     if( replyTo == null ) {
       return; //nichts zu tun
     }
-    com.gip.xyna.xfmg.xfctrl.queuemgmnt.IQueue replyToQueueData;
+    IQueue replyToQueueData;
     try {
       replyToQueueData = getQueueManagement().getQueue(replyTo.getName());
     } catch (Exception e) {
