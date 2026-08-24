@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="WebSphereMQ" comment="" factoryVersion="" versionName="2.0.3" xmlVersion="1.1">
+<Application applicationName="WebSphereMQ" comment="" factoryVersion="" versionName="3.0.0" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Benutzung von JMS-Queues mit (externen) WebSphereMQ-Servern</Description>
     <Description Lang="EN">Using JMS-queues with (external) WebSphereMQ-servers</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Queue</ApplicationName>
-        <VersionName>1.0.4</VersionName>
+        <VersionName>2.0.0</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>

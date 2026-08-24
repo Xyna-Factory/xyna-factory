@@ -209,8 +209,20 @@ public class WebSphereMQConnectStringData extends WebSphereMQConnectData {
 
     @Override
     public String toString() {
-        return "WebSphereMQConnectStringData {hostnameEnv:" + hostnameEnv + ", portEnv:" + portEnv + ", queueManagerEnv:" + queueManagerEnv
-                + ", channelEnv:" + channelEnv + ", " + super.toString() + "}";
+        StringBuilder s = new StringBuilder("WebSphereMQConnectStringData {hostnameEnv: ");
+        s.append(hostnameEnv);
+        s.append(", portEnv: ").append(portEnv);
+        s.append(", queueManagerEnv: ").append(queueManagerEnv);
+        s.append(", channelEnv: ").append(channelEnv).append(", ");
+        s.append(" WebSphereMQConnectData { ");
+        s.append("queueManager: ").append(this.getConfiguredQueueManager());
+        s.append(", hostname: ").append(this.getConfiguredHostname());
+        s.append(", port: ").append(this.getConfiguredPort());
+        s.append(", channel: ").append(this.getConfiguredChannel());
+        s.append(" }");
+        s.append(" } ");
+
+        return s.toString();
     }
 
 
