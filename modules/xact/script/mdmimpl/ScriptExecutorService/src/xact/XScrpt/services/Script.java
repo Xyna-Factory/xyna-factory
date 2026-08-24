@@ -198,7 +198,7 @@ public class Script implements ServiceStepEventHandler<AbortServiceStepEvent> {
         logger.debug("Executing script \"" + concatArgs(callString, args) + "\" ...");
       }
       if (callString.contains(" ") && ((args == null) || (args.size() < 1))) {
-        _cmd = splitCommandString(callString);
+        _cmd = new StringHelper().splitCmdDefault(callString);
       } else {
         _cmd = mergeArgs(callString, args);
       }
@@ -248,44 +248,6 @@ public class Script implements ServiceStepEventHandler<AbortServiceStepEvent> {
     tmplist.add(before);
     tmplist.addAll(after);
     return tmplist.toArray(new String[tmplist.size()]);
-  }
-  
-  
-  private String[] splitCommandString(String cmd) {
-    List<String> ret = new ArrayList<String>();
-    StringTokenizer st = new StringTokenizer(cmd, "'\" \t\n\r", true);
-    boolean inQuote = false;
-    String quoteEnd = "";
-    String cmdPart = "";
-    while (st.hasMoreTokens()) {
-      boolean endPart = false;
-      boolean addToken = true;
-      String token = st.nextToken();
-      if (inQuote) {
-        if (quoteEnd.equals(token) && !cmdPart.endsWith("\\")) {
-          inQuote = false;
-        }
-      } else {
-        if ("'".equals(token) || "\"".equals(token)) {
-          inQuote = true;
-          quoteEnd = token;
-        } else if (token.isBlank()) {
-          endPart = true;
-          addToken = false;
-        }
-      }
-      if (addToken) {
-        cmdPart += token;
-      }
-      if (endPart && (cmdPart.length() > 0)) {
-        ret.add(cmdPart);
-        cmdPart = "";
-      }
-    }
-    if (cmdPart.length() > 0) {
-      ret.add(cmdPart);
-    }
-    return ret.toArray(new String[ret.size()]);
   }
 
 
