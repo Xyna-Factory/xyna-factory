@@ -21,6 +21,6 @@
   <Argument Name="externalName" Description="actual name of the queue used by the external queue provider" Optional="true"/>
   <Argument Name="externalNameEnv" Description="name of an environment variable whose value is the external name of the queue (alternative to externalName; one of the two must be provided)" Optional="true"/>
   <Argument Name="queueType" Description="Type of queue (Possible values: ORACLE_AQ, WEBSPHERE_MQ, ACTIVE_MQ)"/>
-  <Argument Name="connectParameters" Description="Additional parameters needed to create a connection to the queue, depending on queue type (ORACLE_AQ: username, password, Jdbc URL; WEBSPHERE_MQ: queueManager, hostname, port, channel; ACTIVE_MQ: hostname, port)" MultipleValues="true"/>
+  <Argument Name="connectParameters" Description="Additional parameters needed to create a connection to the queue, depending on queue type (ORACLE_AQ: username, password, jdbc; WEBSPHERE_MQ: queueManager, hostname, port, channel; ACTIVE_MQ: hostname, port)" MultipleValues="true"/>
 
 </XynaCommandLineCommand>
