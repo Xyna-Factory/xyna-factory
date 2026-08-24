@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,7 @@ import com.gip.xyna.xact.trigger.ssl.SSLTools;
 import com.gip.xyna.xact.trigger.ssl.WebSphereMQTriggerSSLConfigBuilder;
 import com.gip.xyna.xact.trigger.ssl.WebSphereMQTriggerSSLConfigBuilder.XynaPropertyPrefixForSSLKeystoreConfig;
 import com.gip.xyna.xdev.xfractmod.xmdm.EventListener;
+import com.gip.xyna.xfmg.xfctrl.queuemgmnt.IQueue;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.WebSphereMQConnectData;
 import com.ibm.mq.jms.JMSC;
 import com.ibm.mq.jms.MQConnectionFactory;
@@ -356,7 +357,7 @@ public class WebSphereMQTrigger extends EventListener<WebSphereMQTriggerConnecti
   }
 
 
-  public static void sendToQueue(com.gip.xyna.xfmg.xfctrl.queuemgmnt.IQueue queue,
+  public static void sendToQueue(IQueue queue,
                                  Message message, boolean useSSL, SSLConfig sslConfig, String userName, String password) throws JMSException {
     Connection connection = null;
     try {
@@ -392,13 +393,13 @@ public class WebSphereMQTrigger extends EventListener<WebSphereMQTriggerConnecti
     }
   }
   
-  public static void sendToQueue(com.gip.xyna.xfmg.xfctrl.queuemgmnt.IQueue queue,
+  public static void sendToQueue(IQueue queue,
                                  Message message, boolean useSSL, SSLConfig sslConfig) throws JMSException {
     sendToQueue(queue, message, useSSL, sslConfig, "", "");
   }
 
   public void sendMessageToErrorQueue(Message message) throws JMSException {
-    com.gip.xyna.xfmg.xfctrl.queuemgmnt.IQueue errorQueue = startParameter.getErrorQueue();
+    IQueue errorQueue = startParameter.getErrorQueue();
     if (errorQueue != null) {
       try {
         sendToQueue(errorQueue, message, this.useSSL, this.sslConfig, startParameter.getUserName(), startParameter.getPassword());
@@ -412,7 +413,7 @@ public class WebSphereMQTrigger extends EventListener<WebSphereMQTriggerConnecti
 
 
   private void sendMessageToErrorQueueRedundant(Message message) throws JMSException {
-    com.gip.xyna.xfmg.xfctrl.queuemgmnt.IQueue queue = startParameter.getErrorQueueRedundant();
+    IQueue queue = startParameter.getErrorQueueRedundant();
     if (queue != null) {
       sendToQueue(queue, message, this.useSSL, this.sslConfig, startParameter.getUserName(), startParameter.getPassword());
     }
