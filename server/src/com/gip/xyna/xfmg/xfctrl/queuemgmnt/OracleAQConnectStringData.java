@@ -187,8 +187,13 @@ public class OracleAQConnectStringData extends OracleAQConnectData {
 
     @Override
     public String toString() {
-        return "OracleAQConnectStringData {jdbcEnv:" + jdbcEnv + ", userEnv:" + userEnv + ", passwordEnv:" + passwordEnv + ", "
-                + super.toString() + "}";
+        StringBuilder s = new StringBuilder("OracleAQConnectStringData {jdbcEnv: ");
+        s.append(jdbcEnv).append(", userEnv: ").append(userEnv).append(", passwordEnv: ").append(passwordEnv).append(", ");
+        s.append("OracleAQConnectData { jdbcUrl: ").append(this.getConfiguredJdbcUrl()).append(", userName: ")
+                .append(this.getConfiguredUserName()).append(" } ");
+        s.append("} ");
+
+        return s.toString();
     }
 
 

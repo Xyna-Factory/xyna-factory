@@ -133,7 +133,13 @@ public class ActiveMQConnecStringtData extends ActiveMQConnectData {
 
     @Override
     public String toString() {
-        return "ActiveMQConnecStringtData {hostnameEnv:" + hostnameEnv + ", portEnv:" + portEnv + ", " + super.toString() + "}";
+        StringBuilder s = new StringBuilder("ActiveMQConnecStringtData {hostnameEnv: ");
+        s.append(hostnameEnv).append(", portEnv: ").append(portEnv).append(", ");
+        s.append(" ActiveMQConnectData { ").append("hostname: ").append(this.getConfiguredHostname());
+        s.append(", port: ").append(this.getConfiguredPort()).append(" } ");
+        s.append("} ");
+
+        return s.toString();
     }
 
 

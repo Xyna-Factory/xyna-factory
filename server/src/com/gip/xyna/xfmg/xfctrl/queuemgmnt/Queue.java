@@ -80,7 +80,7 @@ public class Queue extends Storable<Queue> implements IQueue {
         queue.setConnectDataForCurrentVersion((QueueConnectData) connData);
         Object qType = queue.readBlobbedJavaObjectFromResultSet(rs, Constant.ColName.QUEUE_TYPE);
         queue.setQueueTypeForCurrentVersion((QueueType) qType);
-      } /* else if (savedVersion == x) {} */ else {
+      } else {
         queue.setConnectDataStr(rs.getString(Constant.ColName.CONNECT_DATA_STR));
         queue.setQueueTypeStr(rs.getString(Constant.ColName.QUEUE_TYPE_STR));
       }
@@ -127,13 +127,11 @@ public class Queue extends Storable<Queue> implements IQueue {
 
   @Override
   public <U extends Queue> void setAllFieldsFromData(U data) {
-    this.setConnectData(data.getConnectData());
-    this.setConnectDataStr(data.getConnectDataStr());
+    this.setVersion(currentVersion);
+    this.setConnectDataForCurrentVersion(data.getConnectDataForCurrentVersion());
+    this.setQueueTypeForCurrentVersion(data.getQueueTypeForCurrentVersion());
     this.setExternalName(data.getExternalName());
     this.setUniqueName(data.getUniqueName());
-    this.setQueueType(data.getQueueType());
-    this.setQueueTypeStr(data.getQueueTypeStr());
-    this.setVersion(data.getVersion());
     this.setExternalNameEnv(data.getExternalNameEnv());
   }
 
@@ -170,10 +168,7 @@ public class Queue extends Storable<Queue> implements IQueue {
   }
 
 
-  public String getExternalNameForCurrentVersion() {
-    if (isInitialVersion()) {
-      return externalName;
-    }
+  public String resolveExternalName() {
     if (externalNameEnv != null && !externalNameEnv.isEmpty()) {
       EnvironmentVariable<String> envVar = new EnvironmentVariable<String>(externalNameEnv) {
 
