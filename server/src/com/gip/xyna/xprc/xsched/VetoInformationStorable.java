@@ -131,7 +131,7 @@ public class VetoInformationStorable extends ClusteredStorable<VetoInformationSt
   }
   
   public OrderInformation getUsingOrder() {
-    return new OrderInformation(getUsingOrderId(), getUsingRootOrderId(), getUsingOrdertype());
+    return getUsingOrderId() == null ? null : new OrderInformation(getUsingOrderId(), getUsingRootOrderId(), getUsingOrdertype());
   }
 
   public void setUsingOrder(OrderInformation orderInformation) {
@@ -249,10 +249,13 @@ public class VetoInformationStorable extends ClusteredStorable<VetoInformationSt
       VetoInformationStorable vis = new VetoInformationStorable();
       vis.vetoName = rs.getString(COL_VETO_NAME);
       vis.usingOrderId = rs.getLong(COL_USING_ORDER_ID);
+      vis.usingOrderId = vis.usingOrderId == 0 ? null : vis.usingOrderId;
       vis.usingRootOrderId = rs.getLong(COL_USING_ROOT_ORDER_ID);
+      vis.usingRootOrderId = vis.usingRootOrderId == 0 ? null : vis.usingRootOrderId;
       vis.usingOrdertype = rs.getString(COL_USING_ORDERTYPE);
       vis.sharedOrderIds = rs.getString(COL_SHARED_ORDER_IDS);
       vis.pendingExclusiveOrderId = rs.getLong(COL_PENDING_EXCLUSIVE_ORDER_ID);
+      vis.pendingExclusiveOrderId = vis.pendingExclusiveOrderId == 0 ? null : vis.pendingExclusiveOrderId;
       vis.documentation = rs.getString(COL_DOCUMENTATION);
       vis.created = rs.getLong(COL_CREATED);
       vis.created = vis.created == 0 ? null : vis.created;
@@ -276,9 +279,11 @@ public class VetoInformationStorable extends ClusteredStorable<VetoInformationSt
       veto.vetoName = rs.getString(VetoColumn.VETONAME.getColumnName());
       if (selectedCols.contains(VetoColumn.USINGORDERID)) {
         veto.usingOrderId = rs.getLong(VetoColumn.USINGORDERID.getColumnName());
+        veto.usingOrderId = veto.usingOrderId == 0 ? null : veto.usingOrderId;
       }
       if (selectedCols.contains(VetoColumn.USINGROOTORDERID)) {
-        veto.usingOrderId = rs.getLong(VetoColumn.USINGROOTORDERID.getColumnName());
+        veto.usingRootOrderId = rs.getLong(VetoColumn.USINGROOTORDERID.getColumnName());
+        veto.usingRootOrderId = veto.usingRootOrderId == 0 ? null : veto.usingRootOrderId;
       }
       if (selectedCols.contains(VetoColumn.USINGORDERTYPE)) {
         veto.usingOrdertype = rs.getString(VetoColumn.USINGORDERTYPE.getColumnName());
@@ -288,6 +293,7 @@ public class VetoInformationStorable extends ClusteredStorable<VetoInformationSt
       }
       if (selectedCols.contains(VetoColumn.PENDINGEXCLUSIVEORDERID)) {
         veto.pendingExclusiveOrderId = rs.getLong(VetoColumn.PENDINGEXCLUSIVEORDERID.getColumnName());
+        veto.pendingExclusiveOrderId = veto.pendingExclusiveOrderId == 0 ? null : veto.pendingExclusiveOrderId;
       }
       if (selectedCols.contains(VetoColumn.DOCUMENTATION)) {
         veto.documentation = rs.getString(VetoColumn.DOCUMENTATION.getColumnName());
