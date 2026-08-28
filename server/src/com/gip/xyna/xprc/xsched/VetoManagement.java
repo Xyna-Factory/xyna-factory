@@ -432,7 +432,8 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
         List<SharedResourceInstance<SharedResourceVeto>> instances = new ArrayList<>();
         for (VetoInformation veto : vetos) {
           SharedResourceVeto instance =
-              new SharedResourceVeto(veto.getUsingOrderId(), veto.getUsingRootOrderId(), veto.getUsingOrderType(), veto.getDocumentation());
+              new SharedResourceVeto(veto.getUsingOrderId(), veto.getUsingRootOrderId(), veto.getUsingOrderType(), veto.getDocumentation(),
+                                     veto.getSharedOrderIds(), veto.getPendingExclusiveOrderId());
           instances.add(new SharedResourceInstance<>(veto.getName(), now, instance));
         }
         to.create(VM_SharedResource.XYNA_VETO_SR_DEF, instances);
