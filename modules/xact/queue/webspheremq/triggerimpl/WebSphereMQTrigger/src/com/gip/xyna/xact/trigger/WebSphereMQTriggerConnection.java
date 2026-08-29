@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xact.trigger.ssl.SSLConfig;
 import com.gip.xyna.xdev.xfractmod.xmdm.TriggerConnection;
+import com.gip.xyna.xfmg.xfctrl.queuemgmnt.IQueue;
 
 public class WebSphereMQTriggerConnection extends TriggerConnection {
 
@@ -61,7 +62,7 @@ public class WebSphereMQTriggerConnection extends TriggerConnection {
   */
 
 
-  public void sendToQueue(com.gip.xyna.xfmg.xfctrl.queuemgmnt.Queue queue,
+  public void sendToQueue(IQueue queue,
                                  Message message, boolean useSSL, SSLConfig sslConfig) throws JMSException {
     WebSphereMQTrigger t = (WebSphereMQTrigger) super.getTrigger();
     WebSphereMQTrigger.sendToQueue(queue, message, useSSL, sslConfig, t.getStartParameter().getUserName(), t.getStartParameter().getPassword());

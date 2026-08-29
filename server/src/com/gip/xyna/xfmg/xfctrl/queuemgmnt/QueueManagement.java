@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,15 +20,13 @@ package com.gip.xyna.xfmg.xfctrl.queuemgmnt;
 
 
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.gip.xyna.FunctionGroup;
 import com.gip.xyna.utils.exceptions.XynaException;
@@ -46,9 +44,9 @@ public class QueueManagement extends FunctionGroup {
   public static final String DEFAULT_NAME = "QueueManagement";
 
 
-  private static final Comparator<Queue> queueComparator = new Comparator<Queue>() {
+  private static final Comparator<IQueue> queueComparator = new Comparator<IQueue>() {
 
-    public int compare(Queue o1, Queue o2) {
+    public int compare(IQueue o1, IQueue o2) {
       if (!o1.getQueueType().toString().equals(o2.getQueueType().toString())) {
         return o1.getQueueType().toString().compareTo(o2.getQueueType().toString());
       }
@@ -103,15 +101,16 @@ public class QueueManagement extends FunctionGroup {
   }
 
 
-  public void registerQueue(String uniqueName, String externalName, QueueType queueType, QueueConnectData connectData)
+  public void registerQueue(String uniqueName, String externalName, String externalNameEnv, QueueType queueType, QueueConnectData connectData)
       throws PersistenceLayerException {
     ODSConnection conn = ods.openConnection(ODSConnectionType.HISTORY);
     try {
       Queue queue = new Queue();
       queue.setUniqueName(uniqueName);
       queue.setExternalName(externalName);
-      queue.setConnectData(connectData);
-      queue.setQueueType(queueType);
+      queue.setExternalNameEnv(externalNameEnv);
+      queue.setConnectDataForCurrentVersion(connectData);
+      queue.setQueueTypeForCurrentVersion(queueType);
       try {
         conn.persistObject(queue);
         conn.commit();
@@ -149,7 +148,7 @@ public class QueueManagement extends FunctionGroup {
   }
 
 
-  public Queue getQueue(String uniqueName) throws PersistenceLayerException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
+  public QueueFacade getQueue(String uniqueName) throws PersistenceLayerException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
     // wird aus dem Service heraus aufgerufen
 
     if (logger.isTraceEnabled()) {
@@ -161,7 +160,7 @@ public class QueueManagement extends FunctionGroup {
       queue.setUniqueName(uniqueName);
       try {
         conn.queryOneRow(queue);
-        return queue;
+        return QueueFacade.fromQueue(queue);
       } catch (PersistenceLayerException e) {
         throw e;
       } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
@@ -177,16 +176,16 @@ public class QueueManagement extends FunctionGroup {
   }
 
 
-  public Collection<Queue> listQueues() throws PersistenceLayerException {
+  public Collection<QueueFacade> listQueues() throws PersistenceLayerException {
     ODSConnection conn = ods.openConnection(ODSConnectionType.HISTORY);
     try {
       Collection<Queue> queues = conn.loadCollection(Queue.class);
-      List<Queue> queuesSorted = new ArrayList<Queue>(queues);
-      Collections.sort(queuesSorted, queueComparator);
+
       if (logger.isTraceEnabled()) {
         logger.trace("Number of registered queues: " + queues.size());
       }
-      return queuesSorted;
+
+      return queues.stream().map(QueueFacade::fromQueue).sorted(queueComparator).collect(Collectors.toList());
     } finally {
       try {
         conn.closeConnection();
@@ -197,47 +196,15 @@ public class QueueManagement extends FunctionGroup {
   }
 
   public static QueueConnectData createQueueConnectData(QueueType qtype, String[] connectParams) throws IllegalArgumentException {
-    QueueConnectData result = null;
-
     if (qtype == QueueType.ORACLE_AQ) {
-      if (connectParams.length != 3) {
-        throw new IllegalArgumentException("Error: Connect parameter missing.");
-      }
-      checkParameter("userName", connectParams[0]);
-      checkParameter("password", connectParams[1]);
-      checkParameter("jdbcUrl", connectParams[2]);
-      OracleAQConnectData connectData = new OracleAQConnectData();
-      connectData.setUserName(connectParams[0]);
-      connectData.setPassword(connectParams[1]);
-      connectData.setJdbcUrl(connectParams[2]);
-
-      result = connectData;
+      return OracleAQConnectStringData.fromRegisterQueueParameters(connectParams);
     } else if (qtype == QueueType.WEBSPHERE_MQ) {
-      if (connectParams.length != 4) {
-        throw new IllegalArgumentException("Error: Wrong number of connect parameters.");
-      }
-      WebSphereMQConnectData connectData = new WebSphereMQConnectData();
-      connectData.setQueueManager(checkParameter("queueManager", connectParams[0]));
-      connectData.setHostname(checkParameter("hostname", connectParams[1]));
-      connectData.setPort(checkParameter("port", connectParams[2]));
-      connectData.setChannel(checkParameter("channel", connectParams[3]));
-      result = connectData;
+      return WebSphereMQConnectStringData.fromRegisterQueueParameters(connectParams);
     } else if (qtype == QueueType.ACTIVE_MQ) {
-      if (connectParams.length != 2) {
-        throw new IllegalArgumentException("Error: Wrong number of connect parameters.");
-      }
-      ActiveMQConnectData connectData = new ActiveMQConnectData();
-      connectData.setHostname(checkParameter("hostname", connectParams[0]));
-      String portVal = checkParameter("port", connectParams[1]);
-      try {
-        connectData.setPort(Integer.parseInt(portVal));
-      } catch (Exception e) {
-        throw new IllegalArgumentException("Error: Cannot parse int: " + portVal);
-      }
-      result = connectData;
+      return ActiveMQConnecStringtData.fromRegisterQueueParameters(connectParams);
     }
 
-    return result;
+    throw new IllegalArgumentException("Error: Unknown queue type " + qtype);
   }
 
   public static String checkParameter(String name, String value) {
@@ -266,7 +233,7 @@ public class QueueManagement extends FunctionGroup {
    * @throws PersistenceLayerException
    */
   public Object buildQueueInstance(long revision, String name) throws PersistenceLayerException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
-    Queue queue = getQueue(name);
+    QueueFacade queue = getQueue(name);
     QueueInstanceBuilder builder = queueInstanceBuilders.get(queue.getQueueType(), revision);
     if (builder == null) {
       throw new IllegalArgumentException("No registered QueueInstanceBuilder for queue " + name + " (" + queue.getQueueType()
@@ -278,7 +245,7 @@ public class QueueManagement extends FunctionGroup {
 
   public Object buildQueueInstance(Set<Long> revisions, String name)
       throws PersistenceLayerException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
-    Queue queue = getQueue(name);
+    QueueFacade queue = getQueue(name);
     for (Long rev : revisions) {
       QueueInstanceBuilder builder = queueInstanceBuilders.get(queue.getQueueType(), rev);
       if (builder != null) {
@@ -293,7 +260,7 @@ public class QueueManagement extends FunctionGroup {
   public interface QueueInstanceBuilder {
 
     //TODO wie kann richtiger XynaObject-Typ xact.queue.Queue hier bekannt sein?
-    Object build(Queue queue);
+    Object build(IQueue queue);
 
   }
 

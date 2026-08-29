@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -171,8 +171,8 @@ import com.gip.xyna.xfmg.xfctrl.deploystate.deployitem.DeploymentItemBuilder;
 import com.gip.xyna.xfmg.xfctrl.nodemgmt.FactoryNodeStorable;
 import com.gip.xyna.xfmg.xfctrl.nodemgmt.RemoteDestinationManagement;
 import com.gip.xyna.xfmg.xfctrl.nodemgmt.monitoring.InterlinkSearchDispatcher;
-import com.gip.xyna.xfmg.xfctrl.queuemgmnt.Queue;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueConnectData;
+import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueFacade;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueType;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
@@ -2606,9 +2606,9 @@ public class XynaMultiChannelPortal extends XynaMultiChannelPortalBase {
   /**
    * QueueManagement
    */
-  public void registerQueue(String uniqueName, String externalName, QueueType queueType,
+  public void registerQueue(String uniqueName, String externalName, String externalNameEnv, QueueType queueType,
                             QueueConnectData connectData) throws PersistenceLayerException {
-    XynaFactory.getInstance().getFactoryManagement().registerQueue(uniqueName, externalName, queueType,
+    XynaFactory.getInstance().getFactoryManagement().registerQueue(uniqueName, externalName, externalNameEnv, queueType,
                                                                    connectData);
   }
 
@@ -2617,7 +2617,7 @@ public class XynaMultiChannelPortal extends XynaMultiChannelPortalBase {
     XynaFactory.getInstance().getFactoryManagement().deregisterQueue(uniqueName);
   }
 
-  public Collection<Queue> listQueues() throws PersistenceLayerException {
+  public Collection<QueueFacade> listQueues() throws PersistenceLayerException {
     return XynaFactory.getInstance().getFactoryManagement().listQueues();
   }
 
