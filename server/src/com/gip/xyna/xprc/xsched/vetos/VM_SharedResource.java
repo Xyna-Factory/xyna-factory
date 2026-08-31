@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -73,6 +74,7 @@ public class VM_SharedResource implements VetoManagementInterface {
 
   @Override
   public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos, long urgency) {
+    /*
     List<SharedResourceInstance<SharedResourceVeto>> vetosToCreate = new ArrayList<>();
     Long now = System.currentTimeMillis();
     for (String vetoName : exclusiveVetos) {
@@ -92,6 +94,7 @@ public class VM_SharedResource implements VetoManagementInterface {
 
   
   private VetoAllocationResult allocateVetosImpl(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos, long urgency) {
+  */
     if ((orderInformation == null) || (orderInformation.getOrderId() == null)) {
       logger.error("Error allocating shared resource vetos: received empty order information.");
       return VetoAllocationResult.FAILED;
@@ -124,8 +127,7 @@ public class VM_SharedResource implements VetoManagementInterface {
     }
     if (builder.hasRelevantUpdates()) {
       VetoUpdater updater = new VetoUpdater(builder.getRelevantUpdates());
-      List<String> ids = builder.getRelevantUpdates().stream().map(x -> x.getId()).collect(Collectors.toList());
-      SharedResourceRequestResult<SharedResourceVeto> createResult = srm.update(XYNA_VETO_SR_DEF, ids, updater);
+      SharedResourceRequestResult<SharedResourceVeto> createResult = srm.update(XYNA_VETO_SR_DEF, updater.getVetoIds(), updater);
       if (!createResult.isSuccess()) {
         logger.error("Error updating shared resource vetos.", createResult.getException());
         return VetoAllocationResult.FAILED;
@@ -232,21 +234,98 @@ public class VM_SharedResource implements VetoManagementInterface {
     if (!readVetosResult.isSuccess()) {
       return false;
     }
-    List<SharedResourceInstance<SharedResourceVeto>> vetos = readVetosResult.getResources();
+    List<SharedResourceInstance<SharedResourceVeto>> allVetos = readVetosResult.getResources();
+    if (allVetos == null) { return true; }
+    if (allVetos.isEmpty()) { return true; }
+    
+    /*
     vetos = vetos == null ? Collections.emptyList() : vetos;
     vetos.removeIf(x -> x.getValue() != null && x.getValue().usingOrderId != orderId);
 
     List<String> vetoIds = vetos.stream().map(x -> x.getId()).collect(Collectors.toList());
 
     SharedResourceRequestResult<SharedResourceVeto> deleteVetosResult = srm.delete(XYNA_VETO_SR_DEF, vetoIds);
-    return deleteVetosResult.isSuccess();
+    */
+
+    
+    List<String> exclusiveIds = allVetos.stream().filter(x -> (x.getValue() != null) && (x.getValue().usingOrderId == orderId))
+                                        .map(x -> x.getId()).collect(Collectors.toList());
+    if (!exclusiveIds.isEmpty()) {
+      SharedResourceRequestResult<SharedResourceVeto> deleteVetosResult = srm.delete(XYNA_VETO_SR_DEF, exclusiveIds);
+      if (!deleteVetosResult.isSuccess()) {
+        logger.error("Error freeing shared resource vetos.", deleteVetosResult.getException());
+        return false;
+      }
+    }
+    
+    /*
+    List<SharedResourceInstance<SharedResourceVeto>> updates = vetos.stream()
+                                                                    .filter(x -> (x.getValue() != null) &&
+                                                                                 (x.getValue().sharedOrderIds != null) &&
+                                                                                 (x.getValue().sharedOrderIds.contains(orderId)))
+                                                                    .collect(Collectors.toList());
+                                                                    */
+    /*
+    List<SharedResourceInstance<SharedResourceVeto>> updates = new ArrayList<>();
+    for (SharedResourceInstance<SharedResourceVeto> sri : allVetos) {
+      if (sri == null) { continue; }
+      if (sri.getValue() == null) { continue; }
+      SharedResourceVeto veto = sri.getValue();
+      boolean doAdd = false;
+      if ((veto.sharedOrderIds != null) &&
+          (veto.sharedOrderIds.contains(orderId))) {
+        veto.sharedOrderIds.removeIf(x -> x == orderId);
+        doAdd = true;
+      }
+      if ((veto.pendingExclusiveOrderId != null) && (orderId == veto.pendingExclusiveOrderId)) {
+        veto.pendingExclusiveOrderId = null;
+        doAdd = true;
+      }
+      if (doAdd) { updates.add(sri); }
+    }
+    VetoUpdater updater = new VetoUpdater(updates);
+    SharedResourceRequestResult<SharedResourceVeto> createResult = srm.update(XYNA_VETO_SR_DEF, updater.getVetoIds(), updater);
+    */
+    SharedResourceRequestResult<SharedResourceVeto> updateResult = freeSharedOrPendingVetosOfOrder(orderId, allVetos);
+    if (!updateResult.isSuccess()) {
+      logger.error("Error freeing shared resource vetos.", updateResult.getException());
+      return false;
+    }
+    return true;
   }
 
+  
+  private SharedResourceRequestResult<SharedResourceVeto> freeSharedOrPendingVetosOfOrder(long orderId,
+                                                            List<SharedResourceInstance<SharedResourceVeto>> allVetos) {
+    List<SharedResourceInstance<SharedResourceVeto>> updates = new ArrayList<>();
+    for (SharedResourceInstance<SharedResourceVeto> sri : allVetos) {
+      if (sri == null) { continue; }
+      if (sri.getValue() == null) { continue; }
+      SharedResourceVeto veto = sri.getValue();
+      boolean doAdd = false;
+      if ((veto.sharedOrderIds != null) &&
+          (veto.sharedOrderIds.contains(orderId))) {
+        veto.sharedOrderIds.removeIf(x -> x == orderId);
+        doAdd = true;
+      }
+      if (Objects.equals(orderId, veto.pendingExclusiveOrderId)) {
+        veto.pendingExclusiveOrderId = null;
+        doAdd = true;
+      }
+      if (doAdd) { updates.add(sri); }
+    }
+    if (updates.isEmpty()) {
+      return new SharedResourceRequestResult<SharedResourceVeto>(true, null, Collections.emptyList());
+    }
+    VetoUpdater updater = new VetoUpdater(updates);
+    return srm.update(XYNA_VETO_SR_DEF, updater.getVetoIds(), updater);
+  }
 
+  
   @Override
   public void allocateAdministrativeVeto(AdministrativeVeto administrativeVeto)
       throws XPRC_AdministrativeVetoAllocationDenied, PersistenceLayerException {
-
+    /*
     SharedResourceVeto srVeto = new SharedResourceVeto();
     srVeto.documentation = administrativeVeto.getDocumentation();
     srVeto.usingOrderId = AdministrativeVeto.ADMIN_VETO_ORDERID;
@@ -263,6 +342,49 @@ public class VM_SharedResource implements VetoManagementInterface {
       }
       throw new XPRC_AdministrativeVetoAllocationDenied(administrativeVeto.getName(), usingOrderId);
     }
+    */
+    
+    SharedResourceRequestResult<SharedResourceVeto> existingList = srm.read(XYNA_VETO_SR_DEF, List.of(administrativeVeto.getName()));
+    VetoMap existing = new VetoMap(existingList.getResources());
+    VetoChangeBuilder builder = new VetoChangeBuilder();
+    allocateExclusiveVeto(AdministrativeVeto.ADMIN_VETO_ORDER_INFORMATION, administrativeVeto.getName(), existing, builder);
+    if (builder.hasRelevantNewCreates()) {
+      SharedResourceRequestResult<SharedResourceVeto> createResult = srm.create(XYNA_VETO_SR_DEF, builder.getNewCreates());
+      if (!createResult.isSuccess()) {
+        logger.error("Error creating administrative veto.", createResult.getException());
+        long orderid = getBlockingOrderidForAdminVeto(existingList);
+        throw new XPRC_AdministrativeVetoAllocationDenied(administrativeVeto.getName(), orderid);
+      }
+      return;
+    }
+    if (builder.hasRelevantUpdates()) {
+      VetoUpdater updater = new VetoUpdater(builder.getRelevantUpdates());
+      SharedResourceRequestResult<SharedResourceVeto> createResult = srm.update(XYNA_VETO_SR_DEF, updater.getVetoIds(), updater);
+      if (!createResult.isSuccess()) {
+        logger.error("Error updating administrative vetos.", createResult.getException());
+        long orderid = getBlockingOrderidForAdminVeto(existingList);
+        throw new XPRC_AdministrativeVetoAllocationDenied(administrativeVeto.getName(), orderid);
+      }
+      return;
+    }
+    if (!builder.isOrderStartAllowed()) {
+      long orderid = getBlockingOrderidForAdminVeto(existingList);
+      throw new XPRC_AdministrativeVetoAllocationDenied(administrativeVeto.getName(), orderid);
+    }
+  }
+  
+  
+  private long getBlockingOrderidForAdminVeto(SharedResourceRequestResult<SharedResourceVeto> existing) {
+    if (existing == null) { return 0L; }
+    if (existing.getResources() == null) { return 0L; }
+    for (SharedResourceInstance<SharedResourceVeto> sri : existing.getResources()) {
+      if (sri == null) { continue; }
+      if (sri.getValue() == null) { continue; }
+      SharedResourceVeto veto = sri.getValue();
+      if (veto.usingOrderId != null) { return veto.usingOrderId; }
+      if (veto.pendingExclusiveOrderId != null) { return veto.pendingExclusiveOrderId; }
+    }
+    return 0L;
   }
 
 
@@ -294,14 +416,41 @@ public class VM_SharedResource implements VetoManagementInterface {
     if (!readResult.isSuccess() || readResult.getResources() == null || readResult.getResources().isEmpty()) {
       throw new XPRC_AdministrativeVetoDeallocationDenied(administrativeVeto.getName());
     }
+    if (readResult.getResources().size() > 1) {
+      throw new XPRC_AdministrativeVetoDeallocationDenied(administrativeVeto.getName());
+    }
+    if (readResult.getResources().get(0) == null) {
+      throw new XPRC_AdministrativeVetoDeallocationDenied(administrativeVeto.getName());
+    }
+    List<SharedResourceInstance<SharedResourceVeto>> allVetos = readResult.getResources();
+    SharedResourceVeto existing = readResult.getResources().get(0).getValue();
+    
+    /*
     SharedResourceRequestResult<SharedResourceVeto> deleteResult = srm.delete(XYNA_VETO_SR_DEF, List.of(administrativeVeto.getName()));
     if (!deleteResult.isSuccess()) {
       throw new XPRC_AdministrativeVetoDeallocationDenied(administrativeVeto.getName());
     }
     SharedResourceVeto value = readResult.getResources().get(0).getValue();
     OrderInformation orderInfo = new OrderInformation(value.usingOrderId, value.usingRootOrderId, value.usingOrderType);
+    */
+    if (Objects.equals(AdministrativeVeto.ADMIN_VETO_ORDERID, existing.usingOrderId)) {
+      SharedResourceRequestResult<SharedResourceVeto> deleteVetosResult = srm.delete(XYNA_VETO_SR_DEF, List.of(administrativeVeto.getName()));
+      if (!deleteVetosResult.isSuccess()) {
+        logger.error("Error freeing shared resource vetos.", deleteVetosResult.getException());
+        throw new XPRC_AdministrativeVetoDeallocationDenied(administrativeVeto.getName());
+      }
+    } else {
+      SharedResourceRequestResult<SharedResourceVeto> updateResult = freeSharedOrPendingVetosOfOrder(AdministrativeVeto.ADMIN_VETO_ORDERID,
+                                                                                                     allVetos);
+      if (!updateResult.isSuccess()) {
+        logger.error("Error updating shared resource vetos.", updateResult.getException());
+        throw new XPRC_AdministrativeVetoDeallocationDenied(administrativeVeto.getName());
+      }
+    }
     Long created = administrativeVeto.getCreated();
-    VetoInformation info = new VetoInformation(readResult.getResources().get(0).getId(), orderInfo, Collections.emptyList(), null, value.documentation, created, 0);
+    OrderInformation orderInfo = new OrderInformation(existing.usingOrderId, existing.usingRootOrderId, existing.usingOrderType);
+    VetoInformation info = new VetoInformation(readResult.getResources().get(0).getId(), orderInfo, existing.sharedOrderIds,
+                                               existing.pendingExclusiveOrderId, existing.documentation, created, 0);
     return info;
   }
 
@@ -423,14 +572,20 @@ public class VM_SharedResource implements VetoManagementInterface {
   
   public static class VetoUpdater implements Function<SharedResourceInstance<SharedResourceVeto>, SharedResourceInstance<SharedResourceVeto>> {
     private VetoMap _map;
+    private List<String> vetoIds;
     
     public VetoUpdater(List<SharedResourceInstance<SharedResourceVeto>> list) {
       _map = new VetoMap(list);
+      vetoIds = list.stream().map(x -> x.getId()).collect(Collectors.toList());
     }
     
     @Override
     public SharedResourceInstance<SharedResourceVeto> apply(SharedResourceInstance<SharedResourceVeto> input) {
       return _map.getVeto(input.getId());
+    }
+    
+    public List<String> getVetoIds() {
+      return vetoIds;
     }
   }
   
