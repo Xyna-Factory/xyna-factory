@@ -417,7 +417,7 @@ public class ProcessMonitorServicesServiceOperationImpl implements ExtendedDeplo
       List<Veto> result = vetoInformations.stream()
           .map(storable -> new Veto.Builder()
                .name(storable.getVetoName())
-               .runningOrders(Collections.unmodifiableList(Arrays.asList(storable.getUsingOrderId())))
+               .runningOrders(Collections.unmodifiableList(storable.getUsingOrderId() != null ? Arrays.asList(storable.getUsingOrderId()) : Collections.emptyList()))
                .waitingOrdersCount(waitingOrders.getOrDefault(new ResourceInfo(storable.getVetoName(), ResourceType.VETO), Collections.emptySet()).size())
                .created(storable.getCreated() != null ? Constants.defaultUTCSimpleDateFormatWithMS().format(storable.getCreated()) : "")
                .instance())

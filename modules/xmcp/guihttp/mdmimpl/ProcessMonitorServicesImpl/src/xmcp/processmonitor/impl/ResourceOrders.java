@@ -111,8 +111,9 @@ public class ResourceOrders {
           if (!Objects.equals(vetoInfo.getVetoName(), resource.getName())) {
             continue;
           }
-
-          orders = new ArrayList<>(Arrays.asList(new Order(OrderStatus.STATUS_RUNNING.name(), Long.toString(vetoInfo.getUsingOrderId()), vetoInfo.getUsingOrdertype(), null)));
+          if (vetoInfo.getUsingOrder() != null) {
+            orders = new ArrayList<>(Arrays.asList(new Order(OrderStatus.STATUS_RUNNING.name(), Long.toString(vetoInfo.getUsingOrderId()), vetoInfo.getUsingOrdertype(), null)));
+          }
         }
       } catch (PersistenceLayerException e) {
         logger.error("Could not determine used Vetoes", e);

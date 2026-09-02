@@ -187,13 +187,15 @@ public abstract class TryScheduleAbstract implements TrySchedule {
     @Override
     protected TryScheduleResult execute(SchedulingOrder so) {
       List<String> vetos = so.getVetos();
-      needsVetos = ! vetos.isEmpty();
+      List<String> sharedVetos = so.getSharedVetos();
+      needsVetos = !vetos.isEmpty() || !sharedVetos.isEmpty();
       if( needsVetos ) {
         needsVetos = so.getSchedulingData().isNeedsToAcquireVetosOnNextScheduling(); //TODO nötig?
       }
       if( needsVetos ) {
         //logger.debug( "VetoAllocation for xynaOrder "+so.getOrderId() );
-        VetoAllocationResult var = xynaScheduler.getVetoManagement().allocateVetos(so.getOrderInformation(), vetos, so.getCurrentUrgency());
+        VetoAllocationResult var = xynaScheduler.getVetoManagement()
+            .allocateVetos(so.getOrderInformation(), vetos, sharedVetos, so.getCurrentUrgency());
         if (! var.isAllocated()) {
           if( var.getXynaException() != null ) {
             so.terminate( var.getXynaException() );
@@ -211,7 +213,7 @@ public abstract class TryScheduleAbstract implements TrySchedule {
         if( logger.isDebugEnabled() ) {
           logger.debug( "undo VetoAllocation for xynaOrder "+so.getOrderId());
         }
-        xynaScheduler.getVetoManagement().undoAllocation(so.getOrderInformation(), so.getVetos());
+        xynaScheduler.getVetoManagement().undoAllocation(so.getOrderInformation(), so.getVetos(), so.getSharedVetos());
       }
     }
     
@@ -221,7 +223,7 @@ public abstract class TryScheduleAbstract implements TrySchedule {
         if( logger.isDebugEnabled() ) {
           logger.debug( "finalize VetoAllocation for xynaOrder "+so.getOrderId());
         }
-        xynaScheduler.getVetoManagement().finalizeAllocation(so.getOrderInformation(), so.getVetos());
+        xynaScheduler.getVetoManagement().finalizeAllocation(so.getOrderInformation(), so.getVetos(), so.getSharedVetos());
       }
     }
     

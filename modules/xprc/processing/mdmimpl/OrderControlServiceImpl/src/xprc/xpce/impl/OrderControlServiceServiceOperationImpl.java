@@ -156,6 +156,7 @@ public class OrderControlServiceServiceOperationImpl implements ExtendedDeployme
     //derzeit gesetzte Werte aus SchedulingData
     schedulerInformation.setCapacities(createCapacityList(schedulingData.getCapacities()));
     schedulerInformation.setVetos(createVetoList(schedulingData.getVetos()));
+    schedulerInformation.setSharedVetos(createVetoList(schedulingData.getSharedVetos()));
     schedulerInformation.setPriority( new Priority( schedulingData.getPriority() ) );
     schedulerInformation.setTimeConstraint( TimeConstraint.fromDefinition( schedulingData.getTimeConstraint() ) );
     return schedulerInformation;

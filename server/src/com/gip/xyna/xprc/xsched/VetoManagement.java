@@ -311,12 +311,18 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
 
   public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos, long urgency) {
     
-    if (exclusiveVetos.isEmpty() ) {
+    if (exclusiveVetos.isEmpty() && sharedVetos.isEmpty()) {
       return VetoAllocationResult.SUCCESS;
     }
     
     for( String v : exclusiveVetos ) {
       if( v == null || v.length() == 0 ) {
+        return new VetoAllocationResult(new XPRC_VetonameMustNotBeEmpty());
+      }
+    }
+
+    for (String v : sharedVetos) {
+      if (v == null || v.length() == 0) {
         return new VetoAllocationResult(new XPRC_VetonameMustNotBeEmpty());
       }
     }

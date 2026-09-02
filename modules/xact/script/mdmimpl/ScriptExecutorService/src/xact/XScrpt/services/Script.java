@@ -196,7 +196,11 @@ public class Script implements ServiceStepEventHandler<AbortServiceStepEvent> {
       if (logger.isDebugEnabled()) {
         logger.debug("Executing script \"" + concatArgs(callString, args) + "\" ...");
       }
-      _cmd = mergeArgs(callString, args);
+      if (callString.contains(" ") && ((args == null) || (args.size() < 1))) {
+        _cmd = new StringHelper().splitCmdDefault(callString);
+      } else {
+        _cmd = mergeArgs(callString, args);
+      }
       process = Runtime.getRuntime().exec(_cmd);
     }
 
@@ -244,7 +248,7 @@ public class Script implements ServiceStepEventHandler<AbortServiceStepEvent> {
     tmplist.addAll(after);
     return tmplist.toArray(new String[tmplist.size()]);
   }
-  
+
 
   /**
    * This method must be called by the client first to get the script output and second to ensure that the process will

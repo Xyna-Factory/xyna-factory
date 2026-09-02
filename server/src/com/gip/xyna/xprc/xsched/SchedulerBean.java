@@ -177,6 +177,70 @@ public class SchedulerBean extends XynaObject {
   }
 
 
+  private volatile com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<List<Veto>> oldVersionsOfsharedVetos;
+
+
+  public List<? extends Veto> versionedGetSharedVetos(long _version) {
+    if (oldVersionsOfsharedVetos == null) {
+      return sharedVetos;
+    }
+    List<Veto> _local = sharedVetos;
+    com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.Version<List<Veto>> _ret = oldVersionsOfsharedVetos.getVersion(_version);
+    if (_ret == null) {
+      return _local;
+    }
+    return _ret.object;
+  }
+
+
+  public void unversionedSetSharedVetos(List<Veto> sharedVetos) {
+    this.sharedVetos = XOUtils.substituteList(sharedVetos);
+  }
+
+
+  public void addToSharedVetos(Veto e) {
+    if (supportsObjectVersioning()) {
+      com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<List<Veto>> _vo = lazyInitOldVersionsOfsharedVetos();
+      synchronized (_vo) {
+        List<Veto> __tmp = this.sharedVetos;
+        _vo.add(__tmp);
+        if (__tmp == null) {
+          this.sharedVetos = new ArrayList<Veto>();
+        } else {
+          this.sharedVetos = new ArrayList<Veto>(__tmp.size() + 1);
+          this.sharedVetos.addAll(__tmp);
+        }
+        this.sharedVetos.add(e);
+      }
+      return;
+    }
+    if (this.sharedVetos == null) {
+      this.sharedVetos = new ArrayList<Veto>();
+    }
+    this.sharedVetos.add(e);
+  }
+
+
+
+
+  public void removeFromSharedVetos(Veto e) {
+    if (this.sharedVetos == null) {
+      return;
+    }
+    if (supportsObjectVersioning()) {
+      com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<List<Veto>> _vo = lazyInitOldVersionsOfsharedVetos();
+      synchronized (_vo) {
+        List<Veto> __tmp = this.sharedVetos;
+        _vo.add(__tmp);
+        this.sharedVetos = new ArrayList<Veto>(__tmp);
+        this.sharedVetos.remove(e);
+      }
+      return;
+    }
+    this.sharedVetos.remove(e);
+  }
+
+
   protected static class InternalBuilder<_GEN_DOM_TYPE extends SchedulerBean, _GEN_BUILDER_TYPE extends InternalBuilder<_GEN_DOM_TYPE, _GEN_BUILDER_TYPE>> {
 
     protected _GEN_DOM_TYPE instance;
@@ -200,6 +264,12 @@ public class SchedulerBean extends XynaObject {
 
     public _GEN_BUILDER_TYPE vetos(List<Veto> vetos) {
       this.instance.unversionedSetVetos(vetos);
+      return (_GEN_BUILDER_TYPE) this;
+    }
+
+
+    public _GEN_BUILDER_TYPE sharedVetos(List<Veto> sharedVetos) {
+      this.instance.unversionedSetSharedVetos(sharedVetos);
       return (_GEN_BUILDER_TYPE) this;
     }
 
@@ -231,7 +301,8 @@ public class SchedulerBean extends XynaObject {
   /**
   * Creates a new instance using locally defined member variables.
   */
-  public SchedulerBean(List<? extends Capacity> capacities, List<? extends Veto> vetos) {
+  public SchedulerBean(List<? extends Capacity> capacities, List<? extends Veto> vetos,
+                       List<? extends Veto> sharedVetos) {
     this();
     if (capacities != null) {
       this.capacities = new ArrayList<Capacity>(capacities);
@@ -243,12 +314,18 @@ public class SchedulerBean extends XynaObject {
     } else {
       this.vetos = new ArrayList<Veto>();
     }
+    if (sharedVetos != null) {
+      this.sharedVetos = new ArrayList<Veto>(sharedVetos);
+    } else {
+      this.sharedVetos = new ArrayList<Veto>();
+    }
   }
 
 
   protected void fillVars(SchedulerBean source, boolean deep) {
     this.capacities = XynaObject.cloneList(source.capacities, Capacity.class, false, deep);
     this.vetos = XynaObject.cloneList(source.vetos, Veto.class, false, deep);
+    this.sharedVetos = XynaObject.cloneList(source.sharedVetos, Veto.class, false, deep);
   }
 
 
@@ -280,8 +357,13 @@ public class SchedulerBean extends XynaObject {
                      changeSetsOfMembers)) {
         return false;
       }
-      if (!listEqual(xoc.versionedGetVetos(this.version), xoco.versionedGetVetos(other.version), this.version, other.version,
+      if (!listEqual(xoc.versionedGetVetos(this.version), xoco.versionedGetVetos(other.version), this.version,
+                     other.version,
                      changeSetsOfMembers)) {
+        return false;
+      }
+      if (!listEqual(xoc.versionedGetSharedVetos(this.version), xoco.versionedGetSharedVetos(other.version), this.version,
+                     other.version, changeSetsOfMembers)) {
         return false;
       }
       return true;
@@ -295,6 +377,8 @@ public class SchedulerBean extends XynaObject {
       hash = hash * 31 + hashList(capacities, this.version, changeSetsOfMembers, stack);
       List<? extends Veto> vetos = xoc.versionedGetVetos(this.version);
       hash = hash * 31 + hashList(vetos, this.version, changeSetsOfMembers, stack);
+      List<? extends Veto> sharedVetos = xoc.versionedGetSharedVetos(this.version);
+      hash = hash * 31 + hashList(sharedVetos, this.version, changeSetsOfMembers, stack);
       return hash;
     }
 
@@ -316,6 +400,7 @@ public class SchedulerBean extends XynaObject {
                              java.util.Set<Long> datapoints) {
     XOUtils.addChangesForComplexListMember(capacities, oldVersionsOfcapacities, start, end, changeSetsOfMembers, datapoints);
     XOUtils.addChangesForComplexListMember(vetos, oldVersionsOfvetos, start, end, changeSetsOfMembers, datapoints);
+    XOUtils.addChangesForComplexListMember(sharedVetos, oldVersionsOfsharedVetos, start, end, changeSetsOfMembers, datapoints);
   }
 
 
@@ -350,6 +435,7 @@ public class SchedulerBean extends XynaObject {
     if (objectId != -2) {
       XMLHelper.appendDataList(xml, "capacities", "Capacity", "xprc", versionedGetCapacities(version), version, cache);
       XMLHelper.appendDataList(xml, "vetos", "Veto", "xprc", versionedGetVetos(version), version, cache);
+      XMLHelper.appendDataList(xml, "sharedVetos", "Veto", "xprc", versionedGetSharedVetos(version), version, cache);
     }
     if (!onlyContent) {
       XMLHelper.endType(xml);
@@ -359,7 +445,8 @@ public class SchedulerBean extends XynaObject {
 
 
   private static Set<String> varNames = Collections
-      .unmodifiableSet(new HashSet<String>(Arrays.asList(new String[] {"capacities", "vetos"})));
+      .unmodifiableSet(new HashSet<String>(Arrays.asList(new String[] {
+        "capacities", "vetos", "sharedVetos"} )));
 
 
   /**
@@ -400,6 +487,17 @@ public class SchedulerBean extends XynaObject {
         }
       }
       setVetos((List<Veto>) o);
+    } else if ("sharedVetos".equals(name)) {
+      if (o != null) {
+        if (!(o instanceof List)) {
+          throw new IllegalArgumentException("Error while setting member variable sharedVetos, expected list, got "
+              + (o == null ? "null" : o.getClass().getName()));
+        }
+        if (((List) o).size() > 0) {
+          XOUtils.checkCastability(((List) o).get(0), Veto.class, "sharedVetos");
+        }
+      }
+      setSharedVetos((List<Veto>) o);
     } else {
       throw new XDEV_PARAMETER_NAME_NOT_FOUND(name);
     }
@@ -424,6 +522,9 @@ public class SchedulerBean extends XynaObject {
   @LabelAnnotation(label="Vetos")
   protected List<Veto> vetos;
 
+  @LabelAnnotation(label="Shared Vetos")
+  protected List<Veto> sharedVetos;
+
 
   public SchedulerBean(List<Capacity> caps) {
     capacities = caps;
@@ -439,9 +540,21 @@ public class SchedulerBean extends XynaObject {
   }
 
 
+  List<? extends Veto> getSharedVetosNoLazyCreate() {
+    return sharedVetos;
+  }
+
+
   private void vetosLazyCreate() {
     if (vetos == null) {
       vetos = new ArrayList<Veto>();
+    }
+  }
+
+
+  private void sharedVetosLazyCreate() {
+    if (sharedVetos == null) {
+      sharedVetos = new ArrayList<Veto>();
     }
   }
 
@@ -506,6 +619,27 @@ public class SchedulerBean extends XynaObject {
     return vetos;
   }
 
+  public List<? extends Veto> getSharedVetos() {
+    sharedVetosLazyCreate();
+    if (supportsObjectVersioning()) {
+      return new com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedList<Veto>(sharedVetos,
+          new com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.UpdateList<Veto>() {
+
+            private static final long serialVersionUID = 1L;
+
+            public void update(List<Veto> _newList) {
+              sharedVetos = _newList;
+            }
+
+            public com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<List<Veto>> getOldVersions() {
+              return lazyInitOldVersionsOfsharedVetos();
+            }
+
+          });
+    }
+    return sharedVetos;
+  }
+
   private VersionedObject<List<Veto>> lazyInitOldVersionsOfvetos() {
     com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<List<Veto>> _vo = oldVersionsOfvetos;
     if (_vo == null) {
@@ -513,6 +647,19 @@ public class SchedulerBean extends XynaObject {
         _vo = oldVersionsOfvetos;
         if (_vo == null) {
           oldVersionsOfvetos = _vo = new com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<List<Veto>>();
+        }
+      }
+    }
+    return _vo;
+  }
+
+  private VersionedObject<List<Veto>> lazyInitOldVersionsOfsharedVetos() {
+    com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<List<Veto>> _vo = oldVersionsOfsharedVetos;
+    if (_vo == null) {
+      synchronized (this) {
+        _vo = oldVersionsOfsharedVetos;
+        if (_vo == null) {
+          oldVersionsOfsharedVetos = _vo = new com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<List<Veto>>();
         }
       }
     }
@@ -526,10 +673,11 @@ public class SchedulerBean extends XynaObject {
    * @param name variable name or path separated by ".".
    */
   public Object get(String name) throws InvalidObjectPathException {
-    String[] varNames = new String[] {"capacities", "vetos"};
-    Object[] vars = new Object[] {this.capacities, this.vetos};
+    String[] varNames = new String[] {"capacities", "vetos", "sharedVetos"};
+    Object[] vars = new Object[] {this.capacities, this.vetos, this.sharedVetos};
     capacitiesLazyCreate();
     vetosLazyCreate();
+    sharedVetosLazyCreate();
     Object o = XOUtils.getIfNameIsInVarNames(varNames, vars, name);
     if (o == XOUtils.VARNAME_NOTFOUND) {
       throw new InvalidObjectPathException(new XDEV_PARAMETER_NAME_NOT_FOUND(name));
@@ -558,7 +706,7 @@ public class SchedulerBean extends XynaObject {
 
 
   public String toString() {
-    return "SchedulerBean(" + capacities + "," + vetos + ")";
+    return "SchedulerBean(" + capacities + ",vetos=" + vetos + ",sharedVetos=" + sharedVetos + ")";
   }
 
 
@@ -571,6 +719,12 @@ public class SchedulerBean extends XynaObject {
   public List<? extends Veto> unversionedGetVetos() {
     vetosLazyCreate();
     return vetos;
+  }
+
+
+  public List<? extends Veto> unversionedGetSharedVetos() {
+    sharedVetosLazyCreate();
+    return sharedVetos;
   }
 
   public void setVetos(List<? extends Veto> vetos) {
@@ -586,6 +740,22 @@ public class SchedulerBean extends XynaObject {
       return;
     }
     this.vetos = list;
+  }
+
+
+  public void setSharedVetos(List<? extends Veto> sharedVetos) {
+    List<Veto> list = sharedVetos != null
+      ? new ArrayList<Veto>(sharedVetos)
+      : new ArrayList<Veto>();
+    if (supportsObjectVersioning()) {
+      com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedObject<List<Veto>> _vo = lazyInitOldVersionsOfsharedVetos();
+      synchronized (_vo) {
+        _vo.add(this.sharedVetos);
+        this.sharedVetos = list;
+      }
+      return;
+    }
+    this.sharedVetos = list;
   }
 
 
