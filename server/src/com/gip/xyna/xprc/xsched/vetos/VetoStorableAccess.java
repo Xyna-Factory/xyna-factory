@@ -99,8 +99,8 @@ public class VetoStorableAccess implements VetoManagementInterface {
       for (VetoInformationStorable vis : vetos) {
         if ((vis.isAllocatedShared() || vis.isPendingExclusiveAllocation()) && vis.getSharedOrderIds().contains(orderId)) {
           vis.removeSharedOrderId(orderId);
-          if (vis.getSharedOrderIds().isEmpty()) {
-            vetosToDelete.add(vis);
+          if (vis.getSharedOrderIds().isEmpty() && !vis.isPendingExclusiveAllocation()) {
+              vetosToDelete.add(vis);
           } else {
             vetosToUpdate.add(vis);
           }
@@ -216,7 +216,6 @@ public class VetoStorableAccess implements VetoManagementInterface {
   private VetoAllocationResult allocateVetos(ODSConnection con, List<String> exclusiveVetos, List<String> sharedVetos, OrderInformation orderInformation) throws PersistenceLayerException {
 
     long usingOrderId = orderInformation.getOrderId();
-    //Liste der Veto-DB-Objekte erzeugen
     SortedMap<String, VetoInformationStorable> viss = new TreeMap<String, VetoInformationStorable>();
     for (String veto : exclusiveVetos) {
       if( veto == null || veto.length() == 0 ) {
@@ -227,32 +226,33 @@ public class VetoStorableAccess implements VetoManagementInterface {
     for (String veto : sharedVetos) {
       if( veto == null || veto.length() == 0 ) {
         return new VetoAllocationResult(new XPRC_VetonameMustNotBeEmpty());
-      }
+      } 
+      
       viss.put(veto, VetoInformationStorable.createShared(veto, List.of(usingOrderId), System.currentTimeMillis(), ownBinding));
     }
 
-    //Pruefen, ob Vetos bereits in Verwendung sind
+    
+    //Check if any of the vetos prevent the order from being scheduled
     VetoAllocationResult var = checkVetos(con, viss.values());
+    // still update the vetos in the database
+    boolean success = insertVetos(usingOrderId, con, viss.values());
     if (var != null) {
-      //Vetos sind bereits belegt, dies melden
+      //vetos prevent the order from being scheduled, return the causing veto
       return var;
     } else {
-      //Vetos sind noch frei, daher versuchen, sie in die DB einzutragen
-      boolean success = insertVetos(usingOrderId, con, viss.values());
       if (success) {
-        //Vetos erfolgreich eingetragen
         return VetoAllocationResult.SUCCESS;
       } else {
         //vermutlich eine Unique-Contraint-Violation
         //Dieser Fall sollte so gut wie nie (race condition) auftreten, daher muss er nicht performant sein
         logger.debug("Failed to insert new Vetos, checking again...");
 
-        //Bei welchem Veto ist nun der andere schneller gewesen?
+        //check for race condition
         var = checkVetos(con, viss.values());
         if (var != null) {
-          return var; //Meldung der bereits belegten Vetos
+          return var; // the new veto that prevents the order from being scheduled
         } else {
-          //Doch kein belegtes Veto gefunden, unbekannter Grund, warum Vetos nicht eingetragen werden konnten
+          //something else went wrong, e.g. shared id list is too long
           return VetoAllocationResult.FAILED;
         }
       }
@@ -281,7 +281,6 @@ public class VetoStorableAccess implements VetoManagementInterface {
   private boolean checkVeto(VetoInformationStorable vis, VetoInformationStorable existingVis) {
     return hasAlreadyAllocatedVeto(vis, existingVis) || // the order does not change the veto allocation
           (existingVis.isAllocatedShared() && vis.isAllocatedShared()) || // shared => shared: the order wants to share the veto and it is already shared
-          (existingVis.isAllocatedShared() && vis.isAllocatedExclusive()) || // shared => pendingExclusive: the order wants to allocate the veto exclusively and it is shared
           ( // pendingExclusive => exclusive: 
             // the order that has the pending exclusive allocation now wants to allocate it exclusively and no shared allocations exist
             existingVis.isPendingExclusiveAllocation() && vis.isAllocatedExclusive() &&
@@ -315,6 +314,8 @@ public class VetoStorableAccess implements VetoManagementInterface {
     //sondern stattdessen immer ein Update durchfuehrt.
 
     //Daher nun ReturnWert von persistObject pruefen
+      
+    boolean success = true;
 
     for (VetoInformationStorable vis : viss) {
       try {
@@ -348,9 +349,10 @@ public class VetoStorableAccess implements VetoManagementInterface {
             boolean canAdd = updatedVis.addSharedOrderIds(vis.getSharedOrderIds());
             if (!canAdd) {
               con.rollback();
-              return false;
+              success = false;
+            } else {
+              con.persistObject(updatedVis);
             }
-            con.persistObject(updatedVis);
           }
           if (vis.isAllocatedExclusive()) {
             // shared => pendingExclusive: the order wants to allocate the veto exclusively and it is currently shared
@@ -376,7 +378,7 @@ public class VetoStorableAccess implements VetoManagementInterface {
           ));
         } else {   
           con.rollback();
-          return false;
+          success = false;
         }
       } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
         // veto does not exist try to create it
@@ -384,13 +386,12 @@ public class VetoStorableAccess implements VetoManagementInterface {
         if (alreadyExists) {
           //Veto existiert nun doch schon und kann daher nicht neu eingetragen werden
           con.rollback();
-          return false;
+          success = false;
         }
       }
     }
-    //alle Vetos erfolgreich eingetragen
     con.commit();
-    return true;
+    return success;
   }
 
   
