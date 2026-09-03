@@ -85,7 +85,6 @@ public class VM_SharedResource implements VetoManagementInterface {
   
   private VetoAllocationResult allocateVetosImpl(OrderInformation orderInformation, List<String> exclusiveVetos,
                                                  List<String> sharedVetos) {
-  
     if ((orderInformation == null) || (orderInformation.getOrderId() == null)) {
       logger.error("Error allocating shared resource vetos: received empty order information.");
       return VetoAllocationResult.FAILED;
@@ -94,21 +93,40 @@ public class VM_SharedResource implements VetoManagementInterface {
     if (updater.getVetoIds().isEmpty()) {
       return VetoAllocationResult.SUCCESS;
     }
-    SharedResourceRequestResult<SharedResourceVeto> createResult = srm.update(XYNA_VETO_SR_DEF, updater.getVetoIds(), updater);
-    if (!createResult.isSuccess()) {
-      logger.error("Error updating shared resource vetos.", createResult.getException());
+    SharedResourceRequestResult<SharedResourceVeto> readResult = srm.read(XYNA_VETO_SR_DEF, updater.getVetoIds());
+    if (!readResult.isSuccess()) {
+      logger.error("Error reading shared resource vetos.", readResult.getException());
+      return VetoAllocationResult.FAILED;
+    }
+    
+    // For vetos not yet existing: Insert uninitialized objects so that they too can be handled with update command below
+    List<SharedResourceInstance<SharedResourceVeto>> uninitializedList = buildEmptyVetoList(exclusiveVetos, sharedVetos,
+                                                                                            readResult);
+    if (!uninitializedList.isEmpty()) {
+      SharedResourceRequestResult<SharedResourceVeto> createResult = srm.create(XYNA_VETO_SR_DEF, uninitializedList);
+      if (!createResult.isSuccess()) {
+        logger.error("Error inserting uninitialized shared resource vetos.", createResult.getException());
+        return VetoAllocationResult.FAILED;
+      }
+    }
+    
+    // First try: Try to update full scope until encountering an existing veto that disallows order start, in that case stop and rollback
+    SharedResourceRequestResult<SharedResourceVeto> updateResult = srm.update(XYNA_VETO_SR_DEF, updater.getVetoIds(), updater);
+    if (!updateResult.isSuccess()) {
+      logger.error("Error updating shared resource vetos.", updateResult.getException());
       return VetoAllocationResult.FAILED;
     }
     if(logger.isDebugEnabled()) {
-      logger.debug("create Veto Result for " + orderInformation.getOrderId() + ": success? " + !updater.isOrderStartDisallowed());
+      logger.debug("Update Veto Result for " + orderInformation.getOrderId() + ": Return allocation success? " + !updater.isOrderStartDisallowed());
     }
     if (!updater.isOrderStartDisallowed()) {
       return VetoAllocationResult.SUCCESS;
     }
+    // Second try, if order start is disallowed: Update only pendingExclusive vetos where possible
     updater = new VetoUpdater(UpdaterMode.ORDER_START_DISALLOWED, exclusiveVetos, sharedVetos, orderInformation);
-    createResult = srm.update(XYNA_VETO_SR_DEF, updater.getVetoIds(), updater);
-    if (!createResult.isSuccess()) {
-      logger.error("Error updating shared resource vetos.", createResult.getException());
+    updateResult = srm.update(XYNA_VETO_SR_DEF, updater.getVetoIds(), updater);
+    if (!updateResult.isSuccess()) {
+      logger.error("Error updating shared resource vetos.", updateResult.getException());
     }
     return VetoAllocationResult.FAILED;
     
@@ -155,6 +173,32 @@ public class VM_SharedResource implements VetoManagementInterface {
     }
     return builder.isOrderStartAllowed() ? VetoAllocationResult.SUCCESS : VetoAllocationResult.FAILED;
     */
+  }
+  
+
+  public List<SharedResourceInstance<SharedResourceVeto>> buildEmptyVetoList(
+                                                            List<String> exclusiveVetos, List<String> sharedVetos,
+                                                            SharedResourceRequestResult<SharedResourceVeto> existingList) {
+    long now = System.currentTimeMillis();
+    VetoMap existing = new VetoMap(existingList.getResources());
+    List<SharedResourceInstance<SharedResourceVeto>> ret = new ArrayList<>();
+    if (exclusiveVetos != null) {
+      for (String id : exclusiveVetos) {
+        if (!existing.contains(id)) {
+          SharedResourceInstance<SharedResourceVeto> sri = new SharedResourceInstance<>(id, now, new SharedResourceVeto());
+          ret.add(sri);
+        }
+      }
+    }
+    if (sharedVetos != null) {
+      for (String id : sharedVetos) {
+        if (!existing.contains(id)) {
+          SharedResourceInstance<SharedResourceVeto> sri = new SharedResourceInstance<>(id, now, new SharedResourceVeto());
+          ret.add(sri);
+        }
+      }
+    }
+    return ret;
   }
   
   
@@ -595,7 +639,6 @@ public class VM_SharedResource implements VetoManagementInterface {
       return new VetoUpdateData(veto);
     }
     
-    
     public VetoUpdateData allocateExclusiveVeto(OrderInformation orderInfo, SharedResourceVeto veto) {
       if (!veto.initialized) {
         return new VetoUpdateData(this.createExclusiveSRVeto(orderInfo));
@@ -734,6 +777,8 @@ public class VM_SharedResource implements VetoManagementInterface {
     private List<SharedResourceInstance<SharedResourceVeto>> unconditionalUpdates = new ArrayList<>();
     private List<SharedResourceInstance<SharedResourceVeto>> conditionalUpdates = new ArrayList<>();
     private List<SharedResourceInstance<SharedResourceVeto>> newCreates = new ArrayList<>();
+    
+    
     
     public boolean isOrderStartAllowed() { return orderStartAllowed; }
     
