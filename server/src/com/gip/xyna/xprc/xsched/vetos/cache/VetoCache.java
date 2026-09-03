@@ -234,7 +234,7 @@ public class VetoCache {
     VetoInformation newVetoInfo = new VetoInformation(administrativeVeto, System.currentTimeMillis(), ownBinding);
     veto.setVetoInformation(newVetoInfo);
     if( veto.isAdministrative() ) {
-      //Umsetzen des Status, damit ï¿½nderung vom VetoCacheProcessor bearbeitet wird
+      //Umsetzen des Status, damit Änderung vom VetoCacheProcessor bearbeitet wird
       veto.compareAndSetState(State.Used, State.Scheduled);
       vetosToProcess.add(veto.getName());
     }
