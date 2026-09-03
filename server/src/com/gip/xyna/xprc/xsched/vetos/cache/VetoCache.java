@@ -327,7 +327,7 @@ public class VetoCache {
 
   public void endScheduling() {
     //wird im Scheduler-Thread aufgerufen
-    //alle ï¿½briggebliebenen Usable auf Unused setzen
+    //alle übriggebliebenen Usable auf Unused setzen
 
     //wahrscheinlich ist dies schneller als erst nach State zu filtern...
     //TODO Liste kleiner halten durch Auslagerung der selten veränderten Vetos im State Used?
