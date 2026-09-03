@@ -84,15 +84,15 @@ public class VetoCache {
   
   public enum State {
     None,       //existiert nicht im Cache
-    Compare,    //nï¿½chster State muss untersucht werden 
+    Compare,    //nächster State muss untersucht werden 
     Comparing,  //State wird im Cluster zwischen beiden Knoten verhandelt
     Local,      //lokal verwendbar
     Remote,     //wird von anderem Knoten verwendet, lokal nicht verwendbar
     Usable,     //ist im aktuellen Schedulerlauf verwendbar
     Scheduling, //wird gerade zum Schedulen verwendet
-    Scheduled,  //ist zum Schedulen verwendet worden, Auftrag lï¿½uft
+    Scheduled,  //ist zum Schedulen verwendet worden, Auftrag läuft
     Used,       //ist nun in DB eingetragen
-    Free,       //Auftrag benï¿½tigt Veto nicht mehr
+    Free,       //Auftrag benötigt Veto nicht mehr
     
     ;
    
@@ -318,7 +318,7 @@ public class VetoCache {
     //wird im Scheduler-Thread aufgerufen
     this.currentSchedulingRun = currentSchedulingRun;
     //alle Vetos im State Local nach Usable umsetzen
-    //TODO Liste kleiner halten durch Auslagerung der selten verï¿½nderten Vetos im State Used?
+    //TODO Liste kleiner halten durch Auslagerung der selten veränderten Vetos im State Used?
     //also zwei Maps allVetos und activeVetos?
     for( VetoCacheEntry veto : vetoCache.values() ) {
       veto.setLocalToUsable();
@@ -330,7 +330,7 @@ public class VetoCache {
     //alle ï¿½briggebliebenen Usable auf Unused setzen
 
     //wahrscheinlich ist dies schneller als erst nach State zu filtern...
-    //TODO Liste kleiner halten durch Auslagerung der selten verï¿½nderten Vetos im State Used?
+    //TODO Liste kleiner halten durch Auslagerung der selten veränderten Vetos im State Used?
     //also zwei Maps allVetos und activeVetos?
     for( VetoCacheEntry veto : vetoCache.values() ) {
       boolean changed = veto.setUsableToCompare();
