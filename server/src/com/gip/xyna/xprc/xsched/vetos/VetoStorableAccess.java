@@ -270,7 +270,7 @@ public class VetoStorableAccess implements VetoManagementInterface {
   }
 
   private boolean hasAlreadyAllocatedVeto(VetoInformationStorable vis, VetoInformationStorable existingVis) {
-    assert vis.getVetoName().equals(existingVis.getVetoName()) : "Veto names or bindings do not match: " + vis + " vs. " + existingVis;
+    assert vis.getVetoName().equals(existingVis.getVetoName()) && vis.getBinding() == existingVis.getBinding() : "Veto names or bindings do not match: " + vis + " vs. " + existingVis;
     // This can happen if the order was resumed from backup, it will always try to reallocate as it could have released
     // but would no be continued from a previous checkpoint
     return (existingVis.isAllocatedExclusive() && vis.isAllocatedExclusive() && existingVis.getUsingOrderId() == vis.getUsingOrderId()) ||

@@ -45,6 +45,7 @@ public class VM_Cache implements VetoManagementInterface {
 
   private ConcurrentHashMap<String, VetoInformation> vetoCache;
   private ConcurrentHashMap<Long,List<String>> allocatedVetos;
+  private final Object vetoStateLock = new Object();
   private int ownBinding;
   
   public VM_Cache(int ownBinding) {
@@ -56,17 +57,29 @@ public class VM_Cache implements VetoManagementInterface {
   //package private
   void init(Collection<VetoInformation> existingVetos) {
     for( VetoInformation vi : existingVetos ) {
-      vetoCache.put( vi.getName(), vi);
-      if( vi.getUsingOrder() != null ) {
+      vetoCache.put(vi.getName(), vi);
+      if(vi.getUsingOrder() != null) {
         long orderId = vi.getUsingOrder().getOrderId();
-        List<String> allocated = allocatedVetos.get(orderId);
-        if( allocated == null ) {
-          allocated = new ArrayList<String>();
-          allocatedVetos.put(orderId, allocated);
-        }
-        allocated.add(vi.getName());
+        allocatedVetos.computeIfAbsent(orderId, k -> new ArrayList<String>()).add(vi.getName());
+      }
+      if (vi.getPendingExclusiveOrderId() != null) {
+        long orderId = vi.getPendingExclusiveOrderId();
+        allocatedVetos.computeIfAbsent(orderId, k -> new ArrayList<String>()).add(vi.getName());
+      }
+      for (long orderId : vi.getSharedOrderIds()) {
+        allocatedVetos.computeIfAbsent(orderId, k -> new ArrayList<String>()).add(vi.getName());
       }
     }
+  }
+
+
+  private boolean hasAlreadyAllocatedVeto(VetoInformation veto, VetoInformation existingVeto) {
+    assert veto.getName().equals(existingVeto.getName()) && veto.getBinding() == existingVeto.getBinding() : "Veto names or bindings do not match: " + veto + " vs. " + existingVeto;
+    // This can happen if the order was resumed from backup, it will always try to reallocate as it could have released
+    // but would no be continued from a previous checkpoint
+    return (existingVeto.isAllocatedExclusive() && veto.isAllocatedExclusive() && existingVeto.getUsingOrderId() == veto.getUsingOrderId()) ||
+           (existingVeto.isAllocatedShared() && veto.isAllocatedShared() && existingVeto.getSharedOrderIds().containsAll(veto.getSharedOrderIds())) ||
+           (existingVeto.isPendingExclusiveAllocation() && veto.isPendingExclusiveAllocation() && existingVeto.getPendingExclusiveOrderId() == veto.getPendingExclusiveOrderId());
   }
 
   
@@ -77,48 +90,72 @@ public class VM_Cache implements VetoManagementInterface {
   }
 
   public VetoAllocationResult allocateVetos(OrderInformation usingOrder, List<String> exclusiveVetos, List<String> sharedVetos, long urgency) {
-    boolean reallocate = false;
-    //erste Prüfung, die häufig fehlschlägt
-    for( String v : exclusiveVetos ) {
-      VetoInformation existing = vetoCache.get(v);
-      if( existing != null ) {
-        if( existing.getUsingOrderId() != null && !existing.getUsingOrderId().equals(usingOrder.getOrderId()) ) {
-          return new VetoAllocationResult(existing);
-        } else {
-          reallocate = true;
-        }
-      }
+
+    List<VetoInformation> vetos = new ArrayList<VetoInformation>(exclusiveVetos.size() + sharedVetos.size());
+    for(String v : exclusiveVetos) {
+      vetos.add(VetoInformation.createExclusive(v, usingOrder, System.currentTimeMillis(), ownBinding));
+    }
+    for(String v : sharedVetos) {
+      vetos.add(VetoInformation.createShared(v, new ArrayList<>(List.of(usingOrder.getOrderId())), System.currentTimeMillis(), ownBinding));
     }
     
-    //jetzt ist es unwahrscheinlich, dass administratives Veto zeitgleich gesetzt wird
-    List<String> allocated = new ArrayList<String>(exclusiveVetos.size());
-    for( String v : exclusiveVetos ) {
-      VetoInformation vi = new VetoInformation(v,usingOrder, System.currentTimeMillis(), ownBinding);
-      VetoInformation existing = vetoCache.putIfAbsent(v, vi );
-      if( existing != null ) {
-        if( existing.getUsingOrderId() != null && !existing.getUsingOrderId().equals(usingOrder.getOrderId()) ) {
-          //soeben allokierte wieder freigeben
-          freeVetosByOrderId( usingOrder.getOrderId() );
-          return new VetoAllocationResult(existing);
+    synchronized (vetoStateLock) {
+      for(VetoInformation veto : vetos) {
+        VetoInformation existingVeto = vetoCache.get(veto.getName());
+        if(existingVeto != null) {
+
+          if (hasAlreadyAllocatedVeto(veto, existingVeto)) {
+            logger.warn("Order " + usingOrder.getOrderId() + " has already allocated veto " + veto.getName());
+            continue;
+          }
+
+          if (existingVeto.isAllocatedShared()) {
+            if (veto.isAllocatedShared()) {
+              // shared => shared: the order wants to share the veto and it is already shared
+              vetoCache.put(veto.getName(), VetoInformation.createShared(
+                existingVeto.getName(),
+                CollectionUtils.concat(existingVeto.getSharedOrderIds(), List.of(usingOrder.getOrderId())),
+                System.currentTimeMillis(),
+                existingVeto.getBinding()
+              ));
+              allocatedVetos.computeIfAbsent(usingOrder.getOrderId(), k -> new ArrayList<>()).add(veto.getName());
+            } else if (veto.isAllocatedExclusive()) {
+              // shared => pendingExclusive: the order wants to allocate the veto exclusively and its currently shared
+              vetoCache.put(veto.getName(), VetoInformation.createPendingExclusive(
+                existingVeto.getName(),
+                existingVeto.getSharedOrderIds(),
+                usingOrder.getOrderId(),
+                System.currentTimeMillis(),
+                existingVeto.getBinding()
+              ));
+              allocatedVetos.computeIfAbsent(usingOrder.getOrderId(), k -> new ArrayList<>()).add(veto.getName());
+              return new VetoAllocationResult(existingVeto);
+            }
+          } else if (
+            existingVeto.isPendingExclusiveAllocation() && veto.isAllocatedExclusive() &&
+            existingVeto.getPendingExclusiveOrderId() == veto.getUsingOrderId() && existingVeto.getSharedOrderIds().isEmpty()
+          ) {
+              // pendingExclusive => exclusive:
+              // the order that has the pending exclusive allocation now wants to allocate it exclusively and no shared allocations exist anymore
+              vetoCache.put(veto.getName(), VetoInformation.createExclusive(
+                existingVeto.getName(),
+                usingOrder,
+                System.currentTimeMillis(),
+                existingVeto.getBinding()
+              ));
+              // no need to update allocatedVetos since the order already has it in the list from when it was pending exclusive
+          } else {
+            // the veto is already allocated to another order, return the existing veto information
+            return new VetoAllocationResult(existingVeto);
+          }
         } else {
-          //reallocate ignorieren
+          // veto does not exist, so we can allocate it to the order
+          vetoCache.put(veto.getName(), veto);
+          allocatedVetos.computeIfAbsent(usingOrder.getOrderId(), k -> new ArrayList<>()).add(veto.getName());
         }
       }
-      allocated.add(v);
+      return VetoAllocationResult.SUCCESS;
     }
-    
-    if( reallocate ) {
-      logger.info("veto reallocation for "+usingOrder.getOrderId());
-      List<String> prevAllocVetos = allocatedVetos.get(usingOrder.getOrderId());
-      if( ! prevAllocVetos.equals(exclusiveVetos) ) {
-        //TODO was nun? einfach zusammenfassen? teilweise deallokieren?
-        logger.warn("veto reallocation for "+usingOrder.getOrderId() +" changed vetos!");
-      }
-    } else {
-      allocatedVetos.put(usingOrder.getOrderId(), allocated);
-    }
-    //alle allokiert
-    return VetoAllocationResult.SUCCESS;
   }
   
   @Deprecated
@@ -140,32 +177,45 @@ public class VM_Cache implements VetoManagementInterface {
   }
 
   private boolean freeVetosByOrderId(long orderId) {
-    List<String> allocated = allocatedVetos.remove(orderId);
-    if( allocated == null ) {
-      return false;
-    }
-    for( String v : allocated ) {
-      VetoInformation vi = vetoCache.get(v);
-      if( vi != null ) {
-        if( vi.getUsingOrderId() == orderId ) {
-          if( ! vetoCache.remove(v, vi) ) {
-            //TODO wer sollte den Eintrag ändern?
-          }
-        }
-      } else {
-        //TODO evtl. war Veto doppelt angefordert; Ansonsten: wer sollte das Veto bereits entfernt haben
+    synchronized (vetoStateLock) {
+      List<String> allocated = allocatedVetos.remove(orderId);
+      if( allocated == null ) {
+        return false;
       }
+      for( String v : allocated ) {
+        VetoInformation vi = vetoCache.get(v);
+        if (vi != null) {
+          if ((vi.isAllocatedShared() || vi.isPendingExclusiveAllocation()) && vi.getSharedOrderIds().contains(orderId)) {
+            vi.getSharedOrderIds().remove(orderId);
+            if (vi.getSharedOrderIds().isEmpty() && !vi.isPendingExclusiveAllocation()) {
+              vetoCache.remove(v, vi);
+            }
+          } else if (vi.isPendingExclusiveAllocation() && vi.getPendingExclusiveOrderId() == orderId) {
+            if (vi.getSharedOrderIds().isEmpty()) {
+              vetoCache.remove(v, vi);
+            } else {
+              vi.setPendingExclusiveOrderId(null);
+            }
+          } else if (vi.isAllocatedExclusive() && vi.getUsingOrderId() == orderId) {
+            vetoCache.remove(v, vi);
+          }
+        } else {
+          //TODO evtl. war Veto doppelt angefordert; Ansonsten: wer sollte das Veto bereits entfernt haben
+        }
+      }
+      return !allocated.isEmpty();
     }
-    return ! allocated.isEmpty();
   }
 
   public void allocate(VetoAllocationResult var) {
-    String veto = var.getVetoName();
-    if( veto != null ) {
-      VetoInformation vi = var.getExistingVeto();
-      VetoInformation existing = vetoCache.putIfAbsent(veto, vi );
-      if( existing != null ) {
-        //TODO unerwartet
+    synchronized (vetoStateLock) {
+      String veto = var.getVetoName();
+      if( veto != null ) {
+        VetoInformation vi = var.getExistingVeto();
+        VetoInformation existing = vetoCache.putIfAbsent(veto, vi );
+        if( existing != null ) {
+          //TODO unerwartet
+        }
       }
     }
   }
@@ -179,33 +229,39 @@ public class VM_Cache implements VetoManagementInterface {
   }
 
   public void allocateAdministrativeVeto(AdministrativeVeto administrativeVeto) throws XPRC_AdministrativeVetoAllocationDenied {
-    VetoInformation vi = new VetoInformation(administrativeVeto, System.currentTimeMillis(), ownBinding);
-    VetoInformation existing = vetoCache.putIfAbsent(vi.getName(), vi);
-    if( existing != null ) {
-      throw new XPRC_AdministrativeVetoAllocationDenied(existing.getName(), existing.getUsingOrderId());
+    synchronized (vetoStateLock) {
+      VetoInformation vi = new VetoInformation(administrativeVeto, System.currentTimeMillis(), ownBinding);
+      VetoInformation existing = vetoCache.putIfAbsent(vi.getName(), vi);
+      if( existing != null ) {
+        throw new XPRC_AdministrativeVetoAllocationDenied(existing.getName(), existing.getUsingOrderId());
+      }
     }
   }
 
   public String setDocumentationOfAdministrativeVeto(AdministrativeVeto administrativeVeto) throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
-    VetoInformation existing = vetoCache.get(administrativeVeto.getName());
-    if( existing != null ) {
-      String oldDoc = existing.getDocumentation();
-      existing.setDocumentation(administrativeVeto.getDocumentation());
-      return oldDoc;
-    } else {
-      throw new XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY(administrativeVeto.getName(), VetoInformationStorable.TABLE_NAME);
+    synchronized (vetoStateLock) {
+      VetoInformation existing = vetoCache.get(administrativeVeto.getName());
+      if( existing != null ) {
+        String oldDoc = existing.getDocumentation();
+        existing.setDocumentation(administrativeVeto.getDocumentation());
+        return oldDoc;
+      } else {
+        throw new XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY(administrativeVeto.getName(), VetoInformationStorable.TABLE_NAME);
+      }
     }
   }
 
   public VetoInformation freeAdministrativeVeto(AdministrativeVeto administrativeVeto) throws XPRC_AdministrativeVetoDeallocationDenied {
-    VetoInformation veto = vetoCache.get(administrativeVeto.getName());
-    if( veto == null || ! veto.isAdministrative() ) {
+    synchronized (vetoStateLock) {
+      VetoInformation veto = vetoCache.get(administrativeVeto.getName());
+      if( veto == null || ! veto.isAdministrative() ) {
+        throw new XPRC_AdministrativeVetoDeallocationDenied(administrativeVeto.getName());
+      }
+      if( vetoCache.remove(administrativeVeto.getName(), veto) ) {
+        return veto;
+      }
       throw new XPRC_AdministrativeVetoDeallocationDenied(administrativeVeto.getName());
     }
-    if( vetoCache.remove(administrativeVeto.getName(), veto) ) {
-      return veto;
-    }
-    throw new XPRC_AdministrativeVetoDeallocationDenied(administrativeVeto.getName());
   }
 
   public Collection<VetoInformation> listVetos() {
