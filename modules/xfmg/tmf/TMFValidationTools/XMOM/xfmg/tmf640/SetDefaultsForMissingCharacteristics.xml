@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,20 +26,19 @@
       <Data ID="36" Label="Service" ReferenceName="Service" ReferencePath="internalized.tmf640.datamodel" VariableName="service36"/>
     </Output>
     <Throws>
-      <Exception Label="ServiceRelationshipNotFound" ReferenceName="ServiceRelationshipNotFound" ReferencePath="xfmg.tmf.util" VariableName="serviceRelationshipNotFound8393"/>
-      <Exception Label="IncompatibleServiceSpecification" ReferenceName="IncompatibleServiceSpecification" ReferencePath="xfmg.tmf.validation" VariableName="incompatibleServiceSpecification8394"/>
+      <Exception Label="IncompatibleServiceSpecification" ReferenceName="IncompatibleServiceSpecification" ReferencePath="xfmg.tmf.validation" VariableName="incompatibleServiceSpecification8266"/>
     </Throws>
     <ServiceReference ID="4436" Label="Set Default For Single Characteristic" ReferenceName="SetDefaultForSingleCharacteristic" ReferencePath="xfmg.tmf640">
       <Source RefID="4435"/>
       <Target RefID="4435"/>
     </ServiceReference>
-    <ServiceReference ID="4387" Label="Set Default For Single Characteristic" ReferenceName="SetDefaultForSingleCharacteristic" ReferencePath="xfmg.tmf640">
-      <Source RefID="4386"/>
-      <Target RefID="4386"/>
-    </ServiceReference>
     <ServiceReference ID="1122" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
       <Source RefID="1121"/>
       <Target RefID="1121"/>
+    </ServiceReference>
+    <ServiceReference ID="4387" Label="Set Default For Single Characteristic" ReferenceName="SetDefaultForSingleCharacteristic" ReferencePath="xfmg.tmf640">
+      <Source RefID="4386"/>
+      <Target RefID="4386"/>
     </ServiceReference>
     <Choice ID="6839" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="23"/>
@@ -302,10 +301,7 @@
           </Function>
           <Choice ID="3030" TypeName="BaseChoiceTypeFormula" TypePath="server">
             <Source RefID="1201"/>
-            <Target RefID="4077"/>
-            <Target RefID="4078"/>
             <Target RefID="4079"/>
-            <Target RefID="4080"/>
             <Input>
               <Data ID="3992" IsList="true" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="internalized.tmf633.datamodel" VariableName="serviceSpecRelationship3992">
                 <Source RefID="3030"/>
@@ -322,7 +318,7 @@
                   <Data ID="1260" IsList="true" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="internalized.tmf633.datamodel" VariableName="serviceSpecRelationship1260">
                     <Source RefID="1259"/>
                   </Data>
-                  <Source RefID="950">
+                  <Source RefID="1201">
                     <Meta>
                       <LinkType>UserConnected</LinkType>
                     </Meta>
@@ -481,29 +477,11 @@
                 <Mapping>%2%.serviceRelationshipCharacteristic=%0%.characteristic</Mapping>
               </Mappings>
               <Assign ID="3034">
-                <Source RefID="3095"/>
-                <Source RefID="3065"/>
                 <Source RefID="3154"/>
-                <Source RefID="3094"/>
-                <Target RefID="4077"/>
-                <Target RefID="4078"/>
                 <Target RefID="4079"/>
-                <Target RefID="4080"/>
-                <Copy>
-                  <Source RefID="3095"/>
-                  <Target RefID="4077"/>
-                </Copy>
-                <Copy>
-                  <Source RefID="3065"/>
-                  <Target RefID="4078"/>
-                </Copy>
                 <Copy>
                   <Source RefID="3154"/>
                   <Target RefID="4079"/>
-                </Copy>
-                <Copy>
-                  <Source RefID="3094"/>
-                  <Target RefID="4080"/>
                 </Copy>
               </Assign>
               <Data ID="3065" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="internalized.tmf633.datamodel" VariableName="serviceSpecRelationship3065">
@@ -537,15 +515,23 @@
                   </Exception>
                   <Target RefID="3727"/>
                 </Output>
+                <Output>
+                  <Data ID="7620" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="internalized.tmf640.datamodel" VariableName="serviceRelationship7620">
+                    <Source RefID="3652"/>
+                  </Data>
+                  <Target RefID="7621"/>
+                </Output>
                 <Mapping>%1%.relationshipType=%0%.relationshipType</Mapping>
+                <Mapping>%2%=%0%</Mapping>
               </Mappings>
-              <Throw ExceptionID="3727" ID="3609" Label="Throw Service Relationship not found">
-                <Meta>
-                  <PreferedExceptionType>xfmg.tmf.util.ServiceRelationshipNotFound</PreferedExceptionType>
-                </Meta>
-                <Source RefID="3727"/>
-              </Throw>
-              <Assign ID="3036"/>
+              <Assign ID="3036">
+                <Source RefID="7621"/>
+                <Target RefID="4079"/>
+                <Copy>
+                  <Source RefID="7621"/>
+                  <Target RefID="4079"/>
+                </Copy>
+              </Assign>
             </Case>
           </Choice>
           <Assign ID="788">
@@ -583,23 +569,17 @@
       <Data ID="2631" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="internalized.tmf640.datamodel" VariableName="serviceRelationship2631">
         <Source RefID="2601"/>
       </Data>
-      <Data ID="4077" IsList="true" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="characteristicSpecification4077">
-        <Source RefID="3030"/>
-      </Data>
-      <Data ID="4078" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="internalized.tmf633.datamodel" VariableName="serviceSpecRelationship4078">
-        <Source RefID="3030"/>
-      </Data>
       <Data ID="4079" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="internalized.tmf640.datamodel" VariableName="serviceRelationship4079">
-        <Source RefID="3030"/>
-      </Data>
-      <Data ID="4080" Label="CharacteristicListWrapper" ReferenceName="CharacteristicListWrapper" ReferencePath="xfmg.tmf.util" VariableName="characteristicListWrapper4080">
         <Source RefID="3030"/>
       </Data>
       <Data ID="5446" Label="Filter Service Spec Relationship by Type" ReferenceName="FilterServiceSpecRelationshipByType" ReferencePath="xfmg.tmf.util" VariableName="filterServiceSpecRelationshipByType5446">
         <Source RefID="4231"/>
       </Data>
+      <Data ID="7621" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="internalized.tmf640.datamodel" VariableName="serviceRelationship7621">
+        <Source RefID="3652"/>
+      </Data>
       <Exception ID="3727" Label="ServiceRelationshipNotFound" ReferenceName="ServiceRelationshipNotFound" ReferencePath="xfmg.tmf.util" VariableName="serviceRelationshipNotFound3727">
-        <Target RefID="3609"/>
+        <Target RefID="8000"/>
       </Exception>
     </Foreach>
     <Mappings ID="2572" Label="Mapping">
