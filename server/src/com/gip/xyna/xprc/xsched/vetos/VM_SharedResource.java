@@ -139,34 +139,6 @@ public class VM_SharedResource implements VetoManagementInterface {
     return VetoAllocationResult.FAILED;
   }
   
-  /*
-  private void logResult(String msg, SharedResourceRequestResult<SharedResourceVeto> result) {
-    if (!logger.isDebugEnabled()) { return; }
-    try {
-      logger.debug(msg);
-      if (result == null) {
-        logger.debug("result is null");
-        return;
-      }
-      if (result.getResources() == null) {
-        logger.debug("resources are null");
-        return;
-      }
-      if (result.getResources().isEmpty()) {
-        logger.debug("resources are empty");
-        return;
-      }
-      for (SharedResourceInstance<SharedResourceVeto> item : result.getResources()) {
-        logger.debug(item.getId() + " ->" + (
-            item == null ? "null" :
-            (item.getValue() == null ? "null" : item.getValue().asString())
-                     ));
-      }
-    } catch (Exception e) {
-      logger.debug(e.getMessage(), e);
-    }
-  }
-  */
   
   public List<SharedResourceInstance<SharedResourceVeto>> buildEmptyVetoList(
                                                             List<String> exclusiveVetos, List<String> sharedVetos,
@@ -456,7 +428,8 @@ public class VM_SharedResource implements VetoManagementInterface {
 
   
   public static class SharedResourceVeto {
-    public boolean initialized;
+    public boolean initialized = false;
+    public boolean lockedForDelete = false;
     public Long usingOrderId;
     public Long usingRootOrderId;
     public String usingOrderType;
@@ -464,10 +437,7 @@ public class VM_SharedResource implements VetoManagementInterface {
     public ArrayList<Long> sharedOrderIds;
     public Long pendingExclusiveOrderId;
     
-    
-    public SharedResourceVeto() {
-      initialized = false;
-    }
+    public SharedResourceVeto() {}
     
     public SharedResourceVeto(Long usingOrderId, Long usingRootOrderId, String usingOrderType, String documentation,
                               List<Long> sharedOrderIds, Long pendingExclusiveOrderId) {
@@ -530,68 +500,6 @@ public class VM_SharedResource implements VetoManagementInterface {
       s.append(" }");
       return s.toString();
     }
-  }
-  
-  
-  public static class SRVetoHelper {
-    
-    public SharedResourceVeto buildEmpty() {
-      return new SharedResourceVeto();
-    }
-
-    /*
-    public SharedResourceVeto build(Long usingOrderId, Long usingRootOrderId, String usingOrderType, String documentation,
-                              List<Long> sharedOrderIds, Long pendingExclusiveOrderId) {
-      SharedResourceVeto ret = new SharedResourceVeto();
-      ret.initialized = true;
-      ret.usingOrderId = usingOrderId;
-      ret.usingRootOrderId = usingRootOrderId;
-      ret.usingOrderType = usingOrderType;
-      ret.documentation = documentation;
-      ret.sharedOrderIds = new ArrayList<>(sharedOrderIds);
-      ret.pendingExclusiveOrderId = pendingExclusiveOrderId;
-      return ret;
-    }
-    */
-    
-    /*
-    private SharedResourceVeto build(boolean initialized, Long usingOrderId, Long usingRootOrderId, String usingOrderType,
-                               String documentation, List<Long> sharedOrderIds, Long pendingExclusiveOrderId) {
-      SharedResourceVeto ret = new SharedResourceVeto();
-      ret.initialized = initialized;
-      ret.usingOrderId = usingOrderId;
-      ret.usingRootOrderId = usingRootOrderId;
-      ret.usingOrderType = usingOrderType;
-      ret.documentation = documentation;
-      if (sharedOrderIds != null) {
-        ret.sharedOrderIds = new ArrayList<>(sharedOrderIds);
-      }
-      ret.pendingExclusiveOrderId = pendingExclusiveOrderId;
-      return ret;
-    }
-    */
-    /*
-    public SharedResourceVeto doClone() {
-      return new SharedResourceVeto(initialized, usingOrderId, usingRootOrderId, usingOrderType, documentation,
-                                    sharedOrderIds, pendingExclusiveOrderId);
-    }
-  */
-    
-    /*
-    public SharedResourceVeto cloneInitialized(SharedResourceVeto veto) {
-      return build(true, veto.usingOrderId, veto.usingRootOrderId, veto.usingOrderType, veto.documentation,
-                   veto.sharedOrderIds, veto.pendingExclusiveOrderId);
-    }
-
-    public boolean isEmpty(SharedResourceVeto veto) {
-      if (veto.usingOrderId != null) { return false; }
-      if (veto.pendingExclusiveOrderId != null) { return false; }
-      if ((veto.sharedOrderIds != null) && (!veto.sharedOrderIds.isEmpty())) {
-        return false;
-      }
-      return true;
-    }
-    */
   }
   
 
