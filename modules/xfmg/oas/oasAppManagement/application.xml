@@ -22,7 +22,7 @@
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>OAS_Base</ApplicationName>
-        <VersionName>1.7.34</VersionName>
+        <VersionName>1.7.35</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>FileMgmt</ApplicationName>
