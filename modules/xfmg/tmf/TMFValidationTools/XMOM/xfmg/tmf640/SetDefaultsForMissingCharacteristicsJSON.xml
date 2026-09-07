@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,9 +26,12 @@
       <Data ID="2641" Label="Service JSON" ReferenceName="Text" ReferencePath="base" VariableName="text2641"/>
     </Output>
     <Throws>
-      <Exception Label="ServiceRelationshipNotFound" ReferenceName="ServiceRelationshipNotFound" ReferencePath="xfmg.tmf.util" VariableName="serviceRelationshipNotFound6707"/>
-      <Exception Label="IncompatibleServiceSpecification" ReferenceName="IncompatibleServiceSpecification" ReferencePath="xfmg.tmf.validation" VariableName="incompatibleServiceSpecification6708"/>
+      <Exception Label="IncompatibleServiceSpecification" ReferenceName="IncompatibleServiceSpecification" ReferencePath="xfmg.tmf.validation" VariableName="incompatibleServiceSpecification6694"/>
     </Throws>
+    <ServiceReference ID="2350" Label="JSON Datamodel Services" ReferenceName="JSONDatamodelServices.JSONDatamodelServices" ReferencePath="xfmg.xfctrl.datamodel.json">
+      <Source RefID="2349"/>
+      <Target RefID="2349"/>
+    </ServiceReference>
     <ServiceReference ID="411" Label="JSON Datamodel Services" ReferenceName="JSONDatamodelServices.JSONDatamodelServices" ReferencePath="xfmg.xfctrl.datamodel.json">
       <Source RefID="410"/>
       <Target RefID="410"/>
@@ -36,10 +39,6 @@
     <ServiceReference ID="6204" Label="JSON Datamodel Services" ReferenceName="JSONDatamodelServices.JSONDatamodelServices" ReferencePath="xfmg.xfctrl.datamodel.json">
       <Source RefID="6203"/>
       <Target RefID="6203"/>
-    </ServiceReference>
-    <ServiceReference ID="2350" Label="JSON Datamodel Services" ReferenceName="JSONDatamodelServices.JSONDatamodelServices" ReferencePath="xfmg.xfctrl.datamodel.json">
-      <Source RefID="2349"/>
-      <Target RefID="2349"/>
     </ServiceReference>
     <ServiceReference ID="5345" Label="Set Defaults For Missing Characteristics" ReferenceName="SetDefaultsForMissingCharacteristics" ReferencePath="xfmg.tmf640">
       <Source RefID="5344"/>
