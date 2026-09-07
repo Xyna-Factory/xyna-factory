@@ -321,7 +321,7 @@ public class VetoStorableAccess implements VetoManagementInterface {
       try {
         // query using a new object to make sure that the passed object is not changed
         VetoInformationStorable existingVis = new VetoInformationStorable(vis.getVetoName(), vis.getBinding());
-        con.queryOneRow(existingVis);
+        con.queryOneRowForUpdate(existingVis);
           
         if (hasAlreadyAllocatedVeto(vis, existingVis)) {
           // veto has already been allocated. this can happen e.g. in a case in which one cluster node crashes and the
