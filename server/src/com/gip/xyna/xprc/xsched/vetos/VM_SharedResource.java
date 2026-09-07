@@ -128,7 +128,10 @@ public class VM_SharedResource implements VetoManagementInterface {
       return VetoAllocationResult.SUCCESS;
     }
     // Second try, if order start is disallowed: Update only pendingExclusive vetos where possible
-    updater = new VetoUpdater(UpdaterMode.ORDER_START_DISALLOWED, exclusiveVetos, sharedVetos, orderInformation);
+    updater = new VetoUpdater(UpdaterMode.ORDER_START_DISALLOWED, exclusiveVetos, null, orderInformation);
+    if (updater.getVetoIds().isEmpty()) {
+      return VetoAllocationResult.FAILED;
+    }
     updateResult = srm.update(XYNA_VETO_SR_DEF, updater.getVetoIds(), updater);
     if (!updateResult.isSuccess()) {
       logger.error("Error updating shared resource vetos.", updateResult.getException());
@@ -307,12 +310,8 @@ public class VM_SharedResource implements VetoManagementInterface {
                                           null, AdministrativeVeto.ADMIN_VETO_ORDER_INFORMATION);
     SharedResourceRequestResult<SharedResourceVeto> updateResult = srm.update(XYNA_VETO_SR_DEF, updater.getVetoIds(), updater);
     if (!updateResult.isSuccess()) {
-      if (updateResult.getException() != null) {
-        logger.error("AllocateAdministrativeVeto: Error updating shared resource vetos.", updateResult.getException());
-        throw new XPRC_AdministrativeVetoAllocationDenied(administrativeVeto.getName(), blockingOrderId, updateResult.getException());
-      }
       if (!updater.isOrderStartDisallowed()) {
-        logger.error("AllocateAdministrativeVeto: Unexpected result trying to update shared resource vetos.");
+        logger.error("AllocateAdministrativeVeto: Unexpected result trying to update shared resource vetos. ", updateResult.getException());
         throw new XPRC_AdministrativeVetoAllocationDenied(administrativeVeto.getName(), blockingOrderId);
       }
     }
@@ -394,6 +393,13 @@ public class VM_SharedResource implements VetoManagementInterface {
         logger.error("Error updating administrative shared resource vetos.", updateResult.getException());
         throw new XPRC_AdministrativeVetoDeallocationDenied(administrativeVeto.getName());
       }
+      if (!remover.getIdsToDelete().isEmpty()) {
+        SharedResourceRequestResult<SharedResourceVeto> deleteVetosResult = srm.delete(XYNA_VETO_SR_DEF, remover.getIdsToDelete());
+        if (!deleteVetosResult.isSuccess()) {
+          logger.error("Error freeing shared resource vetos.", deleteVetosResult.getException());
+          throw new XPRC_AdministrativeVetoDeallocationDenied(administrativeVeto.getName());
+        }
+      }
     }
     Long created = administrativeVeto.getCreated();
     OrderInformation orderInfo = new OrderInformation(existing.usingOrderId, existing.usingRootOrderId, existing.usingOrderType);
@@ -414,7 +420,10 @@ public class VM_SharedResource implements VetoManagementInterface {
   
       for (SharedResourceInstance<SharedResourceVeto> instance : vetoData.getResources()) {
         SharedResourceVeto value = instance.getValue();
-        OrderInformation orderInfo = new OrderInformation(value.usingOrderId, value.usingRootOrderId, value.usingOrderType);
+        OrderInformation orderInfo = null;
+        if (value.usingOrderId != null) {
+          orderInfo = new OrderInformation(value.usingOrderId, value.usingRootOrderId, value.usingOrderType);
+        }
         VetoInformation info = new VetoInformation(instance.getId(), orderInfo, value.sharedOrderIds, value.pendingExclusiveOrderId,
                                                    value.documentation, instance.getCreated(), 0);
         result.add(info);
@@ -775,6 +784,7 @@ public class VM_SharedResource implements VetoManagementInterface {
       String id = input.getId();
       VetoUpdateData vud;
       if (_mode != UpdaterMode.EXPECT_ORDER_START_ALLOWED) {
+        if (!_exclusiveVetos.contains(id)) { return input; }
         vud = _allocator.allocateExclusiveVetoWithoutOrderStart(_orderInfo, veto);
         return buildSri(id, vud.getVeto());
       }

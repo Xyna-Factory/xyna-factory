@@ -163,8 +163,12 @@ public class VetoInformation implements Serializable {
       return documentation;
     } else if( usingOrder != null ) {
       return usingOrder.getRuntimeContext();
-    }
-    return "Veto is shared by "+ sharedOrderIds.size() + " orders";
+    } else if (pendingExclusiveOrderId != null) {
+      return "Pending...";
+    } else if (sharedOrderIds != null) {
+      return "Veto is shared by "+ sharedOrderIds.size() + " orders";
+    } 
+    return "Unused";
   }
   
   public String getUsingOrderType() {
