@@ -84,6 +84,7 @@ import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.WorkspaceContentDifferences;
 import xmcp.gitintegration.WorkspaceContentDifferencesResolution;
 import xmcp.gitintegration.WorkspaceObjectManagement;
+import xmcp.gitintegration.WorkspaceXmlCreationConfig;
 import xmcp.gitintegration.impl.RepositoryManagementImpl.AddRepositoryConnectionResult.Success;
 import xmcp.gitintegration.impl.tracking.OperationTracker;
 import xmcp.gitintegration.repository.Repository;
@@ -1051,8 +1052,28 @@ public class RepositoryManagementImpl {
                                          connection.getSavedinrepo(), split.getId());
     persistRepositoryConnectionStorable(storable);
     tracker.trackInfo("registered workspace connection for workspace " + connection.getWorkspaceName());
+
+    //create workspace config if spit type is not none
+    if (!createSplitWorkspaceXml(connection, split, tracker)) {
+      return false;
+    }
+    
     tracker.trackInfo("Successfully added workspace " + connection.getWorkspaceName() + " to repository");
     return true;
+  }
+
+
+  private static boolean createSplitWorkspaceXml(RepositoryConnection connection, WorkspaceConfigSplit split, OperationTracker tracker) {
+    if (split == WorkspaceConfigSplit.NONE) {
+      return false;
+    }
+    WorkspaceXmlCreationConfig.Builder builder = new WorkspaceXmlCreationConfig.Builder();
+    builder.splitResult(connection.getSplittype());
+    builder.workspaceName(connection.getWorkspaceName());
+    builder.force(true);
+    WorkspaceObjectManagement.updateWorkspaceContent(builder.instance());
+    tracker.trackInfo("Created workspace xml for split type " + split);
+    return false;
   }
 
 
@@ -1067,13 +1088,8 @@ public class RepositoryManagementImpl {
       } catch (Exception e) {
         tracker.trackError("Error deleting revision content: " + e.getMessage());
         logger.error("Error deleting revision content: " + e.getMessage(), e);
-        try {
-          Files.copy(workspacePathInRepo, revisionPath);
-          tracker.trackInfo("Restored workspace revision content from " + workspacePathInRepo + " to " + revisionPath);
-        } catch (IOException e1) {
-          tracker.trackError("Error during cleanup after failed deletion of revision content: " + e1.getMessage());
-          logger.error("Error during cleanup after failed deletion of revision content: " + e1.getMessage(), e1);
-        }
+        copyDirectoryContent(workspacePathInRepo, revisionPath);
+        tracker.trackInfo("Restored workspace revision content from " + workspacePathInRepo + " to " + revisionPath);
         return false;
       }
       if(!createSymbolicLink(revisionPath, workspacePathInRepo)) {
@@ -1089,12 +1105,7 @@ public class RepositoryManagementImpl {
         tracker.trackInfo("Deleted xmom content at " + savedXmomRevPath);
         if(!createSymbolicLink(savedXmomRevPath, xmomRepoPath)) {
           tracker.trackError("Could not create symbolic link from " +savedXmomRevPath + " to " + xmomRepoPath);
-          try {
-            Files.copy(workspacePathInRepo.resolve(XMOM), savedXmomRevPath);
-          } catch (IOException e1) {
-            tracker.trackError("Error restoring xmom content during cleanup after failed deletion of revision content: " + e1.getMessage());
-            logger.error("Error restoring xmom content during cleanup after failed deletion of revision content: " + e1.getMessage(), e1);
-          }
+          copyDirectoryContent(workspacePathInRepo.resolve(XMOM), savedXmomRevPath);
           return false;
         } else {
           tracker.trackInfo("Created symbolic link from " + savedXmomRevPath + " to " + workspacePathInRepo.resolve(XMOM));
@@ -1102,12 +1113,7 @@ public class RepositoryManagementImpl {
       } catch (Exception e) {
         tracker.trackError("Error deleting revision content: " + e.getMessage());
         logger.error("Error deleting revision content: " + e.getMessage(), e);
-        try {
-          Files.copy(xmomRepoPath, savedXmomRevPath);
-        } catch (IOException e1) {
-          tracker.trackError("Error restoring xmom content during cleanup after failed deletion of revision content: " + e1.getMessage());
-          logger.error("Error restoring xmom content during cleanup after failed deletion of revision content: " + e1.getMessage(), e1);
-        }
+        copyDirectoryContent(xmomRepoPath, savedXmomRevPath);
         return false;
       }
       WorkspaceConfigSplit split = WorkspaceConfigSplit.fromId(connection.getSplittype()).orElse(WorkspaceConfigSplit.NONE);
@@ -1126,13 +1132,8 @@ public class RepositoryManagementImpl {
       } catch (IOException e) {
         tracker.trackError("Error deleting workspace xml: " + e.getMessage());
         logger.error("Error deleting workspace xml: " + e.getMessage(), e);
-        try {
-          Files.copy(workspaceXmlPathInRepo, workspaceXmlPathInRevision);
-          tracker.trackInfo("Restored workspace xml from " + workspaceXmlPathInRepo + " to " + workspaceXmlPathInRevision);
-        } catch (IOException e1) {
-          tracker.trackError("Error during cleanup after failed deletion of workspace xml: " + e1.getMessage());
-          logger.error("Error during cleanup after failed deletion of workspace xml: " + e1.getMessage(), e1);
-        }
+        copyDirectoryContent(workspaceXmlPathInRepo, workspaceXmlPathInRevision);
+        tracker.trackInfo("Restored workspace xml from " + workspaceXmlPathInRepo + " to " + workspaceXmlPathInRevision);
         return false;
       }
     }
@@ -1166,6 +1167,7 @@ public class RepositoryManagementImpl {
         logger.error("Error creating config directory in repository: " + e.getMessage(), e);
         return false;
       }
+
     }
     return true;
   }
@@ -1184,12 +1186,12 @@ public class RepositoryManagementImpl {
           Files.createDirectories(savedXmomPath);
           tracker.trackInfo("Created directory for xmom content of revision " + revision + " at " + savedXmomPath);
         }
-        Files.copy(savedXmomPath, workspacePathInRepo.resolve(XMOM));
+        FileUtils.copyRecursivelyWithFolderStructure(savedXmomPath.toFile(), workspacePathInRepo.resolve(XMOM).toFile());
         tracker.trackInfo("Copied XMOM content of revision " + revision + " to repository at " + workspacePathInRepo.resolve(XMOM));
         WorkspaceConfigSplit split = WorkspaceConfigSplit.fromId(connection.getSplittype()).orElse(WorkspaceConfigSplit.NONE);
         String workspaceXml = split == WorkspaceConfigSplit.NONE ? WORKSPACE_XML : CONFIG;
         Path workspaceXmlInRepo = workspacePathInRepo.resolve(workspaceXml);
-        Files.copy(revPath.resolve(workspaceXml), workspaceXmlInRepo);
+        FileUtils.copyRecursivelyWithFolderStructure(revPath.resolve(workspaceXml).toFile(), workspaceXmlInRepo.toFile());
         tracker.trackInfo("Copied workspace xml of revision " + revision + " to repository at " + workspaceXmlInRepo);
       }
     } catch (Exception e) {
