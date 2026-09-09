@@ -90,7 +90,7 @@ public class VetoStorableAccess implements VetoManagementInterface {
     }
   }
 
-  public boolean freeVetosByOrderId(long orderId) throws PersistenceLayerException {
+  public boolean freeVetosByOrderId(long orderId, boolean undo) throws PersistenceLayerException {
     List<VetoInformationStorable> vetosToUpdate = new ArrayList<VetoInformationStorable>();
     List<VetoInformationStorable> vetosToDelete = new ArrayList<VetoInformationStorable>();
     ODSConnection con = ods.openConnection();
@@ -104,7 +104,7 @@ public class VetoStorableAccess implements VetoManagementInterface {
           } else {
             vetosToUpdate.add(vis);
           }
-        } else if (vis.isPendingExclusiveAllocation() && vis.getPendingExclusiveOrderId() == orderId) {
+        } else if (vis.isPendingExclusiveAllocation() && vis.getPendingExclusiveOrderId() == orderId && !undo) {
           if (vis.getSharedOrderIds().isEmpty()) {
             vetosToDelete.add(vis);
           } else {
@@ -171,12 +171,16 @@ public class VetoStorableAccess implements VetoManagementInterface {
   }
 
   public void undoAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos) {
-    freeVetos(orderInformation);
+    try {
+      freeVetosByOrderId(orderInformation.getOrderId(), true);
+    } catch (PersistenceLayerException e) {
+      logger.error("Error while trying to deallocate vetos.", e);
+    }
   }
 
   public boolean freeVetos(OrderInformation orderInformation) {
     try {
-      return freeVetosByOrderId(orderInformation.getOrderId());
+      return freeVetosByOrderId(orderInformation.getOrderId(), false);
     } catch (PersistenceLayerException e) {
       logger.error("Error while trying to deallocate vetos.", e);
       return false;
@@ -185,7 +189,7 @@ public class VetoStorableAccess implements VetoManagementInterface {
   
   public boolean freeVetosForced(long orderId) {
     try {
-      return freeVetosByOrderId(orderId);
+      return freeVetosByOrderId(orderId, false);
     } catch (PersistenceLayerException e) {
       logger.error("Error while trying to force deallocation of vetos.", e);
       return false;
