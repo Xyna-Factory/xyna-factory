@@ -101,9 +101,9 @@ public class ListOasEndpointsTool extends Tool {
     return new JSONObject.Builder().members(members).instance();
   }
 
-  
+
   private JSONKeyValue createMemberString(String key, String value, String type) {
-    if(value != null && !Objects.equals("null", value)) {
+    if (value != null && !Objects.equals("null", value)) {
       return new JSONKeyValue.Builder().key(key).value(new JSONValue.Builder().type(type).stringOrNumberValue(value).instance()).instance();
     } else {
       return new JSONKeyValue.Builder().key(key).value(new JSONValue.Builder().type("NULL").instance()).instance();

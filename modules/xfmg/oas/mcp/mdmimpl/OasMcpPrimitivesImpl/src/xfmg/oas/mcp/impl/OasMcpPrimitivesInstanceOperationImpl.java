@@ -82,13 +82,11 @@ public class OasMcpPrimitivesInstanceOperationImpl extends OasMcpPrimitivesSuper
 
 
   private void writeObject(java.io.ObjectOutputStream s) throws java.io.IOException {
-    //change if needed to store instance context
     s.defaultWriteObject();
   }
 
 
   private void readObject(java.io.ObjectInputStream s) throws java.io.IOException, ClassNotFoundException {
-    //change if needed to restore instance-context during deserialization of order
     s.defaultReadObject();
   }
 

@@ -17,6 +17,8 @@
  */
 package xfmg.oas.mcp.impl.resources;
 
+
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,12 +32,15 @@ import xmcp.oas.fman.storables.OAS_ImportHistory;
 import xmcp.tables.datatypes.TableColumn;
 import xmcp.tables.datatypes.TableInfo;
 
+
+
 public class ImportHistoryResource extends Resource {
 
   private static final long serialVersionUID = 1L;
 
   private final OAS_ImportHistory history;
-  
+
+
   public ImportHistoryResource(OAS_ImportHistory history) {
     this.history = history;
     unversionedSetName(String.valueOf(history.getUniqueIdentifier()) + "_" + history.getFileName());
@@ -44,17 +49,20 @@ public class ImportHistoryResource extends Resource {
     unversionedSetDescription(createDescription(history));
     unversionedSetMimeType(deriveMimeType(history.getFileName()));
   }
-  
+
+
   private String createUri(OAS_ImportHistory history) {
-    return "xynamcp://oas/history/"+history.getUniqueIdentifier();
+    return "xynamcp://oas/history/" + history.getUniqueIdentifier();
   }
-  
+
+
   private String deriveMimeType(String fileName) {
-    if(fileName.endsWith(".json")) {
+    if (fileName.endsWith(".json")) {
       return "application/json";
     }
     return "text/plain";
   }
+
 
   private String createDescription(OAS_ImportHistory history) {
     StringBuilder sb = new StringBuilder();
@@ -62,24 +70,24 @@ public class ImportHistoryResource extends Resource {
     sb.append("Imported on: ").append(history.getDate0()).append("\n");
     sb.append("Import type: ").append(history.getType()).append("\n");
     sb.append("Import status: ").append(history.getImportStatus()).append("\n");
-    if(history.getErrorMessage() != null && !history.getErrorMessage().isBlank()) {
+    if (history.getErrorMessage() != null && !history.getErrorMessage().isBlank()) {
       sb.append("Error: ").append(history.getErrorMessage()).append("\n");
     }
     sb.append("Import RuntimeContext: ").append(history.getImportRtc());
     return sb.toString();
   }
 
+
   @Override
   public ReadResourceResult read(ReadResourceRequestParams request) {
     List<ResourceContent> contents = new ArrayList<>();
     OAS_ImportHistory data = ApplicationGeneration.queryOasImportHistoryDetails(history);
-    contents.add(new TextResourceContent.Builder().uri(createUri(history)).mimeType(deriveMimeType(history.getFileName())).text(data.getSpecificationFile()).instance());
+    contents.add(new TextResourceContent.Builder().uri(createUri(history)).mimeType(deriveMimeType(history.getFileName()))
+        .text(data.getSpecificationFile()).instance());
     return new ReadResourceResult.Builder().contents(contents).instance();
   }
-  
-  
-  
-  
+
+
   public static List<ImportHistoryResource> listResources() {
     List<TableColumn> columns = new ArrayList<>();
     columns.add(new TableColumn.Builder().path("fileName").instance());
@@ -90,7 +98,7 @@ public class ImportHistoryResource extends Resource {
     TableInfo tableInfo = new TableInfo.Builder().version("1.2").columns(columns).instance();
     List<? extends OAS_ImportHistory> data = ApplicationGeneration.queryOasImportHistory(tableInfo);
     List<ImportHistoryResource> result = new ArrayList<>();
-    for(OAS_ImportHistory entry : data) {
+    for (OAS_ImportHistory entry : data) {
       result.add(new ImportHistoryResource(entry));
     }
     return result;

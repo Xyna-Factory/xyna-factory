@@ -18,24 +18,26 @@
 package xfmg.oas.mcp.impl;
 
 
+
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 
 
+
 public class OasMcpPrimitivesServiceOperationImpl implements ExtendedDeploymentTask {
 
   public void onDeployment() throws XynaException {
-    // TODO do something on deployment, if required
     // This is executed again on each classloader-reload, that is each
     // time a dependent object is redeployed, for example a type of an input parameter.
   }
 
+
   public void onUndeployment() throws XynaException {
-    // TODO do something on undeployment, if required
     // This is executed again on each classloader-unload, that is each
     // time a dependent object is redeployed, for example a type of an input parameter.
   }
+
 
   public Long getOnUnDeploymentTimeout() {
     // The (un)deployment runs in its own thread. The service may define a timeout
@@ -43,6 +45,7 @@ public class OasMcpPrimitivesServiceOperationImpl implements ExtendedDeploymentT
     // If null is returned, the default timeout (defined by XynaProperty xyna.xdev.xfractmod.xmdm.deploymenthandler.timeout) will be used.
     return null;
   }
+
 
   public BehaviorAfterOnUnDeploymentTimeout getBehaviorAfterOnUnDeploymentTimeout() {
     // Defines the behavior of the (un)deployment after reaching the timeout and if this service ignores a Thread.interrupt.

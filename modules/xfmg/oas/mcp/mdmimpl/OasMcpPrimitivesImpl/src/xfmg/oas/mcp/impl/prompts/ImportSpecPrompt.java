@@ -17,6 +17,8 @@
  */
 package xfmg.oas.mcp.impl.prompts;
 
+
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -29,31 +31,38 @@ import xint.mcp.schema.PromptArgument;
 import xint.mcp.schema.PromptMessage;
 import xint.mcp.schema.TextContent;
 
+
+
 public class ImportSpecPrompt extends Prompt {
 
   private static final long serialVersionUID = 1L;
-  
+
+
   public ImportSpecPrompt() {
     List<PromptArgument> args = new ArrayList<>();
-    args.add(new PromptArgument.Builder().name("specFile").title("Specification file").description("Specification to import").required(true).instance());
-    args.add(new PromptArgument.Builder().name("createProvider").title("Create Provider Application").description("Should a provider application be generated").required(false).instance());
-    args.add(new PromptArgument.Builder().name("createClient").title("Create Client Application").description("Should a client application be generated").required(false).instance());
+    args.add(new PromptArgument.Builder().name("specFile").title("Specification file").description("Specification to import").required(true)
+        .instance());
+    args.add(new PromptArgument.Builder().name("createProvider").title("Create Provider Application")
+        .description("Should a provider application be generated").required(false).instance());
+    args.add(new PromptArgument.Builder().name("createClient").title("Create Client Application")
+        .description("Should a client application be generated").required(false).instance());
     unversionedSetArguments(args);
     unversionedSetDescription("Generated Oas applications based on a specification file");
     unversionedSetName("importOasSpec");
     unversionedSetTitle("Import Oas Specification");
   }
-  
+
+
   @Override
   public GetPromptResult get(JSONObject input) {
     boolean generateProvider = readBoolean("createProvider", input);
     boolean generateClient = readBoolean("createClient", input);
     String specFile = readString("specFile", input);
-    
+    boolean isJson = specFile.endsWith(".json");
 
     StringBuilder description = new StringBuilder();
     description.append("Generate ");
-    if(generateProvider && generateClient) {
+    if (generateProvider && generateClient) {
       description.append("provider and client applications ");
     } else if (generateProvider) {
       description.append("the provider application ");
@@ -65,8 +74,8 @@ public class ImportSpecPrompt extends Prompt {
     description.append("from an OpenAPI specification.");
     StringBuilder contentBuilder = new StringBuilder();
     contentBuilder.append("Generate the Xyna ");
-    
-    if(generateProvider && generateClient) {
+
+    if (generateProvider && generateClient) {
       contentBuilder.append("provider and client applications ");
     } else if (generateProvider) {
       contentBuilder.append("provider application ");
@@ -75,42 +84,51 @@ public class ImportSpecPrompt extends Prompt {
     } else {
       contentBuilder.append("datamodel application ");
     }
-    
+
     contentBuilder.append("from the OpenAPI specification in ");
     contentBuilder.append(specFile);
-    contentBuilder.append(". Call the importOasSpec tool with spec set to the parsed contents of ");
-    contentBuilder.append(specFile);
+    contentBuilder.append(". Call the importOasSpec tool with spec set to the ");
+    if (!isJson) {
+      contentBuilder.append("exact contents of ");
+      contentBuilder.append(specFile);
+      contentBuilder.append(" as a string");
+    } else {
+      contentBuilder.append("parsed contents of ");
+      contentBuilder.append(specFile);
+    }
     contentBuilder.append(", and options set to { \"createProvider\": ");
     contentBuilder.append(generateProvider);
     contentBuilder.append(", \"createClient\": ");
     contentBuilder.append(generateClient);
     contentBuilder.append(" }.");
-    
-    
+
+
     PromptMessage.Builder message = new PromptMessage.Builder();
     message.role("user");
     message.content(new TextContent.Builder().type("text").text(contentBuilder.toString()).instance());
-    
+
     return new GetPromptResult.Builder().description(description.toString()).messages(List.of(message.instance())).instance();
   }
 
+
   private String readString(String name, JSONObject input) {
     JSONValue member = input.getMember(name);
-    if(member == null) {
+    if (member == null) {
       return "<missing>";
     }
     return member.getStringOrNumberValue();
   }
-  
+
+
   private boolean readBoolean(String name, JSONObject input) {
     JSONValue member = input.getMember(name);
-    if(member == null) {
+    if (member == null) {
       return false;
     }
-    if(Objects.equals(member.getType(), "BOOLEAN")) {
+    if (Objects.equals(member.getType(), "BOOLEAN")) {
       return member.getBooleanValue();
     }
-    if(Objects.equals(member.getType(), "STRING")) {
+    if (Objects.equals(member.getType(), "STRING")) {
       return "true".equalsIgnoreCase(member.getStringOrNumberValue());
     }
     return false;

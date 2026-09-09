@@ -2,42 +2,32 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
     "properties": {
-        "name": {
-            "type": "string"
+        "spec": {
+            "type": [
+                "object",
+                "string"
+            ]
         },
-        "arguments": {
+        "options": {
             "type": "object",
             "properties": {
-                "spec": {
-                    "type": "object"
+                "createProvider": {
+                    "type": "boolean"
                 },
-                "options": {
-                    "type": "object",
-                    "properties": {
-                        "createProvider": {
-                            "type": "boolean"
-                        },
-                        "createClient": {
-                            "type": "boolean"
-                        }
-                    },
-                    "required": [
-                        "createProvider",
-                        "createClient"
-                    ],
-                    "additionalProperties": false
+                "createClient": {
+                    "type": "boolean"
                 }
             },
             "required": [
-                "spec",
-                "options"
+                "createProvider",
+                "createClient"
             ],
             "additionalProperties": false
         }
     },
     "required": [
-        "name",
-        "arguments"
+        "spec",
+        "options"
     ],
     "additionalProperties": false
 }
