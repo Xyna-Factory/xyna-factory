@@ -140,7 +140,7 @@ public class McpServerFilter extends ConnectionFilter<HTTPTriggerConnection> {
 
     String payload = tc.getPayload();
     if (logger.isTraceEnabled()) {
-      logger.trace(String.format("This MCP Filter is responsible for %s. Payload: %s", payload));
+      logger.trace(String.format("This MCP Filter is responsible for %s. Payload: %s", url, payload));
     }
 
     if (tc.getMethodEnum() == Method.DELETE) {
