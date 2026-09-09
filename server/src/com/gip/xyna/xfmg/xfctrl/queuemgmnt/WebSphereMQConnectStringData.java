@@ -29,6 +29,7 @@ import java.util.Objects;
 
 import com.gip.xyna.utils.misc.StringParameter;
 import com.gip.xyna.utils.misc.StringParameter.StringParameterParsingException;
+import com.gip.xyna.utils.misc.StringParameter.StringParameterUtils;
 import com.gip.xyna.utils.misc.StringParameter.Unmatched;
 import com.gip.xyna.utils.misc.EnvironmentVariable.StringEnvironmentVariable;
 import com.gip.xyna.utils.misc.EnvironmentVariable.IntegerEnvironmentVariable;
@@ -126,37 +127,57 @@ public class WebSphereMQConnectStringData extends WebSphereMQConnectData {
 
     private static final StringParameter<String> HOSTNAME_PARAM =
             StringParameter.typeString("hostname").label("hostname").documentation(Documentation.en("FQDN hostname or IP of queue manager.")
-                    .de("FQDN Hostname oder IP des Queue-Managers.").build()).build();
+                    .de("FQDN Hostname oder IP des Queue-Managers.").build())
+                .mandatory()
+                .alternative("hostnameEnv")
+                .build();
 
     private static final StringParameter<StringEnvironmentVariable> HOSTNAME_ENV_PARAM =
             StringParameter.typeEnvironmentVariable(StringEnvironmentVariable.class, "hostnameEnv").label("hostname env var")
                     .documentation(Documentation.en("Env var for FQDN hostname or IP of queue manager.")
                             .de("Umgebungsvariable für FQDN Hostname oder IP des Queue-Managers.").build())
+                    .mandatory()
+                    .alternative(HOSTNAME_PARAM)
                     .build();
 
-    private static final StringParameter<Integer> PORT_PARAM = StringParameter.typeInteger("port").label("port number")
-            .documentation(Documentation.en("Port of queue manager.").de("Port des Queue-Managers.").build()).build();
+    private static final StringParameter<Integer> PORT_PARAM = StringParameter.typePositiveInteger("port", false).label("port number")
+                .documentation(Documentation.en("Port of queue manager.").de("Port des Queue-Managers.").build())
+            .mandatory()
+            .alternative("portEnv")
+            .build();
 
     private static final StringParameter<IntegerEnvironmentVariable> PORT_ENV_PARAM = StringParameter
             .typeEnvironmentVariable(IntegerEnvironmentVariable.class, "portEnv").label("port number env var").documentation(Documentation
                     .en("Env var for port of queue manager.").de("Umgebungsvariable für Port des Queue-Managers.").build())
+            .mandatory()
+            .alternative(PORT_PARAM)
             .build();
 
     private static final StringParameter<String> QMGR_PARAM = StringParameter.typeString("queueManager").label("queueManager")
-            .documentation(Documentation.en("Name of the queue manager.").de("Name des Queue-Managers.").build()).build();
+                .documentation(Documentation.en("Name of the queue manager.").de("Name des Queue-Managers.").build())
+            .mandatory()
+            .alternative("queueManagerEnv")
+            .build();
 
     private static final StringParameter<StringEnvironmentVariable> QMGR_ENV_PARAM =
             StringParameter.typeEnvironmentVariable(StringEnvironmentVariable.class, "queueManagerEnv").label("queueManager env var")
                     .documentation(Documentation.en("Env var for name of the queue manager.")
                             .de("Umgebungsvariable für Name des Queue-Managers.").build())
+                    .mandatory()
+                    .alternative(QMGR_PARAM)
                     .build();
 
     private static final StringParameter<String> CHANNEL_PARAM = StringParameter.typeString("channel").label("channel")
-            .documentation(Documentation.en("Name of the used channel.").de("Name des zu verwendenden Kanals.").build()).build();
+                .documentation(Documentation.en("Name of the used channel.").de("Name des zu verwendenden Kanals.").build())
+            .mandatory()
+            .alternative("channelEnv")
+            .build();
 
     private static final StringParameter<StringEnvironmentVariable> CHANNEL_ENV_PARAM = StringParameter
             .typeEnvironmentVariable(StringEnvironmentVariable.class, "channelEnv").label("channel env var").documentation(Documentation
                     .en("Env var for name of the used channel.").de("Umgebungsvariable für Name des zu verwendenden Kanals.").build())
+            .mandatory()
+            .alternative(CHANNEL_PARAM)
             .build();
 
     public static final List<StringParameter<?>> allParams =
@@ -244,8 +265,6 @@ public class WebSphereMQConnectStringData extends WebSphereMQConnectData {
             qcsd.setQueueManagerEnv(QMGR_ENV_PARAM.getFromMap(paramValues));
             qcsd.setChannelEnv(CHANNEL_ENV_PARAM.getFromMap(paramValues));
 
-            validateMandatoryValueOrEnv(qcsd);
-
             return qcsd;
         } catch (StringParameterParsingException e) {
             throw new IllegalArgumentException("Unable to parse WebSphereMQ connect data parameters", e);
@@ -258,7 +277,7 @@ public class WebSphereMQConnectStringData extends WebSphereMQConnectData {
             throw new IllegalArgumentException("Error: Connect parameter missing.");
         }
 
-        if (isNamedParameterSyntax(connectParams)) {
+        if (StringParameterUtils.isNamedParameterSyntax(connectParams, allParams)) {
             return fromStringParameters(Arrays.asList(connectParams));
         }
 
@@ -272,81 +291,6 @@ public class WebSphereMQConnectStringData extends WebSphereMQConnectData {
         connectData.setPort(QueueManagement.checkParameter("port", connectParams[2]));
         connectData.setChannel(QueueManagement.checkParameter("channel", connectParams[3]));
         return connectData;
-    }
-
-
-    private static boolean isNamedParameterSyntax(String[] connectParams) {
-        int namedParameters = 0;
-        for (String param : connectParams) {
-            if (isNamedParameter(param, allParams)) {
-                namedParameters++;
-            }
-        }
-
-        if (namedParameters > 0 && namedParameters < connectParams.length) {
-            throw new IllegalArgumentException("Error: Mixed named and unnamed connect parameters are not supported.");
-        }
-
-        return namedParameters == connectParams.length;
-    }
-
-
-    private static boolean isNamedParameter(String param, List<StringParameter<?>> validParameters) {
-        String parameterName = extractParameterName(param);
-        if (parameterName == null) {
-            return false;
-        }
-
-        for (StringParameter<?> validParameter : validParameters) {
-            if (validParameter.getName().equals(parameterName)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-
-    private static String extractParameterName(String param) {
-        if (param == null) {
-            return null;
-        }
-
-        int separatorIndex = param.indexOf('=');
-        if (separatorIndex <= 0) {
-            return null;
-        }
-
-        return param.substring(0, separatorIndex);
-    }
-
-
-    private static void validateMandatoryValueOrEnv(WebSphereMQConnectStringData qcsd) {
-        requireTextValueOrEnvVar("hostname", qcsd.getHostname(), qcsd.getHostnameEnv());
-        requirePositiveIntValueOrEnvVar("port", qcsd.getPort(), qcsd.getPortEnv());
-        requireTextValueOrEnvVar("queueManager", qcsd.getQueueManager(), qcsd.getQueueManagerEnv());
-        requireTextValueOrEnvVar("channel", qcsd.getChannel(), qcsd.getChannelEnv());
-    }
-
-
-    private static void requireTextValueOrEnvVar(String parameterName, String value, StringEnvironmentVariable envVar) {
-        if (!hasText(value) && envVar == null) {
-            throw new IllegalArgumentException("Missing mandatory parameter '" + parameterName + "': provide either '" + parameterName
-                    + "' or '" + parameterName + "Env'.");
-        }
-    }
-
-
-    private static void requirePositiveIntValueOrEnvVar(String parameterName, int value, IntegerEnvironmentVariable envVar) {
-        if (value <= 0 && envVar == null) {
-            throw new IllegalArgumentException("Missing mandatory parameter '" + parameterName + "': provide either '" + parameterName
-                    + "' or '" + parameterName + "Env'.");
-        }
-    }
-
-
-    private static boolean hasText(String value) {
-        return value != null && !value.trim().isEmpty();
     }
 
 

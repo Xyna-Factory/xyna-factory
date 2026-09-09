@@ -32,11 +32,12 @@ import com.gip.xyna.utils.misc.EnvironmentVariable.StringEnvironmentVariable;
 import com.gip.xyna.utils.misc.Documentation;
 import com.gip.xyna.utils.misc.StringParameter;
 import com.gip.xyna.utils.misc.StringParameter.StringParameterParsingException;
+import com.gip.xyna.utils.misc.StringParameter.StringParameterUtils;
 import com.gip.xyna.utils.misc.StringParameter.Unmatched;
 
 
 
-public class ActiveMQConnecStringtData extends ActiveMQConnectData {
+public class ActiveMQConnectStringtData extends ActiveMQConnectData {
 
     private StringEnvironmentVariable hostnameEnv;
     private IntegerEnvironmentVariable portEnv;
@@ -84,31 +85,41 @@ public class ActiveMQConnecStringtData extends ActiveMQConnectData {
 
     private static final StringParameter<String> HOSTNAME_PARAM =
             StringParameter.typeString("hostname").label("hostname").documentation(Documentation.en("FQDN hostname or IP of queue manager.")
-                    .de("FQDN Hostname oder IP des Queue-Managers.").build()).build();
+                        .de("FQDN Hostname oder IP des Queue-Managers.").build())
+                    .mandatory()
+                    .alternative("hostnameEnv")
+                    .build();
 
     private static final StringParameter<StringEnvironmentVariable> HOSTNAME_ENV_PARAM =
             StringParameter.typeEnvironmentVariable(StringEnvironmentVariable.class, "hostnameEnv").label("hostname env var")
                     .documentation(Documentation.en("Env var for FQDN hostname or IP of queue manager.")
                             .de("Umgebungsvariable für FQDN Hostname oder IP des Queue-Managers.").build())
+                    .mandatory()
+                    .alternative(HOSTNAME_PARAM)
                     .build();
 
-    private static final StringParameter<Integer> PORT_PARAM = StringParameter.typeInteger("port").label("port number")
-            .documentation(Documentation.en("Port of queue manager.").de("Port des Queue-Managers.").build()).build();
+    private static final StringParameter<Integer> PORT_PARAM = StringParameter.typePositiveInteger("port", false).label("port number")
+                .documentation(Documentation.en("Port of queue manager.").de("Port des Queue-Managers.").build())
+            .mandatory()
+            .alternative("portEnv")
+            .build();
 
     private static final StringParameter<IntegerEnvironmentVariable> PORT_ENV_PARAM = StringParameter
             .typeEnvironmentVariable(IntegerEnvironmentVariable.class, "portEnv").label("port number env var").documentation(Documentation
                     .en("Env var for port of queue manager.").de("Umgebungsvariable für Port des Queue-Managers.").build())
+            .mandatory()
+            .alternative(PORT_PARAM)
             .build();
 
     public static final List<StringParameter<?>> allParams =
             Collections.unmodifiableList(StringParameter.asList(HOSTNAME_PARAM, PORT_PARAM, HOSTNAME_ENV_PARAM, PORT_ENV_PARAM));
 
 
-    private ActiveMQConnecStringtData(ActiveMQConnectData qcd) {
+    private ActiveMQConnectStringtData(ActiveMQConnectData qcd) {
         Objects.requireNonNull(qcd, "ActiveMQConnectData must not be null");
 
-        if (qcd instanceof ActiveMQConnecStringtData) {
-            ActiveMQConnecStringtData qcsd = (ActiveMQConnecStringtData) qcd;
+        if (qcd instanceof ActiveMQConnectStringtData) {
+            ActiveMQConnectStringtData qcsd = (ActiveMQConnectStringtData) qcd;
             this.setHostname(qcsd.getConfiguredHostname());
             this.setPort(qcsd.getConfiguredPort());
 
@@ -133,7 +144,7 @@ public class ActiveMQConnecStringtData extends ActiveMQConnectData {
 
     @Override
     public String toString() {
-        StringBuilder s = new StringBuilder("ActiveMQConnecStringtData {hostnameEnv: ");
+        StringBuilder s = new StringBuilder("ActiveMQConnectStringtData {hostnameEnv: ");
         s.append(hostnameEnv).append(", portEnv: ").append(portEnv).append(", ");
         s.append(" ActiveMQConnectData { ").append("hostname: ").append(this.getConfiguredHostname());
         s.append(", port: ").append(this.getConfiguredPort()).append(" } ");
@@ -143,12 +154,12 @@ public class ActiveMQConnecStringtData extends ActiveMQConnectData {
     }
 
 
-    public static ActiveMQConnecStringtData fromStringParameters(List<String> parameters) {
+    public static ActiveMQConnectStringtData fromStringParameters(List<String> parameters) {
         Map<String, Object> paramValues;
         try {
             paramValues = StringParameter.parse(parameters).unmatchedKey(Unmatched.Ignore).with(allParams);
 
-            ActiveMQConnecStringtData qcd = new ActiveMQConnecStringtData(new ActiveMQConnectData());
+            ActiveMQConnectStringtData qcd = new ActiveMQConnectStringtData(new ActiveMQConnectData());
             qcd.setHostname(HOSTNAME_PARAM.getFromMap(paramValues));
             Integer port = PORT_PARAM.getFromMap(paramValues);
             if (port != null) {
@@ -157,8 +168,6 @@ public class ActiveMQConnecStringtData extends ActiveMQConnectData {
 
             qcd.setHostnameEnv(HOSTNAME_ENV_PARAM.getFromMap(paramValues));
             qcd.setPortEnv(PORT_ENV_PARAM.getFromMap(paramValues));
-
-            validateMandatoryValueOrEnv(qcd);
 
             return qcd;
         } catch (StringParameterParsingException e) {
@@ -172,7 +181,7 @@ public class ActiveMQConnecStringtData extends ActiveMQConnectData {
             throw new IllegalArgumentException("Error: Connect parameter missing.");
         }
 
-        if (isNamedParameterSyntax(connectParams)) {
+        if (StringParameterUtils.isNamedParameterSyntax(connectParams, allParams)) {
             return fromStringParameters(Arrays.asList(connectParams));
         }
 
@@ -192,82 +201,9 @@ public class ActiveMQConnecStringtData extends ActiveMQConnectData {
     }
 
 
-    private static boolean isNamedParameterSyntax(String[] connectParams) {
-        int namedParameters = 0;
-        for (String param : connectParams) {
-            if (isNamedParameter(param, allParams)) {
-                namedParameters++;
-            }
-        }
-
-        if (namedParameters > 0 && namedParameters < connectParams.length) {
-            throw new IllegalArgumentException("Error: Mixed named and unnamed connect parameters are not supported.");
-        }
-
-        return namedParameters == connectParams.length;
-    }
-
-
-    private static boolean isNamedParameter(String param, List<StringParameter<?>> validParameters) {
-        String parameterName = extractParameterName(param);
-        if (parameterName == null) {
-            return false;
-        }
-
-        for (StringParameter<?> validParameter : validParameters) {
-            if (validParameter.getName().equals(parameterName)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-
-    private static String extractParameterName(String param) {
-        if (param == null) {
-            return null;
-        }
-
-        int separatorIndex = param.indexOf('=');
-        if (separatorIndex <= 0) {
-            return null;
-        }
-
-        return param.substring(0, separatorIndex);
-    }
-
-
-    private static void validateMandatoryValueOrEnv(ActiveMQConnecStringtData qcd) {
-        requireTextValueOrEnvVar("hostname", qcd.getHostname(), qcd.getHostnameEnv());
-        requirePositiveIntValueOrEnvVar("port", qcd.getPort(), qcd.getPortEnv());
-    }
-
-
-    private static void requireTextValueOrEnvVar(String parameterName, String value, StringEnvironmentVariable envVar) {
-        if (!hasText(value) && envVar == null) {
-            throw new IllegalArgumentException("Missing mandatory parameter '" + parameterName + "': provide either '" + parameterName
-                    + "' or '" + parameterName + "Env'.");
-        }
-    }
-
-
-    private static void requirePositiveIntValueOrEnvVar(String parameterName, int value, IntegerEnvironmentVariable envVar) {
-        if (value <= 0 && envVar == null) {
-            throw new IllegalArgumentException("Missing mandatory parameter '" + parameterName + "': provide either '" + parameterName
-                    + "' or '" + parameterName + "Env'.");
-        }
-    }
-
-
-    private static boolean hasText(String value) {
-        return value != null && !value.trim().isEmpty();
-    }
-
-
-    public static ActiveMQConnecStringtData fromConnectData(ActiveMQConnectData qcd) {
+    public static ActiveMQConnectStringtData fromConnectData(ActiveMQConnectData qcd) {
         Objects.requireNonNull(qcd, "ActiveMQConnectData must not be null");
-        return new ActiveMQConnecStringtData(qcd);
+        return new ActiveMQConnectStringtData(qcd);
     }
 
 

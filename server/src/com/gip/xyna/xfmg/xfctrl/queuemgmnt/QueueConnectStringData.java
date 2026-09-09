@@ -63,7 +63,7 @@ public class QueueConnectStringData {
 
             switch (qType) {
                 case ACTIVE_MQ :
-                    return ActiveMQConnecStringtData.fromStringParameters(params);
+                    return ActiveMQConnectStringtData.fromStringParameters(params);
                 case WEBSPHERE_MQ :
                     return WebSphereMQConnectStringData.fromStringParameters(params);
                 case ORACLE_AQ :
@@ -144,7 +144,7 @@ public class QueueConnectStringData {
     public String fromConnectData(ActiveMQConnectData qcd) {
         List<String> params = new ArrayList<String>();
         params.add(QTYPE.toNamedParameterObject(QueueType.ACTIVE_MQ));
-        params.addAll(ActiveMQConnecStringtData.fromConnectData(qcd).toParameters());
+        params.addAll(ActiveMQConnectStringtData.fromConnectData(qcd).toParameters());
 
         return new CSVStringList(params).serializeToString();
     }

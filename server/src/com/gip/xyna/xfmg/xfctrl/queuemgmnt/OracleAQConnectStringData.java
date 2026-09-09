@@ -32,7 +32,10 @@ import com.gip.xyna.utils.misc.EnvironmentVariable.StringEnvironmentVariable;
 import com.gip.xyna.utils.misc.Documentation;
 import com.gip.xyna.utils.misc.StringParameter;
 import com.gip.xyna.utils.misc.StringParameter.StringParameterParsingException;
+import com.gip.xyna.utils.misc.StringParameter.StringParameterUtils;
+import com.gip.xyna.utils.misc.StringParameter.UnmatchedAlternative;
 import com.gip.xyna.utils.misc.StringParameter.Unmatched;
+import com.gip.xyna.utils.StringUtils;
 
 
 
@@ -115,29 +118,44 @@ public class OracleAQConnectStringData extends OracleAQConnectData {
 
 
     private static final StringParameter<String> JDBC_PARAM = StringParameter.typeString("jdbc").label("jdbc")
-            .documentation(Documentation.en("JDBC URL for AQ database.").de("JDBC URL der AQ Datenbank.").build()).build();
+            .documentation(Documentation.en("JDBC URL for AQ database.").de("JDBC URL der AQ Datenbank.").build())
+            .mandatory()
+            .alternative("jdbcEnv")
+            .build();
 
     private static final StringParameter<StringEnvironmentVariable> JDBC_ENV_PARAM =
             StringParameter
                     .typeEnvironmentVariable(StringEnvironmentVariable.class, "jdbcEnv").label("jdbc env var").documentation(Documentation
                             .en("Env var for JDBC URL of AQ database.").de("Umgebungsvariable für JDBC URL der AQ Datenbank.").build())
+                    .mandatory()
+                    .alternative(JDBC_PARAM)
                     .build();
 
     private static final StringParameter<String> USER_PARAM = StringParameter.typeString("user").label("user")
-            .documentation(Documentation.en("Username for database.").de("Benutzername der Datenbank.").build()).build();
+            .documentation(Documentation.en("Username for database.").de("Benutzername der Datenbank.").build())
+            .mandatory()
+            .alternative("userEnv")
+            .build();
 
     private static final StringParameter<StringEnvironmentVariable> USER_ENV_PARAM =
             StringParameter
                     .typeEnvironmentVariable(StringEnvironmentVariable.class, "userEnv").label("user env var").documentation(Documentation
                             .en("Env var for username for database.").de("Umgebungsvariable für Benutzername der Datenbank.").build())
+                    .mandatory()
+                    .alternative(USER_PARAM)
                     .build();
 
     private static final StringParameter<String> PASSWORD_PARAM = StringParameter.typeString("password").label("password")
-            .documentation(Documentation.en("Password of the DB user.").de("Passwort des DB Nutzers.").build()).build();
+            .documentation(Documentation.en("Password of the DB user.").de("Passwort des DB Nutzers.").build())
+            .mandatory()
+            .alternative("passwordEnv")
+            .build();
 
     private static final StringParameter<StringEnvironmentVariable> PASSWORD_ENV_PARAM = StringParameter
             .typeEnvironmentVariable(StringEnvironmentVariable.class, "passwordEnv").label("password env var").documentation(Documentation
                     .en("Env var for password of the DB user.").de("Umgebungsvariable für Passwort des DB Nutzers.").build())
+            .mandatory()
+            .alternative(PASSWORD_PARAM)
             .build();
 
     private static final StringParameter<String> UUID_PARAM = StringParameter.typeString("uuid").label("uuid")
@@ -216,8 +234,6 @@ public class OracleAQConnectStringData extends OracleAQConnectData {
             qcd.setUserEnv(USER_ENV_PARAM.getFromMap(paramValues));
             qcd.setPasswordEnv(PASSWORD_ENV_PARAM.getFromMap(paramValues));
 
-            validateMandatoryValueOrEnv(qcd);
-
             return qcd;
         } catch (StringParameterParsingException e) {
             throw new IllegalArgumentException("Unable to parse OracleAQ connect data parameters", e);
@@ -230,12 +246,12 @@ public class OracleAQConnectStringData extends OracleAQConnectData {
             throw new IllegalArgumentException("Error: Connect parameter missing.");
         }
 
-        if (isNamedParameterSyntax(connectParams)) {
+        if (StringParameterUtils.isNamedParameterSyntax(connectParams, allParams)) {
             List<String> namedParams = new ArrayList<String>(Arrays.asList(connectParams));
             Map<String, Object> paramValues;
             try {
-                paramValues = StringParameter.parse(namedParams).unmatchedKey(Unmatched.Ignore)
-                        .with(StringParameter.asList(UUID_PARAM, PASSWORD_PARAM));
+                paramValues = StringParameter.parse(namedParams).unmatchedKey(Unmatched.Ignore).unmatchedAlternative(UnmatchedAlternative.Ignore)
+                        .with(StringParameter.asList(UUID_PARAM, PASSWORD_PARAM, PASSWORD_ENV_PARAM));
             } catch (StringParameterParsingException e) {
                 throw new IllegalArgumentException("Unable to parse OracleAQ connect data parameters", e);
             }
@@ -243,10 +259,10 @@ public class OracleAQConnectStringData extends OracleAQConnectData {
             String uuid = UUID_PARAM.getFromMap(paramValues);
             String password = PASSWORD_PARAM.getFromMap(paramValues);
 
-            if (!hasText(uuid)) {
+            if (StringUtils.isEmpty(uuid)) {
                 uuid = UUID.randomUUID().toString();
             }
-            String encryptedPassword = hasText(password) ? QueueConnectStringData.encryptPassword(uuid, password) : null;
+            String encryptedPassword = !StringUtils.isEmpty(password) ? QueueConnectStringData.encryptPassword(uuid, password) : null;
 
             List<String> normalizedParams = new ArrayList<String>();
             normalizedParams.add(UUID_PARAM.toNamedParameterObject(uuid));
@@ -280,72 +296,6 @@ public class OracleAQConnectStringData extends OracleAQConnectData {
         connectData.setPassword(QueueManagement.checkParameter("password", connectParams[1]));
         connectData.setJdbcUrl(QueueManagement.checkParameter("jdbcUrl", connectParams[2]));
         return connectData;
-    }
-
-
-    private static boolean isNamedParameterSyntax(String[] connectParams) {
-        int namedParameters = 0;
-        for (String param : connectParams) {
-            if (isNamedParameter(param, allParams)) {
-                namedParameters++;
-            }
-        }
-
-        if (namedParameters > 0 && namedParameters < connectParams.length) {
-            throw new IllegalArgumentException("Error: Mixed named and unnamed connect parameters are not supported.");
-        }
-
-        return namedParameters == connectParams.length;
-    }
-
-
-    private static boolean isNamedParameter(String param, List<StringParameter<?>> validParameters) {
-        String parameterName = extractParameterName(param);
-        if (parameterName == null) {
-            return false;
-        }
-
-        for (StringParameter<?> validParameter : validParameters) {
-            if (validParameter.getName().equals(parameterName)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-
-    private static String extractParameterName(String param) {
-        if (param == null) {
-            return null;
-        }
-
-        int separatorIndex = param.indexOf('=');
-        if (separatorIndex <= 0) {
-            return null;
-        }
-
-        return param.substring(0, separatorIndex);
-    }
-
-
-    private static void validateMandatoryValueOrEnv(OracleAQConnectStringData qcd) {
-        requireTextValueOrEnvVar("jdbc", qcd.getJdbcUrl(), qcd.getJdbcEnv());
-        requireTextValueOrEnvVar("user", qcd.getUserName(), qcd.getUserEnv());
-        requireTextValueOrEnvVar("password", qcd.getPassword(), qcd.getPasswordEnv());
-    }
-
-
-    private static void requireTextValueOrEnvVar(String parameterName, String value, StringEnvironmentVariable envVar) {
-        if (!hasText(value) && envVar == null) {
-            throw new IllegalArgumentException("Missing mandatory parameter '" + parameterName + "': provide either '" + parameterName
-                    + "' or '" + parameterName + "Env'.");
-        }
-    }
-
-
-    private static boolean hasText(String value) {
-        return value != null && !value.trim().isEmpty();
     }
 
 

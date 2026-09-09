@@ -302,7 +302,7 @@ public class QueueParameterHandlingTest extends TestCase {
 
   public void testActiveMqParserRejectsMissingMandatoryPort() {
     ActiveMQConnectData connectData = createActiveMqConnectData("amq-host", 61616);
-    List<String> params = new ArrayList<String>(ActiveMQConnecStringtData.fromConnectData(connectData).toParameters());
+    List<String> params = new ArrayList<String>(ActiveMQConnectStringtData.fromConnectData(connectData).toParameters());
 
     for (int i = 0; i < params.size(); i++) {
       if (params.get(i).startsWith("port=")) {
@@ -312,7 +312,7 @@ public class QueueParameterHandlingTest extends TestCase {
     }
 
     try {
-      ActiveMQConnecStringtData.fromStringParameters(params);
+      ActiveMQConnectStringtData.fromStringParameters(params);
       fail("Expected IllegalArgumentException for missing port parameter");
     } catch (IllegalArgumentException expected) {
       assertTrue(expected.getMessage().contains("port"));
@@ -322,7 +322,7 @@ public class QueueParameterHandlingTest extends TestCase {
 
   public void testActiveMqParserRejectsMissingMandatoryHostname() {
     ActiveMQConnectData connectData = createActiveMqConnectData("amq-host", 61616);
-    List<String> params = new ArrayList<String>(ActiveMQConnecStringtData.fromConnectData(connectData).toParameters());
+    List<String> params = new ArrayList<String>(ActiveMQConnectStringtData.fromConnectData(connectData).toParameters());
 
     for (int i = 0; i < params.size(); i++) {
       if (params.get(i).startsWith("hostname=")) {
@@ -332,7 +332,7 @@ public class QueueParameterHandlingTest extends TestCase {
     }
 
     try {
-      ActiveMQConnecStringtData.fromStringParameters(params);
+      ActiveMQConnectStringtData.fromStringParameters(params);
       fail("Expected IllegalArgumentException for missing hostname parameter");
     } catch (IllegalArgumentException expected) {
       assertTrue(expected.getMessage().contains("hostname"));
@@ -494,7 +494,7 @@ public class QueueParameterHandlingTest extends TestCase {
     queue.setExternalNameEnv(wellKnownEnvVar);
 
     // initial version must not resolve externalNameEnv
-    assertEquals("legacy-name", queue.getExternalNameForCurrentVersion());
+    assertEquals("legacy-name", queue.resolveExternalName());
   }
 
 

@@ -201,7 +201,7 @@ public class QueueManagement extends FunctionGroup {
     } else if (qtype == QueueType.WEBSPHERE_MQ) {
       return WebSphereMQConnectStringData.fromRegisterQueueParameters(connectParams);
     } else if (qtype == QueueType.ACTIVE_MQ) {
-      return ActiveMQConnecStringtData.fromRegisterQueueParameters(connectParams);
+      return ActiveMQConnectStringtData.fromRegisterQueueParameters(connectParams);
     }
 
     throw new IllegalArgumentException("Error: Unknown queue type " + qtype);
