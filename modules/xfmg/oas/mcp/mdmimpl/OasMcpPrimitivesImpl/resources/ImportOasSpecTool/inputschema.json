@@ -29,7 +29,6 @@
                 }
             },
             "required": [
-                "specType",
                 "spec",
                 "options"
             ],

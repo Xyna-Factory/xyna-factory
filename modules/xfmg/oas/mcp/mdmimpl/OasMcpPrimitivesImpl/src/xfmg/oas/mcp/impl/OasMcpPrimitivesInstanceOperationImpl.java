@@ -18,6 +18,7 @@
 package xfmg.oas.mcp.impl;
 
 
+
 import java.lang.ClassNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,41 +33,46 @@ import xint.mcp.schema.Prompt;
 import xint.mcp.schema.Resource;
 import xint.mcp.schema.Tool;
 import xfmg.oas.mcp.OasMcpPrimitivesSuperProxy;
+import xfmg.oas.mcp.impl.prompts.ImportSpecPrompt;
+import xfmg.oas.mcp.impl.resources.ImportHistoryResource;
 import xfmg.oas.mcp.impl.tools.ImportOasSpecTool;
 import xfmg.oas.mcp.impl.tools.ListOasEndpointsTool;
 import xfmg.oas.mcp.OasMcpPrimitivesInstanceOperation;
 import xfmg.oas.mcp.OasMcpPrimitives;
 
 
+
 public class OasMcpPrimitivesInstanceOperationImpl extends OasMcpPrimitivesSuperProxy implements OasMcpPrimitivesInstanceOperation {
 
   private static final long serialVersionUID = 1L;
-  
+
   private static final Logger logger = CentralFactoryLogging.getLogger(OasMcpPrimitivesInstanceOperationImpl.class);
+
 
   public OasMcpPrimitivesInstanceOperationImpl(OasMcpPrimitives instanceVar) {
     super(instanceVar);
   }
 
+
   public List<? extends Prompt> getPrompts() {
-    //TODO implementation
-    //TODO update dependency XML
-    return new ArrayList<Prompt>();
+    return List.of(new ImportSpecPrompt());
   }
 
+
   public List<? extends Resource> getResources() {
-    //TODO implementation
-    //TODO update dependency XML
-    return new ArrayList<Resource>();
+    List<Resource> resources = new ArrayList<>();
+    resources.addAll(ImportHistoryResource.listResources());
+    return resources;
   }
+
 
   public List<? extends Tool> getTools() {
     Long revision = null;
     try {
       ClassLoaderBase clb = (ClassLoaderBase) getClass().getClassLoader();
       revision = clb.getRevision();
-    } catch(Exception e) {
-      if(logger.isWarnEnabled()) {
+    } catch (Exception e) {
+      if (logger.isWarnEnabled()) {
         logger.warn("Could not determine revision.", e);
       }
       return Collections.emptyList();
@@ -74,10 +80,12 @@ public class OasMcpPrimitivesInstanceOperationImpl extends OasMcpPrimitivesSuper
     return List.of(new ImportOasSpecTool(revision), new ListOasEndpointsTool());
   }
 
+
   private void writeObject(java.io.ObjectOutputStream s) throws java.io.IOException {
     //change if needed to store instance context
     s.defaultWriteObject();
   }
+
 
   private void readObject(java.io.ObjectInputStream s) throws java.io.IOException, ClassNotFoundException {
     //change if needed to restore instance-context during deserialization of order
