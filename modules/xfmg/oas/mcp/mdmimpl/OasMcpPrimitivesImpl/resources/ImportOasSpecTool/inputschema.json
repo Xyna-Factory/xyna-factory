@@ -1,0 +1,44 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "arguments": {
+            "type": "object",
+            "properties": {
+                "spec": {
+                    "type": "object"
+                },
+                "options": {
+                    "type": "object",
+                    "properties": {
+                        "createProvider": {
+                            "type": "boolean"
+                        },
+                        "createClient": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "createProvider",
+                        "createClient"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "required": [
+                "specType",
+                "spec",
+                "options"
+            ],
+            "additionalProperties": false
+        }
+    },
+    "required": [
+        "name",
+        "arguments"
+    ],
+    "additionalProperties": false
+}
