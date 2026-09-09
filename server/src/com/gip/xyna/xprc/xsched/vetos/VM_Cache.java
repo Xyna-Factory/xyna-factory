@@ -74,12 +74,12 @@ public class VM_Cache implements VetoManagementInterface {
 
 
   private boolean hasAlreadyAllocatedVeto(VetoInformation veto, VetoInformation existingVeto) {
-    assert veto.getName().equals(existingVeto.getName()) && veto.getBinding() == existingVeto.getBinding() : "Veto names or bindings do not match: " + veto + " vs. " + existingVeto;
     // This can happen if the order was resumed from backup, it will always try to reallocate as it could have released
     // but would no be continued from a previous checkpoint
-    return (existingVeto.isAllocatedExclusive() && veto.isAllocatedExclusive() && existingVeto.getUsingOrderId() == veto.getUsingOrderId()) ||
+    return veto.getName().equals(existingVeto.getName()) && veto.getBinding() == existingVeto.getBinding() && 
+          ((existingVeto.isAllocatedExclusive() && veto.isAllocatedExclusive() && existingVeto.getUsingOrderId() == veto.getUsingOrderId()) ||
            (existingVeto.isAllocatedShared() && veto.isAllocatedShared() && existingVeto.getSharedOrderIds().containsAll(veto.getSharedOrderIds())) ||
-           (existingVeto.isPendingExclusiveAllocation() && veto.isPendingExclusiveAllocation() && existingVeto.getPendingExclusiveOrderId() == veto.getPendingExclusiveOrderId());
+           (existingVeto.isPendingExclusiveAllocation() && veto.isPendingExclusiveAllocation() && existingVeto.getPendingExclusiveOrderId() == veto.getPendingExclusiveOrderId()));
   }
 
   

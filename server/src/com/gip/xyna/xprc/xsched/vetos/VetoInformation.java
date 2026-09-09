@@ -197,7 +197,7 @@ public class VetoInformation implements Serializable {
 
   public boolean isPendingExclusiveAllocation() {
     return usingOrder == null && pendingExclusiveOrderId != null;
-  }  
+  }
 
   public static Transformation<VetoInformation, String> extractName = new Transformation<VetoInformation, String>() {
 
