@@ -90,7 +90,7 @@ public class VetoStorableAccess implements VetoManagementInterface {
     }
   }
 
-  public boolean freeVetosByOrderId(long orderId, boolean undo) throws PersistenceLayerException {
+  public boolean freeVetosByOrderId(long orderId, boolean undoAllocation) throws PersistenceLayerException {
     List<VetoInformationStorable> vetosToUpdate = new ArrayList<VetoInformationStorable>();
     List<VetoInformationStorable> vetosToDelete = new ArrayList<VetoInformationStorable>();
     ODSConnection con = ods.openConnection();
@@ -104,7 +104,7 @@ public class VetoStorableAccess implements VetoManagementInterface {
           } else {
             vetosToUpdate.add(vis);
           }
-        } else if (vis.isPendingExclusiveAllocation() && vis.getPendingExclusiveOrderId() == orderId && !undo) {
+        } else if (vis.isPendingExclusiveAllocation() && vis.getPendingExclusiveOrderId() == orderId && !undoAllocation) {
           if (vis.getSharedOrderIds().isEmpty()) {
             vetosToDelete.add(vis);
           } else {
