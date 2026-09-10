@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,8 +94,8 @@ import com.gip.xyna.xfmg.xfctrl.classloading.persistence.SerializableClassloaded
 import com.gip.xyna.xfmg.xfctrl.datamodelmgmt.DataModelManagement;
 import com.gip.xyna.xfmg.xfctrl.dependencies.DependencyRegister;
 import com.gip.xyna.xfmg.xfctrl.dependencies.RuntimeContextDependencyManagement;
-import com.gip.xyna.xfmg.xfctrl.queuemgmnt.Queue;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueConnectData;
+import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueFacade;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueManagement;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueType;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
@@ -213,6 +213,7 @@ import com.gip.xyna.xprc.xpce.monitoring.EngineSpecificStepHandlerManager;
 import com.gip.xyna.xprc.xpce.planning.Capacity;
 import com.gip.xyna.xprc.xprcods.XynaProcessingODS;
 import com.gip.xyna.xprc.xprcods.capacitymapping.CapacityMappingStorable;
+import com.gip.xyna.xprc.xprcods.orderarchive.OrderBackupManagement;
 import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstance;
 import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstanceBackup;
 import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstanceDetails;
@@ -1398,7 +1399,7 @@ public class UpdateGeneratedClasses {
                   }
 
 
-                  public void registerQueue(String uniqueName, String externalName, QueueType queueType, QueueConnectData connectData)
+                  public void registerQueue(String uniqueName, String externalName, String externalNameEnv, QueueType queueType, QueueConnectData connectData)
                       throws PersistenceLayerException {
                   }
 
@@ -1407,7 +1408,7 @@ public class UpdateGeneratedClasses {
                   }
 
 
-                  public Collection<Queue> listQueues() throws PersistenceLayerException {
+                  public Collection<QueueFacade> listQueues() throws PersistenceLayerException {
                     return null;
                   }
 
@@ -2315,6 +2316,12 @@ public class UpdateGeneratedClasses {
                   
                   @Override
                   public XynaPythonSnippetManagement getXynaPythonSnippetManagement() {
+                    return null;
+                  }
+
+
+                  @Override
+                  public OrderBackupManagement getOrderBackupManagement() {
                     return null;
                   }
                 };

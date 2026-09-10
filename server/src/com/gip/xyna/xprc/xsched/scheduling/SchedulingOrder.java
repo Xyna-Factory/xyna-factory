@@ -202,6 +202,10 @@ public class SchedulingOrder {
   public List<String> getVetos() {
     return getSchedulingData().getVetos();
   }
+
+  public List<String> getSharedVetos() {
+    return getSchedulingData().getSharedVetos();
+  }
   
   public void terminate(XynaException xynaException) {
     addException(xynaException);

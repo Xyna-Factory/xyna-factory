@@ -155,7 +155,9 @@ class MySQLPersistenceLayerAlterTableConnection
             if (type == null) {
                 return MySqlType.LONGBLOB;
             } else if (type == MySqlType.VARCHAR) {
-                if (col.size() > type.getSize()) {
+                // mysql with (default) char set utf8mb4 (one char taking 1-4 bytes) does not allow varchar column size > 16383,
+                // otherwise create table statement will return error
+                if (4 * col.size() > type.getSize()) {
                     return MySqlType.LONGTEXT;
                 } else {
                     return type;

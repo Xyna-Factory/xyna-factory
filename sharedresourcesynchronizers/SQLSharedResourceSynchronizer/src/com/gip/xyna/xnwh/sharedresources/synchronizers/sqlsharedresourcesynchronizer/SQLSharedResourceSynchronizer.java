@@ -131,7 +131,12 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     codeMap.put(SQLErrorType.uniqueCostraint, 1);
     codeMap.put(SQLErrorType.changeDuringTransaction, 1555);
     result.put(Type.Oracle, codeMap);
-    
+
+    codeMap = new HashMap<>();
+    codeMap.put(SQLErrorType.uniqueCostraint, 23505);
+    codeMap.put(SQLErrorType.changeDuringTransaction, 40001);
+    result.put(Type.POSTGRESQL, codeMap);
+
     return result;
   }
 
@@ -139,13 +144,13 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
   public SQLSharedResourceSynchronizer(String tableName, String url, String username, String password, int numConnections,
                                        int concurrentModificationRetries, Duration connectionTimeout, Duration socketTimeout) {
     CREATE_TABLE_STATEMENT = String
-        .format("CREATE TABLE IF NOT EXISTS %s (sr_path VARCHAR(128) NOT NULL, sr_id VARCHAR(128) NOT NULL, sr_created BIGINT(20) NULL, sr_data MEDIUMBLOB NULL DEFAULT NULL, PRIMARY KEY (sr_path, sr_id) USING BTREE)",
+        .format("CREATE TABLE IF NOT EXISTS %s (sr_path VARCHAR(128) NOT NULL, sr_id VARCHAR(128) NOT NULL, sr_created BIGINT NULL, sr_data {{BINTYPE}} NULL DEFAULT NULL, PRIMARY KEY (sr_path, sr_id))",
                 tableName);
     DELETE_TEMPLATE = String.format("DELETE FROM %s WHERE sr_id IN (", tableName);
     INSERT_TEMPLATE = String.format("INSERT INTO %s (sr_path, sr_id, sr_created, sr_data) VALUES\n", tableName);
     SELECT_TEMPLATE = String.format("SELECT * FROM %s WHERE sr_path = ? AND sr_id IN (", tableName);
     SELECT_ALL_TEMPLATE = String.format("SELECT * FROM %s WHERE sr_path = ?", tableName);
-    UPDATE_STATEMENT = String.format("UPDATE %s SET sr_data = ? WHERE sr_path = ? AND sr_id = ?", tableName);
+    UPDATE_STATEMENT = String.format("UPDATE %s SET sr_data = ?, sr_created = ? WHERE sr_path = ? AND sr_id = ?", tableName);
 
     this.tableName = tableName;
     this.url = url;
@@ -185,9 +190,10 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
       cdb.connectTimeoutInSeconds((int) connectionTimeout.getDuration(TimeUnit.SECONDS));
       cdb.autoCommit(true);
       connectionData = cdb.build();
-
+      String btype = connectionData.getType() == Type.POSTGRESQL ? "BYTEA" : "MEDIUMBLOB";
+      String createTableStatement = CREATE_TABLE_STATEMENT.replace("{{BINTYPE}}", btype);
       try (Connection c = connectionData.createConnection()) {
-        try (PreparedStatement stmt = c.prepareStatement(CREATE_TABLE_STATEMENT)) {
+        try (PreparedStatement stmt = c.prepareStatement(createTableStatement)) {
           stmt.execute();
         }
       } catch (Exception e) {
@@ -338,11 +344,12 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
       stream.flush();
       if (blobFirst) {
         result.addParameter(new BLOB(stream));
+        result.addParameter(instance.getCreated());
       }
       result.addParameter(resource.getPath());
       result.addParameter(instance.getId());
-      result.addParameter(instance.getCreated());
       if (!blobFirst) {
+        result.addParameter(instance.getCreated());
         result.addParameter(new BLOB(stream));
       }
     }
@@ -621,7 +628,7 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
 
     return result;
   }
-  
+
   private void returnConnection(Connection con) {
     if(con == null) {
       return;
@@ -635,6 +642,6 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     } catch (Exception e) {
       missingConnections.incrementAndGet();
     }
-   
+
   }
 }

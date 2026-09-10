@@ -1125,7 +1125,7 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
 
       List<ApplicationElement> result = adElements.stream()
       .filter(tableHelper.filter())
-      .filter(ae -> request.getIncludeUnassigned() || !DependencyType.explicit.name().equals(ae.getDependencyType()))
+      .filter(ae -> request.getIncludeAssigned() || !DependencyType.explicit.name().equals(ae.getDependencyType()))
       .collect(Collectors.toList());
       //tableHelper.sort(result);
       return tableHelper.limit(result);

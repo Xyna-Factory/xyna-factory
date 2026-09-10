@@ -46,6 +46,7 @@ public class SchedulingData implements Serializable {
 
   private int priority = -1; //-1 bedeutet, dass PriorityManagement noch richtige Priority ermitteln muss
   private List<String> vetos;
+  private List<String> sharedVetos;
   private List<Capacity> capacities;
   private MultiAllocationCapacities multiAllocationCapacities;
   private TransferCapacities transferCapacities;
@@ -65,6 +66,7 @@ public class SchedulingData implements Serializable {
     //this.entranceTimestamp = entranceTimestamp;
     capacities = Collections.emptyList();
     vetos = Collections.emptyList();
+    sharedVetos = Collections.emptyList();
     timeConstraintData = new TimeConstraintData(entranceTimestamp);
   }
   
@@ -80,6 +82,11 @@ public class SchedulingData implements Serializable {
       copy.vetos = Collections.emptyList(); 
     } else {
       copy.vetos = new ArrayList<String>(schedulingData.vetos);
+    }
+    if( schedulingData.sharedVetos.isEmpty() ) {
+      copy.sharedVetos = Collections.emptyList();
+    } else {
+      copy.sharedVetos = new ArrayList<String>(schedulingData.sharedVetos);
     }
     copy.setCapacities(copy.capacities);
     copy.timeConstraintData.setDefinition(copy.timeConstraintData.getDefinition());
@@ -111,6 +118,7 @@ public class SchedulingData implements Serializable {
 
   public void setSchedulerBean(SchedulerBean sb) {
     setVetos(sb.unversionedGetVetos());
+    setSharedVetos(sb.unversionedGetSharedVetos());
     setCapacities(sb.unversionedGetCapacities());
     if( sb instanceof SchedulerInformation ) {
       SchedulerInformation si = (SchedulerInformation)sb;
@@ -142,12 +150,27 @@ public class SchedulingData implements Serializable {
     }
   }
 
+  private void setSharedVetos(List<? extends Veto> vs) {
+    if( vs.isEmpty() ) {
+      sharedVetos = Collections.emptyList();
+    } else {
+      sharedVetos = new ArrayList<String>(vs.size());
+      for( Veto v : vs ) {
+        sharedVetos.add( v.getVetoName() );
+      }
+    }
+  }
+
   public List<Capacity> getCapacities() {
     return capacities;
   }
   
   public List<String> getVetos() {
     return vetos;
+  }
+
+  public List<String> getSharedVetos() {
+    return sharedVetos;
   }
   
   public boolean mustAcquireCapacitiesOnlyOnce() {

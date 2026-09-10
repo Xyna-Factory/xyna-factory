@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,8 +53,8 @@ import com.gip.xyna.xfmg.statistics.XynaStatistics;
 import com.gip.xyna.xfmg.statistics.XynaStatisticsLegacy;
 import com.gip.xyna.xfmg.xclusteringservices.XynaClusteringServicesManagement;
 import com.gip.xyna.xfmg.xfctrl.XynaFactoryControl;
-import com.gip.xyna.xfmg.xfctrl.queuemgmnt.Queue;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueConnectData;
+import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueFacade;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueType;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 import com.gip.xyna.xfmg.xfmon.XynaFactoryMonitoring;
@@ -695,9 +695,9 @@ public class XynaFactoryManagement extends XynaFactoryManagementBase {
   /**
    * QueueManagement
    */
-  public void registerQueue(String uniqueName, String externalName, QueueType queueType, QueueConnectData connectData)
+  public void registerQueue(String uniqueName, String externalName, String externalNameEnv, QueueType queueType, QueueConnectData connectData)
                   throws PersistenceLayerException {
-    getXynaFactoryControl().getQueueManagement().registerQueue(uniqueName, externalName, queueType, connectData);
+    getXynaFactoryControl().getQueueManagement().registerQueue(uniqueName, externalName, externalNameEnv, queueType, connectData);
   }
 
 
@@ -706,7 +706,7 @@ public class XynaFactoryManagement extends XynaFactoryManagementBase {
   }
 
 
-  public Collection<Queue> listQueues() throws PersistenceLayerException {
+  public Collection<QueueFacade> listQueues() throws PersistenceLayerException {
     return getXynaFactoryControl().getQueueManagement().listQueues();
   }
 
