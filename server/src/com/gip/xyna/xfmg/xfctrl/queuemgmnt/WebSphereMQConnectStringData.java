@@ -267,7 +267,7 @@ public class WebSphereMQConnectStringData extends WebSphereMQConnectData {
 
             return qcsd;
         } catch (StringParameterParsingException e) {
-            throw new IllegalArgumentException("Unable to parse WebSphereMQ connect data parameters", e);
+            throw new IllegalArgumentException("Unable to parse WebSphereMQ connect data parameters: "+ e.getMessage(), e);
         }
     }
 

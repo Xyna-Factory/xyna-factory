@@ -236,7 +236,7 @@ public class OracleAQConnectStringData extends OracleAQConnectData {
 
             return qcd;
         } catch (StringParameterParsingException e) {
-            throw new IllegalArgumentException("Unable to parse OracleAQ connect data parameters", e);
+            throw new IllegalArgumentException("Unable to parse OracleAQ connect data parameters: "+ e.getMessage(), e);
         }
     }
 

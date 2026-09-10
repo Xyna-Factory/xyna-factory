@@ -171,7 +171,8 @@ public class ActiveMQConnectStringtData extends ActiveMQConnectData {
 
             return qcd;
         } catch (StringParameterParsingException e) {
-            throw new IllegalArgumentException("Unable to parse ActiveMQ connect data parameters", e);
+            throw new IllegalArgumentException("Unable to parse ActiveMQ connect data parameters: "+ e.getMessage(), e);
+
         }
     }
 
