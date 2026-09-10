@@ -164,7 +164,7 @@ public class VM_Cache implements VetoManagementInterface {
   }
 
   public void undoAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos) {
-    freeVetosByOrderId(orderInformation.getOrderId());
+    freeVetosByOrderId(orderInformation.getOrderId(), true);
   }
   
   @Deprecated
@@ -176,7 +176,7 @@ public class VM_Cache implements VetoManagementInterface {
     //nichts zu tun
   }
 
-  private boolean freeVetosByOrderId(long orderId) {
+  private boolean freeVetosByOrderId(long orderId, boolean undoAllocation) {
     synchronized (vetoStateLock) {
       List<String> allocated = allocatedVetos.remove(orderId);
       if( allocated == null ) {
@@ -190,7 +190,7 @@ public class VM_Cache implements VetoManagementInterface {
             if (vi.getSharedOrderIds().isEmpty() && !vi.isPendingExclusiveAllocation()) {
               vetoCache.remove(v, vi);
             }
-          } else if (vi.isPendingExclusiveAllocation() && vi.getPendingExclusiveOrderId() == orderId) {
+          } else if (vi.isPendingExclusiveAllocation() && vi.getPendingExclusiveOrderId() == orderId && !undoAllocation) {
             if (vi.getSharedOrderIds().isEmpty()) {
               vetoCache.remove(v, vi);
             } else {
@@ -221,11 +221,11 @@ public class VM_Cache implements VetoManagementInterface {
   }
   
   public boolean freeVetos(OrderInformation orderInformation) {
-    return freeVetosByOrderId(orderInformation.getOrderId());
+    return freeVetosByOrderId(orderInformation.getOrderId(), false);
   }
   
   public boolean freeVetosForced(long orderId) {
-    return freeVetosByOrderId(orderId);
+    return freeVetosByOrderId(orderId, false);
   }
 
   public void allocateAdministrativeVeto(AdministrativeVeto administrativeVeto) throws XPRC_AdministrativeVetoAllocationDenied {
