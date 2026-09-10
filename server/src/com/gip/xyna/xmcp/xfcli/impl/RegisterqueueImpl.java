@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,11 @@ public class RegisterqueueImpl extends XynaCommandImplementation<Registerqueue> 
   public void execute(OutputStream statusOutputStream, Registerqueue payload) throws XynaException {
     try {
       QueueManagement.checkParameter("uniqueName", payload.getUniqueName());
-      QueueManagement.checkParameter("externalName", payload.getExternalName());
+      boolean hasExternalName = payload.getExternalName() != null && !payload.getExternalName().isEmpty();
+      boolean hasExternalNameEnv = payload.getExternalNameEnv() != null && !payload.getExternalNameEnv().isEmpty();
+      if (!hasExternalName && !hasExternalNameEnv) {
+        throw new IllegalArgumentException("Error: One of externalName or externalNameEnv must be provided.");
+      }
       QueueManagement.checkParameter("queueType", payload.getQueueType());
     }
     catch (Exception e) {
@@ -58,7 +62,7 @@ public class RegisterqueueImpl extends XynaCommandImplementation<Registerqueue> 
     try {
       QueueConnectData connectData = QueueManagement.createQueueConnectData(qtype, connectParams);
       XynaFactory.getInstance().getFactoryManagement().registerQueue(payload.getUniqueName(), payload.getExternalName(),
-                                                                     qtype, connectData);
+                                                                     payload.getExternalNameEnv(), qtype, connectData);
     } catch (IllegalArgumentException e) {
       writeLineToCommandLine(statusOutputStream, e.getMessage());
       throw e;
