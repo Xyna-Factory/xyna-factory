@@ -30,6 +30,7 @@ import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemState;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemStateManagement;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DisplayState;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
+import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase.XMOMType;
 import com.gip.xyna.xmcp.xfcli.CommandLineWriter;
 import com.gip.xyna.xmcp.xfcli.ReturnCode;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
@@ -77,6 +78,21 @@ public class DeploymultipleImpl extends XynaCommandImplementation<Deploymultiple
       if (payload.getFqExceptionNames() != null) {
         for (String name : payload.getFqExceptionNames()) {
           objects.add(ExceptionGeneration.getInstance(name, revision));
+        }
+      }
+      if (payload.getObjects() != null) {
+        DeploymentItemStateManagement dism = XynaFactory.getInstance().getFactoryManagementPortal().
+                                                         getXynaFactoryControl().getDeploymentItemStateManagement();
+        for (String name : payload.getObjects()) {
+          DeploymentItemState dis = dism.get(name, revision);
+          XMOMType xmomType = dis.getType();
+          if (xmomType == XMOMType.DATATYPE) {
+            objects.add(DOM.getInstance(name, revision));
+          } else if (xmomType == XMOMType.WORKFLOW) {
+            objects.add(WF.getInstance(name, revision));
+          } else if (xmomType == XMOMType.EXCEPTION) {
+            objects.add(ExceptionGeneration.getInstance(name, revision));
+          }
         }
       }
 

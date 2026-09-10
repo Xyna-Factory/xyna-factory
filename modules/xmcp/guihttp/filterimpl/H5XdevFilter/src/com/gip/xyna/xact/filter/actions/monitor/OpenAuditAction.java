@@ -73,7 +73,11 @@ public class OpenAuditAction extends H5xFilterAction implements Endpoint {
     
     XMOMGuiReply reply = new XMOMGuiReply();
     GetAuditRequestProcessor getAuditRequestProcessor = new GetAuditRequestProcessor();
-    GetAuditResponse gar = getAuditRequestProcessor.processGetAuditRequest(Long.valueOf(url.getPathElement(1)));
+
+    Long auditId = extractAuditId(url);
+    Long parentId = extractParentId(url);
+
+    GetAuditResponse gar = getAuditRequestProcessor.processGetAuditRequest(auditId, parentId);
     reply.setXynaObject(gar);
     ReadonlyUtil.setReadonlyRecursive(reply);
     jfai.sendJson(tc, HTTPTriggerConnection.HTTP_OK, reply.getJson());
@@ -89,13 +93,32 @@ public class OpenAuditAction extends H5xFilterAction implements Endpoint {
   @Override
   public GeneralXynaObject execute(XynaPlainSessionCredentials creds, URLPath url, Method method, String payload) {
     try {
-      return new GetAuditRequestProcessor().processGetAuditRequest(Long.valueOf(url.getPathElement(1)));
+      Long auditId = extractAuditId(url);
+      Long parentId = extractParentId(url);
+
+      return new GetAuditRequestProcessor().processGetAuditRequest(auditId, parentId);
     } catch (Exception e) {
       if (logger.isWarnEnabled()) {
         logger.warn("Could not process open audit request.", e);
       }
       return null;
     }
+  }
+
+  /**
+   * Extracts the audit ID from the URL path element.
+   */
+  private Long extractAuditId(URLPath url) {
+    return Long.valueOf(url.getPathElement(1));
+  }
+
+  /**
+   * Extracts the optional parent ID from the query parameter.
+   * Returns null if the parameter is not present.
+   */
+  private Long extractParentId(URLPath url) {
+    URLPath.URLPathQuery parentQuery = url.getQuery(PathElements.PARENT);
+    return (parentQuery != null && parentQuery.getValue() != null) ? Long.valueOf(parentQuery.getValue()) : null;
   }
   
 }

@@ -23,6 +23,7 @@
   </Meta>
   <Data IsList="true" Label="Capacities" ReferenceName="Capacity" ReferencePath="xprc.xsched" VariableName="capacities"/>
   <Data IsList="true" Label="Vetos" ReferenceName="Veto" ReferencePath="xprc.xsched" VariableName="vetos"/>
+  <Data IsList="true" Label="Shared Vetos" ReferenceName="Veto" ReferencePath="xprc.xsched" VariableName="sharedVetos"/>
   <Data Label="Time Constraint" ReferenceName="TimeConstraint" ReferencePath="xprc.xsched" VariableName="timeConstraint"/>
   <Data Label="Priority" ReferenceName="Priority" ReferencePath="xprc.xsched" VariableName="priority"/>
 </DataType>

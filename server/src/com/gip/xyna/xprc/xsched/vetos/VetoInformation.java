@@ -84,7 +84,7 @@ public class VetoInformation implements Serializable {
     this.sharedOrderIds = sharedOrderIds;
     this.pendingExclusiveOrderId = pendingExclusiveOrderId;
     this.documentation = documentation;
-    this.administrative = AdministrativeVeto.ADMIN_VETO_ORDERID.equals(usingOrder.getOrderId());
+    this.administrative = usingOrder != null && AdministrativeVeto.ADMIN_VETO_ORDERID.equals(usingOrder.getOrderId());
     this.binding = binding;
     this.created = created;
   }
@@ -120,26 +120,29 @@ public class VetoInformation implements Serializable {
   public OrderInformation getOrderInformation() {
     if( usingOrder != null ) {
       return usingOrder;
-    } else {
+    } else if (administrative) {
       return AdministrativeVeto.ADMIN_VETO_ORDER_INFORMATION;
     }
+    return null;
   }
   
 
   public Long getUsingOrderId() {
     if( usingOrder != null ) {
       return usingOrder.getOrderId();
-    } else {
+    } else if (administrative) {
       return AdministrativeVeto.ADMIN_VETO_ORDERID;
     }
+    return null;
   }
   
   public Long getUsingRootOrderId() {
     if( usingOrder != null ) {
       return usingOrder.getRootOrderId();
-    } else {
+    } else if (administrative) {
       return AdministrativeVeto.ADMIN_VETO_ORDERID;
     }
+    return null;
   }
 
   public boolean isAdministrative() {
@@ -158,17 +161,19 @@ public class VetoInformation implements Serializable {
   public String getDocumentation() {
     if( administrative ) {
       return documentation;
-    } else {
+    } else if( usingOrder != null ) {
       return usingOrder.getRuntimeContext();
     }
+    return "Veto is shared by "+ sharedOrderIds.size() + " orders";
   }
   
   public String getUsingOrderType() {
     if( usingOrder != null ) {
       return usingOrder.getOrderType();
-    } else {
+    } else if (administrative) {
       return AdministrativeVeto.ADMIN_VETO_ORDERTYPE;
     }
+    return null;
   }
   
   public Long getCreated() {

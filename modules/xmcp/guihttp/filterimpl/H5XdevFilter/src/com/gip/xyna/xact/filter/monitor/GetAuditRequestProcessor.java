@@ -88,9 +88,9 @@ public class GetAuditRequestProcessor {
     }
   }
 
-  public GetAuditResponse processGetAuditRequest(Long orderId) throws NoAuditData {
+  public GetAuditResponse processGetAuditRequest(Long orderId, Long parentId) throws NoAuditData {
     try {
-      return createGetAuditResponse(MonitorAudit.fromLocalOrder(orderId));
+      return createGetAuditResponse(MonitorAudit.fromLocalOrder(orderId, parentId));
     } catch (Throwable ex) {
       return createGetAuditResponse(orderId, ex, true);
     }
@@ -101,6 +101,7 @@ public class GetAuditRequestProcessor {
     result.setOrderId(monitorAudit.getGuiOrderId());
     result.setParentOrderId(monitorAudit.getGuiParentOrderId());
     result.setRevision(0);
+    result.setOnlyParentRuntimeInfo(monitorAudit.hasOnlyParentRuntimeInfo());
 
     // set workflow parsing to audit mode, which creates fake variables when they can't be created due to a workflow being missing in the XMOM repository
     com.gip.xyna.xact.filter.xmom.workflows.json.Workflow.isAudit.set(true);
