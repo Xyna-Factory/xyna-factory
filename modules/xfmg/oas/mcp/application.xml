@@ -17,6 +17,8 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><Application applicationName="McpOasGeneration" factoryVersion="" versionName="1.0.0" xmlVersion="1.1">
   <ApplicationInfo>
+    <Description Lang="DE">Mcp tools, resources und prompts für das Importieren von Verwalten von Oas Applikationen</Description>
+    <Description Lang="EN">Mcp tools, resources and prompts to import and manage oas applications</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>ModelContextProtocol</ApplicationName>
