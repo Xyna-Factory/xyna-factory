@@ -352,6 +352,8 @@ public class CMSharedResource implements CapacityManagementInterface {
     SharedResourceRequestResult<SharedResourceCapacity> updateResult = srm.update(XYNA_CAP_SR_DEF, ids, update);
     if (!updateResult.isSuccess()) {
       logger.error("could not undo capacity allocation.");
+    } else {
+      schedulingData.setHasAcquiredCapacities(false);
     }
   }
 
