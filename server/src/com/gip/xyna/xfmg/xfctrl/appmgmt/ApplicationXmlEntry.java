@@ -377,6 +377,9 @@ public class ApplicationXmlEntry {
           element = doc.createElement(ApplicationXmlHandler.TAG_SHAREDLIBS);
           element.appendChild(doc.createTextNode(entry.getSharedLibs()));
           entryElement.appendChild(element);
+          element = doc.createElement(ApplicationXmlHandler.TAG_DESCRIPTION);
+          element.appendChild(doc.createTextNode(entry.getDescription()));
+          entryElement.appendChild(element);
           listElement.appendChild(entryElement);
         }
       }
@@ -959,19 +962,21 @@ public class ApplicationXmlEntry {
     protected String fqFilterClassname;
     protected String triggerName;
     protected String sharedLibs;
+    protected String description;
 
     public FilterXmlEntry(boolean isImplicitDependency) {
       super(isImplicitDependency);
     }
     
     protected FilterXmlEntry(boolean isImplicitDependency, String name, String jarFiles, String fqFilterClassname, String triggerName,
-                             String sharedLibs) {
+                             String sharedLibs, String description) {
       super(isImplicitDependency);
       this.name = name;
       this.jarFiles = jarFiles;
       this.fqFilterClassname = fqFilterClassname;
       this.triggerName = triggerName;
       this.sharedLibs = sharedLibs;
+      this.description = description;
     }
 
     public String getName() {
@@ -998,6 +1003,10 @@ public class ApplicationXmlEntry {
       return sharedLibs;
     }
 
+    public String getDescription() {
+      return description;
+    }
+
     @Override
     public int hashCode() {
       final int prime = 31;
@@ -1007,6 +1016,7 @@ public class ApplicationXmlEntry {
       result = prime * result + ((name == null) ? 0 : name.hashCode());
       result = prime * result + ((sharedLibs == null) ? 0 : sharedLibs.hashCode());
       result = prime * result + ((triggerName == null) ? 0 : triggerName.hashCode());
+      result = prime * result + ((description == null) ? 0 : description.hashCode());
       return result;
     }
 
@@ -1019,42 +1029,19 @@ public class ApplicationXmlEntry {
       if (getClass() != obj.getClass())
         return false;
       FilterXmlEntry other = (FilterXmlEntry) obj;
-      if (fqFilterClassname == null) {
-        if (other.fqFilterClassname != null)
-          return false;
-      }
-      else if (!fqFilterClassname.equals(other.fqFilterClassname))
-        return false;
-      if (jarFiles == null) {
-        if (other.jarFiles != null)
-          return false;
-      }
-      else if (!jarFiles.equals(other.jarFiles))
-        return false;
-      if (name == null) {
-        if (other.name != null)
-          return false;
-      }
-      else if (!name.equals(other.name))
-        return false;
-      if (sharedLibs == null) {
-        if (other.sharedLibs != null)
-          return false;
-      }
-      else if (!sharedLibs.equals(other.sharedLibs))
-        return false;
-      if (triggerName == null) {
-        if (other.triggerName != null)
-          return false;
-      }
-      else if (!triggerName.equals(other.triggerName))
-        return false;
+      
+      if (!Objects.equals(fqFilterClassname, other.fqFilterClassname)) { return false; }
+      if (!Objects.equals(jarFiles, other.jarFiles)) { return false; }
+      if (!Objects.equals(name, other.name)) { return false; }
+      if (!Objects.equals(sharedLibs, other.sharedLibs)) { return false; }
+      if (!Objects.equals(triggerName, other.triggerName)) { return false; }
+      if (!Objects.equals(description, other.description)) { return false; }
       return true;
     }
 
     @Override
     public String toString() {
-      return "[name=" + name + ", jarFiles=" + jarFiles + ", fqFilterClassname=" + fqFilterClassname + ", triggerName=" + triggerName + ", sharedLibs=" + sharedLibs + "]";
+      return "[name=" + name + ", jarFiles=" + jarFiles + ", fqFilterClassname=" + fqFilterClassname + ", triggerName=" + triggerName + ", sharedLibs=" + sharedLibs + ", description=" + description + "]";
     }
 
     public int compareTo(XmlEntry o) {
