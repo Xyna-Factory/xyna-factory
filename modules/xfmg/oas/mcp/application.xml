@@ -22,7 +22,7 @@
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>ModelContextProtocol</ApplicationName>
-        <VersionName>0.0.1</VersionName>
+        <VersionName>1.0.0</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>OasAppManagement</ApplicationName>
