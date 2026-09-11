@@ -32,7 +32,7 @@
     </RuntimeContextRequirements>
   </ApplicationInfo>
   <Filters>
-    <Filter implicitDependency="true">
+    <Filter implicitDependency="false">
       <Name>SFTPFilter</Name>
       <JarFiles>SFTPFilter/SFTPFilter.jar:</JarFiles>
       <FqFilterClassname>com.gip.xyna.xact.filter.SFTPFilter</FqFilterClassname>
