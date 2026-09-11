@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+/*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2026 Xyna GmbH, Germany
  *
@@ -15,21 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<project name="build" default="build-all" basedir=".">
+ */
+package xfmg.oas.mcp.impl;
 
-    <property name="target.dir" value="${basedir}/deploy/" />
 
-    <target name="build-all">
-        <ant antfile="build.xml" target="build" inheritAll="false" dir="oasBase">
-            <property name="target.dir" value="${target.dir}" />
-        </ant>
-        <ant antfile="build.xml" target="build" inheritAll="false" dir="oasAppManagement">
-            <property name="target.dir" value="${target.dir}" />
-        </ant>
-        <ant antfile="build.xml" target="build" inheritAll="false" dir="mcp">
-            <property name="target.dir" value="${target.dir}" />
-        </ant>
-    </target>
 
-</project>
+import java.nio.charset.StandardCharsets;
+
+import xact.templates.Document;
+
+
+
+public class ResourceManagement {
+
+
+  public static Document loadResource(String path) {
+    try (java.io.InputStream is = ResourceManagement.class.getClassLoader().getResourceAsStream("resources/" + path)) {
+      if (is == null) {
+        return new Document.Builder().text("{}").instance();
+      }
+      String data = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+      return new Document.Builder().text(data).instance();
+    } catch (Exception e) {
+      return new Document.Builder().text("{}").instance();
+    }
+  }
+}
