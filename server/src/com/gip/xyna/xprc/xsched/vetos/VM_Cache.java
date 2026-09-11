@@ -178,10 +178,11 @@ public class VM_Cache implements VetoManagementInterface {
 
   private boolean freeVetosByOrderId(long orderId, boolean undoAllocation) {
     synchronized (vetoStateLock) {
-      List<String> allocated = allocatedVetos.remove(orderId);
+      List<String> allocated = allocatedVetos.get(orderId);
       if( allocated == null ) {
         return false;
       }
+      List<String> toRemove = new ArrayList<>();
       for( String v : allocated ) {
         VetoInformation vi = vetoCache.get(v);
         if (vi != null) {
@@ -190,20 +191,28 @@ public class VM_Cache implements VetoManagementInterface {
             if (vi.getSharedOrderIds().isEmpty() && !vi.isPendingExclusiveAllocation()) {
               vetoCache.remove(v, vi);
             }
+            toRemove.add(v);
           } else if (vi.isPendingExclusiveAllocation() && vi.getPendingExclusiveOrderId() == orderId && !undoAllocation) {
             if (vi.getSharedOrderIds().isEmpty()) {
               vetoCache.remove(v, vi);
             } else {
               vi.setPendingExclusiveOrderId(null);
             }
+            toRemove.add(v);
           } else if (vi.isAllocatedExclusive() && vi.getUsingOrderId() == orderId) {
             vetoCache.remove(v, vi);
+            toRemove.add(v);
           }
         } else {
           //TODO evtl. war Veto doppelt angefordert; Ansonsten: wer sollte das Veto bereits entfernt haben
         }
       }
-      return !allocated.isEmpty();
+      allocated.removeAll(toRemove);
+      if (allocated.isEmpty()) {
+        allocatedVetos.remove(orderId);
+        return false;
+      }
+      return true;
     }
   }
 
