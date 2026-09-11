@@ -20,6 +20,7 @@ package com.gip.xyna.xprc.xsched.vetos;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import com.gip.xyna.utils.collections.CollectionUtils.Transformation;
 import com.gip.xyna.xprc.xsched.scheduling.OrderInformation;
@@ -164,7 +165,10 @@ public class VetoInformation implements Serializable {
     } else if( usingOrder != null ) {
       return usingOrder.getRuntimeContext();
     } else if (pendingExclusiveOrderId != null) {
-      return "Pending...";
+      String pendingStr = (Objects.equals(AdministrativeVeto.ADMIN_VETO_ORDERID, pendingExclusiveOrderId) ?
+                          "administrative veto" : "" + pendingExclusiveOrderId);
+      return "Exclusive veto requested by " + pendingStr + ". Currently Shared by " +
+             sharedOrderIds.size() + " orders.";
     } else if (sharedOrderIds != null) {
       return "Veto is shared by "+ sharedOrderIds.size() + " orders";
     } 
