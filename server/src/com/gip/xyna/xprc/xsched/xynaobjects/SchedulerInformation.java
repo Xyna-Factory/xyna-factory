@@ -170,6 +170,11 @@ public class SchedulerInformation extends SchedulerBean {
       return (_GEN_BUILDER_TYPE) super.vetos(vetos);
     }
 
+    @Override
+    public _GEN_BUILDER_TYPE sharedVetos(List<com.gip.xyna.xprc.xpce.planning.Veto> sharedVetos) {
+      return (_GEN_BUILDER_TYPE) super.sharedVetos(sharedVetos);
+    }
+
   }
 
   public static class Builder extends InternalBuilder<SchedulerInformation, Builder> {
@@ -284,6 +289,7 @@ public class SchedulerInformation extends SchedulerBean {
     if (objectId != -2) {
       XMLHelper.appendDataList(xml, "capacities", "Capacity", "xprc.xsched", versionedGetCapacities(version), version, cache);
       XMLHelper.appendDataList(xml, "vetos", "Veto", "xprc.xsched", versionedGetVetos(version), version, cache);
+      XMLHelper.appendDataList(xml, "sharedVetos", "Veto", "xprc.xsched", versionedGetSharedVetos(version), version, cache);
       XMLHelper.appendData(xml, "timeConstraint", versionedGetTimeConstraint(version), version, cache);
       XMLHelper.appendData(xml, "priority", versionedGetPriority(version), version, cache);
     }
@@ -293,7 +299,8 @@ public class SchedulerInformation extends SchedulerBean {
     return xml.toString();
   }
 
-  private static Set<String> varNames = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(new String[]{"capacities", "vetos", "timeConstraint", "priority"})));
+  private static Set<String> varNames = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(
+      new String[]{"capacities", "vetos", "sharedVetos", "timeConstraint", "priority"})));
   /**
   * @deprecated use {@link #getVariableNames()} instead
   */
@@ -314,8 +321,8 @@ public class SchedulerInformation extends SchedulerBean {
    * @param name variable name or path separated by ".".
    */
   public Object get(String name) throws InvalidObjectPathException {
-    String[] varNames = new String[]{"capacities", "vetos", "timeConstraint", "priority"};
-    Object[] vars = new Object[]{this.capacities, this.vetos, this.timeConstraint, this.priority};
+    String[] varNames = new String[]{"capacities", "vetos", "sharedVetos", "timeConstraint", "priority"};
+    Object[] vars = new Object[]{this.capacities, this.vetos, this.sharedVetos, this.timeConstraint, this.priority};
     Object o = XOUtils.getIfNameIsInVarNames(varNames, vars, name);
     if (o == XOUtils.VARNAME_NOTFOUND) {
       throw new InvalidObjectPathException(new XDEV_PARAMETER_NAME_NOT_FOUND(name));
@@ -351,8 +358,9 @@ public class SchedulerInformation extends SchedulerBean {
   * Creates a new instance ignoring inherited member variables. Inherited member variables may
   * have been overwritten.
   */
-  public SchedulerInformation(List<Capacity> capacities, List<Veto> vetos, TimeConstraint timeConstraint, Priority priority) {
-    super(capacities, vetos);
+  public SchedulerInformation(List<Capacity> capacities, List<Veto> vetos, List<Veto> sharedVetos,
+                              TimeConstraint timeConstraint, Priority priority) {
+    super(capacities, vetos, sharedVetos);
     this.timeConstraint = timeConstraint;
     this.priority = priority;
   }
@@ -368,11 +376,18 @@ public class SchedulerInformation extends SchedulerBean {
   public List<? extends Veto> getVetos() {
     return (List<? extends Veto>) super.getVetos();
   }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public List<? extends Veto> getSharedVetos() {
+    return (List<? extends Veto>) super.getSharedVetos();
+  }
   
   public String toString() {
     return "SchedulerInformation("+
        (capacities==null?"":"capacities="+capacities)+
-       (vetos==null?"":",vetos="+vetos)+
+      (vetos==null?"":",vetos="+vetos)+
+      (sharedVetos==null?"":",sharedVetos="+sharedVetos)+
        (timeConstraint==null?"":",timeConstraint="+timeConstraint)+
        (priority==null?"":",priority="+priority)+")";
   }

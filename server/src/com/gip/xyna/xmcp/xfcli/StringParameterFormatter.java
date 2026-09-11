@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,6 +57,16 @@ public class StringParameterFormatter {
     output.append(sp.getName()).append(": ").append(sp.documentation(lang));
     output.append(" (").append(mode).append(", type=").append(typename);
    
+    if (sp.hasAlternative()) {
+      output.append(", alternative=").append(sp.getAlternativeParameterName());
+    
+      if (sp.isMandatory()) {
+        output.append(" (exactly one required)");
+      } else {
+        output.append(" (mutually exclusive)");
+      }
+    }
+
     if( sp.getDefaultValueAsString() != null ) {
       if( "String".equals(typename) ) {
         output.append(", default=\"").append(sp.getDefaultValueAsString()).append("\"");

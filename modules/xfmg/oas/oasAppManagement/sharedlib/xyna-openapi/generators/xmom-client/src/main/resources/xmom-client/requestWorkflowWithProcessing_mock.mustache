@@ -227,10 +227,7 @@
 
     <Choice ID="17609" TypePath="server" TypeName="BaseChoiceTypeFormula">
       <Source RefID="40182"/>
-      <Target RefID="45624"/>
-      <Target RefID="45626"/>
-      <Target RefID="45627"/>
-      <Target RefID="45628"/>
+      <Target RefID="123881"/>
       <Input>
         <Data ID="44733" VariableName="xynaPropertyBoolean44733" Label="mock active property" ReferenceName="XynaPropertyBoolean" ReferencePath="xfmg.xods.configuration">
           <Source RefID="17609"/>
@@ -297,92 +294,114 @@
           </Receive>
         </Function>
 
-        <Function ID="22024" Label="Postprocess Response">
-          <Source RefID="22025"/>
-          <Source RefID="13362"/>
-          <Source RefID="31823"/>
+        <Choice ID="119737" TypePath="server" TypeName="BaseChoiceTypeFormula">
           <Source RefID="31824"/>
-          <Source RefID="31822"/>
-          <Target RefID="22025"/>
-          <Target RefID="22027"/>
-          <Target RefID="22028"/>
-          <Target RefID="22029"/>
-          <Invoke ServiceID="22025" Operation="postprocessResponse">
-            <Source RefID="13362"/>
-            <Source RefID="31823"/>
+          <Target RefID="123426"/>
+          <Input>
+            <Data ID="121556" VariableName="hTTPStatusCode121556" Label="HTTP Status Code" ReferenceName="HTTPStatusCode" ReferencePath="xact.http.enums.statuscode">
+              <Source RefID="119737"/>
+            </Data>
             <Source RefID="31824"/>
-            <Source RefID="31822">
-              <Meta>
-                <LinkType>UserConnected</LinkType>
-              </Meta>
-            </Source>
-          </Invoke>
-          <Receive ServiceID="22025">
-            <Target RefID="22027"/>
-            <Target RefID="22028"/>
-            <Target RefID="22029"/>
-          </Receive>
-        </Function>
+          </Input>
+          <Case ID="119738" Label="true" Premise="%0%.code!=&quot;404&quot;">
+            <Function ID="22024" Label="Postprocess Response">
+              <Source RefID="22025"/>
+              <Source RefID="13362"/>
+              <Source RefID="31823"/>
+              <Source RefID="31824"/>
+              <Source RefID="31822"/>
+              <Target RefID="22025"/>
+              <Target RefID="22027"/>
+              <Target RefID="22028"/>
+              <Target RefID="22029"/>
+              <Invoke ServiceID="22025" Operation="postprocessResponse">
+                <Source RefID="13362"/>
+                <Source RefID="31823"/>
+                <Source RefID="31824"/>
+                <Source RefID="31822">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Invoke>
+              <Receive ServiceID="22025">
+                <Target RefID="22027"/>
+                <Target RefID="22028"/>
+                <Target RefID="22029"/>
+              </Receive>
+            </Function>
 
-        <Function ID="23520" Label="parseResponse">
-          <Source RefID="23521"/>
-          <Source RefID="47081"/>
-          <Source RefID="22028"/>
-          <Source RefID="22027"/>
-          <Source RefID="22029"/>
-          <Target RefID="23521"/>
-          <Target RefID="23523"/>
-          <Invoke ServiceID="23521" Operation="parseResponse">
-            <Source RefID="47081">
-              <Meta>
-                <LinkType>Constant</LinkType>
-              </Meta>
-            </Source>
-            <Source RefID="22028">
-              <Meta>
-                <LinkType>UserConnected</LinkType>
-              </Meta>
-            </Source>
-            <Source RefID="22027">
-              <Meta>
-                <LinkType>UserConnected</LinkType>
-              </Meta>
-            </Source>
-            <Source RefID="22029">
-              <Meta>
-                <LinkType>UserConnected</LinkType>
-              </Meta>
-            </Source>
-          </Invoke>
-          <Receive ServiceID="23521">
-            <Target RefID="23523"/>
-          </Receive>
-        </Function>
+            <Function ID="23520" Label="parseResponse">
+              <Source RefID="23521"/>
+              <Source RefID="47081"/>
+              <Source RefID="22028"/>
+              <Source RefID="22027"/>
+              <Source RefID="22029"/>
+              <Target RefID="23521"/>
+              <Target RefID="23523"/>
+              <Invoke ServiceID="23521" Operation="parseResponse">
+                <Source RefID="47081">
+                  <Meta>
+                    <LinkType>Constant</LinkType>
+                  </Meta>
+                </Source>
+                <Source RefID="22028">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+                <Source RefID="22027">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+                <Source RefID="22029">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Invoke>
+                <Receive ServiceID="23521">
+                  <Target RefID="121103"/>
+                </Receive>
+            </Function>
+
+            <Assign ID="119741">
+              <Source RefID="121103"/>
+              <Target RefID="123426"/>
+              <Copy>
+                <Source RefID="121103"/>
+                <Target RefID="123426"/>
+              </Copy>
+            </Assign>
+
+          </Case>
+          <Case ID="119739" Label="false">
+            <Mappings ID="122913" Label="Mapping">
+              <Output>
+                <Data ID="123366" VariableName="{{responseVarName}}123366" Label="{{responseLabel}}" ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}">
+                  <Source RefID="122913"/>
+                </Data>
+                <Target RefID="123367"/>
+              </Output>
+            </Mappings>
+            <Assign ID="119743">
+              <Source RefID="123367"/>
+              <Target RefID="123426"/>
+              <Copy>
+                <Source RefID="123367"/>
+                <Target RefID="123426"/>
+              </Copy>
+            </Assign>
+          </Case>
+        </Choice>
 
         <Assign ID="17613">
-          <Source RefID="23523"/>
-          <Source RefID="22027"/>
-          <Source RefID="22028"/>
-          <Source RefID="22029"/>
-          <Target RefID="45624"/>
-          <Target RefID="45626"/>
-          <Target RefID="45627"/>
-          <Target RefID="45628"/>
+          <Source RefID="123426"/>
+          <Target RefID="123881"/>
           <Copy>
-            <Source RefID="23523"/>
-            <Target RefID="45624"/>
-          </Copy>
-          <Copy>
-            <Source RefID="22027"/>
-            <Target RefID="45626"/>
-          </Copy>
-          <Copy>
-            <Source RefID="22028"/>
-            <Target RefID="45627"/>
-          </Copy>
-          <Copy>
-            <Source RefID="22029"/>
-            <Target RefID="45628"/>
+            <Source RefID="123426"/>
+            <Target RefID="123881"/>
           </Copy>
         </Assign>
 
@@ -395,8 +414,23 @@
         <Data ID="22029" VariableName="document22029" Label="Document" ReferenceName="Document" ReferencePath="xact.templates">
           <Source RefID="22024"/>
         </Data>
-        <Data ID="23523" VariableName="{{responseVarName}}23523" Label="{{responseLabel}}" ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}">
+        <Data ID="121103" VariableName="{{responseVarName}}121103" Label="{{responseLabel}}" ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}">
           <Source RefID="23520"/>
+        </Data>
+        <Data ID="123367" VariableName="{{responseVarName}}123367" Label="{{responseLabel}}" ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}">
+          <Source RefID="122913"/>
+        </Data>
+        <Data ID="123426" VariableName="{{responseVarName}}123426" Label="{{responseLabel}}" ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}">
+          <Source RefID="119737"/>
+        </Data>
+        <Data ID="123822" VariableName="{{responseVarName}}123822" Label="{{responseLabel}}" ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}">
+          <Source RefID="119284"/>
+        </Data>
+        <Data ID="123881" VariableName="{{responseVarName}}123881" Label="{{responseLabel}}" ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}">
+          <Source RefID="17609"/>
+        </Data>
+        <Data ID="127221" VariableName="{{responseVarName}}127221" Label="{{responseLabel}}" ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}">
+          <Source RefID="126767"/>
         </Data>
         <Data ID="29491" VariableName="document29491" Label="Document" ReferenceName="Document" ReferencePath="xact.templates">
           <Source RefID="29488"/>
@@ -413,6 +447,35 @@
       </Case>
 
       <Case ID="17611" Label="false">
+        <Mappings ID="119284" Label="Mapping">
+          <Output>
+            <Data ID="123821" VariableName="{{responseVarName}}123821" Label="{{responseLabel}}" ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}">
+              <Source RefID="119284"/>
+            </Data>
+            <Target RefID="123822"/>
+          </Output>
+        </Mappings>
+        <Assign ID="17615">
+          <Source RefID="123822"/>
+          <Target RefID="123881"/>
+          <Copy>
+            <Source RefID="123822"/>
+            <Target RefID="123881"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+
+    <Choice ID="113842" TypePath="server" TypeName="BaseChoiceTypeFormula">
+      <Source RefID="123881"/>
+      <Target RefID="45624"/>
+      <Input>
+        <Data ID="124276" VariableName="{{responseVarName}}124276" Label="{{responseLabel}}" ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}">
+          <Source RefID="113842"/>
+        </Data>
+        <Source RefID="123881"/>
+      </Input>
+      <Case ID="113843" Label="true" Premise="%0%==null">
         <Function ID="2" Label="Get HTTP Connection">
           <Source RefID="3"/>
           <Source RefID="10"/>
@@ -437,15 +500,15 @@
           </Compensate>
         </Function>
 {{#generateDataCapture}}
-    <Mappings ID="85059" Label="Mapping">
-      <Output>
-        <Data ID="85424" Label="Now" ReferenceName="Now" ReferencePath="base.date" VariableName="now85424">
-          <Source RefID="85059"/>
-        </Data>
-        <Target RefID="85425"/>
-      </Output>
-      <Mapping>%0%=new("base.date.Now")</Mapping>
-    </Mappings>
+        <Mappings ID="85059" Label="Mapping">
+          <Output>
+            <Data ID="85424" Label="Now" ReferenceName="Now" ReferencePath="base.date" VariableName="now85424">
+              <Source RefID="85059"/>
+            </Data>
+            <Target RefID="85425"/>
+          </Output>
+          <Mapping>%0%=new("base.date.Now")</Mapping>
+        </Mappings>
 {{/generateDataCapture}}
         <Function ID="21" Label="sendRequest">
           <Source RefID="22"/>
@@ -925,6 +988,35 @@
           <Source RefID="16"/>
         </Data>
       </Case>
+      <Case ID="113844" Label="false">
+        <Mappings ID="126767" Label="Mapping">
+          <Input>
+            <Data ID="127675" VariableName="{{responseVarName}}127675" Label="{{responseLabel}}" ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}">
+              <Source RefID="126767"/>
+            </Data>
+            <Source RefID="123881">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="127220" VariableName="{{responseVarName}}127220" Label="{{responseLabel}}" ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}">
+              <Source RefID="126767"/>
+            </Data>
+            <Target RefID="127221"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Assign ID="113848">
+          <Source RefID="127221"/>
+          <Target RefID="45624"/>
+          <Copy>
+            <Source RefID="127221"/>
+            <Target RefID="45624"/>
+          </Copy>
+        </Assign>
+      </Case>
     </Choice>
 
     <Function ID="16626" Label="Validate Response">
@@ -937,6 +1029,7 @@
         <Source RefID="13362"/>
         <Source RefID="45624">
           <Meta>
+            <LinkType>UserConnected</LinkType>
             <ExpectedType>{{responseFQN}}</ExpectedType>
           </Meta>
         </Source>
@@ -954,6 +1047,7 @@
       <Invoke ServiceID="27" Operation="OASTypeValidation">
         <Source RefID="45624">
           <Meta>
+            <LinkType>UserConnected</LinkType>
             <ExpectedType>{{responseFQN}}</ExpectedType>
           </Meta>
         </Source>
@@ -1129,7 +1223,11 @@
       <Source RefID="45624"/>
       <Target RefID="15"/>
       <Copy>
-        <Source RefID="45624"/>
+        <Source RefID="45624">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
         <Target RefID="15"/>
       </Copy>
     </Assign>

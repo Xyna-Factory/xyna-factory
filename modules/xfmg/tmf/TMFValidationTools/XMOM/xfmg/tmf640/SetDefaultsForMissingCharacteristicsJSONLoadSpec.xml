@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,20 +25,19 @@
       <Data ID="2641" Label="Service JSON" ReferenceName="Text" ReferencePath="base" VariableName="text2641"/>
     </Output>
     <Throws>
-      <Exception Label="Connect Exception" ReferenceName="ConnectException" ReferencePath="xact.http.exceptions" VariableName="connectException4304"/>
-      <Exception Label="Connection Already Closed Exception" ReferenceName="ConnectionAlreadyClosedException" ReferencePath="xact.http.exceptions" VariableName="connectionAlreadyClosedException4305"/>
-      <Exception Label="Http Exception" ReferenceName="HttpException" ReferencePath="xact.http.exceptions" VariableName="httpException4306"/>
-      <Exception Label="Timeout Exception" ReferenceName="TimeoutException" ReferencePath="xact.http.exceptions" VariableName="timeoutException4307"/>
-      <Exception Label="Unexpected HTTP Response Exception" ReferenceName="UnexpectedHTTPResponseException" ReferencePath="xact.http.exceptions" VariableName="unexpectedHTTPResponseException4308"/>
-      <Exception Label="ServiceRelationshipNotFound" ReferenceName="ServiceRelationshipNotFound" ReferencePath="xfmg.tmf.util" VariableName="serviceRelationshipNotFound4309"/>
-      <Exception Label="TMF Client Request Failed" ReferenceName="TMFClientRequestFailed" ReferencePath="xfmg.tmf.util" VariableName="tMFClientRequestFailed4310"/>
-      <Exception Label="IncompatibleServiceSpecification" ReferenceName="IncompatibleServiceSpecification" ReferencePath="xfmg.tmf.validation" VariableName="incompatibleServiceSpecification4311"/>
-      <Exception Label="UnexpectedServiceSpecificationName" ReferenceName="UnexpectedServiceSpecificationName" ReferencePath="xfmg.tmf640.validation" VariableName="unexpectedServiceSpecificationName4312"/>
-      <Exception Label="ValidationException" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception" VariableName="validationException4313"/>
+      <Exception Label="Connect Exception" ReferenceName="ConnectException" ReferencePath="xact.http.exceptions" VariableName="connectException4356"/>
+      <Exception Label="Connection Already Closed Exception" ReferenceName="ConnectionAlreadyClosedException" ReferencePath="xact.http.exceptions" VariableName="connectionAlreadyClosedException4357"/>
+      <Exception Label="Http Exception" ReferenceName="HttpException" ReferencePath="xact.http.exceptions" VariableName="httpException4358"/>
+      <Exception Label="Timeout Exception" ReferenceName="TimeoutException" ReferencePath="xact.http.exceptions" VariableName="timeoutException4359"/>
+      <Exception Label="Unexpected HTTP Response Exception" ReferenceName="UnexpectedHTTPResponseException" ReferencePath="xact.http.exceptions" VariableName="unexpectedHTTPResponseException4360"/>
+      <Exception Label="TMF Client Request Failed" ReferenceName="TMFClientRequestFailed" ReferencePath="xfmg.tmf.util" VariableName="tMFClientRequestFailed4361"/>
+      <Exception Label="IncompatibleServiceSpecification" ReferenceName="IncompatibleServiceSpecification" ReferencePath="xfmg.tmf.validation" VariableName="incompatibleServiceSpecification4362"/>
+      <Exception Label="UnexpectedServiceSpecificationName" ReferenceName="UnexpectedServiceSpecificationName" ReferencePath="xfmg.tmf640.validation" VariableName="unexpectedServiceSpecificationName4363"/>
+      <Exception Label="ValidationException" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception" VariableName="validationException4364"/>
     </Throws>
-    <ServiceReference ID="2350" Label="JSON Datamodel Services" ReferenceName="JSONDatamodelServices.JSONDatamodelServices" ReferencePath="xfmg.xfctrl.datamodel.json">
-      <Source RefID="2349"/>
-      <Target RefID="2349"/>
+    <ServiceReference ID="237" Label="JSON Datamodel Services" ReferenceName="JSONDatamodelServices.JSONDatamodelServices" ReferencePath="xfmg.xfctrl.datamodel.json">
+      <Source RefID="236"/>
+      <Target RefID="236"/>
     </ServiceReference>
     <ServiceReference ID="12" Label="Set Defaults For Missing Characteristics" ReferenceName="SetDefaultsForMissingCharacteristics" ReferencePath="xfmg.tmf640">
       <Source RefID="11"/>
@@ -48,9 +47,9 @@
       <Source RefID="4102"/>
       <Target RefID="4102"/>
     </ServiceReference>
-    <ServiceReference ID="237" Label="JSON Datamodel Services" ReferenceName="JSONDatamodelServices.JSONDatamodelServices" ReferencePath="xfmg.xfctrl.datamodel.json">
-      <Source RefID="236"/>
-      <Target RefID="236"/>
+    <ServiceReference ID="2350" Label="JSON Datamodel Services" ReferenceName="JSONDatamodelServices.JSONDatamodelServices" ReferencePath="xfmg.xfctrl.datamodel.json">
+      <Source RefID="2349"/>
+      <Target RefID="2349"/>
     </ServiceReference>
     <Mappings ID="296" Label="Mapping">
       <Input>

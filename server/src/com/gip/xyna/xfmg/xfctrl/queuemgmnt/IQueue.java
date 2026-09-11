@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
+/*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType Label="Scheduling Informationen" TypeName="SchedulerBean" TypePath="xprc" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
-    <Data IsList="true" Label="Capacities" ReferenceName="Capacity" ReferencePath="xprc" VariableName="capacities"/> 
-    <Data IsList="true" Label="Vetos" ReferenceName="Veto" ReferencePath="xprc" VariableName="vetos"/>
-    <Data IsList="true" Label="Shared Vetos" ReferenceName="Veto" ReferencePath="xprc" VariableName="sharedVetos"/>
-</DataType>
+ */
+
+ package com.gip.xyna.xfmg.xfctrl.queuemgmnt;
+
+public interface IQueue {
+
+    String getUniqueName();
+
+    void setUniqueName(String uniqueName);
+
+    String getExternalName();
+
+    void setExternalName(String externalName);
+
+    String getExternalNameEnv();
+
+    void setExternalNameEnv(String externalNameEnv);
+
+    QueueConnectData getConnectData();
+
+    void setConnectData(QueueConnectData connectData);
+
+    QueueType getQueueType();
+
+    void setQueueType(QueueType queueType);
+
+    Integer getVersion();
+
+    void setVersion(Integer version);
+
+}
