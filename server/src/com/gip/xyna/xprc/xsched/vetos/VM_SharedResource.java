@@ -311,13 +311,7 @@ public class VM_SharedResource implements VetoManagementInterface {
         throw new XPRC_AdministrativeVetoAllocationDenied(administrativeVeto.getName(), blockingOrderId);
       }
     }
-    VetoUpdaterPendingOnly updater = new VetoUpdaterPendingOnly(List.of(administrativeVeto.getName()),
-                                                                AdministrativeVeto.ADMIN_VETO_ORDER_INFORMATION);
-    SharedResourceRequestResult<SharedResourceVeto> updateResult = srm.update(XYNA_VETO_SR_DEF, updater.getVetoIds(), updater);
-    if (!updateResult.isSuccess()) {
-      logger.error("AllocateAdministrativeVeto: Error updating shared resource vetos.", updateResult.getException());
-      throw new XPRC_AdministrativeVetoAllocationDenied(administrativeVeto.getName(), null, updateResult.getException());
-    }
+    throw new XPRC_AdministrativeVetoAllocationDenied(administrativeVeto.getName(), null);
   }
   
   
@@ -390,28 +384,13 @@ public class VM_SharedResource implements VetoManagementInterface {
       throw new XPRC_AdministrativeVetoDeallocationDenied(administrativeVeto.getName());
     }
     SharedResourceVeto existing = readResult.getResources().get(0).getValue();
-    
-    if (Objects.equals(AdministrativeVeto.ADMIN_VETO_ORDERID, existing.usingOrderId)) {
-      SharedResourceRequestResult<SharedResourceVeto> deleteVetosResult = srm.delete(XYNA_VETO_SR_DEF, List.of(administrativeVeto.getName()));
-      if (!deleteVetosResult.isSuccess()) {
-        logger.error("Error trying to delete administrative shared resource vetos.", deleteVetosResult.getException());
-        throw new XPRC_AdministrativeVetoDeallocationDenied(administrativeVeto.getName());
-      }
-    } else {
-      VetoRemover remover = new VetoRemover(AdministrativeVeto.ADMIN_VETO_ORDERID, RemovalVariant.REMOVE_PENDING);
-      SharedResourceRequestResult<SharedResourceVeto> updateResult = srm.update(XYNA_VETO_SR_DEF,
-                                                                                List.of(administrativeVeto.getName()), remover);
-      if (!updateResult.isSuccess()) {
-        logger.error("Error updating administrative shared resource vetos.", updateResult.getException());
-        throw new XPRC_AdministrativeVetoDeallocationDenied(administrativeVeto.getName());
-      }
-      if (!remover.getIdsToDelete().isEmpty()) {
-        SharedResourceRequestResult<SharedResourceVeto> deleteVetosResult = srm.delete(XYNA_VETO_SR_DEF, remover.getIdsToDelete());
-        if (!deleteVetosResult.isSuccess()) {
-          logger.error("Error freeing shared resource vetos.", deleteVetosResult.getException());
-          throw new XPRC_AdministrativeVetoDeallocationDenied(administrativeVeto.getName());
-        }
-      }
+    if (!Objects.equals(AdministrativeVeto.ADMIN_VETO_ORDERID, existing.usingOrderId)) {
+      throw new XPRC_AdministrativeVetoDeallocationDenied(administrativeVeto.getName());
+    }
+    SharedResourceRequestResult<SharedResourceVeto> deleteVetosResult = srm.delete(XYNA_VETO_SR_DEF, List.of(administrativeVeto.getName()));
+    if (!deleteVetosResult.isSuccess()) {
+      logger.error("Error trying to delete administrative shared resource vetos.", deleteVetosResult.getException());
+      throw new XPRC_AdministrativeVetoDeallocationDenied(administrativeVeto.getName());
     }
     Long created = administrativeVeto.getCreated();
     OrderInformation orderInfo = null;
