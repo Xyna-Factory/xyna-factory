@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="MCPPrimitivesProvider" BaseTypePath="xint.mcp" IsAbstract="false" Label="Oas Mcp Primitives" TypeName="OasMcpPrimitives" TypePath="xfmg.oas.mcp" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>OasMcpPrimitivesImpl.jar</Libraries>
+  <Service Label="Oas Mcp Primitives" TypeName="OasMcpPrimitives">
+    <Operation IsStatic="false" Label="Get Tools" Name="getTools">
+      <Input/>
+      <Output>
+        <Data ID="1" IsList="true" Label="Tool" ReferenceName="Tool" ReferencePath="xint.mcp.schema" VariableName="tool1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getTools();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Get Resources" Name="getResources">
+      <Input/>
+      <Output>
+        <Data ID="4" IsList="true" Label="Resource" ReferenceName="Resource" ReferencePath="xint.mcp.schema" VariableName="resource4"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getResources();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Get Prompts" Name="getPrompts">
+      <Input/>
+      <Output>
+        <Data ID="8" IsList="true" Label="Prompt" ReferenceName="Prompt" ReferencePath="xint.mcp.schema" VariableName="prompt8"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getPrompts();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
