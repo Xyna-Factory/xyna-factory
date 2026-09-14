@@ -739,7 +739,7 @@ public class ApplicationXmlHandler extends DefaultHandler {
   private static class FilterAction extends ListEntryAction<FilterXmlEntry> {
     
     protected FilterAction() {
-      super(TAG_FILTER, Arrays.asList(TAG_NAME, TAG_JARFILES, TAG_FQFILTERCLASSNAME, TAG_TRIGGERNAME, TAG_SHAREDLIBS) );
+      super(TAG_FILTER, Arrays.asList(TAG_NAME, TAG_JARFILES, TAG_FQFILTERCLASSNAME, TAG_TRIGGERNAME, TAG_SHAREDLIBS, TAG_DESCRIPTION) );
     }
     
     @Override
@@ -759,6 +759,8 @@ public class ApplicationXmlHandler extends DefaultHandler {
         entry.triggerName = value;
       } else if(TAG_SHAREDLIBS.equals( childTag)) {
         entry.sharedLibs = value;
+      } else if(TAG_DESCRIPTION.equals( childTag)) {
+        entry.description = value;
       } else {
         error("Unexpected tag <" +  childTag + ">");
       }
