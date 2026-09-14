@@ -39,6 +39,10 @@ import com.gip.xyna.xprc.xfractwfe.generation.xmom.XmomNodeInfo;
 import com.gip.xyna.xprc.xfractwfe.generation.xmom.XmomPointer;
 import com.gip.xyna.xprc.xfractwfe.generation.xmom.XmomTree;
 import com.gip.xyna.xprc.xfractwfe.generation.xmom.XmomWalker;
+import com.gip.xyna.xprc.xfractwfe.generation.xmom.algo.PackAlgoAssign;
+import com.gip.xyna.xprc.xfractwfe.generation.xmom.algo.PackAlgoDataOutput;
+import com.gip.xyna.xprc.xfractwfe.generation.xmom.algo.PackAlgoMappingAutoRef;
+import com.gip.xyna.xprc.xfractwfe.generation.xmom.algo.PackAlgoSingleId;
 import com.gip.xyna.xprc.xfractwfe.generation.xmom.matcher.NodeMatcher;
 import com.gip.xyna.xprc.xfractwfe.generation.xmom.matcher.NodeMatcherAll;
 import com.gip.xyna.xprc.xfractwfe.generation.xmom.matcher.NodeMatcherHasValue;
@@ -143,6 +147,38 @@ public class ParseWriteXmomTest {
   }
   
   
+  public void testAlgo1() throws Exception {
+    try {
+      String txt = readFile("test/xmomjsontest/data/TestWf1.xml");
+      log(txt);
+      String json = "";
+      Document doc = XMLUtils.parseString(txt, true);
+      XmomTree tree = new ParserXmomXml().build(doc);
+      //logXmomTree(tree);
+      json = new WriterXmomJson().toJsonString(tree);
+      log(json);
+      
+      new PackAlgoAssign().pack(tree);
+      new PackAlgoDataOutput().pack(tree);
+      new PackAlgoMappingAutoRef().pack(tree);
+      new PackAlgoSingleId().pack(tree);
+      //logXmomTree(tree);
+      /*
+      XmomWalker walker = new XmomWalker();
+      List<XmomPointer> list = walker.findDescendants(tree, new NodeMatcherRefCountMulti());
+      logPointerList(list);
+      */
+      
+      json = new WriterXmomJson().toJsonString(tree);
+      log(json);
+      
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+  }
+  
+  
   private void logPointerList(List<XmomPointer> list) {
     log("");
     log("#####");
@@ -173,7 +209,8 @@ public class ParseWriteXmomTest {
   
   public static void main(String[] args) {
     try {
-      new ParseWriteXmomTest().testWalker2();
+      //new ParseWriteXmomTest().testWalker2();
+      new ParseWriteXmomTest().testAlgo1();
     }
     catch (Throwable e) {
       e.printStackTrace();
