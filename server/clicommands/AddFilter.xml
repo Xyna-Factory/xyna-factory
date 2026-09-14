@@ -23,5 +23,6 @@
   <Argument Name="sharedLibs" Description="A set of shared libraries required by the implementation" ArgumentValueName="list separated by ':'"/>
   <Argument Name="jarFiles" Description="A set of jar files required by the implementation" MultipleValues="true"/>
   <Argument Name="workspaceName" Description="The name of the workspace." Optional="true"/>
+  <Argument Name="documentation" Description="A description of the filter" Optional="true"/>
   <BoolOption Name="v" LongName="verbose" Description="Print verbose output of the state after the operation has finished." Optional="true" />
 </XynaCommandLineCommand>
