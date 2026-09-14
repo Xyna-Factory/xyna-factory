@@ -77,6 +77,7 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
   private static final String TAG_JARFILES = "jarfiles";
   private static final String TAG_TRIGGERNAME = "triggername";
   private static final String TAG_SHAREDLIBS = "sharedlibs";
+  private static final String TAG_DESCRIPTION = "description";
 
   private static final XynaActivationPortal xynaActivationPortal = XynaFactory.getInstance().getActivationPortal();
   private static RevisionManagement revisionManagement;
@@ -122,7 +123,8 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
               || !Objects.equals(fromEntry.getSharedlibs(), toEntry.getSharedlibs())
               || !Objects.equals(fromEntry.getJarfiles(), toEntry.getJarfiles())
               || !Objects.equals(fromEntry.getTriggerName(), toEntry.getTriggerName())
-              || getReferenceDifferenceList(fromEntry, toEntry).size() > 0) {
+              || getReferenceDifferenceList(fromEntry, toEntry).size() > 0
+              || !Objects.equals(fromEntry.getDescription(), toEntry.getDescription())) {
             wcd.setDifferenceType(new MODIFY());
             wcd.setNewItem(toEntry);
             toWorkingList.remove(toEntry); // remove entry from to-list
@@ -157,17 +159,19 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
     for (int i = 0; i < childNodes.getLength(); i++) {
       Node childNode = childNodes.item(i);
       if (childNode.getNodeName().equals(TAG_FILTERNAME)) {
-        filter.setFilterName(childNode.getTextContent());
+        filter.unversionedSetFilterName(childNode.getTextContent());
       } else if (childNode.getNodeName().equals(TAG_FQFILTERCLASSNAME)) {
-        filter.setFQFilterClassName(childNode.getTextContent());
+        filter.unversionedSetFQFilterClassName(childNode.getTextContent());
       } else if (childNode.getNodeName().equals(TAG_JARFILES)) {
-        filter.setJarfiles(childNode.getTextContent());
+        filter.unversionedSetJarfiles(childNode.getTextContent());
       } else if (childNode.getNodeName().equals(TAG_SHAREDLIBS)) {
-        filter.setSharedlibs(childNode.getTextContent());
+        filter.unversionedSetSharedlibs(childNode.getTextContent());
       } else if (childNode.getNodeName().equals(TAG_TRIGGERNAME)) {
-        filter.setTriggerName(childNode.getTextContent());
+        filter.unversionedSetTriggerName(childNode.getTextContent());
       } else if (childNode.getNodeName().equals(converter.getTagName())) {
-        filter.setReferences(converter.parseTags(childNode));
+        filter.unversionedSetReferences(converter.parseTags(childNode));
+      } else if (childNode.getNodeName().equals(TAG_DESCRIPTION)) {
+        filter.unversionedSetDescription(childNode.getTextContent());
       }
     }
     return filter;
@@ -191,6 +195,9 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
     if ((item.getReferences() != null) && (!item.getReferences().isEmpty())) {
       ReferenceXmlConverter converter = new ReferenceXmlConverter();
       converter.appendReferences(item.getReferences(), builder);
+    }
+    if (item.getDescription() != null) {
+      builder.element(TAG_DESCRIPTION, item.getDescription());
     }
     builder.endElement(TAG_FILTER);
   }
@@ -231,6 +238,11 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
       ds.append("\n");
       ds.append("    " + TAG_TRIGGERNAME + " ");
       ds.append(MODIFY.class.getSimpleName() + " \"" + from.getTriggerName() + "\"=>\"" + to.getTriggerName() + "\"");
+    }
+    if (!Objects.equals(from.getDescription(), to.getDescription())) {
+      ds.append("\n");
+      ds.append("    " + TAG_DESCRIPTION + " ");
+      ds.append(MODIFY.class.getSimpleName() + " \"" + from.getDescription() + "\"=>\"" + to.getDescription() + "\"");
     }
 
     List<ItemDifference<Reference>> idrList = getReferenceDifferenceList(from, to);
@@ -290,6 +302,10 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
         filter.setSharedlibs(ssl.serializeToString());
 
         filter.setTriggerName(filterInfo.getTriggerName());
+
+        if (filterInfo.getDescription() != null) {
+          filter.setDescription(filterInfo.getDescription());
+        }
 
         tiList.add(filter);
       }
@@ -392,7 +408,7 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
     try {
       List<File> jarFilesList = copyToSavedIfNecessary(jarFilesArray, item.getFQFilterClassName(), revision);
       getXynaActivation().getActivationTrigger().addFilter(item.getFilterName(), jarFilesList.toArray(new File[jarFilesList.size()]),
-                                                           item.getFQFilterClassName(), item.getTriggerName(), sharedLibs, null, revision);
+                                                           item.getFQFilterClassName(), item.getTriggerName(), sharedLibs, item.getDescription(), revision);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

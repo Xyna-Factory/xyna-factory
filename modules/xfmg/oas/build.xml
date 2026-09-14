@@ -27,6 +27,9 @@
         <ant antfile="build.xml" target="build" inheritAll="false" dir="oasAppManagement">
             <property name="target.dir" value="${target.dir}" />
         </ant>
+        <ant antfile="build.xml" target="build" inheritAll="false" dir="mcp">
+            <property name="target.dir" value="${target.dir}" />
+        </ant>
     </target>
 
 </project>
