@@ -29,6 +29,10 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.ATT;
 
 public class XmomNodeInfo {
 
+  public static enum CloneMode {
+    COMPLETE, SKIP_IGNORE_AND_EMPTY
+  }
+  
   
   public static class XmomNodeInfoList {
     private List<XmomNodeInfo> list = new ArrayList<>();
@@ -37,6 +41,7 @@ public class XmomNodeInfo {
       return list;
     }
   }
+  
   
   private String name;
   private Optional<String> value = Optional.empty();
@@ -82,6 +87,30 @@ public class XmomNodeInfo {
   }
   
   
+  public XmomNodeInfo doClone(IdMapping idMapping) {
+    return doClone(idMapping, CloneMode.COMPLETE);
+  }
+  
+  
+  public XmomNodeInfo doCloneWithoutIgnoreAndEmpty(IdMapping idMapping) {
+    return doClone(idMapping, CloneMode.SKIP_IGNORE_AND_EMPTY);
+  }
+  
+  
+  private XmomNodeInfo doClone(IdMapping idMapping, CloneMode mode) {
+    XmomNodeInfo ret = new XmomNodeInfo(this.name, this.value, idMapping);
+    for (XmomNodeInfoList list: this.childMap.values()) {
+      for (XmomNodeInfo child : list.getList()) {
+        if (mode == CloneMode.SKIP_IGNORE_AND_EMPTY) {
+          if (child.isIgnoreOrEmpty()) { continue; }
+        }
+        ret.addChild(child.doClone(idMapping));
+      }
+    }
+    return ret;
+  }
+  
+  
   public XmomNodeInfo createChild(String name) {
     return createChild(name, Optional.empty());
   }
@@ -110,7 +139,6 @@ public class XmomNodeInfo {
     if (hasValue()) {
       throw new IllegalArgumentException("Xmom node with value must not have children");
     }
-    //children.add(info);
     XmomNodeInfoList list = childMap.get(info.getName());
     if (list == null) {
       list = new XmomNodeInfoList();
@@ -149,6 +177,7 @@ public class XmomNodeInfo {
   public List<TreePathSegment> getChildrenWithName(String nameIn) {
     List<TreePathSegment> ret = new ArrayList<>();
     XmomNodeInfoList list = childMap.get(nameIn);
+    if (list == null) { return ret; }
     for (int i = 0; i < list.getList().size(); i++) {
       String childName = list.getList().get(i).getName();
       TreePathSegment seg = new TreePathSegment(childName, i);

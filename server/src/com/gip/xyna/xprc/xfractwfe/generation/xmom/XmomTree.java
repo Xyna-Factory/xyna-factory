@@ -18,6 +18,7 @@
 
 package com.gip.xyna.xprc.xfractwfe.generation.xmom;
 
+import com.gip.xyna.xprc.xfractwfe.generation.xmom.XmomNodeInfo.CloneMode;
 
 public class XmomTree {
 
@@ -39,5 +40,17 @@ public class XmomTree {
   public IdMapping getIdMapping() {
     return root.getIdMapping();
   }
+  
+  public XmomTree doClone() {
+    IdMapping idMapping = new IdMapping();
+    return new XmomTree(this.root.doClone(idMapping));
+  }
+  
+  
+  public XmomTree doCloneWithoutIgnoreAndEmpty() {
+    IdMapping idMapping = new IdMapping();
+    return new XmomTree(this.root.doCloneWithoutIgnoreAndEmpty(idMapping));
+  }
+  
   
 }

@@ -48,7 +48,7 @@ public class PackAlgoSingleId implements PackAlgorithm {
     if (id.isEmpty()) { return; }
     if (id.get().getRefCount() == 1) {
       idnode.getNodeInfo().setIgnore(true);
-      idnode.getNodeInfo().createChild(PackingConstants.SingleOutput.P_ID, "*");
+      idnode.getParent().getNodeInfo().createChild(PackingConstants.SingleOutput.P_ID, "*");
     }
   }
   

@@ -158,11 +158,59 @@ public class ParseWriteXmomTest {
       json = new WriterXmomJson().toJsonString(tree);
       log(json);
       
-      new PackAlgoAssign().pack(tree);
-      new PackAlgoDataOutput().pack(tree);
-      new PackAlgoMappingAutoRef().pack(tree);
+      //new PackAlgoAssign().pack(tree);
+      
+      //new PackAlgoDataOutput().pack(tree);
+      //new PackAlgoMappingAutoRef().pack(tree);
       new PackAlgoSingleId().pack(tree);
+      
+      logXmomTree(tree);
+      tree = tree.doCloneWithoutIgnoreAndEmpty();
+      logXmomTree(tree);
+      
+      tree.getIdMapping().renumber();
+      logXmomTree(tree);
+      
+      /*
+      XmomWalker walker = new XmomWalker();
+      List<XmomPointer> list = walker.findDescendants(tree, new NodeMatcherRefCountMulti());
+      logPointerList(list);
+      */
+      
+      json = new WriterXmomJson().toJsonString(tree);
+      log(json);
+      
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+  }
+  
+  
+  public void testAlgo2() throws Exception {
+    try {
+      String txt = readFile("test/xmomjsontest/data/TestWf3.xml");
+      log(txt);
+      String json = "";
+      Document doc = XMLUtils.parseString(txt, true);
+      XmomTree tree = new ParserXmomXml().build(doc);
       //logXmomTree(tree);
+      json = new WriterXmomJson().toJsonString(tree);
+      log(json);
+      
+      new PackAlgoAssign().pack(tree);
+      
+      //new PackAlgoDataOutput().pack(tree);
+      //new PackAlgoMappingAutoRef().pack(tree);
+      //new PackAlgoSingleId().pack(tree);
+      
+      logXmomTree(tree);
+      tree = tree.doCloneWithoutIgnoreAndEmpty();
+      logXmomTree(tree);
+      
+      tree.getIdMapping().renumber();
+      logXmomTree(tree);
+      
       /*
       XmomWalker walker = new XmomWalker();
       List<XmomPointer> list = walker.findDescendants(tree, new NodeMatcherRefCountMulti());
@@ -193,6 +241,8 @@ public class ParseWriteXmomTest {
   
   
   private void logXmomTree(XmomTree tree) {
+    log("");
+    log("#### TREE ####");
     XmomNavigator nav = new XmomNavigator();
     List<TreePath> paths = nav.getAllPathsOfValueNodes(tree);
     for (TreePath path : paths) {
