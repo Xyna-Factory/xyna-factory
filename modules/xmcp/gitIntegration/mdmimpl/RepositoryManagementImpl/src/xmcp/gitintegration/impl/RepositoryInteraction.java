@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,6 +65,7 @@ import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
+import org.eclipse.jgit.lib.RepositoryState;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
@@ -99,7 +100,6 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.DeploymentMode;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.WorkflowProtectionMode;
 
 import base.Text;
-import xmcp.gitintegration.Flag;
 import xmcp.gitintegration.WorkspaceContent;
 import xmcp.gitintegration.WorkspaceContentDifferences;
 import xmcp.gitintegration.WorkspaceObjectManagement;
@@ -409,6 +409,13 @@ public class RepositoryInteraction {
 
     try (Git git = new Git(repo)) {
       container = fillGitDataContainer(git, repo, repository, user);
+
+      if (repo.getRepositoryState() == RepositoryState.MERGING) {
+        container.creds = null;
+        container.warnings.add("Pull aborted. Repository is in merging state.");
+        return createPullOutput(container, dryrun);
+      }
+
       if (dryrun) {
         container.creds = null;
         print(container);
@@ -426,7 +433,7 @@ public class RepositoryInteraction {
         container.creds = null;
         PullOutput output = createPullOutput(container, dryrun);
         output.unversionedSetException(e.getMessage());
-        logger.error(e);
+        logger.error("Exception during pull", e);
         return output;
       } else {
         PullOutput.Builder output = new PullOutput.Builder();
@@ -649,7 +656,7 @@ public class RepositoryInteraction {
           toDeployByRevision.putIfAbsent(revision, new ArrayList<ObjectToDeploy>());
           toDeployByRevision.get(revision).add(new ObjectToDeploy(fqn, filePath));
         }
-      } catch (XynaException e) {
+      } catch (Exception e) {
         exceptions.add(new Triple<>(exec.execType, workspace, fqn));
       }
     }
@@ -844,28 +851,6 @@ public class RepositoryInteraction {
     sb.append(input.getThird()).append("' in workspace '");
     sb.append(input.getSecond()).append("'.");
     return sb.toString();
-  }
-
-
-  private List<String> findOpenDifferenceListIds(String repository) {
-    List<? extends RepositoryConnectionStorable> connections = RepositoryManagementImpl.loadConnectionsForSingleRepository(repository);
-
-    if (logger.isDebugEnabled()) {
-      logger.debug("searching for open lists for repository: " + repository + "...");
-      logger.debug("found " + connections.size() + " connections...");
-    }
-
-    List<String> connectedWorkspaces = connections.stream().map(x -> x.getWorkspacename()).collect(Collectors.toList());
-
-    if (logger.isDebugEnabled()) {
-      logger.debug("found " + connectedWorkspaces.size() + " connected workspaces...");
-    }
-
-    List<String> openDifferenceListIds = new ArrayList<>();
-    for (String connectedWorkspace : connectedWorkspaces) {
-      openDifferenceListIds.addAll(listOpenDifferencesLists(connectedWorkspace));
-    }
-    return openDifferenceListIds;
   }
 
 
@@ -1250,14 +1235,6 @@ public class RepositoryInteraction {
     if (logger.isDebugEnabled()) {
       logger.debug("executed push.");
     }
-  }
-
-
-  private List<String> listOpenDifferencesLists(String connectedWorkspace) {
-    Workspace ws = new Workspace(connectedWorkspace);
-    List<? extends WorkspaceContentDifferences> list = WorkspaceObjectManagement.listOpenWorkspaceDifferencesLists(ws, new Flag(false));
-    List<String> result = list.stream().map(x -> String.valueOf(x.getListId())).collect(Collectors.toList());
-    return result;
   }
 
 
