@@ -84,6 +84,7 @@ import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.WorkspaceContentDifferences;
 import xmcp.gitintegration.WorkspaceContentDifferencesResolution;
 import xmcp.gitintegration.WorkspaceObjectManagement;
+import xmcp.gitintegration.WorkspaceXmlCreationConfig;
 import xmcp.gitintegration.impl.RepositoryManagementImpl.AddRepositoryConnectionResult.Success;
 import xmcp.gitintegration.impl.tracking.OperationTracker;
 import xmcp.gitintegration.repository.Repository;
@@ -276,8 +277,29 @@ public class RepositoryManagementImpl {
       return new AddRepositoryConnectionResult(Success.NONE, Collections.emptyList(), e.getMessage());
     }
     if (workspaces.isEmpty()) {
-      String msg = full ? "Could not find any workspaces in path!" : "Could not find given workspace in path!";
-      return new AddRepositoryConnectionResult(Success.NONE, Collections.emptyList(), msg);
+      if (full) {
+        return new AddRepositoryConnectionResult(Success.NONE, Collections.emptyList(), "Could not find any workspaces in path!");
+      } else {
+        StringBuilder sb = new StringBuilder("Could not find given workspace in path! ");
+        Map<String, Path> candidates = new HashMap<>();
+        try {
+          candidates = createWorkspaceXmlPathMap(Path.of(repoPath), true, null);
+        } catch (IOException e) {
+          logger.error("Could not create workspace xml path map for " + repoPath, e);
+        }
+        if (candidates.size() == 0) {
+          sb.append(" No workspaces were found.");
+        } else {
+          List<String> candidateList = new ArrayList<>(candidates.keySet());
+          Collections.sort(candidateList);
+          sb.append(" Found ");
+          sb.append(candidates.size());
+          sb.append(" candidate workspaces: ");
+          sb.append(String.join(", ", candidateList));
+        }
+        return new AddRepositoryConnectionResult(Success.NONE, Collections.emptyList(), sb.toString());
+      }
+
     }
 
     List<String> errors = new ArrayList<>();
@@ -747,6 +769,11 @@ public class RepositoryManagementImpl {
 
     if (!full) {
       storables.removeIf(storable -> !storable.getWorkspacename().equals(workspace));
+      if (storables.isEmpty()) {
+        storables = loadRepositoryConnections();
+        String workspaceNames = String.join(", ", storables.stream().map(x -> x.getWorkspacename()).collect(Collectors.toList()));
+        return "Error: No workspace connection for '" + workspace + "' found. Workspaces with connections " + workspaceNames;
+      }
     }
     int count = 0;
     for (RepositoryConnectionStorable storable : storables) {
@@ -1158,13 +1185,16 @@ public class RepositoryManagementImpl {
       }
     } else {
       Path configPathInRevision = workspaceRevisionPath.resolve(CONFIG);
+      WorkspaceXmlCreationConfig.Builder builder = new WorkspaceXmlCreationConfig.Builder();
+      builder.force(true); //workspace is not connected yet
+      builder.splitResult(split.toString());
+      builder.workspaceName(connection.getWorkspaceName());
       try {
-        Files.createDirectories(configPathInRevision);
-        tracker.trackInfo("Created config directory for " + connection.getWorkspaceName() + " at " + configPathInRevision);
-      } catch (IOException e) {
-        tracker.trackError(e.getMessage());
-        logger.error("Error creating config directory in repository: " + e.getMessage(), e);
-        return false;
+        WorkspaceObjectManagement.updateWorkspaceContent(builder.instance());
+        tracker.trackInfo("Created config for " + connection.getWorkspaceName() + " at " + configPathInRevision);
+      } catch (Exception e) {
+        logger.error("Could not create workspace content for workspace", e);
+        tracker.trackError("Could not create workspace content for workspace.");
       }
     }
     return true;
@@ -1183,6 +1213,8 @@ public class RepositoryManagementImpl {
         if (!Files.exists(savedXmomPath)) {
           Files.createDirectories(savedXmomPath);
           tracker.trackInfo("Created directory for xmom content of revision " + revision + " at " + savedXmomPath);
+          Files.createFile(savedXmomPath.resolve(".gitkeep"));
+          tracker.trackInfo("Created empty file .gitkeep in XMOM directory.");
         }
         Files.copy(savedXmomPath, workspacePathInRepo.resolve(XMOM));
         tracker.trackInfo("Copied XMOM content of revision " + revision + " to repository at " + workspacePathInRepo.resolve(XMOM));
@@ -1222,7 +1254,26 @@ public class RepositoryManagementImpl {
     //validate there is either an empty directory at subPath or it does not exist
     File workspaceFile = new File(absoluteRepoPath, connection.getSubpath());
     if (workspaceFile.exists() && (!workspaceFile.isDirectory() || workspaceFile.list().length > 0)) {
-      return "Validation of local workspace connection failed because '" + workspaceFile + "' is not an empty directory.";
+      if (!workspaceFile.isDirectory()) {
+        return "Validation of local workspace connection failed because ' " + workspaceFile + "' is not a directory.";
+      }
+
+      if (workspaceFile.list().length > 0) {
+        String[] entries = workspaceFile.list();
+        StringBuilder sb = new StringBuilder("Validation of local workspace connection failed because '");
+        sb.append(workspaceFile);
+        sb.append("' is not an empty directory. It contains ");
+        sb.append(entries.length);
+        sb.append(" files and directories: ");
+        for (int i = 0; i < Math.min(5, entries.length); i++) {
+          sb.append(entries[i]);
+          sb.append(" ");
+        }
+        if (entries.length > 5) {
+          sb.append("...");
+        }
+        return sb.toString();
+      }
     }
 
     //workspace exists

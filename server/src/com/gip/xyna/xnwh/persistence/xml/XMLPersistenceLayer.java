@@ -2398,23 +2398,25 @@ public class XMLPersistenceLayer implements PersistenceLayer {
           elem.appendChild(colEl);
         }
       } else if (col.type() == ColumnType.BLOBBED_JAVAOBJECT) {
-        Element colEl = doc.createElement(col.name());
         Serializable o = storable.getValueByColName(col);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutputStream oos;
-        try {
-          oos = new ObjectOutputStream(baos);
-          // wrap the object into a serializable classloaded object in case xmom objects are stored
-          oos.writeObject(new SerializableClassloadedObject(o));
-          oos.close();
-        } catch (IOException e) {
-          throw new XNWH_GeneralPersistenceLayerException("unexpected problem serializing value of column " + col.name(), e);
+        if (o != null) {
+          Element colEl = doc.createElement(col.name());
+          ByteArrayOutputStream baos = new ByteArrayOutputStream();
+          ObjectOutputStream oos;
+          try {
+            oos = new ObjectOutputStream(baos);
+            // wrap the object into a serializable classloaded object in case xmom objects are stored
+            oos.writeObject(new SerializableClassloadedObject(o));
+            oos.close();
+          } catch (IOException e) {
+            throw new XNWH_GeneralPersistenceLayerException("unexpected problem serializing value of column " + col.name(), e);
+          }
+          byte[] bytes = baos.toByteArray();
+          String encoded = encodeBytes(bytes);
+          Text text = doc.createTextNode(encoded);
+          colEl.appendChild(text);
+          elem.appendChild(colEl);
         }
-        byte[] bytes = baos.toByteArray();
-        String encoded = encodeBytes(bytes);
-        Text text = doc.createTextNode(encoded);
-        colEl.appendChild(text);
-        elem.appendChild(colEl);
       } else if (col.type() == ColumnType.BYTEARRAY) {
         Element colEl = doc.createElement(col.name());
         byte[] bytes = (byte[]) storable.getValueByColName(col);
