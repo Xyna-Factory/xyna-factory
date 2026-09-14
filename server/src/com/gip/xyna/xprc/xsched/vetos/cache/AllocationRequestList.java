@@ -63,6 +63,7 @@ public class AllocationRequestList {
     boolean hasResult = false;
     for (AllocationRequest request : _list) {
       if (request == null) { continue; }
+      if (request.getCacheEntry() == null) { continue; }
       /*
       if (request.isRequiresNotifyProcessor()) {
         return ListAllocationMode.NONE;
@@ -71,7 +72,7 @@ public class AllocationRequestList {
       if (request.getResult() != null) {
         hasResult = true;
       }
-      if (request.getPendingType() != PendingType.NON_PENDING) {
+      if (request.getPendingType() == PendingType.PENDING) {
         hasPending = true;
       }
     }

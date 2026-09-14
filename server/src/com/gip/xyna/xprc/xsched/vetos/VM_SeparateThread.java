@@ -87,6 +87,7 @@ public class VM_SeparateThread implements VetoManagementInterface {
     //List<VetoCacheEntry> vces = new ArrayList<VetoCacheEntry>(exclusiveVetos.size());
     //for( String vetoName : exclusiveVetos ) {
     
+    
     for (AllocationRequest req : reqList.getList()) {
       VetoCacheEntry veto = vetoCache.get(req.getVetoName());
       
@@ -100,12 +101,15 @@ public class VM_SeparateThread implements VetoManagementInterface {
         
         //Zur geforderten Fairnis ist es wahrscheinlich ausreichend, dies beim ersten Veto zu prüfen
         vetoCache.checkAllocation(req, urgency);
+        /*
         VetoAllocationResult var2 = req.getResult();
         if( var2 != null ) {
           return var2;
         }
+        */
       }
     }
+    
     
     //2) Vetos neu anlegen und gleich prüfen
     boolean quitAndNotifyProcessor = false;
