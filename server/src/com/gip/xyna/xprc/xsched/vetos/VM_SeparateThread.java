@@ -37,6 +37,10 @@ import com.gip.xyna.xprc.xsched.scheduling.OrderInformation;
 import com.gip.xyna.xprc.xsched.selectvetos.VetoSearchResult;
 import com.gip.xyna.xprc.xsched.selectvetos.VetoSelectImpl;
 import com.gip.xyna.xprc.xsched.vetos.VM_Cache.VetoFilter;
+import com.gip.xyna.xprc.xsched.vetos.cache.AllocationRequest;
+import com.gip.xyna.xprc.xsched.vetos.cache.AllocationRequest.PendingType;
+import com.gip.xyna.xprc.xsched.vetos.cache.AllocationRequestList;
+import com.gip.xyna.xprc.xsched.vetos.cache.AllocationRequestList.ListAllocationMode;
 import com.gip.xyna.xprc.xsched.vetos.cache.VCP_Abstract;
 import com.gip.xyna.xprc.xsched.vetos.cache.VetoCache;
 import com.gip.xyna.xprc.xsched.vetos.cache.VetoCache.State;
@@ -77,47 +81,76 @@ public class VM_SeparateThread implements VetoManagementInterface {
     }
     
     //1) Scheitert Allocation an bereits vergebenen Vetos?
-    List<VetoCacheEntry> vces = new ArrayList<VetoCacheEntry>(exclusiveVetos.size());
-    for( String vetoName : exclusiveVetos ) {
-      VetoCacheEntry veto = vetoCache.get(vetoName);
-      vces.add(veto);
+    AllocationRequestList reqList = new AllocationRequestList(exclusiveVetos, sharedVetos, vetoCache.getVetoCacheProcessor(),
+                                                              orderInformation);
+    
+    //List<VetoCacheEntry> vces = new ArrayList<VetoCacheEntry>(exclusiveVetos.size());
+    //for( String vetoName : exclusiveVetos ) {
+    
+    for (AllocationRequest req : reqList.getList()) {
+      VetoCacheEntry veto = vetoCache.get(req.getVetoName());
+      
+      //vces.add(veto);
+      
       if( veto != null ) {
+        req.setCacheEntry(veto);
+        
         //TODO bei allen Vetos als wartend eintragen? oder nur beim ersten? 
         //Eintragen als wartend ist nötig, damit nicht niedrig-priorisierter Auftrag Veto erhält
         
         //Zur geforderten Fairnis ist es wahrscheinlich ausreichend, dies beim ersten Veto zu prüfen
-        var = vetoCache.checkAllocation(veto, orderInformation, urgency);
-        if( var != null ) {
-          return var;
+        vetoCache.checkAllocation(req, urgency);
+        VetoAllocationResult var2 = req.getResult();
+        if( var2 != null ) {
+          return var2;
         }
       }
     }
     
     //2) Vetos neu anlegen und gleich prüfen
-    for( int i=0; i<exclusiveVetos.size(); ++i ) {
-      if( vces.get(i) == null ) {
-        VetoCacheEntry veto = vetoCache.getOrCreate(exclusiveVetos.get(i), urgency);
-        vces.set(i, veto );
-        VetoAllocationResult var2 = vetoCache.checkAllocation(veto, orderInformation, urgency);
+    boolean quitAndNotifyProcessor = false;
+    VetoAllocationResult returnValue = null;
+    for (AllocationRequest req : reqList.getList()) {
+    
+    //for( int i=0; i<exclusiveVetos.size(); ++i ) {
+      //if( vces.get(i) == null ) {
+      
+      if (req.getCacheEntry() == null) {
+        VetoCacheEntry veto = vetoCache.getOrCreate(req.getVetoName(), urgency);
+        req.setCacheEntry(veto);
+        
+        //vces.set(i, veto );
+        vetoCache.checkAllocation(req, urgency);
+        VetoAllocationResult var2 = req.getResult();
         if( var2 != null ) {
-          var = var2;
+          returnValue = var2;
+          if (req.getPendingType() != PendingType.PENDING) {
+            quitAndNotifyProcessor = true;
+          }
         }
       }
     }
     
-    if( var != null ) {
+    //if( var != null ) {
+    
+    if (quitAndNotifyProcessor) {
       //Beim Anlegen der Vetos in Schritt 2) wurde festgestellt, dass nicht geschedult werden kann
       //a) Im Cluster wurden Vetos im Zustand "New" angelegt, diese müssen vom VetoCacheProcessor abgeklärt werden
       vetoCache.notifyProcessor();
       //b) in der Zeit von 1) bis 2) wurde konkurrierend ein Veto angelegt, entweder AdminVeto oder im Cluster
-      return var;
+      return returnValue;
+    }
+    ListAllocationMode allocationMode = reqList.determineListAllocationMode();
+    if (allocationMode == ListAllocationMode.NONE) {
+      // should not be reachable
+      return VetoAllocationResult.FAILED;
     }
     
     //3) eigentliche Allozierung, da nun alle Vetos verwendbar sind
     List<String> allocated = new ArrayList<String>();
-    for( VetoCacheEntry veto : vces ) {
-      vetoCache.allocate(veto, orderInformation, urgency);
-      allocated.add( veto.getName() );
+    for (AllocationRequest req : reqList.getList()) {
+      vetoCache.allocate(req, urgency, allocationMode);
+      allocated.add(req.getVetoName());
     }
     List<String> list = allocatedVetos.get(orderInformation.getOrderId());
     if( list == null ) {
@@ -130,6 +163,10 @@ public class VM_SeparateThread implements VetoManagementInterface {
     if( logger.isTraceEnabled() ) {
       logger.trace(" Allocated Vetos + "+ allocated + " for " + orderInformation );
       logger.trace("VetoCache after alloc " + vetoCache.showVetoCache() );
+    }
+    if (allocationMode == ListAllocationMode.ONLY_PENDING) {
+      if (returnValue != null) { return returnValue; }
+      return VetoAllocationResult.FAILED;
     }
     return VetoAllocationResult.SUCCESS;
   }

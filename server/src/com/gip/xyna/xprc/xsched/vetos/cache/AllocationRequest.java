@@ -18,6 +18,7 @@
 
 package com.gip.xyna.xprc.xsched.vetos.cache;
 
+import com.gip.xyna.xprc.xsched.scheduling.OrderInformation;
 import com.gip.xyna.xprc.xsched.vetos.VetoAllocationResult;
 
 
@@ -31,18 +32,25 @@ public class AllocationRequest {
     PENDING, NON_PENDING
   }
   
+  public static enum AllocationMode {
+    CREATE, UPDATE, KEEP, UNKNOWN
+  }
+  
   
   private final String vetoName;
   private final VetoType vetoType;
+  private final OrderInformation orderInformation;
   private VetoAllocationResult result;
   private VetoCacheEntry cacheEntry;
   private PendingType pendingType = PendingType.NON_PENDING;
-  private boolean requiresNotifyProcessor = false;
+  //private boolean requiresNotifyProcessor = false;
+  private AllocationMode allocationMode = AllocationMode.UNKNOWN;
   
   
-  public AllocationRequest(String vetoName, VetoType vetoType) {
+  public AllocationRequest(String vetoName, VetoType vetoType, OrderInformation orderInformation) {
     this.vetoName = vetoName;
     this.vetoType = vetoType;
+    this.orderInformation= orderInformation;
   }
 
   
@@ -75,7 +83,7 @@ public class AllocationRequest {
     this.pendingType = pendingType;
   }
 
-  
+  /*
   public boolean isRequiresNotifyProcessor() {
     return requiresNotifyProcessor;
   }
@@ -84,7 +92,7 @@ public class AllocationRequest {
   public void setRequiresNotifyProcessor(boolean requiresNotifyProcessor) {
     this.requiresNotifyProcessor = requiresNotifyProcessor;
   }
-
+*/
   
   public String getVetoName() {
     return vetoName;
@@ -93,6 +101,21 @@ public class AllocationRequest {
   
   public VetoType getVetoType() {
     return vetoType;
+  }
+
+
+  public AllocationMode getAllocationMode() {
+    return allocationMode;
+  }
+
+
+  public void setAllocationMode(AllocationMode allocationMode) {
+    this.allocationMode = allocationMode;
+  }
+
+
+  public OrderInformation getOrderInformation() {
+    return orderInformation;
   }
   
 }

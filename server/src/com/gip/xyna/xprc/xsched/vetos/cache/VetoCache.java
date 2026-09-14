@@ -37,6 +37,7 @@ import com.gip.xyna.xprc.xsched.scheduling.OrderInformation;
 import com.gip.xyna.xprc.xsched.vetos.AdministrativeVeto;
 import com.gip.xyna.xprc.xsched.vetos.VetoAllocationResult;
 import com.gip.xyna.xprc.xsched.vetos.VetoInformation;
+import com.gip.xyna.xprc.xsched.vetos.cache.AllocationRequestList.ListAllocationMode;
 
 
 public class VetoCache {
@@ -175,21 +176,32 @@ public class VetoCache {
     return CollectionUtils.transformAndSkipNull( vetoCache.values(), new ExtractVetoInformationUsedByOrderId(orderId) );
   }
   
-  public VetoAllocationResult checkAllocation(VetoCacheEntry veto, OrderInformation orderInformation, long urgency) {
+  
+  //public VetoAllocationResult checkAllocation(VetoCacheEntry veto, OrderInformation orderInformation, long urgency) {
+  public void checkAllocation(AllocationRequest req, long urgency) {
     //vom Scheduler-Thread aufgerufen
-    if( veto.checkAllocation(orderInformation,urgency) ) {
-      return null;
+    if (req.getCacheEntry() == null) {
+      // should not be reachable
+      req.setResult(VetoAllocationResult.FAILED);
+      return;
+    }
+    VetoCacheEntry veto = req.getCacheEntry();
+    if (veto.checkAllocation(req, urgency) ) {
+      return;
     } else {
       veto.updateWaiting(urgency, currentSchedulingRun);
       VetoInformation vi = veto.getVetoInformation();
       if( vi != null ) {
-        return new VetoAllocationResult(vi);
+        req.setResult(new VetoAllocationResult(vi));
+        return;
       } else {
-        return new VetoAllocationResult( new VetoInformation(veto.getName()) );
+        req.setResult(new VetoAllocationResult(new VetoInformation(veto.getName())));
+        return;
       }
     }
   }
 
+  
   public VetoAllocationResult checkAllocation() {
     if( ! vetoCacheProcessor.canAllocate() ) {
       return VetoAllocationResult.UNSUPPORTED;
@@ -197,10 +209,14 @@ public class VetoCache {
     return null; 
   }
   
-  public void allocate(VetoCacheEntry veto, OrderInformation orderInformation, long urgency) {
+  
+  public void allocate(AllocationRequest req, long urgency, ListAllocationMode allocMode) {
+    VetoCacheEntry veto = req.getCacheEntry();
+    OrderInformation orderInformation = req.getOrderInformation();
     VetoInformation vi = new VetoInformation(veto.getName(), orderInformation, System.currentTimeMillis(), ownBinding);
     veto.allocate(vi, urgency);
   }
+  
   
   //package private
   boolean createUsedVeto(VetoInformation vetoInformation) {

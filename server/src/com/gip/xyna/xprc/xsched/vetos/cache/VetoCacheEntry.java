@@ -132,8 +132,10 @@ public class VetoCacheEntry {
    }
   }
   
-  public boolean checkAllocation(OrderInformation orderInformation, long urgency) {
+  //public boolean checkAllocation(OrderInformation orderInformation, long urgency) {
+  public boolean checkAllocation(AllocationRequest req, long urgency) {
     //gerufen von SchedulerThread
+    OrderInformation orderInformation = req.getOrderInformation();
     switch( state.get() ) {
     case Scheduling:
     case Used: 
@@ -156,6 +158,7 @@ public class VetoCacheEntry {
     }
   }
 
+  
   public boolean allocate(VetoInformation vetoInformation, long urgency) {
     //gerufen vom SchedulerThread
     if( compareAndSetState(State.Usable, State.Scheduling )) {

@@ -22,28 +22,33 @@ package com.gip.xyna.xprc.xsched.vetos.cache;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gip.xyna.xprc.xsched.scheduling.OrderInformation;
 import com.gip.xyna.xprc.xsched.vetos.cache.AllocationRequest.PendingType;
 import com.gip.xyna.xprc.xsched.vetos.cache.AllocationRequest.VetoType;
 
 
 public class AllocationRequestList {
 
-  public static enum AllocationMode {
-    COMPLETE, ONLY_PENDING, NONE, NONE_REQUIRES_NOTIFY
+  
+  public static enum ListAllocationMode {
+    COMPLETE, ONLY_PENDING, NONE
   }
+  
   
   private List<AllocationRequest> _list = new ArrayList<>();
 
   
-  public AllocationRequestList(List<String> exclusiveVetos, List<String> sharedVetos) {
+  public AllocationRequestList(List<String> exclusiveVetos, List<String> sharedVetos, VetoCacheProcessor processor,
+                               OrderInformation orderInformation) {
     if (exclusiveVetos != null) {
       for (String veto : exclusiveVetos) {
-        _list.add(new AllocationRequest(veto, VetoType.EXCLUSIVE));
+        _list.add(new AllocationRequest(veto, VetoType.EXCLUSIVE, orderInformation));
       }
     }
     if (sharedVetos != null) {
+      boolean allowShared = processor.allowSharedVetos();
       for (String veto : sharedVetos) {
-        _list.add(new AllocationRequest(veto, VetoType.SHARED));
+        _list.add(new AllocationRequest(veto, (allowShared ? VetoType.SHARED : VetoType.EXCLUSIVE), orderInformation));
       }
     }
   }
@@ -53,14 +58,16 @@ public class AllocationRequestList {
     return _list;
   }
   
-  public AllocationMode determineAllocationMode() {
+  public ListAllocationMode determineListAllocationMode() {
     boolean hasPending = false;
     boolean hasResult = false;
     for (AllocationRequest request : _list) {
       if (request == null) { continue; }
+      /*
       if (request.isRequiresNotifyProcessor()) {
-        return AllocationMode.NONE_REQUIRES_NOTIFY;
+        return ListAllocationMode.NONE;
       }
+      */
       if (request.getResult() != null) {
         hasResult = true;
       }
@@ -69,12 +76,12 @@ public class AllocationRequestList {
       }
     }
     if (!hasResult) {
-      return AllocationMode.COMPLETE;
+      return ListAllocationMode.COMPLETE;
     }
     if (hasPending) {
-      return AllocationMode.ONLY_PENDING;
+      return ListAllocationMode.ONLY_PENDING;
     }
-    return AllocationMode.NONE;
+    return ListAllocationMode.NONE;
   }
   
 }
