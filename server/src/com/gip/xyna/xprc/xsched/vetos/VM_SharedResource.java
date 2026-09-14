@@ -38,6 +38,7 @@ import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.CollectionUtils;
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
+import com.gip.xyna.xnwh.exceptions.XNWH_SharedResourceInstanceDoesNotExist;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.sharedresources.KryoSerializedSharedResourceDefinition;
 import com.gip.xyna.xnwh.sharedresources.SharedResourceDefinition;
@@ -116,7 +117,7 @@ public class VM_SharedResource implements VetoManagementInterface {
     SharedResourceRequestResult<SharedResourceVeto> updateResult = srm.update(XYNA_VETO_SR_DEF, updater.getVetoIds(), updater);
     if (!updateResult.isSuccess()) {
       if (!updater.isOrderStartDisallowed()) {
-        logger.error("Unexpected result trying to update shared resource vetos.", updateResult.getException());
+        handleLogUpdateException(updateResult);
         return VetoAllocationResult.FAILED;
       }
     }
@@ -139,9 +140,21 @@ public class VM_SharedResource implements VetoManagementInterface {
     }
     SharedResourceRequestResult<SharedResourceVeto> updateResult = srm.update(XYNA_VETO_SR_DEF, updater.getVetoIds(), updater);
     if (!updateResult.isSuccess()) {
-      logger.error("Error updating shared resource vetos.", updateResult.getException());
+      handleLogUpdateException(updateResult);
     }
     return VetoAllocationResult.FAILED;
+  }
+  
+  
+  private void handleLogUpdateException(SharedResourceRequestResult<SharedResourceVeto> updateResult) {
+    if (updateResult == null) { return; }
+    if (updateResult.getException() instanceof XNWH_SharedResourceInstanceDoesNotExist) {
+      if (logger.isTraceEnabled()) {
+        logger.trace("Veto entry was presumably deleted by other thread");
+      }
+    } else {
+      logger.error("Error updating shared resource vetos.", updateResult.getException());
+    }
   }
   
   
@@ -259,14 +272,14 @@ public class VM_SharedResource implements VetoManagementInterface {
       if (!logger.isTraceEnabled()) { return; }
       String prefix = "Existing veto list (order = " + orderId + ") ";
       if (list == null) {
-        logger.debug(prefix + "No existing vetos");
+        logger.trace(prefix + "No existing vetos");
       }
       for (int i = 0; i < list.size(); i++) {
         SharedResourceInstance<SharedResourceVeto> item = list.get(i);
         if ((item == null) || (item.getValue() == null)) {
-          logger.debug(prefix + "# " + i + " -> null");
+          logger.trace(prefix + "# " + i + " -> null");
         }
-        logger.debug(prefix + "# " + i + " -> " + item.getValue().asString());
+        logger.trace(prefix + "# " + i + " -> " + item.getValue().asString());
       }
     } catch (Exception e) {}
   }
