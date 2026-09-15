@@ -64,11 +64,6 @@ public class AllocationRequestList {
     for (AllocationRequest request : _list) {
       if (request == null) { continue; }
       if (request.getCacheEntry() == null) { continue; }
-      /*
-      if (request.isRequiresNotifyProcessor()) {
-        return ListAllocationMode.NONE;
-      }
-      */
       if (request.getResult() != null) {
         hasResult = true;
       }

@@ -47,7 +47,13 @@ public class AllocationRequest {
   private AllocationMode allocationMode = AllocationMode.UNKNOWN;
   
   
-  public AllocationRequest(String vetoName, VetoType vetoType, OrderInformation orderInformation) {
+  public AllocationRequest(String vetoNameIn, VetoType vetoTypeIn, OrderInformation orderInformationIn) {
+    String vetoName = ((vetoNameIn == null) ? "__UNKNOWN__" : vetoNameIn);
+    VetoType vetoType = ((vetoTypeIn == null) ? VetoType.EXCLUSIVE : vetoTypeIn);
+    OrderInformation orderInformation = orderInformationIn;
+    if ((orderInformation == null) || (orderInformation.getOrderId() == null)) {
+      orderInformation = new OrderInformation(-100L);
+    }
     this.vetoName = vetoName;
     this.vetoType = vetoType;
     this.orderInformation= orderInformation;

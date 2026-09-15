@@ -88,69 +88,57 @@ public class VM_SeparateThread implements VetoManagementInterface {
     //for( String vetoName : exclusiveVetos ) {
     
     
+    VetoAllocationResult returnValue = null;
+    ListAllocationMode allocationMode = ListAllocationMode.NONE;
     for (AllocationRequest req : reqList.getList()) {
       VetoCacheEntry veto = vetoCache.get(req.getVetoName());
-      
-      //vces.add(veto);
-      
       if( veto != null ) {
         req.setCacheEntry(veto);
-        
         //TODO bei allen Vetos als wartend eintragen? oder nur beim ersten? 
         //Eintragen als wartend ist nötig, damit nicht niedrig-priorisierter Auftrag Veto erhält
         
         //Zur geforderten Fairnis ist es wahrscheinlich ausreichend, dies beim ersten Veto zu prüfen
         vetoCache.checkAllocation(req, urgency);
-        /*
-        VetoAllocationResult var2 = req.getResult();
-        if( var2 != null ) {
-          return var2;
-        }
-        */
-      }
-    }
-    
-    
-    //2) Vetos neu anlegen und gleich prüfen
-    boolean quitAndNotifyProcessor = false;
-    VetoAllocationResult returnValue = null;
-    for (AllocationRequest req : reqList.getList()) {
-    
-    //for( int i=0; i<exclusiveVetos.size(); ++i ) {
-      //if( vces.get(i) == null ) {
-      
-      if (req.getCacheEntry() == null) {
-        VetoCacheEntry veto = vetoCache.getOrCreate(req.getVetoName(), urgency);
-        req.setCacheEntry(veto);
-        
-        //vces.set(i, veto );
-        vetoCache.checkAllocation(req, urgency);
         VetoAllocationResult var2 = req.getResult();
         if( var2 != null ) {
           returnValue = var2;
-          if (req.getPendingType() != PendingType.PENDING) {
-            quitAndNotifyProcessor = true;
+        }
+      }
+    }
+    allocationMode = reqList.determineListAllocationMode();
+    if (allocationMode == ListAllocationMode.NONE) {
+      if (returnValue != null) { return returnValue; }
+      return VetoAllocationResult.FAILED;
+    }
+    
+    //2) Vetos neu anlegen und gleich prüfen
+    if (allocationMode == ListAllocationMode.COMPLETE) {
+      for (AllocationRequest req : reqList.getList()) {
+        if (req.getCacheEntry() == null) {
+          VetoCacheEntry veto = vetoCache.getOrCreate(req.getVetoName(), urgency);
+          req.setCacheEntry(veto);
+          vetoCache.checkAllocation(req, urgency);
+          VetoAllocationResult var2 = req.getResult();
+          if( var2 != null ) {
+            returnValue = var2;
           }
+        }
+      }
+      allocationMode = reqList.determineListAllocationMode();
+      if (allocationMode != ListAllocationMode.COMPLETE) {
+        //Beim Anlegen der Vetos in Schritt 2) wurde festgestellt, dass nicht geschedult werden kann
+        //a) Im Cluster wurden Vetos im Zustand "New" angelegt, diese müssen vom VetoCacheProcessor abgeklärt werden
+        vetoCache.notifyProcessor();
+        //b) in der Zeit von 1) bis 2) wurde konkurrierend ein Veto angelegt, entweder AdminVeto oder im Cluster
+        
+        if (allocationMode == ListAllocationMode.NONE) {
+          if (returnValue != null) { return returnValue; }
+          return VetoAllocationResult.FAILED;
         }
       }
     }
     
-    //if( var != null ) {
-    
-    if (quitAndNotifyProcessor) {
-      //Beim Anlegen der Vetos in Schritt 2) wurde festgestellt, dass nicht geschedult werden kann
-      //a) Im Cluster wurden Vetos im Zustand "New" angelegt, diese müssen vom VetoCacheProcessor abgeklärt werden
-      vetoCache.notifyProcessor();
-      //b) in der Zeit von 1) bis 2) wurde konkurrierend ein Veto angelegt, entweder AdminVeto oder im Cluster
-      return returnValue;
-    }
-    ListAllocationMode allocationMode = reqList.determineListAllocationMode();
-    if (allocationMode == ListAllocationMode.NONE) {
-      // should not be reachable
-      return VetoAllocationResult.FAILED;
-    }
-    
-    //3) eigentliche Allozierung, da nun alle Vetos verwendbar sind
+    //3) eigentliche Allozierung
     List<String> allocated = new ArrayList<String>();
     for (AllocationRequest req : reqList.getList()) {
       vetoCache.allocate(req, urgency, allocationMode);
