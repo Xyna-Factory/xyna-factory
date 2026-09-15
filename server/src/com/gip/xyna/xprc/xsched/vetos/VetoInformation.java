@@ -20,6 +20,7 @@ package com.gip.xyna.xprc.xsched.vetos;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import com.gip.xyna.utils.collections.CollectionUtils.Transformation;
 import com.gip.xyna.xprc.xsched.scheduling.OrderInformation;
@@ -208,6 +209,17 @@ public class VetoInformation implements Serializable {
     return usingOrder == null && pendingExclusiveOrderId != null;
   }
 
+  public boolean isUsedBy(long orderIdIn) {
+    boolean success = false;
+    Long orderId = Long.valueOf(orderIdIn);
+    success = Objects.equals(getUsingOrderId(), orderId);
+    success = success || Objects.equals(getPendingExclusiveOrderId(), orderId);
+    if (getSharedOrderIds() != null) {
+      success = success || getSharedOrderIds().contains(orderId);
+    }
+    return success;
+  }
+  
   public static Transformation<VetoInformation, String> extractName = new Transformation<VetoInformation, String>() {
 
     @Override

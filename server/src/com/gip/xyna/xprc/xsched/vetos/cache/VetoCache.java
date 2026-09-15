@@ -80,7 +80,7 @@ public class VetoCache {
         //kann von anderem thread gerade freigegeben worden sein
         return null;
       }
-      if( vi.getUsingOrderId() == orderId ) {
+      if (vi.isUsedBy(orderId)) {
         return vi;
       }
       return null;
@@ -250,11 +250,10 @@ public class VetoCache {
   private VetoInformation updateVetoInfo(VetoCacheEntry veto, AllocationRequest req) {
     VetoInformation current = veto.getVetoInformation();
     if (req.getVetoType() == VetoType.SHARED) {
-      if (current.getSharedOrderIds() == null) {
-        // unexpected state
-        return null;
+      List<Long> sharedIds = new ArrayList<>();
+      if (current.getSharedOrderIds() != null) {
+        sharedIds.addAll(current.getSharedOrderIds());
       }
-      List<Long> sharedIds = new ArrayList<>(current.getSharedOrderIds());
       sharedIds.add(req.getOrderInformation().getOrderId());
       return new VetoInformation(veto.getName(), sharedIds, System.currentTimeMillis(), ownBinding);
     }
@@ -269,6 +268,9 @@ public class VetoCache {
       return new VetoInformation(current.getName(), current.getUsingOrder(), current.getSharedOrderIds(),
                                  req.getOrderInformation().getOrderId(), current.getDocumentation(),
                                  System.currentTimeMillis(), ownBinding);
+    }
+    if (current.getUsingOrderId() == null) {
+      return new VetoInformation(req.getVetoName(), req.getOrderInformation(), System.currentTimeMillis(), ownBinding);
     }
     if (Objects.equals(req.getOrderInformation().getOrderId(), current.getUsingOrderId())) {
       return current;

@@ -168,19 +168,21 @@ public class VetoCacheEntry {
       // Unexpected for states Scheduling, Used or Scheduled
       return false;
     }
-    if (vi.getUsingOrderId() != null) {
-      if (Objects.equals(vi.getUsingOrderId(), req.getOrderInformation().getOrderId())) {
-        return true;
-      }
-      if (vi.getPendingExclusiveOrderId() != null) {
-        if (Objects.equals(vi.getPendingExclusiveOrderId(), req.getOrderInformation().getOrderId())) {
-          return false;
+    if (vi.getSharedOrderIds() != null) {
+      if (!vi.getSharedOrderIds().isEmpty()) {
+        if (vi.getPendingExclusiveOrderId() == null) {
+          req.setPendingType(PendingType.PENDING);
         }
+        return false;
       }
-      req.setPendingType(PendingType.PENDING);
-      return false;
     }
-    return false;
+    if (vi.getUsingOrderId() == null) {
+      if (vi.getPendingExclusiveOrderId() != null) {
+        return Objects.equals(vi.getPendingExclusiveOrderId(), req.getOrderInformation().getOrderId());
+      }
+      return true;
+    }
+    return Objects.equals(vi.getUsingOrderId(), req.getOrderInformation().getOrderId());
   }
 
   
@@ -190,7 +192,7 @@ public class VetoCacheEntry {
       // Unexpected for states Scheduling, Used or Scheduled
       return false;
     }
-    if (vi.getUsingOrderId() != null) { 
+    if (vi.getUsingOrderId() != null) {
       return false;
     }
     if (vi.getPendingExclusiveOrderId() != null) {
@@ -242,8 +244,11 @@ public class VetoCacheEntry {
     if( vi == null ) {
       return; //kann nicht allokiert sein
     }
-    if( vi.getUsingOrderId().equals(orderInformation.getOrderId() ) ) {
-      compareAndSetState(State.Scheduling, State.Usable);
+    if (vi.isUsedBy(orderInformation.getOrderId())) {
+      RemovalResult result = freeOrderId(orderInformation.getOrderId());
+      if (result == RemovalResult.EMPTY) {
+        compareAndSetState(State.Scheduling, State.Usable);
+      }
     }
   }
   
@@ -276,18 +281,12 @@ public class VetoCacheEntry {
     return false;
   }
 
-  public boolean isUsedBy(long orderIdIn) {
+  public boolean isUsedBy(long orderId) {
     //wird von beliebigen Threads verwendet!
     VetoInformation vi = vetoInformation;
     if (vi == null) { return false; }
     boolean success = false;
-    Long orderId = Long.valueOf(orderIdIn);
-    success = Objects.equals(vi.getUsingOrderId(), orderId);
-    success = success || Objects.equals(vi.getPendingExclusiveOrderId(), orderId);
-    if (vi.getSharedOrderIds() != null) {
-      success = success || vi.getSharedOrderIds().contains(orderId);
-    }
-    return success;
+    return vi.isUsedBy(orderId);
   }
   
   
@@ -356,6 +355,7 @@ public class VetoCacheEntry {
     if( compareAndSetState(State.Scheduled, State.Free) || 
         compareAndSetState(State.Used, State.Free) ) {
       this.urgency = Long.MIN_VALUE;
+      setVetoInformation(null);
       return true;
     } else {
       //ungültiger Aufruf: Veto kann nicht freigegeben werden
