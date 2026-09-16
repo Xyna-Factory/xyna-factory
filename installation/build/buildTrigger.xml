@@ -79,8 +79,8 @@
         <local name = "server.mdm.xml.path" />
         <determine-revision workspacename="${workspacename}" outputproperty="revision" />
         <property name="revision.dir" value="../revisions/rev_${revision}" />
-        <property name="server.mdm.path" value="${server.path}/${revision.dir}/saved/trigger/${project.name}" /> <!-- saved? -->
-        <property name="server.mdm.xml.path" value="${server.path}/${revision.dir}/saved/filter/${mdm.xml.name}" />
+        <property name="server.mdm.path" value="${server.path}/${revision.dir}/saved/trigger/${project.name}" />
+        <property name="server.mdm.xml.path" value="${server.path}/${revision.dir}/saved/trigger/${mdm.xml.name}" />
         <property name="deploy.template" value="addtrigger -fqClassName ${fqclassname} -workspaceName '${workspacename}' -jarFiles ${server.mdm.path}/${project.name}.jar -sharedLibs ${deploy.sharedlibs} -triggerName ${project.name}" />
 
         <condition property="foldername.not.ok">
