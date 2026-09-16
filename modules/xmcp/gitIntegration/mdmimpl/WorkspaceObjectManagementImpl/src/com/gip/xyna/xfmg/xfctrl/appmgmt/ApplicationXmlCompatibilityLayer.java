@@ -82,8 +82,8 @@ public class ApplicationXmlCompatibilityLayer {
 
 
   public void addFilter(boolean implicit, String filterName, String jarFiles, String fqFilterClassName, String triggerName,
-                        String sharedLibs) {
-    xml.filters.add(new FilterXmlEntry(implicit, filterName, jarFiles, fqFilterClassName, triggerName, sharedLibs));
+                        String sharedLibs, String description) {
+    xml.filters.add(new FilterXmlEntry(implicit, filterName, jarFiles, fqFilterClassName, triggerName, sharedLibs, description));
   }
 
 

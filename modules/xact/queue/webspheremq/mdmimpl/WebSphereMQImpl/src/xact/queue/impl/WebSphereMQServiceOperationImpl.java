@@ -26,7 +26,7 @@ import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
-import com.gip.xyna.xfmg.xfctrl.queuemgmnt.Queue;
+import com.gip.xyna.xfmg.xfctrl.queuemgmnt.IQueue;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueConnectData;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueManagement;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueManagement.QueueInstanceBuilder;
@@ -78,7 +78,7 @@ public class WebSphereMQServiceOperationImpl implements ExtendedDeploymentTask {
 
   public static class WebSphereMQBuilder implements QueueInstanceBuilder {
 
-    public Object build(Queue queue) {
+    public Object build(IQueue queue) {
       WebSphereMQConfig cfg = new WebSphereMQConfig();
       cfg.setName_externalQueue(queue.getExternalName());
       cfg.setName_unique(new QueueName(queue.getUniqueName()));

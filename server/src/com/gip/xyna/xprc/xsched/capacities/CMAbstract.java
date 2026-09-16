@@ -66,7 +66,7 @@ import com.gip.xyna.xprc.xsched.scheduling.OrderInformation;
 public abstract class CMAbstract implements CapacityManagementInterface {
 
   public static final String TRIED_TO_AQUIRE_TWICE_EXCEPTION_MESSAGE =
-      "Tried to aquire capacities more than once for the following order: ";
+      "Tried to acquire capacities more than once for the following order: ";
 
   protected CapacityCache cache;
   

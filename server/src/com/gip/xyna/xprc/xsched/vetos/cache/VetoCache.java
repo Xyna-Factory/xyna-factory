@@ -198,7 +198,7 @@ public class VetoCache {
   }
   
   public void allocate(VetoCacheEntry veto, OrderInformation orderInformation, long urgency) {
-    VetoInformation vi = new VetoInformation(veto.getName(), orderInformation, System.currentTimeMillis(), ownBinding);
+    VetoInformation vi = VetoInformation.createExclusive(veto.getName(), orderInformation, System.currentTimeMillis(), ownBinding);
     veto.allocate(vi, urgency);
   }
   

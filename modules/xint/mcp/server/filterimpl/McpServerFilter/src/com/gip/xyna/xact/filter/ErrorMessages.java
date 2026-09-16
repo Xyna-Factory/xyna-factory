@@ -99,6 +99,7 @@ public class ErrorMessages {
     jb.addStringAttribute("reason", String.format("Unhandled exception while %s", action));
     jb.endObject();
     jb.endObject();
+    jb.endObject();
     McpServerFilter.send(tc, HTTPTriggerConnection.HTTP_OK, McpMethodHandler.MIME_JSON, null, jb.toString());
   }
 
