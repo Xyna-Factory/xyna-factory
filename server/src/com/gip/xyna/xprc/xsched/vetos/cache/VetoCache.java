@@ -255,7 +255,7 @@ public class VetoCache {
         sharedIds.addAll(current.getSharedOrderIds());
       }
       sharedIds.add(req.getOrderInformation().getOrderId());
-      return new VetoInformation(veto.getName(), sharedIds, System.currentTimeMillis(), ownBinding);
+      return VetoInformation.createShared(veto.getName(), sharedIds, System.currentTimeMillis(), ownBinding);
     }
     if (req.getPendingType() == PendingType.PENDING) {
       if (current.getPendingExclusiveOrderId() != null) {
@@ -270,7 +270,7 @@ public class VetoCache {
                                  System.currentTimeMillis(), ownBinding);
     }
     if (current.getUsingOrderId() == null) {
-      return new VetoInformation(req.getVetoName(), req.getOrderInformation(), System.currentTimeMillis(), ownBinding);
+      return VetoInformation.createExclusive(req.getVetoName(), req.getOrderInformation(), System.currentTimeMillis(), ownBinding);
     }
     if (Objects.equals(req.getOrderInformation().getOrderId(), current.getUsingOrderId())) {
       return current;
@@ -282,10 +282,10 @@ public class VetoCache {
   
   private VetoInformation buildVetoInfo(AllocationRequest req) {
     if (req.getVetoType() == VetoType.SHARED) {
-      return new VetoInformation(req.getVetoName(), List.of(req.getOrderInformation().getOrderId()), System.currentTimeMillis(), 
-                                 ownBinding);
+      return VetoInformation.createShared(req.getVetoName(), List.of(req.getOrderInformation().getOrderId()), System.currentTimeMillis(), 
+                                          ownBinding);
     }
-    return new VetoInformation(req.getVetoName(), req.getOrderInformation(), System.currentTimeMillis(), ownBinding);
+    return VetoInformation.createExclusive(req.getVetoName(), req.getOrderInformation(), System.currentTimeMillis(), ownBinding);
   }
   
   
