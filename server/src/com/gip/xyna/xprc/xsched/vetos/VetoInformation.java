@@ -19,6 +19,7 @@ package com.gip.xyna.xprc.xsched.vetos;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -111,7 +112,9 @@ public class VetoInformation implements Serializable {
       } else if (isAllocatedShared()) {
         return "VetoInformation("+identifier+": allocated shared by "+sharedOrderIds+": "+created+")";
       } else if (isPendingExclusiveAllocation()) {
-        return "VetoInformation("+identifier+": pending exclusive allocation to "+pendingExclusiveOrderId+": "+created+")";
+        return "VetoInformation("+identifier+": pending exclusive allocation to "+pendingExclusiveOrderId+
+               ((sharedOrderIds == null) ? "" : ", allocated shared by "+sharedOrderIds)+
+               ": "+created+")";
       } else {
         return "VetoInformation("+identifier+": unallocated: "+created+")";
       }
@@ -218,6 +221,19 @@ public class VetoInformation implements Serializable {
       success = success || getSharedOrderIds().contains(orderId);
     }
     return success;
+  }
+  
+  public boolean isVetoIdContentEqual(VetoInformation vi) {
+    if (vi == null) { return false; }
+    if (!Objects.equals(this.getUsingOrderId(), vi.getUsingOrderId())) {
+      return false;
+    }
+    if (!Objects.equals(this.getPendingExclusiveOrderId(), vi.getPendingExclusiveOrderId())) {
+      return false;
+    }
+    HashSet<Long> set1 = (this.getSharedOrderIds() == null) ? new HashSet<>() : new HashSet<>(this.getSharedOrderIds());
+    HashSet<Long> set2 = (vi.getSharedOrderIds() == null) ? new HashSet<>() : new HashSet<>(vi.getSharedOrderIds());
+    return set1.equals(set2);
   }
   
   public static Transformation<VetoInformation, String> extractName = new Transformation<VetoInformation, String>() {

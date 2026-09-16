@@ -222,15 +222,14 @@ public class VetoCacheEntry {
     } else if ( state.isIn(State.Scheduled, State.Used) ) {
       if( this.vetoInformation == null ) {
         return false; //darf nicht vorkommen
-      } else {
-        if( this.vetoInformation.getUsingOrderId().equals(vetoInformation.getUsingOrderId() ) ) {
-          //Auftrag hat Veto bereits belegt, dies ist erlaubt
-          if(  this.vetoInformation.getBinding() != vetoInformation.getBinding() ) {
-            this.vetoInformation = vetoInformation; //korrigiert Binding (nach Übernahme vom andern Knoten, bei Restart)
-            compareAndSetState(State.Used, State.Scheduled); //nochmal speichern, da Binding geändert
-          }
-          return true;
+      }
+      if (this.vetoInformation.isVetoIdContentEqual(vetoInformation)) {
+        //Auftrag hat Veto bereits belegt, dies ist erlaubt
+        if(  this.vetoInformation.getBinding() != vetoInformation.getBinding() ) {
+          this.vetoInformation = vetoInformation; //korrigiert Binding (nach Übernahme vom andern Knoten, bei Restart)
+          compareAndSetState(State.Used, State.Scheduled); //nochmal speichern, da Binding geändert
         }
+        return true;
       }
       this.vetoInformation = vetoInformation;
       state.set(State.Scheduling);
@@ -238,11 +237,15 @@ public class VetoCacheEntry {
     return false; //kann eigentlich nicht vorkommen, da nur Scheduler aus Usable entfernen darf
   }
   
-  public void undoAllocation(OrderInformation orderInformation) {
+  public boolean undoAllocation(OrderInformation orderInformation) {
     //vom Scheduler-Thread aufgerufen
     VetoInformation vi = vetoInformation;
     if( vi == null ) {
-      return; //kann nicht allokiert sein
+      return true; //kann nicht allokiert sein
+    }
+    if (vi.isPendingExclusiveAllocation() && Objects.equals(orderInformation.getOrderId(), vi.getPendingExclusiveOrderId())) {
+      // undoAllocation needs to keep pending vetos
+      return false;
     }
     if (vi.isUsedBy(orderInformation.getOrderId())) {
       RemovalResult result = freeOrderId(orderInformation.getOrderId());
@@ -250,6 +253,7 @@ public class VetoCacheEntry {
         compareAndSetState(State.Scheduling, State.Usable);
       }
     }
+    return true;
   }
   
   public void updateWaiting(long urgency, long currentSchedulingRun) {
@@ -285,7 +289,6 @@ public class VetoCacheEntry {
     //wird von beliebigen Threads verwendet!
     VetoInformation vi = vetoInformation;
     if (vi == null) { return false; }
-    boolean success = false;
     return vi.isUsedBy(orderId);
   }
   

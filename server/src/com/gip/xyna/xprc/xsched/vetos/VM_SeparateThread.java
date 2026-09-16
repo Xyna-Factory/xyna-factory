@@ -38,7 +38,6 @@ import com.gip.xyna.xprc.xsched.selectvetos.VetoSearchResult;
 import com.gip.xyna.xprc.xsched.selectvetos.VetoSelectImpl;
 import com.gip.xyna.xprc.xsched.vetos.VM_Cache.VetoFilter;
 import com.gip.xyna.xprc.xsched.vetos.cache.AllocationRequest;
-import com.gip.xyna.xprc.xsched.vetos.cache.AllocationRequest.PendingType;
 import com.gip.xyna.xprc.xsched.vetos.cache.AllocationRequestList;
 import com.gip.xyna.xprc.xsched.vetos.cache.AllocationRequestList.ListAllocationMode;
 import com.gip.xyna.xprc.xsched.vetos.cache.VCP_Abstract;
@@ -70,7 +69,19 @@ public class VM_SeparateThread implements VetoManagementInterface {
     return allocateVetos(orderInformation, vetos, Collections.emptyList(), urgency);
   }
 
-  public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos, long urgency) {
+  public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> exclusiveVetos,
+                                            List<String> sharedVetos, long urgency) {
+    try {
+      return allocateVetosImpl(orderInformation, exclusiveVetos, sharedVetos, urgency);
+    } catch (Exception e) {
+      logger.error("Error trying to allocate vetos. ", e);
+      return VetoAllocationResult.FAILED;
+    }
+  }
+  
+  
+  private VetoAllocationResult allocateVetosImpl(OrderInformation orderInformation, List<String> exclusiveVetos,
+                                                 List<String> sharedVetos, long urgency) {
     VetoAllocationResult var = vetoCache.checkAllocation();
     if( var != null ) {
       return var;
@@ -83,11 +94,6 @@ public class VM_SeparateThread implements VetoManagementInterface {
     //1) Scheitert Allocation an bereits vergebenen Vetos?
     AllocationRequestList reqList = new AllocationRequestList(exclusiveVetos, sharedVetos, vetoCache.getVetoCacheProcessor(),
                                                               orderInformation);
-    
-    //List<VetoCacheEntry> vces = new ArrayList<VetoCacheEntry>(exclusiveVetos.size());
-    //for( String vetoName : exclusiveVetos ) {
-    
-    
     VetoAllocationResult returnValue = null;
     ListAllocationMode allocationMode = ListAllocationMode.NONE;
     for (AllocationRequest req : reqList.getList()) {
@@ -169,16 +175,31 @@ public class VM_SeparateThread implements VetoManagementInterface {
    }
 
    public void undoAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos) {
-     logger.trace(" UndoAllocation ");
-     List<String> allocated = allocatedVetos.remove(orderInformation.getOrderId());
-     if( allocated != null ) {
-       for( String v : allocated ) {
-         vetoCache.get(v).undoAllocation(orderInformation);
+     try {
+       logger.trace(" UndoAllocation ");
+       List<String> allocated = allocatedVetos.remove(orderInformation.getOrderId());
+       if( allocated != null ) {
+         List<String> allocatedNew = new ArrayList<>();
+         for( String v : allocated ) {
+           VetoCacheEntry vce = vetoCache.get(v);
+           if (vce == null) { continue; }
+           boolean canBeRemoved = vce.undoAllocation(orderInformation);
+           if (!canBeRemoved) {
+             allocatedNew.add(v);
+           }
+         }
+         if (!allocatedNew.isEmpty()) {
+           allocatedVetos.put(orderInformation.getOrderId(), allocatedNew);
+           // finalizeAllocation will not be called by scheduler, but changes need to be persisted
+           finalizeAllocationImpl(orderInformation, allocatedNew);
+         }
        }
-     }
-     if( logger.isTraceEnabled() ) {
-       logger.trace("VetoCache after undoAlloc " + vetoCache.showVetoCache() );
-     }
+       if( logger.isTraceEnabled() ) {
+         logger.trace("VetoCache after undoAlloc " + vetoCache.showVetoCache() );
+       }
+    } catch (Exception e) {
+      logger.error("Error trying to undo veto allocation. ", e);
+    }
    }
 
    @Deprecated
@@ -187,41 +208,69 @@ public class VM_SeparateThread implements VetoManagementInterface {
    }
 
    public void finalizeAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos) {
-     for( String v : exclusiveVetos ) {
-       vetoCache.finalizeAllocation(v);
+     try {
+       List<String> vetos = new ArrayList<>();
+       if (exclusiveVetos != null) {
+         vetos.addAll(exclusiveVetos);
+       }
+       if (sharedVetos != null) {
+         vetos.addAll(sharedVetos);
+       }
+       finalizeAllocationImpl(orderInformation, vetos);
+       if( logger.isTraceEnabled() ) {
+         logger.trace("VetoCache after finalizeAllocation " + vetoCache.showVetoCache() );
+       }
+     } catch (Exception e) {
+       logger.error("Error in finalizeAllocation.", e);
+     }
+   }
+   
+   
+   private void finalizeAllocationImpl(OrderInformation orderInformation, List<String> vetos) {
+     if (vetos != null) {
+       for (String v : vetos) {
+         vetoCache.finalizeAllocation(v);
+       }
      }
      vetoCache.notifyProcessor();
-     if( logger.isTraceEnabled() ) {
-       logger.trace("VetoCache after finalizeAllocation " + vetoCache.showVetoCache() );
-     }
    }
   
 
   public boolean freeVetos(OrderInformation orderInformation) {
-    if( logger.isDebugEnabled() ) {
-      logger.debug("freeVetos "+ orderInformation );
+    try {
+      if( logger.isDebugEnabled() ) {
+        logger.debug("freeVetos "+ orderInformation );
+      }
+      long orderId = orderInformation.getOrderId();
+      List<String> vetos = allocatedVetos.remove(orderId);
+      if( vetos != null ) {
+        return freeVetos(vetos, orderId);
+      }
+      return false;
+    } catch (Exception e) {
+      logger.error("Error trying to free vetos. ", e);
+      return false;
     }
-    long orderId = orderInformation.getOrderId();
-    List<String> vetos = allocatedVetos.remove(orderId);
-    if( vetos != null ) {
-      return freeVetos(vetos, orderId);
-    }
-    return false;
   }
   
   public boolean freeVetosForced(long orderId) {
-    if( logger.isDebugEnabled() ) {
-      logger.debug("freeVetosForced "+ orderId );
+    try {
+      if( logger.isDebugEnabled() ) {
+        logger.debug("freeVetosForced "+ orderId );
+      }
+      List<String> vetos = allocatedVetos.remove(orderId);
+      //if( vetos != null ) { 
+      //  return freeVetos(vetos, orderId);
+      //}
+      //freeVetosForced wird nur selten (bei killprocess) aufgerufen, 
+      //deswegen teure Suche immer durchführen.
+      List<VetoInformation> vis = vetoCache.listVetosUsedByOrderId(orderId);
+      vetos = CollectionUtils.transform(vis, VetoInformation.extractName );
+      return freeVetos(vetos, orderId);
+    } catch (Exception e) {
+      logger.error("Error trying to free vetos. ", e);
+      return false;
     }
-    List<String> vetos = allocatedVetos.remove(orderId);
-    //if( vetos != null ) { 
-    //  return freeVetos(vetos, orderId);
-    //}
-    //freeVetosForced wird nur selten (bei killprocess) aufgerufen, 
-    //deswegen teure Suche immer durchführen.
-    List<VetoInformation> vis = vetoCache.listVetosUsedByOrderId(orderId);
-    vetos = CollectionUtils.transform(vis, VetoInformation.extractName );
-    return freeVetos(vetos, orderId);
   }
   
   private boolean freeVetos(List<String> vetos, long orderId) {
