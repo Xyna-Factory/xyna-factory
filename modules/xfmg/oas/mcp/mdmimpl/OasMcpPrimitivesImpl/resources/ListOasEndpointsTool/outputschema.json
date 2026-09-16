@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "endpointCount": {
+      "type": "integer"
+    },
+    "endpoints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "generatedRtc": {
+            "type": "string"
+          },
+          "implementationRtc": {
+            "type": "string"
+          },
+          "apiDatatype": {
+            "type": "string"
+          },
+          "implementationDatatype": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "implementationRtcRevision": {
+            "type": "integer"
+          },
+          "generatedRtcRevision": {
+            "type": "integer"
+          },
+          "implementationRtcIsWorkspace": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "generatedRtc",
+          "implementationRtc",
+          "apiDatatype",
+          "implementationDatatype",
+          "status",
+          "implementationRtcRevision",
+          "generatedRtcRevision",
+          "implementationRtcIsWorkspace"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "endpointCount",
+    "applications"
+  ],
+  "additionalProperties": false
+}

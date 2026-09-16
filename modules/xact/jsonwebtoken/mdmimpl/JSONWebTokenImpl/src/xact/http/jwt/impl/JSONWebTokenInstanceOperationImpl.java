@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 package xact.http.jwt.impl;
 
 
+import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -34,6 +35,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gip.xyna.xprc.xsched.xynaobjects.AbsoluteDate;
 import com.gip.xyna.xprc.xsched.xynaobjects.DateFormat;
@@ -43,7 +45,6 @@ import base.date.CustomDateFormat;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwsHeader;
-import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.JwtBuilder.BuilderHeader;
 import io.jsonwebtoken.Jwts;
@@ -63,7 +64,8 @@ public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy im
 
   private static Logger _logger = Logger.getLogger(JSONWebTokenInstanceOperationImpl.class);
   private DateFormat _defaultDateFormat = new CustomDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-  
+  private static final TypeReference<Map<String, Object>> MAP_TYPE = new TypeReference<Map<String, Object>>() {};
+
   private static final long serialVersionUID = 1L;
 
   public JSONWebTokenInstanceOperationImpl(JSONWebToken instanceVar) {
@@ -109,46 +111,34 @@ public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy im
   @Override
   public JSONWebToken parseTokenUnsecured() throws JWTException {
     String token = this.getInstanceVar().getToken();
-    UnsecureJWTParser jwt = new UnsecureJWTParser().parseToken(token);
-    JWTClaims claims = extractClaimsFromJwsUnsecured(token);
+    ObjectMapper objectMapper = new ObjectMapper();
+
+    String[] parts = token.split("\\.", -1);
+    Map<String, Object> headerMap = parseJsonSegment(parts[0], objectMapper);
+    Map<String, Object> claimsMap = parseJsonSegment(parts[1], objectMapper);
+
+    io.jsonwebtoken.Header header = Jwts.header().add(headerMap).build();
+    Claims claims = Jwts.claims().add(claimsMap).build();
+
     return new JSONWebToken.Builder()
         .token(token)
-        .jWTHeader(toHeader(jwt.getHeader()))
-        .jWTClaims(claims)
+        .jWTHeader(toHeader(header))
+        .jWTClaims(toClaims(claims))
         .instance();
   }
-  
-   
-  // The JJWT library does not allow to parse a Jws without the verification key;
-  // but since the Jws-token is not actually encrypted, the content can be accessed with a workaround.
-  // The incoming Jws-token is a string in the following format:
-  // header + "." + claims + "." + signature
-  // where header and claims are base64-encoded json.
-  // (see https://github.com/jwtk/jjwt?tab=readme-ov-file#jws-example)
-  // The workaround is implemented in this way:
-  // Extract the claims-substring from the token;
-  // then extract the header-substring from a new-built Jwt-token without signature;
-  // then concat those two strings, separated by ".";
-  // this creates a new token without signature that contains the original claims and
-  // can now be parsed by the JJWT library
-  private JWTClaims extractClaimsFromJwsUnsecured(String token) {
+
+
+  private static Map<String, Object> parseJsonSegment(String segment, ObjectMapper objectMapper) {
     try {
-      String[] parts = token.split("\\.");
-      String compactClaims = parts[1];
-      JwtBuilder builder = Jwts.builder().subject("tmp");
-      String token2 = builder.compact();
-      String unsignedHeader = token2.split("\\.")[0];
-      Jwt<io.jsonwebtoken.Header, Claims> jwt = Jwts.parser().unsecured().build().parseUnsecuredClaims(token2);
-      String newToken = unsignedHeader + "." + compactClaims + ".";
-      jwt = Jwts.parser().unsecured().build().parseUnsecuredClaims(newToken);
-      Claims claims = jwt.getPayload();
-      return toClaims(claims);
+      byte[] decoded = Base64.getUrlDecoder().decode(segment);
+      String json = new String(decoded, StandardCharsets.UTF_8);
+      return objectMapper.readValue(json, MAP_TYPE);
     } catch (Exception e) {
-      return null;
+      throw new IllegalArgumentException("Invalid JWT segment JSON.", e);
     }
   }
-  
-  
+
+
   @Override
   public JSONWebToken validateAndParseJWSToken(Key key) throws JWTException {
     String token = this.getInstanceVar().getToken();
