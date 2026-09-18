@@ -77,9 +77,9 @@ public class VM_Cache implements VetoManagementInterface {
     // This can happen if the order was resumed from backup, it will always try to reallocate as it could have released
     // but would no be continued from a previous checkpoint
     return veto.getName().equals(existingVeto.getName()) && veto.getBinding() == existingVeto.getBinding() && 
-          ((existingVeto.isAllocatedExclusive() && veto.isAllocatedExclusive() && existingVeto.getUsingOrderId() == veto.getUsingOrderId()) ||
+          ((existingVeto.isAllocatedExclusive() && veto.isAllocatedExclusive() && existingVeto.getUsingOrderId().equals(veto.getUsingOrderId())) ||
            (existingVeto.isAllocatedShared() && veto.isAllocatedShared() && existingVeto.getSharedOrderIds().containsAll(veto.getSharedOrderIds())) ||
-           (existingVeto.isPendingExclusiveAllocation() && veto.isPendingExclusiveAllocation() && existingVeto.getPendingExclusiveOrderId() == veto.getPendingExclusiveOrderId()));
+           (existingVeto.isPendingExclusiveAllocation() && veto.isPendingExclusiveAllocation() && existingVeto.getPendingExclusiveOrderId().equals(veto.getPendingExclusiveOrderId())));
   }
 
   
@@ -98,7 +98,7 @@ public class VM_Cache implements VetoManagementInterface {
     for(String v : sharedVetos) {
       vetos.add(VetoInformation.createShared(v, new ArrayList<>(List.of(usingOrder.getOrderId())), System.currentTimeMillis(), ownBinding));
     }
-    
+
     synchronized (vetoStateLock) {
       for(VetoInformation veto : vetos) {
         VetoInformation existingVeto = vetoCache.get(veto.getName());
@@ -129,11 +129,11 @@ public class VM_Cache implements VetoManagementInterface {
                 existingVeto.getBinding()
               ));
               allocatedVetos.computeIfAbsent(usingOrder.getOrderId(), k -> new ArrayList<>()).add(veto.getName());
-              return new VetoAllocationResult(existingVeto);
+              return new VetoAllocationResult(existingVeto, true);
             }
           } else if (
             existingVeto.isPendingExclusiveAllocation() && veto.isAllocatedExclusive() &&
-            existingVeto.getPendingExclusiveOrderId() == veto.getUsingOrderId() && existingVeto.getSharedOrderIds().isEmpty()
+            existingVeto.getPendingExclusiveOrderId().equals(veto.getUsingOrderId()) && existingVeto.getSharedOrderIds().isEmpty()
           ) {
               // pendingExclusive => exclusive:
               // the order that has the pending exclusive allocation now wants to allocate it exclusively and no shared allocations exist anymore
