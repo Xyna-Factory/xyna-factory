@@ -33,6 +33,9 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -127,6 +130,8 @@ public class RepositoryInteraction {
 
   private static Logger logger = CentralFactoryLogging.getLogger(RepositoryInteraction.class);
 
+  private static Map<String, ReentrantLock> repoLocks = new ConcurrentHashMap<>();
+
   private DeploymentItemStateManagement dism;
   private RepositoryCredentialsManagement credMgmt;
 
@@ -172,6 +177,20 @@ public class RepositoryInteraction {
 
 
   public List<? extends Text> getFileContentInCurrentOriginBranch(String repository, String file) throws Exception {
+    ReentrantLock lock = getLock(repository);
+    if (lock.tryLock(5, TimeUnit.SECONDS)) {
+      try {
+        return getFileContentInCurrentOriginBranchLocked(repository, file);
+      } finally {
+        lock.unlock();
+      }
+    } else {
+      throw new RuntimeException("Could not aquire lock for " + repository);
+    }
+  }
+
+
+  private List<? extends Text> getFileContentInCurrentOriginBranchLocked(String repository, String file) throws Exception {
     List<Text> ret = new ArrayList<>();
     Repository repo = loadRepo(repository);
     try (Git git = new Git(repo)) {
@@ -209,7 +228,22 @@ public class RepositoryInteraction {
     return ret;
   }
 
+
   public BranchData listBranches(String repository) throws Exception {
+    ReentrantLock lock = getLock(repository);
+    if (lock.tryLock(5, TimeUnit.SECONDS)) {
+      try {
+        return listBranchesLocked(repository);
+      } finally {
+        lock.unlock();
+      }
+    } else {
+      throw new RuntimeException("Could not aquire lock for " + repository);
+    }
+  }
+
+
+  private BranchData listBranchesLocked(String repository) throws Exception {
     BranchData.Builder result = new BranchData.Builder();
     List<Branch> resultBranches = new ArrayList<>();
     Repository repo = loadRepo(repository);
@@ -241,6 +275,20 @@ public class RepositoryInteraction {
 
 
   public List<Commit> listCommits(String repository, String branch, int length) throws Exception {
+    ReentrantLock lock = getLock(repository);
+    if (lock.tryLock(5, TimeUnit.SECONDS)) {
+      try {
+        return listCommitslocked(repository, branch, length);
+      } finally {
+        lock.unlock();
+      }
+    } else {
+      throw new RuntimeException("Could not aquire lock for " + repository);
+    }
+  }
+
+
+  private List<Commit> listCommitslocked(String repository, String branch, int length) throws Exception {
     List<Commit> result = new ArrayList<>();
     Repository repo = loadRepo(repository);
     try (Git git = new Git(repo)) {
@@ -260,6 +308,20 @@ public class RepositoryInteraction {
 
 
   public ChangeSet loadChanges(String repository) throws Exception {
+    ReentrantLock lock = getLock(repository);
+    if (lock.tryLock(5, TimeUnit.SECONDS)) {
+      try {
+        return loadChangesLocked(repository);
+      } finally {
+        lock.unlock();
+      }
+    } else {
+      throw new RuntimeException("Could not aquire lock for " + repository);
+    }
+  }
+
+
+  private ChangeSet loadChangesLocked(String repository) throws Exception {
     if (repository == null) { throw new IllegalArgumentException("Parameter repository is empty."); }
     Repository repo = loadRepo(repository);
     return new LoadChangesTools().loadChanges(repository, repo);
@@ -267,6 +329,20 @@ public class RepositoryInteraction {
 
 
   public void push(String repository, String message, boolean dryrun, String user, List<String> filePatterns) throws Exception {
+    ReentrantLock lock = getLock(repository);
+    if (lock.tryLock(5, TimeUnit.SECONDS)) {
+      try {
+        pushLocked(repository, message, dryrun, user, filePatterns);
+      } finally {
+        lock.unlock();
+      }
+    } else {
+      throw new RuntimeException("Could not aquire lock for " + repository);
+    }
+  }
+
+
+  private void pushLocked(String repository, String message, boolean dryrun, String user, List<String> filePatterns) throws Exception {
     if (message == null) { throw new IllegalArgumentException("Commit message is empty"); }
     Repository repo = loadRepo(repository);
     GitDataContainer container;
@@ -286,7 +362,37 @@ public class RepositoryInteraction {
   }
 
 
+  private ReentrantLock getLock(String repository) {
+    ReentrantLock lock = repoLocks.get(repository);
+    if (lock == null) {
+      synchronized (repoLocks) {
+        lock = repoLocks.get(repository);
+        if (lock == null) {
+          repoLocks.put(repository, new ReentrantLock());
+          lock = repoLocks.get(repository);
+        }
+      }
+    }
+
+    return lock;
+  }
+
+
   public void checkout(String branch, String repository) throws Exception {
+    ReentrantLock lock = getLock(repository);
+    if (lock.tryLock(5, TimeUnit.SECONDS)) {
+      try {
+        checkoutLocked(branch, repository);
+      } finally {
+        lock.unlock();
+      }
+    } else {
+      throw new RuntimeException("Could not aquire lock for " + repository);
+    }
+  }
+
+
+  private void checkoutLocked(String branch, String repository) throws Exception {
     Repository repo = loadRepo(repository);
 
     try (Git git = new Git(repo)) {
@@ -403,7 +509,22 @@ public class RepositoryInteraction {
     return  "unknown";
   }
 
+
   public PullOutput pull(String repository, boolean dryrun, String user) throws Exception {
+    ReentrantLock lock = getLock(repository);
+    if (lock.tryLock(5, TimeUnit.SECONDS)) {
+      try {
+        return pullLocked(repository, dryrun, user);
+      } finally {
+        lock.unlock();
+      }
+    } else {
+      throw new RuntimeException("Could not aquire lock for " + repository);
+    }
+  }
+
+
+  private PullOutput pullLocked(String repository, boolean dryrun, String user) throws Exception {
     Repository repo = loadRepo(repository);
     GitDataContainer container = null;
 
@@ -1328,6 +1449,20 @@ public class RepositoryInteraction {
 
 
   public RepositoryStatus getStatus(String repository) throws Exception {
+    ReentrantLock lock = getLock(repository);
+    if (lock.tryLock(5, TimeUnit.SECONDS)) {
+      try {
+        return getStatusLocked(repository);
+      } finally {
+        lock.unlock();
+      }
+    } else {
+      throw new RuntimeException("Could not aquire lock for " + repository);
+    }
+  }
+
+
+  private RepositoryStatus getStatusLocked(String repository) throws Exception {
     RepositoryStatus.Builder builder = new RepositoryStatus.Builder();
     Repository repo = loadRepo(repository);
 
