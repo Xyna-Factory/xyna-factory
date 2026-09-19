@@ -24,7 +24,7 @@ public class PackingConstants {
   public static class Assign {
     public static final String P_SOURCE = "p_source";
     public static final String P_TARGET = "p_target";
-    public static final String P_LINKTYPE = "p_linktype";
+    public static final String P_LINKTYPE_SOURCE = "p_linktype_source";
   }
   
   public static class DataOutput {
