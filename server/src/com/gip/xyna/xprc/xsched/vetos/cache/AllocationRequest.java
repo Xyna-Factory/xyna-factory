@@ -43,7 +43,6 @@ public class AllocationRequest {
   private VetoAllocationResult result;
   private VetoCacheEntry cacheEntry;
   private PendingType pendingType = PendingType.NON_PENDING;
-  //private boolean requiresNotifyProcessor = false;
   private AllocationMode allocationMode = AllocationMode.UNKNOWN;
   
   
@@ -89,16 +88,6 @@ public class AllocationRequest {
     this.pendingType = pendingType;
   }
 
-  /*
-  public boolean isRequiresNotifyProcessor() {
-    return requiresNotifyProcessor;
-  }
-
-  
-  public void setRequiresNotifyProcessor(boolean requiresNotifyProcessor) {
-    this.requiresNotifyProcessor = requiresNotifyProcessor;
-  }
-*/
   
   public String getVetoName() {
     return vetoName;
