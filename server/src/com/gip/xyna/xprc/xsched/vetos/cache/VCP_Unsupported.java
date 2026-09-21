@@ -69,4 +69,9 @@ public class VCP_Unsupported extends VCP_Abstract {
     return null;
   }
 
+  @Override
+  public boolean allowSharedVetos() {
+    return false;
+  }
+  
 }

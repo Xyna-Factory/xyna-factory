@@ -456,4 +456,9 @@ public class VCP_Clustered extends VCP_Abstract {
     return veto.compareAndSetState(expect, update);
   }
 
+  @Override
+  public boolean allowSharedVetos() {
+    return false;
+  }
+  
 }
