@@ -18,32 +18,68 @@
 --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Member Substitution" TypeName="MemberSubstitution" TypePath="xfmg.xfctrl.datamodel.json.parameter" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
-    <Documentation>The json key specified by "pathToMemberInDataType" will be substituted by "jsonName" (and vice versa when parsing).
+    <Documentation>The substitution process has to directions:
+1. Xyna data type writing to JSON (data type -&gt; JSON)
+2. JSON parsed to Xyna Data Type (JSON -&gt; data type)
+
+Depending on these directions, the following member variables have to be set:
+1. Data type -&gt; JSON
+The json key specified by "pathToMemberInDataType" in the data type will be substituted by "jsonName" in the JSON document.
 
 Example:
 - pathToMemberInDataType=info.a
 - jsonName=@a!
 
 =&gt; transforms
-
-"info" : {"a" : "1", "b" : 2}
+info
+   a: 1
+   b: 2
 
 into
+"info" : {"@a!" : "1", "b" : 2}
 
-"info" : {"@a!" : "1", "b" : 2}</Documentation>
+2. JSON -&gt; data type
+The json key specified by "pathToMemberInDataType" in the JSON document will be substituted by "jsonName" in the data type.
+
+Example:
+- pathToMemberInDataType=@a!
+- jsonName=info.a
+
+=&gt; transforms
+"info" : {"@a!" : "1", "b" : 2}
+
+into
+info
+   a: 1
+   b: 2
+
+Note:
+If a complex substructure has to be substituted, where the parent was already substituded as well, the parent paths or JSON names have to be specified with the new replacement. This is needed regardless of the direction.</Documentation>
   </Meta>
   <Data Label="Path to Member in Data Type" VariableName="pathToMemberInDataType">
     <Meta>
       <Type>String</Type>
-      <Documentation>Path given by member var names (not labels!), separated by dots. If member var name is a list, then append "[]", except if path ends with the list.
+      <Documentation>Case 1 - data type -&gt; JSON:
+Path given by member var names (not labels!), separated by dots. If member var name is a list, then append "[]", except if path ends with the list.
 
 Example:
-router.interfaces vs router.interfaces[].supportedtypes</Documentation>
+router.interfaces vs router.interfaces[].supportedtypes
+
+Case 2 - JSON -&gt; data type:
+JSON name in the document, which has to be substituted.</Documentation>
     </Meta>
   </Data>
   <Data Label="Json Name" VariableName="jsonName">
     <Meta>
       <Type>String</Type>
+      <Documentation>Case 1 - data type -&gt; JSON:
+JSON name in the document, which has to be substituted.
+
+Case 2 - JSON -&gt; data type:
+Path given by member var names (not labels!), separated by dots. If member var name is a list, then append "[]", except if path ends with the list.
+
+Example:
+router.interfaces vs router.interfaces[].supportedtypes</Documentation>
     </Meta>
   </Data>
 </DataType>
