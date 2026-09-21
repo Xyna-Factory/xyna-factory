@@ -18,6 +18,7 @@
 package xmcp.gitintegration.impl.references.methods.objecttypes;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -42,7 +43,7 @@ public class TriggerReferenceMethods implements ReferenceObjectTypeMethods {
 
     for (File candidateFile : candidateFiles) {
       try {
-        if (candidateFile.getParentFile().getAbsolutePath().equals(targetDir.getAbsolutePath())) {
+        if (Files.isSameFile(candidateFile.getParentFile().toPath(), targetDir.toPath())) {
           if (logger.isDebugEnabled()) {
             logger.debug("Skipping copy of " + candidateFile.getName() + " for trigger " + objectName + " in revision " + revision
                 + ", because it is already at the destination");
