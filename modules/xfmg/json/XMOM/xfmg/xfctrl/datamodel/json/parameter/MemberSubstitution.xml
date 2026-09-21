@@ -18,7 +18,7 @@
 --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Member Substitution" TypeName="MemberSubstitution" TypePath="xfmg.xfctrl.datamodel.json.parameter" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
-    <Documentation>The substitution process has to directions:
+    <Documentation>The substitution process has two directions:
 1. Xyna data type writing to JSON (data type -&gt; JSON)
 2. JSON parsed to Xyna Data Type (JSON -&gt; data type)
 
@@ -54,7 +54,7 @@ info
    b: 2
 
 Note:
-If a complex substructure has to be substituted, where the parent was already substituded as well, the parent paths or JSON names have to be specified with the new replacement. This is needed regardless of the direction.</Documentation>
+If a complex substructure has to be substituted, where the parent was already substituted as well, the parent paths or JSON names have to be specified with the new replacement. This is needed regardless of the direction.</Documentation>
   </Meta>
   <Data Label="Path to Member in Data Type" VariableName="pathToMemberInDataType">
     <Meta>
