@@ -17,15 +17,25 @@
  */
 package com.gip.xyna.xprc.xsched.vetos.cache;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.concurrent.AtomicEnum;
 import com.gip.xyna.xprc.xsched.scheduling.OrderInformation;
 import com.gip.xyna.xprc.xsched.vetos.VetoInformation;
+import com.gip.xyna.xprc.xsched.vetos.cache.AllocationRequest.PendingType;
+import com.gip.xyna.xprc.xsched.vetos.cache.AllocationRequest.VetoType;
 import com.gip.xyna.xprc.xsched.vetos.cache.VetoCache.State;
 
 public class VetoCacheEntry {
+  
+  public static enum RemovalResult {
+    IGNORE, EMPTY, STILL_USED
+  }
   
   private static final Logger logger = CentralFactoryLogging.getLogger(VetoCacheEntry.class);
   
@@ -132,22 +142,17 @@ public class VetoCacheEntry {
    }
   }
   
-  public boolean checkAllocation(OrderInformation orderInformation, long urgency) {
+
+  public boolean checkAllocation(AllocationRequest req, long urgency) {
     //gerufen von SchedulerThread
     switch( state.get() ) {
     case Scheduling:
-    case Used: 
+    case Used:
     case Scheduled:
-      //sollte nicht vorkommen, zur Selbstheilung aber erlaubt
-      if( logger.isTraceEnabled() ) {
-        logger.trace( "Veto " + name +" is already assigned to "+orderInformation +" in state "+state.get());
+      if (req.getVetoType() == VetoType.SHARED) {
+        return checkAllocationForShared(req);
       }
-      VetoInformation vi = vetoInformation;
-      if( vi != null ) {
-        return vi.getUsingOrderId().equals(orderInformation.getOrderId());
-      } else {
-        return false;
-      }
+      return checkAllocationForExclusive(req);
     case Usable:
       this.keepUsable = true;
       return true;
@@ -155,7 +160,52 @@ public class VetoCacheEntry {
       return false;
     }
   }
+  
+  
+  private boolean checkAllocationForExclusive(AllocationRequest req) {
+    VetoInformation vi = vetoInformation;
+    if (vi == null) {
+      // Unexpected for states Scheduling, Used or Scheduled
+      return false;
+    }
+    if (vi.getSharedOrderIds() != null) {
+      if (!vi.getSharedOrderIds().isEmpty()) {
+        if (vi.getPendingExclusiveOrderId() == null) {
+          req.setPendingType(PendingType.PENDING);
+        }
+        return false;
+      }
+    }
+    if (vi.getUsingOrderId() == null) {
+      if (vi.getPendingExclusiveOrderId() != null) {
+        return Objects.equals(vi.getPendingExclusiveOrderId(), req.getOrderInformation().getOrderId());
+      }
+      return true;
+    }
+    return Objects.equals(vi.getUsingOrderId(), req.getOrderInformation().getOrderId());
+  }
 
+  
+  private boolean checkAllocationForShared(AllocationRequest req) {
+    VetoInformation vi = vetoInformation;
+    if (vi == null) {
+      // Unexpected for states Scheduling, Used or Scheduled
+      return false;
+    }
+    if (vi.getUsingOrderId() != null) {
+      return false;
+    }
+    if (vi.getPendingExclusiveOrderId() != null) {
+      return false;
+    }
+    if (vi.getSharedOrderIds() == null) {
+      // Unexpected, wait for veto processor action
+      return false;
+    }
+    return true;
+  }
+  
+  
   public boolean allocate(VetoInformation vetoInformation, long urgency) {
     //gerufen vom SchedulerThread
     if( compareAndSetState(State.Usable, State.Scheduling )) {
@@ -163,32 +213,47 @@ public class VetoCacheEntry {
       removeWaiting(urgency);
       this.urgency = urgency;
       return true;
+    } else if (state.is(State.Scheduling)) {
+      if (this.vetoInformation == null) {
+        return false;
+      }
+      this.vetoInformation = vetoInformation;
+      return true;
     } else if ( state.isIn(State.Scheduled, State.Used) ) {
       if( this.vetoInformation == null ) {
         return false; //darf nicht vorkommen
-      } else {
-        if( this.vetoInformation.getUsingOrderId().equals(vetoInformation.getUsingOrderId() ) ) {
-          //Auftrag hat Veto bereits belegt, dies ist erlaubt
-          if(  this.vetoInformation.getBinding() != vetoInformation.getBinding() ) {
-            this.vetoInformation = vetoInformation; //korrigiert Binding (nach Übernahme vom andern Knoten, bei Restart)
-            compareAndSetState(State.Used, State.Scheduled); //nochmal speichern, da Binding geändert
-          }
-          return true;
-        }
       }
+      if (this.vetoInformation.isVetoIdContentEqual(vetoInformation)) {
+        //Auftrag hat Veto bereits belegt, dies ist erlaubt
+        if(  this.vetoInformation.getBinding() != vetoInformation.getBinding() ) {
+          this.vetoInformation = vetoInformation; //korrigiert Binding (nach Übernahme vom andern Knoten, bei Restart)
+          compareAndSetState(State.Used, State.Scheduled); //nochmal speichern, da Binding geändert
+        }
+        return true;
+      }
+      this.vetoInformation = vetoInformation;
+      state.set(State.Scheduling);
     }
     return false; //kann eigentlich nicht vorkommen, da nur Scheduler aus Usable entfernen darf
   }
   
-  public void undoAllocation(OrderInformation orderInformation) {
+  public boolean undoAllocation(OrderInformation orderInformation) {
     //vom Scheduler-Thread aufgerufen
     VetoInformation vi = vetoInformation;
     if( vi == null ) {
-      return; //kann nicht allokiert sein
+      return true; //kann nicht allokiert sein
     }
-    if( vi.getUsingOrderId().equals(orderInformation.getOrderId() ) ) {
-      compareAndSetState(State.Scheduling, State.Usable);
+    if (vi.isPendingExclusiveAllocation() && Objects.equals(orderInformation.getOrderId(), vi.getPendingExclusiveOrderId())) {
+      // undoAllocation needs to keep pending vetos
+      return false;
     }
+    if (vi.isUsedBy(orderInformation.getOrderId())) {
+      RemovalResult result = freeOrderId(orderInformation.getOrderId());
+      if (result == RemovalResult.EMPTY) {
+        compareAndSetState(State.Scheduling, State.Usable);
+      }
+    }
+    return true;
   }
   
   public void updateWaiting(long urgency, long currentSchedulingRun) {
@@ -223,8 +288,51 @@ public class VetoCacheEntry {
   public boolean isUsedBy(long orderId) {
     //wird von beliebigen Threads verwendet!
     VetoInformation vi = vetoInformation;
-    return  vi != null && vi.getUsingOrderId() == orderId;
+    if (vi == null) { return false; }
+    return vi.isUsedBy(orderId);
   }
+  
+  
+  public RemovalResult freeOrderId(long orderIdIn) {
+    if (!state.isIn(State.Scheduling, State.Scheduled, State.Used)) {
+      return RemovalResult.IGNORE;
+    }
+    if (getVetoInformation() == null) {
+      return RemovalResult.IGNORE;
+    }
+    boolean toChange = false;
+    Long orderId = Long.valueOf(orderIdIn);
+    VetoInformation vi = getVetoInformation();
+    OrderInformation usingOrder = vi.getUsingOrder();
+    Long pending = vi.getPendingExclusiveOrderId();
+    List<Long> sharedIds = vi.getSharedOrderIds();
+    if (Objects.equals(orderId, vi.getUsingOrderId())) {
+      usingOrder = null;
+      toChange = true;
+    }
+    if (Objects.equals(orderId, pending)) {
+      pending = null;
+      toChange = true;
+    }
+    if (sharedIds != null) {
+      if (sharedIds.contains(orderId)) {
+        sharedIds = new ArrayList<>(sharedIds);
+        sharedIds.remove(orderId);
+        toChange = true;
+      }
+    }
+    if (toChange) {
+      VetoInformation viNew = new VetoInformation(vi.getName(), usingOrder, sharedIds, pending, vi.getDocumentation(),
+                                                System.currentTimeMillis(), vi.getBinding());
+      setVetoInformation(viNew);
+      vi = viNew;
+    }
+    if (vi.isAllocatedExclusive() || vi.isAllocatedShared() || vi.isPendingExclusiveAllocation()) {
+      return RemovalResult.STILL_USED;
+    }
+    return RemovalResult.EMPTY;
+  }
+  
   
   public boolean free() {
     //wird von beliebigen Threads verwendet!
@@ -250,6 +358,7 @@ public class VetoCacheEntry {
     if( compareAndSetState(State.Scheduled, State.Free) || 
         compareAndSetState(State.Used, State.Free) ) {
       this.urgency = Long.MIN_VALUE;
+      setVetoInformation(null);
       return true;
     } else {
       //ungültiger Aufruf: Veto kann nicht freigegeben werden

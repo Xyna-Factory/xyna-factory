@@ -104,4 +104,9 @@ public class VCP_Local extends VCP_Abstract {
     }
   }
 
+  @Override
+  public boolean allowSharedVetos() {
+    return true;
+  }
+  
 }
