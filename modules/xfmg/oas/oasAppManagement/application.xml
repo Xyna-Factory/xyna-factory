@@ -34,7 +34,7 @@
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>Json</ApplicationName>
-        <VersionName>1.5.4</VersionName>
+        <VersionName>1.5.5</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>XynaPropertyMgmt</ApplicationName>
