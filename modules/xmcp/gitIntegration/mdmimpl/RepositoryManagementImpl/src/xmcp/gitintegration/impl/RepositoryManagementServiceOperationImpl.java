@@ -89,7 +89,7 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
   public static final XynaPropertyString FETCH_SUBMODULE_POLICY = 
       new XynaPropertyString("xmcp.gitintegration.fetch_submodule_policy", "NO")
       .setDefaultDocumentation(DocumentationLanguage.EN, "How to handle submodules during fetch: YES, ON_DEMAND, NO")
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Wie soll mit submodules während des fatch verfahren werden: YES; ON_DEMAND, NO");
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Wie soll mit submodules während des fetch verfahren werden: YES; ON_DEMAND, NO");
 
   public void onDeployment() throws XynaException {
     RepositoryManagementImpl.init();
