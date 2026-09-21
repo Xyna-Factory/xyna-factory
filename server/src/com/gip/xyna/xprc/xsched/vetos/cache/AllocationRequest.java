@@ -32,10 +32,6 @@ public class AllocationRequest {
     PENDING, NON_PENDING
   }
   
-  public static enum AllocationMode {
-    CREATE, UPDATE, KEEP, UNKNOWN
-  }
-  
   
   private final String vetoName;
   private final VetoType vetoType;
@@ -43,7 +39,6 @@ public class AllocationRequest {
   private VetoAllocationResult result;
   private VetoCacheEntry cacheEntry;
   private PendingType pendingType = PendingType.NON_PENDING;
-  private AllocationMode allocationMode = AllocationMode.UNKNOWN;
   
   
   public AllocationRequest(String vetoNameIn, VetoType vetoTypeIn, OrderInformation orderInformationIn) {
@@ -96,16 +91,6 @@ public class AllocationRequest {
   
   public VetoType getVetoType() {
     return vetoType;
-  }
-
-
-  public AllocationMode getAllocationMode() {
-    return allocationMode;
-  }
-
-
-  public void setAllocationMode(AllocationMode allocationMode) {
-    this.allocationMode = allocationMode;
   }
 
 

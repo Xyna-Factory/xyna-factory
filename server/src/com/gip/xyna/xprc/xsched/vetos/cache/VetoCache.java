@@ -185,6 +185,7 @@ public class VetoCache {
     //vom Scheduler-Thread aufgerufen
     if (req.getCacheEntry() == null) {
       // should not be reachable
+      logger.warn("Unexpected state in VetoCache.checkAllocation()");
       req.setResult(VetoAllocationResult.FAILED);
       return;
     }
@@ -217,19 +218,23 @@ public class VetoCache {
     VetoCacheEntry veto = req.getCacheEntry();
     if (veto == null) {
       // unexpected state
+      logger.warn("Unexpected state in VetoCache.allocate()");
       return;
     }
     if (!Objects.equals(req.getVetoName(), veto.getName())) {
       // inconsistent state
+      logger.warn("Inconsistent state in VetoCache.allocate()");
       return;
     }
     if (req.getPendingType() == PendingType.PENDING) {
       if (veto.getVetoInformation() == null) {
         // inconsistent state
+        logger.warn("Inconsistent state in VetoCache.allocate()");
         return;
       }
       if (req.getVetoType() == VetoType.SHARED) {
         // inconsistent state
+        logger.warn("Inconsistent state in VetoCache.allocate()");
         return;
       }
     }
@@ -241,6 +246,7 @@ public class VetoCache {
     }
     if (vi == null) {
       // unexpected state
+      logger.warn("Unexpected state in VetoCache.allocate()");
       return;
     }
     veto.allocate(vi, urgency);
@@ -263,6 +269,7 @@ public class VetoCache {
           return current;
         }
         // unexpected state
+        logger.warn("Unexpected state in VetoCache.updateVetoInfo()");
         return null;
       }
       return new VetoInformation(current.getName(), current.getUsingOrder(), current.getSharedOrderIds(),
@@ -276,6 +283,7 @@ public class VetoCache {
       return current;
     }
     // unexpected state
+    logger.warn("Unexpected state in VetoCache.updateVetoInfo()");
     return null;
   }
   
