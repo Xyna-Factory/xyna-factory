@@ -288,5 +288,14 @@
         <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.loadConnectionsForSingleRepository(repository4038);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="Remove User From Repository" Name="removeUserFromRepository" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="4040" Label="Repository User Creation Data" ReferenceName="RepositoryUserCreationData" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryUserCreationData4040"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.gitintegration.RepositoryManagementImpl.removeUserFromRepository(correlatedXynaOrder, repositoryUserCreationData4040);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>
