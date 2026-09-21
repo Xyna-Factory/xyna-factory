@@ -27,6 +27,7 @@ public class VetoAllocationResult {
       VetoAllocationResult( new VetoInformation(new AdministrativeVeto("vetos currently unsupported","vetos currently unsupported", null), null, 0));
   
   private boolean allocated;
+  private boolean pending;
 
   private XynaException xynaException;
   private OrderInstanceStatus status;
@@ -34,22 +35,33 @@ public class VetoAllocationResult {
 
   public VetoAllocationResult(boolean allocated,OrderInstanceStatus status) {
     this.allocated = allocated;
+    this.pending = false;
     this.status = status;
   }
   
   public VetoAllocationResult(XynaException xynaException) {
     this.allocated = false;
+    this.pending = false;
     this.xynaException = xynaException;
   }
 
   public VetoAllocationResult(VetoInformation existing) {
+    this(existing, false);
+  }
+
+  public VetoAllocationResult(VetoInformation existing, boolean pending) {
     this.allocated = false;
+    this.pending = pending;
     this.existingVeto = existing;
     this.status = existing.isAdministrative() ? OrderInstanceStatus.WAITING_FOR_VETO : OrderInstanceStatus.SCHEDULING_VETO;
   }
 
   public boolean isAllocated() {
     return allocated;
+  }
+
+  public boolean isPending() {
+    return pending;
   }
 
   public String getVetoName() {

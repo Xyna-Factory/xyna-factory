@@ -69,18 +69,12 @@ public class VM_CachedStorable implements VetoManagementInterface {
   //synchron zum Scheduler
   public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos, long urgency) {
     VetoAllocationResult var = vetoCache.allocateVetos(orderInformation, exclusiveVetos, sharedVetos, urgency);
-    if( ! var.isAllocated() ) {
-      return var; //konnte nicht allokiert werden
+    if (!var.isAllocated() && !var.isPending()) {
+      return var; //konnte nicht allokiert werden und kein pending wurde gesetzt, 
+      // d.h. es gibt keine änderungen die persistiert werden müssen (bzw. erhalten bleiben nach dem nächsten undoAllocation)
     }
     
-    VetoAllocationResult var2 = vetoStorableAccess.allocateVetos(orderInformation, exclusiveVetos, sharedVetos, urgency);
-    if( ! var2.isAllocated() ) {
-      if( var2.getVetoName() != null ) {
-        vetoCache.allocate(var2); //nachträglich!
-      }
-      vetoCache.undoAllocation(orderInformation, exclusiveVetos, sharedVetos);
-    }
-    return var2;
+    return vetoStorableAccess.allocateVetos(orderInformation, exclusiveVetos, sharedVetos, urgency);
   }
   
   //synchron zum Scheduler
@@ -95,7 +89,7 @@ public class VM_CachedStorable implements VetoManagementInterface {
       return;
     }
     vetoCache.undoAllocation(orderInformation, exclusiveVetos, sharedVetos);
-    vetoStorableAccess.freeVetos(orderInformation);
+    vetoStorableAccess.undoAllocation(orderInformation, exclusiveVetos, sharedVetos);
   }
   
   @Deprecated
@@ -111,21 +105,12 @@ public class VM_CachedStorable implements VetoManagementInterface {
   
   
   public boolean freeVetos(OrderInformation orderInformation) {
-    long orderId = orderInformation.getOrderId();
-    try {
-      vetoStorableAccess.freeVetosByOrderId(orderId);
-    } catch (PersistenceLayerException e) {
-      logger.warn("Error while trying to deallocate vetos.", e);
-    } 
+    vetoStorableAccess.freeVetos(orderInformation);
     return vetoCache.freeVetos(orderInformation);
   }
   
   public boolean freeVetosForced(long orderId) {
-    try {
-      vetoStorableAccess.freeVetosByOrderId(orderId);
-    } catch (PersistenceLayerException e) {
-      logger.warn("Error while trying to force deallocation of vetos.", e);
-    } 
+    vetoStorableAccess.freeVetosForced(orderId);
     return vetoCache.freeVetosForced(orderId);
   }
  
