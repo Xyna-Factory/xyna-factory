@@ -277,9 +277,9 @@ public class VetoStorableAccess implements VetoManagementInterface {
     // This can happen if the order was resumed from backup, it will always try to reallocate as it could have released
     // but would no be continued from a previous checkpoint
     return vis.getVetoName().equals(existingVis.getVetoName()) && vis.getBinding() == existingVis.getBinding() &&
-           ((existingVis.isAllocatedExclusive() && vis.isAllocatedExclusive() && existingVis.getUsingOrderId() == vis.getUsingOrderId()) ||
+           ((existingVis.isAllocatedExclusive() && vis.isAllocatedExclusive() && existingVis.getUsingOrderId().equals(vis.getUsingOrderId())) ||
            (existingVis.isAllocatedShared() && vis.isAllocatedShared() && existingVis.getSharedOrderIds().containsAll(vis.getSharedOrderIds())) ||
-           (existingVis.isPendingExclusiveAllocation() && vis.isPendingExclusiveAllocation() && existingVis.getPendingExclusiveOrderId() == vis.getPendingExclusiveOrderId()));
+           (existingVis.isPendingExclusiveAllocation() && vis.isPendingExclusiveAllocation() && existingVis.getPendingExclusiveOrderId().equals(vis.getPendingExclusiveOrderId())));
   }
 
   private boolean checkVeto(VetoInformationStorable vis, VetoInformationStorable existingVis) {
@@ -288,7 +288,7 @@ public class VetoStorableAccess implements VetoManagementInterface {
           ( // pendingExclusive => exclusive: 
             // the order that has the pending exclusive allocation now wants to allocate it exclusively and no shared allocations exist
             existingVis.isPendingExclusiveAllocation() && vis.isAllocatedExclusive() &&
-            existingVis.getPendingExclusiveOrderId() == vis.getUsingOrderId() && existingVis.getSharedOrderIds().isEmpty()
+            existingVis.getPendingExclusiveOrderId().equals(vis.getUsingOrderId()) && existingVis.getSharedOrderIds().isEmpty()
           );
   }
 
@@ -299,7 +299,8 @@ public class VetoStorableAccess implements VetoManagementInterface {
         VetoInformationStorable existingVis = new VetoInformationStorable(vis.getVetoName(), vis.getBinding());
         con.queryOneRow(existingVis);
         if (!checkVeto(vis, existingVis)) {
-          return new VetoAllocationResult(VetoInformationStorable.toVetoInformation.transform(existingVis));
+          boolean pending = existingVis.isAllocatedShared() && vis.isAllocatedExclusive();
+          return new VetoAllocationResult(VetoInformationStorable.toVetoInformation.transform(existingVis), pending);
         }
       } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
         // fully expected, veto is not used by anyone else
@@ -370,7 +371,7 @@ public class VetoStorableAccess implements VetoManagementInterface {
           }
         } else if ( 
             existingVis.isPendingExclusiveAllocation() && vis.isAllocatedExclusive() &&
-            existingVis.getPendingExclusiveOrderId() == vis.getUsingOrderId() && existingVis.getSharedOrderIds().isEmpty()
+            existingVis.getPendingExclusiveOrderId().equals(vis.getUsingOrderId()) && existingVis.getSharedOrderIds().isEmpty()
           ) {
           // pendingExclusive => exclusive: 
           // the order that has the pending exclusive allocation now wants to allocate it exclusively and no shared allocations exist anymore
