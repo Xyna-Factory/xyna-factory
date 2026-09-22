@@ -49,7 +49,7 @@ public class DatatypeReferenceMethods implements ReferenceObjectTypeMethods {
       Optional<File> candidateFile = candidateFiles.stream().filter(x -> x.getName().equals(jarName)).findFirst();
       if(candidateFile.isPresent()) {
         try {
-          if(candidateFile.get().getParentFile().getAbsolutePath().equals(targetDir.getAbsolutePath())) {
+          if(Files.isSameFile(candidateFile.get().getParentFile().toPath(), targetDir.toPath())) {
             if(logger.isDebugEnabled()) {
               logger.debug("Skipping copy of " + jarName + " for datatype " + objectName + " in revision " + revision + ", because it is already at the destination");
             }

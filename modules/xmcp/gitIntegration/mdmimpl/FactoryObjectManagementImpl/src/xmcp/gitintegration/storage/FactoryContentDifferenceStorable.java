@@ -124,7 +124,7 @@ public class FactoryContentDifferenceStorable extends Storable<FactoryContentDif
 
   public static List<FactoryContentDifferenceStorable> readAllEntriesForList(ODSConnection con, long listid)
       throws PersistenceLayerException {
-    PreparedQuery<FactoryContentDifferenceStorable> query = queryCache.getQueryFromCache(QUERY_ENTRIES_FOR_LIST, con, reader);
+    PreparedQuery<FactoryContentDifferenceStorable> query = queryCache.getQueryFromCache(QUERY_ENTRIES_FOR_LIST, con, reader, FactoryContentDifferenceStorable.TABLE_NAME);
     List<FactoryContentDifferenceStorable> result = con.query(query, new Parameter(listid), -1);
     result.sort(comparator);
     return result;
