@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -237,6 +237,23 @@ public class ValidationUtilsServiceOperationImpl
       return null;
     }
     return new Text(resultString);
+  }
+
+
+  @Override
+  public Text retainOnlyPaths(Text json, List<? extends Text> jsonPaths) {
+    if (json == null) {
+      return null;
+    }
+    if (jsonPaths == null || jsonPaths.isEmpty()) {
+      return json;
+    }
+    List<String> paths = jsonPaths.stream().filter(p -> p != null && p.getText() != null && !p.getText().isBlank()).map(p -> p.getText())
+        .collect(Collectors.toList());
+    if (paths.isEmpty()) {
+      return json;
+    }
+    return new Text(WhiteListUtils.retainOnlyPaths(json.getText(), paths));
   }
 
 
