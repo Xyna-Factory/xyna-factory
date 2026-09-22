@@ -73,48 +73,66 @@ public class TestWhiteListUtils {
 
   @Test
   public void testEqualRestOfJSON() {
-    assertEquals(false, WhiteListUtils.isJSONTheSameExceptPaths(TestParser.JSON, 
-                                                                TestParser.JSON2, 
+    assertEquals(false, WhiteListUtils.isJSONTheSameExceptPaths(TestParser.JSON, TestParser.JSON2,
                                                                 Arrays.asList("$.serviceCharacteristic[?(@.name=='intchar1')].value")));
-    assertEquals(true, WhiteListUtils.isJSONTheSameExceptPaths(TestParser.JSON,
-                                                               TestParser.JSON2,
-                         Arrays.asList("$.serviceCharacteristic",
-                                       "$.id",
-                                       "$.feature",
-                                       "$.note",
-                                       "$.place",
-                                       "$.relatedEntity",
-                                       "$.serviceOrderItem",
-                                       "$.serviceRelationship[?(@.relationshipType=='redundantTo')].serviceRelationshipCharacteristic",
-                                       "$.supportingService",
-                                       "$.supportingResource[?(@.name=='res3')].value"
-                                       )));
+    assertEquals(true,
+                 WhiteListUtils.isJSONTheSameExceptPaths(TestParser.JSON, TestParser.JSON2, Arrays
+                     .asList("$.serviceCharacteristic", "$.id", "$.feature", "$.note", "$.place", "$.relatedEntity", "$.serviceOrderItem",
+                             "$.serviceRelationship[?(@.relationshipType=='redundantTo')].serviceRelationshipCharacteristic",
+                             "$.supportingService", "$.supportingResource[?(@.name=='res3')].value")));
   }
-  
+
+
   @Test
   public void testListOfChanges() {
     List<String> l = WhiteListUtils.createJsonPathListOfAllChanges(TestParser.JSON, TestParser.JSON2);
     System.out.println(l);
   }
-  
+
+
   @Test
   public void testIsJSONPartTheSamePathNotFound() {
     assertEquals(true, WhiteListUtils.isJSONPartTheSame("{}", "{}", "$['test']"));
     assertEquals(false, WhiteListUtils.isJSONPartTheSame("{\"test\":\"bla\"}", "{}", "$['test']"));
-  }  
-  
+  }
+
+
   @Test
   public void testIsJSONPartTheSame() {
     assertEquals(true, WhiteListUtils.isJSONPartTheSame("{\"test\":{}}", "{\"test\":{}, \"bla\":1}", "$['test']"));
     assertEquals(true, WhiteListUtils.isJSONPartTheSame("{\"test\":\"bla\"}", "{\"test\":\"bla\", \"bla\":1}", "$['test']"));
     assertEquals(false, WhiteListUtils.isJSONPartTheSame("{\"test\":\"bla\"}", "{\"test\":[\"bla\"], \"bla\":1}", "$['test']"));
   }
-  
+
+
   @Test
   public void testIsJSONPartTheSameEmptyArrayVsNull() {
-    assertEquals(true, WhiteListUtils.isJSONPartTheSame("{\"serviceCharacteristic\":[]}", "{}", "$.serviceCharacteristic[?(@.name=='name')]"));
+    assertEquals(true,
+                 WhiteListUtils.isJSONPartTheSame("{\"serviceCharacteristic\":[]}", "{}", "$.serviceCharacteristic[?(@.name=='name')]"));
   }
- 
+
+
+  @Test
+  public void testIsJSONPartTheSameEmptyArrayVsNull2() {
+    assertEquals(true, WhiteListUtils.isJSONTheSameExceptPaths("{\"serviceCharacteristic\":[{\"name\":\"name\",\"bla\":{}}]}", "{\"serviceCharacteristic\":[]}",
+                                                                Arrays.asList("$.serviceCharacteristic[?(@.name=='name')]")));
+    assertEquals(true, WhiteListUtils.isJSONTheSameExceptPaths("{\"serviceCharacteristic\":[{\"name\":\"name\",\"bla\":{}}]}", "{}",
+                                                               Arrays.asList("$.serviceCharacteristic[?(@.name=='name')]")));
+  }
+
+
+  @Test
+  public void testIsJSONTheSameExceptPathsSoleArrayElementAndMissingArray() {
+    assertEquals(true, WhiteListUtils.isJSONTheSameExceptPaths("{\"items\":[{\"id\":1}]}", "{}",
+                                                               Arrays.asList("$.items[?(@.id==1)]")));
+  }
+
+  @Test
+  public void testNonRelatedEmptyArraysAreStillAChange() {
+    assertEquals(false, WhiteListUtils.isJSONTheSameExceptPaths("{\"items\":[{\"id\":1}]}", "{\"other\":[]}",
+                                                               Arrays.asList("$.items[?(@.id==1)]")));
+  }
+
   @Test
   public void testJsJSONPartTheSameWrongAccess() {
     assertEquals(true, WhiteListUtils.isJSONPartTheSame("{\"serviceCharacteristic\":{}}", "{}", "serviceCharacteristic[0].@type"));

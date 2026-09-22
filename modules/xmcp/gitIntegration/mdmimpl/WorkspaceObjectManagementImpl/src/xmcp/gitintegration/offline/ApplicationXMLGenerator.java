@@ -432,7 +432,7 @@ public class ApplicationXMLGenerator {
         if (filtersInContent.contains(f.getFilterName())
             || filterUsedByFilterInstances(filterInstancesInContent, allFilterInstances, f.getFilterName())) {
           xml.addFilter(!filtersInContent.contains(f.getFilterName()), f.getFilterName(), f.getJarfiles(), f.getFQFilterClassName(),
-                        f.getTriggerName(), f.getSharedlibs());
+                        f.getTriggerName(), f.getSharedlibs(), f.getDescription());
           allUsedSharedLibs.addAll(separateSerializedList(f.getSharedlibs()));
         }
       } else if (item instanceof FilterInstance) {

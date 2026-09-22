@@ -39,10 +39,7 @@ import com.gip.xyna.xact.exceptions.XACT_TriggerCouldNotBeStoppedException;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.exceptions.XFMG_InvalidCapacityCardinality;
-import com.gip.xyna.xfmg.exceptions.XFMG_UnknownClusterInstanceIDException;
-import com.gip.xyna.xfmg.xclusteringservices.ClusterState;
 import com.gip.xyna.xfmg.xclusteringservices.XynaClusteringServicesManagement;
-import com.gip.xyna.xfmg.xclusteringservices.XynaClusteringServicesManagementInterface;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationEntryStorable.ApplicationEntryType;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
@@ -54,9 +51,7 @@ import com.gip.xyna.xmcp.XynaMultiChannelPortal;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.exceptions.XNWH_RetryTransactionException;
 import com.gip.xyna.xnwh.persistence.FactoryWarehouseCursor;
-import com.gip.xyna.xnwh.persistence.ODS;
 import com.gip.xyna.xnwh.persistence.ODSConnection;
-import com.gip.xyna.xnwh.persistence.ODSConnectionType;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoResult;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutor;
@@ -95,10 +90,10 @@ import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
 import com.gip.xyna.xprc.xpce.dispatcher.DestinationValue;
 import com.gip.xyna.xprc.xpce.dispatcher.XynaDispatcher;
 import com.gip.xyna.xprc.xpce.manualinteraction.ManualInteractionManagement.ManualInteractionProcessingRejectionState;
-import com.gip.xyna.xprc.xpce.monitoring.MonitoringDispatcher;
 import com.gip.xyna.xprc.xpce.planning.Capacity;
 import com.gip.xyna.xprc.xprcods.XynaProcessingODS;
 import com.gip.xyna.xprc.xprcods.capacitymapping.CapacityMappingStorable;
+import com.gip.xyna.xprc.xprcods.orderarchive.OrderBackupManagement;
 import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstance;
 import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstanceBackup;
 import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstanceBackup.BackupCause;
@@ -151,6 +146,7 @@ public class XynaProcessing extends XynaProcessingBase {
   private OrderStatus orderStatus;
   private XynaFrequencyControl frequencyControl;
   private BatchProcessManagement batchProcessManagement;
+  private OrderBackupManagement orderbackupManagement;
 
 
   public XynaProcessing() throws XynaException {
@@ -173,6 +169,8 @@ public class XynaProcessing extends XynaProcessingBase {
     deploySection(frequencyControl);
     batchProcessManagement = new BatchProcessManagement();
     deploySection(batchProcessManagement);
+    orderbackupManagement = new OrderBackupManagement();
+    deploySection(orderbackupManagement);
 
     // create a workflow engine and deploy it
     workflowEngine = new XynaFractalWorkflowEngine();
@@ -205,11 +203,6 @@ public class XynaProcessing extends XynaProcessingBase {
     fExec.addTask(OrderStartupAndMigrationManagement.class, "OrderStartupAndMigrationManagement").
       after(XynaClusteringServicesManagement.class).
       execAsync(new Runnable() {public void run() { initOrderStartupAndMigrationManagement(); }});
-  
-    fExec.addTask("startPersistedOrders", "startPersistedOrders" ).
-      after(FUTUREEXECUTIONID_ORDER_EXECUTION).
-      after(OrderStartupAndMigrationManagement.class).
-      execAsync(new Runnable() {public void run() { startPersistedOrders(); }});
 
     fExec.addTask(FUTUREEXECUTIONID_STARTPERSISTEDORDERS, "deprecated TaskId" ).
       deprecated().
@@ -302,6 +295,10 @@ public class XynaProcessing extends XynaProcessingBase {
     return pythonCodeSnippetMgmt;
   }
 
+  @Override
+  public OrderBackupManagement getOrderBackupManagement() {
+    return orderbackupManagement;
+  }
 
   /**
    * remote access to remove a cron like order
@@ -594,35 +591,6 @@ public class XynaProcessing extends XynaProcessingBase {
     int ownBinding = getXynaProcessingODS().getOrderArchive().getOwnBinding();
     OrderStartupAndMigrationManagement.getInstance(ownBinding);
   }
-  
-  private void startPersistedOrders() {
-    // lade gespeicherte+pausierte Aufträge im eigenen Thread
-    ODS ods = getXynaProcessingODS().getODS();
-    ClusterState clusterState = getClusterState(ods);
-    OrderStartupAndMigrationManagement.getInstance().startLoadingAtStartup(clusterState);
-    if(clusterState == ClusterState.DISCONNECTED_MASTER) {
-      OrderStartupAndMigrationManagement.getInstance().startMigrating(clusterState, 0);
-    }
-  }
-  
-
-
-  /**
-   * @param ods
-   * @return
-   * @throws XFMG_UnknownClusterInstanceIDException
-   */
-  private ClusterState getClusterState(ODS ods) {
-    long clusterInstanceId = ods.getClusterInstanceId(ODSConnectionType.DEFAULT, OrderInstanceBackup.class);
-    XynaClusteringServicesManagementInterface clusterMgmt =
-        XynaFactory.getInstance().getFactoryManagement().getXynaClusteringServicesManagement();
-    try {
-      return clusterMgmt.getClusterInstance(clusterInstanceId).getState();
-    } catch (XFMG_UnknownClusterInstanceIDException e) {
-      return ClusterState.NO_CLUSTER;
-    }
-  }
-
 
   /**
    * 1. cronls anhalten 2. trigger, rmi anhalten 3. mi bearbeitung deaktivieren 4. scheduler anhalten (pause-aufträge
@@ -1207,7 +1175,5 @@ public class XynaProcessing extends XynaProcessingBase {
   public boolean modifyBatchProcess(Long batchProcessId, BatchProcessInput input) throws PersistenceLayerException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY{
     return getBatchProcessManagement().modifyBatchProcess(batchProcessId, input);
   }
-
-
 
 }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -137,6 +137,7 @@ public abstract class StringParameter<T> implements Serializable {
   protected boolean hasDefault;
   protected ArrayList<SerializablePair<String, SerializableMandatoryValue>> mandatoryFor;
   protected Documentation documentation;
+  protected String alternativeParameterName;
 
   public String getName() {
     return name;
@@ -201,7 +202,15 @@ public abstract class StringParameter<T> implements Serializable {
     return getTypeClass().getSimpleName();
   }
   
-  /**
+  public boolean hasAlternative() {
+    return alternativeParameterName != null;
+  }
+
+  public String getAlternativeParameterName() {
+    return alternativeParameterName;
+  }
+
+/**
    * Parsen des String in den gewünschten Typ
    * @param string
    * @return
@@ -396,11 +405,18 @@ public abstract class StringParameter<T> implements Serializable {
    * @param paramMap
    */
   public void validate(Map<String, Object> paramMap) throws StringParameterParsingException {
+    boolean selfSet = paramMap.containsKey(getName());
+    boolean alternativeSet = hasAlternative() && paramMap.containsKey(getAlternativeParameterName());
+
     if( isMandatory() ) {
-      if( paramMap.containsKey(name) ) {
-        //ist enthalten, daher Regel erfüllt
+      if ( hasAlternative() ) {
+        if (selfSet == alternativeSet) {
+            throw new StringParameterParsingException(getName(), Reason.AlternativeMandatory, getAlternativeParameterName());
+        }
       } else {
-        throw new StringParameterParsingException(name, Reason.Mandatory);
+        if ( !selfSet ) {
+          throw new StringParameterParsingException(getName(), Reason.Mandatory);
+        }
       }
     } else if( isMandatoryFor() ) {
       if( paramMap.containsKey(name) ) {
@@ -410,20 +426,23 @@ public abstract class StringParameter<T> implements Serializable {
         for( SerializablePair<String, SerializableMandatoryValue> pair : mandatoryFor ) {
           if( pair.getSecond() == null ) {
             if( paramMap.containsKey(pair.getFirst() ) ) {
-              throw new StringParameterParsingException(name, Reason.MandatoryFor, pair);
+              throw new StringParameterParsingException(getName(), Reason.MandatoryFor, pair);
             }
           } else {
             Object valueAsCorrectType = pair.getSecond().getValueAs(paramMap.get(pair.getFirst()));
             if(valueAsCorrectType != null &&
                valueAsCorrectType.equals( paramMap.get(pair.getFirst() ) ) ) {
-              throw new StringParameterParsingException(name, Reason.MandatoryFor, pair);
+              throw new StringParameterParsingException(getName(), Reason.MandatoryFor, pair);
             }
           }
         }
       }
+    } else if ( isOptional() ) {
+      if (selfSet && alternativeSet) {
+        throw new StringParameterParsingException(getName(), Reason.AlternativeConflict, getAlternativeParameterName());
+      }
     }
   }
-  
   /**
    * Umwandlung der ParameterListe in eine Map&lt;String,Object&gt; (Nach weiterem Aufruf von with(...)
    * @param params
@@ -443,13 +462,52 @@ public abstract class StringParameter<T> implements Serializable {
   }
   
   
+  public static class StringParameterUtils {
+
+    public static boolean isNamedParameterSyntax(String[] params, List<StringParameter<?>> validParameters) {
+        int namedParameters = 0;
+        for (String param : params) {
+            if (isNamedParameter(param, validParameters)) {
+                namedParameters++;
+            }
+        }
+
+        if (namedParameters > 0 && namedParameters < params.length) {
+            throw new IllegalArgumentException("Error: Mixed named and unnamed connect parameters are not supported.");
+        }
+
+        return namedParameters == params.length;
+    }
+
+
+    public static boolean isNamedParameter(String param, List<StringParameter<?>> validParameters) {
+        String parameterName = extractParameterName(param);
+
+        return parameterName != null
+                && validParameters.stream()
+                   .map(StringParameter::getName)
+                   .anyMatch(parameterName::equals);
+    }
+
+
+    public static String extractParameterName(String param) {
+        if (param == null) {
+            return null;
+        }
+
+        Matcher matcher = KEY_VALUE_PATTERN.matcher(param);
+        return matcher.matches() ? matcher.group(1) : null;
+    }
+  }
+
   public static enum Unmatched { Keep, Ignore, Error }
   public static enum Unparseable { Keep, Ignore, Null, Error }
-  
+  public static enum UnmatchedAlternative { Ignore,  Error }
   public static class Parser {
 
     private Unmatched unmatched = Unmatched.Error;
     private Unparseable unparseable = Unparseable.Error;
+    private UnmatchedAlternative unmatchedAlternative = UnmatchedAlternative.Error;
     private Map<String, ? extends Object> params;
     private Map<String,StringParameter<?>> allStringParameter;
     private Map<String,Object> paramMap;
@@ -481,6 +539,11 @@ public abstract class StringParameter<T> implements Serializable {
       return this;
     }
     
+    public Parser unmatchedAlternative(UnmatchedAlternative unmatchedAlternative) {
+      this.unmatchedAlternative = unmatchedAlternative;
+      return this;
+    }
+
     public Parser silent(boolean silent) {
       this.unmatched = Unmatched.Keep; //TODO so behalten?
       this.unparseable = Unparseable.Null; //TODO so behalten?
@@ -504,6 +567,7 @@ public abstract class StringParameter<T> implements Serializable {
     
     
     private Map<String, Object> parse() throws StringParameterParsingException {
+      validateAlternativeDefinitions();
       paramMap = new HashMap<String, Object>();
       if( params != null ) {
         for( Map.Entry<String,? extends Object> entry : params.entrySet() ) {
@@ -523,6 +587,37 @@ public abstract class StringParameter<T> implements Serializable {
       return paramMap;
     }
     
+
+    private void validateAlternativeDefinitions() {
+
+      for (StringParameter<?> sp : allStringParameter.values()) {
+
+        if (!sp.hasAlternative()) {
+          continue;
+        }
+
+        String altName = sp.getAlternativeParameterName();
+
+        StringParameter<?> alt = allStringParameter.get(altName);
+
+        if (alt == null) {
+          switch (unmatchedAlternative) {
+            case Ignore :
+              continue;
+            case Error :
+              throw new IllegalStateException("Alternative parameter '" + altName + "' for parameter '" + sp.getName()
+                  + "' does not exist.");
+          }
+        }
+
+        if (alt.hasAlternative() && !sp.getName().equals(alt.getAlternativeParameterName())) {
+
+          throw new IllegalStateException("Conflicting alternative definitions: '" + sp.getName() + "' -> '" + alt.getName() + "' but '"
+              + alt.getName() + "' -> '" + alt.getAlternativeParameterName() + "'");
+        }
+      }
+    }
+
     
     private StringParameter<?> findStringParameter(String name, Object value) throws StringParameterParsingException {
       StringParameter<?> sp = allStringParameter.get(name);
@@ -629,8 +724,18 @@ public abstract class StringParameter<T> implements Serializable {
     return spb.name(name);
   }
   
+  public static StringParameterBuilder<Integer> typePositiveInteger(String name, boolean includeZero) {
+    StringParameterBuilder<Integer> spb = new StringParameterBuilder<Integer>( new StringParameterPositiveInteger(includeZero) );
+    return spb.name(name);
+  }
+  
   public static StringParameterBuilder<Long> typeLong(String name) {
     StringParameterBuilder<Long> spb = new StringParameterBuilder<Long>( new StringParameterLong() );
+    return spb.name(name);
+  }
+  
+  public static StringParameterBuilder<Long> typePositiveLong(String name, boolean includeZero) {
+    StringParameterBuilder<Long> spb = new StringParameterBuilder<Long>( new StringParameterPositiveLong(includeZero) );
     return spb.name(name);
   }
   
@@ -796,7 +901,16 @@ public abstract class StringParameter<T> implements Serializable {
       return this;
     }
    
-  }
+    public StringParameterBuilder<T> alternative(StringParameter<?> alternative) {
+      sp.alternativeParameterName = alternative.getName();
+      return this;
+    }
+
+    public StringParameterBuilder<T> alternative(String alternativeName) {
+      sp.alternativeParameterName = alternativeName;
+      return this;
+    }
+  }  
 
   public static interface DefaultValue<T> extends Serializable {
     T getDefaultValue();
@@ -931,6 +1045,18 @@ public abstract class StringParameter<T> implements Serializable {
     private static final long serialVersionUID = 1L;
     
     public enum Reason {
+      AlternativeMandatory(" requires exactly one of the alternative parameters") {
+        @Override
+        protected String getMessage(Object additional) {
+          return message + " [" + additional + "]";
+        }
+      },
+      AlternativeConflict(" and its alternative parameter are both set") {
+        @Override
+        protected String getMessage(Object additional) {
+          return message + " [" + additional + "]";
+        }
+      },
       Pattern(" does not match pattern"),
       Mandatory(" is mandatory"),
       MandatoryFor(" is mandatory") {
@@ -954,6 +1080,8 @@ public abstract class StringParameter<T> implements Serializable {
           return message;
         }
       },
+      NotNegative(" has not a non-negative value (>=0)"),
+      Positive(" has not a positive value (>0)"),
       StringParameter( " is no StringParameter");
       
       protected String message;
@@ -1031,12 +1159,15 @@ public abstract class StringParameter<T> implements Serializable {
   public static class StringParameterInteger extends StringParameter<Integer> {
     private static final long serialVersionUID = 1L;
     
-    public Integer parseString(String string) {
+    @Override 
+    public Integer parseString(String string) throws Exception {
       return Integer.valueOf(string);
     }
-    public Integer parseObject(Object object) {
+    @Override 
+    public Integer parseObject(Object object)  throws Exception {
       return (Integer)object;
     }
+    @Override 
     public String asString(Integer value) {
       return value==null?null:value.toString();
     }
@@ -1045,15 +1176,49 @@ public abstract class StringParameter<T> implements Serializable {
     }
   }
   
+  public static class StringParameterPositiveInteger extends StringParameterInteger {
+    private static final long serialVersionUID = 1L;
+
+    private boolean includeZero = true;
+
+    public StringParameterPositiveInteger(boolean includeZero) {
+      this.includeZero = includeZero;
+    }
+
+    @Override 
+    public Integer parseString(String string) throws Exception {
+      Integer val = super.parseString(string);
+      validatePositive(val);
+      return val;
+    }
+    @Override 
+    public Integer parseObject(Object object) throws Exception {
+      Integer val = super.parseObject(object);
+      validatePositive(val);
+      return val;
+    }
+    private void validatePositive(Integer val) throws StringParameterParsingException {
+      if (includeZero && val < 0) {
+        throw new StringParameterParsingException(getName(), Reason.Positive);
+      }
+      if (!includeZero && val <= 0) {
+        throw new StringParameterParsingException(getName(), Reason.NotNegative);
+      }
+    }
+  }
+
   public static class StringParameterLong extends StringParameter<Long> {
     private static final long serialVersionUID = 1L;
 
-    public Long parseString(String string) {
+    @Override 
+    public Long parseString(String string) throws Exception {
       return Long.valueOf(string);
     }
-    public Long parseObject(Object object) {
+    @Override 
+    public Long parseObject(Object object) throws Exception {
       return (Long)object;
     }
+    @Override 
     public String asString(Long value) {
       return value==null?null:value.toString();
     }
@@ -1062,6 +1227,37 @@ public abstract class StringParameter<T> implements Serializable {
     }
   }
   
+  public static class StringParameterPositiveLong extends StringParameterLong {
+    private static final long serialVersionUID = 1L;
+
+    private boolean includeZero = true;
+
+    public StringParameterPositiveLong(boolean includeZero) {
+      this.includeZero = includeZero;
+    }
+
+    @Override 
+    public Long parseString(String string) throws Exception {
+      Long val = super.parseString(string);
+      validatePositive(val);
+      return val;
+    }
+    @Override 
+    public Long parseObject(Object object) throws Exception {
+      Long val = super.parseObject(object);
+      validatePositive(val);
+      return val;
+    }
+    private void validatePositive(Long val) throws StringParameterParsingException {
+      if (includeZero && val < 0) {
+        throw new StringParameterParsingException(getName(), Reason.Positive);
+      }
+      if (!includeZero && val <= 0) {
+        throw new StringParameterParsingException(getName(), Reason.NotNegative);
+      }
+    }
+  }
+    
   public static class StringParameterDuration extends StringParameter<Duration> {
     private static final long serialVersionUID = 1L;
 

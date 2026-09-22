@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,8 +49,8 @@ import com.gip.xyna.xfmg.exceptions.XFMG_UserIsLockedException;
 import com.gip.xyna.xfmg.statistics.XynaStatistics;
 import com.gip.xyna.xfmg.statistics.XynaStatisticsLegacy;
 import com.gip.xyna.xfmg.xfctrl.XynaFactoryControl;
-import com.gip.xyna.xfmg.xfctrl.queuemgmnt.Queue;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueConnectData;
+import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueFacade;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueType;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 import com.gip.xyna.xfmg.xfmon.XynaFactoryMonitoring;
@@ -370,14 +370,14 @@ public interface XynaFactoryManagementPortal {
   public List<OrdertypeParameter> listOrdertypes(SearchOrdertypeParameter sop) throws PersistenceLayerException;
 
 
-  public void registerQueue(String uniqueName, String externalName, QueueType queueType, QueueConnectData connectData)
+  public void registerQueue(String uniqueName, String externalName, String externalNameEnv, QueueType queueType, QueueConnectData connectData)
       throws PersistenceLayerException;
 
 
   public void deregisterQueue(String uniqueName) throws PersistenceLayerException;
 
 
-  public Collection<Queue> listQueues() throws PersistenceLayerException;
+  public Collection<QueueFacade> listQueues() throws PersistenceLayerException;
   
   
   public boolean isSessionAlive(String sessionId) throws PersistenceLayerException;

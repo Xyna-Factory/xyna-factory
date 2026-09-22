@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Icon" TypeName="Icon" TypePath="xint.mcp.schema" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>An optionally-sized icon that can be displayed in a user interface.</Documentation>
+  </Meta>
+  <Data Label="Src" VariableName="src">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>A standard URI pointing to an icon resource. May be an HTTP/HTTPS URL or a data: URI with Base64-encoded image data.</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Mime Type" VariableName="mimeType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Optional MIME type override if the source MIME type is missing or generic. For example: “image/png”, “image/jpeg”, or “image/svg+xml”.</Documentation>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="Sizes" VariableName="sizes">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Optional array of strings that specify sizes at which the icon can be used. Each string should be in WxH format (e.g., “48x48”, “96x96”) or “any” for scalable formats like SVG.</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Theme" VariableName="theme">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>“light” | “dark”
+
+Optional specifier for the theme this icon is designed for. light indicates the icon is designed to be used with a light background, and dark indicates the icon is designed to be used with a dark background.</Documentation>
+    </Meta>
+  </Data>
+</DataType>

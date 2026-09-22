@@ -17,6 +17,7 @@
  */
 package com.gip.xyna.xprc.xfractwfe.python.jep;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -58,6 +59,17 @@ import jep.python.PyObject;
 
 public class JepInterpreterFactory extends PythonInterpreterFactory {
 
+  public static enum XynaTypeAttributeVal {
+    DATATYPE("DATATYPE"),
+    EXCEPTION("EXCEPTION"),
+    OTHER("OTHER");
+    private XynaTypeAttributeVal(String val) {
+      this.value = val;
+    }
+    private String value;
+    public String getValue() { return value; }
+  }
+  
   private static final Logger logger = CentralFactoryLogging.getLogger(JepInterpreterFactory.class);
 
   private static final Map<String, Class<?>> typeConversionMap = createTypeConversionMap();
@@ -181,10 +193,13 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     ClassLoaderDispatcher cld = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl()
         .getClassLoaderDispatcher();
     ClassLoaderBase cl;
+    XynaTypeAttributeVal xynaTypeAttributeVal = XynaTypeAttributeVal.OTHER;
     if (xynatype.equals("DATATYPE")) {
       cl = cld.findClassLoaderByType(fqn, context.revision, ClassLoaderType.MDM, true);
-    } else if (xynatype.equals("EXEPTION")) {
+      xynaTypeAttributeVal = XynaTypeAttributeVal.DATATYPE;
+    } else if (xynatype.equals("EXCEPTION")) {
       cl = cld.findClassLoaderByType(fqn, context.revision, ClassLoaderType.Exception, true);
+      xynaTypeAttributeVal = XynaTypeAttributeVal.EXCEPTION;
     } else {
       throw new UnsupportedOperationException();
     }
@@ -207,7 +222,13 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
         Class<? extends GeneralXynaObject> tmpclazz = (Class<? extends GeneralXynaObject>) cl.loadClass(fqn);
         clazz = tmpclazz;
       }
-      resultObj = clazz.getDeclaredConstructor().newInstance();
+      if (xynaTypeAttributeVal == XynaTypeAttributeVal.EXCEPTION) {
+        Constructor<? extends GeneralXynaObject> constructor = clazz.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        resultObj = constructor.newInstance();
+      } else {
+        resultObj = clazz.getDeclaredConstructor().newInstance();
+      }
 
       List<Field> allFields = new ArrayList<>(); 
       if (!(resultObj instanceof XynaObject)) {
@@ -222,6 +243,10 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
       }
       for (Field f : allFields) {
         if (Modifier.isPrivate(f.getModifiers())) {
+          if (xynaTypeAttributeVal == XynaTypeAttributeVal.EXCEPTION) {
+            if (Modifier.isStatic(f.getModifiers())) { continue; }
+            if (Modifier.isVolatile(f.getModifiers())) { continue; }
+          }
           String fieldName = f.getName();
           String pyFieldName = mgmt.getPythonKeywords().contains(fieldName) ? fieldName + "_" : fieldName;
           Object memberAttr = pyObj.getAttr(pyFieldName);

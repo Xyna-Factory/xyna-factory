@@ -97,4 +97,5 @@ public class PathElements {
   public static final String MEMBERS              = "members";
   public static final String SERVICES             = "services";
   public static final String META                 = "meta";
+  public static final String PARENT               = "parent";
 }

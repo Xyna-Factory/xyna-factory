@@ -86,6 +86,10 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
           .setDefaultDocumentation(DocumentationLanguage.EN, "Default location for git repositories. Repositories in this directory are added to the list of suggestions.")
           .setDefaultDocumentation(DocumentationLanguage.DE, "Standardverzeichnis für Git Repositories. Repositories in diesem Verzeichnins werden in die Liste der Vorschläge aufgenommen.");
 
+  public static final XynaPropertyString FETCH_SUBMODULE_POLICY = 
+      new XynaPropertyString("xmcp.gitintegration.fetch_submodule_policy", "NO")
+      .setDefaultDocumentation(DocumentationLanguage.EN, "How to handle submodules during fetch: YES, ON_DEMAND, NO")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Wie soll mit submodules während des fetch verfahren werden: YES; ON_DEMAND, NO");
 
   public void onDeployment() throws XynaException {
     RepositoryManagementImpl.init();
@@ -93,6 +97,7 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
     OverallInformationProvider.onDeployment();
     PluginManagement.registerPlugin(this.getClass());
     DEFAULT_REPO_LOCATION.registerDependency(UserType.Service, "GitIntegation");
+    FETCH_SUBMODULE_POLICY.registerDependency(UserType.Service, "GitIntegration");
   }
 
 
@@ -102,6 +107,7 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
     OverallInformationProvider.onUndeployment();
     PluginManagement.unregisterPlugin(this.getClass());
     DEFAULT_REPO_LOCATION.unregister();
+    FETCH_SUBMODULE_POLICY.unregister();
   }
 
 
@@ -446,5 +452,14 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
     }
     
     return result;
+  }
+
+
+  @Override
+  public void removeUserFromRepository(XynaOrderServerExtension order, RepositoryUserCreationData user) {
+    SessionManagement sessionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getSessionManagement();
+    String sessionId = order.getSessionId();
+    String username = sessionManagement.resolveSessionToUser(sessionId);
+    new UserManagementStorage().removeUserFromRepository(user.getRepository().getPath(),username);
   }
 }

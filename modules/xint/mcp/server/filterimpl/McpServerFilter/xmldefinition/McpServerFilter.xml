@@ -1,0 +1,7 @@
+<Filter>
+	<AdditionalDependencies>
+		<!-- <Datatype>fullyQualifiedMdmType</Datatype>
+		<XynaProperty>propertyName</XynaProperty>
+		<Workflow>workflow</Workflow> -->
+	</AdditionalDependencies>
+</Filter>

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.utils.misc.TableFormatter;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.ActiveMQConnectData;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.OracleAQConnectData;
-import com.gip.xyna.xfmg.xfctrl.queuemgmnt.Queue;
+import com.gip.xyna.xfmg.xfctrl.queuemgmnt.IQueue;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.WebSphereMQConnectData;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 import com.gip.xyna.xmcp.xfcli.generated.Listqueues;
@@ -40,14 +40,14 @@ public class ListqueuesImpl extends XynaCommandImplementation<Listqueues> {
 
   public void execute(OutputStream statusOutputStream, Listqueues payload) throws XynaException {
 
-    Collection<Queue> queues = XynaFactory.getInstance().getFactoryManagement().listQueues();
+    Collection<? extends IQueue> queues = XynaFactory.getInstance().getFactoryManagement().listQueues();
 
     StringBuilder builder = new StringBuilder();
     if (payload.getOldstyle()) {
       addListHeaderOLDSTYLE(builder);
       int length = queues.size();
       int index = 0;
-      for (Queue queue : queues) {
+      for (IQueue queue : queues) {
         index++;
         addListItemOLDSTYLE(queue, builder, index < length);
       }
@@ -72,7 +72,7 @@ public class ListqueuesImpl extends XynaCommandImplementation<Listqueues> {
   }
 
 
-  public void addListItemOLDSTYLE(Queue queue, StringBuilder s, boolean withLineBreak) {
+  public void addListItemOLDSTYLE(IQueue queue, StringBuilder s, boolean withLineBreak) {
     s.append(queue.getUniqueName()).append(", ");
     s.append(queue.getExternalName()).append(", ");
     s.append(queue.getQueueType().toString()).append(", ");
@@ -100,24 +100,24 @@ public class ListqueuesImpl extends XynaCommandImplementation<Listqueues> {
     private List<String> header;
     private List<QueuesTableColumn> columns;
    
-    public QueuesTableFormatter(Collection<Queue> queues) {
+    public QueuesTableFormatter(Collection<? extends IQueue> queues) {
       columns = //Arrays.asList(QueuesTableColumn.values() );
           QueuesTableColumn.ALL_WITHOUT_PASSWORD;
       generateRowsAndHeader(queues);
     }
 
-    private void generateRowsAndHeader(Collection<Queue> queues) {
+    private void generateRowsAndHeader(Collection<? extends IQueue> queues) {
       header = new ArrayList<String>();
       for( QueuesTableColumn ac : columns ) {
         header.add( ac.toString() );
       }
       rows = new ArrayList<List<String>>();
-      for( Queue ai : queues ) {
+      for( IQueue ai : queues ) {
         rows.add( generateRow(ai) );
       }
     }
 
-    private List<String> generateRow(Queue ai) {
+    private List<String> generateRow(IQueue ai) {
       List<String> row = new ArrayList<String>();
       for( QueuesTableColumn ac : columns ) {
         row.add( ac.extract(ai) );
@@ -136,22 +136,22 @@ public class ListqueuesImpl extends XynaCommandImplementation<Listqueues> {
     
     public enum QueuesTableColumn {
       UniqueXynaQueueName {
-        public String extract(Queue ai) {
+        public String extract(IQueue ai) {
           return ai.getUniqueName();
         }
       },
       ExternalQueueName {
-        public String extract(Queue ai) {
+        public String extract(IQueue ai) {
           return ai.getExternalName();
         }
       },
       Type {
-        public String extract(Queue ai) {
+        public String extract(IQueue ai) {
           return ai.getQueueType().toString();
         }
       },
       Hostname {
-        public String extract(Queue ai) {
+        public String extract(IQueue ai) {
           if (ai.getConnectData() instanceof WebSphereMQConnectData) {
             return ((WebSphereMQConnectData) ai.getConnectData()).getHostname();
           } else if (ai.getConnectData() instanceof ActiveMQConnectData) {
@@ -162,7 +162,7 @@ public class ListqueuesImpl extends XynaCommandImplementation<Listqueues> {
         }
       },
       Port {
-        public String extract(Queue ai) {
+        public String extract(IQueue ai) {
           if (ai.getConnectData() instanceof WebSphereMQConnectData) {
             return ((WebSphereMQConnectData) ai.getConnectData()).getPort() + "";
           } else if (ai.getConnectData() instanceof ActiveMQConnectData) {
@@ -173,7 +173,7 @@ public class ListqueuesImpl extends XynaCommandImplementation<Listqueues> {
         }
       },
       QueueManager {
-        public String extract(Queue ai) {
+        public String extract(IQueue ai) {
           if (ai.getConnectData() instanceof WebSphereMQConnectData) {
             return ((WebSphereMQConnectData) ai.getConnectData()).getQueueManager();
           } else {
@@ -181,7 +181,7 @@ public class ListqueuesImpl extends XynaCommandImplementation<Listqueues> {
           }
         }
       }, Channel {
-        public String extract(Queue ai) {
+        public String extract(IQueue ai) {
           if (ai.getConnectData() instanceof WebSphereMQConnectData) {
             return ((WebSphereMQConnectData) ai.getConnectData()).getChannel();
           } else {
@@ -189,7 +189,7 @@ public class ListqueuesImpl extends XynaCommandImplementation<Listqueues> {
           }
         }
       }, ConnectString {
-        public String extract(Queue ai) {
+        public String extract(IQueue ai) {
           if (ai.getConnectData() instanceof OracleAQConnectData) {
             return ((OracleAQConnectData) ai.getConnectData()).getJdbcUrl();
           } else {
@@ -197,7 +197,7 @@ public class ListqueuesImpl extends XynaCommandImplementation<Listqueues> {
           }
         }
       }, UserName {
-        public String extract(Queue ai) {
+        public String extract(IQueue ai) {
           if (ai.getConnectData() instanceof OracleAQConnectData) {
             return ((OracleAQConnectData) ai.getConnectData()).getUserName();
           } else {
@@ -205,7 +205,7 @@ public class ListqueuesImpl extends XynaCommandImplementation<Listqueues> {
           }
         }
       }, Password {
-        public String extract(Queue ai) {
+        public String extract(IQueue ai) {
           if (ai.getConnectData() instanceof OracleAQConnectData) {
             return ((OracleAQConnectData) ai.getConnectData()).getPassword();
           } else {
@@ -219,7 +219,7 @@ public class ListqueuesImpl extends XynaCommandImplementation<Listqueues> {
           Arrays.asList(UniqueXynaQueueName, ExternalQueueName, Type, Hostname, Port, 
               QueueManager, Channel, ConnectString, UserName) );
       
-      public abstract String extract(Queue ai);
+      public abstract String extract(IQueue ai);
     }
 
   }

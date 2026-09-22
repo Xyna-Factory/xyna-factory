@@ -42,4 +42,10 @@
       <Type>int</Type>
     </Meta>
   </Data>
+  <Data Label="Only Parent Runtime Info" VariableName="onlyParentRuntimeInfo">
+    <Meta>
+      <Type>boolean</Type>
+      <Documentation>True when the Runtime Information in member info has been fetched with data from the parent. This leads to only the basic info being present: Workflow inputs, outputs and exceptions (when raised).</Documentation>
+    </Meta>
+  </Data>
 </DataType>

@@ -77,7 +77,7 @@ public class VetoManagementTest extends TestCase {
   }
   
   private SchedulerBean createSchedulerBean(List<Veto> requestedVetos) {
-    SchedulerBean bean = new SchedulerBean(Collections.<Capacity>emptyList(), requestedVetos);
+    SchedulerBean bean = new SchedulerBean(Collections.<Capacity>emptyList(), requestedVetos, Collections.<Veto>emptyList());
     return bean;
   }
   
@@ -320,7 +320,7 @@ public class VetoManagementTest extends TestCase {
     assertEquals("Vetos should have been empty after setup", 0, vetos.size());
     
     
-    AdministrativeVeto adminVeto = new AdministrativeVeto("AV", "for testing");
+    AdministrativeVeto adminVeto = new AdministrativeVeto("AV", "for testing", System.currentTimeMillis());
     try {
       vm.allocateAdministrativeVeto(adminVeto);
     } catch (XPRC_AdministrativeVetoAllocationDenied e) {
@@ -328,7 +328,7 @@ public class VetoManagementTest extends TestCase {
     }
    
     try {
-      vm.allocateAdministrativeVeto(new AdministrativeVeto("AV", "failed") );
+      vm.allocateAdministrativeVeto(new AdministrativeVeto("AV", "failed", System.currentTimeMillis()) );
       fail("Expected exception XPRC_AdministrativeVetoAllocationDenied" );
     } catch (XPRC_AdministrativeVetoAllocationDenied e) {
       assertEquals( "Das Veto 'AV' konnte nicht administrativ belegt werden, da es bereits von Auftrag -1 gehalten wird.", e.getMessage() );
@@ -340,13 +340,13 @@ public class VetoManagementTest extends TestCase {
     assertEquals("Veto documentation does not match created AdministrativeVeto", adminVeto.getDocumentation(), vetos.iterator().next().getDocumentation() );
     
     try {
-      vm.setDocumentationOfAdministrativeVeto(new AdministrativeVeto("AV", "changed") );
+      vm.setDocumentationOfAdministrativeVeto(new AdministrativeVeto("AV", "changed", System.currentTimeMillis()) );
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       fail("Unexpected exception "+e);
       assertEquals( "Das Veto 'AV' konnte nicht administrativ belegt werden, da es bereits von Auftrag -1 gehalten wird.", e.getMessage() );
     }
     try {
-      vm.setDocumentationOfAdministrativeVeto(new AdministrativeVeto("NONE", "changed") );
+      vm.setDocumentationOfAdministrativeVeto(new AdministrativeVeto("NONE", "changed", System.currentTimeMillis()) );
       fail("Expected exception XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY" );
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       assertEquals( "No object found with primarykey 'NONE' in table 'vetos'", e.getMessage() );
@@ -363,7 +363,7 @@ public class VetoManagementTest extends TestCase {
     }
     
     try {
-      vm.freeAdministrativeVeto(new AdministrativeVeto("NONE", "failed"));
+      vm.freeAdministrativeVeto(new AdministrativeVeto("NONE", "failed", System.currentTimeMillis()));
       fail("Expected exception XPRC_AdministrativeVetoDeallocationDenied" );
     } catch (XPRC_AdministrativeVetoDeallocationDenied e) {
       assertEquals( "The Veto 'NONE' could not be deallocated, it is either not held administratively or not held at all.", e.getMessage() );
@@ -378,7 +378,7 @@ public class VetoManagementTest extends TestCase {
     Collection<VetoInformation> vetos = vm.listVetos();
     assertEquals("Vetos should have been empty after setup", 0, vetos.size());
     
-    AdministrativeVeto adminVeto = new AdministrativeVeto("AV", "for testing");
+    AdministrativeVeto adminVeto = new AdministrativeVeto("AV", "for testing", System.currentTimeMillis());
     try {
       vm.allocateAdministrativeVeto(adminVeto);
     } catch (XPRC_AdministrativeVetoAllocationDenied e) {

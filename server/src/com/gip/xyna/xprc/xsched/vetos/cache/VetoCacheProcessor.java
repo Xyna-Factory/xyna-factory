@@ -168,4 +168,6 @@ public abstract class VetoCacheProcessor implements Algorithm {
     return true;
   }
 
+  public abstract boolean allowSharedVetos();
+  
 }

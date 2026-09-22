@@ -71,6 +71,11 @@ public class WhiteListUtils {
   }
 
 
+  private static String removePathAndPruneEmptyParents(String json, String pathToRemove) {
+    return removePathFromJSON(json, pathToRemove);
+  }
+
+
   public static boolean isJSONPartTheSame(String json1, String json2, String path) {
     String s1 = extractPathFromJSON(json1, path);
     String s2 = extractPathFromJSON(json2, path);
@@ -399,8 +404,13 @@ public class WhiteListUtils {
 
   public static boolean isJSONTheSameExceptPaths(String json1, String json2, List<String> paths) {
     for (String p : paths) {
-      json1 = removePathFromJSON(json1, p);
-      json2 = removePathFromJSON(json2, p);
+      Object before1 = JSONValue.parse(json1);
+      Object before2 = JSONValue.parse(json2);
+      Object after1 = JSONValue.parse(removePathAndPruneEmptyParents(json1, p));
+      Object after2 = JSONValue.parse(removePathAndPruneEmptyParents(json2, p));
+      pruneEmptyArrayParents(before1, before2, after1, after2);
+      json1 = JSONValue.toJSONString(after1);
+      json2 = JSONValue.toJSONString(after2);
       Object o1 = JSONValue.parse(json1);
       Object o2 = JSONValue.parse(json2);
       if (o1.equals(o2)) {
@@ -413,6 +423,41 @@ public class WhiteListUtils {
       logger.debug("json2=" + canonicalizeJSON(json2));
     }
     return false;
+  }
+
+
+  private static void pruneEmptyArrayParents(Object before1, Object before2, Object after1, Object after2) {
+    if (!(after1 instanceof JSONObject) || !(after2 instanceof JSONObject)) {
+      return;
+    }
+    JSONObject beforeObject1 = before1 instanceof JSONObject ? (JSONObject) before1 : new JSONObject();
+    JSONObject beforeObject2 = before2 instanceof JSONObject ? (JSONObject) before2 : new JSONObject();
+    JSONObject afterObject1 = (JSONObject) after1;
+    JSONObject afterObject2 = (JSONObject) after2;
+    Set<String> keys = new HashSet<>(afterObject1.keySet());
+    keys.addAll(afterObject2.keySet());
+    for (String key : keys) {
+      Object beforeValue1 = beforeObject1.get(key);
+      Object beforeValue2 = beforeObject2.get(key);
+      Object afterValue1 = afterObject1.get(key);
+      Object afterValue2 = afterObject2.get(key);
+      pruneEmptyArrayParents(beforeValue1, beforeValue2, afterValue1, afterValue2);
+        boolean wasNonEmptyArray = (beforeValue1 instanceof JSONArray && !((JSONArray) beforeValue1).isEmpty())
+          || (beforeValue2 instanceof JSONArray && !((JSONArray) beforeValue2).isEmpty());
+        if (wasNonEmptyArray && afterValue1 instanceof JSONArray && ((JSONArray) afterValue1).isEmpty()
+          && afterValue2 instanceof JSONArray && ((JSONArray) afterValue2).isEmpty()) {
+        afterObject1.remove(key);
+        afterObject2.remove(key);
+      } else if (beforeValue1 instanceof JSONArray && !((JSONArray) beforeValue1).isEmpty()
+          && afterValue1 instanceof JSONArray && ((JSONArray) afterValue1).isEmpty()
+          && !(afterValue2 instanceof JSONArray)) {
+        afterObject1.remove(key);
+      } else if (beforeValue2 instanceof JSONArray && !((JSONArray) beforeValue2).isEmpty()
+          && afterValue2 instanceof JSONArray && ((JSONArray) afterValue2).isEmpty()
+          && !(afterValue1 instanceof JSONArray)) {
+        afterObject2.remove(key);
+      }
+    }
   }
 
 

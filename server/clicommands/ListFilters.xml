@@ -23,4 +23,5 @@
   <BoolOption Name="i" LongName="instancesOnly" Description="Print informations for instances only." Optional="true"/>
   <BoolOption Name="c" LongName="instanceConfigurationParameter" Description="Print informations for instance configuration parameters." Optional="true"/>
   <BoolOption Name="r" LongName="sortByRuntimeContext" Description="Orders by runtime context name instead of filter name." Optional="true"/>
+  <Argument Name="excludeColumns" Description="Do not display the given columns" MultipleValues="true" Optional="true"/>
 </XynaCommandLineCommand>

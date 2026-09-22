@@ -28,7 +28,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.gip.xyna.sharedresources</groupId>
   <artifactId>sqlsharedresourcesynchronizer</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <packaging>jar</packaging>
   <properties>
     <bom.dir>../../installation/build</bom.dir>
