@@ -65,6 +65,7 @@ import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
+import org.eclipse.jgit.lib.SubmoduleConfig.FetchRecurseSubmodulesMode;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
@@ -876,6 +877,7 @@ public class RepositoryInteraction {
     }
     PullCommand cmd = git.pull();
     getCredentialsMgmt().addCredentialsToCommand(cmd, repository, container.creds);
+    cmd.setRecurseSubmodules(readFetchRecurseSubmodulesMode());
     cmd.call();
 
     if(stashRequired) {
@@ -1189,9 +1191,21 @@ public class RepositoryInteraction {
   }
 
 
+  private FetchRecurseSubmodulesMode readFetchRecurseSubmodulesMode() {
+    String submoduleRecurse = RepositoryManagementServiceOperationImpl.FETCH_SUBMODULE_POLICY.get();
+    try {
+      FetchRecurseSubmodulesMode mode = FetchRecurseSubmodulesMode.valueOf(submoduleRecurse);
+     return mode;
+    } catch (Exception e) {
+      logger.error("Could not parse FetchRecurseMode. - Property: " + submoduleRecurse, e);
+    }
+    return FetchRecurseSubmodulesMode.NO;
+  }
+
   private void fetch(Git git, Repository repository, GitDataContainer container) throws Exception {
     FetchCommand cmd =  git.fetch();
     getCredentialsMgmt().addCredentialsToCommand(cmd, repository, container.creds);
+    cmd.setRecurseSubmodules(readFetchRecurseSubmodulesMode());
 
     FetchResult result = cmd.call();
     if (logger.isDebugEnabled()) {
