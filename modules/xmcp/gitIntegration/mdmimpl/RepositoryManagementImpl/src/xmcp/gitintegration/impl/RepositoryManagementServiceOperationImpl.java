@@ -453,4 +453,13 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
     
     return result;
   }
+
+
+  @Override
+  public void removeUserFromRepository(XynaOrderServerExtension order, RepositoryUserCreationData user) {
+    SessionManagement sessionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getSessionManagement();
+    String sessionId = order.getSessionId();
+    String username = sessionManagement.resolveSessionToUser(sessionId);
+    new UserManagementStorage().removeUserFromRepository(user.getRepository().getPath(),username);
+  }
 }
