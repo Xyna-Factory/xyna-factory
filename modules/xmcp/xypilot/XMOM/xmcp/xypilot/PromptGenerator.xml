@@ -20,7 +20,7 @@
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
   <Libraries>PromptGeneratorImpl.jar</Libraries>
-  <Libraries>freemarker-2.3.32.jar</Libraries>
+  <Libraries>freemarker-2.3.35.jar</Libraries>
   <Service Label="PromptGenerator" TypeName="PromptGenerator">
     <Meta>
       <AdditionalDependencies>
