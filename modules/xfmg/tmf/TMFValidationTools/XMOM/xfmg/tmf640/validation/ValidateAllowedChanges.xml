@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Validate Allowed Changes" TypeName="ValidateAllowedChanges" TypePath="xfmg.tmf640.validation" Version="1.8">
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Validate Allowed Changes" TypeName="ValidateAllowedChanges" TypePath="xfmg.tmf640.validation" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Validate Allowed Changes" Name="ValidateAllowedChanges">
     <Input>
       <Data ID="2" Label="JSON old Service" ReferenceName="Text" ReferencePath="base" VariableName="text2"/>
@@ -24,8 +25,20 @@
     </Input>
     <Output/>
     <Throws>
-      <Exception Label="Not An Allowed Change" ReferenceName="NotAnAllowedChange" ReferencePath="xfmg.tmf640.validation" VariableName="notAnAllowedChange471"/>
+      <Exception Label="Not An Allowed Change" ReferenceName="NotAnAllowedChange" ReferencePath="xfmg.tmf640.validation" VariableName="notAnAllowedChange755"/>
     </Throws>
+    <ServiceReference ID="289" Label="Validation Utils" ReferenceName="ValidationUtils.ValidationUtils" ReferencePath="xfmg.tmf.validation">
+      <Source RefID="288"/>
+      <Target RefID="288"/>
+    </ServiceReference>
+    <ServiceReference ID="395" Label="Validation Utils" ReferenceName="ValidationUtils.ValidationUtils" ReferencePath="xfmg.tmf.validation">
+      <Source RefID="394"/>
+      <Target RefID="394"/>
+    </ServiceReference>
+    <ServiceReference ID="246" Label="Get All Service Paths as Json Paths" ReferenceName="GetAllServicePathsAsJsonPaths" ReferencePath="xfmg.tmf633">
+      <Source RefID="245"/>
+      <Target RefID="245"/>
+    </ServiceReference>
     <ServiceReference ID="114" Label="Validation Utils" ReferenceName="ValidationUtils.ValidationUtils" ReferencePath="xfmg.tmf.validation">
       <Source RefID="113"/>
       <Target RefID="113"/>
@@ -45,20 +58,68 @@
       </Output>
       <Mapping>%1%=%0%.allowedChanges</Mapping>
     </Mappings>
-    <Function ID="113" Label="validate Allowed Changes">
-      <Source RefID="114"/>
-      <Source RefID="30"/>
+    <Function ID="245" Label="Get All Service Paths as Json Paths">
+      <Source RefID="246"/>
+      <Source RefID="7"/>
+      <Target RefID="246"/>
+      <Target RefID="248"/>
+      <Invoke Operation="GetAllServicePathsAsJsonPaths" ServiceID="246">
+        <Source RefID="7"/>
+      </Invoke>
+      <Receive ServiceID="246">
+        <Target RefID="248"/>
+      </Receive>
+    </Function>
+    <Function ID="288" Label="retain only paths">
+      <Source RefID="289"/>
       <Source RefID="2"/>
-      <Source RefID="148"/>
-      <Target RefID="114"/>
-      <Invoke Operation="validateAllowedChanges" ServiceID="114">
-        <Source RefID="30"/>
+      <Source RefID="248"/>
+      <Target RefID="289"/>
+      <Target RefID="342"/>
+      <Invoke Operation="retainOnlyPaths" ServiceID="289">
         <Source RefID="2">
           <Meta>
             <LinkType>UserConnected</LinkType>
           </Meta>
         </Source>
+        <Source RefID="248"/>
+      </Invoke>
+      <Receive ServiceID="289">
+        <Target RefID="342"/>
+      </Receive>
+    </Function>
+    <Function ID="394" Label="retain only paths">
+      <Source RefID="395"/>
+      <Source RefID="148"/>
+      <Source RefID="248"/>
+      <Target RefID="395"/>
+      <Target RefID="397"/>
+      <Invoke Operation="retainOnlyPaths" ServiceID="395">
         <Source RefID="148">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="248"/>
+      </Invoke>
+      <Receive ServiceID="395">
+        <Target RefID="397"/>
+      </Receive>
+    </Function>
+    <Function ID="113" Label="validate Allowed Changes">
+      <Source RefID="114"/>
+      <Source RefID="30"/>
+      <Source RefID="342"/>
+      <Source RefID="397"/>
+      <Target RefID="114"/>
+      <Invoke Operation="validateAllowedChanges" ServiceID="114">
+        <Source RefID="30"/>
+        <Source RefID="342">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="397">
           <Meta>
             <LinkType>UserConnected</LinkType>
           </Meta>
@@ -68,6 +129,15 @@
     </Function>
     <Data ID="30" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="internalized.tmf633.datamodel" VariableName="allowedChanges30">
       <Source RefID="20"/>
+    </Data>
+    <Data ID="248" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text248">
+      <Source RefID="245"/>
+    </Data>
+    <Data ID="342" Label="JSON" ReferenceName="Text" ReferencePath="base" VariableName="text342">
+      <Source RefID="288"/>
+    </Data>
+    <Data ID="397" Label="JSON" ReferenceName="Text" ReferencePath="base" VariableName="text397">
+      <Source RefID="394"/>
     </Data>
     <Assign ID="1"/>
   </Operation>

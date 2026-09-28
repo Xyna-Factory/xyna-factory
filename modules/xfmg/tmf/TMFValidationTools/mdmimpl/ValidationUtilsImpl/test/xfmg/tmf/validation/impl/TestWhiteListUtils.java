@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -114,28 +114,79 @@ public class TestWhiteListUtils {
 
   @Test
   public void testIsJSONPartTheSameEmptyArrayVsNull2() {
-    assertEquals(true, WhiteListUtils.isJSONTheSameExceptPaths("{\"serviceCharacteristic\":[{\"name\":\"name\",\"bla\":{}}]}", "{\"serviceCharacteristic\":[]}",
-                                                                Arrays.asList("$.serviceCharacteristic[?(@.name=='name')]")));
+    assertEquals(true,
+                 WhiteListUtils.isJSONTheSameExceptPaths("{\"serviceCharacteristic\":[{\"name\":\"name\",\"bla\":{}}]}",
+                                                         "{\"serviceCharacteristic\":[]}",
+                                                         Arrays.asList("$.serviceCharacteristic[?(@.name=='name')]")));
     assertEquals(true, WhiteListUtils.isJSONTheSameExceptPaths("{\"serviceCharacteristic\":[{\"name\":\"name\",\"bla\":{}}]}", "{}",
                                                                Arrays.asList("$.serviceCharacteristic[?(@.name=='name')]")));
   }
 
 
   @Test
-  public void testIsJSONTheSameExceptPathsSoleArrayElementAndMissingArray() {
-    assertEquals(true, WhiteListUtils.isJSONTheSameExceptPaths("{\"items\":[{\"id\":1}]}", "{}",
-                                                               Arrays.asList("$.items[?(@.id==1)]")));
+  public void testRetainOnlyPathsKeepsSelectedField() {
+    String json = "{\"id\":\"123\",\"name\":\"service\",\"serviceCharacteristic\":[{\"name\":\"a\",\"value\":\"1\"},{\"name\":\"b\",\"value\":\"2\"}]}";
+    String retained = WhiteListUtils.retainOnlyPaths(json, Arrays.asList("$.name", "$.id"));
+    assertEquals(JSONValue.parse("{\"id\":\"123\",\"name\":\"service\"}"), JSONValue.parse(retained));
   }
+
+
+  @Test
+  public void testRetainOnlyPathsKeepsMatchingServiceCharacteristic() {
+    String json = "{\"id\":\"123\",\"name\":\"service\",\"serviceCharacteristic\":[{\"name\":\"a\",\"value\":\"1\"},{\"name\":\"b\",\"value\":\"2\"}]}";
+    String retained = WhiteListUtils.retainOnlyPaths(json, Arrays.asList("$.serviceCharacteristic[?(@.name=='b')]"));
+    assertEquals(JSONValue.parse("{\"serviceCharacteristic\":[{\"name\":\"b\",\"value\":\"2\"}]}"), JSONValue.parse(retained));
+  }
+
+
+  @Test
+  public void testRetainOnlyPathsKeepsSelectedSubtreeAndDropsOthers() {
+    String json = "{\"id\":\"123\",\"serviceCharacteristic\":[{\"name\":\"a\",\"value\":\"1\"},{\"name\":\"b\",\"value\":\"2\"}],\"state\":\"active\"}";
+    String retained = WhiteListUtils.retainOnlyPaths(json, Arrays.asList("$.serviceCharacteristic[?(@.name=='b')].value"));
+    assertEquals(JSONValue.parse("{\"serviceCharacteristic\":[{\"value\":\"2\"}]}"), JSONValue.parse(retained));
+  }
+
+
+  @Test
+  public void testRetainOnlyPathsKeepsWholeArrayAndWholeObjectSelection() {
+    String json = "{\"root\":{\"items\":[{\"id\":\"a\",\"payload\":{\"enabled\":true}},{\"id\":\"b\",\"payload\":{\"enabled\":false}}],\"meta\":{\"name\":\"service\",\"version\":1}},\"ignoreMe\":\"drop\"}";
+    String retained = WhiteListUtils.retainOnlyPaths(json, Arrays.asList("$.root.items", "$.root.meta"));
+    assertEquals(JSONValue.parse("{\"root\":{\"items\":[{\"id\":\"a\",\"payload\":{\"enabled\":true}},{\"id\":\"b\",\"payload\":{\"enabled\":false}}],\"meta\":{\"name\":\"service\",\"version\":1}}}"),
+                 JSONValue.parse(retained));
+  }
+
+
+  @Test
+  public void testRetainDoesntLeaveArtifacts() {
+    String json = "{"
+        + "\"selected\":{\"name\":\"keep\",\"value\":1},"
+        + "\"unrelated\":{\"name\":\"keep\",\"value\":1},"
+        + "\"other\":{\"name\":\"drop\",\"value\":2}"
+        + "}";
+
+    String retained = WhiteListUtils.retainOnlyPaths(json, Arrays.asList("$.selected"));
+
+    assertEquals(JSONValue.parse("{\"selected\":{\"name\":\"keep\",\"value\":1}}"), JSONValue.parse(retained));
+  }
+
+
+  @Test
+  public void testIsJSONTheSameExceptPathsSoleArrayElementAndMissingArray() {
+    assertEquals(true, WhiteListUtils.isJSONTheSameExceptPaths("{\"items\":[{\"id\":1}]}", "{}", Arrays.asList("$.items[?(@.id==1)]")));
+  }
+
 
   @Test
   public void testNonRelatedEmptyArraysAreStillAChange() {
     assertEquals(false, WhiteListUtils.isJSONTheSameExceptPaths("{\"items\":[{\"id\":1}]}", "{\"other\":[]}",
-                                                               Arrays.asList("$.items[?(@.id==1)]")));
+                                                                Arrays.asList("$.items[?(@.id==1)]")));
   }
+
 
   @Test
   public void testJsJSONPartTheSameWrongAccess() {
     assertEquals(true, WhiteListUtils.isJSONPartTheSame("{\"serviceCharacteristic\":{}}", "{}", "serviceCharacteristic[0].@type"));
   }
+
 
 }

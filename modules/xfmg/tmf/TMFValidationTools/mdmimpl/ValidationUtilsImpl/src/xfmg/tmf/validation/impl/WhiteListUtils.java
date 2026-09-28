@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package xfmg.tmf.validation.impl;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -68,6 +69,76 @@ public class WhiteListUtils {
       //ok
     }
     return JSONValue.toJSONString(dc.read("$"));
+  }
+
+
+  public static String retainOnlyPaths(String json, List<String> paths) {
+    if (json == null || json.isEmpty()) {
+      return json;
+    }
+    if (paths == null || paths.isEmpty()) {
+      return json;
+    }
+    Object root = JSONValue.parse(json);
+    List<Object> selectedValues = new ArrayList<>();
+    for (String p : paths) {
+      if (p == null || p.isBlank()) {
+        continue;
+      }
+      try {
+        Object selected = JsonPath.compile(p).read(root);
+        addSelectedValues(selectedValues, selected);
+      } catch (PathNotFoundException e) {
+        // ignore non-existing matching paths
+      }
+    }
+    Object retained = retainMatchingNodes(root, selectedValues);
+    return retained == null ? "{}" : JSONValue.toJSONString(retained);
+  }
+
+
+  private static void addSelectedValues(List<Object> selectedValues, Object selected) {
+    if (selected == null) {
+      return;
+    }
+    if (selected instanceof JSONArray) {
+      for (Object o : (JSONArray) selected) {
+        selectedValues.add(o);
+      }
+    } else {
+      selectedValues.add(selected);
+    }
+  }
+
+
+  private static Object retainMatchingNodes(Object node, List<Object> selectedValues) {
+    if (node == null) {
+      return null;
+    }
+    if (selectedValues.stream().anyMatch(v -> v == node)) {
+      return node;
+    }
+    if (node instanceof JSONObject) {
+      JSONObject result = new JSONObject();
+      for (Entry<String, Object> e : ((JSONObject) node).entrySet()) {
+        Object kept = retainMatchingNodes(e.getValue(), selectedValues);
+        if (kept != null) {
+          result.put(e.getKey(), kept);
+        }
+      }
+      return result.isEmpty() ? null : result;
+    }
+    if (node instanceof JSONArray) {
+      JSONArray result = new JSONArray();
+      for (Object o : (JSONArray) node) {
+        Object kept = retainMatchingNodes(o, selectedValues);
+        if (kept != null) {
+          result.add(kept);
+        }
+      }
+      return result.isEmpty() ? null : result;
+    }
+    return null;
   }
 
 
