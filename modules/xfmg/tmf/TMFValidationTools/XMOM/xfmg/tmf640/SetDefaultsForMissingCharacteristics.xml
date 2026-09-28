@@ -26,19 +26,19 @@
       <Data ID="36" Label="Service" ReferenceName="Service" ReferencePath="internalized.tmf640.datamodel" VariableName="service36"/>
     </Output>
     <Throws>
-      <Exception Label="IncompatibleServiceSpecification" ReferenceName="IncompatibleServiceSpecification" ReferencePath="xfmg.tmf.validation" VariableName="incompatibleServiceSpecification8266"/>
+      <Exception Label="IncompatibleServiceSpecification" ReferenceName="IncompatibleServiceSpecification" ReferencePath="xfmg.tmf.validation" VariableName="incompatibleServiceSpecification7921"/>
     </Throws>
     <ServiceReference ID="4436" Label="Set Default For Single Characteristic" ReferenceName="SetDefaultForSingleCharacteristic" ReferencePath="xfmg.tmf640">
       <Source RefID="4435"/>
       <Target RefID="4435"/>
     </ServiceReference>
-    <ServiceReference ID="1122" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
-      <Source RefID="1121"/>
-      <Target RefID="1121"/>
-    </ServiceReference>
     <ServiceReference ID="4387" Label="Set Default For Single Characteristic" ReferenceName="SetDefaultForSingleCharacteristic" ReferencePath="xfmg.tmf640">
       <Source RefID="4386"/>
       <Target RefID="4386"/>
+    </ServiceReference>
+    <ServiceReference ID="1122" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
+      <Source RefID="1121"/>
+      <Target RefID="1121"/>
     </ServiceReference>
     <Choice ID="6839" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="23"/>
@@ -474,6 +474,7 @@
                   </Data>
                   <Target RefID="3154"/>
                 </Output>
+                <Mapping>%2%=%1%</Mapping>
                 <Mapping>%2%.serviceRelationshipCharacteristic=%0%.characteristic</Mapping>
               </Mappings>
               <Assign ID="3034">
