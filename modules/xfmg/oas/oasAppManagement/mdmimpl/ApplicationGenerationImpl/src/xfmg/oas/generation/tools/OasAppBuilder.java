@@ -72,7 +72,7 @@ public class OasAppBuilder {
     List<File> files = new ArrayList<>();
     data.statusHandler().storeStatusParsing();
     
-    callGenerator(generator, target, data.specFile(), data.oasVersion(), data.generateMock(), data.generateDataCapture());
+    callGenerator(generator, target, data);
     
     data.statusHandler().storeStatusAppBinaryGen();
     separateFiles(target);
@@ -126,7 +126,7 @@ public class OasAppBuilder {
       try {
         String tmpDirAsString = tmpDir.toString();
 
-        callGenerator(generator, tmpDirAsString, data.specFile(), data.oasVersion(), data.generateMock(), data.generateDataCapture());
+        callGenerator(generator, tmpDirAsString, data);
         separateFiles(tmpDirAsString);
         String appName = createAppFileNameFromXml(tmpDirAsString);
 
@@ -144,17 +144,17 @@ public class OasAppBuilder {
   }
 
   
-  private void callGenerator(String generatorName, String target, String specFile, String oasVersion, boolean generateMock, boolean generateDataCapture) {
+  private void callGenerator(String generatorName, String target, AppGenerationData data) {
     final CodegenConfigurator configurator = new CodegenConfigurator()
         .setGeneratorName(generatorName)
-        .setInputSpec(specFile)
+        .setInputSpec(data.specFile())
         .addAdditionalProperty("generateAliasAsModel", XynaFactory.isFactoryServer() ?
                                ApplicationGenerationServiceOperationImpl.createListWrappers.get() : true)
         .addAdditionalProperty("x-createListWrappers", XynaFactory.isFactoryServer() ? 
                                ApplicationGenerationServiceOperationImpl.createListWrappers.get() : true)
-        .addAdditionalProperty("generateMock", generateMock)
-        .addAdditionalProperty("generateDataCapture", generateDataCapture)
-        .addAdditionalProperty("oasBaseVersion", oasVersion)
+        .addAdditionalProperty("generateMock", data.generateMock())
+        .addAdditionalProperty("generateDataCapture", data.generateDataCapture())
+        .addAdditionalProperty("oasBaseVersion", data.oasVersion())
         .setOutputDir(target);
     
       final ClientOptInput clientOptInput = configurator.toClientOptInput();
