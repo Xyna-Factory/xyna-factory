@@ -26,9 +26,9 @@ import org.apache.log4j.Logger;
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
-
 import xfmg.oas.generation.cli.generated.Buildoasapplication;
 import xfmg.oas.generation.tools.AppGenerationData;
+import xfmg.oas.generation.tools.GenerateApplicationTool;
 import xfmg.oas.generation.tools.OASApplicationData;
 import xfmg.oas.generation.tools.OasAppBuilder;
 import xfmg.oas.generation.tools.OasImportStatusHandler;
@@ -66,7 +66,8 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
     if (!result.getErrors().isEmpty()) {
       throw new RuntimeException(errors.toString());
     }
-    String oasVersion = "TODO:";
+    String oasVersion = GenerateApplicationTool.determineOasBaseVersion(getClass());
+
     AppGenerationData data = new AppGenerationData(specFile, oasVersion, payload.getGenerateMockOption(), payload.getGenerateDataCaptureOption(), new OasImportStatusHandler());
     createAppAndPrintId(statusOutputStream, "xmom-data-model", target + "_datatypes", "datamodel", data);
     if (payload.getBuildProvider()) {
