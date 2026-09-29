@@ -133,7 +133,8 @@ public class GenerateApplicationTool {
                                           boolean generateDataCapture, OasImportStatusHandler statusHandler) {
     OasAppBuilder oasAppBuilder = new OasAppBuilder();
     String result = null;
-    try (OASApplicationData data = oasAppBuilder.createOasApp(generator, target, specFile, generateMock, generateDataCapture, statusHandler)) {
+    AppGenerationData appData = new AppGenerationData(specFile, "TODO:", generateMock, generateDataCapture, statusHandler);
+    try (OASApplicationData data = oasAppBuilder.createOasApp(generator, target, appData)) {
       statusHandler.storeStatusAppImport();
       if(workspace == null || workspace.isBlank()) {
         importApplicationAsApplication(correlatedXynaOrder, data.getId());

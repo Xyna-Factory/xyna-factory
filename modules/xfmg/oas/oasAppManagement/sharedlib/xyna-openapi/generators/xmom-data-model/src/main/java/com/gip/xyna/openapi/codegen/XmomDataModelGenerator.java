@@ -17,8 +17,15 @@
  */
 package com.gip.xyna.openapi.codegen;
 
-import org.openapitools.codegen.*;
+import org.openapitools.codegen.CliOption;
 import org.openapitools.codegen.CodegenDiscriminator.MappedModel;
+import org.openapitools.codegen.CodegenModel;
+import org.openapitools.codegen.CodegenOperation;
+import org.openapitools.codegen.CodegenProperty;
+import org.openapitools.codegen.CodegenResponse;
+import org.openapitools.codegen.CodegenType;
+import org.openapitools.codegen.DefaultCodegen;
+import org.openapitools.codegen.SupportingFile;
 import org.openapitools.codegen.model.ModelMap;
 import org.openapitools.codegen.model.ModelsMap;
 import org.openapitools.codegen.model.OperationMap;
@@ -35,8 +42,13 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.media.Schema;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.io.File;
 
 public class XmomDataModelGenerator extends DefaultCodegen {
@@ -47,6 +59,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
   private XynaCodegenFactory codegenFactory= new XynaCodegenFactory(this);
 
   public static final String XYNA_FACTORY_VERSION = "xynaFactoryVersion";
+  public static final String OAS_BASE_VERSION = "oasBaseVersion";
 
   /**
    * Configures the type of generator.
@@ -273,6 +286,8 @@ public class XmomDataModelGenerator extends DefaultCodegen {
 
   public XmomDataModelGenerator() {
     super();
+
+    cliOptions.add(CliOption.newString(OAS_BASE_VERSION, "Version of Oas_Base to reference in runtime context dependencies"));
 
     // set the output folder here
     outputFolder = "generated-code/xmom-data-model";

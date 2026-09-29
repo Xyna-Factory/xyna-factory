@@ -23,18 +23,20 @@
         <attribute name="yaml" description="yaml" />
         <attribute name="type" description="type" />
         <attribute name="target" description="target" />
-        <attribute name="version" description="version" />
+        <attribute name="version" description="OAS_Base version" />
         <sequential>
             <property name="appgen.dir" value="@{oas.dir}/mdmimpl/ApplicationGenerationImpl" />
             <ant antfile="build.xml" dir="@{oas.dir}" target="prepare-mdm-jar-if-missing" />
-            <replace-appversion oasdir="@{oas.dir}" version="@{version}" />
             <ant antfile="build.xml" dir="${appgen.dir}" target="build">
                 <property name="target.dir" value="${appgen.dir}/deploy" />
             </ant>
             <java classname="xfmg.oas.offline.OASApplicationGeneration" fork="true" failonerror="true">
+                <sysproperty key="javax.xml.parsers.SAXParserFactory" value="com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl"/>
                 <arg value="@{yaml}" />
                 <arg value="@{type}" />
                 <arg value="@{target}" />
+                <arg value="--oasVersion" />
+                <arg value="@{version}" />
                 <classpath>
                     <fileset dir="${appgen.dir}/lib/xyna">
                         <include name="*.jar" />
@@ -46,16 +48,4 @@
             </java>
         </sequential>
     </macrodef>
-
-
-    <macrodef name="replace-appversion">
-        <attribute name="oasdir" description="oas.dir" />
-        <attribute name="version" description="version" />
-        <sequential>
-            <property name="datamodelres" value="@{oasdir}/sharedlib/xyna-openapi/generators/xmom-data-model/src/main/resources/xmom-data-model/" />
-            <copy file="${datamodelres}/applicationAntToken.mustache" tofile="${datamodelres}/application.mustache" overwrite="true" />
-            <replace file="${datamodelres}/application.mustache" token="$AppVersion" value="@{version}"/>
-        </sequential>
-    </macrodef>
-
 </project>

@@ -53,7 +53,7 @@
     </target>
 
     <target name="replace-appversion">
-        <xmlproperty file="application.xml" />
+        <xmlproperty file="application.xml" /> <!-- TODO: read application.xml from OAS_BASE instead -->
         <copy file="${datamodelres}/applicationAntToken.mustache" tofile="${datamodelres}/application.mustache" overwrite="true" />
         <replace file="${datamodelres}/application.mustache" token="$AppVersion" value="${Application(versionName)}"/>
     </target>

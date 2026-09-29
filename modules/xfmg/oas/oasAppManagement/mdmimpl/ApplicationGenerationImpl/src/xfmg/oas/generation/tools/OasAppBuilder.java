@@ -68,20 +68,13 @@ import xfmg.oas.generation.impl.ApplicationGenerationServiceOperationImpl;
 
 public class OasAppBuilder {
 
-  
-  public OASApplicationData createOasApp(String generator, String target, String specFile, boolean generateMock, boolean generateDataCapture) {
-    return createOasApp(generator, target, specFile, generateMock, generateDataCapture, new OasImportStatusHandler());
-  }
-
-  
-  public OASApplicationData createOasApp(String generator, String target, String specFile, boolean generateMock, boolean generateDataCapture,
-                                         OasImportStatusHandler statusHandler) {
+  public OASApplicationData createOasApp(String generator, String target, AppGenerationData data) {
     List<File> files = new ArrayList<>();
-    statusHandler.storeStatusParsing();
+    data.statusHandler().storeStatusParsing();
     
-    callGenerator(generator, target, specFile, generateMock, generateDataCapture);
+    callGenerator(generator, target, data.specFile(), data.oasVersion(), data.generateMock(), data.generateDataCapture());
     
-    statusHandler.storeStatusAppBinaryGen();
+    data.statusHandler().storeStatusAppBinaryGen();
     separateFiles(target);
     compileFilter(target);
     String appFileName = createAppFileNameFromXml(target);
@@ -126,18 +119,18 @@ public class OasAppBuilder {
     }
   }
 
-  public void createOasAppOffline(String generator, String targetDir, String specFile, boolean generateMock, boolean generateDataCapture) {
+  public void createOasAppOffline(String generator, String target, AppGenerationData data) {
     try {
       Path tmpDir = Files.createTempDirectory("oasmain");
       File tmpDirFile = tmpDir.toFile();
       try {
         String tmpDirAsString = tmpDir.toString();
 
-        callGenerator(generator, tmpDirAsString, specFile, generateMock, generateDataCapture);
+        callGenerator(generator, tmpDirAsString, data.specFile(), data.oasVersion(), data.generateMock(), data.generateDataCapture());
         separateFiles(tmpDirAsString);
         String appName = createAppFileNameFromXml(tmpDirAsString);
 
-        File targetAppFile = new File(targetDir, appName + ".zip");
+        File targetAppFile = new File(target, appName + ".zip");
         try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(targetAppFile))) {
           FileUtils.zipDir(tmpDirFile, zos, tmpDirFile);
         }
@@ -151,7 +144,7 @@ public class OasAppBuilder {
   }
 
   
-  private void callGenerator(String generatorName, String target, String specFile, boolean generateMock, boolean generateDataCapture) {
+  private void callGenerator(String generatorName, String target, String specFile, String oasVersion, boolean generateMock, boolean generateDataCapture) {
     final CodegenConfigurator configurator = new CodegenConfigurator()
         .setGeneratorName(generatorName)
         .setInputSpec(specFile)
@@ -161,6 +154,7 @@ public class OasAppBuilder {
                                ApplicationGenerationServiceOperationImpl.createListWrappers.get() : true)
         .addAdditionalProperty("generateMock", generateMock)
         .addAdditionalProperty("generateDataCapture", generateDataCapture)
+        .addAdditionalProperty("oasBaseVersion", oasVersion)
         .setOutputDir(target);
     
       final ClientOptInput clientOptInput = configurator.toClientOptInput();
