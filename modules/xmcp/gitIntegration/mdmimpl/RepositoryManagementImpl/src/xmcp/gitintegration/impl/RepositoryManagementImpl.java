@@ -1091,7 +1091,7 @@ public class RepositoryManagementImpl {
 
   private static boolean createSplitWorkspaceXml(RepositoryConnection connection, WorkspaceConfigSplit split, OperationTracker tracker) {
     if (split == WorkspaceConfigSplit.NONE) {
-      return false;
+      return true;
     }
     WorkspaceXmlCreationConfig.Builder builder = new WorkspaceXmlCreationConfig.Builder();
     builder.splitResult(connection.getSplittype());
@@ -1099,7 +1099,7 @@ public class RepositoryManagementImpl {
     builder.force(true);
     WorkspaceObjectManagement.updateWorkspaceContent(builder.instance());
     tracker.trackInfo("Created workspace xml for split type " + split);
-    return false;
+    return true;
   }
 
 
@@ -1147,7 +1147,11 @@ public class RepositoryManagementImpl {
       Path workspaceXmlPathInRevision = revisionPath.resolve(workspaceXmlPath);
       Path workspaceXmlPathInRepo = workspacePathInRepo.resolve(workspaceXmlPath);
       try {
-        Files.deleteIfExists(workspaceXmlPathInRevision);
+        if (split == WorkspaceConfigSplit.NONE) {
+          Files.deleteIfExists(workspaceXmlPathInRevision);
+        } else {
+          FileUtils.deleteDirectoryRecursively(workspaceXmlPathInRevision.toFile());
+        }
         tracker.trackInfo("Deleted workspace xml at " + workspaceXmlPathInRevision);
         if(!createSymbolicLink(workspaceXmlPathInRevision, workspaceXmlPathInRepo)) {
           tracker.trackError("Could not create symbolic link from " + workspaceXmlPathInRevision + " to " + workspaceXmlPathInRepo);
@@ -1185,13 +1189,9 @@ public class RepositoryManagementImpl {
       }
     } else {
       Path configPathInRevision = workspaceRevisionPath.resolve(CONFIG);
-      WorkspaceXmlCreationConfig.Builder builder = new WorkspaceXmlCreationConfig.Builder();
-      builder.force(true); //workspace is not connected yet
-      builder.splitResult(split.toString());
-      builder.workspaceName(connection.getWorkspaceName());
       try {
-        WorkspaceObjectManagement.updateWorkspaceContent(builder.instance());
-        tracker.trackInfo("Created config for " + connection.getWorkspaceName() + " at " + configPathInRevision);
+        Files.createDirectories(configPathInRevision);
+        tracker.trackInfo("Created config directory for " + connection.getWorkspaceName() + " at " + configPathInRevision);
       } catch (Exception e) {
         logger.error("Could not create workspace content for workspace", e);
         tracker.trackError("Could not create workspace content for workspace.");
@@ -1211,6 +1211,10 @@ public class RepositoryManagementImpl {
         tracker.trackInfo("Copied workspace content of revision " + revision + " to repository at " + workspacePathInRepo);
       } else {
         Path savedXmomPath = revPath.resolve(SAVED).resolve(XMOM);
+        if (Files.isSymbolicLink(savedXmomPath)) {
+          savedXmomPath.toFile().delete();
+          tracker.trackInfo("Deleted old symbolic link at " + savedXmomPath);
+        }
         if (!Files.exists(savedXmomPath)) {
           Files.createDirectories(savedXmomPath);
           tracker.trackInfo("Created directory for xmom content of revision " + revision + " at " + savedXmomPath);
@@ -1222,7 +1226,12 @@ public class RepositoryManagementImpl {
         WorkspaceConfigSplit split = WorkspaceConfigSplit.fromId(connection.getSplittype()).orElse(WorkspaceConfigSplit.NONE);
         String workspaceXml = split == WorkspaceConfigSplit.NONE ? WORKSPACE_XML : CONFIG;
         Path workspaceXmlInRepo = workspacePathInRepo.resolve(workspaceXml);
-        FileUtils.copyRecursivelyWithFolderStructure(revPath.resolve(workspaceXml).toFile(), workspaceXmlInRepo.toFile());
+        if (split == WorkspaceConfigSplit.NONE) {
+          Files.createDirectories(workspaceXmlInRepo.getParent());
+          FileUtils.copyFile(revPath.resolve(workspaceXml).toFile(), workspaceXmlInRepo.toFile());
+        } else {
+          FileUtils.copyRecursivelyWithFolderStructure(revPath.resolve(workspaceXml).toFile(), workspaceXmlInRepo.toFile());
+        }
         tracker.trackInfo("Copied workspace xml of revision " + revision + " to repository at " + workspaceXmlInRepo);
       }
     } catch (Exception e) {
