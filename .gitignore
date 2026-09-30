@@ -191,3 +191,8 @@ server.properties
 workspace.properties
 
 /modules/xfmg/tmf/datamodels/apps
+
+/modules/xfmg/oas/oasAppManagement/sharedlib/xyna-open-api/test
+/modules/xfmg/oas/oasAppManagement/sharedlib/xyna-open-api/generators/xmom-data-model/src/test/java/com/gip/xyna/openapi/codegen/XmomDataModelGeneratorTest.java
+/modules/xfmg/oas/oasAppManagement/sharedlib/xyna-open-api/generators/xmom-server/src/test/java/com/gip/xyna/openapi/codegen/XmomServerGeneratorTest.java
+/modules/xfmg/oas/oasAppManagement/sharedlib/xyna-open-api/generators/xmom-client/src/test/java/com/gip/xyna/openapi/codegen/XmomClientGeneratorTest.java
