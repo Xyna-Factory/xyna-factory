@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,8 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gip.xyna</groupId>
-    <artifactId>ConstantInputSource</artifactId>
-    <version>1.0.0</version>
+    <artifactId>XTFInputSource</artifactId>
+    <version>1.1.0</version>
     <packaging>jar</packaging>
     <properties>
         <bom.dir>../../installation/build</bom.dir>
