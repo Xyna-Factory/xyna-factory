@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2026 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get All Service Paths as Json Paths" TypeName="GetAllServicePathsAsJsonPaths" TypePath="xfmg.tmf633" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Get All Service Paths as Json Paths" Name="GetAllServicePathsAsJsonPaths">
+    <Input>
+      <Data ID="10" Label="ServiceSpecification" ReferenceName="ServiceSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="serviceSpecification10"/>
+    </Input>
+    <Output>
+      <Data ID="27" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text27"/>
+    </Output>
+    <Mappings ID="36" Label="Mapping">
+      <Input>
+        <Data ID="427" Label="ServiceSpecification" ReferenceName="ServiceSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="serviceSpecification427">
+          <Source RefID="36"/>
+        </Data>
+        <Source RefID="10"/>
+      </Input>
+      <Output>
+        <Data ID="57" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text57">
+          <Source RefID="36"/>
+        </Data>
+        <Target RefID="58"/>
+      </Output>
+      <Output>
+        <Data ID="436" IsList="true" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="internalized.tmf633.datamodel" VariableName="serviceSpecRelationship436">
+          <Source RefID="36"/>
+        </Data>
+        <Target RefID="437"/>
+      </Output>
+      <Output>
+        <Data ID="490" IsList="true" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="characteristicSpecification490">
+          <Source RefID="36"/>
+        </Data>
+        <Target RefID="491"/>
+      </Output>
+      <Mapping>%1%["0"].text="$.@type"</Mapping>
+      <Mapping>%1%["1"].text="$.category"</Mapping>
+      <Mapping>%1%["2"].text="$.id"</Mapping>
+      <Mapping>%1%["3"].text="$.name"</Mapping>
+      <Mapping>%1%["4"].text="$.serviceDate"</Mapping>
+      <Mapping>%1%["5"].text="$.state"</Mapping>
+      <Mapping>%1%["6"].text="$.relatedEntity"</Mapping>
+      <Mapping>%1%["7"].text="$.relatedParty"</Mapping>
+      <Mapping>%1%["8"].text="$.serviceSpecification"</Mapping>
+      <Mapping>%1%["9"].text="$.supportingResource"</Mapping>
+      <Mapping>%2%=%0%.serviceSpecRelationship</Mapping>
+      <Mapping>%3%=%0%.specCharacteristic</Mapping>
+    </Mappings>
+    <Foreach ID="989">
+      <Source RefID="437"/>
+      <Target RefID="1038"/>
+      <InputList RefID="437">
+        <Data ID="990" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="internalized.tmf633.datamodel" VariableName="serviceSpecRelationship990"/>
+      </InputList>
+      <OutputList RefID="1038">
+        <Data ID="1037" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text1037">
+          <Source RefID="957"/>
+        </Data>
+      </OutputList>
+      <Choice ID="957" TypeName="BaseChoiceTypeFormula" TypePath="server">
+        <Source RefID="990"/>
+        <Target RefID="1037"/>
+        <Input>
+          <Data ID="972" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="internalized.tmf633.datamodel" VariableName="serviceSpecRelationship972">
+            <Source RefID="957"/>
+          </Data>
+          <Source RefID="990"/>
+        </Input>
+        <Case ID="958" Label="true" Premise="%0%!=null">
+          <Mappings ID="1007" Label="Mapping">
+            <Input>
+              <Data ID="1047" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="internalized.tmf633.datamodel" VariableName="serviceSpecRelationship1047">
+                <Source RefID="1007"/>
+              </Data>
+              <Source RefID="990">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Input>
+            <Output>
+              <Data ID="1035" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text1035">
+                <Source RefID="1007"/>
+              </Data>
+              <Target RefID="1036"/>
+            </Output>
+            <Mapping>%1%.text=concat("$.serviceRelationship[?(@.relationshipType=='", %0%.relationshipType, "')]")</Mapping>
+          </Mappings>
+          <Assign ID="961">
+            <Source RefID="1036"/>
+            <Target RefID="1037"/>
+            <Copy>
+              <Source RefID="1036"/>
+              <Target RefID="1037"/>
+            </Copy>
+          </Assign>
+        </Case>
+        <Case ID="959" Label="false">
+          <Mappings ID="1016" Label="Mapping">
+            <Output>
+              <Data ID="1025" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text1025">
+                <Source RefID="1016"/>
+              </Data>
+              <Target RefID="1026"/>
+            </Output>
+          </Mappings>
+          <Assign ID="963">
+            <Source RefID="1026"/>
+            <Target RefID="1037"/>
+            <Copy>
+              <Source RefID="1026"/>
+              <Target RefID="1037"/>
+            </Copy>
+          </Assign>
+        </Case>
+      </Choice>
+      <Data ID="1026" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text1026">
+        <Source RefID="1016"/>
+      </Data>
+      <Data ID="1036" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text1036">
+        <Source RefID="1007"/>
+      </Data>
+    </Foreach>
+    <Foreach ID="580">
+      <Source RefID="491"/>
+      <Target RefID="782"/>
+      <InputList RefID="491">
+        <Data ID="581" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="characteristicSpecification581"/>
+      </InputList>
+      <OutputList RefID="782">
+        <Data ID="781" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text781">
+          <Source RefID="564"/>
+        </Data>
+      </OutputList>
+      <Choice ID="564" TypeName="BaseChoiceTypeFormula" TypePath="server">
+        <Source RefID="581"/>
+        <Target RefID="781"/>
+        <Input>
+          <Data ID="579" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="characteristicSpecification579">
+            <Source RefID="564"/>
+          </Data>
+          <Source RefID="581"/>
+        </Input>
+        <Case ID="565" Label="true" Premise="%0%!=null">
+          <Mappings ID="606" Label="Mapping">
+            <Input>
+              <Data ID="649" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="characteristicSpecification649">
+                <Source RefID="606"/>
+              </Data>
+              <Source RefID="581">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Input>
+            <Output>
+              <Data ID="615" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text615">
+                <Source RefID="606"/>
+              </Data>
+              <Target RefID="616"/>
+            </Output>
+            <Mapping>%1%.text=concat("$.serviceCharacteristic[?(@.name=='", %0%.name, "')]")</Mapping>
+          </Mappings>
+          <Assign ID="568">
+            <Source RefID="616"/>
+            <Target RefID="781"/>
+            <Copy>
+              <Source RefID="616"/>
+              <Target RefID="781"/>
+            </Copy>
+          </Assign>
+        </Case>
+        <Case ID="566" Label="false">
+          <Mappings ID="770" Label="Mapping">
+            <Output>
+              <Data ID="779" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text779">
+                <Source RefID="770"/>
+              </Data>
+              <Target RefID="780"/>
+            </Output>
+          </Mappings>
+          <Assign ID="570">
+            <Source RefID="780"/>
+            <Target RefID="781"/>
+            <Copy>
+              <Source RefID="780"/>
+              <Target RefID="781"/>
+            </Copy>
+          </Assign>
+        </Case>
+      </Choice>
+      <Data ID="616" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text616">
+        <Source RefID="606"/>
+      </Data>
+      <Data ID="780" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text780">
+        <Source RefID="770"/>
+      </Data>
+    </Foreach>
+    <Mappings ID="791" Label="Mapping">
+      <Input>
+        <Data ID="800" IsList="true" Label="others" ReferenceName="Text" ReferencePath="base" VariableName="text800">
+          <Source RefID="791"/>
+        </Data>
+        <Source RefID="58">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="809" IsList="true" Label="characteristics" ReferenceName="Text" ReferencePath="base" VariableName="text809">
+          <Source RefID="791"/>
+        </Data>
+        <Source RefID="782">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="818" IsList="true" Label="relationships" ReferenceName="Text" ReferencePath="base" VariableName="text818">
+          <Source RefID="791"/>
+        </Data>
+        <Source RefID="1038">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="827" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text827">
+          <Source RefID="791"/>
+        </Data>
+        <Target RefID="828"/>
+      </Output>
+      <Mapping>%3%=concatlists(concatlists(%0%, %1%), %2%)</Mapping>
+    </Mappings>
+    <Data ID="58" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text58">
+      <Source RefID="36"/>
+    </Data>
+    <Data ID="437" IsList="true" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="internalized.tmf633.datamodel" VariableName="serviceSpecRelationship437">
+      <Source RefID="36"/>
+    </Data>
+    <Data ID="491" IsList="true" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="characteristicSpecification491">
+      <Source RefID="36"/>
+    </Data>
+    <Data ID="782" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text782">
+      <Source RefID="580"/>
+      <Target RefID="782"/>
+    </Data>
+    <Data ID="828" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text828">
+      <Source RefID="791"/>
+    </Data>
+    <Data ID="1038" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text1038">
+      <Source RefID="989"/>
+      <Target RefID="1038"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="828"/>
+      <Target RefID="27"/>
+      <Copy>
+        <Source RefID="828">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="27"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
