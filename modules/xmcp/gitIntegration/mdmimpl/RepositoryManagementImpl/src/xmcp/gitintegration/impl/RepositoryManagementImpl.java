@@ -1097,8 +1097,13 @@ public class RepositoryManagementImpl {
     builder.splitResult(connection.getSplittype());
     builder.workspaceName(connection.getWorkspaceName());
     builder.force(true);
-    WorkspaceObjectManagement.updateWorkspaceContent(builder.instance());
-    tracker.trackInfo("Created workspace xml for split type " + split);
+    try {
+      WorkspaceObjectManagement.updateWorkspaceContent(builder.instance());
+      tracker.trackInfo("Created workspace xml for split type " + split);
+    } catch(Exception e) {
+      tracker.trackError("Could not create spilt workspace xml " + e.getMessage());
+      return false;
+    }
     return true;
   }
 
