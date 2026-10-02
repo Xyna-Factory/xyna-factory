@@ -89,6 +89,7 @@
       <fileset dir="${oas.app.mgmt.dir}/lib/xyna" includes="xmom-*-openapi-generator-*.jar" />
     </copy>
 
+    <mkdir dir="${http.trigger.dir}/lib" />
     <ant antfile="build.xml" target="cleanup-lib" inheritAll="false" dir="${http.trigger.dir}" />
     <ant antfile="build.xml" target="build" inheritAll="false" dir="${http.trigger.dir}" >
       <property name="target.dir" value="${oas.lib.dir}" />
