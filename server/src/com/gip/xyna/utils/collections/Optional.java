@@ -31,11 +31,12 @@ public class Optional<T> implements Serializable {
   
   private static final long serialVersionUID = 1L;
 
-  private final static Optional<?> EMPTY = new Optional();
+  private final static Optional<?> EMPTY = new Optional<>();
 
   private final T value; //achtung: T ist nicht immer serializable, dann ist auch optional nicht serializable. so wird es derzeit verwendet, auch wenn das unschön ist
   private final boolean present;
 
+  @Deprecated
   public Optional(T value) {
       this.value = value;
       this.present = true;
@@ -46,11 +47,14 @@ public class Optional<T> implements Serializable {
       this.present = false;
   }
 
+  @SuppressWarnings("unchecked")
+  @Deprecated
   public static <T> Optional<T> empty() {
       return (Optional<T>) EMPTY;
   }
 
   // not part if the jdk impl (at least last I checked)
+  @Deprecated
   public static <T> Optional<T> of(T value) {
     if (value == null) {
       return Optional.empty();
@@ -59,27 +63,31 @@ public class Optional<T> implements Serializable {
     }
   }
   
+  @Deprecated
   public T get() {
       if (!present)
           throw new NoSuchElementException();
       return value;
   }
 
+  @Deprecated
   public boolean isPresent() {
       return present;
   }
 
+  @Deprecated
   public T orElse(T other) {
       return present ? value : other;
   }
 
 
+  @Deprecated
   @Override
   public boolean equals(Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
 
-      Optional optional = (Optional) o;
+      Optional<?> optional = (Optional<?>) o;
 
       if (present != optional.present) return false;
       if (value != null ? !value.equals(optional.value) : optional.value != null) return false;
@@ -87,6 +95,7 @@ public class Optional<T> implements Serializable {
       return true;
   }
 
+  @Deprecated
   @Override
   public int hashCode() {
       int result = value != null ? value.hashCode() : 0;
@@ -94,6 +103,7 @@ public class Optional<T> implements Serializable {
       return result;
   }
   
+  @Deprecated
   public java.util.Optional<T> adapt() {
     if (isPresent()) {
       return java.util.Optional.<T>ofNullable(value);
