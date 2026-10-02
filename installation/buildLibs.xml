@@ -22,8 +22,14 @@
   <property name="gitintegration.module.dir" value="${basedir}/../modules/xmcp/gitIntegration" />
   <property name="gitintegration.wsp.mgmt.dir" value="${gitintegration.module.dir}/mdmimpl/WorkspaceObjectManagementImpl" />
 
+  <property name="oas.lib.dir" value="${basedir}/build/lib/oas" />
+  <property name="oas.module.dir" value="${basedir}/../modules/xfmg/oas/oasAppManagement" />
+  <property name="oas.app.mgmt.dir" value="${oas.module.dir}/mdmimpl/ApplicationGenerationImpl" />
+  <property name="http.module.dir" value="${basedir}/../modules/xact/http" />
+  <property name="http.trigger.dir" value="${http.module.dir}/triggerimpl/HTTPTrigger" />
 
-  <target name="build-all" description="Download or build all libs, administered by Maven, needed for xyna development" depends="init-maven, build-factory, build-persistence, build-tests, refresh-libs-from-maven, build-oracle-aq-tools, build-gitintegration-libs" />
+
+  <target name="build-all" description="Download or build all libs, administered by Maven, needed for xyna development" depends="init-maven, build-factory, build-persistence, build-tests, refresh-libs-from-maven, build-oracle-aq-tools, build-gitintegration-libs, build-oas-libs" />
 
 
   <target name="refresh-libs-from-maven" description="Refresh libs from Maven repository without rebuilding anything">
@@ -65,8 +71,28 @@
       <property name="target.dir" value="${gitintegration.lib.dir}" />
     </ant>
     <copy todir="${gitintegration.lib.dir}">
-      <fileset dir="${gitintegration.wsp.mgmt.dir}/lib/xyna" includes="*.jar" />
+      <fileset dir="${gitintegration.wsp.mgmt.dir}/lib/xyna" includes="mdm.jar" />
     </copy>
+  </target>
+
+  <target name="build-oas-libs" description="build-oas-libs">
+    <mkdir dir="${oas.lib.dir}" />
+    <ant antfile="build.xml" target="cleanup-lib" inheritAll="false" dir="${oas.app.mgmt.dir}" />
+    <ant antfile="build.xml" target="build" inheritAll="false" dir="${oas.app.mgmt.dir}" >
+      <property name="target.dir" value="${oas.lib.dir}" />
+    </ant>
+    <copy todir="${oas.lib.dir}">
+      <fileset dir="${oas.app.mgmt.dir}/lib/xyna" includes="mdm.jar" />
+      <fileset dir="${oas.app.mgmt.dir}/lib/xyna" includes="servicedefinition.jar" />
+      <fileset dir="${oas.app.mgmt.dir}/lib/xyna" includes="generator-utils-*.jar" />
+      <fileset dir="${oas.app.mgmt.dir}/lib/xyna" includes="openapi-generator-*.jar" />
+      <fileset dir="${oas.app.mgmt.dir}/lib/xyna" includes="xmom-*-openapi-generator-*.jar" />
+    </copy>
+
+    <ant antfile="build.xml" target="cleanup-lib" inheritAll="false" dir="${http.trigger.dir}" />
+    <ant antfile="build.xml" target="build" inheritAll="false" dir="${http.trigger.dir}" >
+      <property name="target.dir" value="${oas.lib.dir}" />
+    </ant>
   </target>
 
 

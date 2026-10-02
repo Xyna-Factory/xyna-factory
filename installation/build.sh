@@ -606,6 +606,12 @@ cleanup_lib() {
   rm -rf factory
 }
 
+fill_oas_lib() {
+  echo "fill oas lib..."
+  cd $SCRIPT_DIR
+  ant -f buildLibs.xml build-oas-libs
+}
+
 build_all() {
   build
   build_modules
@@ -626,6 +632,7 @@ build() {
   build_conpooltypes
   build_persistencelayers
   fill_lib
+  fill_oas_lib
   build_oracle_aq_tools
 }
 
