@@ -480,6 +480,9 @@
 					<fileset dir="${antUtils.dir}lib/gitintegration">
 						<include name="*.jar" />
 					</fileset>
+					<fileset dir="${antUtils.dir}lib/factory">
+						<include name="*.jar" />
+					</fileset>
 				</classpath>
 			</java>
 		</target>

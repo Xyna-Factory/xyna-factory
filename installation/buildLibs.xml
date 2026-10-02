@@ -72,6 +72,7 @@
     </ant>
     <copy todir="${gitintegration.lib.dir}">
       <fileset dir="${gitintegration.wsp.mgmt.dir}/lib/xyna" includes="mdm.jar" />
+      <fileset dir="${gitintegration.wsp.mgmt.dir}/lib/xyna" includes="servicedefinition.jar" />
     </copy>
   </target>
 
