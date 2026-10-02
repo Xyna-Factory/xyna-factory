@@ -187,6 +187,12 @@ buildNumber.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
 
-# Issue 1491:Add workspace and server properties files to gitignore
 server.properties
 workspace.properties
+
+/modules/xfmg/tmf/datamodels/apps
+
+/modules/xfmg/oas/oasAppManagement/sharedlib/xyna-openapi/test
+/modules/xfmg/oas/oasAppManagement/sharedlib/xyna-openapi/generators/xmom-data-model/src/test/java/com/gip/xyna/openapi/codegen/XmomDataModelGeneratorTest.java
+/modules/xfmg/oas/oasAppManagement/sharedlib/xyna-openapi/generators/xmom-server/src/test/java/com/gip/xyna/openapi/codegen/XmomServerGeneratorTest.java
+/modules/xfmg/oas/oasAppManagement/sharedlib/xyna-openapi/generators/xmom-client/src/test/java/com/gip/xyna/openapi/codegen/XmomClientGeneratorTest.java

@@ -19,8 +19,6 @@ package com.gip.xyna.openapi;
 
 import org.junit.jupiter.api.Test;
 
-import com.gip.xyna.openapi.DateTimeTypeValidator;
-
 public class OpenAPIDateTimeTypeTest {
   // https://www.rfc-editor.org/rfc/rfc3339#section-5.8
   @Test

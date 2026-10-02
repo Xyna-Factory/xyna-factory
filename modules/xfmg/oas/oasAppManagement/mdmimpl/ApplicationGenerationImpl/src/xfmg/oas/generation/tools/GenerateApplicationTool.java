@@ -36,12 +36,14 @@ import com.gip.xyna.utils.collections.CollectionUtils.Transformation;
 import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagementImpl.ApplicationPartImportMode;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagementImpl.ImportApplicationParameter;
+import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 import com.gip.xyna.xfmg.xfctrl.filemgmt.FileManagement;
 import com.gip.xyna.xfmg.xfctrl.nodemgmt.rtctxmgmt.LocalRuntimeContextManagementSecurity;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement.PathType;
 import com.gip.xyna.xfmg.xopctrl.managedsessions.SessionManagement;
 import com.gip.xyna.xmcp.xfcli.impl.SavexmomobjectImpl;
+import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 
@@ -107,34 +109,38 @@ public class GenerateApplicationTool {
     if (!result.getErrors().isEmpty()) {
       throw new RuntimeException(errors.toString());
     }
+
+
+    String oasBaseVersion = determineOasBaseVersion(this.getClass());
+
+    boolean generateMock = applicationGenerationParameter1.getGenerateMockOption() == null ? false : applicationGenerationParameter1.getGenerateMockOption();
+    boolean generateDataCapture = applicationGenerationParameter1.getGenerateDataCaptureOption() == null ? false : applicationGenerationParameter1.getGenerateDataCaptureOption();
+
+    AppGenerationData appData = new AppGenerationData(specFile, oasBaseVersion, generateMock, generateDataCapture, statusHandler);
     String workspace = applicationGenerationParameter1.getWorkspaceName();
     statusHandler.setAppType(AppType.DATA_MODEL);
-    String targetRtc = createAndImportApplication(correlatedXynaOrder, "xmom-data-model", target + "_datatypes", specFile,
-                               workspace, false, false, statusHandler);
+    String targetRtc = createAndImportApplication(correlatedXynaOrder, "xmom-data-model", target + "_datatypes",
+                               workspace, appData);
     statusHandler.storeTargetRtc(targetRtc);
     if (applicationGenerationParameter1.getGenerateProvider()) {
       statusHandler.setAppType(AppType.PROVIDER);
-      createAndImportApplication(correlatedXynaOrder, "xmom-server", target + "_provider", specFile, workspace, false,
-                                 false, statusHandler);
+      createAndImportApplication(correlatedXynaOrder, "xmom-server", target + "_provider", workspace, appData);
     }
     if (applicationGenerationParameter1.getGenerateClient()) {
       statusHandler.setAppType(AppType.CLIENT);
-      boolean generateMock = applicationGenerationParameter1.getGenerateMockOption() == null ? false : applicationGenerationParameter1.getGenerateMockOption();
-      boolean generateDataCapture = applicationGenerationParameter1.getGenerateDataCaptureOption() == null ? false : applicationGenerationParameter1.getGenerateDataCaptureOption();
-      createAndImportApplication(correlatedXynaOrder, "xmom-client", target + "_client", specFile, workspace, generateMock,
-                                 generateDataCapture, statusHandler);
+      createAndImportApplication(correlatedXynaOrder, "xmom-client", target + "_client", workspace, appData);
     }
     statusHandler.storeStatusSuccess();
   }
 
   
   private String createAndImportApplication(XynaOrderServerExtension correlatedXynaOrder, String generator,
-                                          String target, String specFile, String workspace, boolean generateMock,
-                                          boolean generateDataCapture, OasImportStatusHandler statusHandler) {
+                                          String target, String workspace, AppGenerationData appData) {
     OasAppBuilder oasAppBuilder = new OasAppBuilder();
     String result = null;
-    try (OASApplicationData data = oasAppBuilder.createOasApp(generator, target, specFile, generateMock, generateDataCapture, statusHandler)) {
-      statusHandler.storeStatusAppImport();
+
+    try (OASApplicationData data = oasAppBuilder.createOasApp(generator, target, appData)) {
+      appData.statusHandler().storeStatusAppImport();
       if(workspace == null || workspace.isBlank()) {
         importApplicationAsApplication(correlatedXynaOrder, data.getId());
         result = data.getAppName();
@@ -206,6 +212,24 @@ public class GenerateApplicationTool {
       throw new RuntimeException(e);
     } finally {
         FileUtils.deleteDirectory(tmpPath.toFile());
+    }
+  }
+
+  public static String determineOasBaseVersion(Class<?> c) {
+    long oasMgmtRevision = 0l;
+    ClassLoader cl = c.getClassLoader();
+    if (cl instanceof ClassLoaderBase clbase) {
+      oasMgmtRevision = clbase.getRevision();
+    } else {
+      throw new RuntimeException("Unexpected classloader type: " + cl.getClass());
+    }
+    try {
+      var factoryCtl = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl();
+      long oasBaseRev = factoryCtl.getRuntimeContextDependencyManagement().getRevisionDefiningXMOMObjectOrParent("xmcp.oas.datatype.OASBaseApi", oasMgmtRevision);
+      return XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().getApplication(oasBaseRev).getVersionName();
+
+    } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
+      throw new RuntimeException("Could not determine OAS_Base version");
     }
   }
 }
