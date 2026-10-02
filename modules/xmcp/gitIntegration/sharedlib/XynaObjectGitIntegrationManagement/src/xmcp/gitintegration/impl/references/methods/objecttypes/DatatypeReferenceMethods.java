@@ -45,7 +45,13 @@ public class DatatypeReferenceMethods implements ReferenceObjectTypeMethods {
   public void trigger(List<File> candidateFiles, String objectName, Long revision) {
     List<String> requiredFiles = getRequiredFiles(objectName, revision);
     File targetDir = new File(RevisionManagement.getPathForRevision(PathType.SERVICE, revision, false), objectName);
-    for(String jarName : requiredFiles) {
+
+    if (!targetDir.exists()) {
+      targetDir.mkdirs();
+    }
+
+
+    for (String jarName : requiredFiles) {
       Optional<File> candidateFile = candidateFiles.stream().filter(x -> x.getName().equals(jarName)).findFirst();
       if(candidateFile.isPresent()) {
         try {
@@ -54,9 +60,6 @@ public class DatatypeReferenceMethods implements ReferenceObjectTypeMethods {
               logger.debug("Skipping copy of " + jarName + " for datatype " + objectName + " in revision " + revision + ", because it is already at the destination");
             }
             continue;
-          }
-          if(!targetDir.exists()) {
-            Files.createDirectories(targetDir.toPath());
           }
           FileUtils.copyFileToDir(candidateFile.get(), targetDir);
         } catch (Exception e) {
