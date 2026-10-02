@@ -304,8 +304,8 @@ public class OasAppBuilder {
   private Path getJarPathFromClassPath(String jarName) {
     String search = String.format("/%s.jar", jarName);
     String classpath = System.getProperty("java.class.path");
-    classpath = classpath.replace("\\", "/");
-    String[] entries = classpath.split(";");
+    classpath = classpath.replace("\\", "/").replace(";", ":");
+    String[] entries = classpath.split(":");
     for (int i = 0; i < entries.length; i++) {
       if (entries[i].endsWith(search)) {
         return Path.of(entries[i]);
