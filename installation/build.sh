@@ -271,7 +271,8 @@ install_gitintegration_libs() {
   cd $SCRIPT_DIR/../modules/xmcp/gitIntegration/mdmimpl/WorkspaceObjectManagementImpl
   ant build
   cp -r deploy/* $SCRIPT_DIR/build/lib/gitintegration
-  cp -r lib/xyna/* $SCRIPT_DIR/build/lib/gitintegration
+  cp lib/xyna/mdm.jar $SCRIPT_DIR/build/lib/gitintegration
+  cp lib/xyna/servicedefinition.jar $SCRIPT_DIR/build/lib/gitintegration
 }
 
 build_prerequisites() {
