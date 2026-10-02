@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,6 +61,7 @@ import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.generation.AVariable.PrimitiveType;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM.OperationInformation;
 import com.gip.xyna.xprc.xfractwfe.generation.serviceimpl.JavaServiceImplementation;
+import com.gip.xyna.xprc.xfractwfe.generation.xml.Utils;
 
 
 public class XynaObjectCodeGenerator {
@@ -1033,39 +1034,43 @@ public class XynaObjectCodeGenerator {
     cb.addLine("}").addLB(); //end memberEquals
 
     //hashcode
-    cb.addLine("public int calcHashOfMembers(", Stack.class.getName(), "<", GeneralXynaObject.class.getSimpleName(), "> stack) {");
+    List<String> memberVarNames = memberVars.stream().map(x -> x.getVarName()).toList();
+    String stackVar = Utils.createUniqueJavaName(memberVarNames, "stack", false);
+    String hashVar = Utils.createUniqueJavaName(memberVarNames, "hash", false);
+    cb.addLine("public int calcHashOfMembers(", Stack.class.getName(), "<", GeneralXynaObject.class.getSimpleName(), "> ", stackVar, ") {");
     if (hasSuperObjectVersionClass) {
-      cb.addLine("int hash = super.calcHashOfMembers(stack)");
+      cb.addLine("int ", hashVar, " = super.calcHashOfMembers(", stackVar, ")");
     } else {
-      cb.addLine("int hash = 1");
+      cb.addLine("int ", hashVar, " = 1");
     }
 
     if (memberVars.size() > 0) {
-      cb.addLine(simpleClassName, " xoc = (", simpleClassName, ") xo");
+      String xocVar = Utils.createUniqueJavaName(memberVarNames, "xoc", false);
+      cb.addLine(simpleClassName, " ", xocVar, " = (", simpleClassName, ") xo");
       for (AVariable v : memberVars) {
-        String vg = "xoc.versionedG" + GenerationBase.buildGetter(v.getVarName()).substring(1) + "(this.version)";
+        String vg = xocVar + ".versionedG" + GenerationBase.buildGetter(v.getVarName()).substring(1) + "(this.version)";
         cb.addLine(v.getEventuallyQualifiedClassNameWithGenerics(imports), " ", v.getVarName(), " = ", vg);
         if (v.isJavaBaseType()) {
           if (v.isList()) {
-            cb.addLine("hash = hash * 31 + hashList(", v.getVarName(), ")");
+            cb.addLine(hashVar, " = ", hashVar, " * 31 + hashList(", v.getVarName(), ")");
           } else if (v.getJavaTypeEnum().isObject()) {
-            cb.addLine("hash = hash * 31 + (", v.getVarName(), " == null ? 0 : ", v.getVarName(), ".hashCode())");
+            cb.addLine(hashVar, " = ", hashVar, " * 31 + (", v.getVarName(), " == null ? 0 : ", v.getVarName(), ".hashCode())");
           } else {
-            cb.addLine("hash = hash * 31 + ", v.getJavaTypeEnum().getObjectClassOfType(), ".valueOf(", v.getVarName(), ").hashCode()");
+            cb.addLine(hashVar, " = ", hashVar, " * 31 + ", v.getJavaTypeEnum().getObjectClassOfType(), ".valueOf(", v.getVarName(), ").hashCode()");
           }
         } else if (v.isList()) {
           //TODO zyklen check: stack beachten. falls stack objekt enthält, dann den abstand im stack zu dem eigenen objekt als für den hash relevante zahl verwenden.
           //also A-B-A -> hash*31+2, A-B-C-A -> hash*31+3 usw
-          cb.addLine("hash = hash * 31 + hashList(", v.getVarName(), ", this.version, changeSetsOfMembers, stack)");
+          cb.addLine(hashVar, " = ", hashVar, " * 31 + hashList(", v.getVarName(), ", this.version, changeSetsOfMembers, ", stackVar ,")");
         } else {
           //TODO zyklen check                
-          cb.addLine("hash = hash * 31 + (", v.getVarName(), " == null ? 0 : ", v.getVarName(),
-                     ".createObjectVersion(this.version, changeSetsOfMembers).hashCode(stack))");
+          cb.addLine(hashVar, " = ", hashVar, " * 31 + (", v.getVarName(), " == null ? 0 : ", v.getVarName(),
+                     ".createObjectVersion(this.version, changeSetsOfMembers).hashCode(", stackVar, "))");
         }
       }
     }
 
-    cb.addLine("return hash");
+    cb.addLine("return ", hashVar);
     cb.addLine("}").addLB(); //end calchash
 
     cb.addLine("}").addLB(2); //end class
