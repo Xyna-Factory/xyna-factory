@@ -19,8 +19,6 @@ package com.gip.xyna.openapi;
 
 import org.junit.jupiter.api.Test;
 
-import com.gip.xyna.openapi.DateTypeValidator;
-
 public class OpenAPIDateTypeTest {
   @Test
   void testNullIsValid() {
