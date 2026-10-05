@@ -20,7 +20,10 @@
 
     <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
 
+    <property name="compiler.args" value="-proc:none" />
 
+    <property environment="env" />
+    <property name="env.MAVEN_OPTS" value="" />
  <!-- = = = = = = = = = = = = = = = = =
               macrodef: buildJar
              = = = = = = = = = = = = = = = = =
@@ -34,6 +37,7 @@
         <attribute name="classes.dir" default="@{basedir}/classes" />
         <attribute name="lib.dir" default="@{basedir}/lib" />
         <attribute name="encoding" default="iso-8859-1" />
+        <attribute name="compiler.args" default="${compiler.args}" />
         <!--<element name="attributes"
                  optional="true"
                  description="Additional attributes for manifest" />-->
@@ -43,7 +47,8 @@
                      src.dir="@{src.dir}"
                      classes.dir="@{classes.dir}"
                      lib.dir="@{lib.dir}"
-                     encoding="@{encoding}">
+                     encoding="@{encoding}"
+                     compiler.args="@{compiler.args}">
                 <additionalSrcDirs />
             </compile>
             <dirname file="@{destfile}" property="destdir" />
@@ -78,6 +83,7 @@
         <!-- wird nur benutzt, wenn auch max ungleich -1 ist. -->
         <attribute name="memoryMaximumSize" default="-1" />
         <attribute name="target" default="-1" />
+        <attribute name="compiler.args" default="${compiler.args}" />
         <element name="additionalSrcDirs" implicit="true" optional="true" />
         <sequential>
             <classpath-run basedir="@{basedir}" classes.dir="@{classes.dir}" lib.dir="@{lib.dir}" />
@@ -96,7 +102,8 @@
                         <equals arg1="@{target}" arg2="-1" />
                         <then>
                             <!-- use defaults of jvm for min and max-memory and target -->
-                            <javac destdir="@{classes.dir}" sourcepath="" encoding="@{encoding}" debug="on" fork="yes" includeJavaRuntime="true">
+                            <javac destdir="@{classes.dir}" sourcepath="" encoding="@{encoding}" debug="on" fork="yes" includeantruntime="false" includeJavaRuntime="true">
+                                <compilerarg line="@{compiler.args}" />
                                 <src path="@{src.dir}" />
                                 <additionalSrcDirs />
                                 <classpath refid="${classpath.run.@{basedir}}" />
@@ -104,7 +111,8 @@
                         </then>
                         <else>
                             <!-- use defaults of jvm for min and max-memory -->
-                            <javac destdir="@{classes.dir}" sourcepath="" encoding="@{encoding}" debug="on" fork="yes" includeJavaRuntime="true" target="@{target}">
+                            <javac destdir="@{classes.dir}" sourcepath="" encoding="@{encoding}" debug="on" fork="yes" includeantruntime="false" includeJavaRuntime="true" target="@{target}">
+                                <compilerarg line="@{compiler.args}" />
                                 <src path="@{src.dir}" />
                                 <additionalSrcDirs />
                                 <classpath refid="${classpath.run.@{basedir}}" />
@@ -117,7 +125,8 @@
                         <equals arg1="@{target}" arg2="-1" />
                         <then>
                             <!-- use defaults of jvm for target -->
-                            <javac destdir="@{classes.dir}" sourcepath="" encoding="@{encoding}" debug="on" fork="yes" includeJavaRuntime="true" memoryInitialSize="@{memoryInitialSize}" memoryMaximumSize="@{memoryMaximumSize}">
+                            <javac destdir="@{classes.dir}" sourcepath="" encoding="@{encoding}" debug="on" fork="yes" includeantruntime="false" includeJavaRuntime="true" memoryInitialSize="@{memoryInitialSize}" memoryMaximumSize="@{memoryMaximumSize}">
+                                <compilerarg line="@{compiler.args}" />
                                 <src path="@{src.dir}" />
                                 <additionalSrcDirs />
                                 <classpath refid="${classpath.run.@{basedir}}" />
@@ -125,7 +134,8 @@
                         </then>
                         <else>
                             <!-- use no defaults of jvm -->
-                            <javac destdir="@{classes.dir}" sourcepath="" encoding="@{encoding}" debug="on" fork="yes" includeJavaRuntime="true" memoryInitialSize="@{memoryInitialSize}" memoryMaximumSize="@{memoryMaximumSize}" target="@{target}">
+                            <javac destdir="@{classes.dir}" sourcepath="" encoding="@{encoding}" debug="on" fork="yes" includeantruntime="false" includeJavaRuntime="true" memoryInitialSize="@{memoryInitialSize}" memoryMaximumSize="@{memoryMaximumSize}" target="@{target}">
+                                <compilerarg line="@{compiler.args}" />
                                 <src path="@{src.dir}" />
                                 <additionalSrcDirs />
                                 <classpath refid="${classpath.run.@{basedir}}" />
@@ -694,6 +704,7 @@
         <attribute name="pom" default="${basedir}/pom.xml" />
         <sequential>
             <exec osfamily="windows" executable="cmd" outputproperty="exec.output">
+                <env key="MAVEN_OPTS" value="${env.MAVEN_OPTS} -Dlog4j2.loggerContextFactory=org.apache.logging.log4j.simple.SimpleLoggerContextFactory" />			
                 <arg value="/c"/>
                 <arg value="mvn"/>
                 <arg value="-f" />
@@ -705,6 +716,7 @@
                 <!--arg value="-Dlicense.organizeLicensesByDependencies=true" /-->
             </exec>
             <exec osfamily="unix" executable="mvn" outputproperty="exec.output">
+                <env key="MAVEN_OPTS" value="${env.MAVEN_OPTS} -Dlog4j2.loggerContextFactory=org.apache.logging.log4j.simple.SimpleLoggerContextFactory" />			
                 <arg value="-f" />
                 <arg value="@{pom}" />
                 <arg value="license:download-licenses" />
@@ -744,5 +756,4 @@
                 </classpath>
             </java>
         </sequential>
-    </macrodef>
-</project>
+    </macrodef></project>

@@ -35,7 +35,8 @@
   <target name="build" description="Create build artfact">
     <mkdir dir="${target.dir}" />
     <buildJar basedir="${basedir}"
-              destfile="${target.dir}/${project.name}.jar" />
+              destfile="${target.dir}/${project.name}.jar"
+              compiler.args="${compiler.args}" />
   </target>
 
 
