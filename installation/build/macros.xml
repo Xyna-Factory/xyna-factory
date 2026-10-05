@@ -18,11 +18,7 @@
  -->
 <project name="macros" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant" >
 
-    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
-        <classpath>
-            <pathelement location="${common.xyna.lib.dir}/ant-contrib.jar" />
-        </classpath>
-    </taskdef>
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
 
 
  <!-- = = = = = = = = = = = = = = = = =
@@ -717,6 +713,36 @@
                 <!--arg value="-Dlicense.organizeLicensesByDependencies=true" /-->
             </exec>
             <echo message="${exec.output}" />
+        </sequential>
+    </macrodef>
+
+
+    <!-- =================================
+        macro: buildoasapp
+        ================================= -->
+    <macrodef name="buildoasapp">
+        <attribute name="oas.dir" description="oas.dir" />
+        <attribute name="yaml" description="yaml" />
+        <attribute name="type" description="type" />
+        <attribute name="target" description="target" />
+        <attribute name="version" description="OAS_Base version" />
+        <sequential>
+            <java classname="xfmg.oas.offline.OASApplicationGeneration" fork="true" failonerror="true">
+                <arg value="@{yaml}" />
+                <arg value="@{type}" />
+                <arg value="@{target}" />
+                <arg value="--oasVersion" />
+                <arg value="@{version}" />
+                <classpath>
+                    <fileset dir="${root.dir}/installation/build/lib/oas">
+                        <include name="*.jar" />
+                    </fileset>
+                    <fileset dir="${root.dir}/installation/build/lib/factory">
+                        <include name="*.jar" />
+                        <exclude name="xmlparser*" />
+                    </fileset>
+                </classpath>
+            </java>
         </sequential>
     </macrodef>
 </project>

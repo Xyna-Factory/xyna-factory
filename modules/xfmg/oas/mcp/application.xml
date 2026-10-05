@@ -26,7 +26,7 @@
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>OasAppManagement</ApplicationName>
-        <VersionName>1.7.36</VersionName>
+        <VersionName>1.7.37</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
