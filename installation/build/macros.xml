@@ -377,28 +377,15 @@
         <attribute name="encoding" default="iso8859-1" />
         <attribute name="srcdir" default="${basedir}/src" />
         <attribute name="destdir" default="${basedir}/classes" />
+        <attribute name="compiler.args" default="${compiler.args}" />
         <element name="javac-elements" implicit="yes"/>
         <sequential>
-            <if>
-                <equals arg1="${javacompile.version}" arg2="1.7" />
-                <then>
-                    <!-- <echo message="Compile 1.7"/> -->
-                    <javac
-                        executable="/opt/jdk1.7/bin/javac"
-                        debug="on" includeantruntime="false" fork="yes"
-                        encoding="@{encoding}" srcdir="@{srcdir}" destdir="@{destdir}">
-                        <javac-elements />
-                    </javac>
-                </then>
-                <else>
-                    <!-- <echo message="Compile old"/> -->
-                    <javac
-                        debug="on" includeantruntime="false" fork="yes"
-                        encoding="@{encoding}" srcdir="@{srcdir}" destdir="@{destdir}">
-                        <javac-elements />
-                    </javac>
-                </else>
-            </if>
+            <javac
+                debug="on" includeantruntime="false" fork="yes"
+                encoding="@{encoding}" srcdir="@{srcdir}" destdir="@{destdir}">
+                <compilerarg line="@{compiler.args}" />
+                <javac-elements />
+            </javac>
         </sequential>
     </macrodef>
 
