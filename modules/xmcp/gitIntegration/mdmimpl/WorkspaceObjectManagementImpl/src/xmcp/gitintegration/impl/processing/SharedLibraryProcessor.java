@@ -165,7 +165,7 @@ public class SharedLibraryProcessor implements WorkspaceContentProcessor<SharedL
     }
     
     ReferenceSupport refSupport = new ReferenceSupport();
-    refSupport.triggerReferences(internalReferences, revision);
+    refSupport.prepareAndTriggerReferences(internalReferences, revision);
   }
 
   @Override

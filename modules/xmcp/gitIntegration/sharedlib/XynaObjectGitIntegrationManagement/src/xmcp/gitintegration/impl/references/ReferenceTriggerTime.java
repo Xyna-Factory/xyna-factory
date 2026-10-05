@@ -18,19 +18,6 @@
 package xmcp.gitintegration.impl.references;
 
 
-public enum ReferenceObjectType {
-  DATATYPE(ReferenceTriggerTime.DURING_DEPLOY), 
-  TRIGGER(ReferenceTriggerTime.AFTER_DEPLOY), 
-  FILTER(ReferenceTriggerTime.AFTER_DEPLOY), 
-  SHAREDLIB(ReferenceTriggerTime.BEFORE_DEPLOY);
-  
-  private ReferenceTriggerTime time;
-  
-  ReferenceObjectType(ReferenceTriggerTime time) {
-    this.time = time;
-  }
-  
-  public ReferenceTriggerTime getTriggerTime() {
-    return time;
-  }
+public enum ReferenceTriggerTime {
+  BEFORE_DEPLOY, DURING_DEPLOY, AFTER_DEPLOY
 }

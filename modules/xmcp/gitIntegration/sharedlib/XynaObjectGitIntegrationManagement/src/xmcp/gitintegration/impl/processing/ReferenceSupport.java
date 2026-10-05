@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ package xmcp.gitintegration.impl.processing;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,9 @@ import xmcp.gitintegration.impl.references.InternalReference;
 import xmcp.gitintegration.impl.references.ReferenceMethods;
 import xmcp.gitintegration.impl.references.ReferenceObjectType;
 import xmcp.gitintegration.impl.references.ReferenceObjectTypeMethods;
+import xmcp.gitintegration.impl.references.ReferenceTriggerTime;
 import xmcp.gitintegration.impl.references.ReferenceType;
+import xmcp.gitintegration.impl.references.methods.BuildMethods;
 import xmcp.gitintegration.impl.references.methods.LibFolderMethods;
 import xmcp.gitintegration.impl.references.methods.objecttypes.DatatypeReferenceMethods;
 import xmcp.gitintegration.impl.references.methods.objecttypes.FilterReferenceMethods;
@@ -72,6 +75,7 @@ public class ReferenceSupport {
 
     //register implementations here
     result.put(ReferenceType.lib_folder, new LibFolderMethods());
+    result.put(ReferenceType.build, new BuildMethods());
 
     return result;
   }
@@ -108,21 +112,8 @@ public class ReferenceSupport {
   }
 
 
-  public void triggerReferences(List<InternalReference> references, Long revision) {
-    ReferenceStorage storage = new ReferenceStorage();
-    List<ReferenceStorable> allrefs = storage.getAllReferencesForWorkspace(revision);
-    Map<String, ObjectReferenceInformation> grouped = new HashMap<>();
-    for (InternalReference reference : references) {
-      Optional<ReferenceStorable> opt = allrefs.stream().filter(x -> matchRevisionAndPath(x, reference.getPath(), revision)).findAny();
-      if (opt.isEmpty()) {
-        continue;
-      }
-      ReferenceStorable storable = opt.get();
-      grouped.putIfAbsent(storable.getObjectName(), new ObjectReferenceInformation());
-      ObjectReferenceInformation info = grouped.get(storable.getObjectName());
-      info.objectType = ReferenceObjectType.valueOf(storable.getObjecttype());
-      info.references.add(reference);
-    }
+  public void prepareAndTriggerReferences(List<InternalReference> references, Long revision) {
+    Map<String, ObjectReferenceInformation> grouped = groupReferences(references, revision);
 
     //call objectTypeImplementations.get(objectType).trigger(refs, objectName, revision)
     for (Entry<String, ObjectReferenceInformation> kvp : grouped.entrySet()) {
@@ -141,7 +132,57 @@ public class ReferenceSupport {
       }
     }
   }
+  
+  private Map<String, ObjectReferenceInformation> groupReferences(List<InternalReference> references, Long revision) {
+    Map<String, ObjectReferenceInformation> grouped = new HashMap<>();
+    ReferenceStorage storage = new ReferenceStorage();
+    List<ReferenceStorable> allrefs = storage.getAllReferencesForWorkspace(revision);
+    for (InternalReference reference : references) {
+      Optional<ReferenceStorable> opt = allrefs.stream().filter(x -> matchRevisionAndPath(x, reference.getPath(), revision)).findAny();
+      if (opt.isEmpty()) {
+        continue;
+      }
+      ReferenceStorable storable = opt.get();
+      grouped.putIfAbsent(storable.getObjectName(), new ObjectReferenceInformation());
+      ObjectReferenceInformation info = grouped.get(storable.getObjectName());
+      info.objectType = ReferenceObjectType.valueOf(storable.getObjecttype());
+      info.references.add(reference);
+    }
+    return grouped;
+  }
+  
+  public void triggerReferences(List<InternalReference> references, Long revision,  Map<String, List<File>> files, ReferenceTriggerTime triggerTime) {
+    Map<String, ObjectReferenceInformation> grouped = groupReferences(references, revision);
+    for (Entry<String, ObjectReferenceInformation> kvp : grouped.entrySet()) {
+      String objectName = kvp.getKey();
+      if (kvp.getValue().objectType.getTriggerTime() != triggerTime) {
+        continue;
+      }
+      try {
+        objectTypeImplementations.get(kvp.getValue().objectType).trigger(files.getOrDefault(objectName, Collections.emptyList()), objectName, revision);
+    } catch(Exception e) {
+      if(logger.isWarnEnabled()) {
+        logger.warn("Exception during reference trigger.", e);
+      }
+    }
+    }
+  }
 
+  
+  public Map<String, List<File>> prepareReferences(List<InternalReference> references, Long revision) {
+    Map<String, List<File>> result = new HashMap<>();
+    Map<String, ObjectReferenceInformation> grouped = groupReferences(references, revision);
+    for (Entry<String, ObjectReferenceInformation> kvp : grouped.entrySet()) {
+      List<InternalReference> refs = kvp.getValue().references;
+      String objectName = kvp.getKey();
+      if(logger.isDebugEnabled()) {
+        logger.debug("triggering reference. revision:" + revision + ", objectName: " + objectName);
+      }
+      List<File> files = executeReferences(refs);
+      result.put(objectName, files);
+    }
+    return result;
+  }
   
   public List<File> executeReferences(List<InternalReference> references) {
     List<File> result = new ArrayList<File>();

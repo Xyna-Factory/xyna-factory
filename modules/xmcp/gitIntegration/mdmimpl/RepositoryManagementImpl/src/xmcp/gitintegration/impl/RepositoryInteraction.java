@@ -110,6 +110,7 @@ import xmcp.gitintegration.WorkspaceObjectManagement;
 import xmcp.gitintegration.impl.RepositoryCredentialsManagement.XynaRepoCredentials;
 import xmcp.gitintegration.impl.processing.ReferenceSupport;
 import xmcp.gitintegration.impl.references.InternalReference;
+import xmcp.gitintegration.impl.references.ReferenceTriggerTime;
 import xmcp.gitintegration.repository.Branch;
 import xmcp.gitintegration.repository.BranchData;
 import xmcp.gitintegration.repository.ChangeSet;
@@ -546,8 +547,7 @@ public class RepositoryInteraction {
       processConflicts(container);
       processReverts(git, repo, container);
       processPulls(git, repo, container);
-      processExecs(container);
-      processReferences(container);
+      processObjects(container);
       updateSplit(repository, container);
       processWorkspaceConfig(repo, container);
     } catch(Exception e) {
@@ -572,6 +572,51 @@ public class RepositoryInteraction {
     }
     return createPullOutput(container, dryrun);
   }
+
+  private void processObjects(GitDataContainer container) {
+    ReferenceSupport referenceSupport = new ReferenceSupport();
+    
+    //prepareExecs => Map toDeployByRevision
+    Map<Long, List<ObjectToDeploy>> toDeployByRevision = processExecs(container);
+    //prepareReferences => Map referencesByRevision
+    Map<Long, List<InternalReference>> referencesByRevision = prepareReferences(container);
+    
+    Map<Long, Pair<List<ObjectToDeploy>, List<InternalReference>>> objects = new HashMap<>();
+    toDeployByRevision.forEach((rev, objs) -> objects.put(rev, new Pair<>(objs, referencesByRevision.getOrDefault(rev, Collections.emptyList()))));
+    referencesByRevision.forEach((rev, intref) -> objects.putIfAbsent(rev, new Pair<>(Collections.emptyList(), intref)));
+    
+    List<Long> revisionsSorted = sortRevisions(objects.keySet());
+    List<Triple<PullExecType, String, String>> exceptions = new ArrayList<>();
+    
+    //for each revision in order
+    for(Long revision : revisionsSorted) {
+      Map<String, List<File>> files = null; //TODO: get this from prepareReferences-Output
+      //  trigger references [before]
+      for (Entry<Long, List<InternalReference>> kvp : referencesByRevision.entrySet()) {
+        referenceSupport.triggerReferences(kvp.getValue(), kvp.getKey(), files, ReferenceTriggerTime.BEFORE_DEPLOY);
+      }
+      
+      //  deploy/remove/save xmoms
+      if (logger.isDebugEnabled()) {
+        logger.debug("depolying " + toDeployByRevision.get(revision).size() + " objects in revision " + revision);
+      }
+      deployRevision(revision, toDeployByRevision.get(revision), exceptions);
+      
+      //  trigger references [after]
+      for (Entry<Long, List<InternalReference>> kvp : referencesByRevision.entrySet()) {
+        referenceSupport.triggerReferences(kvp.getValue(), kvp.getKey(), files, ReferenceTriggerTime.AFTER_DEPLOY);
+      }
+    }
+    
+    if (!exceptions.isEmpty()) {
+      List<String> e = exceptions.stream().map(this::formatXmomRegistrationException).collect(Collectors.toList());
+      container.warnings.addAll(e);
+    }
+    
+    
+    
+  }
+
 
   private void processWorkspaceConfig(Repository repo, GitDataContainer container) throws Exception {
     String fromHash = container.localCommitBeforePull;
@@ -662,49 +707,49 @@ public class RepositoryInteraction {
   }
 
 
-  private void processReferences(GitDataContainer container) {
+  private Map<Long, List<InternalReference>> prepareReferences(GitDataContainer container) {
     ReferenceSupport referenceSupport = new ReferenceSupport();
     ReferenceStorage storage = new ReferenceStorage();
     List<ReferenceStorable> references = storage.getAllReferences();
-    Map<Long, List<InternalReference>> grouped = new HashMap<>();
+    Map<Long, List<InternalReference>> groupedbyRev = new HashMap<>();
+    Map<String, RepositoryConnection> repoConnectionCache = new HashMap<>();
+    Map<String, Long> revisionCache = new HashMap<>();
     for (String repoPath : container.pull) {
       Pair<String, String> fqnAndWs = getFqnAndWorkspaceFromRepoPath(repoPath, container.repository);
       if (fqnAndWs != null) {
         //changes to a datatype with reference?
-        Long revision = getRevision(fqnAndWs.getSecond());
-        RepositoryConnection con = RepositoryManagementImpl.getRepositoryConnection(fqnAndWs.getSecond());
+        String ws = fqnAndWs.getSecond();
+        Long revision = revisionCache.computeIfAbsent(ws, this::getRevision);
+        RepositoryConnection con = repoConnectionCache.computeIfAbsent(ws, RepositoryManagementImpl::getRepositoryConnection);
         if (con == null) {
           if (logger.isErrorEnabled()) {
-            logger.error("Could not find a repositoryConnection for '" + fqnAndWs.getSecond() + "'.");
+            logger.error("Could not find a repositoryConnection for '" + ws + "'.");
           }
           continue;
         }
-        Optional<ReferenceStorable> opt = references.stream().filter(x -> matchNameAndRevision(x, fqnAndWs.getFirst(), revision)).findAny();
-        if (opt.isPresent()) {
-          InternalReference internalRef = new InternalReference();
-          internalRef.setPath(opt.get().getPath());
-          internalRef.setPathToRepo(con.getPath());
-          internalRef.setType(opt.get().getReftype());
-          addEntry(grouped, revision, internalRef);
+
+        List<ReferenceStorable> opt = references.stream().filter(x -> matchNameAndRevision(x, fqnAndWs.getFirst(), revision)).toList();
+        for (ReferenceStorable ref : opt) {
+          InternalReference internalRef = referenceSupport.convert(ref, con.getPath());
+          addEntry(groupedbyRev, revision, internalRef);
         }
       } else {
         //changes to a referenced file?
         //find referenceStorable for reference
-        List<ReferenceStorable> list = references.stream().filter(x -> repoPath.startsWith(x.getPath())).collect(Collectors.toList());
+        List<ReferenceStorable> list = references.stream().filter(x -> repoPath.startsWith(x.getPath())).toList();
         for (ReferenceStorable ref : list) {
           RepositoryConnection con = RepositoryManagementImpl.getRepositoryConnection(getWorkspace(ref.getWorkspace()).getName());
-          InternalReference internalRef = new InternalReference();
-          internalRef.setPath(ref.getPath());
-          internalRef.setPathToRepo(con.getPath());
-          internalRef.setType(ref.getReftype());
-          addEntry(grouped, ref.getWorkspace(), internalRef);
+          InternalReference internalRef = referenceSupport.convert(ref, con.getPath());
+          addEntry(groupedbyRev, ref.getWorkspace(), internalRef);
         }
       }
     }
-
-    for (Entry<Long, List<InternalReference>> kvp : grouped.entrySet()) {
-      referenceSupport.triggerReferences(kvp.getValue(), kvp.getKey());
+    
+    for (Entry<Long, List<InternalReference>> kvp : groupedbyRev.entrySet()) {
+      referenceSupport.prepareReferences(kvp.getValue(), kvp.getKey());
     }
+
+    return groupedbyRev;
   }
 
 
@@ -748,9 +793,8 @@ public class RepositoryInteraction {
   private boolean matchNameAndRevision(ReferenceStorable s, String fqn, Long revision) {
     return fqn.equals(s.getObjectName()) && revision == s.getWorkspace();
   }
-
-
-  private void processExecs(GitDataContainer container) {
+  
+  private Map<Long, List<ObjectToDeploy>> processExecs(GitDataContainer container) {
     List<PullExec> execs = container.exec;
 
     List<Triple<PullExecType, String, String>> exceptions = new ArrayList<>();
@@ -783,19 +827,11 @@ public class RepositoryInteraction {
       }
     }
 
-    List<Long> revisionsSorted = sortRevisions(toDeployByRevision.keySet());
-    for (Long revision : revisionsSorted) {
-      if (logger.isDebugEnabled()) {
-        logger.debug("depolying " + toDeployByRevision.get(revision).size() + " objects in revision " + revision);
-      }
-      deployRevision(revision, toDeployByRevision.get(revision), exceptions);
-    }
-
-
     if (!exceptions.isEmpty()) {
       List<String> e = exceptions.stream().map(this::formatXmomRegistrationException).collect(Collectors.toList());
       container.warnings.addAll(e);
     }
+    return toDeployByRevision;
   }
 
 
