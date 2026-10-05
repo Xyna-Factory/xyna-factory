@@ -743,4 +743,5 @@
                 </classpath>
             </java>
         </sequential>
-    </macrodef></project>
+    </macrodef>
+</project>
