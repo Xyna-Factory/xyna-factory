@@ -17,22 +17,37 @@
  */
 package xmcp.gitintegration.impl.references.methods;
 
+
+
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.FileUtils;
 
 import xmcp.gitintegration.impl.references.InternalReference;
 import xmcp.gitintegration.impl.references.ReferenceMethods;
 
+
+
 public class LibFolderMethods implements ReferenceMethods {
 
-  
+  private static final Logger logger = CentralFactoryLogging.getLogger(LibFolderMethods.class);
+
+
   public List<File> execute(InternalReference reference) {
     Path libFolder = Path.of(reference.getPathToRepo(), reference.getPath());
     List<File> files = new ArrayList<>();
     FileUtils.findFilesRecursively(libFolder.toFile(), files, (x, y) -> true);
+
+    if (logger.isDebugEnabled()) {
+      logger.debug("searched for files in lib_folder " + libFolder.toString() + ". Found " + files.size() + " files.");
+    }
+
     return files;
   }
 }

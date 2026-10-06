@@ -21,6 +21,7 @@ package xmcp.gitintegration.impl.references.methods.objecttypes;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +29,6 @@ import java.util.Optional;
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
-import com.gip.xyna.FileUtils;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement.PathType;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
@@ -61,13 +61,16 @@ public class DatatypeReferenceMethods implements ReferenceObjectTypeMethods {
             }
             continue;
           }
-          FileUtils.copyFileToDir(candidateFile.get(), targetDir);
+          Files.copy(candidateFile.get().toPath(), new File(targetDir, jarName).toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (Exception e) {
           throw new RuntimeException(e);
         }
       } else {
-        if(logger.isWarnEnabled()) {
+        if (logger.isWarnEnabled()) {
           logger.warn("Did not find required datatype jar " + jarName + " for datatype " + objectName + " in revision " + revision);
+          if (logger.isDebugEnabled()) {
+            logger.debug(String.join(", ", candidateFiles.stream().map(x -> x.getPath()).toList()));
+          }
         }
       }
     }

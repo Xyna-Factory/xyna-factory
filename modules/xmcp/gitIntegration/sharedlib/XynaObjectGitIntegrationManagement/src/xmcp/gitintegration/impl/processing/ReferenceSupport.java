@@ -21,7 +21,6 @@ package xmcp.gitintegration.impl.processing;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,10 +29,12 @@ import java.util.Map.Entry;
 import com.gip.xyna.CentralFactoryLogging;
 
 import java.util.Optional;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import xmcp.gitintegration.impl.references.InternalReference;
+import xmcp.gitintegration.impl.references.InternalReference.PreparedReferencedObject;
 import xmcp.gitintegration.impl.references.ReferenceMethods;
 import xmcp.gitintegration.impl.references.ReferenceObjectType;
 import xmcp.gitintegration.impl.references.ReferenceObjectTypeMethods;
@@ -151,20 +152,22 @@ public class ReferenceSupport {
     return grouped;
   }
   
-  public void triggerReferences(List<InternalReference> references, Long revision,  Map<String, List<File>> files, ReferenceTriggerTime triggerTime) {
-    Map<String, ObjectReferenceInformation> grouped = groupReferences(references, revision);
-    for (Entry<String, ObjectReferenceInformation> kvp : grouped.entrySet()) {
-      String objectName = kvp.getKey();
-      if (kvp.getValue().objectType.getTriggerTime() != triggerTime) {
+
+  public void triggerReferences(Long revision, Set<PreparedReferencedObject> objects, ReferenceTriggerTime triggerTime) {
+    for (PreparedReferencedObject obj : objects) {
+      ReferenceObjectType objectType = obj.objectType();
+      if (objectType.getTriggerTime() != triggerTime) {
         continue;
       }
+      List<File> files = obj.files();
+      String objectName = obj.objectName();
       try {
-        objectTypeImplementations.get(kvp.getValue().objectType).trigger(files.getOrDefault(objectName, Collections.emptyList()), objectName, revision);
-    } catch(Exception e) {
-      if(logger.isWarnEnabled()) {
-        logger.warn("Exception during reference trigger.", e);
+        objectTypeImplementations.get(objectType).trigger(files, objectName, revision);
+      } catch (Exception e) {
+        if (logger.isWarnEnabled()) {
+          logger.warn("Exception during reference trigger.", e);
+        }
       }
-    }
     }
   }
 

@@ -86,7 +86,6 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.FileUtils;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.Pair;
-import com.gip.xyna.utils.collections.Triple;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.utils.exceptions.utils.XMLUtils;
 import com.gip.xyna.xfmg.xfctrl.dependencies.RuntimeContextDependencyManagement;
@@ -110,6 +109,8 @@ import xmcp.gitintegration.WorkspaceObjectManagement;
 import xmcp.gitintegration.impl.RepositoryCredentialsManagement.XynaRepoCredentials;
 import xmcp.gitintegration.impl.processing.ReferenceSupport;
 import xmcp.gitintegration.impl.references.InternalReference;
+import xmcp.gitintegration.impl.references.InternalReference.PreparedReferencedObject;
+import xmcp.gitintegration.impl.references.ReferenceObjectType;
 import xmcp.gitintegration.impl.references.ReferenceTriggerTime;
 import xmcp.gitintegration.repository.Branch;
 import xmcp.gitintegration.repository.BranchData;
@@ -573,48 +574,45 @@ public class RepositoryInteraction {
     return createPullOutput(container, dryrun);
   }
 
+
   private void processObjects(GitDataContainer container) {
     ReferenceSupport referenceSupport = new ReferenceSupport();
-    
-    //prepareExecs => Map toDeployByRevision
+
     Map<Long, List<ObjectToDeploy>> toDeployByRevision = processExecs(container);
-    //prepareReferences => Map referencesByRevision
-    Map<Long, List<InternalReference>> referencesByRevision = prepareReferences(container);
-    
-    Map<Long, Pair<List<ObjectToDeploy>, List<InternalReference>>> objects = new HashMap<>();
-    toDeployByRevision.forEach((rev, objs) -> objects.put(rev, new Pair<>(objs, referencesByRevision.getOrDefault(rev, Collections.emptyList()))));
-    referencesByRevision.forEach((rev, intref) -> objects.putIfAbsent(rev, new Pair<>(Collections.emptyList(), intref)));
-    
-    List<Long> revisionsSorted = sortRevisions(objects.keySet());
-    List<Triple<PullExecType, String, String>> exceptions = new ArrayList<>();
-    
-    //for each revision in order
-    for(Long revision : revisionsSorted) {
-      Map<String, List<File>> files = null; //TODO: get this from prepareReferences-Output
+    Map<Long, Set<PreparedReferencedObject>> referencesByRevision = prepareReferences(container);
+
+    Set<Long> revisions = new HashSet<Long>();
+    revisions.addAll(toDeployByRevision.keySet());
+    revisions.addAll(referencesByRevision.keySet());
+
+    List<Long> revisionsSorted = sortRevisions(revisions);
+    List<ObjectException> exceptions = new ArrayList<>();
+
+    for (Long revision : revisionsSorted) {
+      Set<PreparedReferencedObject> refsInRevision = referencesByRevision.getOrDefault(revision, Collections.emptySet());
+      Set<ObjectToDeploy> objsToDeployInRev = new HashSet<>(toDeployByRevision.getOrDefault(revision, Collections.emptyList()));
+
       //  trigger references [before]
-      for (Entry<Long, List<InternalReference>> kvp : referencesByRevision.entrySet()) {
-        referenceSupport.triggerReferences(kvp.getValue(), kvp.getKey(), files, ReferenceTriggerTime.BEFORE_DEPLOY);
+      referenceSupport.triggerReferences(revision, refsInRevision, ReferenceTriggerTime.BEFORE_DEPLOY);
+
+      // add DataType references to deploy set
+      List<PreparedReferencedObject> refDatatypes = null;
+      refDatatypes = refsInRevision.stream().filter(x -> x.objectType() == ReferenceObjectType.DATATYPE).toList();
+      for (PreparedReferencedObject obj : refDatatypes) {
+        String fileName = GenerationBase.getFileLocationOfXmlNameForSaving(obj.objectName(), revision) + ".xml";
+        objsToDeployInRev.add(new ObjectToDeploy(obj.objectName(), fileName));
       }
-      
-      //  deploy/remove/save xmoms
-      if (logger.isDebugEnabled()) {
-        logger.debug("depolying " + toDeployByRevision.get(revision).size() + " objects in revision " + revision);
-      }
-      deployRevision(revision, toDeployByRevision.get(revision), exceptions);
-      
-      //  trigger references [after]
-      for (Entry<Long, List<InternalReference>> kvp : referencesByRevision.entrySet()) {
-        referenceSupport.triggerReferences(kvp.getValue(), kvp.getKey(), files, ReferenceTriggerTime.AFTER_DEPLOY);
-      }
+
+      deployRevision(revision, objsToDeployInRev, exceptions);
+
+      // trigger references [after]
+      referenceSupport.triggerReferences(revision, refsInRevision, ReferenceTriggerTime.AFTER_DEPLOY);
     }
-    
+
     if (!exceptions.isEmpty()) {
       List<String> e = exceptions.stream().map(this::formatXmomRegistrationException).collect(Collectors.toList());
       container.warnings.addAll(e);
     }
-    
-    
-    
   }
 
 
@@ -707,13 +705,15 @@ public class RepositoryInteraction {
   }
 
 
-  private Map<Long, List<InternalReference>> prepareReferences(GitDataContainer container) {
+  private Map<Long, Set<PreparedReferencedObject>> prepareReferences(GitDataContainer container) {
     ReferenceSupport referenceSupport = new ReferenceSupport();
     ReferenceStorage storage = new ReferenceStorage();
+    Map<Long, Set<PreparedReferencedObject>> result = new HashMap<>();
     List<ReferenceStorable> references = storage.getAllReferences();
     Map<Long, List<InternalReference>> groupedbyRev = new HashMap<>();
     Map<String, RepositoryConnection> repoConnectionCache = new HashMap<>();
     Map<String, Long> revisionCache = new HashMap<>();
+
     for (String repoPath : container.pull) {
       Pair<String, String> fqnAndWs = getFqnAndWorkspaceFromRepoPath(repoPath, container.repository);
       if (fqnAndWs != null) {
@@ -746,10 +746,22 @@ public class RepositoryInteraction {
     }
     
     for (Entry<Long, List<InternalReference>> kvp : groupedbyRev.entrySet()) {
-      referenceSupport.prepareReferences(kvp.getValue(), kvp.getKey());
+      result.put(kvp.getKey(), new HashSet<>());
+      Map<String, List<File>> filesByObject = referenceSupport.prepareReferences(kvp.getValue(), kvp.getKey());
+      for (Entry<String, List<File>> fileEntry : filesByObject.entrySet()) {
+        Optional<ReferenceStorable> optStorable;
+        optStorable = references.stream().filter(x -> Objects.equals(x.getObjectName(), fileEntry.getKey())).findFirst();
+        if (optStorable.isEmpty()) {
+          continue;
+        }
+        ReferenceObjectType objType = ReferenceObjectType.valueOf(optStorable.get().getObjecttype());
+        PreparedReferencedObject preparedObject;
+        preparedObject = new PreparedReferencedObject(fileEntry.getKey(), objType, kvp.getValue(), fileEntry.getValue());
+        result.get(kvp.getKey()).add(preparedObject);
+      }
     }
 
-    return groupedbyRev;
+    return result;
   }
 
 
@@ -797,14 +809,14 @@ public class RepositoryInteraction {
   private Map<Long, List<ObjectToDeploy>> processExecs(GitDataContainer container) {
     List<PullExec> execs = container.exec;
 
-    List<Triple<PullExecType, String, String>> exceptions = new ArrayList<>();
+    List<ObjectException> exceptions = new ArrayList<>();
     Map<Long, List<ObjectToDeploy>> toDeployByRevision = new HashMap<>();
     for (PullExec exec : execs) {
       String repoPath = exec.repoPath;
       String filePath = Path.of(container.repository, repoPath).toString();
       Pair<String, String> fqnAndWorkspace = getFqnAndWorkspaceFromRepoPath(repoPath, container.repository);
       if (fqnAndWorkspace == null) {
-        exceptions.add(new Triple<>(exec.execType, "unknown", exec.repoPath));
+        exceptions.add(new ObjectException(exec.execType, "unknown", exec.repoPath));
         continue;
       }
       String fqn = fqnAndWorkspace.getFirst();
@@ -823,7 +835,7 @@ public class RepositoryInteraction {
           toDeployByRevision.get(revision).add(new ObjectToDeploy(fqn, filePath));
         }
       } catch (Exception e) {
-        exceptions.add(new Triple<>(exec.execType, workspace, fqn));
+        exceptions.add(new ObjectException(exec.execType, workspace, fqn));
       }
     }
 
@@ -866,17 +878,18 @@ public class RepositoryInteraction {
   }
 
 
-  private void deployRevision(Long revision, List<ObjectToDeploy> objectFiles, List<Triple<PullExecType, String, String>> exceptions) {
-    Map<XMOMType, List<String>> items = new HashMap<>();
-    String workspace = String.valueOf(revision);
-    try {
-      workspace = getRevisionMgmt().getWorkspace(revision).getName();
-    } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e1) {
+  private void deployRevision(Long revision, Set<ObjectToDeploy> objectFiles, List<ObjectException> exceptions) {
+    if (logger.isDebugEnabled()) {
+      logger.debug("depolying " + objectFiles.size() + " objects in revision " + revision);
     }
+
+    String workspace = getWorkspace(revision).getName();
+    Map<XMOMType, List<String>> items = new HashMap<>();
+
     for (ObjectToDeploy objectToDeploy : objectFiles) {
       Optional<XMOMType> type = determineXmomType(objectToDeploy.fileName);
       if (type.isEmpty()) {
-        exceptions.add(new Triple<PullExecType, String, String>(PullExecType.deploy, workspace, objectToDeploy.fqn));
+        exceptions.add(new ObjectException(PullExecType.deploy, workspace, objectToDeploy.fqn));
         continue;
       }
       items.putIfAbsent(type.get(), new LinkedList<String>());
@@ -886,7 +899,7 @@ public class RepositoryInteraction {
       GenerationBase.deploy(items, DeploymentMode.codeChanged, false, WorkflowProtectionMode.FORCE_DEPLOYMENT, revision, "gitIntegration");
     } catch (Exception e) {
       List<String> objs = objectFiles.stream().map(x -> x.fqn).collect(Collectors.toList());
-      exceptions.add(new Triple<PullExecType, String, String>(PullExecType.deploy, workspace, String.join(",", objs)));
+      exceptions.add(new ObjectException(PullExecType.deploy, workspace, String.join(",", objs)));
     }
   }
 
@@ -1003,11 +1016,11 @@ public class RepositoryInteraction {
   }
 
 
-  private String formatXmomRegistrationException(Triple<PullExecType , String, String> input) {
+  private String formatXmomRegistrationException(ObjectException input) {
     StringBuilder sb = new StringBuilder();
-    sb.append("Could not ").append(input.getFirst()).append(" '");
-    sb.append(input.getThird()).append("' in workspace '");
-    sb.append(input.getSecond()).append("'.");
+    sb.append("Could not ").append(input.type()).append(" '");
+    sb.append(input.objectName()).append("' in workspace '");
+    sb.append(input.workspace()).append("'.");
     return sb.toString();
   }
 
@@ -1486,18 +1499,7 @@ public class RepositoryInteraction {
     }
   }
 
-
-  private static class ObjectToDeploy {
-    private String fqn;
-    private String fileName;
-
-    public ObjectToDeploy(String fqn, String fileName) {
-      this.fqn = fqn;
-      this.fileName = fileName;
-    }
-  }
-
-
+  
   public RepositoryStatus getStatus(String repository) throws Exception {
     ReentrantLock lock = getLock(repository);
     if (lock.tryLock(5, TimeUnit.SECONDS)) {
@@ -1532,4 +1534,12 @@ public class RepositoryInteraction {
     
     return builder.instance();
   }
+
+
+  private record ObjectToDeploy(String fqn, String fileName) {
+  }
+
+  private record ObjectException(PullExecType type, String workspace, String objectName) {
+  }
+
 }

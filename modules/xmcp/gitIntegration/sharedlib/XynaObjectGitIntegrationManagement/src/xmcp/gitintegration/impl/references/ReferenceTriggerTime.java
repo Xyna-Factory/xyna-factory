@@ -19,5 +19,5 @@ package xmcp.gitintegration.impl.references;
 
 
 public enum ReferenceTriggerTime {
-  BEFORE_DEPLOY, DURING_DEPLOY, AFTER_DEPLOY
+  BEFORE_DEPLOY, AFTER_DEPLOY
 }

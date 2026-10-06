@@ -19,7 +19,7 @@ package xmcp.gitintegration.impl.references;
 
 
 public enum ReferenceObjectType {
-  DATATYPE(ReferenceTriggerTime.DURING_DEPLOY), 
+  DATATYPE(ReferenceTriggerTime.BEFORE_DEPLOY), 
   TRIGGER(ReferenceTriggerTime.AFTER_DEPLOY), 
   FILTER(ReferenceTriggerTime.AFTER_DEPLOY), 
   SHAREDLIB(ReferenceTriggerTime.BEFORE_DEPLOY);

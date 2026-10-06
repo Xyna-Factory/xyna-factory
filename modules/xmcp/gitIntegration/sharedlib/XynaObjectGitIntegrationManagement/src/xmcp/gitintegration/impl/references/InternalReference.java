@@ -18,33 +18,59 @@
 package xmcp.gitintegration.impl.references;
 
 
+
+import java.io.File;
+import java.util.List;
+
+
+
 public class InternalReference {
 
   private String path;
   private String type;
   private String pathToRepo;
-  
+
+
   public String getPath() {
     return path;
   }
-  
+
+
   public void setPath(String path) {
     this.path = path;
   }
-  
+
+
   public String getType() {
     return type;
   }
-  
+
+
   public void setType(String type) {
     this.type = type;
   }
+
 
   public String getPathToRepo() {
     return pathToRepo;
   }
 
+
   public void setPathToRepo(String pathToRepo) {
     this.pathToRepo = pathToRepo;
+  }
+
+
+  public record ReferencedObject(String objectName, ReferenceObjectType objectType, List<InternalReference> references) {
+
+    public PreparedReferencedObject prepare(List<File> files) {
+      return new PreparedReferencedObject(objectName, objectType, references, files);
+    }
+
+  }
+
+  public record PreparedReferencedObject(String objectName, ReferenceObjectType objectType, List<InternalReference> references,
+                                         List<File> files) {
+
   }
 }
