@@ -18,44 +18,6 @@
 -->
 <project name="oas-macros">
 
-    <macrodef name="buildoasapp">
-        <attribute name="oas.dir" description="oas.dir" />
-        <attribute name="yaml" description="yaml" />
-        <attribute name="type" description="type" />
-        <attribute name="target" description="target" />
-        <attribute name="version" description="version" />
-        <sequential>
-            <property name="appgen.dir" value="@{oas.dir}/mdmimpl/ApplicationGenerationImpl" />
-            <ant antfile="build.xml" dir="@{oas.dir}" target="prepare-mdm-jar-if-missing" />
-            <replace-appversion oasdir="@{oas.dir}" version="@{version}" />
-            <ant antfile="build.xml" dir="${appgen.dir}" target="build">
-                <property name="target.dir" value="${appgen.dir}/deploy" />
-            </ant>
-            <java classname="xfmg.oas.offline.OASApplicationGeneration" fork="true" failonerror="true">
-                <arg value="@{yaml}" />
-                <arg value="@{type}" />
-                <arg value="@{target}" />
-                <classpath>
-                    <fileset dir="${appgen.dir}/lib/xyna">
-                        <include name="*.jar" />
-                    </fileset>
-                    <fileset dir="${appgen.dir}/deploy">
-                        <include name="*.jar" />
-                    </fileset>
-                </classpath>
-            </java>
-        </sequential>
-    </macrodef>
-
-
-    <macrodef name="replace-appversion">
-        <attribute name="oasdir" description="oas.dir" />
-        <attribute name="version" description="version" />
-        <sequential>
-            <property name="datamodelres" value="@{oasdir}/sharedlib/xyna-openapi/generators/xmom-data-model/src/main/resources/xmom-data-model/" />
-            <copy file="${datamodelres}/applicationAntToken.mustache" tofile="${datamodelres}/application.mustache" overwrite="true" />
-            <replace file="${datamodelres}/application.mustache" token="$AppVersion" value="@{version}"/>
-        </sequential>
-    </macrodef>
-
+    <!-- buildoasapp macro is now in central macros.xml -->
+    <import file="${root.dir}/installation/build/macros.xml" />
 </project>

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" ?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2026 Xyna GmbH, Germany
@@ -16,15 +15,13 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="xynautils-logging" basedir=".">
-
-    <!--Next release version for the archive file-->
-    <property name="release.number" value="4.0.1"/>
-    <!--Name of the utils project-->
-    <property name="utils.name" value="logging"/>
-    <property name="compiler.args" value="-proc:full -Alog4j.graalvm.groupId=com.gip.xyna -Alog4j.graalvm.artifactId=xynautils-logging" />
-
-    <!--Import all targets from master build file-->
-    <import file="${basedir}/../../installation/build/buildXynaUtils.xml"/>
-
-</project>
+<XynaCommandLineCommand>
+  <CommandDefinition Groups="Git Repository Management" Name="addusertorepository" Description="Configures a factory user for a repository" />
+  <Argument Name="repository" Description="Path to the repository" />
+  <Argument Name="factoryUser" Description="Factory username" />
+  <Argument Name="username" Description="Repository username" />
+  <Argument Name="password" Description="Password" Optional="true" />
+  <Argument Name="privateKeyFile" Description="Path and filename containing private key" Optional="true" />
+  <Argument Name="keyPassphrase" Description="Passphrase for private key" Optional="true" />
+  <Argument Name="mail" Description="Mail" />
+</XynaCommandLineCommand>

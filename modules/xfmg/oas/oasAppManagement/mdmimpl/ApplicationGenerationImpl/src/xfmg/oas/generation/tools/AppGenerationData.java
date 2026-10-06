@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!--
+/*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2026 Xyna GmbH, Germany
  *
@@ -15,16 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<project name="xynautils-logging" basedir=".">
+ */
+package xfmg.oas.generation.tools;
 
-    <!--Next release version for the archive file-->
-    <property name="release.number" value="4.0.1"/>
-    <!--Name of the utils project-->
-    <property name="utils.name" value="logging"/>
-    <property name="compiler.args" value="-proc:full -Alog4j.graalvm.groupId=com.gip.xyna -Alog4j.graalvm.artifactId=xynautils-logging" />
 
-    <!--Import all targets from master build file-->
-    <import file="${basedir}/../../installation/build/buildXynaUtils.xml"/>
 
-</project>
+public record AppGenerationData(String specFile, String oasVersion, boolean generateMock, boolean generateDataCapture,
+                                OasImportStatusHandler statusHandler) {
+
+}

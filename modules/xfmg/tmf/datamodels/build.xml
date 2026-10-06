@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@
     <import file="${oas.dir}/oasMacros.xml" />
 
 	<target name="build">
-        <xmlproperty file="${oas.dir}/application.xml" />
+        <xmlproperty file="${oas.dir}/../oasBase/application.xml" />
         <buildoasapp oas.dir="${oas.dir}" yaml="tmf633-service-catalog-openapi-1.1.15.yaml" type="client" target="." version="${Application(versionName)}" />
         <buildoasapp oas.dir="${oas.dir}" yaml="tmf640-service-activation-openapi-1.1.8.yaml" type="datamodel" target="." version="${Application(versionName)}" />
 		<antcall target="unzipApps" />
@@ -49,15 +49,15 @@
 	</target>
 
 	<target name="unzipApps">
+        <mkdir dir="${basedir}/apps" />
 		<foreach target="unzipApp" param="zipfile">
-			<fileset dir="${basedir}" includes="*.zip" >
-			</fileset>
+			<fileset dir="${basedir}" includes="*.zip" />
 		</foreach>
 	</target>
 
 	<target name="unzipApp">
 		<basename property="filename" file="${zipfile}" suffix=".zip"/>
-		<unzip src="${zipfile}" dest="${basedir}/${filename}"/>
+		<unzip src="${zipfile}" dest="${basedir}/apps/${filename}"/>
 	</target>
 
 </project>

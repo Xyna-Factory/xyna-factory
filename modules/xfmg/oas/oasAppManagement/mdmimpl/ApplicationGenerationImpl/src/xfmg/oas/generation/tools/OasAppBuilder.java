@@ -68,20 +68,13 @@ import xfmg.oas.generation.impl.ApplicationGenerationServiceOperationImpl;
 
 public class OasAppBuilder {
 
-  
-  public OASApplicationData createOasApp(String generator, String target, String specFile, boolean generateMock, boolean generateDataCapture) {
-    return createOasApp(generator, target, specFile, generateMock, generateDataCapture, new OasImportStatusHandler());
-  }
-
-  
-  public OASApplicationData createOasApp(String generator, String target, String specFile, boolean generateMock, boolean generateDataCapture,
-                                         OasImportStatusHandler statusHandler) {
+  public OASApplicationData createOasApp(String generator, String target, AppGenerationData data) {
     List<File> files = new ArrayList<>();
-    statusHandler.storeStatusParsing();
+    data.statusHandler().storeStatusParsing();
     
-    callGenerator(generator, target, specFile, generateMock, generateDataCapture);
+    callGenerator(generator, target, data);
     
-    statusHandler.storeStatusAppBinaryGen();
+    data.statusHandler().storeStatusAppBinaryGen();
     separateFiles(target);
     compileFilter(target);
     String appFileName = createAppFileNameFromXml(target);
@@ -126,18 +119,19 @@ public class OasAppBuilder {
     }
   }
 
-  public void createOasAppOffline(String generator, String targetDir, String specFile, boolean generateMock, boolean generateDataCapture) {
+  public void createOasAppOffline(String generator, String target, AppGenerationData data) {
     try {
       Path tmpDir = Files.createTempDirectory("oasmain");
       File tmpDirFile = tmpDir.toFile();
       try {
         String tmpDirAsString = tmpDir.toString();
 
-        callGenerator(generator, tmpDirAsString, specFile, generateMock, generateDataCapture);
+        callGenerator(generator, tmpDirAsString, data);
         separateFiles(tmpDirAsString);
+        compileFilterOffline(tmpDirAsString);
         String appName = createAppFileNameFromXml(tmpDirAsString);
 
-        File targetAppFile = new File(targetDir, appName + ".zip");
+        File targetAppFile = new File(target, appName + ".zip");
         try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(targetAppFile))) {
           FileUtils.zipDir(tmpDirFile, zos, tmpDirFile);
         }
@@ -151,16 +145,17 @@ public class OasAppBuilder {
   }
 
   
-  private void callGenerator(String generatorName, String target, String specFile, boolean generateMock, boolean generateDataCapture) {
+  private void callGenerator(String generatorName, String target, AppGenerationData data) {
     final CodegenConfigurator configurator = new CodegenConfigurator()
         .setGeneratorName(generatorName)
-        .setInputSpec(specFile)
+        .setInputSpec(data.specFile())
         .addAdditionalProperty("generateAliasAsModel", XynaFactory.isFactoryServer() ?
                                ApplicationGenerationServiceOperationImpl.createListWrappers.get() : true)
         .addAdditionalProperty("x-createListWrappers", XynaFactory.isFactoryServer() ? 
                                ApplicationGenerationServiceOperationImpl.createListWrappers.get() : true)
-        .addAdditionalProperty("generateMock", generateMock)
-        .addAdditionalProperty("generateDataCapture", generateDataCapture)
+        .addAdditionalProperty("generateMock", data.generateMock())
+        .addAdditionalProperty("generateDataCapture", data.generateDataCapture())
+        .addAdditionalProperty("oasBaseVersion", data.oasVersion())
         .setOutputDir(target);
     
       final ClientOptInput clientOptInput = configurator.toClientOptInput();
@@ -298,6 +293,41 @@ public class OasAppBuilder {
         cs.addToCompile(new JavaSourceFromString("src.com.gip.xyna.xact.filter." + filterName, Files.readString(javaFile.toPath())));
         cs.addToClassPath(mdmJarPath.toString());
         cs.addToClassPath(httpTriggerJar.toString());
+        cs.compileToJar(filterOutputDir.toFile(), false);
+        FileUtils.deleteFileWithRetries(javaFile);
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+    }
+  }
+
+  private Path getJarPathFromClassPath(String jarName) {
+    String search = String.format("/%s.jar", jarName);
+    String classpath = System.getProperty("java.class.path");
+    classpath = classpath.replace("\\", "/").replace(";", ":");
+    String[] entries = classpath.split(":");
+    for (int i = 0; i < entries.length; i++) {
+      if (entries[i].endsWith(search)) {
+        return Path.of(entries[i]);
+      }
+    }
+    throw new RuntimeException("Could not find " + jarName + ". ClassPath: " + classpath);
+  }
+
+
+  private void compileFilterOffline(String target) {
+    List<File> filterJava = new ArrayList<>();
+    FileUtils.findFilesRecursively(Path.of(target, "filter").toFile(), filterJava, findOASFilterJava);
+    Path httpTriggerJar = getJarPathFromClassPath("HTTPTrigger");
+    Path mdmJar = getJarPathFromClassPath("mdm");
+    for (File javaFile: filterJava) {
+      String filterName = javaFile.getName().substring(0, javaFile.getName().lastIndexOf("_"));
+      Path filterOutputDir = Path.of(target, "filter", filterName, filterName + ".jar");
+      InMemoryCompilationSet cs = new InMemoryCompilationSet(false, false, false);
+      try {
+        cs.addToCompile(new JavaSourceFromString("src.com.gip.xyna.xact.filter." + filterName, Files.readString(javaFile.toPath())));
+        cs.addToClassPath(httpTriggerJar.toString());
+        cs.addToClassPath(mdmJar.toString());
         cs.compileToJar(filterOutputDir.toFile(), false);
         FileUtils.deleteFileWithRetries(javaFile);
       } catch (Exception e) {

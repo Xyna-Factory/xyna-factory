@@ -160,6 +160,7 @@
     <javac debug="on"
            encoding="iso8859-1"
            fork="yes"
+           includeantruntime="false"
            srcdir="${basedir}/src/com/gip/xyna/xmcp/xfcli/generation"
            destdir="${basedir}/classes">
       <classpath path="${basedir}/classes" />
