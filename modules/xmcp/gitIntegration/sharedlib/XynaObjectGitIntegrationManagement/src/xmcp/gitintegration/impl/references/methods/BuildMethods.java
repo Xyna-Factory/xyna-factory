@@ -96,9 +96,9 @@ public class BuildMethods implements ReferenceMethods {
       return Collections.emptyList();
     }
 
-    Path deployFolder = Path.of(reference.getPathToRepo(), reference.getPath(), "deploy");
+    Path deployDir = Path.of(reference.getPathToRepo(), reference.getPath(), "deploy");
     List<File> files = new ArrayList<>();
-    FileUtils.findFilesRecursively(deployFolder.toFile(), files, (x, y) -> true);
+    FileUtils.findFilesRecursively(deployDir.toFile(), files, (x, y) -> true);
     return files;
   }
 

@@ -86,6 +86,7 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.FileUtils;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.Pair;
+import com.gip.xyna.utils.collections.lists.StringSerializableList;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.utils.exceptions.utils.XMLUtils;
 import com.gip.xyna.xfmg.xfctrl.dependencies.RuntimeContextDependencyManagement;
@@ -103,6 +104,8 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.DeploymentMode;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.WorkflowProtectionMode;
 
 import base.Text;
+import xmcp.gitintegration.Filter;
+import xmcp.gitintegration.Trigger;
 import xmcp.gitintegration.WorkspaceContent;
 import xmcp.gitintegration.WorkspaceContentDifferences;
 import xmcp.gitintegration.WorkspaceObjectManagement;
@@ -548,7 +551,7 @@ public class RepositoryInteraction {
       processConflicts(container);
       processReverts(git, repo, container);
       processPulls(git, repo, container);
-      processObjects(container);
+      processObjects(repo, container);
       updateSplit(repository, container);
       processWorkspaceConfig(repo, container);
     } catch(Exception e) {
@@ -575,7 +578,7 @@ public class RepositoryInteraction {
   }
 
 
-  private void processObjects(GitDataContainer container) {
+  private void processObjects(Repository repo, GitDataContainer container) {
     ReferenceSupport referenceSupport = new ReferenceSupport();
 
     Map<Long, List<ObjectToDeploy>> toDeployByRevision = processExecs(container);
@@ -607,6 +610,61 @@ public class RepositoryInteraction {
 
       // trigger references [after]
       referenceSupport.triggerReferences(revision, refsInRevision, ReferenceTriggerTime.AFTER_DEPLOY);
+      try {
+        String workspaceName = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement()
+            .getWorkspace(revision).getName();
+        Optional<RepositoryConnectionStorable> optCon = RepositoryManagementImpl.loadRepositoryConnectionForWorkspace(workspaceName);
+        if (optCon.isEmpty()) {
+          container.warnings.add("Could not find repository connection for revision " + revision);
+          continue;
+        }
+        String wsConfigPath = optCon.get().getSubpath() + ("none".equals(optCon.get().getSplittype()) ? "/workspace.xml" : "/config/");
+        WorkspaceContent wscAfter = createWorkspaceContentFromCommit(repo, container, wsConfigPath, container.remoteCommit);
+
+        //deploy trigger and filter
+        List<Trigger> triggerObjs =
+            wscAfter.getWorkspaceContentItems().stream().filter(x -> x instanceof Trigger).map(x -> (Trigger) x).toList();
+        List<String> triggers =
+            refsInRevision.stream().filter(x -> x.objectType() == ReferenceObjectType.TRIGGER).map(x -> x.objectName()).toList();
+
+        List<Trigger> triggersToDeploy = triggerObjs.stream().filter(x -> triggers.contains(x.getTriggerName())).toList();
+        StringSerializableList<String> ssl = StringSerializableList.autoSeparator(String.class, ":|/;\\@-_.+#=[]?§$%&!", ':');
+        for(Trigger trigger : triggersToDeploy) {
+          String[] jarFiles = ssl.deserializeFromString(trigger.getJarfiles()).toArray(new String[]{});
+          String[] sharedLibs = ssl.deserializeFromString(trigger.getSharedlibs()).toArray(new String[]{});
+          File[] jars = new File[jarFiles.length];
+          int idx = 0;
+          List<File> candidateFiles = refsInRevision.stream().filter(x -> x.objectName().equals(trigger.getTriggerName())).findFirst().get().files();
+          for (String jarFile : jarFiles) {
+            base.File file = candidateFiles.stream().filter(x -> x.getName().equals(jarFile)).map(x -> new base.File(x.getAbsolutePath())).findFirst().get();
+            jars[idx++] = new File(file.getPath());
+          }
+          XynaFactory.getInstance().getActivation().getActivationTrigger().addTrigger(trigger.getTriggerName(), jars, trigger.getFQTriggerClassName(), sharedLibs);
+        }
+
+        List<Filter> filterObjs =
+            wscAfter.getWorkspaceContentItems().stream().filter(x -> x instanceof Filter).map(x -> (Filter) x).toList();
+        List<String> filters =
+            refsInRevision.stream().filter(x -> x.objectType() == ReferenceObjectType.FILTER).map(x -> x.objectName()).toList();
+        List<Filter> filtersToDeploy = filterObjs.stream().filter(x -> filters.contains(x.getFilterName())).toList();
+        for(Filter item : filtersToDeploy) {
+          String[] jarFiles = ssl.deserializeFromString(item.getJarfiles()).toArray(new String[]{});
+          File[] jarFilesArray = new File[jarFiles.length];
+          int idx = 0;
+          List<File> candidateFiles = refsInRevision.stream().filter(x -> x.objectName().equals(item.getFilterName())).findFirst().get().files();
+          for (String jarFile : jarFiles) {
+            base.File file = candidateFiles.stream().filter(x -> x.getName().equals(jarFile)).map(x -> new base.File(x.getAbsolutePath())).findFirst().get();
+            jarFilesArray[idx++] = new File(file.getPath());
+          }
+          String[] sharedLibs = ssl.deserializeFromString(item.getSharedlibs()).toArray(new String[] {});
+          XynaFactory.getInstance().getActivation().getActivationTrigger().addFilter(item.getFilterName(), jarFilesArray,
+                                                                                     item.getFQFilterClassName(), item.getTriggerName(),
+                                                                                     sharedLibs, item.getDescription(), revision);
+        }
+
+      } catch(Exception e) {
+        container.warnings.add("Could not deploy triggers and filters in revision " + revision);
+      }
     }
 
     if (!exceptions.isEmpty()) {
@@ -738,7 +796,8 @@ public class RepositoryInteraction {
         //find referenceStorable for reference
         List<ReferenceStorable> list = references.stream().filter(x -> repoPath.startsWith(x.getPath())).toList();
         for (ReferenceStorable ref : list) {
-          RepositoryConnection con = RepositoryManagementImpl.getRepositoryConnection(getWorkspace(ref.getWorkspace()).getName());
+          String wsName = getWorkspace(ref.getWorkspace()).getName();
+          RepositoryConnection con = repoConnectionCache.computeIfAbsent(wsName, RepositoryManagementImpl::getRepositoryConnection);
           InternalReference internalRef = referenceSupport.convert(ref, con.getPath());
           addEntry(groupedbyRev, ref.getWorkspace(), internalRef);
         }

@@ -55,12 +55,12 @@ import xmcp.gitintegration.storage.ReferenceStorage;
  * 
  * should not be a Processor, because ReferenceStorables
  * are not supposed to be shared between factories.
- * Instead, relevant WorkspaceContentItems contains reference
+ * Instead, relevant WorkspaceContentItems contain reference
  * tags. Reference tags contain a subset of the data stored
  * in ReferenceStorable objects.
  * 
  * ReferenceStorable objects are specific to a factory (contain
- * workspace revision), while the date provided by reference
+ * workspace revision), while the data provided by reference
  * tags is factory-independent.
  */
 public class ReferenceSupport {
@@ -92,11 +92,6 @@ public class ReferenceSupport {
     result.put(ReferenceObjectType.TRIGGER, new TriggerReferenceMethods());
 
     return result;
-  }
-
-
-  private ReferenceMethods dispatch(ReferenceType type) {
-    return implementations.get(type);
   }
 
 
@@ -191,7 +186,7 @@ public class ReferenceSupport {
     List<File> result = new ArrayList<File>();
     for (InternalReference reference : references) {
       ReferenceType referenceType = ReferenceType.valueOf(reference.getType());
-      ReferenceMethods methods = dispatch(referenceType);
+      ReferenceMethods methods = implementations.get(referenceType);
       List<File> partialResult = methods.execute(reference);
       result.addAll(partialResult);
     }
