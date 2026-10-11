@@ -138,6 +138,8 @@ public class PackAlgoAssign implements PackAlgorithm {
       String linkTypeVal = pLinktypeSource.get().getNodeInfo().getValueOrEmpty();
       assign.getDescendantByPath(EL.COPY, EL.SOURCE).get().getNodeInfo().createChild(EL.META).createChild(EL.LINKTYPE, linkTypeVal);
     }
+    pSource.get().getNodeInfo().setIgnore(true);
+    pTarget.get().getNodeInfo().setIgnore(true);
   }
   
 

@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.ATT;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.EL;
@@ -98,6 +99,13 @@ public class PackAlgoDataOutput implements PackAlgorithm {
     String refId = targetRef.get().getNodeInfo().getValue().get();
     XmomPointer target = rootChildren.get(refId);
     if (!dataNodesMatch(data, target)) { return; }
+    
+    Set<String> expected = Set.of(ATT.ID, ATT.LABEL, ATT.VARIABLENAME, ATT.REFERENCENAME, ATT.REFERENCEPATH);
+    List<XmomPointer> children = target.getChildren();
+    for (XmomPointer child : children) {
+      if (!expected.contains(child.getNodeInfo().getName())) { return; }
+    }
+    
     targetRef.get().getNodeInfo().setIgnore(true);
     if (!targetRef.get().getParent().getNodeInfo().isIgnoreOrEmpty()) {
       targetRef.get().getNodeInfo().setIgnore(false);
@@ -121,8 +129,30 @@ public class PackAlgoDataOutput implements PackAlgorithm {
   
   @Override
   public void unpack(XmomTree tree) {
-    XmomNodeInfo root = tree.getRoot();
+    NodeMatcher matcher = new NodeMatcherByName(PackingConstants.DataOutput.P_ROOT_DATA);
+    List<XmomPointer> list = new XmomWalker().findDescendants(tree, matcher);
+    for (XmomPointer pointer : list) {
+      unpackRootData(pointer);
+    }
+  }
+
+  
+  private void unpackRootData(XmomPointer pRootData) {
+    String id = pRootData.getNodeInfo().getValueOrEmpty();
+    if (id.isBlank()) { return; }
+    XmomPointer data = pRootData.getParent();
+    if (!EL.DATA.equals(data.getNodeInfo().getName())) { return; }
+    XmomPointer output = data.getParent();
+    if (!EL.OUTPUT.equals(output.getNodeInfo().getName())) { return; }
+    output.getNodeInfo().createChild(EL.TARGET).createChild(ATT.REFID, id);
     
+    XmomNodeInfo newData = output.getRoot().getNodeInfo().createChild(EL.DATA);
+    newData.createChild(ATT.ID, id);
+    newData.createChild(ATT.LABEL, data.getChildValueOrEmptyString(ATT.LABEL));
+    newData.createChild(ATT.VARIABLENAME, data.getChildValueOrEmptyString(ATT.VARIABLENAME));
+    newData.createChild(ATT.REFERENCENAME, data.getChildValueOrEmptyString(ATT.REFERENCENAME));
+    newData.createChild(ATT.REFERENCEPATH, data.getChildValueOrEmptyString(ATT.REFERENCEPATH));
+    pRootData.getNodeInfo().setIgnore(true);
   }
 
 }

@@ -168,5 +168,10 @@ public class XmomPointer {
   public XmomNodeInfo getNodeInfo() {
     return node;
   }
+
+
+  public XmomTree getTree() {
+    return tree;
+  }
   
 }

@@ -48,15 +48,26 @@ public class PackAlgoSingleId implements PackAlgorithm {
     if (id.isEmpty()) { return; }
     if (id.get().getRefCount() == 1) {
       idnode.getNodeInfo().setIgnore(true);
-      idnode.getParent().getNodeInfo().createChild(PackingConstants.SingleOutput.P_ID, "*");
+      idnode.getParent().getNodeInfo().createChild(PackingConstants.SingleId.P_ID, "*");
     }
   }
   
   
   @Override
   public void unpack(XmomTree tree) {
-    // TODO Auto-generated method stub
-    
+    NodeMatcher matcher = new NodeMatcherByName(PackingConstants.SingleId.P_ID);
+    List<XmomPointer> pidList = new XmomWalker().findDescendants(tree, matcher);
+    for (XmomPointer pid : pidList) {
+      unpackId(pid);
+    }
+  }
+  
+  
+  private void unpackId(XmomPointer pid) {
+    XmomPointer parent = pid.getParent();
+    int nextId = 1 + pid.getTree().getIdMapping().getMaxIdVal();
+    parent.getNodeInfo().createChild(ATT.ID, "" + nextId);
+    pid.getNodeInfo().setIgnore(true);
   }
   
 }

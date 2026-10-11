@@ -76,8 +76,22 @@ public class PackAlgoMappingAutoRef implements PackAlgorithm {
   
   @Override
   public void unpack(XmomTree tree) {
-    // TODO Auto-generated method stub
-    
+    NodeMatcher matcher = new NodeMatcherByName(PackingConstants.MappingAutoRef.P_SOURCE_AUTO);
+    List<XmomPointer> list = new XmomWalker().findDescendants(tree, matcher);
+    for (XmomPointer pointer : list) {
+      unpackSource(pointer);
+    }
   }
 
+  
+  private void unpackSource(XmomPointer pSourceAuto) {
+    XmomPointer data = pSourceAuto.getParent();
+    XmomPointer mappings = data.getParent().getParent();
+    if (!EL.MAPPINGS.equals(mappings.getNodeInfo().getName())) { return; }
+    String id = mappings.getChildValueOrEmptyString(ATT.ID);
+    if (id.isBlank()) { return; }
+    data.getNodeInfo().createChild(EL.SOURCE).createChild(ATT.REFID, id);
+    pSourceAuto.getNodeInfo().setIgnore(true);
+  }
+  
 }

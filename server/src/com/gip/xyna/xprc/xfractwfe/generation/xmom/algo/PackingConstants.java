@@ -30,7 +30,7 @@ public class PackingConstants {
   public static class DataOutput {
     public static final String P_ROOT_DATA = "p_rootdata";
   }
-  public static class SingleOutput {
+  public static class SingleId {
     public static final String P_ID = "p_id";
   }
   public static class MappingAutoRef {
