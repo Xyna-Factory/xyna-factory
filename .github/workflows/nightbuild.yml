@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         node-version: [26]
-        java-version: [21 25]
+        java-version: [21, 25]
 
     steps:
      - uses: actions/cache@v5
