@@ -141,7 +141,7 @@
       <Mapping>%0%.possibleValues.listItemValuePath="value"</Mapping>
       <Mapping>%0%.dataPath="%4%.text"</Mapping>
       <Mapping>%0%.possibleValues.dataPath="%3%"</Mapping>
-      <Mapping>%0%.label="Load into..."</Mapping>
+      <Mapping>%0%.label="Load into... (Select a workspaces only for debugging)"</Mapping>
     </Mappings>
     <Mappings ID="11" Label="Mapping">
       <Input>
