@@ -199,10 +199,9 @@ public class ParseWriteXmomTest {
       log(json);
       
       new PackAlgoAssign().pack(tree);
-      
-      //new PackAlgoDataOutput().pack(tree);
-      //new PackAlgoMappingAutoRef().pack(tree);
-      //new PackAlgoSingleId().pack(tree);
+      new PackAlgoDataOutput().pack(tree);
+      new PackAlgoMappingAutoRef().pack(tree);
+      new PackAlgoSingleId().pack(tree);
       
       logXmomTree(tree);
       tree = tree.doCloneWithoutIgnoreAndEmpty();
@@ -219,6 +218,27 @@ public class ParseWriteXmomTest {
       
       json = new WriterXmomJson().toJsonString(tree);
       log(json);
+      
+      
+      new PackAlgoSingleId().unpack(tree);
+      
+      //new PackAlgoMappingAutoRef().unpack(tree);
+      //new PackAlgoDataOutput().unpack(tree);
+      //new PackAlgoAssign().unpack(tree);
+      
+      
+      logXmomTree(tree);
+      tree = tree.doCloneWithoutIgnoreAndEmpty();
+      logXmomTree(tree);
+      
+      tree.getIdMapping().renumber();
+      logXmomTree(tree);
+      
+      json = new WriterXmomJson().toJsonString(tree);
+      log(json);
+      
+      String xml = new WriterXmomXml().toXmlString(tree);
+      log(xml);
       
     } catch (Exception e) {
       e.printStackTrace();
@@ -247,7 +267,8 @@ public class ParseWriteXmomTest {
     List<TreePath> paths = nav.getAllPathsOfValueNodes(tree);
     for (TreePath path : paths) {
       Optional<XmomNodeInfo> info = nav.gotoPath(tree, path);
-      log(path.asString() + " -> " + info.get().getValue().get());
+      log(path.asString() + " -> " + info.get().getValue().get() + (info.get().isIgnore() ? " [IGNORED]" : "") +
+          (info.get().hasValue() ? "" : " [ NO-VALUE]"));
     }
   }
   
@@ -260,7 +281,7 @@ public class ParseWriteXmomTest {
   public static void main(String[] args) {
     try {
       //new ParseWriteXmomTest().testWalker2();
-      new ParseWriteXmomTest().testAlgo1();
+      new ParseWriteXmomTest().testAlgo2();
     }
     catch (Throwable e) {
       e.printStackTrace();

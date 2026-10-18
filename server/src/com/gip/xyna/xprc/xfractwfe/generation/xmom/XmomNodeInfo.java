@@ -98,13 +98,13 @@ public class XmomNodeInfo {
   
   
   private XmomNodeInfo doClone(IdMapping idMapping, CloneMode mode) {
-    XmomNodeInfo ret = new XmomNodeInfo(this.name, this.value, idMapping);
+    XmomNodeInfo ret = new XmomNodeInfo(this.name, this.getValue(), idMapping);
     for (XmomNodeInfoList list: this.childMap.values()) {
       for (XmomNodeInfo child : list.getList()) {
         if (mode == CloneMode.SKIP_IGNORE_AND_EMPTY) {
           if (child.isIgnoreOrEmpty()) { continue; }
         }
-        ret.addChild(child.doClone(idMapping));
+        ret.addChild(child.doClone(idMapping, mode));
       }
     }
     return ret;
@@ -193,6 +193,9 @@ public class XmomNodeInfo {
 
   
   public boolean isIgnoreOrEmpty() {
+    if (isIgnore()) {
+      return true;
+    }
     if (hasValue()) {
       return false;
     }
