@@ -55,8 +55,7 @@ import com.gip.xyna.xprc.xsched.vetos.cache.cluster.VetoResponse;
 import junit.framework.TestCase;
 
 public class VetoCacheTestHelper extends TestCase {
-  
-  
+
   public static class TestVM implements VetoManagementInterface {
     
     protected VetoCache vc;
@@ -154,11 +153,11 @@ public class VetoCacheTestHelper extends TestCase {
     }
 
     public VetoAllocationResult allocateVetos(TestOrder to) {
-      return allocateVetos(to.getOrderInformation(), to.getVetos(), to.getUrgency());
+      return allocateVetos(to.getOrderInformation(), to.getVetos(), to.getSharedVetos(), to.getUrgency());
     }
     
     public void undoAllocation(TestOrder to) {
-      undoAllocation(to.getOrderInformation(), to.getVetos());
+      undoAllocation(to.getOrderInformation(), to.getVetos(), to.getSharedVetos());
     }
     
     public boolean freeVetos(TestOrder to) {
