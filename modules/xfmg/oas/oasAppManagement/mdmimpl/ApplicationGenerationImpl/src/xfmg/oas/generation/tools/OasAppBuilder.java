@@ -71,15 +71,15 @@ public class OasAppBuilder {
   public OASApplicationData createOasApp(String generator, String target, AppGenerationData data) {
     List<File> files = new ArrayList<>();
     data.statusHandler().storeStatusParsing();
-    
+
     callGenerator(generator, target, data);
-    
+
     data.statusHandler().storeStatusAppBinaryGen();
     separateFiles(target);
     compileFilter(target);
     String appFileName = createAppFileNameFromXml(target);
     Application app = readApplicationXml(target);
- 
+
     File targetAsFile = new File(target);
     File unzipedApp = new File("/tmp/" + appFileName);
     files.add(unzipedApp);
@@ -105,7 +105,7 @@ public class OasAppBuilder {
       throw new RuntimeException(e);
     }
     String appName = removeAppNameSuffix(app.getName(), generator);
-    appName = String.format("%s/%s", appName, app.getVersionName()); 
+    appName = String.format("%s/%s", appName, app.getVersionName());
     return new OASApplicationData(id, files, appName);
   }
 
@@ -141,29 +141,29 @@ public class OasAppBuilder {
       }
     } catch (Exception e) {
       throw new RuntimeException(e);
-    } 
+    }
   }
 
-  
+
   private void callGenerator(String generatorName, String target, AppGenerationData data) {
     final CodegenConfigurator configurator = new CodegenConfigurator()
         .setGeneratorName(generatorName)
         .setInputSpec(data.specFile())
         .addAdditionalProperty("generateAliasAsModel", XynaFactory.isFactoryServer() ?
                                ApplicationGenerationServiceOperationImpl.createListWrappers.get() : true)
-        .addAdditionalProperty("x-createListWrappers", XynaFactory.isFactoryServer() ? 
+        .addAdditionalProperty("x-createListWrappers", XynaFactory.isFactoryServer() ?
                                ApplicationGenerationServiceOperationImpl.createListWrappers.get() : true)
         .addAdditionalProperty("generateMock", data.generateMock())
         .addAdditionalProperty("generateDataCapture", data.generateDataCapture())
         .addAdditionalProperty("oasBaseVersion", data.oasVersion())
         .setOutputDir(target);
-    
+
       final ClientOptInput clientOptInput = configurator.toClientOptInput();
       DefaultGenerator generator = new DefaultGenerator();
       generator.opts(clientOptInput).generate();
   }
-  
-  
+
+
   public ValidationResult validate(String specFile) {
     ValidationResult result = new ValidationResult();
     ParseOptions options = new ParseOptions();
@@ -181,8 +181,8 @@ public class OasAppBuilder {
     evaluatorResult.getWarnings().forEach(invalid -> result.addWarning(invalid.getMessage()));
     return result;
   }
-  
-  
+
+
   private Application readApplicationXml(String target) {
     Path applicationXML = Path.of(target, "application.xml");
     String appName = "app";
@@ -254,7 +254,7 @@ public class OasAppBuilder {
     }
   }
 
-  
+
   private FilenameFilter findOASFilterJava = new FilenameFilter() {
 
     @Override
@@ -267,7 +267,7 @@ public class OasAppBuilder {
   private void compileFilter(String target) {
     List<File> filterJava = new ArrayList<>();
     FileUtils.findFilesRecursively(Path.of(target, "filter").toFile(), filterJava, findOASFilterJava);
-    
+
     for (File javaFile: filterJava) {
      String filterName = javaFile.getName().substring(0, javaFile.getName().lastIndexOf("_"));
 
@@ -347,9 +347,12 @@ public class OasAppBuilder {
     }
     return null;
   }
-  
+
   public static String decompressArchive(String zipFile) {
-    String unzipDir =  "/tmp/" + new File(zipFile).getName() + "_unzipped";
+    return decompressArchive(zipFile, "/tmp/" + new File(zipFile).getName() + "_unzipped");
+  }
+
+  public static String decompressArchive(String zipFile, String unzipDir) {
     FileUtils.deleteDirectoryRecursively(new File(unzipDir));
     try {
       FileUtils.unzip(zipFile, unzipDir, (path) -> true);
@@ -362,5 +365,5 @@ public class OasAppBuilder {
     }
     return files[0].getAbsolutePath();
   }
-  
+
 }

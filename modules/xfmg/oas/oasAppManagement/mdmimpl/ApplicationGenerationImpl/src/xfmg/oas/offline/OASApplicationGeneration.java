@@ -44,7 +44,7 @@ public class OASApplicationGeneration {
 
     if (args.length < 3) {
       System.out.println("Generates Xyna Applications representing datamodel & client from Open API yaml schema.");
-      System.out.println("Parameters: <Open API yaml schema file> "
+      System.out.println("Parameters: <Open API yaml schema file> or zip archive"
               + "<Generation Target (\"datamodel\", \"client\", \"provider\", \"all\")> "
               + "<Target directory (where generated application files will be placed)> "
               + "--oasVersion <oas-base-version> "
@@ -52,7 +52,7 @@ public class OASApplicationGeneration {
       System.exit(2);
     }
 
-    String yaml = args[0];
+    String specFile = args[0];
     String generationTarget = args[1];
     String target = args[2];
 
@@ -80,7 +80,7 @@ public class OASApplicationGeneration {
           System.exit(2);
       }
     }
-    
+
     if(oasVersion.isBlank()) {
       System.out.println("--oasVersion required");
       System.exit(3);
@@ -91,8 +91,12 @@ public class OASApplicationGeneration {
       System.exit(4);
     }
 
-    AppGenerationData data = new AppGenerationData(yaml, oasVersion, generateMock, generateDataCapture, new OasImportStatusHandler());
-    
+    if(specFile.endsWith(".zip")) {
+      specFile = OasAppBuilder.decompressArchive(specFile, target);
+    }
+
+    AppGenerationData data = new AppGenerationData(specFile, oasVersion, generateMock, generateDataCapture, new OasImportStatusHandler());
+
     switch (generationTarget) {
       case "all" :
         new OasAppBuilder().createOasAppOffline("xmom-client", target, data);
