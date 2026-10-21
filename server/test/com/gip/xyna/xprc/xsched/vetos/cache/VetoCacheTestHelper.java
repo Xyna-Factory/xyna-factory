@@ -55,8 +55,7 @@ import com.gip.xyna.xprc.xsched.vetos.cache.cluster.VetoResponse;
 import junit.framework.TestCase;
 
 public class VetoCacheTestHelper extends TestCase {
-  
-  
+
   public static class TestVM implements VetoManagementInterface {
     
     protected VetoCache vc;
@@ -602,7 +601,7 @@ public class VetoCacheTestHelper extends TestCase {
     
     @Override
     public void initVetoCache(int binding) {
-      //hier nicht mÃ¶glich
+      //hier nicht möglich
     }
     
     @Override
@@ -634,7 +633,7 @@ public class VetoCacheTestHelper extends TestCase {
 
     @Override
     public void cleanupVetoCache() {
-      //hier nicht mÃ¶glich
+      //hier nicht möglich
     }
 
     @Override
