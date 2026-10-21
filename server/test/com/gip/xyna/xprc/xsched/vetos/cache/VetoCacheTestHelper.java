@@ -154,11 +154,11 @@ public class VetoCacheTestHelper extends TestCase {
     }
 
     public VetoAllocationResult allocateVetos(TestOrder to) {
-      return allocateVetos(to.getOrderInformation(), to.getVetos(), to.getUrgency());
+      return allocateVetos(to.getOrderInformation(), to.getVetos(), to.getSharedVetos(), to.getUrgency());
     }
     
     public void undoAllocation(TestOrder to) {
-      undoAllocation(to.getOrderInformation(), to.getVetos());
+      undoAllocation(to.getOrderInformation(), to.getVetos(), to.getSharedVetos());
     }
     
     public boolean freeVetos(TestOrder to) {
@@ -602,7 +602,7 @@ public class VetoCacheTestHelper extends TestCase {
     
     @Override
     public void initVetoCache(int binding) {
-      //hier nicht möglich
+      //hier nicht mÃ¶glich
     }
     
     @Override
@@ -634,7 +634,7 @@ public class VetoCacheTestHelper extends TestCase {
 
     @Override
     public void cleanupVetoCache() {
-      //hier nicht möglich
+      //hier nicht mÃ¶glich
     }
 
     @Override

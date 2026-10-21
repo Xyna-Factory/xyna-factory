@@ -49,7 +49,7 @@ import com.gip.xyna.xfmg.statistics.XynaStatistics;
 import com.gip.xyna.xfmg.statistics.XynaStatisticsLegacy;
 import com.gip.xyna.xfmg.xclusteringservices.XynaClusteringServicesManagementInterface;
 import com.gip.xyna.xfmg.xfctrl.XynaFactoryControl;
-import com.gip.xyna.xfmg.xfctrl.queuemgmnt.Queue;
+import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueFacade;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueConnectData;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueType;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
@@ -173,6 +173,13 @@ public class XynaFactoryManagementMock extends XynaFactoryManagementBase {
   }
 
   public SessionCredentials getNewSession(User user, boolean force)
+      throws PersistenceLayerException, XFMG_DuplicateSessionException {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  public SessionCredentials createSession(XynaUserCredentials credentials,
+      com.gip.xyna.utils.collections.Optional<String> roleName, boolean force)
       throws PersistenceLayerException, XFMG_DuplicateSessionException {
     // TODO Auto-generated method stub
     return null;
@@ -551,12 +558,17 @@ public class XynaFactoryManagementMock extends XynaFactoryManagementBase {
     
   }
 
+  public void registerQueue(String uniqueName, String externalName, String externalNameEnv, QueueType queueType,
+                            QueueConnectData connectData) throws PersistenceLayerException {
+    // TODO Auto-generated method stub
+  }
+
   public void deregisterQueue(String uniqueName) throws PersistenceLayerException {
     // TODO Auto-generated method stub
     
   }
 
-  public Collection<Queue> listQueues() throws PersistenceLayerException {
+  public Collection<QueueFacade> listQueues() throws PersistenceLayerException {
     // TODO Auto-generated method stub
     return null;
   }

@@ -245,7 +245,7 @@ public class VetoCacheSingleTest extends TestCase {
     assertEquals("[]", vm.listVetos().toString());
     
     TestOrder to1 = new TestOrder(1, "eins").vetos("V").urgency(123);
-    AdministrativeVeto av = new AdministrativeVeto("V", "test");
+    AdministrativeVeto av = new AdministrativeVeto("V", "test", System.currentTimeMillis());
     
     vm.allocateAdministrativeVeto(av);
     sleep(50);
@@ -278,7 +278,7 @@ public class VetoCacheSingleTest extends TestCase {
     assertEquals("[]", vm.listVetos().toString());
     
     TestOrder to1 = new TestOrder(1, "eins").vetos("V").urgency(123);
-    AdministrativeVeto av = new AdministrativeVeto("V", "test");
+    AdministrativeVeto av = new AdministrativeVeto("V", "test", System.currentTimeMillis());
     
     vm.schedule(12, to1);
     sleep(50);
