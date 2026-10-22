@@ -44,6 +44,7 @@ public class VetoCacheEntry {
   private final VetoHistory vetoHistory;
   
   private volatile VetoInformation vetoInformation; //Thread(VCP, S, andere); volatile nur auf Verdacht
+  private volatile int remoteFreeBinding = -1;
   private volatile long urgency;               //Thread(VCP, S, andere); volatile nur auf Verdacht
   private volatile WaitingOrder waitingOrder;  //Thread(VCP, S); volatile nur auf Verdacht
   private boolean keepUsable; //Thread(S). Veto wurde im Status "usable" angetroffen, aber nicht geschedult. 
@@ -78,6 +79,9 @@ public class VetoCacheEntry {
   void setVetoInformation(VetoInformation vetoInformation) {
     if( vetoInformation != null && vetoInformation.isAdministrative() ) {
       this.urgency = Long.MAX_VALUE;
+    }
+    if( vetoInformation != null ) {
+      remoteFreeBinding = -1;
     }
     this.vetoInformation = vetoInformation;
   }
@@ -136,7 +140,7 @@ public class VetoCacheEntry {
    //gerufen von VetoCacheProcessorThread
    VetoInformation vi = vetoInformation;
    if( vi == null ) {
-     return -1; 
+     return remoteFreeBinding;
    } else {
      return vi.getBinding();
    }
@@ -355,12 +359,16 @@ public class VetoCacheEntry {
   
   public boolean remoteFree() {
     //wird von remote-Thread gerufen, analog zu free() müssen mehrere States untersucht werden
+    remoteFreeBinding = getBinding();
     if( compareAndSetState(State.Scheduled, State.Free) || 
         compareAndSetState(State.Used, State.Free) ) {
       this.urgency = Long.MIN_VALUE;
-      setVetoInformation(null);
+      this.vetoInformation = null;
       return true;
     } else {
+      if( state.get() != State.Free ) {
+        remoteFreeBinding = -1;
+      }
       //ungültiger Aufruf: Veto kann nicht freigegeben werden
       return false;
     }
@@ -459,6 +467,7 @@ public class VetoCacheEntry {
   public void removeVetoInformation() {
     //gerufen von VetoCacheProcessorThread
     this.vetoInformation = null;
+    this.remoteFreeBinding = -1;
   }
   
   public void setLocalToUsable() {
