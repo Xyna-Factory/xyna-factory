@@ -67,6 +67,7 @@ import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
 import com.gip.xyna.xprc.xpce.dispatcher.DestinationValue;
 import com.gip.xyna.xprc.xpce.planning.Capacity;
 import com.gip.xyna.xprc.xprcods.XynaProcessingODS;
+import com.gip.xyna.xprc.xprcods.orderarchive.OrderBackupManagement;
 import com.gip.xyna.xprc.xprcods.capacitymapping.CapacityMappingStorable;
 import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstanceBackup;
 import com.gip.xyna.xprc.xprcods.workflowdb.WorkflowDatabase.DeploymentStatus;
@@ -482,6 +483,11 @@ public class XynaProcessingMock extends XynaProcessingBase {
   @Override
   public XynaProcessingODS getXynaProcessingODS() {
      return processingODS;
+  }
+
+  @Override
+  public OrderBackupManagement getOrderBackupManagement() {
+    return null;
   }
 
   @Override
