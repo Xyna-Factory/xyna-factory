@@ -148,7 +148,7 @@ public class DefaultCronLikeOrderStartUnderlyingOrderAlgorithm
         con.queryOneRowForUpdate(cronOrderDB);
       } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e1) {
         // Auftrag muss schon ausgeführt wurden sein.
-        logger.warn("CronLikeOrder with id <" + order.getId() + "> was not found. Abort starting the order.");
+        logger.warn("CronLikeOrder with id <" + order.getId() + "> (" + order.getOrdertype() + ") was not found. Abort starting the order.");
         return false;
       }
       if(!cronOrderDB.getNextExecution().equals(order.getNextExecution())) {
