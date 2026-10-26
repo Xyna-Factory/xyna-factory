@@ -338,7 +338,7 @@ public class RepositoryManagementImpl {
   }
 
 
-  private static Long resolveRuntimeContextDependencyDiffs(RepositoryConnectionStorable storable, WorkspaceContentDifferences diffs,
+  private static Long resolveRuntimeContextDependencyDiffs(WorkspaceContentDifferences diffs,
                                                            List<String> actionsPerformed, List<String> errors) {
     ListId listId = new ListId.Builder().listId(diffs.getListId()).instance();
     List<? extends WorkspaceContentDifference> entries = new ArrayList<>(diffs.getDifferences());
@@ -353,13 +353,35 @@ public class RepositoryManagementImpl {
     }
 
     if (remainingChanges) {
-      errors.add("Could not resolve all rtc dependencies of workspace " + storable.getWorkspacename()
+      errors.add("Could not resolve all rtc dependencies of workspace " + diffs.getWorkspaceName()
           + " setup of this workspace will be skipped.");
       return null;
     } else {
-      actionsPerformed.add("Successfully resolved all rtc dependencies of workspace " + storable.getWorkspacename());
-      return getRevision(storable.getWorkspacename());
+      actionsPerformed.add("Successfully resolved all rtc dependencies of workspace " + diffs.getWorkspaceName());
+      return getRevision(diffs.getWorkspaceName());
     }
+  }
+  
+  private static boolean resolveDependencyDiffs(String type, WorkspaceContentDifferences diffs, List<String> actionsPerformed, List<String> errors) {
+    ListId listId = new ListId.Builder().listId(diffs.getListId()).instance();
+    List<? extends WorkspaceContentDifference> entries = new ArrayList<>(diffs.getDifferences());
+    boolean remainingChanges = false;
+    for (WorkspaceContentDifference entry : entries) {
+      if (!(entry.getContentType().equals(type))) {
+        continue;
+      }
+      boolean success = resolveWorkspaceDifference(listId, entry, actionsPerformed, errors);
+      remainingChanges |= !success;
+      diffs.getDifferences().remove(entry);
+    }
+    if(remainingChanges) {
+      errors.add("Could not resolve all differences of type " + type + " in workspace " + diffs.getWorkspaceName());
+      return true;
+    } else {
+      actionsPerformed.add("Successfully resolved all differences of type " + type + " in workspace " + diffs.getWorkspaceName());
+      return false;
+    }
+    
   }
 
 
@@ -389,7 +411,7 @@ public class RepositoryManagementImpl {
           + storable.getWorkspacename());
       workspaceDiffsByWorkspace.put(storable.getWorkspacename(), diffs);
 
-      revisions.add(resolveRuntimeContextDependencyDiffs(storable, diffs, actionsPerformed, errors));
+      revisions.add(resolveRuntimeContextDependencyDiffs(diffs, actionsPerformed, errors));
     }
 
     List<Long> sortedRevisions = sortWorkspaces(revisions);
@@ -405,7 +427,13 @@ public class RepositoryManagementImpl {
     for (Long revision : sortedRevisions) {
       refreshworkspace(revision, false, actionsPerformed, errors);
     }
-
+    
+    for (Long revision : sortedRevisions) {
+      WorkspaceContentDifferences diffs = workspaceDiffsByWorkspace.get(revisionToWsNameMap.get(revision));
+      resolveDependencyDiffs("sharedlibrary", diffs, actionsPerformed, errors);
+      resolveDependencyDiffs("datatype", diffs, actionsPerformed, errors);
+    }
+    
     for (Long revision : sortedRevisions) {
       String workspaceName = revisionToWsNameMap.get(revision);
       resolveNonAppDefDiffs(workspaceDiffsByWorkspace, workspaceName, actionsPerformed, errors);
@@ -414,6 +442,12 @@ public class RepositoryManagementImpl {
 
     for (Long revision : sortedRevisions) {
       refreshworkspace(revision, true, actionsPerformed, errors);
+    }
+     
+    for (Long revision : sortedRevisions) {
+      WorkspaceContentDifferences diffs = workspaceDiffsByWorkspace.get(revisionToWsNameMap.get(revision));
+      resolveDependencyDiffs("trigger", diffs, actionsPerformed, errors);
+      resolveDependencyDiffs("filter", diffs, actionsPerformed, errors);
     }
 
     for (Long revision : sortedRevisions) {
