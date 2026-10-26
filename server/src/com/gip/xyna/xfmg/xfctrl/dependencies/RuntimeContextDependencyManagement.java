@@ -32,6 +32,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.log4j.Logger;
 
@@ -619,7 +620,16 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
   }
 
 
-  public synchronized void modifyDependencies(RuntimeDependencyContext owner, Collection<RuntimeDependencyContext> newDependencies, String user, boolean force, boolean publishChanges) throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
+  public void modifyDependencies(RuntimeDependencyContext owner, Collection<RuntimeDependencyContext> newDependencies, String user, boolean force, boolean publishChanges) throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
+    modifyLock.lock();
+    try {
+      modifyDependenciesLocked(owner, newDependencies, user, force, publishChanges);
+    } finally {
+      modifyLock.unlock();
+    }
+  }
+
+  private void modifyDependenciesLocked(RuntimeDependencyContext owner, Collection<RuntimeDependencyContext> newDependencies, String user, boolean force, boolean publishChanges) throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
     final RevisionManagement revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     try { // TODO duplication from below for lock constructor
       IRuntimeDependencyLock lock = null;
@@ -654,8 +664,17 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
    
   
   // TODO handle modfiy with empty or null list as removal
-  // synchronized to guard vs other modifies, rather use a lock?
-  public synchronized void modifyDependencies(RuntimeDependencyContext owner, Collection<RuntimeDependencyContext> newDependencies, String user, boolean force, boolean publishChanges, IRuntimeDependencyLock lock) throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
+  // guarded vs other modifies by modifyLock (released while waiting in IRuntimeDependencyLock)
+  public void modifyDependencies(RuntimeDependencyContext owner, Collection<RuntimeDependencyContext> newDependencies, String user, boolean force, boolean publishChanges, IRuntimeDependencyLock lock) throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
+    modifyLock.lock();
+    try {
+      modifyDependenciesLocked(owner, newDependencies, user, force, publishChanges, lock);
+    } finally {
+      modifyLock.unlock();
+    }
+  }
+
+  private void modifyDependenciesLocked(RuntimeDependencyContext owner, Collection<RuntimeDependencyContext> newDependencies, String user, boolean force, boolean publishChanges, IRuntimeDependencyLock lock) throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
     validateRequestedChanges(owner, newDependencies);
     if (logger.isDebugEnabled()) {
       logger.debug("modifydependencies for " + owner + ": new deps=" + newDependencies);
@@ -714,7 +733,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
         
         Map<Long, Map<XMOMType, Collection<String>>> toRegenerate = validationResult.toRegenerate();
         
-        lock.lock(workflowProtectionNecessary(ownerRev, deps));
+        lockWithoutModifyLock(lock, workflowProtectionNecessary(ownerRev, deps));
         try {
           TriggerAndFilterHandling tfHandling = new TriggerAndFilterHandling(ownerRev, removedRevisions);
           tfHandling.handleTriggerAndFilter();
@@ -756,7 +775,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
           }
        
         } finally {
-          lock.unlock();
+          unlockWithoutModifyLock(lock);
           exceptionsDuringModification.addAll(lock.getExceptionsAtUnlock());
         }
         
@@ -910,7 +929,16 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
   }
   
   
-  public synchronized void modifyDependencies(Collection<RuntimeContextDependencyChange> changes, String user, boolean force, boolean publishChanges, IRuntimeDependencyLock lock) throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
+  public void modifyDependencies(Collection<RuntimeContextDependencyChange> changes, String user, boolean force, boolean publishChanges, IRuntimeDependencyLock lock) throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
+    modifyLock.lock();
+    try {
+      modifyDependenciesLocked(changes, user, force, publishChanges, lock);
+    } finally {
+      modifyLock.unlock();
+    }
+  }
+
+  private void modifyDependenciesLocked(Collection<RuntimeContextDependencyChange> changes, String user, boolean force, boolean publishChanges, IRuntimeDependencyLock lock) throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
     final RevisionManagement revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     
     for (RuntimeContextDependencyChange change : changes) {
@@ -940,7 +968,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
       
       Map<Long, Map<XMOMType, Collection<String>>> toRegenerate = collectRegenerates(validationResults);
       
-      lock.lock(workflowProtectionNecessary(runtimeContextChanges));
+      lockWithoutModifyLock(lock, workflowProtectionNecessary(runtimeContextChanges));
       try {
         
         TriggerAndFilterHandling tfHandling = new TriggerAndFilterHandling(runtimeContextChanges);
@@ -996,7 +1024,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
         }
         
       } finally {
-        lock.unlock();
+        unlockWithoutModifyLock(lock);
         exceptionsDuringModification.addAll(lock.getExceptionsAtUnlock());
       }
       
@@ -1660,7 +1688,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
     }
   }
 
-  private synchronized void modifyDependenciesDirectly(RuntimeDependencyContext owner, Collection<RuntimeDependencyContext> newDependencies) throws PersistenceLayerException {
+  private void modifyDependenciesDirectly(RuntimeDependencyContext owner, Collection<RuntimeDependencyContext> newDependencies) throws PersistenceLayerException {
     storage.modifyDependencies(owner, newDependencies);
     if (newDependencies.size() > 0) {
       dependencies.put(owner, newDependencies);
@@ -1691,6 +1719,49 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
   
 
   // additive Änderungen ohne Sperrung zulassen
+  private final ReentrantLock modifyLock = new ReentrantLock();
+
+
+  /**
+   * IRuntimeDependencyLock.lock waits for running orders, which may themselves wait for modifyLock
+   * (e.g. an order re-importing an application with an unchanged version). Therefore modifyLock must not be held while waiting.
+   */
+  private void lockWithoutModifyLock(IRuntimeDependencyLock lock, boolean workflowProtectionNecessary) {
+    int holds = releaseModifyLock();
+    try {
+      lock.lock(workflowProtectionNecessary);
+    } finally {
+      reacquireModifyLock(holds);
+    }
+  }
+
+
+  private void unlockWithoutModifyLock(IRuntimeDependencyLock lock) {
+    int holds = releaseModifyLock();
+    try {
+      lock.unlock();
+    } finally {
+      reacquireModifyLock(holds);
+    }
+  }
+
+
+  private int releaseModifyLock() {
+    int holds = modifyLock.getHoldCount();
+    for (int i = 0; i < holds; i++) {
+      modifyLock.unlock();
+    }
+    return holds;
+  }
+
+
+  private void reacquireModifyLock(int holds) {
+    for (int i = 0; i < holds; i++) {
+      modifyLock.lock();
+    }
+  }
+
+
   private boolean workflowProtectionNecessary(Long ownerRev, Set<Long> newDependencies) {
     Set<Long> oldDeps = revDependencies.getValues(ownerRev);
     if (oldDeps != null) {
