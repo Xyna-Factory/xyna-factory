@@ -1084,6 +1084,10 @@ public class XynaScheduler extends Section {
     
     allOrders.lock(so);
     try {
+      if( so.isAlreadyScheduled() ) {
+        return ChangeSchedulingParameterStatus.Unschedulable;
+      }
+
       if( ! so.canBeScheduled() ) {
         return ChangeSchedulingParameterStatus.Unschedulable;
       }
