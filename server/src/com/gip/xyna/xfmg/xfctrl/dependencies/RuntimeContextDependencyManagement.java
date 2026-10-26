@@ -28,10 +28,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.log4j.Logger;
@@ -94,6 +97,7 @@ import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase.XMOMType;
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyEnum;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyLong;
 import com.gip.xyna.xmcp.xguisupport.messagebus.Publisher;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.persistence.ODSImpl.PersistenceLayerInstances;
@@ -620,13 +624,13 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
   }
 
 
-  public void modifyDependencies(RuntimeDependencyContext owner, Collection<RuntimeDependencyContext> newDependencies, String user, boolean force, boolean publishChanges) throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
-    modifyLock.lock();
-    try {
-      modifyDependenciesLocked(owner, newDependencies, user, force, publishChanges);
-    } finally {
-      modifyLock.unlock();
-    }
+  public void modifyDependencies(final RuntimeDependencyContext owner, final Collection<RuntimeDependencyContext> newDependencies, final String user, final boolean force, final boolean publishChanges) throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
+    runWithModifyLock(owner.toString(), new ModifyAction() {
+
+      public void run() throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
+        modifyDependenciesLocked(owner, newDependencies, user, force, publishChanges);
+      }
+    });
   }
 
   private void modifyDependenciesLocked(RuntimeDependencyContext owner, Collection<RuntimeDependencyContext> newDependencies, String user, boolean force, boolean publishChanges) throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
@@ -665,13 +669,13 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
   
   // TODO handle modfiy with empty or null list as removal
   // guarded vs other modifies by modifyLock (released while waiting in IRuntimeDependencyLock)
-  public void modifyDependencies(RuntimeDependencyContext owner, Collection<RuntimeDependencyContext> newDependencies, String user, boolean force, boolean publishChanges, IRuntimeDependencyLock lock) throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
-    modifyLock.lock();
-    try {
-      modifyDependenciesLocked(owner, newDependencies, user, force, publishChanges, lock);
-    } finally {
-      modifyLock.unlock();
-    }
+  public void modifyDependencies(final RuntimeDependencyContext owner, final Collection<RuntimeDependencyContext> newDependencies, final String user, final boolean force, final boolean publishChanges, final IRuntimeDependencyLock lock) throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
+    runWithModifyLock(owner.toString(), new ModifyAction() {
+
+      public void run() throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
+        modifyDependenciesLocked(owner, newDependencies, user, force, publishChanges, lock);
+      }
+    });
   }
 
   private void modifyDependenciesLocked(RuntimeDependencyContext owner, Collection<RuntimeDependencyContext> newDependencies, String user, boolean force, boolean publishChanges, IRuntimeDependencyLock lock) throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
@@ -699,6 +703,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
           //ntbd
           return;
         }
+        final Set<Long> previousDepsSnapshot = previousDeps == null ? null : new HashSet<Long>(previousDeps);
         
         ValidationResult validationResult =
             validateRuntimeContextChanges(Collections.singleton(new RuntimeContextDependencyChange(owner, newDependencies)), force)
@@ -733,8 +738,14 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
         
         Map<Long, Map<XMOMType, Collection<String>>> toRegenerate = validationResult.toRegenerate();
         
-        lockWithoutModifyLock(lock, workflowProtectionNecessary(ownerRev, deps));
+        lockWithoutModifyLock(lock, workflowProtectionNecessary(ownerRev, deps), owner.toString());
         try {
+          // state may have been changed by other threads while modifyLock was released
+          Set<Long> currentParentRevs = getParentRevisionsRecursivly(ownerRev);
+          currentParentRevs.add(ownerRev);
+          if (!Objects.equals(previousDepsSnapshot, revDependencies.getValues(ownerRev)) || !parentRevs.equals(currentParentRevs)) {
+            throw new StaleStateException();
+          }
           TriggerAndFilterHandling tfHandling = new TriggerAndFilterHandling(ownerRev, removedRevisions);
           tfHandling.handleTriggerAndFilter();
           try {
@@ -775,7 +786,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
           }
        
         } finally {
-          unlockWithoutModifyLock(lock);
+          unlockWithoutModifyLock(lock, owner.toString());
           exceptionsDuringModification.addAll(lock.getExceptionsAtUnlock());
         }
         
@@ -929,13 +940,20 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
   }
   
   
-  public void modifyDependencies(Collection<RuntimeContextDependencyChange> changes, String user, boolean force, boolean publishChanges, IRuntimeDependencyLock lock) throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
-    modifyLock.lock();
-    try {
-      modifyDependenciesLocked(changes, user, force, publishChanges, lock);
-    } finally {
-      modifyLock.unlock();
+  public void modifyDependencies(final Collection<RuntimeContextDependencyChange> changes, final String user, final boolean force, final boolean publishChanges, final IRuntimeDependencyLock lock) throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
+    StringBuilder description = new StringBuilder();
+    for (RuntimeContextDependencyChange change : changes) {
+      if (description.length() > 0) {
+        description.append(", ");
+      }
+      description.append(change.getOwner());
     }
+    runWithModifyLock(description.toString(), new ModifyAction() {
+
+      public void run() throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
+        modifyDependenciesLocked(changes, user, force, publishChanges, lock);
+      }
+    });
   }
 
   private void modifyDependenciesLocked(Collection<RuntimeContextDependencyChange> changes, String user, boolean force, boolean publishChanges, IRuntimeDependencyLock lock) throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
@@ -968,8 +986,29 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
       
       Map<Long, Map<XMOMType, Collection<String>>> toRegenerate = collectRegenerates(validationResults);
       
-      lockWithoutModifyLock(lock, workflowProtectionNecessary(runtimeContextChanges));
+      Map<Long, Set<Long>> previousDepsSnapshots = new HashMap<>();
+      for (RuntimeContextDependencyChange runtimeContextChange : runtimeContextChanges) {
+        previousDepsSnapshots.put(runtimeContextChange.ownerRev, runtimeContextChange.previousDeps == null ? null : new HashSet<Long>(runtimeContextChange.previousDeps));
+      }
+      StringBuilder ownerDescription = new StringBuilder();
+      for (RuntimeContextDependencyChange runtimeContextChange : runtimeContextChanges) {
+        ownerDescription.append(ownerDescription.length() > 0 ? ", " : "").append(runtimeContextChange.getOwner());
+      }
+      
+      lockWithoutModifyLock(lock, workflowProtectionNecessary(runtimeContextChanges), ownerDescription.toString());
       try {
+        // state may have been changed by other threads while modifyLock was released
+        Set<Long> currentParentRevisions = new HashSet<>();
+        for (RuntimeContextDependencyChange runtimeContextChange : runtimeContextChanges) {
+          if (!Objects.equals(previousDepsSnapshots.get(runtimeContextChange.ownerRev), revDependencies.getValues(runtimeContextChange.ownerRev))) {
+            throw new StaleStateException();
+          }
+          getParentRevisionsRecursivly(runtimeContextChange.ownerRev, currentParentRevisions);
+          currentParentRevisions.add(runtimeContextChange.ownerRev);
+        }
+        if (!parentRevisions.equals(currentParentRevisions)) {
+          throw new StaleStateException();
+        }
         
         TriggerAndFilterHandling tfHandling = new TriggerAndFilterHandling(runtimeContextChanges);
         tfHandling.handleTriggerAndFilter();
@@ -1024,7 +1063,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
         }
         
       } finally {
-        unlockWithoutModifyLock(lock);
+        unlockWithoutModifyLock(lock, ownerDescription.toString());
         exceptionsDuringModification.addAll(lock.getExceptionsAtUnlock());
       }
       
@@ -1719,29 +1758,102 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
   
 
   // additive Änderungen ohne Sperrung zulassen
+  private static final XynaPropertyLong modifyLockTimeoutMillis =
+      new XynaPropertyLong("xfmg.xfctrl.rcdependencies.change.lock.timeout", 600000L)
+          .setDefaultDocumentation(DocumentationLanguage.EN,
+                                   "Maximum time in milliseconds to wait for the lock that serializes Runtime Context dependency changes.");
+
+  private static final int MAX_MODIFY_ATTEMPTS = 10;
+
   private final ReentrantLock modifyLock = new ReentrantLock();
+
+
+  private interface ModifyAction {
+
+    void run() throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException;
+  }
+
+
+  /**
+   * thrown if the dependency state changed while modifyLock was released. the whole modification is then retried
+   */
+  private static class StaleStateException extends RuntimeException {
+
+    private static final long serialVersionUID = 1L;
+
+
+    StaleStateException() {
+      super("Runtime context dependencies changed concurrently", null, false, false);
+    }
+  }
+
+
+  private void runWithModifyLock(String description, ModifyAction action) throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
+    acquireModifyLock(description);
+    try {
+      for (int attempt = 1;; attempt++) {
+        try {
+          action.run();
+          return;
+        } catch (StaleStateException e) {
+          if (attempt >= MAX_MODIFY_ATTEMPTS) {
+            throw new XFMG_CouldNotModifyRuntimeContextDependenciesException(description, e);
+          }
+          if (logger.isDebugEnabled()) {
+            logger.debug("Dependencies changed concurrently while modifying " + description + ", retrying (attempt " + attempt + ")");
+          }
+        }
+      }
+    } finally {
+      if (modifyLock.isHeldByCurrentThread()) {
+        modifyLock.unlock();
+      }
+    }
+  }
+
+
+  private void acquireModifyLock(String description) throws XFMG_CouldNotModifyRuntimeContextDependenciesException {
+    long timeout = modifyLockTimeoutMillis.get();
+    try {
+      if (!modifyLock.tryLock(timeout, TimeUnit.MILLISECONDS)) {
+        throw new XFMG_CouldNotModifyRuntimeContextDependenciesException(description,
+            new TimeoutException("Could not acquire runtime context dependency lock within " + timeout + " ms"));
+      }
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new XFMG_CouldNotModifyRuntimeContextDependenciesException(description, e);
+    }
+  }
 
 
   /**
    * IRuntimeDependencyLock.lock waits for running orders, which may themselves wait for modifyLock
    * (e.g. an order re-importing an application with an unchanged version). Therefore modifyLock must not be held while waiting.
+   * the caller has to revalidate its state afterwards.
    */
-  private void lockWithoutModifyLock(IRuntimeDependencyLock lock, boolean workflowProtectionNecessary) {
+  private void lockWithoutModifyLock(IRuntimeDependencyLock lock, boolean workflowProtectionNecessary, String description) throws XFMG_CouldNotModifyRuntimeContextDependenciesException {
     int holds = releaseModifyLock();
     try {
       lock.lock(workflowProtectionNecessary);
-    } finally {
-      reacquireModifyLock(holds);
+    } catch (RuntimeException e) {
+      reacquireModifyLockQuietly(holds);
+      throw e;
+    }
+    try {
+      reacquireModifyLock(holds, description);
+    } catch (XFMG_CouldNotModifyRuntimeContextDependenciesException e) {
+      lock.unlock();
+      throw e;
     }
   }
 
 
-  private void unlockWithoutModifyLock(IRuntimeDependencyLock lock) {
+  private void unlockWithoutModifyLock(IRuntimeDependencyLock lock, String description) throws XFMG_CouldNotModifyRuntimeContextDependenciesException {
     int holds = releaseModifyLock();
     try {
       lock.unlock();
     } finally {
-      reacquireModifyLock(holds);
+      reacquireModifyLock(holds, description);
     }
   }
 
@@ -1755,7 +1867,18 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
   }
 
 
-  private void reacquireModifyLock(int holds) {
+  private void reacquireModifyLock(int holds, String description) throws XFMG_CouldNotModifyRuntimeContextDependenciesException {
+    if (holds == 0) {
+      return;
+    }
+    acquireModifyLock(description);
+    for (int i = 1; i < holds; i++) {
+      modifyLock.lock();
+    }
+  }
+
+
+  private void reacquireModifyLockQuietly(int holds) {
     for (int i = 0; i < holds; i++) {
       modifyLock.lock();
     }
@@ -2023,6 +2146,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
              unlockExceptions.add(e);
            }
          }
+         appsToStart.clear();
        }
      }
 
