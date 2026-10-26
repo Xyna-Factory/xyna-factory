@@ -21,22 +21,20 @@ package com.gip.xyna.xact.filter.actions.auth;
 
 import java.rmi.RemoteException;
 import java.security.cert.CertificateException;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
-import com.gip.xyna.utils.collections.Optional;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.filter.ConfigurableFilterAction;
-import com.gip.xyna.xact.filter.FilterAction;
 import com.gip.xyna.xact.filter.H5XdevFilterParameter;
 import com.gip.xyna.xact.filter.HTMLBuilder.HTMLPart;
 import com.gip.xyna.xact.filter.JsonFilterActionInstance;
 import com.gip.xyna.xact.filter.URLPath;
 import com.gip.xyna.xact.filter.actions.auth.utils.AuthUtils;
-import com.gip.xyna.xact.filter.H5XdevFilterParameter;
 import com.gip.xyna.xact.filter.session.XMOMGui;
 import com.gip.xyna.xact.filter.session.XMOMGuiReply.Status;
 import com.gip.xyna.xact.filter.util.Utils;
@@ -146,7 +144,7 @@ public class ExternalUserLoginAction implements ConfigurableFilterAction {
     boolean force = request.getForce() != null ? request.getForce() : true;
     String domainName = request.getDomain();
     SessionCredentials creds = XynaFactory.getInstance().getFactoryManagement()
-        .createSession(new XynaUserCredentials(eui.externalUserName, ""), Optional.<String> empty(), force);
+        .createSession(new XynaUserCredentials(eui.externalUserName, ""), Optional.empty(), force);
 
     // encode optional selectedRole into password: "selectedRole\0jwtToken"
     // \0 is safe as JWT tokens are base64url-encoded and never contain this character

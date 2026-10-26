@@ -271,7 +271,8 @@ install_gitintegration_libs() {
   cd $SCRIPT_DIR/../modules/xmcp/gitIntegration/mdmimpl/WorkspaceObjectManagementImpl
   ant build
   cp -r deploy/* $SCRIPT_DIR/build/lib/gitintegration
-  cp -r lib/xyna/* $SCRIPT_DIR/build/lib/gitintegration
+  cp lib/xyna/mdm.jar $SCRIPT_DIR/build/lib/gitintegration
+  cp lib/xyna/servicedefinition.jar $SCRIPT_DIR/build/lib/gitintegration
 }
 
 build_prerequisites() {
@@ -606,6 +607,12 @@ cleanup_lib() {
   rm -rf factory
 }
 
+fill_oas_lib() {
+  echo "fill oas lib..."
+  cd $SCRIPT_DIR
+  ant -f buildLibs.xml build-oas-libs
+}
+
 build_all() {
   build
   build_modules
@@ -626,6 +633,7 @@ build() {
   build_conpooltypes
   build_persistencelayers
   fill_lib
+  fill_oas_lib
   build_oracle_aq_tools
 }
 

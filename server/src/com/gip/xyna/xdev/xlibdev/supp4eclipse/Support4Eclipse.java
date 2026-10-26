@@ -296,7 +296,7 @@ public class Support4Eclipse extends FunctionGroup {
           if (javaVersion == null) {
             xmomClassDir = RevisionManagement.getPathForRevision(PathType.XMOMCLASSES, revision);
             FileUtils.zipDir(new File(xmomClassDir), jos, new File(xmomClassDir));
-          } else if (javaVersion.equals("Java5") || javaVersion.equals("Java6") || javaVersion.equals("Java7") || javaVersion.equals("Java11")) {
+          } else {
             List<GenerationBase> objects = new ArrayList<GenerationBase>();
             GenerationBaseCache cache = new GenerationBaseCache();
             Set<DependencyNode> doms =
@@ -379,10 +379,6 @@ public class Support4Eclipse extends FunctionGroup {
             }
             
             FileUtils.zipDir(tmpDir, jos, tmpDir);
-          } else {
-            RuntimeException e = new RuntimeException("Unknown mdm target java version : " + javaVersion);
-            exceptions.add(e);
-            logger.error(e);
           }
           jos.flush();
         } finally {

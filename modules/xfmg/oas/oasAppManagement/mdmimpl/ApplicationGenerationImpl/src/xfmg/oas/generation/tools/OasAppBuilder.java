@@ -128,6 +128,7 @@ public class OasAppBuilder {
 
         callGenerator(generator, tmpDirAsString, data);
         separateFiles(tmpDirAsString);
+        compileFilterOffline(tmpDirAsString);
         String appName = createAppFileNameFromXml(tmpDirAsString);
 
         File targetAppFile = new File(target, appName + ".zip");
@@ -292,6 +293,41 @@ public class OasAppBuilder {
         cs.addToCompile(new JavaSourceFromString("src.com.gip.xyna.xact.filter." + filterName, Files.readString(javaFile.toPath())));
         cs.addToClassPath(mdmJarPath.toString());
         cs.addToClassPath(httpTriggerJar.toString());
+        cs.compileToJar(filterOutputDir.toFile(), false);
+        FileUtils.deleteFileWithRetries(javaFile);
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+    }
+  }
+
+  private Path getJarPathFromClassPath(String jarName) {
+    String search = String.format("/%s.jar", jarName);
+    String classpath = System.getProperty("java.class.path");
+    classpath = classpath.replace("\\", "/").replace(";", ":");
+    String[] entries = classpath.split(":");
+    for (int i = 0; i < entries.length; i++) {
+      if (entries[i].endsWith(search)) {
+        return Path.of(entries[i]);
+      }
+    }
+    throw new RuntimeException("Could not find " + jarName + ". ClassPath: " + classpath);
+  }
+
+
+  private void compileFilterOffline(String target) {
+    List<File> filterJava = new ArrayList<>();
+    FileUtils.findFilesRecursively(Path.of(target, "filter").toFile(), filterJava, findOASFilterJava);
+    Path httpTriggerJar = getJarPathFromClassPath("HTTPTrigger");
+    Path mdmJar = getJarPathFromClassPath("mdm");
+    for (File javaFile: filterJava) {
+      String filterName = javaFile.getName().substring(0, javaFile.getName().lastIndexOf("_"));
+      Path filterOutputDir = Path.of(target, "filter", filterName, filterName + ".jar");
+      InMemoryCompilationSet cs = new InMemoryCompilationSet(false, false, false);
+      try {
+        cs.addToCompile(new JavaSourceFromString("src.com.gip.xyna.xact.filter." + filterName, Files.readString(javaFile.toPath())));
+        cs.addToClassPath(httpTriggerJar.toString());
+        cs.addToClassPath(mdmJar.toString());
         cs.compileToJar(filterOutputDir.toFile(), false);
         FileUtils.deleteFileWithRetries(javaFile);
       } catch (Exception e) {

@@ -21,10 +21,10 @@ package com.gip.xyna.xfmg.xods.orderinputsource.xtf;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.gip.xyna.XynaFactory;
-import com.gip.xyna.utils.collections.Optional;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemInterface;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemState;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemState.DeploymentLocation;

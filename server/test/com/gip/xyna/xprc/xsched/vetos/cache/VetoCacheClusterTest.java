@@ -402,7 +402,7 @@ public class VetoCacheClusterTest extends TestCase {
     ClusteredVM vm2 = new ClusteredVM(2, true);
     ClusteredVM.cluster(vm, vm2);
     
-    AdministrativeVeto av = new AdministrativeVeto("AV", "test");
+    AdministrativeVeto av = new AdministrativeVeto("AV", "test", System.currentTimeMillis());
     vm.allocateAdministrativeVeto(av);
     sleep(50);
     assertEquals("{AV=VetoCacheEntry(Used: VetoInformation(AV: test), null)}", vm.showVetoCache() );
@@ -410,7 +410,7 @@ public class VetoCacheClusterTest extends TestCase {
     assertEquals("[VetoInformation(AV: test)]", vm.listVetos().toString());
     assertEquals("[VetoInformation(AV: test)]", vm2.listVetos().toString());
     
-    AdministrativeVeto avc = new AdministrativeVeto("AV", "changed");
+    AdministrativeVeto avc = new AdministrativeVeto("AV", "changed", System.currentTimeMillis());
     vm.setDocumentationOfAdministrativeVeto(avc);
     sleep(50);
     assertEquals("{AV=VetoCacheEntry(Used: VetoInformation(AV: changed), null)}", vm.showVetoCache() );
@@ -430,7 +430,7 @@ public class VetoCacheClusterTest extends TestCase {
     ClusteredVM.cluster(vm,vm2);
     
     logger.debug("Step 1"); //Administratives Veto anlegen
-    AdministrativeVeto av = new AdministrativeVeto("AV", "test");
+    AdministrativeVeto av = new AdministrativeVeto("AV", "test", System.currentTimeMillis());
     vm.allocateAdministrativeVetoInOwnThread(av);
     sleep(20);
     assertEquals("{AV=VetoCacheEntry(Compare: VetoInformation(AV: test), null)}", vm.showVetoCache() );
@@ -480,7 +480,7 @@ public class VetoCacheClusterTest extends TestCase {
     
     
     logger.debug("Step 2"); //Dokumentation ändern
-    AdministrativeVeto avc = new AdministrativeVeto("AV", "changed");
+    AdministrativeVeto avc = new AdministrativeVeto("AV", "changed", System.currentTimeMillis());
     vm.setDocumentationOfAdministrativeVetoInOwnThread(avc);
     sleep(20);
     assertEquals("{AV=VetoCacheEntry(Scheduled: VetoInformation(AV: changed), null)}", vm.showVetoCache() );
@@ -601,7 +601,7 @@ public class VetoCacheClusterTest extends TestCase {
     ClusteredVM vm2 = new ClusteredVM(2, true);
     ClusteredVM.cluster(vm, vm2);
     
-    AdministrativeVeto av = new AdministrativeVeto("V", "test");
+    AdministrativeVeto av = new AdministrativeVeto("V", "test", System.currentTimeMillis());
     TestOrder to1 = new TestOrder(1, "eins").vetos("V").urgency(123);
     
     vm.allocateAdministrativeVeto(av);
@@ -641,7 +641,7 @@ public class VetoCacheClusterTest extends TestCase {
     ClusteredVM vm2 = new ClusteredVM(2, true);
     ClusteredVM.cluster(vm, vm2);
      
-    AdministrativeVeto av = new AdministrativeVeto("V", "test");
+    AdministrativeVeto av = new AdministrativeVeto("V", "test", System.currentTimeMillis());
     TestOrder to1 = new TestOrder(1, "eins").vetos("V").urgency(123);
     
     vm.allocateAdministrativeVeto(av);
@@ -681,7 +681,7 @@ public class VetoCacheClusterTest extends TestCase {
     ClusteredVM vm2 = new ClusteredVM(2, false);
     ClusteredVM.cluster(vm,vm2);
     
-    AdministrativeVeto av = new AdministrativeVeto("V", "test");
+    AdministrativeVeto av = new AdministrativeVeto("V", "test", System.currentTimeMillis());
     TestOrder to1 = new TestOrder(1, "eins").vetos("V").urgency(123);
     
     logger.debug("Step 1");
@@ -1147,7 +1147,7 @@ public class VetoCacheClusterTest extends TestCase {
     final StringBuffer sb = new StringBuffer();
 
 
-    final AdministrativeVeto av = new AdministrativeVeto("V", "test");
+    final AdministrativeVeto av = new AdministrativeVeto("V", "test", System.currentTimeMillis());
     final TestOrder to1 = new TestOrder(1, "eins").vetos("V").urgency(123);
     final CountDownLatch cdl = new CountDownLatch(1);
     Thread t2 = new Thread(new Runnable() {
@@ -1243,7 +1243,7 @@ public class VetoCacheClusterTest extends TestCase {
     final ClusteredVM vm2 = new ClusteredVM(2,false, true);
     ClusteredVM.cluster(vm,vm2);
     
-    AdministrativeVeto av = new AdministrativeVeto("V", "test");
+    AdministrativeVeto av = new AdministrativeVeto("V", "test", System.currentTimeMillis());
     TestOrder to1 = new TestOrder(1, "eins").vetos("V").urgency(123);
     
     

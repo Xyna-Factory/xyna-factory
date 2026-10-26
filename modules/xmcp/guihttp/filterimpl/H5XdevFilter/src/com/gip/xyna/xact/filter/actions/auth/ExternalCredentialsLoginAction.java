@@ -18,8 +18,9 @@
 package com.gip.xyna.xact.filter.actions.auth;
 
 import java.rmi.RemoteException;
+import java.util.Optional;
+
 import com.gip.xyna.XynaFactory;
-import com.gip.xyna.utils.collections.Optional;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.filter.FilterAction;
 import com.gip.xyna.xact.filter.HTMLBuilder.HTMLPart;
@@ -76,8 +77,7 @@ public class ExternalCredentialsLoginAction implements FilterAction {
     boolean force = request.getForce() != null ? request.getForce() : true;
     String domainName = request.getDomain();
     XynaUserCredentials userCredentials = new XynaUserCredentials(username, password);
-    SessionCredentials creds = XynaFactory.getInstance().getFactoryManagement()
-        .createSession(userCredentials, Optional.<String>empty(), force);
+    SessionCredentials creds = XynaFactory.getInstance().getFactoryManagement().createSession(userCredentials, Optional.empty(), force);
 
     try {
       if (!new RMIChannelImpl().authorizeSession(userCredentials, domainName,

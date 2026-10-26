@@ -121,40 +121,10 @@ public class InMemoryCompilationSet implements CompilationSet {
     String targetVersion = null;
     if (crossCompile) {
       String javaVersion = determineJavaVersion();
-      //FIXME wieso ist die javaversion in der property nicht einfach gleich der targetversion?
-      if (javaVersion.equals("Java6")) {
-        targetVersion = "1.6";
-      } else if (javaVersion.equals("Java7")) {
-        targetVersion = "1.7";
-      } else if (javaVersion.equals("Java8")) {
-        targetVersion = "1.8";
-      } else if (javaVersion.equals("Java9")) {
-        targetVersion = "1.9";
-      } else if (javaVersion.equals("Java11")) {
-        targetVersion = "11";
-      } else {
-        // Just set to current JavaVersion by default. It might not work and crash later
-        targetVersion = javaVersion.replace("Java", "");
-      }
+      targetVersion = javaVersion.replace("Java", "");
     } else {
       int javaVersion = ListsysteminfoImpl.getJavaVersion();
-      switch (javaVersion) {
-        case 7 :
-          targetVersion = "1.7";
-          break;
-        case 8 :
-          targetVersion = "1.8";
-          break;
-        case 9 :
-          targetVersion = "1.9";
-          break;
-        case 11 :
-          targetVersion = "11";
-          break;
-        default :
-          // see else case above
-          targetVersion = String.valueOf(javaVersion);
-      }
+      targetVersion = String.valueOf(javaVersion);
     }
     
     

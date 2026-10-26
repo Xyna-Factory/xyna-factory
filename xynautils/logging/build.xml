@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,13 @@
 -->
 <project name="xynautils-logging" basedir=".">
 
-	<!--Next release version for the archive file-->
-	<property name="release.number" value="3.0.0"/>
-	<!--Name of the utils project-->
-	<property name="utils.name" value="logging"/>
+    <!--Next release version for the archive file-->
+    <property name="release.number" value="4.0.1"/>
+    <!--Name of the utils project-->
+    <property name="utils.name" value="logging"/>
+    <property name="compiler.args" value="-proc:full -Alog4j.graalvm.groupId=com.gip.xyna -Alog4j.graalvm.artifactId=xynautils-logging" />
 
-	<!--Import all targets from master build file-->
-	<import file="${basedir}/../../installation/build/buildXynaUtils.xml"/>
+    <!--Import all targets from master build file-->
+    <import file="${basedir}/../../installation/build/buildXynaUtils.xml"/>
 
 </project>

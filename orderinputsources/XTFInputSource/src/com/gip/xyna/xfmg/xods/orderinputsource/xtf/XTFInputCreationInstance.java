@@ -22,9 +22,9 @@ package com.gip.xyna.xfmg.xods.orderinputsource.xtf;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import com.gip.xyna.XynaFactory;
-import com.gip.xyna.utils.collections.Optional;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.Container;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
