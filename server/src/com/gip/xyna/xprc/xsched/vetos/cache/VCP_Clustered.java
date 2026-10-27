@@ -30,6 +30,7 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.xfmg.xclusteringservices.RMIClusterProvider;
 import com.gip.xyna.xprc.xsched.vetos.cache.VetoCache.State;
+import com.gip.xyna.xprc.xsched.vetos.VetoInformation;
 import com.gip.xyna.xprc.xsched.vetos.cache.cluster.ReplicateVetoRequest;
 import com.gip.xyna.xprc.xsched.vetos.cache.cluster.VCP_Remote;
 import com.gip.xyna.xprc.xsched.vetos.cache.cluster.VCP_RemoteImpl;
@@ -284,7 +285,8 @@ public class VCP_Clustered extends VCP_Abstract {
   @Override
   protected boolean processScheduled(VetoCacheEntry veto) {
     persist(veto, true);
-    if( veto.getBinding() == ownBinding ) {
+    VetoInformation information = veto.getVetoInformation();
+    if( information != null && information.getAuthorityBinding() == ownBinding ) {
       remoteVetoRequests.scheduled(veto);
     } else {
       //nichts mehr zu tun
@@ -295,11 +297,40 @@ public class VCP_Clustered extends VCP_Abstract {
     switch( response ) {
     case IN_USE:
       return Result.Reprocess;
+    case STALE_AUTHORITY:
+      return Result.StaleAuthority;
     case SUCCESS:
       return Result.Ok;
     default:
       return Result.Failed;
     }
+  }
+
+  private Result processSharedGrant(VetoCacheEntry veto, Response response, VetoResponseEntry responseEntry) {
+    if (response == Response.IN_USE) {
+      return Result.Reprocess;
+    }
+    if (response != Response.SUCCESS || responseEntry.getVetoInformation() == null) {
+      return Result.Failed;
+    }
+    VetoInformation incoming = responseEntry.getVetoInformation();
+    VetoInformation current = veto.getVetoInformation();
+    if (current == null || incoming.getAuthorityBinding() != current.getAuthorityBinding() ||
+      incoming.getAuthorityEpoch() != current.getAuthorityEpoch() ||
+      incoming.getAuthorityVersion() < current.getAuthorityVersion() ||
+      (incoming.getAuthorityVersion() == current.getAuthorityVersion() &&
+       !incoming.isVetoIdContentEqual(current))) {
+      return Result.Failed;
+    }
+    if (veto.setScheduled(State.Remote, incoming) || veto.setScheduled(State.Used, incoming) ||
+      veto.setScheduled(State.Scheduled, incoming)) {
+      vetoCache.process(veto);
+      return Result.Ok;
+    }
+    if (veto.getState() == State.Scheduled || veto.getState() == State.Used) {
+      return Result.Ok;
+    }
+    return Result.Failed;
   }
   
 
@@ -353,7 +384,7 @@ public class VCP_Clustered extends VCP_Abstract {
 
   
   private enum Result {
-    Ok, Reprocess, Failed;
+    Ok, Reprocess, Failed, StaleAuthority;
   }
   
   private void processRemoteResponse(long id, Pair<VetoRequestEntry, VetoResponseEntry> requestResponse) {
@@ -388,6 +419,10 @@ public class VCP_Clustered extends VCP_Abstract {
       case Reprocess:
         vetoCache.process(veto);
         break;
+      case StaleAuthority:
+        veto.compareAndSetState(State.Scheduled, State.Remote);
+        veto.compareAndSetState(State.Used, State.Remote);
+        break;
       default:
         logger.warn("Unexpected Result "+result);
         break;
@@ -410,6 +445,12 @@ public class VCP_Clustered extends VCP_Abstract {
       break;
     case Scheduled:
       result = processScheduled( veto, response, responseEntry );
+      break;
+    case RequestShared:
+    case ReleaseShared:
+    case RequestExclusive:
+    case CancelExclusive:
+      result = processSharedGrant(veto, response, responseEntry);
       break;
     }
     if( result == null ) {
@@ -457,8 +498,47 @@ public class VCP_Clustered extends VCP_Abstract {
   }
 
   @Override
+  public void requestSharedAllocation(VetoCacheEntry veto, AllocationRequest request, long urgency) {
+    VetoInformation current = veto.getVetoInformation();
+    if (current == null || current.isAdministrative() || current.getUsingOrderId() != null ||
+        current.getPendingExclusiveOrderId() != null || current.getAuthorityBinding() == ownBinding) {
+      return;
+    }
+    VetoInformation requested = VetoInformation.createShared(veto.getName(),
+        java.util.Collections.singletonList(request.getOrderInformation().getOrderId()), System.currentTimeMillis(),
+      ownBinding, current.getAuthorityBinding(), current.getAuthorityEpoch(), current.getAuthorityVersion());
+    remoteVetoRequests.sharedGrant(veto, requested);
+    vetoCache.notifyProcessor();
+  }
+
+  @Override
+  public void requestSharedRelease(VetoCacheEntry veto, long orderId) {
+    remoteVetoRequests.sharedRelease(veto, orderId);
+    vetoCache.notifyProcessor();
+  }
+
+  @Override
+  public void requestExclusiveAllocation(VetoCacheEntry veto, AllocationRequest request, long urgency) {
+    VetoInformation current = veto.getVetoInformation();
+    if (current == null || current.isAdministrative() || current.getAuthorityBinding() == ownBinding) {
+      return;
+    }
+    VetoInformation requested = new VetoInformation(veto.getName(), request.getOrderInformation(),
+        java.util.Collections.emptyList(), null, null, System.currentTimeMillis(), ownBinding,
+        current.getAuthorityBinding(), current.getAuthorityEpoch(), current.getAuthorityVersion());
+    remoteVetoRequests.exclusiveRequest(veto, requested);
+    vetoCache.notifyProcessor();
+  }
+
+  @Override
+  public void cancelExclusiveAllocation(VetoCacheEntry veto, long orderId) {
+    remoteVetoRequests.cancelExclusive(veto, orderId);
+    vetoCache.notifyProcessor();
+  }
+
+  @Override
   public boolean allowSharedVetos() {
-    return false;
+    return true;
   }
   
 }

@@ -664,7 +664,8 @@ public class VetoCacheTestHelper extends TestCase {
       if( vce.getVetoInformation() != null ) {
         VetoInformation vi = vce.getVetoInformation();
         VetoInformation viClone = new VetoInformation(vi.getName(), vi.getOrderInformation(), 
-            vi.getSharedOrderIds(), vi.getPendingExclusiveOrderId(), vi.getDocumentation(), vi.getCreated(), vi.getBinding() );
+          vi.getSharedOrderIds(), vi.getPendingExclusiveOrderId(), vi.getDocumentation(), vi.getCreated(),
+            vi.getBinding(), vi.getAuthorityBinding(), vi.getAuthorityEpoch(), vi.getAuthorityVersion() );
         clone.setVetoInformation(viClone);
       }
       return clone;

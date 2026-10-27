@@ -183,7 +183,7 @@ public class VM_SeparateThread implements VetoManagementInterface {
          for( String v : allocated ) {
            VetoCacheEntry vce = vetoCache.get(v);
            if (vce == null) { continue; }
-           boolean canBeRemoved = vce.undoAllocation(orderInformation);
+           boolean canBeRemoved = vetoCache.undoAllocation(vce, orderInformation);
            if (!canBeRemoved) {
              allocatedNew.add(v);
            }

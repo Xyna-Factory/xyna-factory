@@ -86,6 +86,30 @@ public class VetoRequest implements Serializable {
     return add(veto, vr);
   }
 
+  public VetoRequestEntry sharedGrant(VetoCacheEntry veto, VetoInformation request) {
+    VetoRequestEntry vr = new VetoRequestEntry(veto, Action.RequestShared, request.getSharedOrderIds().get(0));
+    vr.vetoInformation = request;
+    return add(veto, vr);
+  }
+
+  public VetoRequestEntry sharedRelease(VetoCacheEntry veto, long orderId) {
+    VetoRequestEntry vr = new VetoRequestEntry(veto, Action.ReleaseShared, orderId);
+    vr.vetoInformation = veto.getVetoInformation();
+    return add(veto, vr);
+  }
+
+  public VetoRequestEntry exclusiveRequest(VetoCacheEntry veto, VetoInformation request) {
+    VetoRequestEntry vr = new VetoRequestEntry(veto, Action.RequestExclusive, request.getUsingOrderId());
+    vr.vetoInformation = request;
+    return add(veto, vr);
+  }
+
+  public VetoRequestEntry cancelExclusive(VetoCacheEntry veto, long orderId) {
+    VetoRequestEntry vr = new VetoRequestEntry(veto, Action.CancelExclusive, orderId);
+    vr.vetoInformation = veto.getVetoInformation();
+    return add(veto, vr);
+  }
+
   
   private VetoRequestEntry add(VetoCacheEntry veto, VetoRequestEntry vr) {
     if( entries.add(vr) ) {
@@ -100,17 +124,23 @@ public class VetoRequest implements Serializable {
     private static final long serialVersionUID = 1L;
    
     public enum Action {
-      Compare, Scheduled, Free;
+      Compare, Scheduled, Free, RequestShared, ReleaseShared, RequestExclusive, CancelExclusive;
     }
    
     private final String name;
     private final Action action;
     private long urgency;
+    private final long orderId;
     private VetoInformation vetoInformation;
     
     public VetoRequestEntry(VetoCacheEntry veto, Action action) {
+      this(veto, action, -1L);
+    }
+
+    public VetoRequestEntry(VetoCacheEntry veto, Action action, long orderId) {
       this.name = veto.getName();
       this.action = action;
+      this.orderId = orderId;
     }
     
     @Override
@@ -130,8 +160,24 @@ public class VetoRequest implements Serializable {
       return urgency;
     }
 
+    public long getOrderId() {
+      return orderId;
+    }
+
     public VetoInformation getVetoInformation() {
       return vetoInformation;
+    }
+
+    public int getAuthorityBinding() {
+      return vetoInformation == null ? -1 : vetoInformation.getAuthorityBinding();
+    }
+
+    public long getAuthorityEpoch() {
+      return vetoInformation == null ? -1L : vetoInformation.getAuthorityEpoch();
+    }
+
+    public long getAuthorityVersion() {
+      return vetoInformation == null ? -1L : vetoInformation.getAuthorityVersion();
     }
 
     @Override
@@ -140,6 +186,10 @@ public class VetoRequest implements Serializable {
       int result = 1;
       result = prime * result + ((action == null) ? 0 : action.hashCode());
       result = prime * result + ((name == null) ? 0 : name.hashCode());
+        if (action == Action.RequestShared || action == Action.ReleaseShared || action == Action.RequestExclusive ||
+          action == Action.CancelExclusive) {
+        result = prime * result + Long.hashCode(orderId);
+      }
       return result;
     }
 
@@ -153,6 +203,10 @@ public class VetoRequest implements Serializable {
         return false;
       VetoRequestEntry other = (VetoRequestEntry) obj;
       if (action != other.action)
+        return false;
+         if ((action == Action.RequestShared || action == Action.ReleaseShared || action == Action.RequestExclusive ||
+           action == Action.CancelExclusive) &&
+          orderId != other.orderId)
         return false;
       if (name == null) {
         if (other.name != null)

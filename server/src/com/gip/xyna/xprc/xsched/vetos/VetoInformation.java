@@ -35,12 +35,26 @@ public class VetoInformation implements Serializable {
   private Long pendingExclusiveOrderId;
   private final boolean administrative;
   private final int binding;
+  private final int authorityBinding;
+  private final long authorityEpoch;
+  private final long authorityVersion;
   private final Long created;
   private String documentation;
   
 
   public static VetoInformation createShared(String name, List<Long> sharedOrderIds, Long created, int binding) {
     return new VetoInformation(name, null, sharedOrderIds, null, null, created, binding);
+  }
+
+  public static VetoInformation createShared(String name, List<Long> sharedOrderIds, Long created, int binding,
+                                             int authorityBinding, long authorityEpoch) {
+    return createShared(name, sharedOrderIds, created, binding, authorityBinding, authorityEpoch, 0L);
+  }
+
+  public static VetoInformation createShared(String name, List<Long> sharedOrderIds, Long created, int binding,
+                                             int authorityBinding, long authorityEpoch, long authorityVersion) {
+    return new VetoInformation(name, null, sharedOrderIds, null, null, created, binding, authorityBinding,
+                               authorityEpoch, authorityVersion);
   }
 
   public static VetoInformation createExclusive(String name, OrderInformation usingOrder, Long created, int binding) {
@@ -52,18 +66,44 @@ public class VetoInformation implements Serializable {
   }
   
   public VetoInformation(AdministrativeVeto administrativeVeto, Long created, int binding) {
+    this(administrativeVeto, created, binding, binding, 0L);
+  }
+
+  public VetoInformation(AdministrativeVeto administrativeVeto, Long created, int binding, int authorityBinding,
+                         long authorityEpoch) {
+    this(administrativeVeto, created, binding, authorityBinding, authorityEpoch, 0L);
+  }
+
+  public VetoInformation(AdministrativeVeto administrativeVeto, Long created, int binding, int authorityBinding,
+                         long authorityEpoch, long authorityVersion) {
     this.name = administrativeVeto.getName();
     this.usingOrder = null;
     this.sharedOrderIds = Collections.emptyList();
     this.pendingExclusiveOrderId = null;
     this.administrative = true;
     this.binding =  binding;
+    this.authorityBinding = authorityBinding;
+    this.authorityEpoch = authorityEpoch;
+    this.authorityVersion = authorityVersion;
     this.created = created;
     this.documentation = administrativeVeto.getDocumentation();
   }
   
 
   public VetoInformation(String name, OrderInformation usingOrder, List<Long> sharedOrderIds, Long pendingExclusiveOrderId, String documentation, Long created, int binding) {
+    this(name, usingOrder, sharedOrderIds, pendingExclusiveOrderId, documentation, created, binding, binding, 0L);
+  }
+
+  public VetoInformation(String name, OrderInformation usingOrder, List<Long> sharedOrderIds,
+                         Long pendingExclusiveOrderId, String documentation, Long created, int binding,
+                         int authorityBinding, long authorityEpoch) {
+    this(name, usingOrder, sharedOrderIds, pendingExclusiveOrderId, documentation, created, binding,
+       authorityBinding, authorityEpoch, 0L);
+    }
+
+    public VetoInformation(String name, OrderInformation usingOrder, List<Long> sharedOrderIds,
+               Long pendingExclusiveOrderId, String documentation, Long created, int binding,
+               int authorityBinding, long authorityEpoch, long authorityVersion) {
     this.name = name;
     this.usingOrder = usingOrder;
     this.sharedOrderIds = sharedOrderIds;
@@ -71,6 +111,9 @@ public class VetoInformation implements Serializable {
     this.documentation = documentation;
     this.administrative = usingOrder != null && AdministrativeVeto.ADMIN_VETO_ORDERID.equals(usingOrder.getOrderId());
     this.binding = binding;
+    this.authorityBinding = authorityBinding;
+    this.authorityEpoch = authorityEpoch;
+    this.authorityVersion = authorityVersion;
     this.created = created;
   }
   
@@ -81,6 +124,9 @@ public class VetoInformation implements Serializable {
     this.pendingExclusiveOrderId = null;
     this.administrative = false;
     this.binding = 0;
+    this.authorityBinding = 0;
+    this.authorityEpoch = 0L;
+    this.authorityVersion = 0L;
     this.created = null;
   }
   
@@ -180,6 +226,18 @@ public class VetoInformation implements Serializable {
 
   public int getBinding() {
     return binding;
+  }
+
+  public int getAuthorityBinding() {
+    return authorityBinding;
+  }
+
+  public long getAuthorityEpoch() {
+    return authorityEpoch;
+  }
+
+  public long getAuthorityVersion() {
+    return authorityVersion;
   }
 
   public OrderInformation getUsingOrder() {

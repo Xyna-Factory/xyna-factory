@@ -89,7 +89,7 @@ public class VCP_Remote implements VCP_RemoteInterface {
     veto.getHistory().remoteActionStart(request.getAction(),requestId, binding);
     VetoResponseEntry response = null;
     try {
-      response = processRemoteVetoRequest(veto, request);
+      response = processRemoteVetoRequest(veto, request, binding);
     } catch( RuntimeException e) {
       response = VetoResponseEntry.fail(vetoName, "exception: "+ e.getClass() + " " +e.getMessage()+" on " +request.getAction() );
       logger.warn("Failed to processRemoteVetoRequest "+request.getAction()+" "+veto, e);
@@ -105,17 +105,87 @@ public class VCP_Remote implements VCP_RemoteInterface {
     return response;
   }
   
-  private VetoResponseEntry processRemoteVetoRequest(VetoCacheEntry veto, VetoRequestEntry request) {
+  private VetoResponseEntry processRemoteVetoRequest(VetoCacheEntry veto, VetoRequestEntry request, int senderBinding) {
     switch( request.getAction() ) {
     case Compare:
       return processCompare(veto, request);
     case Scheduled:
-      return processScheduled(veto, request);
+      return processScheduled(veto, request, senderBinding);
+    case RequestShared:
+      return processSharedGrant(veto, request, senderBinding);
+    case ReleaseShared:
+      return processSharedRelease(veto, request, senderBinding);
+    case RequestExclusive:
+      return processExclusiveRequest(veto, request, senderBinding);
+    case CancelExclusive:
+      return processExclusiveCancellation(veto, request);
     case Free:
       return processFree(veto, request);
     default:
       return VetoResponseEntry.fail(veto.getName(), "unexpected action "+request.getAction() );
     }
+  }
+
+  private VetoResponseEntry processSharedGrant(VetoCacheEntry veto, VetoRequestEntry request, int senderBinding) {
+    VetoInformation requested = request.getVetoInformation();
+    VetoInformation current = veto.getVetoInformation();
+    if (requested == null || current == null || requested.getBinding() != senderBinding ||
+        current.getAuthorityBinding() != ownBinding) {
+      return VetoResponseEntry.staleAuthority(request.getName());
+    }
+    VetoInformation granted = veto.grantSharedHolder(requested);
+    if (granted == null) {
+      return VetoResponseEntry.inUse(request.getName(), veto.getState());
+    }
+    if (granted != current) {
+      vetoCache.process(veto);
+    }
+    return VetoResponseEntry.success(request.getName(), granted);
+  }
+
+  private VetoResponseEntry processSharedRelease(VetoCacheEntry veto, VetoRequestEntry request, int senderBinding) {
+    VetoInformation current = veto.getVetoInformation();
+    if (current == null || current.getAuthorityBinding() != ownBinding ||
+        request.getAuthorityBinding() != current.getAuthorityBinding() ||
+        request.getAuthorityEpoch() != current.getAuthorityEpoch()) {
+      return VetoResponseEntry.staleAuthority(request.getName());
+    }
+    if (!current.getSharedOrderIds().contains(request.getOrderId())) {
+      return VetoResponseEntry.success(request.getName(), current);
+    }
+    vetoCache.free(veto, request.getOrderId());
+    return VetoResponseEntry.success(request.getName(), veto.getVetoInformation());
+  }
+
+  private VetoResponseEntry processExclusiveRequest(VetoCacheEntry veto, VetoRequestEntry request, int senderBinding) {
+    VetoInformation requested = request.getVetoInformation();
+    VetoInformation current = veto.getVetoInformation();
+    if (requested == null || current == null || requested.getBinding() != senderBinding ||
+        current.getAuthorityBinding() != ownBinding) {
+      return VetoResponseEntry.staleAuthority(request.getName());
+    }
+    VetoInformation granted = veto.grantExclusiveRequest(requested);
+    if (granted == null) {
+      return VetoResponseEntry.inUse(request.getName(), veto.getState());
+    }
+    if (granted != current) {
+      vetoCache.process(veto);
+    }
+    return VetoResponseEntry.success(request.getName(), granted);
+  }
+
+  private VetoResponseEntry processExclusiveCancellation(VetoCacheEntry veto, VetoRequestEntry request) {
+    VetoInformation current = veto.getVetoInformation();
+    if (current == null || current.getAuthorityBinding() != ownBinding ||
+        request.getAuthorityBinding() != current.getAuthorityBinding() ||
+        request.getAuthorityEpoch() != current.getAuthorityEpoch()) {
+      return VetoResponseEntry.staleAuthority(request.getName());
+    }
+    if (!java.util.Objects.equals(current.getPendingExclusiveOrderId(), request.getOrderId())) {
+      return VetoResponseEntry.success(request.getName(), current);
+    }
+    vetoCache.free(veto, request.getOrderId());
+    return VetoResponseEntry.success(request.getName(), veto.getVetoInformation());
   }
 
   /**
@@ -193,7 +263,6 @@ public class VCP_Remote implements VCP_RemoteInterface {
         return VetoResponseEntry.inUse(veto.getName(), veto.getState() );
       }
     } else if( currentState == State.Comparing ) {
-      //Konflikt: anderer Knoten führt gerade Vergleich durch
       return VetoResponseEntry.inUse(veto.getName(), veto.getState());
     } else if( currentState == State.Local ) {
       notifyScheduler = true;
@@ -248,31 +317,26 @@ public class VCP_Remote implements VCP_RemoteInterface {
     }
   }
   
-  private VetoResponseEntry processScheduled(VetoCacheEntry veto, VetoRequestEntry request) {
+  private VetoResponseEntry processScheduled(VetoCacheEntry veto, VetoRequestEntry request, int senderBinding) {
+    VetoInformation incoming = request.getVetoInformation();
+    VetoInformation existingInformation = veto.getVetoInformation();
+    if (incoming == null || incoming.getAuthorityBinding() != senderBinding ||
+        (existingInformation != null &&
+         (incoming.getAuthorityEpoch() < existingInformation.getAuthorityEpoch() ||
+          (incoming.getAuthorityEpoch() == existingInformation.getAuthorityEpoch() &&
+           (incoming.getAuthorityBinding() != existingInformation.getAuthorityBinding() ||
+          incoming.getAuthorityVersion() < existingInformation.getAuthorityVersion() ||
+          (incoming.getAuthorityVersion() == existingInformation.getAuthorityVersion() &&
+           !incoming.isVetoIdContentEqual(existingInformation))))))) {
+      return VetoResponseEntry.staleAuthority(request.getName());
+    }
     switch( veto.getState() ) {
     case Remote:
       return setScheduled(State.Remote, veto, request, false);
     case Used:
-      if( veto.isAdministrative() ) {
-        //Ausnahme bei administrativen Vetos: Umsetzen der Documentation
-        return setScheduled(State.Used, veto, request, false);
-      } else {
-        VetoInformation existing = veto.getVetoInformation();
-        if( existing.getUsingOrderId().equals(request.getVetoInformation().getUsingOrderId() ) ) {
-          //siehe VetoCacheEntry.allocate
-          if( existing.getBinding() != request.getVetoInformation().getBinding() ) {
-            return setScheduled(State.Used, veto, request, false);
-          }
-        }
-        return VetoResponseEntry.failUnexpectedState(veto);
-      }
+      return setScheduled(State.Used, veto, request, false);
     case Scheduled:
-      if( veto.isReplicated() ) {
-        //Direkt nach Übergang nach Clustered werden Scheduled-Vetos teilweise doppelt gemeldet, dies soll kein Fehler sein
-        return VetoResponseEntry.success(request.getName());
-      } else {
-        return VetoResponseEntry.failUnexpectedState(veto);
-      }
+      return setScheduled(State.Scheduled, veto, request, false);
     case Comparing:
       //Dies ist zu erwarten, wenn dieser Knoten den anderen Knoten über ein Compare in Zustand Local gebracht hat,
       //dieser dann schnell nach Usable->Scheduling->Scheduled gegangen ist und hier lokal die Antwort (Comparing->Remote)
@@ -299,7 +363,7 @@ public class VCP_Remote implements VCP_RemoteInterface {
   @Override
   public void replicate(ReplicateVetoRequest replicateVetoRequest) {
    for( ReplicateVetoRequestEntry request : replicateVetoRequest.getEntries() ) {
-      replicate(request);
+      replicate(replicateVetoRequest.getBinding(), request);
     }
     vcp_Clustered.setReplicated(replicateVetoRequest.getBinding(), replicateVetoRequest.getEntries().size() );
    
@@ -311,7 +375,7 @@ public class VCP_Remote implements VCP_RemoteInterface {
     }
   }
   
-  private void replicate(ReplicateVetoRequestEntry request) {
+  private void replicate(int senderBinding, ReplicateVetoRequestEntry request) {
     String vetoName = request.getVetoName();
     VetoCacheEntry vetoNew = null;
     switch( request.getReplication() ) {
@@ -322,6 +386,11 @@ public class VCP_Remote implements VCP_RemoteInterface {
       vetoNew = new VetoCacheEntry(vetoName, State.Remote, true, null);
       break;
     case Scheduled:
+      VetoInformation incoming = request.getVetoInformation();
+      if (incoming == null || senderBinding != incoming.getAuthorityBinding()) {
+        logger.warn("Rejected replication for veto " + vetoName + ": sender is not its authority");
+        return;
+      }
       vetoNew = new VetoCacheEntry(vetoName, State.Scheduled, true, request.getVetoInformation());
       vetoNew.setScheduled(State.Scheduled, request.getVetoInformation());
       break;
@@ -335,7 +404,24 @@ public class VCP_Remote implements VCP_RemoteInterface {
         vetoCache.process(vetoNew);
       }
     } else {
-      if( veto.replace(State.Compare, vetoNew) ) {
+      VetoInformation existing = veto.getVetoInformation();
+      VetoInformation incoming = request.getVetoInformation();
+      if (existing != null && incoming != null &&
+          (incoming.getAuthorityEpoch() < existing.getAuthorityEpoch() ||
+           (incoming.getAuthorityEpoch() == existing.getAuthorityEpoch() &&
+            (incoming.getAuthorityBinding() != existing.getAuthorityBinding() ||
+             incoming.getAuthorityVersion() < existing.getAuthorityVersion() ||
+             (incoming.getAuthorityVersion() == existing.getAuthorityVersion() &&
+              !incoming.isVetoIdContentEqual(existing)))))) {
+        logger.warn("Rejected stale authority replication for veto " + vetoName);
+      } else if (existing != null && incoming != null &&
+                 (incoming.getAuthorityEpoch() > existing.getAuthorityEpoch() ||
+                  incoming.getAuthorityVersion() > existing.getAuthorityVersion()) &&
+                 veto.replace(veto.getState(), vetoNew)) {
+        if( request.getReplication() == Replication.Scheduled ) {
+          vetoCache.process(veto);
+        }
+      } else if( veto.replace(State.Compare, vetoNew) || veto.replace(State.Remote, vetoNew) ) {
         //Veto konnte ersetzt werden. Sollte eigentlich klappen, wenn State Compare ist, da nur VetoCacheProcessor und RMI
         //den State Compare ändern darf. VCP sollte aber noch am CountDownLatch hängen.
       } else {

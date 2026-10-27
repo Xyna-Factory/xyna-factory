@@ -349,7 +349,7 @@ public class VetoStorableAccess implements VetoManagementInterface {
                 vis.getVetoName(), 
                 existingVis.getSharedOrderIds(),
                 System.currentTimeMillis(),
-                vis.getBinding()
+                vis.getBinding(), vis.getAuthorityBinding(), vis.getAuthorityEpoch(), vis.getAuthorityVersion()
             );
             boolean canAdd = updatedVis.addSharedOrderIds(vis.getSharedOrderIds());
             if (!canAdd) {
@@ -366,7 +366,7 @@ public class VetoStorableAccess implements VetoManagementInterface {
                 existingVis.getSharedOrderIds(),
                 vis.getUsingOrderId(),
                 System.currentTimeMillis(),
-                vis.getBinding()
+                vis.getBinding(), vis.getAuthorityBinding(), vis.getAuthorityEpoch(), vis.getAuthorityVersion()
             ));
           }
         } else if ( 
@@ -379,7 +379,7 @@ public class VetoStorableAccess implements VetoManagementInterface {
               vis.getVetoName(),
               vis.getUsingOrder(),
               System.currentTimeMillis(),
-              vis.getBinding()
+              vis.getBinding(), vis.getAuthorityBinding(), vis.getAuthorityEpoch(), vis.getAuthorityVersion()
           ));
         } else {   
           con.rollback();

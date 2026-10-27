@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gip.xyna.xprc.xsched.vetos.VetoInformation;
 import com.gip.xyna.xprc.xsched.vetos.cache.VetoCache.State;
 import com.gip.xyna.xprc.xsched.vetos.cache.VetoCacheEntry;
 
@@ -80,7 +81,7 @@ public class VetoResponse implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public enum Response {
-      COMPARE, SUCCESS, FAILED, MISSING, IN_USE;
+      COMPARE, SUCCESS, FAILED, MISSING, IN_USE, STALE_AUTHORITY;
     }
     public enum Compare {
       ADMIN, LOCAL, REMOTE, UNUSED;
@@ -89,6 +90,7 @@ public class VetoResponse implements Serializable {
     private final String name;
     private final Response response;
     private String state;
+    private VetoInformation vetoInformation;
     
     private VetoResponseEntry(String name, Response response) {
       this.name = name;
@@ -119,6 +121,10 @@ public class VetoResponse implements Serializable {
       return name;
     }
 
+    public VetoInformation getVetoInformation() {
+      return vetoInformation;
+    }
+
     public static VetoResponseEntry fail(String name, String message) {
       return new VetoResponseEntry(name, Response.FAILED, message);
     }
@@ -127,8 +133,18 @@ public class VetoResponse implements Serializable {
       return new VetoResponseEntry(name, Response.MISSING);
     }
 
+    public static VetoResponseEntry staleAuthority(String name) {
+      return new VetoResponseEntry(name, Response.STALE_AUTHORITY);
+    }
+
     public static VetoResponseEntry success(String name) {
       return new VetoResponseEntry(name, Response.SUCCESS);
+    }
+
+    public static VetoResponseEntry success(String name, VetoInformation vetoInformation) {
+      VetoResponseEntry response = new VetoResponseEntry(name, Response.SUCCESS);
+      response.vetoInformation = vetoInformation;
+      return response;
     }
     
     public static VetoResponseEntry failUnexpectedState(VetoCacheEntry veto) {

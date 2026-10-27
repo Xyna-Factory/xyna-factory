@@ -55,7 +55,8 @@ public class ReplicateVetoRequest implements Serializable {
     default:        replication = Replication.Info; break;
     }
     if( replication == Replication.Scheduled ) {
-      if( binding != veto.getBinding() ) {
+      VetoInformation information = veto.getVetoInformation();
+      if( information == null || binding != information.getAuthorityBinding() ) {
         replication = Replication.Info;
       }
     }
