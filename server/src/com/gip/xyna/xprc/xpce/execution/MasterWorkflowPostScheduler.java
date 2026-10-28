@@ -742,6 +742,8 @@ public class MasterWorkflowPostScheduler extends XynaRunnable {
         } else if (xo.getDestinationKey().isCompensate()) {
           //compensate
           xo.setAbortionException(new ProcessAbortedException(AbortionCause.UNKNOWN)); //FIXME abortionCause und orginOrderId von ursprünglichem abort erben
+          //vetos might have been allocated while waiting in the scheduler
+          scheduler.getVetoManagement().forceFreeVetos(xo.getId());
           cleanupCompensateBeforeOrderHasBeenScheduled(false);
         } else {
           //ungültiger zustand?
