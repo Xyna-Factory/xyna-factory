@@ -429,7 +429,8 @@ public class MasterWorkflowPostScheduler extends XynaRunnable {
             logger.warn( "finish.getWfStatus: has exception XPRC_PROCESS_CANCELLED but is not canceled" );
           }
           return OrderInstanceStatus.CANCELED;
-        } else if( xe instanceof XPRC_PROCESS_SCHEDULING_TIMEOUT ) {
+        } else if( xe instanceof XPRC_PROCESS_SCHEDULING_TIMEOUT timeoutEx && timeoutEx.getOrderId() == xo.getId() ) {
+          // orderIds do not match, if the exception was (re-)thrown by a sub-process.
           if( ! xo.isTimedOut() ) {
             logger.warn( "finish.getWfStatus: has exception XPRC_PROCESS_SCHEDULING_TIMEOUT but is not timed out" );
           }

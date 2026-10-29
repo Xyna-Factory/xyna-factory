@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="McpOasGeneration" factoryVersion="" versionName="1.0.0" xmlVersion="1.1">
+--><Application applicationName="McpOasGeneration" factoryVersion="" versionName="1.0.1" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Mcp tools, resources und prompts für das Importieren von Verwalten von Oas Applikationen</Description>
     <Description Lang="EN">Mcp tools, resources and prompts to import and manage oas applications</Description>
@@ -26,7 +26,7 @@
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>OasAppManagement</ApplicationName>
-        <VersionName>1.7.37</VersionName>
+        <VersionName>1.7.38</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>

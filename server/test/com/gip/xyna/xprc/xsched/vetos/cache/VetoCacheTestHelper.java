@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
 
@@ -55,8 +56,45 @@ import com.gip.xyna.xprc.xsched.vetos.cache.cluster.VetoResponse;
 import junit.framework.TestCase;
 
 public class VetoCacheTestHelper extends TestCase {
-  
-  
+
+
+  public void test_HarnessSharedVetoForwarding() throws XynaException {
+    final TestOrder order = new TestOrder(1, "shared").vetos("exclusive").sharedVetos("shared").urgency(123);
+    final AtomicInteger allocations = new AtomicInteger();
+    final AtomicInteger undos = new AtomicInteger();
+    TestVM vm = new TestVM(false) {
+
+      @Override
+      public VetoAllocationResult allocateVetos(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos,
+                                                long urgency) {
+        assertSame(order.getOrderInformation(), orderInformation);
+        assertSame(order.getVetos(), exclusiveVetos);
+        assertSame(order.getSharedVetos(), sharedVetos);
+        assertEquals(order.getUrgency(), urgency);
+        allocations.incrementAndGet();
+        return VetoAllocationResult.SUCCESS;
+      }
+
+
+      @Override
+      public void undoAllocation(OrderInformation orderInformation, List<String> exclusiveVetos, List<String> sharedVetos) {
+        assertSame(order.getOrderInformation(), orderInformation);
+        assertSame(order.getVetos(), exclusiveVetos);
+        assertSame(order.getSharedVetos(), sharedVetos);
+        undos.incrementAndGet();
+      }
+    };
+
+    assertSame(VetoAllocationResult.SUCCESS, vm.allocateVetos(order));
+    vm.undoAllocation(order);
+    assertEquals(1, allocations.get());
+    assertEquals(1, undos.get());
+  }
+
+  static String normalizeVetoInformationTimestamps(String value) {
+    return value.replaceAll(": \\d+\\)", ")");
+  }
+
   public static class TestVM implements VetoManagementInterface {
     
     protected VetoCache vc;
@@ -132,6 +170,10 @@ public class VetoCacheTestHelper extends TestCase {
       return vm.listVetos();
     }
 
+    public String showVetos() {
+      return normalizeVetoInformationTimestamps(vm.listVetos().toString());
+    }
+
     public VetoSearchResult searchVetos(VetoSelectImpl select, int maxRows) throws PersistenceLayerException {
       return vm.searchVetos(select, maxRows);
     }
@@ -154,11 +196,11 @@ public class VetoCacheTestHelper extends TestCase {
     }
 
     public VetoAllocationResult allocateVetos(TestOrder to) {
-      return allocateVetos(to.getOrderInformation(), to.getVetos(), to.getUrgency());
+      return allocateVetos(to.getOrderInformation(), to.getVetos(), to.getSharedVetos(), to.getUrgency());
     }
     
     public void undoAllocation(TestOrder to) {
-      undoAllocation(to.getOrderInformation(), to.getVetos());
+      undoAllocation(to.getOrderInformation(), to.getVetos(), to.getSharedVetos());
     }
     
     public boolean freeVetos(TestOrder to) {
@@ -166,11 +208,11 @@ public class VetoCacheTestHelper extends TestCase {
     }
 
     public String showVetoCache() {
-      return vc.showVetoCache();
+      return normalizeVetoInformationTimestamps(vc.showVetoCache());
     }
     
     public String showVetoQueue() {
-      return vc.showVetoQueue()+"-"+vcp.showBatch();
+      return normalizeVetoInformationTimestamps(vc.showVetoQueue()+"-"+vcp.showBatch());
     }
 
     public void executeVetoCacheProcessor() {
@@ -222,7 +264,7 @@ public class VetoCacheTestHelper extends TestCase {
     }
     
     public String showVetoPersistence() {
-      return persistence.show();
+      return normalizeVetoInformationTimestamps(persistence.show());
     }
 
     @Override

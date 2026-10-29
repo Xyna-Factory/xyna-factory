@@ -83,6 +83,10 @@ public class XynaFactoryMock implements XynaFactoryBase {
           @Override
           public void storeLastUsed(String realm) {
           }
+
+          @Override
+          public void setBlockSize(String realm, long blockSize) {
+          }
         };
       }
     }, 

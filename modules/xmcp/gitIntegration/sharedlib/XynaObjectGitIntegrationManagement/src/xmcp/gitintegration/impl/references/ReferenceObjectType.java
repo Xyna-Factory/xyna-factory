@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,5 +19,18 @@ package xmcp.gitintegration.impl.references;
 
 
 public enum ReferenceObjectType {
-  DATATYPE, TRIGGER, FILTER, SHAREDLIB
+  DATATYPE(ReferenceTriggerTime.BEFORE_DEPLOY), 
+  TRIGGER(ReferenceTriggerTime.AFTER_DEPLOY), 
+  FILTER(ReferenceTriggerTime.AFTER_DEPLOY), 
+  SHAREDLIB(ReferenceTriggerTime.BEFORE_DEPLOY);
+  
+  private ReferenceTriggerTime time;
+  
+  ReferenceObjectType(ReferenceTriggerTime time) {
+    this.time = time;
+  }
+  
+  public ReferenceTriggerTime getTriggerTime() {
+    return time;
+  }
 }

@@ -280,7 +280,12 @@ public class VetoCache {
       return VetoInformation.createExclusive(req.getVetoName(), req.getOrderInformation(), System.currentTimeMillis(), ownBinding);
     }
     if (Objects.equals(req.getOrderInformation().getOrderId(), current.getUsingOrderId())) {
-      return current;
+      if (current.getBinding() == ownBinding) {
+        return current;
+      }
+      return new VetoInformation(current.getName(), current.getUsingOrder(), current.getSharedOrderIds(),
+                                 current.getPendingExclusiveOrderId(), current.getDocumentation(),
+                                 current.getCreated(), ownBinding);
     }
     // unexpected state
     logger.warn("Unexpected state in VetoCache.updateVetoInfo()");

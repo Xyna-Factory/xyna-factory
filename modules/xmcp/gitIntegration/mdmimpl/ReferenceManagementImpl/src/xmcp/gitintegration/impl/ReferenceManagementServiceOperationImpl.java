@@ -157,7 +157,7 @@ public class ReferenceManagementServiceOperationImpl implements ExtendedDeployme
   public void triggerReferences(List<? extends Reference> refs, List<String> jarNames, Long revision) {
     ReferenceSupport impl = new ReferenceSupport();
     List<InternalReference> references = convert(refs, revision);
-    impl.triggerReferences(references, revision);
+    impl.prepareAndTriggerReferences(references, revision);
   }
   
   private List<InternalReference> convert(List<? extends Reference> arg0, Long revision) {

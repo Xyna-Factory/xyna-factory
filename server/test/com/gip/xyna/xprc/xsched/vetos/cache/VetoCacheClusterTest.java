@@ -54,16 +54,38 @@ public class VetoCacheClusterTest extends TestCase {
     } catch (InterruptedException e) {
     }
   }
+
+  private void waitForVetoState(ClusteredVM vm, VetoCache.State expectedState) {
+    long deadline = System.currentTimeMillis() + 2000;
+    VetoCacheEntry veto = vm.vc.get("V");
+    while ((veto == null || veto.getState() != expectedState) && System.currentTimeMillis() < deadline) {
+      sleep(5);
+      veto = vm.vc.get("V");
+    }
+    assertNotNull(veto);
+    assertEquals(expectedState, veto.getState());
+  }
   
   private void assertCleaned(ClusteredVM vm, ClusteredVM vm2) {
     assertEquals("{}", vm.showVetoCache() );
     assertEquals("{}", vm2.showVetoCache() );
-    assertEquals( "[]", vm.listVetos().toString() );
-    assertEquals( "[]", vm2.listVetos().toString() );
+    assertEquals("[]", vm.showVetos() );
+    assertEquals("[]", vm2.showVetos() );
     assertEquals("{}", vm.showVetoPersistence() );
     assertEquals("{}", vm2.showVetoPersistence() );
   }
-  
+
+  private void waitForCleaned(ClusteredVM vm, ClusteredVM vm2) {
+    long deadline = System.currentTimeMillis() + 2000;
+    while (System.currentTimeMillis() < deadline &&
+        (!"{}".equals(vm.showVetoCache()) || !"{}".equals(vm2.showVetoCache()) ||
+         !"[]".equals(vm.showVetos()) || !"[]".equals(vm2.showVetos()) ||
+         !"{}".equals(vm.showVetoPersistence()) || !"{}".equals(vm2.showVetoPersistence()))) {
+      sleep(5);
+    }
+    assertCleaned(vm, vm2);
+  }
+
   public void test_Allocate_Free() throws XynaException {
     
     ClusteredVM vm = new ClusteredVM(1, true);
@@ -73,7 +95,7 @@ public class VetoCacheClusterTest extends TestCase {
     assertEquals( "started, clustered, persistent(0 entries)", vm.showInformation() );
     assertEquals( "started, clustered, persistent(0 entries)", vm2.showInformation() );
         
-    assertEquals( "[]", vm.listVetos().toString());
+    assertEquals( "[]", vm.showVetos());
    
     TestOrder to1 = new TestOrder(1, "eins").vetos("V").urgency(123);
    
@@ -84,10 +106,10 @@ public class VetoCacheClusterTest extends TestCase {
     
     vm.schedule(37, to1);
     sleep(50);
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
-    assertEquals("[VetoInformation(1-V: OrderInformation(1,eins))]", vm.listVetos().toString());
-    assertEquals("[VetoInformation(1-V: OrderInformation(1,eins))]", vm2.listVetos().toString());
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("[VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins))]", vm.showVetos());
+    assertEquals("[VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins))]", vm2.showVetos());
     
     assertTrue( vm.freeVetos(to1) );
     sleep(50);
@@ -109,26 +131,25 @@ public class VetoCacheClusterTest extends TestCase {
     
     vm.schedule(37, to1, to2);
     sleep(50);
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder(37, count=1))}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
-    assertEquals("[VetoInformation(1-V: OrderInformation(1,eins))]", vm.listVetos().toString());
-    assertEquals("[VetoInformation(1-V: OrderInformation(1,eins))]", vm2.listVetos().toString());
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder(37, count=1))}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("[VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins))]", vm.showVetos());
+    assertEquals("[VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins))]", vm2.showVetos());
     
     vm.schedule(55, to2);
     sleep(50);
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder(37, count=1))}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder(37, count=1))}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
     
     assertTrue( vm.freeVetos(to1) );
     sleep(50);
     assertEquals("{V=VetoCacheEntry(Local: V, 37, WaitingOrder())}", vm.showVetoCache() );
-    //assertEquals("{V=VetoCacheEntry(Local: V, WaitingOrder(37, count=1))}", vm.showVetoCache() );
     assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache() );
     
     vm.schedule(55, to2);
     sleep(50);
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(2,zwei)), 37, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(2,zwei)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(2,zwei)), 37, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(2,zwei)), null)}", vm2.showVetoCache() );
     
     assertTrue( vm.freeVetos(to2) );
     sleep(50);
@@ -153,15 +174,15 @@ public class VetoCacheClusterTest extends TestCase {
     
     vm.schedule(37, to1);
     sleep(50);
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
-    assertEquals("[VetoInformation(1-V: OrderInformation(1,eins))]", vm.listVetos().toString());
-    assertEquals("[VetoInformation(1-V: OrderInformation(1,eins))]", vm2.listVetos().toString());
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("[VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins))]", vm.showVetos());
+    assertEquals("[VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins))]", vm2.showVetos());
     
     vm.schedule(55, to2);
     sleep(50);
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder(37, count=1))}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder(37, count=1))}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
     
     assertTrue( vm.freeVetos(to1) );
     sleep(50);
@@ -170,8 +191,8 @@ public class VetoCacheClusterTest extends TestCase {
      
     vm.schedule(55, to2);
     sleep(50);
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(2,zwei)), 37, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(2,zwei)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(2,zwei)), 37, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(2,zwei)), null)}", vm2.showVetoCache() );
     
     assertTrue( vm.freeVetos(to2) );
     sleep(50);
@@ -193,15 +214,15 @@ public class VetoCacheClusterTest extends TestCase {
     
     vm.schedule(37, to1);
     sleep(50);
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
-    assertEquals("[VetoInformation(1-V: OrderInformation(1,eins))]", vm.listVetos().toString());
-    assertEquals("[VetoInformation(1-V: OrderInformation(1,eins))]", vm2.listVetos().toString());
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("[VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins))]", vm.showVetos());
+    assertEquals("[VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins))]", vm2.showVetos());
     
     vm2.schedule(55, to2);
     sleep(50);
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), WaitingOrder(37, count=1))}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), WaitingOrder(37, count=1))}", vm2.showVetoCache() );
     
     assertTrue( vm.freeVetos(to1) );
     sleep(50);
@@ -210,8 +231,8 @@ public class VetoCacheClusterTest extends TestCase {
     
     vm2.schedule(55, to2);
     sleep(50);
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(2,zwei)), WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(2,zwei)), 37, WaitingOrder())}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(2,zwei)), WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(2,zwei)), 37, WaitingOrder())}", vm2.showVetoCache() );
     
     assertTrue( vm2.freeVetos(to2) );
     sleep(50);
@@ -219,6 +240,11 @@ public class VetoCacheClusterTest extends TestCase {
   }
   
   public void testStepped_Allocate_Free_2_orders_sequential() throws XynaException {
+    runStepped_Allocate_Free_2_orders_sequential(false);
+    runStepped_Allocate_Free_2_orders_sequential(true);
+  }
+
+  private void runStepped_Allocate_Free_2_orders_sequential(boolean ownerComparesFirst) throws XynaException {
     ClusteredVM vm = new ClusteredVM(1, false);
     ClusteredVM vm2 = new ClusteredVM(2, false);
     ClusteredVM.cluster(vm,vm2);
@@ -230,7 +256,6 @@ public class VetoCacheClusterTest extends TestCase {
     vm.schedule(23, to1);
     assertEquals("{V=VetoCacheEntry(Compare: V, 123, WaitingOrder(123, count=1))}", vm.showVetoCache() );
     assertEquals("{}", vm2.showVetoCache() );
-    assertEquals("[V]-P[]-0", vm.showVetoQueue() );
     assertEquals("[]-P[]-0", vm2.showVetoQueue() );
 
     logger.debug("Step 2");
@@ -242,102 +267,72 @@ public class VetoCacheClusterTest extends TestCase {
 
     logger.debug("Step 3");
     vm.schedule(24, to1);
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
     assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache() );
     assertEquals("[V]-P[]-0", vm.showVetoQueue() );
     assertEquals("[]-P[]-0", vm2.showVetoQueue() );
-
-    /*
-     //schnellere Ausführung auf 1
-    logger.debug("Step 4");
-    vm.schedule(37, to2);
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder(37, count=1))}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache() );
-    assertEquals("[V]-P[]-0", vm.showVetoQueue() );
-    assertEquals("[]-P[]-0", vm2.showVetoQueue() );
-
-    logger.debug("Step 5");
-    assertTrue( vm.freeVetos(to1) );
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), WaitingOrder(37, count=1))}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache() );
-    assertEquals("[V, V]-P[]-0", vm.showVetoQueue() );
-    assertEquals("[]-P[]-0", vm2.showVetoQueue() );
-
-    logger.debug("Step 6");
-    vm.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Compare: V, 37, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Free: V, null)}", vm2.showVetoCache() );
-    assertEquals("[V]-P[]-1", vm.showVetoQueue() );
-    assertEquals("[V]-P[]-0", vm2.showVetoQueue() );
-   
-    logger.debug("Step 7"); //ändert nichts
-    vm.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Compare: V, 37, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Free: V, null)}", vm2.showVetoCache() );
-    assertEquals("[V]-P[]-0", vm.showVetoQueue() );
-    assertEquals("[V]-P[]-0", vm2.showVetoQueue() );
-   
-    logger.debug("Step 8"); //fast wie Step 9 unten
-    vm2.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Compare: V, 37, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache() );
-    assertEquals("[V]-P[]-0", vm.showVetoQueue() );
-    assertEquals("[]-P[]-0", vm2.showVetoQueue() );
-   */
     
 
     logger.debug("Step 4");
     vm.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
     assertEquals("[]-P[]-0", vm.showVetoQueue() );
     assertEquals("[V]-P[]-0", vm2.showVetoQueue() );
     
     logger.debug("Step 5");
     vm2.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
     assertEquals("[]-P[]-0", vm.showVetoQueue() );
     assertEquals("[]-P[]-0", vm2.showVetoQueue() );
 
     logger.debug("Step 6");
     vm.schedule(37, to2);
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder(37, count=1))}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder(37, count=1))}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
     assertEquals("[]-P[]-0", vm.showVetoQueue() );
     assertEquals("[]-P[]-0", vm2.showVetoQueue() );
 
     logger.debug("Step 7");
     assertTrue( vm.freeVetos(to1) );
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), WaitingOrder(37, count=1))}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: unallocated), WaitingOrder(37, count=1))}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
     assertEquals("[V]-P[]-0", vm.showVetoQueue() );
     assertEquals("[]-P[]-0", vm2.showVetoQueue() );
 
     logger.debug("Step 8");
     vm.executeVetoCacheProcessor();
     assertEquals("{V=VetoCacheEntry(Comparing: V, 37, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: V, null)}", vm2.showVetoCache() );
     assertEquals("[]-P[]-1", vm.showVetoQueue() );
     assertEquals("[V]-P[]-0", vm2.showVetoQueue() );
     
-    /*
-    logger.debug("Step 9a");
-    vm.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Compare: V, 37, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
-    assertEquals("[V]-P[]-0", vm.showVetoQueue() );
-    assertEquals("[V]-P[]-0", vm2.showVetoQueue() );
-    */
-    logger.debug("Step 9");
-    vm2.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Comparing: V, 37, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache() );
-    assertEquals("[]-P[]-1", vm.showVetoQueue() );
-    assertEquals("[]-P[]-0", vm2.showVetoQueue() );
+    if (ownerComparesFirst) {
+      logger.debug("Step 9a: owner compares while peer is Free");
+      vm.executeVetoCacheProcessor();
+      assertEquals("{V=VetoCacheEntry(Compare: V, 37, WaitingOrder())}", vm.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Free: V, null)}", vm2.showVetoCache() );
+      assertEquals("[V]-P[]-0", vm.showVetoQueue() );
+      assertEquals("[V]-P[]-0", vm2.showVetoQueue() );
 
-    logger.debug("Step 10");
-    vm.executeVetoCacheProcessor();
+      vm2.executeVetoCacheProcessor();
+      assertEquals("{V=VetoCacheEntry(Compare: V, 37, WaitingOrder())}", vm.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache() );
+
+      logger.debug("Step 10");
+      vm.executeVetoCacheProcessor();
+    } else {
+      logger.debug("Step 9: peer processes Free first");
+      vm2.executeVetoCacheProcessor();
+      assertEquals("{V=VetoCacheEntry(Comparing: V, 37, WaitingOrder())}", vm.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache() );
+      assertEquals("[]-P[]-1", vm.showVetoQueue() );
+      assertEquals("[]-P[]-0", vm2.showVetoQueue() );
+
+      logger.debug("Step 10");
+      vm.executeVetoCacheProcessor();
+    }
     assertEquals("{V=VetoCacheEntry(Local: V, 37, WaitingOrder())}", vm.showVetoCache() );
     assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache() );
     assertEquals("[]-P[]-0", vm.showVetoQueue() );
@@ -345,36 +340,36 @@ public class VetoCacheClusterTest extends TestCase {
 
     logger.debug("Step 11");
     vm.schedule(38, to2);
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(2,zwei)), 37, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(2,zwei)), 37, WaitingOrder())}", vm.showVetoCache() );
     assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache() );
     assertEquals("[V]-P[]-0", vm.showVetoQueue() );
     assertEquals("[]-P[]-0", vm2.showVetoQueue() );
 
     logger.debug("Step 12");
     vm.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(2,zwei)), 37, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(2,zwei)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(2,zwei)), 37, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(2,zwei)), null)}", vm2.showVetoCache() );
     assertEquals("[]-P[]-0", vm.showVetoQueue() );
     assertEquals("[V]-P[]-0", vm2.showVetoQueue() );
 
     logger.debug("Step 13");
     vm2.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(2,zwei)), 37, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(2,zwei)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(2,zwei)), 37, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(2,zwei)), null)}", vm2.showVetoCache() );
     assertEquals("[]-P[]-0", vm.showVetoQueue() );
     assertEquals("[]-P[]-0", vm2.showVetoQueue() );
     
     logger.debug("Step 14");
     assertTrue( vm.freeVetos(to2) );
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(2,zwei)), WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(2,zwei)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: unallocated), WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(2,zwei)), null)}", vm2.showVetoCache() );
     assertEquals("[V]-P[]-0", vm.showVetoQueue() );
     assertEquals("[]-P[]-0", vm2.showVetoQueue() );
 
     logger.debug("Step 15");
     vm.executeVetoCacheProcessor();
     assertEquals("{V=VetoCacheEntry(Comparing: V, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(2,zwei)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: V, null)}", vm2.showVetoCache() );
     assertEquals("[]-P[]-1", vm.showVetoQueue() );
     assertEquals("[V]-P[]-0", vm2.showVetoQueue() );
 
@@ -395,6 +390,52 @@ public class VetoCacheClusterTest extends TestCase {
     assertCleaned(vm, vm2);
   }
 
+  public void testStepped_Allocate_Free_WhileWaiting() throws XynaException {
+    ClusteredVM vm = new ClusteredVM(1, false);
+    ClusteredVM vm2 = new ClusteredVM(2, false);
+    ClusteredVM.cluster(vm, vm2);
+
+    TestOrder to1 = new TestOrder(1, "eins").vetos("V").urgency(123);
+    TestOrder to2 = new TestOrder(2, "zwei").vetos("V").urgency(37);
+
+    vm.schedule(23, to1);
+    assertEquals("{V=VetoCacheEntry(Compare: V, 123, WaitingOrder(123, count=1))}", vm.showVetoCache());
+    vm.executeVetoCacheProcessor();
+    assertEquals("{V=VetoCacheEntry(Local: V, 123, WaitingOrder(123, count=1))}", vm.showVetoCache());
+    assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache());
+
+    vm.schedule(24, to1);
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache());
+
+    vm.schedule(37, to2);
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder(37, count=1))}", vm.showVetoCache());
+
+    assertTrue(vm.freeVetos(to1));
+    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: unallocated), WaitingOrder(37, count=1))}", vm.showVetoCache());
+
+    vm.executeVetoCacheProcessor();
+    assertEquals("{V=VetoCacheEntry(Comparing: V, 37, WaitingOrder())}", vm.showVetoCache());
+    assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache());
+
+    vm2.executeVetoCacheProcessor();
+    assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache());
+    vm.executeVetoCacheProcessor();
+    assertEquals("{V=VetoCacheEntry(Local: V, 37, WaitingOrder())}", vm.showVetoCache());
+
+    vm.schedule(38, to2);
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(2,zwei)), 37, WaitingOrder())}", vm.showVetoCache());
+    vm.executeVetoCacheProcessor();
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(2,zwei)), 37, WaitingOrder())}", vm.showVetoCache());
+    vm2.executeVetoCacheProcessor();
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(2,zwei)), null)}", vm2.showVetoCache());
+
+    assertTrue(vm.freeVetos(to2));
+    vm.executeVetoCacheProcessor();
+    vm2.executeVetoCacheProcessor();
+    vm.executeVetoCacheProcessor();
+    assertCleaned(vm, vm2);
+  }
+
   
   
   public void test_AdminVeto() throws XynaException {
@@ -402,21 +443,21 @@ public class VetoCacheClusterTest extends TestCase {
     ClusteredVM vm2 = new ClusteredVM(2, true);
     ClusteredVM.cluster(vm, vm2);
     
-    AdministrativeVeto av = new AdministrativeVeto("AV", "test");
+    AdministrativeVeto av = new AdministrativeVeto("AV", "test", System.currentTimeMillis());
     vm.allocateAdministrativeVeto(av);
     sleep(50);
     assertEquals("{AV=VetoCacheEntry(Used: VetoInformation(AV: test), null)}", vm.showVetoCache() );
     assertEquals("{AV=VetoCacheEntry(Used: VetoInformation(AV: test), null)}", vm2.showVetoCache() );
-    assertEquals("[VetoInformation(AV: test)]", vm.listVetos().toString());
-    assertEquals("[VetoInformation(AV: test)]", vm2.listVetos().toString());
+    assertEquals("[VetoInformation(AV: test)]", vm.showVetos());
+    assertEquals("[VetoInformation(AV: test)]", vm2.showVetos());
     
-    AdministrativeVeto avc = new AdministrativeVeto("AV", "changed");
+    AdministrativeVeto avc = new AdministrativeVeto("AV", "changed", System.currentTimeMillis());
     vm.setDocumentationOfAdministrativeVeto(avc);
     sleep(50);
     assertEquals("{AV=VetoCacheEntry(Used: VetoInformation(AV: changed), null)}", vm.showVetoCache() );
     assertEquals("{AV=VetoCacheEntry(Used: VetoInformation(AV: changed), null)}", vm2.showVetoCache() );
-    assertEquals("[VetoInformation(AV: changed)]", vm.listVetos().toString());
-    assertEquals("[VetoInformation(AV: changed)]", vm2.listVetos().toString());
+    assertEquals("[VetoInformation(AV: changed)]", vm.showVetos());
+    assertEquals("[VetoInformation(AV: changed)]", vm2.showVetos());
     
     
     vm.freeAdministrativeVeto(av);
@@ -430,7 +471,7 @@ public class VetoCacheClusterTest extends TestCase {
     ClusteredVM.cluster(vm,vm2);
     
     logger.debug("Step 1"); //Administratives Veto anlegen
-    AdministrativeVeto av = new AdministrativeVeto("AV", "test");
+    AdministrativeVeto av = new AdministrativeVeto("AV", "test", System.currentTimeMillis());
     vm.allocateAdministrativeVetoInOwnThread(av);
     sleep(20);
     assertEquals("{AV=VetoCacheEntry(Compare: VetoInformation(AV: test), null)}", vm.showVetoCache() );
@@ -480,7 +521,7 @@ public class VetoCacheClusterTest extends TestCase {
     
     
     logger.debug("Step 2"); //Dokumentation ändern
-    AdministrativeVeto avc = new AdministrativeVeto("AV", "changed");
+    AdministrativeVeto avc = new AdministrativeVeto("AV", "changed", System.currentTimeMillis());
     vm.setDocumentationOfAdministrativeVetoInOwnThread(avc);
     sleep(20);
     assertEquals("{AV=VetoCacheEntry(Scheduled: VetoInformation(AV: changed), null)}", vm.showVetoCache() );
@@ -544,7 +585,7 @@ public class VetoCacheClusterTest extends TestCase {
    
     assertEquals("VetoResponse(3,[SUCCESS(AV)])", vm.executeRemoteRequests(true) );
     assertEquals("{AV=VetoCacheEntry(Comparing: AV, null)}", vm.showVetoCache() );
-    assertEquals("{AV=VetoCacheEntry(Free: VetoInformation(AV: changed), null)}", vm2.showVetoCache() );
+    assertEquals("{AV=VetoCacheEntry(Free: AV, null)}", vm2.showVetoCache() );
     assertEquals("[]-P[]-1", vm.showVetoQueue() );
     assertEquals("[AV]-P[]-0", vm2.showVetoQueue() );
     assertEquals("{}", vm.showVetoPersistence() );
@@ -571,13 +612,13 @@ public class VetoCacheClusterTest extends TestCase {
     
     vm2.executeVetoCacheProcessor();
     assertEquals("{AV=VetoCacheEntry(Comparing: AV, null)}", vm.showVetoCache() );
-    assertEquals("{AV=VetoCacheEntry(Free: VetoInformation(AV: changed), null)}", vm2.showVetoCache() );
+    assertEquals("{AV=VetoCacheEntry(Free: AV, null)}", vm2.showVetoCache() );
     assertEquals("[]-P[]-1", vm.showVetoQueue() );
-    assertEquals("[]-P[f=[VetoCacheEntry(Free: VetoInformation(AV: changed), null)],s=[]]-1", vm2.showVetoQueue() );
+    assertEquals("[]-P[f=[VetoCacheEntry(Free: AV, null)],s=[]]-0", vm2.showVetoQueue() );
     assertEquals("{}", vm.showVetoPersistence() );
     assertEquals("{AV=VetoCacheEntry(Used: VetoInformation(AV: changed), null)}", vm2.showVetoPersistence() );
     
-    assertEquals("VetoResponse(0,[SUCCESS(AV)])", vm2.executeRemoteRequests(true) );
+    assertEquals("none", vm2.executeRemoteRequests(true) );
     assertEquals("{AV=VetoCacheEntry(Comparing: AV, null)}", vm.showVetoCache() );
     assertEquals("{AV=VetoCacheEntry(Remote: AV, null)}", vm2.showVetoCache() );
     assertEquals("[]-P[]-1", vm.showVetoQueue() );
@@ -601,39 +642,40 @@ public class VetoCacheClusterTest extends TestCase {
     ClusteredVM vm2 = new ClusteredVM(2, true);
     ClusteredVM.cluster(vm, vm2);
     
-    AdministrativeVeto av = new AdministrativeVeto("V", "test");
+    AdministrativeVeto av = new AdministrativeVeto("V", "test", System.currentTimeMillis());
     TestOrder to1 = new TestOrder(1, "eins").vetos("V").urgency(123);
     
     vm.allocateAdministrativeVeto(av);
-    sleep(50);
+    waitForVetoState(vm, VetoCache.State.Used);
+    waitForVetoState(vm2, VetoCache.State.Used);
     assertEquals("{V=VetoCacheEntry(Used: VetoInformation(V: test), null)}", vm.showVetoCache() );
     assertEquals("{V=VetoCacheEntry(Used: VetoInformation(V: test), null)}", vm2.showVetoCache() );
-    assertEquals("[VetoInformation(V: test)]", vm.listVetos().toString());
-    assertEquals("[VetoInformation(V: test)]", vm2.listVetos().toString());
+    assertEquals("[VetoInformation(V: test)]", vm.showVetos());
+    assertEquals("[VetoInformation(V: test)]", vm2.showVetos());
     
     
     vm.schedule(11, to1);
-    sleep(50);
     assertEquals("{V=VetoCacheEntry(Used: VetoInformation(V: test), WaitingOrder(123, count=1))}", vm.showVetoCache() );
     assertEquals("{V=VetoCacheEntry(Used: VetoInformation(V: test), null)}", vm2.showVetoCache() );
     
     vm.freeAdministrativeVeto(av);
-    sleep(50);
+    waitForVetoState(vm, VetoCache.State.Local);
+    waitForVetoState(vm2, VetoCache.State.Remote);
     assertEquals("{V=VetoCacheEntry(Local: V, 123, WaitingOrder())}", vm.showVetoCache() );
     assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache() );
-    assertEquals("[]", vm.listVetos().toString());
-    assertEquals("[]", vm2.listVetos().toString());
+    assertEquals("[]", vm.showVetos());
+    assertEquals("[]", vm2.showVetos());
     
     vm.schedule(11, to1);
-    sleep(50);
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
-    assertEquals("[VetoInformation(1-V: OrderInformation(1,eins))]", vm.listVetos().toString());
-    assertEquals("[VetoInformation(1-V: OrderInformation(1,eins))]", vm2.listVetos().toString());
+    waitForVetoState(vm, VetoCache.State.Used);
+    waitForVetoState(vm2, VetoCache.State.Used);
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("[VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins))]", vm.showVetos());
+    assertEquals("[VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins))]", vm2.showVetos());
     
     assertTrue( vm.freeVetos(to1) );
-    sleep(50);
-    assertCleaned(vm, vm2);
+    waitForCleaned(vm, vm2);
   }
 
   public void test_AdminVeto_Blocking_FreeOnOther() throws XynaException {
@@ -641,39 +683,40 @@ public class VetoCacheClusterTest extends TestCase {
     ClusteredVM vm2 = new ClusteredVM(2, true);
     ClusteredVM.cluster(vm, vm2);
      
-    AdministrativeVeto av = new AdministrativeVeto("V", "test");
+    AdministrativeVeto av = new AdministrativeVeto("V", "test", System.currentTimeMillis());
     TestOrder to1 = new TestOrder(1, "eins").vetos("V").urgency(123);
     
     vm.allocateAdministrativeVeto(av);
-    sleep(50);
+    waitForVetoState(vm, VetoCache.State.Used);
+    waitForVetoState(vm2, VetoCache.State.Used);
     assertEquals("{V=VetoCacheEntry(Used: VetoInformation(V: test), null)}", vm.showVetoCache() );
     assertEquals("{V=VetoCacheEntry(Used: VetoInformation(V: test), null)}", vm2.showVetoCache() );
-    assertEquals("[VetoInformation(V: test)]", vm.listVetos().toString());
-    assertEquals("[VetoInformation(V: test)]", vm2.listVetos().toString());
+    assertEquals("[VetoInformation(V: test)]", vm.showVetos());
+    assertEquals("[VetoInformation(V: test)]", vm2.showVetos());
     
     
     vm.schedule(11, to1);
-    sleep(50);
     assertEquals("{V=VetoCacheEntry(Used: VetoInformation(V: test), WaitingOrder(123, count=1))}", vm.showVetoCache() );
     assertEquals("{V=VetoCacheEntry(Used: VetoInformation(V: test), null)}", vm2.showVetoCache() );
     
     vm2.freeAdministrativeVeto(av);
-    sleep(50);
+    waitForVetoState(vm, VetoCache.State.Local);
+    waitForVetoState(vm2, VetoCache.State.Remote);
     assertEquals("{V=VetoCacheEntry(Local: V, 123, WaitingOrder())}", vm.showVetoCache() );
     assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache() );
-    assertEquals("[]", vm.listVetos().toString());
-    assertEquals("[]", vm2.listVetos().toString());
+    assertEquals("[]", vm.showVetos());
+    assertEquals("[]", vm2.showVetos());
     
     vm.schedule(11, to1);
-    sleep(50);
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
-    assertEquals("[VetoInformation(1-V: OrderInformation(1,eins))]", vm.listVetos().toString());
-    assertEquals("[VetoInformation(1-V: OrderInformation(1,eins))]", vm2.listVetos().toString());
+    waitForVetoState(vm, VetoCache.State.Used);
+    waitForVetoState(vm2, VetoCache.State.Used);
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("[VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins))]", vm.showVetos());
+    assertEquals("[VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins))]", vm2.showVetos());
     
     assertTrue( vm.freeVetos(to1) );
-    sleep(50);
-    assertCleaned(vm, vm2);
+    waitForCleaned(vm, vm2);
   }
   
   public void testStepped_AdminVeto_Blocking() throws XynaException {
@@ -681,7 +724,7 @@ public class VetoCacheClusterTest extends TestCase {
     ClusteredVM vm2 = new ClusteredVM(2, false);
     ClusteredVM.cluster(vm,vm2);
     
-    AdministrativeVeto av = new AdministrativeVeto("V", "test");
+    AdministrativeVeto av = new AdministrativeVeto("V", "test", System.currentTimeMillis());
     TestOrder to1 = new TestOrder(1, "eins").vetos("V").urgency(123);
     
     logger.debug("Step 1");
@@ -694,59 +737,50 @@ public class VetoCacheClusterTest extends TestCase {
    
     logger.debug("Step 2");
     vm.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(V: test), null)}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Remote: VetoInformation(V: test), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(V: test), null)}", vm.showVetoCache());
+    assertEquals("{V=VetoCacheEntry(Remote: VetoInformation(V: test), null)}", vm2.showVetoCache());
     assertEquals("[]-P[]-1", vm.showVetoQueue() );
     assertEquals("[]-P[]-0", vm2.showVetoQueue() );
    
     logger.debug("Step 3");
     vm.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(V: test), null)}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(V: test), null)}", vm2.showVetoCache() );
-    assertEquals("[]-P[]-0", vm.showVetoQueue() );
-    assertEquals("[V]-P[]-0", vm2.showVetoQueue() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(V: test), null)}", vm.showVetoCache());
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(V: test), null)}", vm2.showVetoCache());
+    assertEquals("[]-P[]-0", vm.showVetoQueue());
+    assertEquals("[V]-P[]-0", vm2.showVetoQueue());
    
     logger.debug("Step 4");
     vm2.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(V: test), null)}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(V: test), null)}", vm2.showVetoCache() );
-    assertEquals("[]-P[]-0", vm.showVetoQueue() );
-    assertEquals("[]-P[]-0", vm2.showVetoQueue() );
-   
-    assertEquals("[VetoInformation(V: test)]", vm.listVetos().toString());
-    assertEquals("[VetoInformation(V: test)]", vm2.listVetos().toString());
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(V: test), null)}", vm.showVetoCache());
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(V: test), null)}", vm2.showVetoCache());
+    assertEquals("[]-P[]-0", vm.showVetoQueue());
+    assertEquals("[]-P[]-0", vm2.showVetoQueue());
+
+    assertEquals("[VetoInformation(V: test)]", vm.showVetos());
+    assertEquals("[VetoInformation(V: test)]", vm2.showVetos());
     
     //blockierter Auftrag
     logger.debug("Step 5");
     vm.schedule(11, to1);
     sleep(50);
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(V: test), WaitingOrder(123, count=1))}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(V: test), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(V: test), WaitingOrder(123, count=1))}", vm.showVetoCache());
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(V: test), null)}", vm2.showVetoCache());
     
     //free
     logger.debug("Step 6");
     vm.freeAdministrativeVetoInOwnThread(av);
     sleep(20);
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(V: test), WaitingOrder(123, count=1))}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(V: test), null)}", vm2.showVetoCache() );
-    assertEquals("[V]-P[]-0", vm.showVetoQueue() );
+    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(V: test), WaitingOrder(123, count=1))}", vm.showVetoCache());
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(V: test), null)}", vm2.showVetoCache());
+    assertEquals("[V]-P[]-0", vm.showVetoQueue());
     assertEquals("[]-P[]-0", vm2.showVetoQueue() );
    
     logger.debug("Step 7");
     vm.executeVetoCacheProcessor();
     assertEquals("{V=VetoCacheEntry(Comparing: V, 123, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(V: test), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: V, null)}", vm2.showVetoCache() );
     assertEquals("[]-P[]-1", vm.showVetoQueue() );
     assertEquals("[V]-P[]-0", vm2.showVetoQueue() );
-    
-    /*
-    logger.debug("Step 8a");
-    vm.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Compare: V, 123, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(V: test), null)}", vm2.showVetoCache() );
-    assertEquals("[V]-P[]-0", vm.showVetoQueue() );
-    assertEquals("[V]-P[]-0", vm2.showVetoQueue() );
-    */
     
     logger.debug("Step 8");
     vm2.executeVetoCacheProcessor();
@@ -764,39 +798,39 @@ public class VetoCacheClusterTest extends TestCase {
     
     logger.debug("Step 10");
     vm.schedule(11, to1);
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache());
+    assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache());
     assertEquals("[V]-P[]-0", vm.showVetoQueue() );
     assertEquals("[]-P[]-0", vm2.showVetoQueue() );
     
     logger.debug("Step 11");
     vm.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
-    assertEquals("[]-P[]-0", vm.showVetoQueue() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache());
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache());
+    assertEquals("[]-P[]-0", vm.showVetoQueue());
     assertEquals("[V]-P[]-0", vm2.showVetoQueue() );
     
     
     logger.debug("Step 12");
     vm2.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
-    assertEquals("[]-P[]-0", vm.showVetoQueue() );
-    assertEquals("[]-P[]-0", vm2.showVetoQueue() );
-    assertEquals("[VetoInformation(1-V: OrderInformation(1,eins))]", vm.listVetos().toString());
-    assertEquals("[VetoInformation(1-V: OrderInformation(1,eins))]", vm2.listVetos().toString());
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache());
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache());
+    assertEquals("[]-P[]-0", vm.showVetoQueue());
+    assertEquals("[]-P[]-0", vm2.showVetoQueue());
+    assertEquals("[VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins))]", vm.showVetos());
+    assertEquals("[VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins))]", vm2.showVetos());
     
     logger.debug("Step 13");
-    assertTrue( vm.freeVetos(to1) );
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
-    assertEquals("[V]-P[]-0", vm.showVetoQueue() );
+    assertTrue(vm.freeVetos(to1));
+    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: unallocated), WaitingOrder())}", vm.showVetoCache());
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache());
+    assertEquals("[V]-P[]-0", vm.showVetoQueue());
     assertEquals("[]-P[]-0", vm2.showVetoQueue() );
     
     logger.debug("Step 14");
     vm.executeVetoCacheProcessor();
     assertEquals("{V=VetoCacheEntry(Comparing: V, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: V, null)}", vm2.showVetoCache() );
     assertEquals("[]-P[]-1", vm.showVetoQueue() );
     assertEquals("[V]-P[]-0", vm2.showVetoQueue() );
     
@@ -817,16 +851,7 @@ public class VetoCacheClusterTest extends TestCase {
     assertCleaned(vm, vm2);
   }
 
-  
-  
-  
- 
 
-
-  /*
-   * FIXME Test kann so nicht stimmen: in allocate werden zuerst die Vetos überprüft. Dabei fällt bei Schedule to2 auf, 
-   * dass Veto V bereits vergeben ist. Damit wird Z 
-    */
   public void test_Allocate_Two() throws XynaException {
     
     ClusteredVM vm = new ClusteredVM(1, true);
@@ -846,21 +871,21 @@ public class VetoCacheClusterTest extends TestCase {
     vm.schedule(37, to2);
     
     sleep(50);
-    assertEquals("{Z=VetoCacheEntry(Local: Z, 111, WaitingOrder(111, count=1)), V=VetoCacheEntry(Usable: V, 123, WaitingOrder(123, count=1))}", vm.showVetoCache() );
-    assertEquals("{Z=VetoCacheEntry(Remote: Z, null), V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Usable: V, 123, WaitingOrder(123, count=1)), Z=VetoCacheEntry(Local: Z, 111, WaitingOrder(111, count=1))}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Remote: V, null), Z=VetoCacheEntry(Remote: Z, null)}", vm2.showVetoCache() );
     assertEquals("[]", vm.listVetos().toString());
     assertEquals("[]", vm2.listVetos().toString());
     
     
     vm.schedule(38, to2);
     sleep(50);
-    assertEquals("{Z=VetoCacheEntry(Used: VetoInformation(1-Z: OrderInformation(2,zwei)), 111, WaitingOrder()), V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(2,zwei)), 111, WaitingOrder(123, count=1))}", vm.showVetoCache() );
-    assertEquals("{Z=VetoCacheEntry(Used: VetoInformation(1-Z: OrderInformation(2,zwei)), null), V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(2,zwei)), null)}", vm2.showVetoCache() );
-    assertEquals("[VetoInformation(1-Z: OrderInformation(2,zwei)), VetoInformation(1-V: OrderInformation(2,zwei))]", vm.listVetos().toString());
-    assertEquals("[VetoInformation(1-Z: OrderInformation(2,zwei)), VetoInformation(1-V: OrderInformation(2,zwei))]", vm2.listVetos().toString());
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(2,zwei)), 111, WaitingOrder(123, count=1)), Z=VetoCacheEntry(Used: VetoInformation(1-Z: allocated exclusive to OrderInformation(2,zwei)), 111, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(2,zwei)), null), Z=VetoCacheEntry(Used: VetoInformation(1-Z: allocated exclusive to OrderInformation(2,zwei)), null)}", vm2.showVetoCache() );
+    assertEquals("[VetoInformation(1-V: allocated exclusive to OrderInformation(2,zwei)), VetoInformation(1-Z: allocated exclusive to OrderInformation(2,zwei))]", vm.showVetos());
+    assertEquals("[VetoInformation(1-V: allocated exclusive to OrderInformation(2,zwei)), VetoInformation(1-Z: allocated exclusive to OrderInformation(2,zwei))]", vm2.showVetos());
         
     assertTrue( vm.freeVetos(to2) );
-     sleep(50);
+    sleep(50);
     assertEquals("{V=VetoCacheEntry(Local: V, 123, WaitingOrder())}", vm.showVetoCache() );
     assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache() );
     assertEquals( "[]", vm.listVetos().toString() );
@@ -880,7 +905,7 @@ public class VetoCacheClusterTest extends TestCase {
     ClusteredVM.cluster(vm, vm2);
     assertEquals("started, clustered, persistent(0 entries)", vm.showInformation());
     assertEquals("started, clustered, persistent(0 entries)", vm2.showInformation());
-    assertEquals( "[]", vm.listVetos().toString());
+    assertEquals( "[]", vm.showVetos());
    
     TestOrder to1 = new TestOrder(1, "eins").vetos("V").urgency(123);
     TestOrder to2 = new TestOrder(2, "zwei").vetos("V").urgency(123);
@@ -892,52 +917,32 @@ public class VetoCacheClusterTest extends TestCase {
     
     vm.schedule(37, to1, to2);
     sleep(50);
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder(123, count=1))}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
-    assertEquals("[VetoInformation(1-V: OrderInformation(1,eins))]", vm.listVetos().toString());
-    assertEquals("[VetoInformation(1-V: OrderInformation(1,eins))]", vm2.listVetos().toString());
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder(123, count=1))}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("[VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins))]", vm.showVetos());
+    assertEquals("[VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins))]", vm2.showVetos());
     
     assertTrue( vm.freeVetos(to1) );
     sleep(50);
     assertEquals("{V=VetoCacheEntry(Local: V, 123, WaitingOrder())}", vm.showVetoCache() );
     assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache() );
-    assertEquals("[]", vm.listVetos().toString());
-    assertEquals("[]", vm2.listVetos().toString());
+    assertEquals("[]", vm.showVetos());
+    assertEquals("[]", vm2.showVetos());
        
     
     vm.schedule(38, to2);
     sleep(50);
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(2,zwei)), 123, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(2,zwei)), null)}", vm2.showVetoCache() );
-    assertEquals("[VetoInformation(1-V: OrderInformation(2,zwei))]", vm.listVetos().toString());
-    assertEquals("[VetoInformation(1-V: OrderInformation(2,zwei))]", vm2.listVetos().toString());
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(2,zwei)), 123, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(2,zwei)), null)}", vm2.showVetoCache() );
+    assertEquals("[VetoInformation(1-V: allocated exclusive to OrderInformation(2,zwei))]", vm.showVetos());
+    assertEquals("[VetoInformation(1-V: allocated exclusive to OrderInformation(2,zwei))]", vm2.showVetos());
     
     assertTrue( vm.freeVetos(to2) );
     sleep(50);
     assertCleaned(vm, vm2);
   }
 
-  
-  
-  
-  
-  
-  
-  
- 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
   public void testStepped_Conflict() throws XynaException {
     final ClusteredVM vm = new ClusteredVM(1,false, true);
     final ClusteredVM vm2 = new ClusteredVM(2,false, true);
@@ -994,7 +999,7 @@ public class VetoCacheClusterTest extends TestCase {
     
     logger.debug("Step 6"); //Knoten 1 belegt Veto nun
     vm.schedule(24, to1);
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
     assertEquals("{V=VetoCacheEntry(Remote: V, 37, WaitingOrder(37, count=1))}", vm2.showVetoCache() );
     assertEquals("[V]-P[]-0", vm.showVetoQueue() );
     assertEquals("[]-P[]-0", vm2.showVetoQueue() );
@@ -1003,67 +1008,67 @@ public class VetoCacheClusterTest extends TestCase {
     if( ! fastFree ) {
 
       vm.executeVetoCacheProcessor();
-      assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
       assertEquals("{V=VetoCacheEntry(Remote: V, 37, WaitingOrder(37, count=1))}", vm2.showVetoCache() );
-      assertEquals("[]-P[f=[],s=[VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder())]]-1", vm.showVetoQueue() );
+      assertEquals("[]-P[f=[],s=[VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())]]-1", vm.showVetoQueue() );
       assertEquals("[]-P[]-0", vm2.showVetoQueue() );
 
       assertEquals("VetoResponse(1,[SUCCESS(V)])", vm.executeRemoteRequests(true) );
-      assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
-      assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(1,eins)), 37, WaitingOrder(37, count=1))}", vm2.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 37, WaitingOrder(37, count=1))}", vm2.showVetoCache() );
       assertEquals("[]-P[]-0", vm.showVetoQueue() );
       assertEquals("[V]-P[]-0", vm2.showVetoQueue() );
 
       vm2.executeVetoCacheProcessor();
-      assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
-      assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(1,eins)), 37, WaitingOrder(37, count=1))}", vm2.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 37, WaitingOrder(37, count=1))}", vm2.showVetoCache() );
       assertEquals("[]-P[]-0", vm.showVetoQueue() );
-      assertEquals("[]-P[f=[],s=[VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(1,eins)), 37, WaitingOrder(37, count=1))]]-0", vm2.showVetoQueue() );
+      assertEquals("[]-P[f=[],s=[VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 37, WaitingOrder(37, count=1))]]-0", vm2.showVetoQueue() );
 
       assertEquals( "none", vm2.executeRemoteRequests(true) );
-      assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
-      assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 37, WaitingOrder(37, count=1))}", vm2.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 37, WaitingOrder(37, count=1))}", vm2.showVetoCache() );
       assertEquals("[]-P[]-0", vm.showVetoQueue() );
       assertEquals("[]-P[]-0", vm2.showVetoQueue() );
 
       logger.debug("Step 7");
       vm.freeVetos(to1);
-      assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), WaitingOrder())}", vm.showVetoCache() );
-      assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 37, WaitingOrder(37, count=1))}", vm2.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: unallocated), WaitingOrder())}", vm.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 37, WaitingOrder(37, count=1))}", vm2.showVetoCache() );
       assertEquals("[V]-P[]-0", vm.showVetoQueue() );
       assertEquals("[]-P[]-0", vm2.showVetoQueue() );
 
       logger.debug("Step 8");  //Free durchführen
       vm.executeVetoCacheProcessor();
-      assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), WaitingOrder())}", vm.showVetoCache() );
-      assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 37, WaitingOrder(37, count=1))}", vm2.showVetoCache() );
-      assertEquals("[]-P[f=[VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), WaitingOrder())],s=[]]-1", vm.showVetoQueue() );
+      assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: unallocated), WaitingOrder())}", vm.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 37, WaitingOrder(37, count=1))}", vm2.showVetoCache() );
+      assertEquals("[]-P[f=[VetoCacheEntry(Free: VetoInformation(1-V: unallocated), WaitingOrder())],s=[]]-1", vm.showVetoQueue() );
       assertEquals("[]-P[]-0", vm2.showVetoQueue() );
 
       assertEquals("VetoResponse(2,[SUCCESS(V)])", vm.executeRemoteRequests(true) );
       assertEquals("{V=VetoCacheEntry(Comparing: V, WaitingOrder())}", vm.showVetoCache() );
-      assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), WaitingOrder(37, count=1))}", vm2.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Free: V, WaitingOrder(37, count=1))}", vm2.showVetoCache() );
       assertEquals("[]-P[]-1", vm.showVetoQueue() );
       assertEquals("[V]-P[]-0", vm2.showVetoQueue() );
 
       assertEquals("VetoResponse(3,[IN_USE(V,Free)])", vm.executeRemoteRequests(true) );
       assertEquals("{V=VetoCacheEntry(Compare: V, WaitingOrder())}", vm.showVetoCache() );
-      assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), WaitingOrder(37, count=1))}", vm2.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Free: V, WaitingOrder(37, count=1))}", vm2.showVetoCache() );
       assertEquals("[V]-P[]-0", vm.showVetoQueue() );
       assertEquals("[V]-P[]-0", vm2.showVetoQueue() );
 
       vm.executeVetoCacheProcessor();
       assertEquals("{V=VetoCacheEntry(Comparing: V, WaitingOrder())}", vm.showVetoCache() );
-      assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), WaitingOrder(37, count=1))}", vm2.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Free: V, WaitingOrder(37, count=1))}", vm2.showVetoCache() );
       assertEquals("[]-P[]-1", vm.showVetoQueue() );
       assertEquals("[V]-P[]-0", vm2.showVetoQueue() );
       //bleibt bei VetoResponse(?,[IN_USE(V,Free)])
 
       vm2.executeVetoCacheProcessor();
       assertEquals("{V=VetoCacheEntry(Comparing: V, WaitingOrder())}", vm.showVetoCache() );
-      assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), WaitingOrder(37, count=1))}", vm2.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Free: V, WaitingOrder(37, count=1))}", vm2.showVetoCache() );
       assertEquals("[]-P[]-1", vm.showVetoQueue() );
-      assertEquals("[]-P[f=[VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), WaitingOrder(37, count=1))],s=[]]-0", vm2.showVetoQueue() );
+      assertEquals("[]-P[f=[VetoCacheEntry(Free: V, WaitingOrder(37, count=1))],s=[]]-0", vm2.showVetoQueue() );
 
       assertEquals("none", vm2.executeRemoteRequests(true) );
       assertEquals("{V=VetoCacheEntry(Comparing: V, WaitingOrder())}", vm.showVetoCache() );
@@ -1083,16 +1088,16 @@ public class VetoCacheClusterTest extends TestCase {
       logger.debug("Step 7");  //zu schnelles Free
       vm.freeVetos(to1);
       vm2.schedule(25);  //TODO kann leider WaitingOrder(...) nicht entfernen, da remote
-      assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), WaitingOrder())}", vm.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), WaitingOrder())}", vm.showVetoCache() );
       assertEquals("{V=VetoCacheEntry(Remote: V, 37, WaitingOrder(37, count=1))}", vm2.showVetoCache() );
       assertEquals("[V, V]-P[]-0", vm.showVetoQueue() );
       assertEquals("[]-P[]-0", vm2.showVetoQueue() );
 
       logger.debug("Step 8");  //Free durchführen
       vm.executeVetoCacheProcessor();
-      assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), WaitingOrder())}", vm.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), WaitingOrder())}", vm.showVetoCache() );
       assertEquals("{V=VetoCacheEntry(Remote: V, 37, WaitingOrder(37, count=1))}", vm2.showVetoCache() );
-      assertEquals("[]-P[f=[VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), WaitingOrder()), VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), WaitingOrder())],s=[]]-1", vm.showVetoQueue() );
+      assertEquals("[]-P[f=[VetoCacheEntry(Free: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), WaitingOrder()), VetoCacheEntry(Free: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), WaitingOrder())],s=[]]-1", vm.showVetoQueue() );
       assertEquals("[]-P[]-0", vm2.showVetoQueue() );
 
       assertEquals("VetoResponse(1,[SUCCESS(V)])", vm.executeRemoteRequests(true) );
@@ -1147,7 +1152,7 @@ public class VetoCacheClusterTest extends TestCase {
     final StringBuffer sb = new StringBuffer();
 
 
-    final AdministrativeVeto av = new AdministrativeVeto("V", "test");
+    final AdministrativeVeto av = new AdministrativeVeto("V", "test", System.currentTimeMillis());
     final TestOrder to1 = new TestOrder(1, "eins").vetos("V").urgency(123);
     final CountDownLatch cdl = new CountDownLatch(1);
     Thread t2 = new Thread(new Runnable() {
@@ -1216,7 +1221,8 @@ public class VetoCacheClusterTest extends TestCase {
     if( admin ) {
       logger.debug("Step 3 a: free admin veto");
       vm2.freeAdministrativeVeto(av);
-      sleep(30);
+      waitForVetoState(vm2, VetoCache.State.Local);
+      waitForVetoState(vm, VetoCache.State.Remote);
       //assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm.showVetoCache() );
       assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm.showVetoCache() );
       //assertEquals("{}", vm.showVetoCache() );
@@ -1226,10 +1232,10 @@ public class VetoCacheClusterTest extends TestCase {
     
     logger.debug("Step 4: schedule order");
     vm2.schedule(12, to1);
-    sleep(10);
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(1,eins)), null)}", vm.showVetoCache() );
-    //assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm2.showVetoCache() );
+    waitForVetoState(vm2, VetoCache.State.Used);
+    waitForVetoState(vm, VetoCache.State.Used);
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm2.showVetoCache() );
 
     vm2.freeVetos(to1);
     
@@ -1239,11 +1245,17 @@ public class VetoCacheClusterTest extends TestCase {
 
   
   public void testStepped_AdminVeto_Order_Concurrent2() throws XynaException {
+    for (int variant = 0; variant < 4; variant++) {
+      runStepped_AdminVeto_Order_Concurrent2(variant);
+    }
+  }
+
+  private void runStepped_AdminVeto_Order_Concurrent2(int variant) throws XynaException {
     final ClusteredVM vm = new ClusteredVM(1,false, true);
     final ClusteredVM vm2 = new ClusteredVM(2,false, true);
     ClusteredVM.cluster(vm,vm2);
     
-    AdministrativeVeto av = new AdministrativeVeto("V", "test");
+    AdministrativeVeto av = new AdministrativeVeto("V", "test", System.currentTimeMillis());
     TestOrder to1 = new TestOrder(1, "eins").vetos("V").urgency(123);
     
     
@@ -1257,7 +1269,6 @@ public class VetoCacheClusterTest extends TestCase {
     assertEquals("[V]-P[]-0", vm2.showVetoQueue() );
 
     logger.debug("Step 2"); //Gleichzeitiges oder versetztes Laufen von executeVetoCacheProcessor
-    int variant = (int)(Math.random()*4);
     boolean node1First = true;
     
     logger.info("variant = "+variant);
@@ -1427,7 +1438,7 @@ public class VetoCacheClusterTest extends TestCase {
    
     assertEquals("VetoResponse(?,[SUCCESS(V)])", vm.executeRemoteRequests(false) );
     assertEquals("{V=VetoCacheEntry(Comparing: V, null)}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(V: test), WaitingOrder(123, count=1))}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: V, WaitingOrder(123, count=1))}", vm2.showVetoCache() );
     assertEquals("[]-P[]-1", vm.showVetoQueue() );
     assertEquals("[V]-P[]-0", vm2.showVetoQueue() );
     assertEquals("{}", vm.showVetoPersistence() );
@@ -1435,13 +1446,13 @@ public class VetoCacheClusterTest extends TestCase {
 
     vm2.executeVetoCacheProcessor();
     assertEquals("{V=VetoCacheEntry(Comparing: V, null)}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(V: test), WaitingOrder(123, count=1))}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: V, WaitingOrder(123, count=1))}", vm2.showVetoCache() );
     assertEquals("[]-P[]-1", vm.showVetoQueue() );
-    assertEquals("[]-P[f=[VetoCacheEntry(Free: VetoInformation(V: test), WaitingOrder(123, count=1))],s=[]]-1", vm2.showVetoQueue() );
+    assertEquals("[]-P[f=[VetoCacheEntry(Free: V, WaitingOrder(123, count=1))],s=[]]-0", vm2.showVetoQueue() );
     assertEquals("{}", vm.showVetoPersistence() );
     assertEquals("{V=VetoCacheEntry(Used: VetoInformation(V: test), null)}", vm2.showVetoPersistence() );
 
-    assertEquals("VetoResponse(?,[SUCCESS(V)])", vm2.executeRemoteRequests(false) );
+    assertEquals("none", vm2.executeRemoteRequests(false) );
     assertEquals("{V=VetoCacheEntry(Comparing: V, null)}", vm.showVetoCache() );
     assertEquals("{V=VetoCacheEntry(Remote: V, 123, WaitingOrder())}", vm2.showVetoCache() );
     assertEquals("[]-P[]-1", vm.showVetoQueue() );
@@ -1458,71 +1469,71 @@ public class VetoCacheClusterTest extends TestCase {
     logger.debug("Step 4"); //Veto wird verwendet
     vm2.schedule(27, to1);
     assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(2-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm2.showVetoCache() );
     assertEquals("[]-P[]-0", vm.showVetoQueue() );
     assertEquals("[V]-P[]-0", vm2.showVetoQueue() );
     
     vm2.executeVetoCacheProcessor();
     assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(2-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm2.showVetoCache() );
     assertEquals("[]-P[]-0", vm.showVetoQueue() );
-    assertEquals("[]-P[f=[],s=[VetoCacheEntry(Scheduled: VetoInformation(2-V: OrderInformation(1,eins)), 123, WaitingOrder())]]-1", vm2.showVetoQueue() );
+    assertEquals("[]-P[f=[],s=[VetoCacheEntry(Scheduled: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())]]-1", vm2.showVetoQueue() );
    
     assertEquals("VetoResponse(?,[SUCCESS(V)])", vm2.executeRemoteRequests(false) );
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(2-V: OrderInformation(1,eins)), null)}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm2.showVetoCache() );
     assertEquals("[V]-P[]-0", vm.showVetoQueue() );
     assertEquals("[]-P[]-0", vm2.showVetoQueue() );
     assertEquals("{}", vm.showVetoPersistence() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(1,eins)), null)}", vm2.showVetoPersistence() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoPersistence() );
 
     vm.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(2-V: OrderInformation(1,eins)), null)}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm2.showVetoCache() );
-    assertEquals("[]-P[f=[],s=[VetoCacheEntry(Scheduled: VetoInformation(2-V: OrderInformation(1,eins)), null)]]-0", vm.showVetoQueue() );
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm2.showVetoCache() );
+    assertEquals("[]-P[f=[],s=[VetoCacheEntry(Scheduled: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), null)]]-0", vm.showVetoQueue() );
     assertEquals("[]-P[]-0", vm2.showVetoQueue() );
     assertEquals("{}", vm.showVetoPersistence() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(1,eins)), null)}", vm2.showVetoPersistence() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoPersistence() );
 
     assertEquals("none", vm.executeRemoteRequests(false) );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(1,eins)), null)}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm2.showVetoCache() );
     assertEquals("[]-P[]-0", vm.showVetoQueue() );
     assertEquals("[]-P[]-0", vm2.showVetoQueue() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(1,eins)), null)}", vm.showVetoPersistence() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(1,eins)), null)}", vm2.showVetoPersistence() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm.showVetoPersistence() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoPersistence() );
     
     logger.debug("Step 4"); //Veto wird freigeben
     vm2.freeVetos(to1);
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(1,eins)), null)}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(2-V: OrderInformation(1,eins)), WaitingOrder())}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(2-V: unallocated), WaitingOrder())}", vm2.showVetoCache() );
     assertEquals("[]-P[]-0", vm.showVetoQueue() );
     assertEquals("[V]-P[]-0", vm2.showVetoQueue() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(1,eins)), null)}", vm.showVetoPersistence() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(1,eins)), null)}", vm2.showVetoPersistence() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm.showVetoPersistence() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoPersistence() );
    
     vm2.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(1,eins)), null)}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(2-V: OrderInformation(1,eins)), WaitingOrder())}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(2-V: unallocated), WaitingOrder())}", vm2.showVetoCache() );
     assertEquals("[]-P[]-0", vm.showVetoQueue() );
-    assertEquals("[]-P[f=[VetoCacheEntry(Free: VetoInformation(2-V: OrderInformation(1,eins)), WaitingOrder())],s=[]]-1", vm2.showVetoQueue() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(1,eins)), null)}", vm.showVetoPersistence() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(1,eins)), null)}", vm2.showVetoPersistence() );
+    assertEquals("[]-P[f=[VetoCacheEntry(Free: VetoInformation(2-V: unallocated), WaitingOrder())],s=[]]-1", vm2.showVetoQueue() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm.showVetoPersistence() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoPersistence() );
 
     assertEquals("VetoResponse(?,[SUCCESS(V)])", vm2.executeRemoteRequests(false) );
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(2-V: OrderInformation(1,eins)), null)}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: V, null)}", vm.showVetoCache() );
     assertEquals("{V=VetoCacheEntry(Comparing: V, WaitingOrder())}", vm2.showVetoCache() );
     assertEquals("[V]-P[]-0", vm.showVetoQueue() );
     assertEquals("[]-P[]-1", vm2.showVetoQueue() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(1,eins)), null)}", vm.showVetoPersistence() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm.showVetoPersistence() );
     assertEquals("{}", vm2.showVetoPersistence() );
 
     vm.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(2-V: OrderInformation(1,eins)), null)}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: V, null)}", vm.showVetoCache() );
     assertEquals("{V=VetoCacheEntry(Comparing: V, WaitingOrder())}", vm2.showVetoCache() );
-    assertEquals("[]-P[f=[VetoCacheEntry(Free: VetoInformation(2-V: OrderInformation(1,eins)), null)],s=[]]-0", vm.showVetoQueue() );
+    assertEquals("[]-P[f=[VetoCacheEntry(Free: V, null)],s=[]]-0", vm.showVetoQueue() );
     assertEquals("[]-P[]-1", vm2.showVetoQueue() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(1,eins)), null)}", vm.showVetoPersistence() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm.showVetoPersistence() );
     assertEquals("{}", vm2.showVetoPersistence() );
 
     assertEquals("none", vm.executeRemoteRequests(false) );
@@ -1565,25 +1576,25 @@ public class VetoCacheClusterTest extends TestCase {
     //Allocation
     result = vm.allocateVetos(to1);
     assertTrue(result.isAllocated());
-    assertEquals("{V=VetoCacheEntry(Scheduling: VetoInformation(1-V: OrderInformation(1,eins)), 0, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Scheduling: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 0, WaitingOrder())}", vm.showVetoCache() );
     
     vm.finalizeAllocation(to1);
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(1,eins)), 0, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 0, WaitingOrder())}", vm.showVetoCache() );
     
     vetos = vm.listVetos();
-    assertEquals("[VetoInformation(1-V: OrderInformation(1,eins))]", vetos.toString());
+    assertEquals("[VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins))]", vm.showVetos());
     
     //Used
     vm.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 0, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 0, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
     
     vm2.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
     
     //Free
     assertTrue( vm.freeVetos(to1) );
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: unallocated), WaitingOrder())}", vm.showVetoCache() );
     
     vetos = vm.listVetos();
     assertEquals( 0, vetos.size());
@@ -1591,7 +1602,7 @@ public class VetoCacheClusterTest extends TestCase {
     vm.executeVetoCacheProcessor();
     
     assertEquals("{V=VetoCacheEntry(Comparing: V, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: V, null)}", vm2.showVetoCache() );
     
     vm2.executeVetoCacheProcessor();
     assertEquals("{V=VetoCacheEntry(Comparing: V, WaitingOrder())}", vm.showVetoCache() );
@@ -1635,25 +1646,25 @@ public class VetoCacheClusterTest extends TestCase {
     //Allocation
     result = vm.allocateVetos(to1);
     assertTrue(result.isAllocated());
-    assertEquals("{V=VetoCacheEntry(Scheduling: VetoInformation(1-V: OrderInformation(1,eins)), 0, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Scheduling: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 0, WaitingOrder())}", vm.showVetoCache() );
     
     vm.finalizeAllocation(to1);
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(1,eins)), 0, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 0, WaitingOrder())}", vm.showVetoCache() );
     
     vetos = vm.listVetos();
-    assertEquals("[VetoInformation(1-V: OrderInformation(1,eins))]", vetos.toString());
+    assertEquals("[VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins))]", vm.showVetos());
     
     //Used
     //vm.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(1,eins)), 0, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 0, WaitingOrder())}", vm.showVetoCache() );
     assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache() );
     
     //vm2.executeVetoCacheProcessor();
-    //assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    //assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
     
     //Free
     assertTrue( vm.freeVetos(to1) );
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: unallocated), WaitingOrder())}", vm.showVetoCache() );
     assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache() );
     
     vetos = vm.listVetos();
@@ -1698,7 +1709,6 @@ public class VetoCacheClusterTest extends TestCase {
 
   
     vm.executeVetoCacheProcessor();
-    //vm2.executeVetoCacheProcessor();
     ClusteredVM.executeVetoCacheProcessorSimultaneous(vm, vm2); 
     
     assertEquals("{V=VetoCacheEntry(Local: V, 123, WaitingOrder(123, count=1))}", vm.showVetoCache() );
@@ -1725,30 +1735,30 @@ public class VetoCacheClusterTest extends TestCase {
     
     vm2.schedule(12, to2);
     assertEquals("{V=VetoCacheEntry(Remote: V, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(2-V: OrderInformation(2,zwei)), 37, WaitingOrder())}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(2-V: allocated exclusive to OrderInformation(2,zwei)), 37, WaitingOrder())}", vm2.showVetoCache() );
     assertEquals("[]-P[]-0", vm.showVetoQueue() );
     assertEquals("[V]-P[]-0", vm2.showVetoQueue() );
     
     vm2.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(2-V: OrderInformation(2,zwei)), WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(2,zwei)), 37, WaitingOrder())}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(2-V: allocated exclusive to OrderInformation(2,zwei)), WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(2,zwei)), 37, WaitingOrder())}", vm2.showVetoCache() );
     assertEquals("[V]-P[]-0", vm.showVetoQueue() );
     assertEquals("[]-P[]-0", vm2.showVetoQueue() );
     
     vm.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(2,zwei)), WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(2,zwei)), 37, WaitingOrder())}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(2,zwei)), WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(2,zwei)), 37, WaitingOrder())}", vm2.showVetoCache() );
     assertEquals("[]-P[]-0", vm.showVetoQueue() );
     assertEquals("[]-P[]-0", vm2.showVetoQueue() );
     
     vm2.freeVetos(to2);
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(2,zwei)), WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(2-V: OrderInformation(2,zwei)), WaitingOrder())}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(2,zwei)), WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(2-V: unallocated), WaitingOrder())}", vm2.showVetoCache() );
     assertEquals("[]-P[]-0", vm.showVetoQueue() );
     assertEquals("[V]-P[]-0", vm2.showVetoQueue() );
     
     vm2.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(2-V: OrderInformation(2,zwei)), WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: V, WaitingOrder())}", vm.showVetoCache() );
     assertEquals("{V=VetoCacheEntry(Comparing: V, WaitingOrder())}", vm2.showVetoCache() );
     assertEquals("[V]-P[]-0", vm.showVetoQueue() );
     assertEquals("[]-P[]-1", vm2.showVetoQueue() );
@@ -1801,22 +1811,22 @@ public class VetoCacheClusterTest extends TestCase {
       //Allocation
       VetoAllocationResult result = vm.allocateVetos(to1);
       assertTrue(result.isAllocated());
-      assertEquals("{V=VetoCacheEntry(Scheduling: VetoInformation(1-V: OrderInformation(1,eins)), 137, WaitingOrder())}", vm.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Scheduling: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 137, WaitingOrder())}", vm.showVetoCache() );
 
       vm.finalizeAllocation(to1);
-      assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(1,eins)), 137, WaitingOrder())}", vm.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 137, WaitingOrder())}", vm.showVetoCache() );
     }
     
     vetos = vm.listVetos();
-    assertEquals("[VetoInformation(1-V: OrderInformation(1,eins))]", vetos.toString());
+    assertEquals("[VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins))]", vm.showVetos());
     
     //Used
     vm.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 137, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 137, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
     
     vm2.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
     
     
     //Allocation 2
@@ -1824,12 +1834,12 @@ public class VetoCacheClusterTest extends TestCase {
     { //Scheduling 3
       VetoAllocationResult result = vm2.allocateVetos(to2);
       assertFalse(result.isAllocated());
-      assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), WaitingOrder(123, count=1))}", vm2.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), WaitingOrder(123, count=1))}", vm2.showVetoCache() );
     }
     
     //Free
     assertTrue( vm.freeVetos(to1) );
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: unallocated), WaitingOrder())}", vm.showVetoCache() );
     
     vetos = vm.listVetos();
     assertEquals( 0, vetos.size());
@@ -1837,7 +1847,7 @@ public class VetoCacheClusterTest extends TestCase {
     vm.executeVetoCacheProcessor();
     
     assertEquals("{V=VetoCacheEntry(Comparing: V, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), WaitingOrder(123, count=1))}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: V, WaitingOrder(123, count=1))}", vm2.showVetoCache() );
     
     vm2.executeVetoCacheProcessor();
     assertEquals("{V=VetoCacheEntry(Comparing: V, WaitingOrder())}", vm.showVetoCache() );
@@ -1855,38 +1865,38 @@ public class VetoCacheClusterTest extends TestCase {
       //Allocation
       VetoAllocationResult result = vm2.allocateVetos(to2);
       assertTrue(result.isAllocated());
-      assertEquals("{V=VetoCacheEntry(Scheduling: VetoInformation(2-V: OrderInformation(2,zwei)), 123, WaitingOrder())}", vm2.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Scheduling: VetoInformation(2-V: allocated exclusive to OrderInformation(2,zwei)), 123, WaitingOrder())}", vm2.showVetoCache() );
 
       vm2.finalizeAllocation(to2);
-      assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(2-V: OrderInformation(2,zwei)), 123, WaitingOrder())}", vm2.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(2-V: allocated exclusive to OrderInformation(2,zwei)), 123, WaitingOrder())}", vm2.showVetoCache() );
     }
     
     vetos = vm.listVetos();
     assertEquals("[]", vetos.toString());
     vetos = vm2.listVetos();
-    assertEquals("[VetoInformation(2-V: OrderInformation(2,zwei))]", vetos.toString());
+    assertEquals("[VetoInformation(2-V: allocated exclusive to OrderInformation(2,zwei))]", vm2.showVetos());
     
     //Used
     vm2.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(2-V: OrderInformation(2,zwei)), WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(2,zwei)), 123, WaitingOrder())}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(2-V: allocated exclusive to OrderInformation(2,zwei)), WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(2,zwei)), 123, WaitingOrder())}", vm2.showVetoCache() );
     
     vm.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(2,zwei)), WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(2,zwei)), WaitingOrder())}", vm.showVetoCache() );
     
     vetos = vm.listVetos();
-    assertEquals("[VetoInformation(2-V: OrderInformation(2,zwei))]", vetos.toString());
+    assertEquals("[VetoInformation(2-V: allocated exclusive to OrderInformation(2,zwei))]", vm.showVetos());
     
     //Free
     assertTrue( vm2.freeVetos(to2) );
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(2-V: OrderInformation(2,zwei)), WaitingOrder())}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(2-V: unallocated), WaitingOrder())}", vm2.showVetoCache() );
     
     vetos = vm2.listVetos();
     assertEquals( 0, vetos.size());
     
     vm2.executeVetoCacheProcessor();
     
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(2-V: OrderInformation(2,zwei)), WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: V, WaitingOrder())}", vm.showVetoCache() );
     assertEquals("{V=VetoCacheEntry(Comparing: V, WaitingOrder())}", vm2.showVetoCache() );
     
     vm.executeVetoCacheProcessor();
@@ -1910,25 +1920,25 @@ public class VetoCacheClusterTest extends TestCase {
     vm.setUnclustered();
     vm2.setUnclustered();
     
-    assertEquals( "[]", vm.listVetos().toString());
+    assertEquals( "[]", vm.showVetos());
     
     TestOrder to1 = new TestOrder(1, "eins").vetos("V").urgency(123).schedulingUndo();
     
     vm.schedule(23, to1);
     
-    assertEquals("{V=VetoCacheEntry(Usable: VetoInformation(1-V: OrderInformation(1,eins)), 123, null)}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Usable: VetoInformation(1-V: unallocated), 123, null)}", vm.showVetoCache() );
     assertEquals("{}", vm2.showVetoCache() );
     
     if( testUnused ) {
       vm.schedule(24 );
-      assertEquals("{V=VetoCacheEntry(Compare: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Compare: VetoInformation(1-V: unallocated), null)}", vm.showVetoCache() );
       assertEquals("{}", vm2.showVetoCache() );
 
       //nun Clustern
       vm.switchClustered(vm2);
       vm.executeVetoCacheProcessorInOwnThread(20);
       //assertEqualsChoice("[V]-P[]-Init", "[V]-P[]-Replicating", vm.showVetoQueue() );
-      assertEquals("{V=VetoCacheEntry(Compare: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Compare: VetoInformation(1-V: unallocated), null)}", vm.showVetoCache() );
       assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache() );
       
       vm2.executeVetoCacheProcessorInOwnThread(20); //muss Replikation anstossen
@@ -1941,7 +1951,7 @@ public class VetoCacheClusterTest extends TestCase {
       vm.switchClustered(vm2);
       vm.executeVetoCacheProcessorInOwnThread(20);
       assertEquals("[]-P[]-Replicating", vm.showVetoQueue() );
-      assertEquals("{V=VetoCacheEntry(Usable: VetoInformation(1-V: OrderInformation(1,eins)), 123, null)}", vm.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Usable: VetoInformation(1-V: unallocated), 123, null)}", vm.showVetoCache() );
       assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache() );
 
       vm2.executeVetoCacheProcessorInOwnThread(20);
@@ -1949,7 +1959,7 @@ public class VetoCacheClusterTest extends TestCase {
       
       vm.schedule(24 );
 
-      assertEquals("{V=VetoCacheEntry(Unused: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Unused: VetoInformation(1-V: unallocated), null)}", vm.showVetoCache() );
       assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache() );
       vm.executeVetoCacheProcessor();
     }
@@ -1970,18 +1980,18 @@ public class VetoCacheClusterTest extends TestCase {
     vm.setUnclustered();
     vm2.setUnclustered();
     
-    assertEquals( "[]", vm.listVetos().toString());
+    assertEquals( "[]", vm.showVetos());
     
     TestOrder to1 = new TestOrder(1, "eins").vetos("V").urgency(123);
    
     vm.schedule(23, to1);
     
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(1,eins)), 123, null)}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, null)}", vm.showVetoCache() );
     assertEquals("{}", vm2.showVetoCache() );
     
     if( testUsed ) {
       vm.executeVetoCacheProcessor();
-      assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, null)}", vm.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, null)}", vm.showVetoCache() );
       assertEquals("{}", vm2.showVetoCache() );
     }
    
@@ -1989,34 +1999,34 @@ public class VetoCacheClusterTest extends TestCase {
     vm.switchClustered(vm2);
     vm.executeVetoCacheProcessorInOwnThread(20);
     if( testUsed ) {
-      assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, null)}", vm.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, null)}", vm.showVetoCache() );
     } else {
-      assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(1,eins)), 123, null)}", vm.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, null)}", vm.showVetoCache() );
     }
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
     
     vm2.executeVetoCacheProcessorInOwnThread(20);
     if( testUsed ) {
-      assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, null)}", vm.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, null)}", vm.showVetoCache() );
     } else {
-      assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(1,eins)), 123, null)}", vm.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, null)}", vm.showVetoCache() );
     }
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
     
     if( !testUsed ) {
       vm.executeVetoCacheProcessor();
-      assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, null)}", vm.showVetoCache() );
-      assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, null)}", vm.showVetoCache() );
+      assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
     }
     
     
     assertTrue( vm.freeVetos(to1) );
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: unallocated), null)}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
     
     vm.executeVetoCacheProcessor();
     assertEquals("{V=VetoCacheEntry(Comparing: V, null)}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: V, null)}", vm2.showVetoCache() );
 
     vm2.executeVetoCacheProcessor();
     assertEquals("{V=VetoCacheEntry(Comparing: V, null)}", vm.showVetoCache() );
@@ -2037,28 +2047,28 @@ public class VetoCacheClusterTest extends TestCase {
     vm2.setUnclustered();
     
    
-    assertEquals( "[]", vm.listVetos().toString());
+    assertEquals( "[]", vm.showVetos());
     
     TestOrder to1 = new TestOrder(1, "eins").vetos("V").urgency(123);
     
     vm.schedule(23, to1);
     
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(1,eins)), 123, null)}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, null)}", vm.showVetoCache() );
     assertEquals("{}", vm2.showVetoCache() );
     
     vm.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, null)}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, null)}", vm.showVetoCache() );
     assertEquals("{}", vm2.showVetoCache() );
    
     assertTrue( vm.freeVetos(to1) );
     
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: unallocated), null)}", vm.showVetoCache() );
     assertEquals("{}", vm2.showVetoCache() );
     
     //nun Clustern
     vm.switchClustered(vm2);
     vm.executeVetoCacheProcessorInOwnThread(20);
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(1-V: unallocated), null)}", vm.showVetoCache() );
     assertEquals("{}", vm2.showVetoCache() );
     
     vm2.executeVetoCacheProcessorInOwnThread(20);
@@ -2079,7 +2089,7 @@ public class VetoCacheClusterTest extends TestCase {
     ClusteredVM vm2 = new ClusteredVM(2,false);
     ClusteredVM.cluster(vm, vm2);
     
-    assertEquals( "[]", vm.listVetos().toString());
+    assertEquals( "[]", vm.showVetos());
     
     TestOrder to1 = new TestOrder(1, "eins").vetos("V").urgency(123);
    
@@ -2092,48 +2102,48 @@ public class VetoCacheClusterTest extends TestCase {
     assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache() );
     
     vm.schedule(27, to1);
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
     assertEquals("{V=VetoCacheEntry(Remote: V, null)}", vm2.showVetoCache() );
    
     vm.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
    
     vm2.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
    
     //doppeltes Schedulen erzeugt Warnung im Log
     vm.schedule(137, to1);
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
     
     vm.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
    
     
     //Schedulen auf Knoten 2 nach OrderMigration
     vm2.schedule(345, to1);
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(2-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(1-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
    
     vm2.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(2-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Scheduled: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
    
     
     vm.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
    
     //Free
     assertTrue( vm2.freeVetos(to1) );
-    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(2-V: OrderInformation(1,eins)), null)}", vm2.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Used: VetoInformation(2-V: allocated exclusive to OrderInformation(1,eins)), 123, WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(2-V: unallocated), null)}", vm2.showVetoCache() );
     
     vm2.executeVetoCacheProcessor();
-    assertEquals("{V=VetoCacheEntry(Free: VetoInformation(2-V: OrderInformation(1,eins)), WaitingOrder())}", vm.showVetoCache() );
+    assertEquals("{V=VetoCacheEntry(Free: V, WaitingOrder())}", vm.showVetoCache() );
     assertEquals("{V=VetoCacheEntry(Comparing: V, null)}", vm2.showVetoCache() );
     
     vm.executeVetoCacheProcessor();

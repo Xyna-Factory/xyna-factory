@@ -19,6 +19,7 @@
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
+  <Libraries>OasMcpPrimitivesImpl.jar</Libraries>
   <Service Label="Oas Mcp Primitives" TypeName="OasMcpPrimitives">
     <Operation IsStatic="false" Label="Get Tools" Name="getTools">
       <Input/>
