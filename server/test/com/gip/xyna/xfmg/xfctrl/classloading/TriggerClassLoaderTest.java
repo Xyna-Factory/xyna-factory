@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,66 +18,42 @@
 
 package com.gip.xyna.xfmg.xfctrl.classloading;
 
-import java.io.File;
-import java.net.MalformedURLException;
+
+
+import java.io.IOException;
 import java.util.HashMap;
 
 import junit.framework.TestCase;
 
 import com.gip.xyna.utils.exceptions.XynaException;
-import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement;
+
 
 
 public class TriggerClassLoaderTest extends TestCase {
 
 
-  public void testDelegateClassloadingToParent() throws XynaException, MalformedURLException, ClassNotFoundException {
+  public void testDelegateClassloadingToParent() throws XynaException, ClassNotFoundException, IOException {
 
-    String oldSharedLibDir = Constants.SHAREDLIB_BASEDIR;
-    Constants.SHAREDLIB_BASEDIR = "";
+    final String requestedClassName = "test.ParentProvidedClass";
+    final Class<?> expectedClass = HashMap.class;
 
-    try {
+    SharedLibClassLoader sharedLibCl =
+        new SharedLibClassLoader(SharedLibClassLoader.EMPTYSHAREDLIB, VersionManagement.REVISION_WORKINGSET) {
 
-      String sharedLibName = null;
+          @Override
+          protected Class<?> findClass(String name) throws ClassNotFoundException {
+            if (requestedClassName.equals(name)) {
+              return expectedClass;
+            }
+            return super.findClass(name);
+          }
+        };
 
-      File f = new File(Constants.SHAREDLIB_BASEDIR + ".");
-      String[] files = f.list();
-      for (String file : files) {
-        if (new File(file).isDirectory()) {
-          sharedLibName = file;
-          break;
-        }
-      }
-
-      if (sharedLibName == null) {
-        fail("The test requires the existence of an arbitrary subdirectory of '.'");
-      }
-
-      final String sharedLibNameFinal = sharedLibName;
-
-      final Class<?> xyzClass = HashMap.class;
-
-      SharedLibClassLoader sharedLibCl = new SharedLibClassLoader(sharedLibName, VersionManagement.REVISION_WORKINGSET) {
-
-        protected Class<?> findClass(final String name) throws ClassNotFoundException {
-          if (name.equals(sharedLibNameFinal))
-            return xyzClass;
-          return super.findClass(sharedLibNameFinal);
-        }
-
-      };
-
-      String triggerClassName = "triggerClassName";
-      TriggerClassLoader triggerCl = new TriggerClassLoader(triggerClassName, new SharedLibClassLoader[] {sharedLibCl},
-                                                            new String[0], VersionManagement.REVISION_WORKINGSET);
-
-      // Verify that the classloading is correctly delegated to the parents
-      assertEquals("Classes differ", xyzClass, triggerCl.loadClass(sharedLibName));
-
-    }
-    finally {
-      Constants.SHAREDLIB_BASEDIR = oldSharedLibDir;
+    String triggerClassName = "triggerClassName";
+    try (TriggerClassLoader triggerCl = new TriggerClassLoader(triggerClassName, new SharedLibClassLoader[] {sharedLibCl}, new String[0],
+                                                               VersionManagement.REVISION_WORKINGSET)) {
+      assertSame("Classes differ", expectedClass, triggerCl.loadClass(requestedClassName));
     }
 
   }

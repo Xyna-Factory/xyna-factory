@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,12 @@
 
 package com.gip.xyna.xfmg.xfctrl.classloading;
 
-import java.io.File;
-import java.net.MalformedURLException;
+import static com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderTestUtils.expectReload;
+
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -31,70 +32,15 @@ import org.easymock.classextension.EasyMock;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.XynaFactoryBase;
 import com.gip.xyna.utils.exceptions.XynaException;
-import com.gip.xyna.utils.misc.DataRangeCollection;
-import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
-import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.DeploymentTask;
-import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.XynaFactoryManagementBase;
 import com.gip.xyna.xfmg.xfctrl.XynaFactoryControl;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase.ClassLoaderSwitcher;
 import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement;
-import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
+
 
 
 public class MDMClassLoaderTest extends TestCase {
-
-  private static class MyXO extends XynaObject implements DeploymentTask {
-
-
-    private static final long serialVersionUID = 1L;
-    private static boolean deployed = false;
-
-    @Override
-    public XynaObject clone() {
-      return null;
-    }
-
-    public Object get(String path) throws InvalidObjectPathException {
-      return null;
-    }
-
-    public void set(String name, Object value) {
-    }
-
-    @Override
-    public String toXml(String varName, boolean onlyContent) {
-      return null;
-    }
-
-    public void onDeployment() {
-      if (deployed) {
-        throw new RuntimeException();
-      }
-      deployed = true;
-    }
-
-    public void onUndeployment() {
-      if (!deployed) {
-        throw new RuntimeException();
-      }
-      deployed = false;
-    }
-
-    public String toXml(String varName, boolean onlyContent, long version, XMLReferenceCache cache) {
-      return null;
-    }
-
-    public boolean supportsObjectVersioning() {
-      return false;
-    }
-
-    public void collectChanges(long start, long end, IdentityHashMap<GeneralXynaObject, DataRangeCollection> changeSetsOfMembers,
-                               Set<Long> datapoints) {
-    }
-  }
-  
 
   /**
    * This method tests that filters and workflows are reloaded if they use an MDM object whose classloader is told to
@@ -102,55 +48,67 @@ public class MDMClassLoaderTest extends TestCase {
    * 
    * @throws ClassNotFoundException
    * @throws XynaException
-   * @throws MalformedURLException
+   * @throws IOException
    */
   @SuppressWarnings("unchecked")
-  public void testLoadMDMandCreateDependencies() throws ClassNotFoundException, XynaException, MalformedURLException {
+  public void testLoadMDMandCreateDependencies() throws ClassNotFoundException, XynaException, IOException {
 
-    MDMClassLoader mdmCl = null;
-    WFClassLoader wfCl = null;
-    FilterClassLoader filterCl = null;
-    TriggerClassLoader triggerCl = null;
-
-    final String mdmClassname = "mdmClassName";
+    final String mdmClassname = MDMClassLoaderTestObject.class.getName();
+    final byte[] classBytes;
+    try (InputStream input = MDMClassLoaderTestObject.class.getResourceAsStream("MDMClassLoaderTestObject.class")) {
+      assertNotNull("Missing MDM test fixture bytecode", input);
+      classBytes = input.readAllBytes();
+    }
     String wfClassname = "wfClassName";
     String filterClassname = "filterClassname";
     String triggerClassname = "triggerClassname";
 
-    SharedLibClassLoader empty = new SharedLibClassLoader(SharedLibClassLoader.EMPTYSHAREDLIB, VersionManagement.REVISION_WORKINGSET);
-    wfCl = new WFClassLoader(wfClassname, "", wfClassname, VersionManagement.REVISION_WORKINGSET);
-    triggerCl = new TriggerClassLoader(triggerClassname, new SharedLibClassLoader[] {empty}, new String[0], VersionManagement.REVISION_WORKINGSET);
-    filterCl = new FilterClassLoader(filterClassname, triggerCl,
-                                     new SharedLibClassLoader[] {empty}, triggerClassname, VersionManagement.REVISION_WORKINGSET);
+    // Hide the classpath fixture from parents so only the MDM loader can define it.
+    final SharedLibClassLoader empty =
+        new SharedLibClassLoader(SharedLibClassLoader.EMPTYSHAREDLIB, VersionManagement.REVISION_WORKINGSET) {
 
-    XynaObject xo = new MyXO();
-    final Class<XynaObject> x = (Class<XynaObject>) xo.getClass();
+          @Override
+          public Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+            if (mdmClassname.equals(name)) {
+              throw new ClassNotFoundException(name);
+            }
+            return super.loadClass(name, resolve);
+          }
+        };
+    final WFClassLoader wfCl = new WFClassLoader(wfClassname, "", wfClassname, VersionManagement.REVISION_WORKINGSET) {
 
-    mdmCl = new MDMClassLoader(mdmClassname, new SharedLibClassLoader[] {empty}, new String[0], "", mdmClassname, VersionManagement.REVISION_WORKINGSET) {
+      @Override
+      protected ClassLoaderBase[] getParents() {
+        return new ClassLoaderBase[] {empty};
+      }
+    };
+    final TriggerClassLoader triggerCl = new TriggerClassLoader(triggerClassname, new SharedLibClassLoader[] {empty}, new String[0], VersionManagement.REVISION_WORKINGSET);
+    final FilterClassLoader filterCl = new FilterClassLoader(filterClassname, triggerCl, new SharedLibClassLoader[] {empty}, triggerClassname, VersionManagement.REVISION_WORKINGSET);
+    final MDMClassLoader mdmCl = new MDMClassLoader(mdmClassname, new SharedLibClassLoader[] {empty}, new String[0], "", mdmClassname, VersionManagement.REVISION_WORKINGSET) {
 
-      protected Class<?> findClass(String s) throws ClassNotFoundException {
-        if (s.equals(mdmClassname))
-          return x;
-        throw new ClassNotFoundException();
+      @Override
+      protected Class<?> findClass(String name) throws ClassNotFoundException {
+        if (mdmClassname.equals(name)) {
+          return defineClass(name, classBytes, 0, classBytes.length);
+        }
+        return super.findClass(name);
       }
 
     };
 
+    final Class<XynaObject> x = (Class<XynaObject>) mdmCl.loadClass(mdmClassname);
+    assertSame("The MDM loader must define the fixture", mdmCl, x.getClassLoader());
+
     // Mock some classes, such as the class loader dispatcher
     ClassLoaderDispatcher cld = EasyMock.createMock(ClassLoaderDispatcher.class);
 
-    EasyMock.expect(cld.loadMDMClass(mdmClassname, false, null, null, VersionManagement.REVISION_WORKINGSET))
-                    .andReturn((Class<XynaObject>) mdmCl.loadClass(mdmClassname)).anyTimes();
-    EasyMock.expect(cld.getMDMClassLoader(mdmClassname, VersionManagement.REVISION_WORKINGSET, EasyMock.isA(boolean.class))).andReturn(mdmCl).anyTimes();
-    EasyMock.expect(cld.getClassLoaderByType(ClassLoaderType.WF, wfClassname, VersionManagement.REVISION_WORKINGSET)).andReturn(wfCl).anyTimes();
-    EasyMock.expect(cld.getClassLoaderByType(ClassLoaderType.MDM, mdmClassname, VersionManagement.REVISION_WORKINGSET)).andReturn(mdmCl).anyTimes();
-    EasyMock.expect(cld.getClassLoaderByType(ClassLoaderType.Filter, filterClassname, VersionManagement.REVISION_WORKINGSET)).andReturn(filterCl).anyTimes();
-    cld.reloadClassLoaderByType(ClassLoaderType.MDM, mdmClassname, VersionManagement.REVISION_WORKINGSET);
-    EasyMock.expectLastCall().times(1);
-    cld.reloadClassLoaderByType(ClassLoaderType.WF, wfClassname, VersionManagement.REVISION_WORKINGSET);
-    EasyMock.expectLastCall().times(1);
-    cld.reloadClassLoaderByType(ClassLoaderType.Filter, filterClassname, VersionManagement.REVISION_WORKINGSET);
-    EasyMock.expectLastCall().times(1);
+    EasyMock.expect(cld.loadMDMClass(mdmClassname, false, null, null, VersionManagement.REVISION_WORKINGSET)).andReturn(x).anyTimes();
+    EasyMock
+        .expect(cld.getMDMClassLoader(EasyMock.eq(mdmClassname), EasyMock.eq(VersionManagement.REVISION_WORKINGSET), EasyMock.anyBoolean()))
+        .andReturn(mdmCl).anyTimes();
+    expectReload(cld, ClassLoaderType.MDM, mdmClassname, mdmCl);
+    expectReload(cld, ClassLoaderType.WF, wfClassname, wfCl);
+    expectReload(cld, ClassLoaderType.Filter, filterClassname, filterCl);
 
     EasyMock.replay(cld);
     ClassLoaderDispatcherFactory.getInstance().setImpl(cld);
@@ -174,71 +132,48 @@ public class MDMClassLoaderTest extends TestCase {
     EasyMock.replay(xf);
     XynaFactory.setInstance(xf);
 
-    Class result1 = wfCl.loadClass(mdmClassname);
-    assertEquals("Loaded class differs from the initial one", x, result1);
+    Class<?> result1 = wfCl.loadClass(mdmClassname);
+    assertSame("Loaded class differs from the initial one", x, result1);
 
-    Class result2 = filterCl.loadClass(mdmClassname);
-    assertEquals("Loaded class differs from the initial one", x, result2);
+    Class<?> result2 = filterCl.loadClass(mdmClassname);
+    assertSame("Loaded class differs from the initial one", x, result2);
 
     mdmCl.reloadDependencies(new ClassLoaderSwitcher() {
 
       public void switchClassLoader() throws XynaException {
       }
-      
+
     });
     EasyMock.verify(xf, xfm, cld);
 
   }
 
 
-  public void testDelegateClassloadingToParent() throws XynaException, MalformedURLException, ClassNotFoundException {
+  public void testDelegateClassloadingToParent() throws XynaException, ClassNotFoundException, IOException {
 
-    String oldSharedLibDir = Constants.SHAREDLIB_BASEDIR;
-    Constants.SHAREDLIB_BASEDIR = "";
+    final String requestedClassName = "test.ParentProvidedClass";
+    final Class<?> expectedClass = HashMap.class;
 
-    try {
+    SharedLibClassLoader sharedLibCl =
+        new SharedLibClassLoader(SharedLibClassLoader.EMPTYSHAREDLIB, VersionManagement.REVISION_WORKINGSET) {
 
-      String sharedLibName = null;
+          @Override
+          protected Class<?> findClass(String name) throws ClassNotFoundException {
+            if (requestedClassName.equals(name)) {
+              return expectedClass;
+            }
+            return super.findClass(name);
+          }
+        };
 
-      File f = new File(Constants.SHAREDLIB_BASEDIR + ".");
-      String[] files = f.list();
-      for (String file : files) {
-        if (new File(file).isDirectory()) {
-          sharedLibName = file;
-          break;
-        }
-      }
-
-      if (sharedLibName == null) {
-        fail("The test requires the existence of an arbitrary subdirectory of '.'");
-      }
-
-      final String sharedLibNameFinal = sharedLibName;
-
-      final Class<?> xyzClass = HashMap.class;
-
-      SharedLibClassLoader sharedLibCl = new SharedLibClassLoader(sharedLibName, VersionManagement.REVISION_WORKINGSET) {
-
-        protected Class<?> findClass(final String name) throws ClassNotFoundException {
-          if (name.equals(sharedLibNameFinal))
-            return xyzClass;
-          return super.findClass(sharedLibNameFinal);
-        }
-
-      };
-
-      String mdmClassName = "mdmClassName";
-      MDMClassLoader mdmCl = new MDMClassLoader(mdmClassName, new SharedLibClassLoader[] {sharedLibCl}, new String[0],
-                                                "", mdmClassName, VersionManagement.REVISION_WORKINGSET);
-
+    String mdmClassName = "mdmClassName";
+    try (MDMClassLoader mdmCl = new MDMClassLoader(mdmClassName, new SharedLibClassLoader[] {sharedLibCl}, new String[0], "", mdmClassName,
+                                                   VersionManagement.REVISION_WORKINGSET)) {
       // Verify that the classloading is correctly delegated to the parents
-      assertEquals("Classes differ", xyzClass, mdmCl.loadClass(sharedLibName));
-
+      assertSame(expectedClass, mdmCl.loadClass(requestedClassName));
+    } catch (IOException e) {
+      throw e;
     }
-    finally {
-      Constants.SHAREDLIB_BASEDIR = oldSharedLibDir;
-    }
-
   }
 
 }
