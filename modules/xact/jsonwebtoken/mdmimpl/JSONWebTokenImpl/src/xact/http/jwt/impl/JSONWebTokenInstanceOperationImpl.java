@@ -223,10 +223,15 @@ public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy im
       .jWTID(claims.getId())
       .notBefore(toAbsoluteDate(claims.getNotBefore()))
       .subject(claims.getSubject());
-    if (claims.getAudience() != null) {
+    Object audience = claims.get("aud");
+    if (audience != null) {
       List<String> list = new ArrayList<>();
-      for (String s : claims.getAudience()) {
-        list.add(s);
+      if (audience instanceof String singleAudience) {
+        list.add(singleAudience);
+      } else if (audience instanceof Set<?>) {
+        for (String s : claims.getAudience()) {
+          list.add(s);
+        }
       }
       builder.audienceArray(list);
     }
