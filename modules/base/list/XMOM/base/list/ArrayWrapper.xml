@@ -1,21 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
- * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
 <DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Array Wrapper" TypeName="ArrayWrapper" TypePath="base.list" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
@@ -176,6 +159,32 @@ throw new RuntimeException("supported lists are all null");</CodeSnippet>
   return new ArrayList&lt;&gt;(doubleArray0.stream().map(i -&gt; i == null ? null : Long.valueOf((long)(double)i)).collect(java.util.stream.Collectors.toList()));
 }
 throw new RuntimeException("lists are all null");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="as String list" Name="asStringList">
+      <Input>
+        <Data ID="65" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text65"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="list" VariableName="list">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <Meta>
+        <Documentation>Transforms a List of base.Text into a String Array.
+The result is saved within the String Array member and can be used for mappings.</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">List&lt;String&gt; resultingStringList = new ArrayList&lt;String&gt;();
+if(text65.size() &gt; 0){
+    for(base.Text text : text65){
+        resultingStringList.add(text.getText());
+    }
+}
+this.setStringArray(resultingStringList);
+return resultingStringList;</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
