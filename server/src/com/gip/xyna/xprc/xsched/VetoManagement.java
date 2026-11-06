@@ -240,6 +240,9 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
 
   @Override
   protected void shutdown() throws XynaException {
+    if (vmAlgorithm instanceof VM_SharedResource) {
+      ((VM_SharedResource) vmAlgorithm).shutdown();
+    }
     XynaFactoryManagementBase fm = XynaFactory.getInstance().getFactoryManagement();
     if (fm != null) {
       XynaStatistics xs = fm.getXynaStatistics();
@@ -442,6 +445,18 @@ public class VetoManagement extends FunctionGroup implements VetoManagementInter
 
 
     private void changeAlgorithm(boolean toSharedResource) {
+      VetoManagementInterface oldAlgorithm = vmAlgorithm;
+      try {
+        changeAlgorithmImpl(toSharedResource);
+      } finally {
+        if (oldAlgorithm != vmAlgorithm && oldAlgorithm instanceof VM_SharedResource) {
+          ((VM_SharedResource) oldAlgorithm).shutdown();
+        }
+      }
+    }
+
+
+    private void changeAlgorithmImpl(boolean toSharedResource) {
       if (toSharedResource) {
         vmAlgorithm = new VM_SharedResource();
         return;
