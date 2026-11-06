@@ -273,6 +273,7 @@ install_gitintegration_libs() {
   cp -r deploy/* $SCRIPT_DIR/build/lib/gitintegration
   cp lib/xyna/mdm.jar $SCRIPT_DIR/build/lib/gitintegration
   cp lib/xyna/servicedefinition.jar $SCRIPT_DIR/build/lib/gitintegration
+  cp lib/xyna/XynaObjectGitIntegrationManagement.jar $SCRIPT_DIR/build/lib/gitintegration
 }
 
 build_prerequisites() {
