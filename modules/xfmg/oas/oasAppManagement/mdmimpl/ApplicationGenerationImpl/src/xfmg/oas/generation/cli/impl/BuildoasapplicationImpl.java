@@ -67,8 +67,13 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
       throw new RuntimeException(errors.toString());
     }
     String oasVersion = GenerateApplicationTool.determineOasBaseVersion(getClass());
+    boolean generateDataCapture = payload.getGenerateDataCaptureOption();
+    boolean generateClient = payload.getBuildClient();
+    String fileMgmtVersion = generateDataCapture && generateClient
+        ? GenerateApplicationTool.determineFileMgmtVersion(getClass()) : "";
 
-    AppGenerationData data = new AppGenerationData(specFile, oasVersion, payload.getGenerateMockOption(), payload.getGenerateDataCaptureOption(), new OasImportStatusHandler());
+    AppGenerationData data = new AppGenerationData(specFile, oasVersion, fileMgmtVersion,
+        payload.getGenerateMockOption(), generateDataCapture, new OasImportStatusHandler());
     createAppAndPrintId(statusOutputStream, "xmom-data-model", target + "_datatypes", "datamodel", data);
     if (payload.getBuildProvider()) {
       createAppAndPrintId(statusOutputStream, "xmom-server", target + "_provider", "provider", data);
