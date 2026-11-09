@@ -431,6 +431,39 @@ public class CapacityManagement extends FunctionGroup
     return result;
   }
   
+  public CapacityAllocationResult prepareCapacityAllocation(OrderInformation orderInformation, SchedulingData schedulingData) {
+    if(logger.isDebugEnabled()) {
+      logger.debug("prepareCapacityAllocation called for " + orderInformation.getOrderId() + " with" 
+                   + " Capacities: " +  schedulingData.getCapacities() 
+                   + " TransferableCapacities: " + schedulingData.getTransferCapacities()
+                   + " MultiCaps: " + schedulingData.getMultiAllocationCapacities());
+    }
+    CapacityAllocationResult result = cmAlgorithm.prepareCapacityAllocation(orderInformation, schedulingData);
+    logAllocationResult("prepareCapacityAllocation", orderInformation, result);
+    return result;
+  }
+
+  public CapacityAllocationResult commitCapacityAllocation(OrderInformation orderInformation, SchedulingData schedulingData) {
+    if(logger.isDebugEnabled()) {
+      logger.debug("commitCapacityAllocation called for " + orderInformation.getOrderId());
+    }
+    CapacityAllocationResult result = cmAlgorithm.commitCapacityAllocation(orderInformation, schedulingData);
+    logAllocationResult("commitCapacityAllocation", orderInformation, result);
+    return result;
+  }
+
+  private void logAllocationResult(String method, OrderInformation orderInformation, CapacityAllocationResult result) {
+    if(logger.isDebugEnabled()) {
+      logger.debug(method + " result for " + orderInformation.getOrderId() + ":"
+      + " allocated " + result.isAllocated()
+      + " demand: " + result.getDemand()
+      + " freeCardinality: " + result.getFreeCardinality()
+      + " exception: " + result.getXynaException()
+      + " orderInstancestatus: " + result.getOrderInstanceStatus()
+      + " Scheduler: " + cache.getCurrentSchedulingRun());
+    }
+  }
+
   public void undoAllocation(OrderInformation orderInformation, SchedulingData schedulingData) {
     if(logger.isDebugEnabled()) {
       logger.debug("undoAllocation called for " + orderInformation.getOrderId() + " with" 

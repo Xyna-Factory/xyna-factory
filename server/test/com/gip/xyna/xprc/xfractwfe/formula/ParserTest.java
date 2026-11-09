@@ -19,7 +19,11 @@ package com.gip.xyna.xprc.xfractwfe.formula;
 
 
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import org.junit.Test;
 
 import com.gip.xyna.xprc.exceptions.XPRC_InvalidVariableIdException;
 import com.gip.xyna.xprc.exceptions.XPRC_InvalidVariableMemberNameException;
@@ -30,7 +34,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.VariableContextIdentification;
 
 
 
-public class ParserTest extends TestCase {
+public class ParserTest {
   
   private VariableContextIdentification helperContext() {
     return new VariableContextIdentification() {
@@ -49,6 +53,7 @@ public class ParserTest extends TestCase {
     };
   }
   
+  @Test
   public void testBug17155() throws XPRC_ParsingModelledExpressionException {
    
     String valid = "((%0%.deviceTypeId.deviceTypeId==\"3\")&&(%0%.currentFirmwareVersion.firmwareVersion==\"03.08.00.S\"))";
@@ -63,17 +68,20 @@ public class ParserTest extends TestCase {
   }
 
 
+  @Test
   public void testMultiply() throws XPRC_ParsingModelledExpressionException {
     String valid = "%3%.x=(%0%.abc*%1%.cde)*%2%.yxy.ds";
     ModelledExpression me = ModelledExpression.parse(helperContext(), valid);
     System.out.println(me);
   }
 
+  @Test
   public void testNew() throws XPRC_ParsingModelledExpressionException {
     String valid = "%1%.base~=new(\"bg.test.xfl.newAndCast.Sub2\")";
     ModelledExpression.parse(helperContext(), valid);
   }
   
+  @Test
   public void testCast2ArgsExpression() throws XPRC_ParsingModelledExpressionException {
     String valid = "%2%.text=concat(\"Network Access Control O\",%0%#cast(\"cl.dhcpbeispiel.SomeData\").deviceData#cast(\"cl.dhcpbeispiel.DeviceData\").mode+\"2\"+%1%#cast(\"cl.dhcpbeispiel.SomeData\").data,\"bject:1\")";
     ModelledExpression me = ModelledExpression.parse(helperContext(), valid);
@@ -83,6 +91,7 @@ public class ParserTest extends TestCase {
   }
   
   
+  @Test
   public void testEmptyExpression() throws XPRC_ParsingModelledExpressionException {
     String valid = "(%4%,)";
     try {
@@ -90,6 +99,42 @@ public class ParserTest extends TestCase {
       fail("expected exception");
     } catch (XPRC_ParsingModelledExpressionException e) {
       
+    }
+  }
+
+  @Test(timeout = 5000)
+  public void testMissingIndexClosingBracket() throws XPRC_ParsingModelledExpressionException {
+    String[] invalidExpressions = {
+        "%1%.text=asxflexpression(%0%.text[\"0\")",
+        "%1%.text=asxflexpression(%0%.text[\"0\"   )",
+        "%1%.text=concat(%0%.text[\"0\", \"suffix\")",
+        "%1%.text=asxflexpression(%0%.text[\"0\"+\"1\")",
+        "%1%.text=asxflexpression(concatlists(%0%.text,%2%.text)[\"0\")",
+        "%1%.text=asxflexpression(%0%.text[\"0\"",
+        "%1%.text=asxflexpression(%0%.text[\"0\"   "
+    };
+    for (String invalid : invalidExpressions) {
+      try {
+        ModelledExpression.parse(helperContext(), invalid);
+        fail("expected parsing exception for " + invalid);
+      } catch (XPRC_ParsingModelledExpressionException e) {
+        assertTrue(e.getPosition() > invalid.indexOf('[') + 1);
+      }
+    }
+  }
+
+  @Test(timeout = 5000)
+  public void testValidIndexExpressions() throws XPRC_ParsingModelledExpressionException {
+    String[] validExpressions = {
+        "%1%.text=asxflexpression(%0%.text[\"0\"])",
+        "%1%.text=asxflexpression(%0%.text[\"0\"   ])",
+        "%1%.text=concat(%0%.text[\"0\"], \"suffix\")",
+        "%1%.text=asxflexpression(%0%.text[\"0\"+\"1\"])",
+        "%1%.text=asxflexpression(concatlists(%0%.text,%2%.text)[\"0\"])",
+        "%1%.text=asxflexpression(%0%.text[%2%.indices[\"0\"]])"
+    };
+    for (String valid : validExpressions) {
+      ModelledExpression.parse(helperContext(), valid);
     }
   }
   
