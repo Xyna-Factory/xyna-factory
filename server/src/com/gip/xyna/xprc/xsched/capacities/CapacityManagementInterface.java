@@ -54,6 +54,28 @@ public interface CapacityManagementInterface {
    * @param schedulingData
    */
   public void undoAllocation(OrderInformation orderInformation, SchedulingData schedulingData);
+
+  /**
+   * Checks at the capacity gate of the scheduler whether the capacities of the order are available.
+   * An implementation may defer the allocation: then a successful result does not reserve anything and
+   * {@link #commitCapacityAllocation(OrderInformation, SchedulingData)} has to be called after all other
+   * scheduling gates have passed and before the order is executed.
+   * An unsuccessful or abandoned attempt is cleaned up with {@link #undoAllocation(OrderInformation, SchedulingData)}.
+   * The default implementation allocates immediately.
+   */
+  public default CapacityAllocationResult prepareCapacityAllocation(OrderInformation orderInformation, SchedulingData schedulingData) {
+    return allocateCapacities(orderInformation, schedulingData);
+  }
+
+  /**
+   * Allocates capacities whose allocation was deferred by {@link #prepareCapacityAllocation(OrderInformation, SchedulingData)}.
+   * Only a successful result allows the order to be executed. After a successful commit,
+   * {@link #undoAllocation(OrderInformation, SchedulingData)} releases the allocation again.
+   * The default implementation has nothing to do because preparation already allocated the capacities.
+   */
+  public default CapacityAllocationResult commitCapacityAllocation(OrderInformation orderInformation, SchedulingData schedulingData) {
+    return CapacityAllocationResult.SUCCESS;
+  }
   
   /**
    * Gibt alle transferierbaren Capacities wieder frei
