@@ -491,7 +491,7 @@ j_start_xynafactory () {
 
   if [[ "x${DEBUG}" == "xtrue" ]]; then
     if [[ "x${VERBOSE}" == "xtrue" ]]; then message_ok "Debug port ${DEBUG_SERVER_PORT} enabled."; fi
-    DEBUG_OPTIONS="-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:${DEBUG_SERVER_PORT} -Xdebug -Xnoagent -Djava.compiler=NONE";
+    DEBUG_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${DEBUG_SERVER_PORT}"
   fi
 
   # ssl parameter -Djavax.net.ssl.trustStore=cacerts -Djavax.net.ssl.keyStore=cacerts -Djavax.net.ssl.keyStorePassword=changeit -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.debug=all
