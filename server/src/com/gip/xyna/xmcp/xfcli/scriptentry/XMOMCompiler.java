@@ -423,7 +423,7 @@ public class XMOMCompiler {
 
   private void scanForApplicationFolders(Path path, Collection<Path> applicationRoot) {
     try (Stream<Path> files = Files.walk(path)) {
-      Collection<Path> apps = files.filter(this::isApplicationRootFolder).collect(Collectors.toList());
+      Collection<Path> apps = files.filter(XMOMCompiler::isApplicationRootFolder).collect(Collectors.toList());
       applicationRoot.addAll(apps);
     } catch (IOException e) {
       throw new RuntimeException(e);
@@ -431,7 +431,7 @@ public class XMOMCompiler {
   }
 
 
-  private boolean isApplicationRootFolder(Path potentialAppRoot) {
+  public static boolean isApplicationRootFolder(Path potentialAppRoot) {
     Path applicationFile = Path.of(potentialAppRoot.toAbsolutePath().toString(), APPLICATION_DESCRIPTION_FILE);
     if (applicationFile.toFile().exists()) {
       Path xmomFolder = Path.of(potentialAppRoot.toAbsolutePath().toString(), XMOM_FOLDER);
@@ -493,7 +493,7 @@ public class XMOMCompiler {
   }
 
 
-  private static ApplicationXmlEntry readApplicationXml(Path applicationRoot) {
+  public static ApplicationXmlEntry readApplicationXml(Path applicationRoot) {
     Path applicationFile = Path.of(applicationRoot.toAbsolutePath().toString(), APPLICATION_DESCRIPTION_FILE);
     ApplicationXmlHandler handler = new ApplicationXmlHandler();
     try {
