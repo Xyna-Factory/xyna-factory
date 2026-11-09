@@ -1852,10 +1852,10 @@ public class Updater implements UpdaterInterface {
       ud.addFollowingBranchVersionsAsAllowedForUpdate(2); //10.x.x.x darf hier drauf updaten
       updates.add(ud);
 
-      // 11.1.0.0
-      Version v481 = new Version(v480).increaseToMajorVersion(2, 1);
+      // 11.0.1.0
+      Version v481 = new Version(v480).increaseToMajorVersion(3, 1);
       ud = new UpdateJustVersion(v480, v481);
-      ud.addFollowingBranchVersionsAsAllowedForUpdate(3); //11.0.x.x darf hier drauf updaten
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //11.0.0.x darf hier drauf updaten
       updates.add(ud);
 
 
