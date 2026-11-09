@@ -48,6 +48,7 @@ public class OASApplicationGeneration {
               + "<Generation Target (\"datamodel\", \"client\", \"provider\", \"all\")> "
               + "<Target directory (where generated application files will be placed)> "
               + "--oasVersion <oas-base-version> "
+              + "[--fileMgmtVersion <filemgmt-version>] "
               + "[--generateMock] [--generateDataCapture]");
       System.exit(2);
     }
@@ -59,6 +60,7 @@ public class OASApplicationGeneration {
     boolean generateMock = false;
     boolean generateDataCapture = false;
     String oasVersion = "";
+    String fileMgmtVersion = "";
 
     for (int i = 3; i < args.length; i++) {
       switch (args[i]) {
@@ -75,6 +77,13 @@ public class OASApplicationGeneration {
           }
           oasVersion = args[++i];
           break;
+        case "--fileMgmtVersion" :
+          if (i + 1 >= args.length || args[i + 1].startsWith("--")) {
+            System.out.println("Missing value for option: --fileMgmtVersion");
+            System.exit(2);
+          }
+          fileMgmtVersion = args[++i];
+          break;
         default :
           System.out.println("Unknown option: " + args[i]);
           System.exit(2);
@@ -85,13 +94,19 @@ public class OASApplicationGeneration {
       System.out.println("--oasVersion required");
       System.exit(3);
     }
+    boolean generatesClient = generationTarget.equals("client") || generationTarget.equals("all");
+    if (generateDataCapture && generatesClient && fileMgmtVersion.isBlank()) {
+      System.out.println("--fileMgmtVersion required when generating a client with --generateDataCapture");
+      System.exit(3);
+    }
 
     if (!Files.exists(Path.of(target)) || !Files.isDirectory(Path.of(target))) {
       System.out.println("Target parameter must be an existing directory");
       System.exit(4);
     }
 
-    AppGenerationData data = new AppGenerationData(yaml, oasVersion, generateMock, generateDataCapture, new OasImportStatusHandler());
+    AppGenerationData data = new AppGenerationData(yaml, oasVersion, fileMgmtVersion,
+        generateMock, generateDataCapture, new OasImportStatusHandler());
     
     switch (generationTarget) {
       case "all" :
