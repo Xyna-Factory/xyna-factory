@@ -60,12 +60,20 @@ public abstract class TryScheduleAbstract implements TrySchedule {
     
   private Execution termination = new BackupGate( new Schedule() );
   
+  /**
+   * true, if CapacityAllocation has only prepared the capacity allocation of the current order. 
+   * Schedule then has to commit the allocation before the order is started.
+   * Only used by the scheduler thread, like the fields of the Executions.
+   */
+  private boolean capacityCommitPending;
+  
   
   TryScheduleAbstract(XynaScheduler xynaScheduler) {
     this.xynaScheduler = xynaScheduler;
   }
 
   protected TryScheduleResult tryScheduleInternal(SchedulingOrder so) {
+    capacityCommitPending = false;
     if( so.getSchedulingData() == null ) {
       so.terminate(new XPRC_Scheduler_SchedulerBeanMissingException());
     }
@@ -241,9 +249,10 @@ public abstract class TryScheduleAbstract implements TrySchedule {
 
     @Override
     protected TryScheduleResult execute(SchedulingOrder so) {
+      capacityCommitPending = false;
       needsCapacities = so.getSchedulingData().isNeedsToAcquireCapacitiesOnNextScheduling(); //TODO nötig?
       if( needsCapacities ) { 
-        CapacityAllocationResult car = xynaScheduler.getCapacityManagement().allocateCapacities(so.getOrderInformation(), so.getSchedulingData() );
+        CapacityAllocationResult car = xynaScheduler.getCapacityManagement().prepareCapacityAllocation(so.getOrderInformation(), so.getSchedulingData() );
         if (! car.isAllocated()) {
           if( car.getXynaException() != null ) {
             so.terminate(car.getXynaException());
@@ -251,12 +260,14 @@ public abstract class TryScheduleAbstract implements TrySchedule {
           }
           return TryScheduleResult.getCapacityNotAvailableInstance(car);
         }
+        capacityCommitPending = true;
       }
       return null;
     }
 
     @Override
     protected void undo(SchedulingOrder so) {
+      capacityCommitPending = false;
       if( needsCapacities ) { 
         if( logger.isDebugEnabled() ) {
           logger.debug( "undo CapacityAllocation for xynaOrder "+so.getOrderId());
@@ -351,6 +362,18 @@ public abstract class TryScheduleAbstract implements TrySchedule {
     }
 
     private TryScheduleResult startOrder(SchedulingOrder so) {
+      if (capacityCommitPending) {
+        //Capacities müssen vor BatchProcessMaster-Behandlung alloziert sein, da diese ohne Undo enden kann
+        capacityCommitPending = false;
+        CapacityAllocationResult car = xynaScheduler.getCapacityManagement().commitCapacityAllocation(so.getOrderInformation(), so.getSchedulingData());
+        if (! car.isAllocated()) {
+          if( car.getXynaException() != null ) {
+            so.terminate(car.getXynaException());
+            return terminateOrder(so);
+          }
+          return TryScheduleResult.getCapacityNotAvailableInstance(car);
+        }
+      }
       //Behandlung der BatchProcessMaster
       BatchProcessMarker marker = so.getBatchProcessMarker();
       if (marker != null) {

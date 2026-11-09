@@ -626,6 +626,7 @@ public class MigrateRuntimeContext {
         allOrdersList.deploymentFinished(orderId);
       } catch (Throwable t) {
         allOrdersList.removeOrder(orderId);
+        freeVetosOfAbortedOrder(orderId);
         context.addAbortedOrderId(ActiveOrderType.ORDER, orderId);
       }
     }
@@ -786,7 +787,21 @@ public class MigrateRuntimeContext {
                                              xose.getOrderContext());
         }
       }
+      freeVetosOfAbortedOrder(id);
       context.addAbortedOrderId(ActiveOrderType.ORDER, id);
+    }
+  }
+
+
+  /**
+   * Aborted orders do not run through cleanup. Vetos may have been allocated for them while waiting in the scheduler
+   * (e.g. by the asynchronous allocation of VM_SharedResource), so they have to be freed here.
+   */
+  private static void freeVetosOfAbortedOrder(long orderId) {
+    try {
+      XynaFactory.getInstance().getProcessing().getXynaScheduler().getVetoManagement().forceFreeVetos(orderId);
+    } catch (RuntimeException e) {
+      logger.warn("Could not free vetos of aborted order " + orderId, e);
     }
   }
 
