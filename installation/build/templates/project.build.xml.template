@@ -60,5 +60,9 @@
         </ant>
     </target>
 
+    <target name="update-rtc-references-in-workspace-xml" description="update runtime context references in workspace-xml to the current application versions">
+        <update-rtc-references-in-workspace-xml paths="&quot;${root.dir}&quot; &quot;${basedir}/${rtc.path}&quot;" />
+    </target>
+
     <import file="${root.dir}/installation/build/projectmacros.xml" />
 </project>
