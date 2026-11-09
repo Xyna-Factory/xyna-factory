@@ -115,8 +115,10 @@ public class GenerateApplicationTool {
 
     boolean generateMock = applicationGenerationParameter1.getGenerateMockOption() == null ? false : applicationGenerationParameter1.getGenerateMockOption();
     boolean generateDataCapture = applicationGenerationParameter1.getGenerateDataCaptureOption() == null ? false : applicationGenerationParameter1.getGenerateDataCaptureOption();
+    boolean generateClient = applicationGenerationParameter1.getGenerateClient();
+    String fileMgmtVersion = generateDataCapture && generateClient ? determineFileMgmtVersion(this.getClass()) : "";
 
-    AppGenerationData appData = new AppGenerationData(specFile, oasBaseVersion, generateMock, generateDataCapture, statusHandler);
+    AppGenerationData appData = new AppGenerationData(specFile, oasBaseVersion, fileMgmtVersion, generateMock, generateDataCapture, statusHandler);
     String workspace = applicationGenerationParameter1.getWorkspaceName();
     statusHandler.setAppType(AppType.DATA_MODEL);
     String targetRtc = createAndImportApplication(correlatedXynaOrder, "xmom-data-model", target + "_datatypes",
@@ -126,7 +128,7 @@ public class GenerateApplicationTool {
       statusHandler.setAppType(AppType.PROVIDER);
       createAndImportApplication(correlatedXynaOrder, "xmom-server", target + "_provider", workspace, appData);
     }
-    if (applicationGenerationParameter1.getGenerateClient()) {
+    if (generateClient) {
       statusHandler.setAppType(AppType.CLIENT);
       createAndImportApplication(correlatedXynaOrder, "xmom-client", target + "_client", workspace, appData);
     }
@@ -216,6 +218,16 @@ public class GenerateApplicationTool {
   }
 
   public static String determineOasBaseVersion(Class<?> c) {
+    return determineApplicationVersion(c, "xmcp.oas.datatype.OASBaseApi", "OAS_Base");
+  }
+
+
+  public static String determineFileMgmtVersion(Class<?> c) {
+    return determineApplicationVersion(c, "xfmg.xfctrl.filemgmt.ManagedFile", "FileMgmt");
+  }
+
+
+  private static String determineApplicationVersion(Class<?> c, String fqName, String applicationName) {
     long oasMgmtRevision = 0l;
     ClassLoader cl = c.getClassLoader();
     if (cl instanceof ClassLoaderBase clbase) {
@@ -225,11 +237,12 @@ public class GenerateApplicationTool {
     }
     try {
       var factoryCtl = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl();
-      long oasBaseRev = factoryCtl.getRuntimeContextDependencyManagement().getRevisionDefiningXMOMObjectOrParent("xmcp.oas.datatype.OASBaseApi", oasMgmtRevision);
-      return XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().getApplication(oasBaseRev).getVersionName();
+      long dependencyRevision = factoryCtl.getRuntimeContextDependencyManagement()
+          .getRevisionDefiningXMOMObjectOrParent(fqName, oasMgmtRevision);
+      return factoryCtl.getRevisionManagement().getApplication(dependencyRevision).getVersionName();
 
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
-      throw new RuntimeException("Could not determine OAS_Base version");
+      throw new RuntimeException("Could not determine " + applicationName + " version", e);
     }
   }
 }

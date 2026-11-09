@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -726,12 +726,15 @@
         <attribute name="target" description="target" />
         <attribute name="version" description="OAS_Base version" />
         <sequential>
+            <xmlproperty file="@{oas.dir}/../../filemgmt/application.xml" prefix="fileMgmt" />
             <java classname="xfmg.oas.offline.OASApplicationGeneration" fork="true" failonerror="true">
                 <arg value="@{yaml}" />
                 <arg value="@{type}" />
                 <arg value="@{target}" />
                 <arg value="--oasVersion" />
                 <arg value="@{version}" />
+                <arg value="--fileMgmtVersion" />
+                <arg value="${fileMgmt.Application(versionName)}" />
                 <classpath>
                     <fileset dir="${root.dir}/installation/build/lib/oas">
                         <include name="*.jar" />
