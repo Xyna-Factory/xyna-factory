@@ -90,7 +90,7 @@ public enum StatusCode {
   
   private HTTPStatusCode newInstance(String reason) {
     try {
-      HTTPStatusCode sc = statusClass.newInstance();
+      HTTPStatusCode sc = statusClass.getConstructor().newInstance();
       sc.unversionedSetCode(code);
       sc.unversionedSetReason(reason);
       return sc;

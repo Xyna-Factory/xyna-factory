@@ -19,6 +19,8 @@ package xact.http.impl;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -59,16 +61,16 @@ public class URLUtils {
   //Pattern p = Pattern.compile("(\\w+)://([\\w\\.]+)(:\\d+)?/.*");
     
     try {
-      URL url = new URL(urlString);
+      URL url = new URI(urlString).toURL();
       return new HttpHost(url.getHost(), url.getPort(), url.getProtocol());
-    } catch (MalformedURLException e) {
+    } catch (MalformedURLException | URISyntaxException e) {
       throw new IllegalArgumentException("Malformed url", e);
     }
   }
 
   public static URLPath parseURLPath(String urlString) {
     try {
-      URL url = new URL(urlString);
+      URL url = new URI(urlString).toURL();
       List<URLPathQuery> queryList = null;
       if( url.getQuery() != null ) {
         queryList = new ArrayList<URLPathQuery>();
@@ -86,7 +88,7 @@ public class URLUtils {
         }
       }
       return new URLPath(url.getPath(), queryList, url.getRef()); 
-    } catch (MalformedURLException e) {
+    } catch (MalformedURLException | URISyntaxException e) {
       throw new IllegalArgumentException("Malformed url", e);
     }
   }
