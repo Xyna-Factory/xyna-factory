@@ -18,7 +18,7 @@
 
 package com.gip.xyna.xfmg.xfctrl.classloading;
 
-
+import static com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderTestUtils.expectReload;
 
 import junit.framework.TestCase;
 
@@ -40,8 +40,7 @@ import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement;
 public class FilterClassLoaderTest extends TestCase {
 
   /**
-   * This method tests that filters and workflows are reloaded if they use an MDM object whose classloader is told to
-   * reload all dependencies
+   * Tests that reloading a trigger does not reload a filter based only on constructor dependencies in reduced mode.
    * 
    * @throws XynaException
    * @throws ClassNotFoundException
@@ -79,12 +78,7 @@ public class FilterClassLoaderTest extends TestCase {
     // Mock some classes, such as the class loader dispatcher
     ClassLoaderDispatcher cld = EasyMock.createMock(ClassLoaderDispatcher.class);
 
-    EasyMock.expect(cld.getClassLoaderByType(ClassLoaderType.Filter, filterClassname, VersionManagement.REVISION_WORKINGSET)).andReturn(filterCl).anyTimes();
-    EasyMock.expect(cld.getClassLoaderByType(ClassLoaderType.Trigger, triggerClassname, VersionManagement.REVISION_WORKINGSET)).andReturn(triggerCl).anyTimes();
-    cld.reloadClassLoaderByType(ClassLoaderType.Trigger, triggerClassname, VersionManagement.REVISION_WORKINGSET);
-    EasyMock.expectLastCall().times(1);
-    cld.reloadClassLoaderByType(ClassLoaderType.Filter, filterClassname, VersionManagement.REVISION_WORKINGSET);
-    EasyMock.expectLastCall().times(1);
+    expectReload(cld, ClassLoaderType.Trigger, triggerClassname, triggerCl);
 
     EasyMock.replay(cld);
     ClassLoaderDispatcherFactory.getInstance().setImpl(cld);
@@ -110,6 +104,8 @@ public class FilterClassLoaderTest extends TestCase {
 
     Class<?> result1 = filterCl.loadClass(triggerConnectionClassname);
     assertEquals("Classes differ", TriggerConnectionPriv.class, result1);
+    assertFalse("Reduced mode must not register the filter solely from construction",
+                triggerCl.getClassLoadersToReloadIfThisClassLoaderIsRecreated().containsKey(ClassLoaderType.Filter));
 
     triggerCl.reloadDependencies(new ClassLoaderSwitcher() {
 
@@ -127,6 +123,8 @@ public class FilterClassLoaderTest extends TestCase {
    * Helper classes
    */
   private class TriggerConnectionPriv extends TriggerConnection {
+
+    private static final long serialVersionUID = 1L;
   }
 
   private class StartParameterPriv implements StartParameter {
