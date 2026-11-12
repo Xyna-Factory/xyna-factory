@@ -70,7 +70,6 @@ import xact.http.enums.httpmethods.POST;
 import xact.http.enums.httpmethods.PUT;
 import xact.http.enums.httpmethods.TRACE;
 import xact.http.enums.statuscode.HTTPStatusCode;
-import xact.http.enums.statuscode.InternalServerError;
 import xact.templates.Document;
 import xact.templates.PlainText;
 
@@ -113,7 +112,7 @@ public class HTTPForwardingFilter extends ConnectionFilter<HTTPTriggerConnection
       tc.readHeader();
       String contentByteLength = tc.getHeader().getProperty("content-length");
       if (!validateContentLength(contentByteLength)) {
-        tc.sendError(HTTPTriggerConnection.HTTP_INTERNALERROR, "Internal Error");
+        tc.sendErrorResponse(HTTPTriggerConnection.HTTP_INTERNALERROR, "Internal Error");
         return FilterResponse.responsibleWithoutXynaorder();
       }
       tc.readPayload(maxContentLengthIfNotSet.get());
@@ -166,9 +165,7 @@ public class HTTPForwardingFilter extends ConnectionFilter<HTTPTriggerConnection
     }
     //fehlerbehandlung
     try {
-      tc.sendError(HTTPTriggerConnection.HTTP_INTERNALERROR, "Internal Error");
-    } catch (InterruptedException e) {
-      //expected
+      tc.sendErrorResponse(HTTPTriggerConnection.HTTP_INTERNALERROR, "Internal Error");
     } catch (Exception e) {
       logger.warn("Could not send http reply.", e);
     }
@@ -184,9 +181,7 @@ public class HTTPForwardingFilter extends ConnectionFilter<HTTPTriggerConnection
       for (XynaException ex : e) {
         logger.debug("Order returned exception", ex);
       }
-      tc.sendError(HTTPTriggerConnection.HTTP_INTERNALERROR, "Internal Error");
-    } catch (InterruptedException ex) {
-      //expected
+      tc.sendErrorResponse(HTTPTriggerConnection.HTTP_INTERNALERROR, "Internal Error");
     } catch (Exception ex) {
       logger.warn("Could not send http reply.", ex);
     }
@@ -208,6 +203,7 @@ public class HTTPForwardingFilter extends ConnectionFilter<HTTPTriggerConnection
    * Called once for each filter instance when it is deployed and again on each classloader change (e.g. when changing corresponding implementation jars).
    * @param triggerInstance trigger instance this filter instance is registered to
    */
+  @SuppressWarnings("rawtypes")
   public void onDeployment(EventListener triggerInstance) {
     super.onDeployment(triggerInstance);
     String triggerInstanceName = triggerInstance.getTriggerInstanceIdentification().getInstanceName();
@@ -225,6 +221,7 @@ public class HTTPForwardingFilter extends ConnectionFilter<HTTPTriggerConnection
    * Called once for each filter instance when it is undeployed and again on each classloader change (e.g. when changing corresponding implementation jars).
    * @param triggerInstance trigger instance this filter instance is registered to
    */
+  @SuppressWarnings("rawtypes")
   public void onUndeployment(EventListener triggerInstance) {
     super.onUndeployment(triggerInstance);
     startParameterMap.remove(triggerInstance);
@@ -322,7 +319,7 @@ public class HTTPForwardingFilter extends ConnectionFilter<HTTPTriggerConnection
         logger.warn("unsupported charset " + charset + ": " + e.getMessage());
         throw new InternalServerErrorException();
       }
-      contentLength = new Long(bytes.length);
+      contentLength = Long.valueOf(bytes.length);
       contentStream = new ByteArrayInputStream(bytes);
     }
     return Pair.of(contentStream, contentLength);
