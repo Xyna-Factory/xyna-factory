@@ -40,15 +40,10 @@
 	<target name="build" depends="resolve,buildXSOR">
 		<delete dir="${basedir}/classes" />
 		<mkdir dir="${basedir}/classes" />
-		<!-- eigtl lib auch mal löschen, aber das geht nicht, weil man dann das xsor.jar löscht...-->
 		<mkdir dir="${basedir}/lib" />
 		<mkdir dir="${target.dir}" />
-<echo message="basedir: ${basedir}" />
-<echo message="target.dir: ${target.dir}" />
-<echo message="ant.version: ${ant.version}" />
-<echo message="java.version: ${java.version}" />
-<echo message="PATH: ${env.PATH}" />
-		<javac debug="on" encoding="iso8859-1" fork="yes" srcdir="${basedir}/src" destdir="${basedir}/classes">
+		<javac debug="on" encoding="iso8859-1" fork="yes" srcdir="${basedir}/src" destdir="${basedir}/classes" includeantruntime="false">
+			<compilerarg line="-proc:none" />
 			<classpath path="${basedir}/classes" />
 			<!-- custom libraries to be specified in template project -->
 			<classpath refid="libraries" />
@@ -71,12 +66,6 @@
 			<fileset dir="${basedir}/classes">
 				<include name="**/*.class" />
 			</fileset>
-			<!--     <fileset dir="${basedir}">
-  	                                <include name="Exceptions.xml" />
-  	                        </fileset>
-  	                        <fileset dir="${basedir}/src">
-  	                                <include name="**/*.xml" />
-  	                        </fileset> -->
 		</jar>
 		<delete>
 		  <fileset dir="${target.dir}">

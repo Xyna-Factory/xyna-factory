@@ -163,6 +163,7 @@
            includeantruntime="false"
            srcdir="${basedir}/src/com/gip/xyna/xmcp/xfcli/generation"
            destdir="${basedir}/classes">
+      <compilerarg line="-proc:none" />
       <classpath path="${basedir}/classes" />
       <classpath>
         <fileset dir="${basedir}/lib">
