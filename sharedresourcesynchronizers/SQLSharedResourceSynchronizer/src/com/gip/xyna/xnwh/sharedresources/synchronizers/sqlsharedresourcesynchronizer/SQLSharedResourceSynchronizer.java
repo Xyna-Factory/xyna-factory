@@ -69,6 +69,7 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
   private static final Exception UPDATE_MODIFIED_ID_EXCEPTION = new RuntimeException("Update modified instance id");
   private static final String INSERT_VALUE_PLACEHOLDER = "(?, ?, ?, ?),\n";
   private static final String DESC_FORMAT = "SQLSharedResourceSynchronizer - %s - %s - Connections[idle/configured/missing]: %d/%d/%d";
+  static final Duration DEFAULT_VALIDATION_IDLE_THRESHOLD = Duration.valueOf("60 s");
 
   static {
     NO_CONNECTION_AVAILABLE_EXCEPTION.setStackTrace(new StackTraceElement[0]);
@@ -91,10 +92,11 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
   private Duration connectionTimeout;
   private Duration socketTimeout;
   private int queryTimeoutSeconds;
+  private final long validationIdleThresholdNanos;
 
   private DBConnectionData connectionData;
   private Set<Connection> allConnections;
-  private final ConcurrentLinkedQueue<Connection> idleConnections;
+  private final ConcurrentLinkedQueue<IdleConnection> idleConnections;
 
   /**
    * number of connections that cannot be used due to some exception.
@@ -112,6 +114,16 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
 
   private enum State {
     starting, running, stopping, stopped
+  }
+
+  private static class IdleConnection {
+    private final Connection connection;
+    private final long idleSinceNanos;
+
+    private IdleConnection(Connection connection) {
+      this.connection = connection;
+      this.idleSinceNanos = System.nanoTime();
+    }
   }
   
   private enum SQLErrorType {
@@ -143,6 +155,17 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
 
   public SQLSharedResourceSynchronizer(String tableName, String url, String username, String password, int numConnections,
                                        int concurrentModificationRetries, Duration connectionTimeout, Duration socketTimeout) {
+    this(tableName, url, username, password, numConnections, concurrentModificationRetries, connectionTimeout, socketTimeout,
+         DEFAULT_VALIDATION_IDLE_THRESHOLD);
+  }
+
+  public SQLSharedResourceSynchronizer(String tableName, String url, String username, String password, int numConnections,
+                                       int concurrentModificationRetries, Duration connectionTimeout, Duration socketTimeout,
+                                       Duration validationIdleThreshold) {
+    long idleThresholdNanos = validationIdleThreshold.getDuration(TimeUnit.NANOSECONDS);
+    if (idleThresholdNanos < 0) {
+      throw new IllegalArgumentException("Connection validation idle threshold must not be negative");
+    }
     CREATE_TABLE_STATEMENT = String
         .format("CREATE TABLE IF NOT EXISTS %s (sr_path VARCHAR(128) NOT NULL, sr_id VARCHAR(128) NOT NULL, sr_created BIGINT NULL, sr_data {{BINTYPE}} NULL DEFAULT NULL, PRIMARY KEY (sr_path, sr_id))",
                 tableName);
@@ -161,6 +184,7 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     this.connectionTimeout = connectionTimeout;
     this.socketTimeout = socketTimeout;
     this.queryTimeoutSeconds = (int) connectionTimeout.getDuration(TimeUnit.SECONDS);
+    this.validationIdleThresholdNanos = idleThresholdNanos;
 
     allConnections = new HashSet<>();
     idleConnections = new ConcurrentLinkedQueue<>();
@@ -236,11 +260,11 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
     }
     try {
       List<Connection> capturedConnections = new ArrayList<Connection>();
-      Connection idleConnection = null;
+      IdleConnection idleConnection = null;
       do {
         idleConnection = idleConnections.poll();
         if (idleConnection != null) {
-          capturedConnections.add(idleConnection);
+          capturedConnections.add(idleConnection.connection);
         }
       } while (idleConnection != null);
 
@@ -300,9 +324,38 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
       return null;
     }
 
-    Connection result = idleConnections.poll();
-    if (result != null) {
-      return result; // there was a free connection
+    Connection result = null;
+    IdleConnection idleConnection;
+    while ((idleConnection = idleConnections.poll()) != null) {
+      result = idleConnection.connection;
+      if (System.nanoTime() - idleConnection.idleSinceNanos < validationIdleThresholdNanos) {
+        return result;
+      }
+      try {
+        if (result.isValid(Math.max(1, queryTimeoutSeconds))) {
+          return result;
+        }
+        logger.warn("Discarding invalid shared resource database connection");
+      } catch (SQLException e) {
+        logger.warn("Could not validate shared resource database connection", e);
+      }
+
+      boolean closed = false;
+      try {
+        result.close();
+        closed = true;
+      } catch (SQLException e) {
+        logger.warn("Could not close invalid shared resource database connection", e);
+      }
+      synchronized (allConnections) {
+        if (closed) {
+          allConnections.remove(result);
+        }
+        if (state.get() == State.running) {
+          missingConnections.incrementAndGet();
+        }
+      }
+      result = null;
     }
     if (missingConnections.get() <= 0) {
       return null; // there was no free connection and there are no missing connections to replace
@@ -637,7 +690,7 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
       if(con.isClosed()) {
         missingConnections.incrementAndGet();
       } else {
-        idleConnections.add(con);
+        idleConnections.add(new IdleConnection(con));
       }
     } catch (Exception e) {
       missingConnections.incrementAndGet();
