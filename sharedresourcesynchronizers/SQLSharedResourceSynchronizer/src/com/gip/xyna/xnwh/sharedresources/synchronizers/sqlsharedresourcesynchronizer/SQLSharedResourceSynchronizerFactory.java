@@ -80,7 +80,7 @@ public class SQLSharedResourceSynchronizerFactory implements SharedResourceSynch
       StringParameter.typeDuration("validationIdleThreshold").label("Connection Validation Idle Threshold")
           .defaultValue(SQLSharedResourceSynchronizer.DEFAULT_VALIDATION_IDLE_THRESHOLD)
           .documentation(Documentation.en("Validate a connection on reuse after it has been idle for this long; 0 validates every reuse")
-              .de("Eine Verbindung nach dieser Leerlaufzeit vor der Wiederverwendung geprüft; 0 prüft jede Wiederverwendung").build()).build();
+              .de("Eine Verbindung nach dieser Leerlaufzeit wird vor der Wiederverwendung geprüft; 0 prüft jede Wiederverwendung").build()).build();
 
   private static final StringParameter<StringEnvironmentVariable> URL_ENV = StringParameter
       .typeEnvironmentVariable(StringEnvironmentVariable.class, "connectStringEnv").label("Connectstring environment variable.")
