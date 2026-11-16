@@ -25,7 +25,6 @@ import java.util.HashSet;
 import com.gip.xyna.xprc.xsched.VetoInformationStorable;
 import com.gip.xyna.xprc.xsched.vetos.VetoAllocationResult;
 import com.gip.xyna.xprc.xsched.vetos.VetoInformation;
-import com.gip.xyna.xprc.xsched.vetos.cache.VCP_Clustered;
 import com.gip.xyna.xprc.xsched.vetos.cache.VetoCacheTestHelper.ClusteredVM;
 import com.gip.xyna.xprc.xsched.vetos.cache.VetoCacheTestHelper.TestOrder;
 import com.gip.xyna.xprc.xsched.vetos.cache.cluster.ReplicateVetoRequest;

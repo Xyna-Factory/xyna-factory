@@ -321,13 +321,7 @@ public class VCP_Remote implements VCP_RemoteInterface {
     VetoInformation incoming = request.getVetoInformation();
     VetoInformation existingInformation = veto.getVetoInformation();
     if (incoming == null || incoming.getAuthorityBinding() != senderBinding ||
-        (existingInformation != null &&
-         (incoming.getAuthorityEpoch() < existingInformation.getAuthorityEpoch() ||
-          (incoming.getAuthorityEpoch() == existingInformation.getAuthorityEpoch() &&
-           (incoming.getAuthorityBinding() != existingInformation.getAuthorityBinding() ||
-          incoming.getAuthorityVersion() < existingInformation.getAuthorityVersion() ||
-          (incoming.getAuthorityVersion() == existingInformation.getAuthorityVersion() &&
-           !incoming.isVetoIdContentEqual(existingInformation))))))) {
+        isStaleAuthoritySnapshot(incoming, existingInformation)) {
       return VetoResponseEntry.staleAuthority(request.getName());
     }
     switch( veto.getState() ) {
@@ -345,6 +339,16 @@ public class VCP_Remote implements VCP_RemoteInterface {
     default:
       return VetoResponseEntry.failUnexpectedState(veto);
     }
+  }
+
+  private boolean isStaleAuthoritySnapshot(VetoInformation incoming, VetoInformation existing) {
+    return incoming == null || (existing != null &&
+        (incoming.getAuthorityEpoch() < existing.getAuthorityEpoch() ||
+         (incoming.getAuthorityEpoch() == existing.getAuthorityEpoch() &&
+          (incoming.getAuthorityBinding() != existing.getAuthorityBinding() ||
+           incoming.getAuthorityVersion() < existing.getAuthorityVersion() ||
+           (incoming.getAuthorityVersion() == existing.getAuthorityVersion() &&
+            !incoming.isVetoIdContentEqual(existing))))));
   }
   
   private VetoResponseEntry setScheduled(State expected, VetoCacheEntry veto, VetoRequestEntry request, boolean inUse) {
@@ -399,35 +403,31 @@ public class VCP_Remote implements VCP_RemoteInterface {
       return;
     }
     VetoCacheEntry veto = vetoCache.addVetoIfAbsent(vetoNew);
-    if( veto == null ) {
-      if( request.getReplication() == Replication.Scheduled ) {
+    if (veto == null) {
+      if (request.getReplication() == Replication.Scheduled) {
         vetoCache.process(vetoNew);
       }
-    } else {
-      VetoInformation existing = veto.getVetoInformation();
-      VetoInformation incoming = request.getVetoInformation();
-      if (existing != null && incoming != null &&
-          (incoming.getAuthorityEpoch() < existing.getAuthorityEpoch() ||
-           (incoming.getAuthorityEpoch() == existing.getAuthorityEpoch() &&
-            (incoming.getAuthorityBinding() != existing.getAuthorityBinding() ||
-             incoming.getAuthorityVersion() < existing.getAuthorityVersion() ||
-             (incoming.getAuthorityVersion() == existing.getAuthorityVersion() &&
-              !incoming.isVetoIdContentEqual(existing)))))) {
-        logger.warn("Rejected stale authority replication for veto " + vetoName);
-      } else if (existing != null && incoming != null &&
-                 (incoming.getAuthorityEpoch() > existing.getAuthorityEpoch() ||
-                  incoming.getAuthorityVersion() > existing.getAuthorityVersion()) &&
-                 veto.replace(veto.getState(), vetoNew)) {
-        if( request.getReplication() == Replication.Scheduled ) {
-          vetoCache.process(veto);
-        }
-      } else if( veto.replace(State.Compare, vetoNew) || veto.replace(State.Remote, vetoNew) ) {
-        //Veto konnte ersetzt werden. Sollte eigentlich klappen, wenn State Compare ist, da nur VetoCacheProcessor und RMI
-        //den State Compare ändern darf. VCP sollte aber noch am CountDownLatch hängen.
-      } else {
-        logger.warn("Failed replication for veto "+vetoName+", "+request.getReplication()+": veto already exists: "+veto);
-      }
+      return;
     }
+
+    VetoInformation existing = veto.getVetoInformation();
+    VetoInformation incoming = request.getVetoInformation();
+    if (isStaleAuthoritySnapshot(incoming, existing)) {
+      logger.warn("Rejected stale authority replication for veto " + vetoName);
+    } else if (existing != null && incoming != null &&
+               (incoming.getAuthorityEpoch() > existing.getAuthorityEpoch() ||
+                incoming.getAuthorityVersion() > existing.getAuthorityVersion()) &&
+               veto.replace(veto.getState(), vetoNew)) {
+      if( request.getReplication() == Replication.Scheduled ) {
+        vetoCache.process(veto);
+      }
+    } else if( veto.replace(State.Compare, vetoNew) || veto.replace(State.Remote, vetoNew) ) {
+      //Veto konnte ersetzt werden. Sollte eigentlich klappen, wenn State Compare ist, da nur VetoCacheProcessor und RMI
+      //den State Compare ändern darf. VCP sollte aber noch am CountDownLatch hängen.
+    } else {
+      logger.warn("Failed replication for veto "+vetoName+", "+request.getReplication()+": veto already exists: "+veto);
+    }
+
   }
 
 }

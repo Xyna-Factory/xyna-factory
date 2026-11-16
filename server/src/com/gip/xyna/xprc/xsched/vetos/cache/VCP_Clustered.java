@@ -19,6 +19,7 @@ package com.gip.xyna.xprc.xsched.vetos.cache;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -505,7 +506,7 @@ public class VCP_Clustered extends VCP_Abstract {
       return;
     }
     VetoInformation requested = VetoInformation.createShared(veto.getName(),
-        java.util.Collections.singletonList(request.getOrderInformation().getOrderId()), System.currentTimeMillis(),
+        Collections.singletonList(request.getOrderInformation().getOrderId()), System.currentTimeMillis(),
       ownBinding, current.getAuthorityBinding(), current.getAuthorityEpoch(), current.getAuthorityVersion());
     remoteVetoRequests.sharedGrant(veto, requested);
     vetoCache.notifyProcessor();
@@ -524,7 +525,7 @@ public class VCP_Clustered extends VCP_Abstract {
       return;
     }
     VetoInformation requested = new VetoInformation(veto.getName(), request.getOrderInformation(),
-        java.util.Collections.emptyList(), null, null, System.currentTimeMillis(), ownBinding,
+        Collections.emptyList(), null, null, System.currentTimeMillis(), ownBinding,
         current.getAuthorityBinding(), current.getAuthorityEpoch(), current.getAuthorityVersion());
     remoteVetoRequests.exclusiveRequest(veto, requested);
     vetoCache.notifyProcessor();

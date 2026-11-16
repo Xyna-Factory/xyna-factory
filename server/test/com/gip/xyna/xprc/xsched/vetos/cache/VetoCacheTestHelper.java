@@ -661,11 +661,12 @@ public class VetoCacheTestHelper extends TestCase {
     
     private VetoCacheEntry cloneVetoCacheEntry(VetoCacheEntry vce) {
       VetoCacheEntry clone = new VetoCacheEntry(vce.getName(), State.Used );
-      if( vce.getVetoInformation() != null ) {
+      if (vce.getVetoInformation() != null) {
         VetoInformation vi = vce.getVetoInformation();
-        VetoInformation viClone = new VetoInformation(vi.getName(), vi.getOrderInformation(), 
-          vi.getSharedOrderIds(), vi.getPendingExclusiveOrderId(), vi.getDocumentation(), vi.getCreated(),
-            vi.getBinding(), vi.getAuthorityBinding(), vi.getAuthorityEpoch(), vi.getAuthorityVersion() );
+        VetoInformation viClone =
+            new VetoInformation(vi.getName(), vi.getOrderInformation(), vi.getSharedOrderIds(), vi.getPendingExclusiveOrderId(),
+                                vi.getDocumentation(), vi.getCreated(), vi.getBinding(), vi.getAuthorityBinding(), vi.getAuthorityEpoch(),
+                                vi.getAuthorityVersion());
         clone.setVetoInformation(viClone);
       }
       return clone;
