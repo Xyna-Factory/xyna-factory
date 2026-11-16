@@ -70,8 +70,7 @@ public class SQLSharedResourceSynchronizerFactory implements SharedResourceSynch
 
   private static final StringParameter<Duration> CONNECTION_TIMEOUT =
       StringParameter.typeDuration("connectionTimeout").label("Connection Timeout").defaultValue(Duration.valueOf("10 s"))
-          .documentation(Documentation.en("Database connection timeout; also used for connection validation, with a minimum of 1 second")
-              .de("Datenbank-Verbindungstimeout; wird auch fuer die Verbindungspüfung verwendet, mindestens 1 Sekunde").build()).build();
+          .documentation(Documentation.en("Database connection timeout").de("Datenbank-Verbindungstimeout").build()).build();
 
   private static final StringParameter<Duration> SOCKET_TIMEOUT =
       StringParameter.typeDuration("socketTimeout").label("Socket Timeout").defaultValue(Duration.valueOf("10 s"))

@@ -154,12 +154,6 @@ public class SQLSharedResourceSynchronizer implements SharedResourceSynchronizer
 
 
   public SQLSharedResourceSynchronizer(String tableName, String url, String username, String password, int numConnections,
-                                       int concurrentModificationRetries, Duration connectionTimeout, Duration socketTimeout) {
-    this(tableName, url, username, password, numConnections, concurrentModificationRetries, connectionTimeout, socketTimeout,
-         DEFAULT_VALIDATION_IDLE_THRESHOLD);
-  }
-
-  public SQLSharedResourceSynchronizer(String tableName, String url, String username, String password, int numConnections,
                                        int concurrentModificationRetries, Duration connectionTimeout, Duration socketTimeout,
                                        Duration validationIdleThreshold) {
     long idleThresholdNanos = validationIdleThreshold.getDuration(TimeUnit.NANOSECONDS);
