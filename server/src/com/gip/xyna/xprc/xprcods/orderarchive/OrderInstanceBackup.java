@@ -392,7 +392,11 @@ public class OrderInstanceBackup extends ClusteredStorable<OrderInstanceBackup> 
           if (oi.bootCntId == 0 && rs.wasNull()) {
             oi.bootCntId = null;
           }
-          oi.created = rs.getLong(COL_CREATED);
+          try {
+            oi.created = rs.getLong(COL_CREATED);
+          } catch(SQLException e) {
+            //don't set created if it was not requested
+          }
           return oi;
         }
 
@@ -422,7 +426,11 @@ public class OrderInstanceBackup extends ClusteredStorable<OrderInstanceBackup> 
           if (oi.bootCntId == 0 && rs.wasNull()) {
             oi.bootCntId = null;
           }
-          oi.created = rs.getLong(COL_CREATED);
+          try {
+            oi.created = rs.getLong(COL_CREATED);
+          } catch(SQLException e) {
+            //don't set created if it was not requested
+          }
           return oi;
         }
 

@@ -144,7 +144,7 @@ public class VetoCacheEntry {
   }
   
 
-  public boolean checkAllocation(AllocationRequest req, long urgency) {
+  public synchronized boolean checkAllocation(AllocationRequest req, long urgency) {
     //gerufen von SchedulerThread
     switch( state.get() ) {
     case Scheduling:
@@ -207,7 +207,7 @@ public class VetoCacheEntry {
   }
   
   
-  public boolean allocate(VetoInformation vetoInformation, long urgency) {
+  public synchronized boolean allocate(VetoInformation vetoInformation, long urgency) {
     //gerufen vom SchedulerThread
     if( compareAndSetState(State.Usable, State.Scheduling )) {
       this.vetoInformation = vetoInformation;
@@ -238,7 +238,7 @@ public class VetoCacheEntry {
     return false; //kann eigentlich nicht vorkommen, da nur Scheduler aus Usable entfernen darf
   }
   
-  public boolean undoAllocation(OrderInformation orderInformation) {
+  public synchronized boolean undoAllocation(OrderInformation orderInformation) {
     //vom Scheduler-Thread aufgerufen
     VetoInformation vi = vetoInformation;
     if( vi == null ) {
@@ -413,7 +413,7 @@ public class VetoCacheEntry {
   }
   
   
-  public boolean free() {
+  public synchronized boolean free() {
     //wird von beliebigen Threads verwendet!
     if( compareAndSetState(State.Used, State.Free) ) {
       //häufigster Fall

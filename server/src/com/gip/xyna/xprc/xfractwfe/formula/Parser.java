@@ -262,7 +262,12 @@ public class Parser {
                     c = read(idx);
                   }
                   while (c != ']') {
+                    int lastIdx = indexDefExpr.getLastIdx();
                     indexDefExpr = parseSecondPartOfExpressionIfExisting(idx, indexDefExpr);
+                    if (indexDefExpr.getLastIdx() <= lastIdx) {
+                      throw new XPRC_ParsingModelledExpressionException(expression, idx + 1,
+                                                                      new RuntimeException("missing closing bracket."));
+                    }
                     idx = indexDefExpr.getLastIdx() + 1;
                     c = read(idx);
                     while (c == ' ') {
@@ -691,7 +696,12 @@ public class Parser {
             c = read(idx);
           }
           while (c != ']') {
+            int previousLastIdx = indexDefExpr.getLastIdx();
             indexDefExpr = parseSecondPartOfExpressionIfExisting(idx, indexDefExpr);
+            if (indexDefExpr.getLastIdx() <= previousLastIdx) {
+              throw new XPRC_ParsingModelledExpressionException(expression, idx + 1,
+                                                              new RuntimeException("missing closing bracket."));
+            }
             idx = indexDefExpr.getLastIdx() + 1;
             c = read(idx);
             while (c == ' ') {

@@ -233,6 +233,7 @@ public class TestJwt {
   }
   
   
+  @SuppressWarnings("deprecation")
   @Test
   public void testAudience2() {
     try {
@@ -302,6 +303,39 @@ public class TestJwt {
       throw new RuntimeException(e);
     }
   }
+  
+  @Test
+  public void testAudience5() throws Exception {
+    Container keys = new KeyGeneratorInstanceOperationImpl(new KeyGenerator()).generateKeyPair();
+    assertEquals(2, keys.size());
+    Key privateKey = (Key) keys.get(0);
+    JWTClaims claims = new JWTClaims();
+    claims.addToAudienceArray("aud-test-4a");
+    claims.addToAudienceArray("aud-test-4b");
+    JSONWebToken token = new JSONWebToken();
+    token.setJWTClaims(claims);
+    token = new JSONWebTokenInstanceOperationImpl(token).createAndSignJWSToken(privateKey);
+    String jws = token.getToken();
+    token.setToken(jws);
+    JSONWebToken result = new JSONWebTokenInstanceOperationImpl(token).parseTokenUnsecured();
+    assertEquals(2, result.getJWTClaims().getAudienceArray().size());
+    assertTrue(result.getJWTClaims().getAudienceArray().contains("aud-test-4a"));
+    assertTrue(result.getJWTClaims().getAudienceArray().contains("aud-test-4b"));
+  }
+
+  @Test
+  @SuppressWarnings("deprecation")
+  public void testAudience6() throws Exception {
+    JwtBuilder builder = Jwts.builder();
+    builder.claims().audience().single("aud-1234");
+    String jws = builder.compact();
+    JSONWebToken token = new JSONWebToken();
+    token.setToken(jws);
+    JSONWebToken result = new JSONWebTokenInstanceOperationImpl(token).parseTokenUnsecured();
+    assertEquals(1, result.getJWTClaims().getAudienceArray().size());
+    assertEquals("aud-1234", result.getJWTClaims().getAudienceArray().get(0));
+  }
+  
   
   @Test
   public void testDate() {

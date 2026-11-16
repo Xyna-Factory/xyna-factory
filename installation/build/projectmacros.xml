@@ -50,6 +50,27 @@
         </sequential>
     </macrodef>
 
+    <!-- =================================
+         macro: update-rtc-references-in-workspace-xml
+         ================================= -->
+    <macrodef name="update-rtc-references-in-workspace-xml" description="update runtime context references in workspace-xml to the current application versions">
+        <attribute name="paths"/>
+        <sequential>
+            <echo message="Updating application references in workspace-xml in directories @{paths} ..." />
+            <java classname="xmcp.gitintegration.offline.WorkspaceXMLUpdater" fork="true" failonerror="true">
+                <arg line="@{paths}" />
+                <classpath>
+                    <!-- jars to be created by installation/build.sh install_gitintegration_libs -->
+                    <fileset dir="${root.dir}/installation/build/lib/gitintegration">
+                        <include name="*.jar" />
+                    </fileset>
+                    <fileset dir="${root.dir}/installation/build/lib/factory">
+                        <include name="*.jar" />
+                    </fileset>
+                </classpath>
+            </java>
+        </sequential>
+    </macrodef>
 
     <load-according-to-type build.type="${build.type}" />
 

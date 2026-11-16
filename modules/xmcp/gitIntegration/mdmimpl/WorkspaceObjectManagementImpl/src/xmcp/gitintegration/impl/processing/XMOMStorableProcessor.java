@@ -294,7 +294,8 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
                     Objects.equals(to.getFQPath(), item.getFqpath()) &&
                     Objects.equals(to.getPath(), item.getPath());
         } else {
-          matches = item.isTableConfig();
+          matches = item.isTableConfig() &&
+                    Objects.equals(to.getFQPath(), item.getFqpath());
         }
         if (matches) {
           XMOMStorable ret = adapt(item);

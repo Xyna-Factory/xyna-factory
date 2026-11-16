@@ -232,28 +232,42 @@ public class VetoCache {
   }
   
   
-  public void allocate(AllocationRequest req, long urgency, ListAllocationMode allocMode) {
+  public boolean allocate(AllocationRequest req, long urgency, ListAllocationMode allocMode) {
     VetoCacheEntry veto = req.getCacheEntry();
     if (veto == null) {
       // unexpected state
       logger.warn("Unexpected state in VetoCache.allocate()");
-      return;
+      return false;
     }
     if (!Objects.equals(req.getVetoName(), veto.getName())) {
       // inconsistent state
       logger.warn("Inconsistent state in VetoCache.allocate()");
-      return;
+      return false;
+    }
+    //check, build and write the new VetoInformation atomically with respect to a concurrent free
+    synchronized (veto) {
+      return allocateLocked(veto, req, urgency, allocMode);
+    }
+  }
+
+
+  private boolean allocateLocked(VetoCacheEntry veto, AllocationRequest req, long urgency, ListAllocationMode allocMode) {
+    if (allocMode == ListAllocationMode.COMPLETE && req.getPendingType() != PendingType.PENDING) {
+      //veto may have been freed or allocated since the preliminary check
+      if (!veto.checkAllocation(req, urgency)) {
+        return false;
+      }
     }
     if (req.getPendingType() == PendingType.PENDING) {
       if (veto.getVetoInformation() == null) {
         // inconsistent state
         logger.warn("Inconsistent state in VetoCache.allocate()");
-        return;
+        return false;
       }
       if (req.getVetoType() == VetoType.SHARED) {
         // inconsistent state
         logger.warn("Inconsistent state in VetoCache.allocate()");
-        return;
+        return false;
       }
     }
     VetoInformation vi = null;
@@ -265,14 +279,17 @@ public class VetoCache {
     if (vi == null) {
       // unexpected state
       logger.warn("Unexpected state in VetoCache.allocate()");
-      return;
+      return false;
     }
-    veto.allocate(vi, urgency);
+    if (!veto.allocate(vi, urgency)) {
+      return false;
+    }
     if (req.getPendingType() == PendingType.PENDING && vi.getAuthorityBinding() == ownBinding &&
         veto.compareAndSetState(State.Scheduling, State.Scheduled)) {
       process(veto);
       notifyProcessor();
     }
+    return true;
   }
   
   
@@ -398,29 +415,31 @@ public class VetoCache {
    if( veto == null ) {
      return false;
    }
-   VetoInformation information = veto.getVetoInformation();
-   if (information != null && information.getSharedOrderIds() != null &&
-       information.getSharedOrderIds().contains(orderId) && information.getAuthorityBinding() != ownBinding) {
-     vetoCacheProcessor.requestSharedRelease(veto, orderId);
-     return true;
-   }
-   if (information != null && Objects.equals(information.getPendingExclusiveOrderId(), orderId) &&
-       information.getAuthorityBinding() != ownBinding) {
-     vetoCacheProcessor.cancelExclusiveAllocation(veto, orderId);
-     return true;
-   }
-   if( veto.isUsedBy(orderId) ) {
-     RemovalResult result = veto.freeOrderId(orderId);
-     if (result == RemovalResult.IGNORE) {
-       return false;
+   synchronized (veto) {
+     VetoInformation information = veto.getVetoInformation();
+     if (information != null && information.getSharedOrderIds() != null &&
+         information.getSharedOrderIds().contains(orderId) && information.getAuthorityBinding() != ownBinding) {
+       vetoCacheProcessor.requestSharedRelease(veto, orderId);
+       return true;
      }
-     if (result == RemovalResult.EMPTY) {
-       veto.free();
-     } else if (information != null && information.getAuthorityBinding() == ownBinding) {
-       veto.compareAndSetState(State.Used, State.Scheduled);
+     if (information != null && Objects.equals(information.getPendingExclusiveOrderId(), orderId) &&
+         information.getAuthorityBinding() != ownBinding) {
+       vetoCacheProcessor.cancelExclusiveAllocation(veto, orderId);
+       return true;
      }
-     vetosToProcess.add(veto.getName());
-     return true;
+     if( veto.isUsedBy(orderId) ) {
+       RemovalResult result = veto.freeOrderId(orderId);
+       if (result == RemovalResult.IGNORE) {
+         return false;
+       }
+       if (result == RemovalResult.EMPTY) {
+         veto.free();
+       } else if (information != null && information.getAuthorityBinding() == ownBinding) {
+         veto.compareAndSetState(State.Used, State.Scheduled);
+       }
+       vetosToProcess.add(veto.getName());
+       return true;
+     }
    }
    return false;
   }

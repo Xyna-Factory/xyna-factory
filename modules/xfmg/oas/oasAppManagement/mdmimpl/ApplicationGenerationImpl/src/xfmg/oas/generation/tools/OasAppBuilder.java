@@ -156,6 +156,7 @@ public class OasAppBuilder {
         .addAdditionalProperty("generateMock", data.generateMock())
         .addAdditionalProperty("generateDataCapture", data.generateDataCapture())
         .addAdditionalProperty("oasBaseVersion", data.oasVersion())
+        .addAdditionalProperty("fileMgmtVersion", data.fileMgmtVersion())
         .setOutputDir(target);
     
       final ClientOptInput clientOptInput = configurator.toClientOptInput();

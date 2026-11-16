@@ -22,17 +22,23 @@ package com.gip.xyna.xprc.xsched.capacities;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+import java.util.function.LongSupplier;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyDuration;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xnwh.exceptions.XNWH_SharedResourceInstanceAlreadyExists;
@@ -68,15 +74,208 @@ public class CMSharedResource implements CapacityManagementInterface {
                                                    HashMap.class, Order.class);
 
   private static final Logger logger = CentralFactoryLogging.getLogger(CMSharedResource.class);
-  private final SharedResourceManagement srm;
+  static final XynaPropertyDuration KNOWN_STATES_MAX_AGE =
+      new XynaPropertyDuration("xprc.xsched.capacities.sharedresource.knownStatesMaxAge", "1 s", TimeUnit.MILLISECONDS)
+          .setDefaultDocumentation(DocumentationLanguage.EN,
+                                   "Maximum age of capacity states remembered by the SharedResource capacity management. "
+                                       + "They are used to check whether the capacities of an order are available before its vetos are "
+                                       + "allocated. The capacities are then allocated atomically right before the order is started. "
+                                       + "Changes on this node invalidate the remembered states immediately, changes on other nodes "
+                                       + "are noticed after this time at the latest. 0 disables remembering.")
+          .setDefaultDocumentation(DocumentationLanguage.DE,
+                                   "Maximales Alter von gemerkten Capacity Zustaenden des SharedResource CapacityManagements. "
+                                       + "Mit ihnen wird geprueft, ob die Capacities eines Auftrags verfuegbar sind, bevor seine Vetos "
+                                       + "alloziert werden. Die Capacities werden dann atomar direkt vor dem Start des Auftrags alloziert. "
+                                       + "Aenderungen von diesem Knoten werden sofort erkannt, Aenderungen von anderen Knoten "
+                                       + "spaetestens nach dieser Zeitspanne. 0 deaktiviert das Merken.");
+
+  private final CapacityStore store;
+  private final LongSupplier knownStatesMaxAge;
+  private final LongSupplier clock;
 
   private final Set<Long> skipUndoSet = new HashSet<>();
+  /** orders whose capacity allocation was checked by prepareCapacityAllocation, but not yet committed */
+  private final Set<Long> preparedOrders = ConcurrentHashMap.newKeySet();
   private final CMSharedResourceConsistencyManagement consistencyMgmt;
+
+  private final Object knownStatesLock = new Object();
+  /** guarded by knownStatesLock. A null capacity means that the capacity did not exist. */
+  private final Map<String, KnownCapacityState> knownStates = new HashMap<>();
+  /** guarded by knownStatesLock. Incremented on each invalidation so that concurrent reads do not publish outdated states */
+  private long knownStatesGeneration;
 
 
   public CMSharedResource() {
-    srm = XynaFactory.getInstance().getXynaNetworkWarehouse().getSharedResourceManagement();
+    this(new SrmCapacityStore(XynaFactory.getInstance().getXynaNetworkWarehouse().getSharedResourceManagement()),
+         KNOWN_STATES_MAX_AGE::getMillis, System::currentTimeMillis);
+  }
+
+
+  CMSharedResource(CapacityStore store, LongSupplier knownStatesMaxAge, LongSupplier clock) {
+    this.store = store;
+    this.knownStatesMaxAge = knownStatesMaxAge;
+    this.clock = clock;
     consistencyMgmt = new CMSharedResourceConsistencyManagement(this::processFreecapacityRequest);
+  }
+
+
+  /**
+   * Only checks the capacities against remembered (at most {@link #KNOWN_STATES_MAX_AGE} old) capacity states without
+   * allocating them, so that orders waiting for other resources do not write to the shared resource.
+   * The allocation is done by {@link #commitCapacityAllocation(OrderInformation, SchedulingData)}.
+   */
+  @Override
+  public CapacityAllocationResult prepareCapacityAllocation(OrderInformation orderInformation, SchedulingData schedulingData) {
+    if (schedulingData == null) {
+      throw new IllegalArgumentException("SchedulingData may not be null when allocating capacity");
+    }
+    if (!schedulingData.needsCapacities()) {
+      return allocateCapacities(orderInformation, schedulingData);
+    }
+    AllocateCapacitiesInformationContainer allocInfo =
+        AllocateCapacitiesInformationContainer.createAllocateCapacitiesInformationContainer(orderInformation, schedulingData);
+    preparedOrders.add(allocInfo.orderId);
+    Map<String, SharedResourceCapacity> states = getKnownStates(allocInfo.ids);
+    if (states == null) {
+      //commit decides
+      return CapacityAllocationResult.SUCCESS;
+    }
+    for (String id : allocInfo.ids) {
+      SharedResourceCapacity capacity = states.get(id);
+      if (capacity == null) {
+        switch (XynaProperty.SCHEDULER_UNDEFINED_CAPACITY_REACTION.get()) {
+          case Schedule :
+            continue;
+          case Wait :
+            return new CapacityAllocationResult(id, allocInfo.totalCapacityMap.getOrDefault(id, 0), 0, true);
+          case Fail :
+          default :
+            //commit decides
+            return CapacityAllocationResult.SUCCESS;
+        }
+      }
+      SharedResourceInstance<SharedResourceCapacity> instance = new SharedResourceInstance<>(id, 0L, capacity);
+      allocInfo.reset();
+      if (capacityDisabled(instance, allocInfo)) {
+        return new CapacityAllocationResult(allocInfo.capNameOfDisabled, allocInfo.capDemandDisabled, 0, true);
+      }
+      if (capacityInsufficient(instance, allocInfo)) {
+        CapacityAllocationResult result = createCapacityAllocationResultInsufficient(allocInfo);
+        if (result.getXynaException() != null) {
+          //remembered state may be outdated, only commit may fail the order
+          return CapacityAllocationResult.SUCCESS;
+        }
+        return result;
+      }
+    }
+    return CapacityAllocationResult.SUCCESS;
+  }
+
+
+  @Override
+  public CapacityAllocationResult commitCapacityAllocation(OrderInformation orderInformation, SchedulingData schedulingData) {
+    if (!preparedOrders.remove(orderInformation.getOrderId())) {
+      //nothing deferred
+      return CapacityAllocationResult.SUCCESS;
+    }
+    return allocateCapacities(orderInformation, schedulingData);
+  }
+
+
+  private Map<String, SharedResourceCapacity> getKnownStates(List<String> ids) {
+    long maxAge = knownStatesMaxAge.getAsLong();
+    long now = clock.getAsLong();
+    Map<String, SharedResourceCapacity> result = new HashMap<>();
+    List<String> idsToRead = new ArrayList<>();
+    long generation;
+    synchronized (knownStatesLock) {
+      generation = knownStatesGeneration;
+      for (String id : ids) {
+        KnownCapacityState known = knownStates.get(id);
+        if (known != null && maxAge > 0 && now - known.observedAt < maxAge) {
+          result.put(id, known.capacity);
+        } else {
+          idsToRead.add(id);
+        }
+      }
+    }
+    if (idsToRead.isEmpty()) {
+      return result;
+    }
+    SharedResourceRequestResult<SharedResourceCapacity> readResult = store.read(idsToRead);
+    if (!readResult.isSuccess() || readResult.getResources() == null) {
+      logger.warn("could not read capacities " + idsToRead, readResult.getException());
+      return null;
+    }
+    Map<String, SharedResourceCapacity> readStates = new HashMap<>();
+    for (String id : idsToRead) {
+      readStates.put(id, null);
+    }
+    for (SharedResourceInstance<SharedResourceCapacity> instance : readResult.getResources()) {
+      readStates.put(instance.getId(), copy(instance.getValue()));
+    }
+    result.putAll(readStates);
+    if (maxAge > 0) {
+      synchronized (knownStatesLock) {
+        if (generation == knownStatesGeneration) {
+          for (Entry<String, SharedResourceCapacity> entry : readStates.entrySet()) {
+            knownStates.put(entry.getKey(), new KnownCapacityState(entry.getValue(), now));
+          }
+        }
+      }
+    }
+    return result;
+  }
+
+
+  private void invalidateKnownStates() {
+    synchronized (knownStatesLock) {
+      knownStatesGeneration++;
+      knownStates.clear();
+    }
+  }
+
+
+  private SharedResourceRequestResult<SharedResourceCapacity> update(List<String> ids,
+                                                                     Function<SharedResourceInstance<SharedResourceCapacity>, SharedResourceInstance<SharedResourceCapacity>> update) {
+    try {
+      return store.update(ids, update);
+    } finally {
+      invalidateKnownStates();
+    }
+  }
+
+
+  private SharedResourceRequestResult<SharedResourceCapacity> create(List<SharedResourceInstance<SharedResourceCapacity>> data) {
+    try {
+      return store.create(data);
+    } finally {
+      invalidateKnownStates();
+    }
+  }
+
+
+  private SharedResourceRequestResult<SharedResourceCapacity> delete(List<String> ids) {
+    try {
+      return store.delete(ids);
+    } finally {
+      invalidateKnownStates();
+    }
+  }
+
+
+  static SharedResourceCapacity copy(SharedResourceCapacity value) {
+    if (value == null) {
+      return null;
+    }
+    SharedResourceCapacity copy = new SharedResourceCapacity(value.cardinality, value.stateString);
+    copy.inuse = value.inuse;
+    if (value.orders != null) {
+      for (Entry<Long, Order> entry : value.orders.entrySet()) {
+        copy.orders.put(entry.getKey(), entry.getValue() == null ? null : entry.getValue().copy());
+      }
+    }
+    return copy;
   }
 
 
@@ -107,7 +306,7 @@ public class CMSharedResource implements CapacityManagementInterface {
       allocRegularCapacities(currentResource, allocInfo);
       return new SharedResourceInstance<>(currentResource.getId(), now, currentResource.getValue());
     };
-    SharedResourceRequestResult<SharedResourceCapacity> result = srm.update(XYNA_CAP_SR_DEF, allocInfo.ids, update);
+    SharedResourceRequestResult<SharedResourceCapacity> result = update(allocInfo.ids, update);
     if (!result.isSuccess() && result.getException() instanceof XNWH_SharedResourceInstanceDoesNotExist
         && XynaProperty.SCHEDULER_UNDEFINED_CAPACITY_REACTION.get() == CapacityProblemReaction.Schedule) {
       XNWH_SharedResourceInstanceDoesNotExist ex = (XNWH_SharedResourceInstanceDoesNotExist) result.getException();
@@ -115,7 +314,7 @@ public class CMSharedResource implements CapacityManagementInterface {
       if(allocInfo.ids.isEmpty()) {
         result = new SharedResourceRequestResult<>(true, null, null);
       } else {
-        result = srm.update(XYNA_CAP_SR_DEF, allocInfo.ids, update);
+        result = update(allocInfo.ids, update);
       }
     }
     if (!result.isSuccess()) { 
@@ -154,7 +353,7 @@ public class CMSharedResource implements CapacityManagementInterface {
         allocationContainer.allocations = Math.max(minAllocs, maxAllocations + minAllocs);
         return currentResource;
       };
-      srm.update(XYNA_CAP_SR_DEF, allocInfo.ids, update);
+      update(allocInfo.ids, update);
     } else {
       executeMultiAllocation(allocInfo, schedulingData, allocationContainer);
     }
@@ -190,7 +389,7 @@ public class CMSharedResource implements CapacityManagementInterface {
       return currentResource;
     };
     for (int i = multiAlloc.getMinAllocation(); i < multiAlloc.getMaxAllocation(); i++) {
-      SharedResourceRequestResult<SharedResourceCapacity> result = srm.update(XYNA_CAP_SR_DEF, allocInfo.ids, update);
+      SharedResourceRequestResult<SharedResourceCapacity> result = update(allocInfo.ids, update);
       if (!result.isSuccess()) {
         return lastSuccess;
       }
@@ -326,6 +525,14 @@ public class CMSharedResource implements CapacityManagementInterface {
 
   @Override
   public void undoAllocation(OrderInformation orderInformation, SchedulingData schedulingData) {
+    if (preparedOrders.remove(orderInformation.getOrderId())) {
+      skipUndoSet.remove(orderInformation.getOrderId());
+      if (logger.isDebugEnabled()) {
+        logger.debug("Skipping undo of capacity allocation for order " + orderInformation.getOrderId()
+            + " because capacities were only prepared");
+      }
+      return;
+    }
     if (skipUndoSet.contains(orderInformation.getOrderId())) {
       skipUndoSet.remove(orderInformation.getOrderId());
       if (logger.isDebugEnabled()) {
@@ -334,7 +541,7 @@ public class CMSharedResource implements CapacityManagementInterface {
       }
       return;
     }
-    SharedResourceRequestResult<SharedResourceCapacity> readResult = srm.readAll(XYNA_CAP_SR_DEF);
+    SharedResourceRequestResult<SharedResourceCapacity> readResult = store.readAll();
     if (!readResult.isSuccess() || readResult.getResources() == null) {
       logger.error("could not read capacities.", readResult.getException());
       return;
@@ -349,7 +556,7 @@ public class CMSharedResource implements CapacityManagementInterface {
       currentResoruce.getValue().orders.remove(orderId);
       return new SharedResourceInstance<>(currentResoruce.getId(), now, currentResoruce.getValue());
     };
-    SharedResourceRequestResult<SharedResourceCapacity> updateResult = srm.update(XYNA_CAP_SR_DEF, ids, update);
+    SharedResourceRequestResult<SharedResourceCapacity> updateResult = update(ids, update);
     if (!updateResult.isSuccess()) {
       logger.error("could not undo capacity allocation.");
     } else {
@@ -365,7 +572,7 @@ public class CMSharedResource implements CapacityManagementInterface {
 
 
   private boolean freeTransferableCapaictiesInternal(long orderId, boolean queueOnError) {
-    SharedResourceRequestResult<SharedResourceCapacity> readResult = srm.readAll(XYNA_CAP_SR_DEF);
+    SharedResourceRequestResult<SharedResourceCapacity> readResult = store.readAll();
     if (!readResult.isSuccess() || readResult.getResources() == null) {
       logger.error("could not read capacities.", readResult.getException());
       if (queueOnError) {
@@ -387,7 +594,7 @@ public class CMSharedResource implements CapacityManagementInterface {
       }
       return new SharedResourceInstance<>(currentResource.getId(), now, currentResource.getValue());
     };
-    SharedResourceRequestResult<SharedResourceCapacity> updateResult = srm.update(XYNA_CAP_SR_DEF, ids, update);
+    SharedResourceRequestResult<SharedResourceCapacity> updateResult = update(ids, update);
     if (!updateResult.isSuccess() && queueOnError) {
       consistencyMgmt.queueRequest(new SharedResourceFreeCapacitiesRequest(CapacityMethod.transferable, orderId));
     }
@@ -401,7 +608,8 @@ public class CMSharedResource implements CapacityManagementInterface {
   }
 
   private boolean freeCapacitiesInternal(long orderId, boolean queueOnError) {
-    SharedResourceRequestResult<SharedResourceCapacity> readResult = srm.readAll(XYNA_CAP_SR_DEF);
+    preparedOrders.remove(orderId);
+    SharedResourceRequestResult<SharedResourceCapacity> readResult = store.readAll();
     if (!readResult.isSuccess() || readResult.getResources() == null) {
       logger.error("could not read capacities.", readResult.getException());
       if (queueOnError) {
@@ -423,7 +631,7 @@ public class CMSharedResource implements CapacityManagementInterface {
       }
       return new SharedResourceInstance<>(currentResource.getId(), now, currentResource.getValue());
     };
-    SharedResourceRequestResult<SharedResourceCapacity> updateResult = srm.update(XYNA_CAP_SR_DEF, ids, update);
+    SharedResourceRequestResult<SharedResourceCapacity> updateResult = update(ids, update);
     if (!updateResult.isSuccess() && queueOnError) {
       consistencyMgmt.queueRequest(new SharedResourceFreeCapacitiesRequest(CapacityMethod.force, orderId));
     }
@@ -466,7 +674,7 @@ public class CMSharedResource implements CapacityManagementInterface {
       return new SharedResourceInstance<>(currentResource.getId(), now, currentResource.getValue());
     };
 
-    SharedResourceRequestResult<SharedResourceCapacity> updateResult = srm.update(XYNA_CAP_SR_DEF, ids, update);
+    SharedResourceRequestResult<SharedResourceCapacity> updateResult = update(ids, update);
     return updateResult.isSuccess();
   }
 
@@ -477,7 +685,8 @@ public class CMSharedResource implements CapacityManagementInterface {
   }
 
   private boolean forceFreeCapacitiesInternal(long orderId, boolean queueOnError) {
-    SharedResourceRequestResult<SharedResourceCapacity> readResult = srm.readAll(XYNA_CAP_SR_DEF);
+    preparedOrders.remove(orderId);
+    SharedResourceRequestResult<SharedResourceCapacity> readResult = store.readAll();
     if (!readResult.isSuccess() && queueOnError) {
       consistencyMgmt.queueRequest(new SharedResourceFreeCapacitiesRequest(CapacityMethod.force, orderId));
       return false;
@@ -507,7 +716,7 @@ public class CMSharedResource implements CapacityManagementInterface {
       return new SharedResourceInstance<CMSharedResource.SharedResourceCapacity>(currentResoruce.getId(), now, currentResoruce.getValue());
     };
 
-    SharedResourceRequestResult<SharedResourceCapacity> updateResult = srm.update(XYNA_CAP_SR_DEF, ids, update);
+    SharedResourceRequestResult<SharedResourceCapacity> updateResult = update(ids, update);
     //if capacities could not be freed, and it is not because of a missing Order
     //an order might be missing, if it was freed from another factory
     if (!updateResult.isSuccess() && !container.missing && queueOnError) {
@@ -529,7 +738,7 @@ public class CMSharedResource implements CapacityManagementInterface {
     value.orders = new HashMap<>();
     value.stateString = state.toString();
     SharedResourceInstance<SharedResourceCapacity> instance = new SharedResourceInstance<>(name, now, value);
-    SharedResourceRequestResult<SharedResourceCapacity> createResult = srm.create(XYNA_CAP_SR_DEF, List.of(instance));
+    SharedResourceRequestResult<SharedResourceCapacity> createResult = create(List.of(instance));
     if (!createResult.isSuccess() && createResult.getException() instanceof XNWH_SharedResourceInstanceAlreadyExists) {
       throw new XPRC_CAPACITY_ALREADY_DEFINED(name);
     }
@@ -564,12 +773,12 @@ public class CMSharedResource implements CapacityManagementInterface {
       return new SharedResourceInstance<SharedResourceCapacity>(currentResource.getId(), currentResource.getCreated(), currentResource.getValue());
     };
 
-    SharedResourceRequestResult<SharedResourceCapacity> updateResult = srm.update(XYNA_CAP_SR_DEF, List.of(oldName), update);
+    SharedResourceRequestResult<SharedResourceCapacity> updateResult = update(List.of(oldName), update);
     if (!updateResult.isSuccess()) {
       return false;
     }
 
-    SharedResourceRequestResult<SharedResourceCapacity> createResult = srm.create(XYNA_CAP_SR_DEF, List.of(newInstance));
+    SharedResourceRequestResult<SharedResourceCapacity> createResult = create(List.of(newInstance));
     if (!createResult.isSuccess()) {
       if (!newValue.stateString.equals(State.DISABLED.toString())) {
         if (!changeState(oldName, State.valueOf(newValue.stateString))) {
@@ -579,7 +788,7 @@ public class CMSharedResource implements CapacityManagementInterface {
       }
     }
 
-    SharedResourceRequestResult<SharedResourceCapacity> deleteResult = srm.delete(XYNA_CAP_SR_DEF, List.of(oldName));
+    SharedResourceRequestResult<SharedResourceCapacity> deleteResult = delete(List.of(oldName));
     if (!deleteResult.isSuccess()) {
       logger.error("Rename of Capacity " + oldName + " succeeded, but old capacity could not be deleted. It is now in state "
           + State.DISABLED.toString());
@@ -611,7 +820,7 @@ public class CMSharedResource implements CapacityManagementInterface {
       return new SharedResourceInstance<SharedResourceCapacity>(currentResource.getId(), currentResource.getCreated(), currentResource.getValue());
     };
 
-    SharedResourceRequestResult<SharedResourceCapacity> updateResult = srm.update(XYNA_CAP_SR_DEF, List.of(capName), update);
+    SharedResourceRequestResult<SharedResourceCapacity> updateResult = update(List.of(capName), update);
 
     if (container.exShangeState != null) {
       throw container.exShangeState;
@@ -633,27 +842,27 @@ public class CMSharedResource implements CapacityManagementInterface {
       return new SharedResourceInstance<SharedResourceCapacity>(currentResource.getId(), now, currentResource.getValue());
     };
 
-    SharedResourceRequestResult<SharedResourceCapacity> updateResult = srm.update(XYNA_CAP_SR_DEF, List.of(capName), update);
+    SharedResourceRequestResult<SharedResourceCapacity> updateResult = update(List.of(capName), update);
     return updateResult.isSuccess();
   }
 
 
   @Override
   public boolean removeCapacity(String capName) {
-    SharedResourceRequestResult<SharedResourceCapacity> deleteResult = srm.delete(XYNA_CAP_SR_DEF, List.of(capName));
+    SharedResourceRequestResult<SharedResourceCapacity> deleteResult = delete(List.of(capName));
     return deleteResult.isSuccess();
   }
 
 
   @Override
   public void removeAllCapacities() {
-    SharedResourceRequestResult<SharedResourceCapacity> readResult = srm.readAll(XYNA_CAP_SR_DEF);
+    SharedResourceRequestResult<SharedResourceCapacity> readResult = store.readAll();
     if (!readResult.isSuccess() || readResult.getResources() == null) {
       logger.error("could not read capacities.", readResult.getException());
       return;
     }
     List<String> ids = readResult.getResources().stream().map(x -> x.getId()).collect(Collectors.toList());
-    SharedResourceRequestResult<SharedResourceCapacity> deleteResult = srm.delete(XYNA_CAP_SR_DEF, ids);
+    SharedResourceRequestResult<SharedResourceCapacity> deleteResult = delete(ids);
     if (!deleteResult.isSuccess()) {
       logger.error("could not delete capacities.", deleteResult.getException());
     }
@@ -662,7 +871,7 @@ public class CMSharedResource implements CapacityManagementInterface {
 
   @Override
   public CapacityInformation getCapacityInformation(String capName) {
-    SharedResourceRequestResult<SharedResourceCapacity> readResult = srm.read(XYNA_CAP_SR_DEF, List.of(capName));
+    SharedResourceRequestResult<SharedResourceCapacity> readResult = store.read(List.of(capName));
     if (!readResult.isSuccess()) {
       throw new RuntimeException("Could not read capacity", readResult.getException());
     }
@@ -680,7 +889,7 @@ public class CMSharedResource implements CapacityManagementInterface {
 
   @Override
   public ExtendedCapacityUsageInformation getExtendedCapacityUsageInformation() {
-    SharedResourceRequestResult<SharedResourceCapacity> readResult = srm.readAll(XYNA_CAP_SR_DEF);
+    SharedResourceRequestResult<SharedResourceCapacity> readResult = store.readAll();
     if (!readResult.isSuccess() || readResult.getResources() == null) {
       logger.error("could not read capacities.", readResult.getException());
       return new ExtendedCapacityUsageInformation();
@@ -729,7 +938,7 @@ public class CMSharedResource implements CapacityManagementInterface {
 
   @Override
   public List<CapacityInformation> listCapacities() {
-    SharedResourceRequestResult<SharedResourceCapacity> readResult = srm.readAll(XYNA_CAP_SR_DEF);
+    SharedResourceRequestResult<SharedResourceCapacity> readResult = store.readAll();
     if (!readResult.isSuccess() || readResult.getResources() == null) {
       logger.error("could not read capacities.", readResult.getException());
     }
@@ -822,6 +1031,81 @@ public class CMSharedResource implements CapacityManagementInterface {
     public int capacityInstances;
     public int transferableCapacityInstances;
     public int receivedTransferableCapacityInstances;
+
+
+    private Order copy() {
+      Order copy = new Order();
+      copy.orderType = orderType;
+      copy.capacityInstances = capacityInstances;
+      copy.transferableCapacityInstances = transferableCapacityInstances;
+      copy.receivedTransferableCapacityInstances = receivedTransferableCapacityInstances;
+      return copy;
+    }
+  }
+
+  private static class KnownCapacityState {
+
+    private final SharedResourceCapacity capacity;
+    private final long observedAt;
+
+
+    private KnownCapacityState(SharedResourceCapacity capacity, long observedAt) {
+      this.capacity = capacity;
+      this.observedAt = observedAt;
+    }
+  }
+
+  /**
+   * Access to the capacity shared resource {@link #XYNA_CAP_SR_DEF}.
+   */
+  interface CapacityStore {
+
+    SharedResourceRequestResult<SharedResourceCapacity> create(List<SharedResourceInstance<SharedResourceCapacity>> data);
+
+    SharedResourceRequestResult<SharedResourceCapacity> read(List<String> ids);
+
+    SharedResourceRequestResult<SharedResourceCapacity> readAll();
+
+    SharedResourceRequestResult<SharedResourceCapacity> update(List<String> ids,
+                                                               Function<SharedResourceInstance<SharedResourceCapacity>, SharedResourceInstance<SharedResourceCapacity>> update);
+
+    SharedResourceRequestResult<SharedResourceCapacity> delete(List<String> ids);
+  }
+
+  private static class SrmCapacityStore implements CapacityStore {
+
+    private final SharedResourceManagement srm;
+
+
+    private SrmCapacityStore(SharedResourceManagement srm) {
+      this.srm = srm;
+    }
+
+
+    public SharedResourceRequestResult<SharedResourceCapacity> create(List<SharedResourceInstance<SharedResourceCapacity>> data) {
+      return srm.create(XYNA_CAP_SR_DEF, data);
+    }
+
+
+    public SharedResourceRequestResult<SharedResourceCapacity> read(List<String> ids) {
+      return srm.read(XYNA_CAP_SR_DEF, ids);
+    }
+
+
+    public SharedResourceRequestResult<SharedResourceCapacity> readAll() {
+      return srm.readAll(XYNA_CAP_SR_DEF);
+    }
+
+
+    public SharedResourceRequestResult<SharedResourceCapacity> update(List<String> ids,
+                                                                      Function<SharedResourceInstance<SharedResourceCapacity>, SharedResourceInstance<SharedResourceCapacity>> update) {
+      return srm.update(XYNA_CAP_SR_DEF, ids, update);
+    }
+
+
+    public SharedResourceRequestResult<SharedResourceCapacity> delete(List<String> ids) {
+      return srm.delete(XYNA_CAP_SR_DEF, ids);
+    }
   }
 
   private static class ChangeCardinalityExceptionContainer {
@@ -871,11 +1155,14 @@ public class CMSharedResource implements CapacityManagementInterface {
       String orderType = orderInformation.getOrderType();
 
       List<Capacity> transferableCapacities = new ArrayList<>();
-      if (schedulingData.getTransferCapacities() != null) {
-        transferableCapacities = schedulingData.getTransferCapacities().getCapacities();
+      if (schedulingData.getTransferCapacities() != null && schedulingData.getTransferCapacities().getCapacities() != null) {
+        transferableCapacities.addAll(schedulingData.getTransferCapacities().getCapacities());
       }
 
-      List<Capacity> regularCapacities = schedulingData.getCapacities();
+      List<Capacity> regularCapacities = new ArrayList<>();
+      if (schedulingData.getCapacities() != null) {
+        regularCapacities.addAll(schedulingData.getCapacities());
+      }
 
       boolean multiAlloCaps = schedulingData.getMultiAllocationCapacities() != null;
       if (multiAlloCaps) {
@@ -889,22 +1176,22 @@ public class CMSharedResource implements CapacityManagementInterface {
         }
         listToAddTo.addAll(capsToAdd);
       }
-      List<String> ids = transferableCapacities.stream().map(x -> x.getCapName()).collect(Collectors.toList());
-      ids.addAll(regularCapacities.stream().map(x -> x.getCapName()).collect(Collectors.toList()));
+      Set<String> uniqueIds = new LinkedHashSet<>();
+      transferableCapacities.forEach(x -> uniqueIds.add(x.getCapName()));
+      regularCapacities.forEach(x -> uniqueIds.add(x.getCapName()));
+      List<String> ids = new ArrayList<>(uniqueIds);
 
       Map<String, Integer> totalCapacityMap = new HashMap<>();
       Map<String, Integer> regularCapacityMap = new HashMap<>();
       Map<String, Integer> transferableCapacityMap = new HashMap<>();
       for (Capacity capacity : transferableCapacities) {
-        totalCapacityMap.putIfAbsent(capacity.getCapName(), 0);
-        totalCapacityMap.compute(capacity.getCapName(), (x, y) -> y + capacity.getCardinality());
-        transferableCapacityMap.put(capacity.getCapName(), capacity.getCardinality());
+        totalCapacityMap.merge(capacity.getCapName(), capacity.getCardinality(), Integer::sum);
+        transferableCapacityMap.merge(capacity.getCapName(), capacity.getCardinality(), Integer::sum);
       }
 
       for (Capacity capacity : regularCapacities) {
-        totalCapacityMap.putIfAbsent(capacity.getCapName(), 0);
-        totalCapacityMap.compute(capacity.getCapName(), (x, y) -> y + capacity.getCardinality());
-        regularCapacityMap.put(capacity.getCapName(), capacity.getCardinality());
+        totalCapacityMap.merge(capacity.getCapName(), capacity.getCardinality(), Integer::sum);
+        regularCapacityMap.merge(capacity.getCapName(), capacity.getCardinality(), Integer::sum);
       }
 
       AllocateCapacitiesInformationContainer allocInfo = new AllocateCapacitiesInformationContainer();
