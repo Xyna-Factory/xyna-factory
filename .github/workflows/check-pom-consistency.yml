@@ -12,5 +12,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Checks encodings
+      - name: Checks versions
         run: installation/build/checkPomConsistency.py .
+      
+      - name: Checks third party consistency 
+        run: installation/build/checkThirdPartyDependencies.py installation/build/pom.xml installation/build/third_parties.pom.xml com.gip.xyna.*
