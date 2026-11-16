@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
@@ -186,6 +187,37 @@ public class TestWhiteListUtils {
   @Test
   public void testJsJSONPartTheSameWrongAccess() {
     assertEquals(true, WhiteListUtils.isJSONPartTheSame("{\"serviceCharacteristic\":{}}", "{}", "serviceCharacteristic[0].@type"));
+  }
+
+
+  @Test
+  public void testCanonicalizeOrderInsensitiveArrays() {
+    String json1 = "{\"tags\":[{\"b\":2,\"a\":1},{}],\"ordered\":[1,2]}";
+    String json2 = "{\"tags\":[{}, {\"a\":1,\"b\":2}],\"ordered\":[1,2]}";
+    assertEquals(JSONValue.parse(WhiteListUtils.canonicalizeOrderInsensitiveArrays(json1, Collections.singleton("$.tags"))),
+                 JSONValue.parse(WhiteListUtils.canonicalizeOrderInsensitiveArrays(json2, Collections.singleton("$.tags"))));
+
+    String reorderedOrderedArray = "{\"tags\":[{\"b\":2,\"a\":1},{}],\"ordered\":[2,1]}";
+    assertEquals(false, JSONValue.parse(WhiteListUtils.canonicalizeOrderInsensitiveArrays(json1, Collections.singleton("$.tags")))
+        .equals(JSONValue.parse(WhiteListUtils.canonicalizeOrderInsensitiveArrays(reorderedOrderedArray, Collections.singleton("$.tags")))));
+  }
+
+
+  @Test
+  public void testCanonicalizeIndefinitelySelectedOrderInsensitiveArrays() {
+    String json1 = "{\"groups\":[{\"tags\":[\"b\",\"a\"]},{\"tags\":[\"d\",\"c\"]}]}";
+    String json2 = "{\"groups\":[{\"tags\":[\"a\",\"b\"]},{\"tags\":[\"c\",\"d\"]}]}";
+    assertEquals(JSONValue.parse(WhiteListUtils.canonicalizeOrderInsensitiveArrays(json1, Collections.singleton("$.groups[*].tags"))),
+                 JSONValue.parse(WhiteListUtils.canonicalizeOrderInsensitiveArrays(json2, Collections.singleton("$.groups[*].tags"))));
+  }
+
+
+  @Test
+  public void testOrderInsensitiveArraysRemainDuplicateSensitive() {
+    String jsonWithDuplicates = "{\"tags\":[\"a\",\"a\",\"b\"]}";
+    String jsonWithoutDuplicate = "{\"tags\":[\"a\",\"b\"]}";
+    assertEquals(false, JSONValue.parse(WhiteListUtils.canonicalizeOrderInsensitiveArrays(jsonWithDuplicates, Collections.singleton("$.tags")))
+        .equals(JSONValue.parse(WhiteListUtils.canonicalizeOrderInsensitiveArrays(jsonWithoutDuplicate, Collections.singleton("$.tags")))));
   }
 
 

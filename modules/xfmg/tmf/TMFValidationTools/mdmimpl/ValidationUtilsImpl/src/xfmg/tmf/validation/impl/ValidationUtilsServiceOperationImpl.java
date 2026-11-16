@@ -19,11 +19,14 @@ package xfmg.tmf.validation.impl;
 
 
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.gip.xyna.XynaFactory;
@@ -35,6 +38,8 @@ import com.gip.xyna.xdev.ProjectCreationOrChangeProvider.ProjectCreationOrChange
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
+import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyString;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 
@@ -166,6 +171,9 @@ public class ValidationUtilsServiceOperationImpl
     }
     String s1 = WhiteListUtils.removePathsFromJSON(json1.getText(), changes.getIgnored());
     String s2 = WhiteListUtils.removePathsFromJSON(json2.getText(), changes.getIgnored());
+    Set<String> pathsOfOrderInsensitiveArrays = getPathsOfOrderInsensitiveArrays();
+    s1 = WhiteListUtils.canonicalizeOrderInsensitiveArrays(s1, pathsOfOrderInsensitiveArrays);
+    s2 = WhiteListUtils.canonicalizeOrderInsensitiveArrays(s2, pathsOfOrderInsensitiveArrays);
 
     if (!isEmpty(changes.getAllof())) {
       listloop : for (ChangeList cl : changes.getAllof()) {
@@ -195,6 +203,20 @@ public class ValidationUtilsServiceOperationImpl
     }
 
     throw new NotAnAllowedChange(msg(WhiteListUtils.createJsonPathListOfAllChanges(s1, s2)));
+  }
+
+  private static XynaPropertyString PROPERTY_PATHS_OF_ORDER_INSENSITIVE_ARRAYS = new XynaPropertyString(
+      "xfmg.tmf.validation.allowedchanges.pathsOfOrderInsensitiveArrays", "").setDefaultDocumentation(DocumentationLanguage.EN,
+          "Comma-separated JSONPaths of arrays whose element order is ignored. Duplicate elements remain significant.");
+
+
+  private Set<String> getPathsOfOrderInsensitiveArrays() {
+    String paths = PROPERTY_PATHS_OF_ORDER_INSENSITIVE_ARRAYS.get();
+    if (paths == null || paths.trim().isEmpty()) {
+      return Collections.emptySet();
+    }
+    return new HashSet<>(Arrays.asList(paths.split(",")).stream().map(String::trim).filter(s -> !s.isEmpty())
+        .collect(Collectors.toSet()));
   }
 
 

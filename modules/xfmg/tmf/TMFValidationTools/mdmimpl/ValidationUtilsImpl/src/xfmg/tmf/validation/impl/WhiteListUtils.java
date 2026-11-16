@@ -21,6 +21,7 @@ package xfmg.tmf.validation.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -57,6 +58,51 @@ public class WhiteListUtils {
       json = removePathFromJSON(json, p);
     }
     return json;
+  }
+
+
+  public static String canonicalizeOrderInsensitiveArrays(String json, Set<String> paths) {
+    if (paths == null || paths.isEmpty()) {
+      return json;
+    }
+    DocumentContext dc = JsonPath.using(Configuration.defaultConfiguration()).parse(json);
+    for (String path : paths.stream().sorted(Comparator.comparingInt(String::length).reversed()).collect(Collectors.toList())) {
+      JsonPath jsonPath = JsonPath.compile(path);
+      try {
+        Object selected = dc.read(jsonPath);
+        if (jsonPath.isDefinite()) {
+          sortArrayAsOrderInsensitive(selected, path);
+        } else if (selected instanceof JSONArray) {
+          for (Object match : (JSONArray) selected) {
+            sortArrayAsOrderInsensitive(match, path);
+          }
+        } else {
+          throw new IllegalArgumentException("JSONPath for array-as-set does not select arrays: " + path);
+        }
+      } catch (PathNotFoundException e) {
+        // The configured array may be absent from this JSON.
+      }
+    }
+    return JSONValue.toJSONString(dc.read("$"));
+  }
+
+
+  private static void sortArrayAsOrderInsensitive(Object selected, String path) {
+    if (!(selected instanceof JSONArray)) {
+      throw new IllegalArgumentException("JSONPath for array-as-set does not select an array: " + path);
+    }
+    JSONArray array = (JSONArray) selected;
+    List<Object> sorted = new ArrayList<>(array);
+    sorted.sort(Comparator.comparing(WhiteListUtils::canonicalizeJSONValue));
+    array.clear();
+    array.addAll(sorted);
+  }
+
+
+  private static String canonicalizeJSONValue(Object value) {
+    StringBuilder sb = new StringBuilder();
+    writeJSONValue(sb, value);
+    return sb.toString();
   }
 
 
@@ -548,12 +594,16 @@ public class WhiteListUtils {
 
   private static void writeJSONObject(StringBuilder sb, JSONObject obj) {
     sb.append("{");
-    obj.entrySet().stream().sorted((o1, o2) -> o1.getKey().compareTo(o2.getKey())).forEach(e -> {
+    boolean first = true;
+    for (Entry<String, Object> e : obj.entrySet().stream().sorted((o1, o2) -> o1.getKey().compareTo(o2.getKey()))
+        .collect(Collectors.toList())) {
+      if (!first) {
+        sb.append(", ");
+      }
       sb.append("\"").append(JSONValue.escape(e.getKey())).append("\": ");
       writeJSONValue(sb, e.getValue());
-      sb.append(", ");
-    });
-    sb.setLength(sb.length() - 2);
+      first = false;
+    }
     sb.append("}");
   }
 
