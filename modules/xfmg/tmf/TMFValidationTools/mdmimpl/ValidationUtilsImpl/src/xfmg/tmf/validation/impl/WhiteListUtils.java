@@ -21,6 +21,8 @@ package xfmg.tmf.validation.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -232,6 +234,7 @@ public class WhiteListUtils {
     public final String jsonLeft;
     public final String jsonRight;
     public final int sumLen;
+    public final String customMessage;
 
 
     public JSONCorrelationDetails(String jsonLeft, String jsonRight) {
@@ -239,6 +242,15 @@ public class WhiteListUtils {
       this.jsonLeft = jsonLeft;
       this.jsonRight = jsonRight;
       this.sumLen = len(jsonLeft) + len(jsonRight);
+      this.customMessage = null;
+    }
+
+
+    private JSONCorrelationDetails(String customMessage) {
+      this.jsonLeft = null;
+      this.jsonRight = null;
+      this.sumLen = 0;
+      this.customMessage = customMessage;
     }
 
 
@@ -251,6 +263,9 @@ public class WhiteListUtils {
 
 
     public String toString() {
+      if (customMessage != null) {
+        return customMessage;
+      }
       StringBuilder sb = new StringBuilder();
       if (jsonLeft == null || jsonRight == null) {
         sb.append("only ");
@@ -278,16 +293,29 @@ public class WhiteListUtils {
     public static JSONCorrelationDetails of(Object o1, Object o2) {
       return new JSONCorrelationDetails(o1 == null ? null : JSONValue.toJSONString(o1), o2 == null ? null : JSONValue.toJSONString(o2));
     }
+
+
+    public static JSONCorrelationDetails moved(Object value, int fromIndex, int toIndex) {
+      return new JSONCorrelationDetails(JSONValue.toJSONString(value) + " is at a different place in the array (index " + fromIndex
+          + " -> " + toIndex + ")");
+    }
   }
 
 
   public static List<String> createJsonPathListOfAllChanges(String json1, String json2) {
+    return createJsonPathListOfAllChanges(json1, json2, Collections.emptySet());
+  }
+
+
+  public static List<String> createJsonPathListOfAllChanges(String json1, String json2, Set<String> orderInsensitiveArrayPaths) {
+    json1 = canonicalizeOrderInsensitiveArrays(json1, orderInsensitiveArrayPaths);
+    json2 = canonicalizeOrderInsensitiveArrays(json2, orderInsensitiveArrayPaths);
     Object o1 = JSONValue.parse(json1);
     Object o2 = JSONValue.parse(json2);
     Map<String, JSONCorrelationDetails> changes = new HashMap<>();
     addJSONValueChanges(changes, null, "$", o1, o2, false);
     return changes.entrySet().stream().sorted((e, f) -> e.getKey().compareTo(f.getKey())).map(e -> {
-      return "<" + e.getKey() + "> is " + e.getValue(); 
+      return "<" + e.getKey() + ">" + (e.getValue().customMessage == null ? " is " + e.getValue() : " " + e.getValue());
     })
         .collect(Collectors.toList());
   }
@@ -334,17 +362,6 @@ public class WhiteListUtils {
   }
 
 
-  private static void addSubMapEntries(Map<String, JSONCorrelationDetails> changes, Map<String, JSONCorrelationDetails> subChanges,
-                                       String basePath) {
-    if (changes == null) {
-      return;
-    }
-    for (Entry<String, JSONCorrelationDetails> e : subChanges.entrySet()) {
-      changes.put(basePath + e.getKey(), e.getValue());
-    }
-  }
-
-
   private static void addSame(Map<String, JSONCorrelationDetails> same, String path, Object o) {
     if (same == null) {
       return;
@@ -387,11 +404,6 @@ public class WhiteListUtils {
   }
 
 
-  /*
-   * json array element ordering is typically of importance, but in our case we 
-   * ignore that and treat it as a set. because the other whitelist functions also
-   * don't care about changes in order.
-   */
   private static void addJSONArrayChanges(Map<String, JSONCorrelationDetails> changes, Map<String, JSONCorrelationDetails> same,
                                           String basePath, JSONArray a1, JSONArray a2, boolean lrswitch) {
     if (logger.isTraceEnabled()) {
@@ -403,119 +415,119 @@ public class WhiteListUtils {
       addSame(same, basePath, a1);
       return;
     }
-    Set<Object> intersection = new HashSet<>(a1);
-    intersection.retainAll(a2);
-    //intersection is "equal" and can be ignored
-    if (intersection.size() == a1.size() && a1.size() == a2.size()) {
-      addSame(same, basePath, a1);
-      return;
-    }
-    for (Object o : intersection) {
-      addSame(same, basePath + buildQualifier(a1, o), o);
-    }
-    Set<Object> remaining1 = new HashSet<>(a1);
-    remaining1.removeAll(intersection);
-    Set<Object> remaining2 = new HashSet<>(a2);
-    remaining2.removeAll(intersection);
-    if (remaining1.size() > remaining2.size()) {
-      Set<Object> tmp = remaining1;
-      remaining1 = remaining2;
-      remaining2 = tmp;
-      JSONArray tmpa = a1;
-      a1 = a2;
-      a2 = tmpa;
-      lrswitch = !lrswitch;
-    }
-    Map<Object, Map<Object, Map<String, JSONCorrelationDetails>[]>> changeMap = new HashMap<>();
-    outer : for (Object o : remaining1) {
-      /*
-       * now the question is, is there another object in remaining2 that is mostly the same?
-       * it could even be fully the same, because in nested list only the ordering of elements could be different.
-       * 
-       * => search for the minimum of changes below each candidate
-       */
-      Map<Object, Map<String, JSONCorrelationDetails>[]> m = new HashMap<>();
-      for (Object o2 : remaining2) {
-        Map<String, JSONCorrelationDetails> change1 = new HashMap<>();
-        Map<String, JSONCorrelationDetails> same1 = new HashMap<>();
-        addJSONValueChanges(change1, same1, "", o, o2, lrswitch);
-        if (change1.size() == 0) {
-          //found a identical (up to ordering) object
-          remaining2.remove(o2);
-          addSame(same, basePath + buildQualifier(a1, o), o);
-          continue outer;
+    int[][] lcs = new int[a1.size() + 1][a2.size() + 1];
+    for (int i = a1.size() - 1; i >= 0; i--) {
+      for (int j = a2.size() - 1; j >= 0; j--) {
+        if (Objects.equals(a1.get(i), a2.get(j))) {
+          lcs[i][j] = lcs[i + 1][j + 1] + 1;
+        } else {
+          lcs[i][j] = Math.max(lcs[i + 1][j], lcs[i][j + 1]);
         }
-        m.put(o2, new Map[] {change1, same1});
       }
-      changeMap.put(o, m);
     }
 
-    if (logger.isTraceEnabled()) {
-      logger.trace("looking for best matches...");
-    }
-    while (changeMap.size() > 0) {
-      Object[] similar = getMostSimilar(changeMap, remaining2);
-      remaining2.remove(similar[1]);
-      Map<String, JSONCorrelationDetails>[] similarChanges = changeMap.remove(similar[0]).get(similar[1]);
-      //now we need to add a suitable qualifier to the path that identifies both elements uniquely.
-      String path = basePath + buildQualifier(a1, similar[0]);
-      addSubMapEntries(changes, similarChanges[0], path);
-      addSubMapEntries(same, similarChanges[1], path);
+    boolean[] matchedLeft = new boolean[a1.size()];
+    boolean[] matchedRight = new boolean[a2.size()];
+    int[] matchedRightIndexForLeft = new int[a1.size()];
+    Arrays.fill(matchedRightIndexForLeft, -1);
+    int leftIndex = 0;
+    int rightIndex = 0;
+    while (leftIndex < a1.size() && rightIndex < a2.size()) {
+      if (Objects.equals(a1.get(leftIndex), a2.get(rightIndex))) {
+        matchedLeft[leftIndex] = true;
+        matchedRight[rightIndex] = true;
+        matchedRightIndexForLeft[leftIndex] = rightIndex;
+        leftIndex++;
+        rightIndex++;
+      } else if (lcs[leftIndex][rightIndex + 1] > lcs[leftIndex + 1][rightIndex]
+          || (lcs[leftIndex][rightIndex + 1] == lcs[leftIndex + 1][rightIndex]
+              && a2.size() - rightIndex >= a1.size() - leftIndex)) {
+        rightIndex++;
+      } else {
+        leftIndex++;
+      }
     }
 
-    for (Object o : remaining2) {
-      addChange(changes, basePath + buildQualifier(a2, o), null, o, lrswitch);
+    boolean[] movedLeft = new boolean[a1.size()];
+    boolean[] movedRight = new boolean[a2.size()];
+    for (int i = 0; i < a1.size(); i++) {
+      if (matchedLeft[i]) {
+        continue;
+      }
+      int closestMatch = -1;
+      int closestDistance = Integer.MAX_VALUE;
+      for (int j = 0; j < a2.size(); j++) {
+        if (!matchedRight[j] && !movedRight[j] && i != j && Objects.equals(a1.get(i), a2.get(j))) {
+          int distance = Math.abs(i - j);
+          if (distance < closestDistance) {
+            closestMatch = j;
+            closestDistance = distance;
+          }
+        }
+      }
+      if (closestMatch >= 0) {
+        movedLeft[i] = true;
+        movedRight[closestMatch] = true;
+        String path = basePath + "[" + i + "] (moved)";
+        changes.put(path, JSONCorrelationDetails.moved(a1.get(i), i, closestMatch));
+      }
+    }
+
+    int leftSegmentStart = 0;
+    int rightSegmentStart = 0;
+    for (int i = 0; i < a1.size(); i++) {
+      if (matchedLeft[i]) {
+        int j = matchedRightIndexForLeft[i];
+        addJSONArraySegmentChanges(changes, same, basePath, a1, a2, leftSegmentStart, i, rightSegmentStart, j, movedLeft,
+                                   movedRight, lrswitch);
+        leftSegmentStart = i + 1;
+        rightSegmentStart = j + 1;
+      }
+    }
+    addJSONArraySegmentChanges(changes, same, basePath, a1, a2, leftSegmentStart, a1.size(), rightSegmentStart, a2.size(), movedLeft,
+                               movedRight, lrswitch);
+  }
+
+
+  private static void addJSONArraySegmentChanges(Map<String, JSONCorrelationDetails> changes, Map<String, JSONCorrelationDetails> same,
+                                                 String basePath, JSONArray a1, JSONArray a2, int leftStart, int leftEnd, int rightStart,
+                                                 int rightEnd, boolean[] movedLeft, boolean[] movedRight, boolean lrswitch) {
+    List<Integer> leftIndices = new ArrayList<>();
+    List<Integer> rightIndices = new ArrayList<>();
+    for (int i = leftStart; i < leftEnd; i++) {
+      if (!movedLeft[i]) {
+        leftIndices.add(i);
+      }
+    }
+    for (int i = rightStart; i < rightEnd; i++) {
+      if (!movedRight[i]) {
+        rightIndices.add(i);
+      }
+    }
+    int commonLength = Math.min(leftIndices.size(), rightIndices.size());
+    for (int i = 0; i < commonLength; i++) {
+      int left = leftIndices.get(i);
+      int right = rightIndices.get(i);
+      addJSONValueChanges(changes, same, basePath + "[" + right + "]", a1.get(left), a2.get(right), lrswitch);
+    }
+    for (int i = commonLength; i < leftIndices.size(); i++) {
+      int left = leftIndices.get(i);
+      addArrayOnlyChange(changes, basePath, left, a1.get(left), true, lrswitch);
+    }
+    for (int i = commonLength; i < rightIndices.size(); i++) {
+      int right = rightIndices.get(i);
+      addArrayOnlyChange(changes, basePath, right, a2.get(right), false, lrswitch);
     }
   }
 
 
-  private static String buildQualifier(JSONArray a, Object o) {
-    return "[" + a.indexOf(o) + "]";
-  }
-
-
-  private static Object[] getMostSimilar(Map<Object, Map<Object, Map<String, JSONCorrelationDetails>[]>> changeMap,
-                                         Set<Object> remaining2) {
-    /*
-     * what "IS" most similar?
-     * => highest ratio between same and change (measured in length of json-subsnippet of both)
-     * but two changes of length 1 should be a bigger change than one change of length 2
-     * so lets do something like this:
-     * changeVal = (countChangePaths*3-2) * sumChangeLength
-     * sameVal = (countSamePaths*3-2) * sumSameLength
-     */
-    double maxRatio = 0;
-    Object[] similar = new Object[2];
-    for (Entry<Object, Map<Object, Map<String, JSONCorrelationDetails>[]>> e : changeMap.entrySet()) {
-      Map<Object, Map<String, JSONCorrelationDetails>[]> rm = e.getValue();
-      for (Entry<Object, Map<String, JSONCorrelationDetails>[]> re : rm.entrySet()) {
-        if (!remaining2.contains(re.getKey())) {
-          //already identified as part of another pair
-          continue;
-        }
-        int countChangePaths = re.getValue()[0].size();
-        int countSamePaths = re.getValue()[1].size();
-        int sumChangeLength = re.getValue()[0].values().stream().mapToInt(i -> i.sumLen).sum();
-        int sumSameLength = re.getValue()[1].values().stream().mapToInt(i -> i.sumLen).sum();
-        int changeVal = (countChangePaths * 3 - 2) * sumChangeLength;
-        int sameVal = (countSamePaths * 3 - 2) * sumSameLength;
-        double ratio = 1.0 * sameVal / changeVal;
-        if (ratio > maxRatio) {
-          maxRatio = ratio;
-          similar[0] = e.getKey();
-          similar[1] = re.getKey();
-        }
-      }
+  private static void addArrayOnlyChange(Map<String, JSONCorrelationDetails> changes, String basePath, int index, Object value,
+                                         boolean leftOnly, boolean lrswitch) {
+    String path = basePath + "[" + index + "]";
+    if (changes.containsKey(path)) {
+      path += leftOnly ? " (left)" : " (right)";
     }
-    if (similar[0] == null) {
-      throw new RuntimeException(); //should not happen, because the keyset of the first map is smaller then the nested one 
-    }
-    if (logger.isTraceEnabled()) {
-      logger.trace("next best match (" + maxRatio + "): ");
-      logger.trace(" left: " + JSONValue.toJSONString(similar[0]));
-      logger.trace("right: " + JSONValue.toJSONString(similar[1]));
-    }
-    return similar;
+    addChange(changes, path, leftOnly ? value : null, leftOnly ? null : value, lrswitch);
   }
 
 

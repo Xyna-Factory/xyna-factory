@@ -20,6 +20,7 @@ package xfmg.tmf.validation.impl;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.Arrays;
@@ -88,6 +89,53 @@ public class TestWhiteListUtils {
   public void testListOfChanges() {
     List<String> l = WhiteListUtils.createJsonPathListOfAllChanges(TestParser.JSON, TestParser.JSON2);
     System.out.println(l);
+  }
+
+
+  @Test
+  public void testArrayReorderingReportsMovedElementOnce() {
+    List<String> differences =
+        WhiteListUtils.createJsonPathListOfAllChanges("{\"items\":[\"first\",\"second\"]}", "{\"items\":[\"second\",\"first\"]}");
+    assertEquals(1, differences.size());
+    assertTrue(differences.get(0).contains("\"second\" is at a different place in the array"));
+  }
+
+
+  @Test
+  public void testArrayMoveAndInsertionAreBothReported() {
+    List<String> differences =
+        WhiteListUtils.createJsonPathListOfAllChanges("{\"items\":[\"1\",\"3\",\"2\"]}", "{\"items\":[\"1\",\"2\",\"4\",\"3\"]}");
+    assertEquals(2, differences.size());
+    assertTrue(differences.stream().anyMatch(d -> d.contains("\"2\" is at a different place in the array (index 2 -> 1)")));
+    assertTrue(differences.stream().anyMatch(d -> d.contains("only right: \"4\"")));
+  }
+
+   @Test
+  public void testArrayInsertionAtBeginningOnlyReportsInsertedElement() {
+    List<String> differences =
+        WhiteListUtils.createJsonPathListOfAllChanges("{\"items\":[\"first\",\"second\"]}", "{\"items\":[\"X\",\"first\",\"second\"]}");
+    assertEquals(1, differences.size());
+    assertTrue(differences.get(0).contains("<$.items[0]>"));
+    assertTrue(differences.get(0).contains("only right: \"X\""));
+  }
+
+
+  @Test
+  public void testArrayInsertionInMiddleOnlyReportsInsertedElement() {
+    List<String> differences =
+        WhiteListUtils.createJsonPathListOfAllChanges("{\"items\":[\"first\",\"second\"]}", "{\"items\":[\"first\",\"X\",\"second\"]}");
+    assertEquals(1, differences.size());
+    assertTrue(differences.get(0).contains("<$.items[1]>"));
+    assertTrue(differences.get(0).contains("only right: \"X\""));
+  }
+
+
+  @Test
+  public void testOrderInsensitiveArrayChangesAreNotReported() {
+    List<String> differences = WhiteListUtils.createJsonPathListOfAllChanges("{\"items\":[\"first\",\"second\"]}",
+                                                                              "{\"items\":[\"second\",\"first\"]}",
+                                                                              Collections.singleton("$.items"));
+    assertTrue(differences.isEmpty());
   }
 
 

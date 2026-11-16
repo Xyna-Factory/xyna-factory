@@ -172,6 +172,8 @@ public class ValidationUtilsServiceOperationImpl
     String s1 = WhiteListUtils.removePathsFromJSON(json1.getText(), changes.getIgnored());
     String s2 = WhiteListUtils.removePathsFromJSON(json2.getText(), changes.getIgnored());
     Set<String> pathsOfOrderInsensitiveArrays = getPathsOfOrderInsensitiveArrays();
+    String json1ForDiff = s1;
+    String json2ForDiff = s2;
     s1 = WhiteListUtils.canonicalizeOrderInsensitiveArrays(s1, pathsOfOrderInsensitiveArrays);
     s2 = WhiteListUtils.canonicalizeOrderInsensitiveArrays(s2, pathsOfOrderInsensitiveArrays);
 
@@ -202,7 +204,8 @@ public class ValidationUtilsServiceOperationImpl
       }
     }
 
-    throw new NotAnAllowedChange(msg(WhiteListUtils.createJsonPathListOfAllChanges(s1, s2)));
+    throw new NotAnAllowedChange(msg(
+        WhiteListUtils.createJsonPathListOfAllChanges(json1ForDiff, json2ForDiff, pathsOfOrderInsensitiveArrays)));
   }
 
   private static XynaPropertyString PROPERTY_PATHS_OF_ORDER_INSENSITIVE_ARRAYS = new XynaPropertyString(
