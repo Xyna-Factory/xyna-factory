@@ -29,11 +29,12 @@
 	         target: build             
 	        ================================= -->
 	<target name="build" depends="clearLibs, resolve, genCodeClass, buildMemoryPersistenceLayer, buildClusterManagement, buildXSOR">
-<echo message="basedir: ${basedir}" />
-<echo message="target.dir: ${target.dir}" />
+		<echo message="basedir: ${basedir}" />
+		<echo message="target.dir: ${target.dir}" />
 		<mkdir dir="${basedir}/classes" />
 		<mkdir dir="${target.dir}" />
 		<javac debug="on" encoding="iso8859-1" includeantruntime="false" fork="yes" srcdir="${basedir}/src" destdir="${basedir}/classes">
+			<compilerarg line="-proc:none" />
 			<classpath path="${basedir}/classes" />
 			<!-- custom libraries to be specified in template project -->
 			<classpath>
@@ -57,9 +58,6 @@
 			<fileset dir="${basedir}">
 				<include name="Exceptions.xml" />
 			</fileset>
-			<!--     <fileset dir="${basedir}/src">
-    	                                <include name="**/*.xml" />
-    	                        </fileset> -->
 		</jar>
 		<copy todir="${target.dir}">
 			<fileset dir="${basedir}/lib">
@@ -109,11 +107,6 @@
 
 
 	<target name="buildXSOR">
-<echo message="basedir: ${basedir}" />
-<echo message="target.dir: ${target.dir}" />
-<echo message="ant.version: ${ant.version}" />
-<echo message="java.version: ${java.version}" />
-<echo message="PATH: ${env.PATH}" />
 	       <ant dir="../xsor" target="build">
 	       <property name="target.dir" value="${basedir}/lib" />
 	       </ant>
@@ -127,10 +120,9 @@
 	</target>
 
 	<target name="buildMemoryPersistenceLayer">
-		<!-- FIXME: memoryPL kann nicht mit java 6 gebaut werden... -->
-		<!--	<ant dir="../../../../persistencelayers/XynaMemoryPersistenceLayer" target="build">
+		<ant dir="../../../../persistencelayers/XynaMemoryPersistenceLayer" target="build">
 			<property name="target.dir" value="${basedir}/lib" />
-		</ant> -->
+		</ant>
 	</target>
 
 	<target name="genCodeClass" description="Generate code class for exceptions.">
