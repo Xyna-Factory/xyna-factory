@@ -377,9 +377,11 @@ public class ApplicationXmlEntry {
           element = doc.createElement(ApplicationXmlHandler.TAG_SHAREDLIBS);
           element.appendChild(doc.createTextNode(entry.getSharedLibs()));
           entryElement.appendChild(element);
-          element = doc.createElement(ApplicationXmlHandler.TAG_DESCRIPTION);
-          element.appendChild(doc.createTextNode(entry.getDescription()));
-          entryElement.appendChild(element);
+          if(entry.getDescription() != null) {
+            element = doc.createElement(ApplicationXmlHandler.TAG_DESCRIPTION);
+            element.appendChild(doc.createTextNode(entry.getDescription()));
+            entryElement.appendChild(element);
+          }
           listElement.appendChild(entryElement);
         }
       }

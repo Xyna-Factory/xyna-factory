@@ -19,7 +19,8 @@ package xfmg.oas.generation.tools;
 
 
 
-public record AppGenerationData(String specFile, String oasVersion, boolean generateMock, boolean generateDataCapture,
+public record AppGenerationData(String specFile, String oasVersion, String fileMgmtVersion,
+                                boolean generateMock, boolean generateDataCapture,
                                 OasImportStatusHandler statusHandler) {
 
 }

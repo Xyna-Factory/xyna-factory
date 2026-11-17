@@ -146,9 +146,25 @@ public class VM_SeparateThread implements VetoManagementInterface {
     
     //3) eigentliche Allozierung
     List<String> allocated = new ArrayList<String>();
+    List<String> newlyAllocated = new ArrayList<String>();
     for (AllocationRequest req : reqList.getList()) {
-      vetoCache.allocate(req, urgency, allocationMode);
-      allocated.add(req.getVetoName());
+      VetoCacheEntry entry = req.getCacheEntry();
+      boolean alreadyHeld = entry != null && entry.isUsedBy(orderInformation.getOrderId());
+      if (vetoCache.allocate(req, urgency, allocationMode)) {
+        allocated.add(req.getVetoName());
+        if (!alreadyHeld) {
+          newlyAllocated.add(req.getVetoName());
+        }
+      } else if (allocationMode == ListAllocationMode.COMPLETE) {
+        //veto changed since the check (e.g. concurrently freed): order must not run with only a part of its vetos
+        if( logger.isDebugEnabled() ) {
+          logger.debug("Allocation of veto " + req.getVetoName() + " failed for " + orderInformation
+              + ", rolling back " + newlyAllocated);
+        }
+        undoAllocatedVetos(orderInformation, newlyAllocated);
+        VetoInformation vi = entry == null ? null : entry.getVetoInformation();
+        return new VetoAllocationResult(vi != null ? vi : new VetoInformation(req.getVetoName()));
+      }
     }
     List<String> list = allocatedVetos.get(orderInformation.getOrderId());
     if( list == null ) {
@@ -179,20 +195,7 @@ public class VM_SeparateThread implements VetoManagementInterface {
        logger.trace(" UndoAllocation ");
        List<String> allocated = allocatedVetos.remove(orderInformation.getOrderId());
        if( allocated != null ) {
-         List<String> allocatedNew = new ArrayList<>();
-         for( String v : allocated ) {
-           VetoCacheEntry vce = vetoCache.get(v);
-           if (vce == null) { continue; }
-           boolean canBeRemoved = vce.undoAllocation(orderInformation);
-           if (!canBeRemoved) {
-             allocatedNew.add(v);
-           }
-         }
-         if (!allocatedNew.isEmpty()) {
-           allocatedVetos.put(orderInformation.getOrderId(), allocatedNew);
-           // finalizeAllocation will not be called by scheduler, but changes need to be persisted
-           finalizeAllocationImpl(orderInformation, allocatedNew);
-         }
+         undoAllocatedVetos(orderInformation, allocated);
        }
        if( logger.isTraceEnabled() ) {
          logger.trace("VetoCache after undoAlloc " + vetoCache.showVetoCache() );
@@ -200,6 +203,23 @@ public class VM_SeparateThread implements VetoManagementInterface {
     } catch (Exception e) {
       logger.error("Error trying to undo veto allocation. ", e);
     }
+   }
+
+   private void undoAllocatedVetos(OrderInformation orderInformation, List<String> allocated) {
+     List<String> allocatedNew = new ArrayList<>();
+     for( String v : allocated ) {
+       VetoCacheEntry vce = vetoCache.get(v);
+       if (vce == null) { continue; }
+       boolean canBeRemoved = vce.undoAllocation(orderInformation);
+       if (!canBeRemoved) {
+         allocatedNew.add(v);
+       }
+     }
+     if (!allocatedNew.isEmpty()) {
+       allocatedVetos.put(orderInformation.getOrderId(), allocatedNew);
+       // finalizeAllocation will not be called by scheduler, but changes need to be persisted
+       finalizeAllocationImpl(orderInformation, allocatedNew);
+     }
    }
 
    @Deprecated
