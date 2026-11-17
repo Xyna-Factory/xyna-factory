@@ -28,7 +28,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.nio.channels.ServerSocketChannel;
-import java.security.AccessControlException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -345,9 +344,6 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
       } else {
         throw new RuntimeException();
       }
-    } catch (AccessControlException e) {
-      // not onErrorDuringReceive to log less
-      logger.error("error receiving connection: " + e.getMessage());
     } catch (IOException e) {
       if (!isStopping) {
         onErrorDuringReceive(new HTTPTRIGGER_HTTP_RECEIVE_ERROR(e.getMessage(), e));
