@@ -76,6 +76,12 @@ public class SQLSharedResourceSynchronizerFactory implements SharedResourceSynch
       StringParameter.typeDuration("socketTimeout").label("Socket Timeout").defaultValue(Duration.valueOf("10 s"))
           .documentation(Documentation.en("Database socket timeout").de("Datenbank-Sockettimeout").build()).build();
 
+  private static final StringParameter<Duration> VALIDATION_IDLE_THRESHOLD =
+      StringParameter.typeDuration("validationIdleThreshold").label("Connection Validation Idle Threshold")
+          .defaultValue(SQLSharedResourceSynchronizer.DEFAULT_VALIDATION_IDLE_THRESHOLD)
+          .documentation(Documentation.en("Validate a connection on reuse after it has been idle for this long; 0 validates every reuse")
+              .de("Eine Verbindung nach dieser Leerlaufzeit wird vor der Wiederverwendung geprüft; 0 prüft jede Wiederverwendung").build()).build();
+
   private static final StringParameter<StringEnvironmentVariable> URL_ENV = StringParameter
       .typeEnvironmentVariable(StringEnvironmentVariable.class, "connectStringEnv").label("Connectstring environment variable.")
       .documentation(Documentation.en("Name of the environment variable containing the JDBC connect string.")
@@ -85,13 +91,13 @@ public class SQLSharedResourceSynchronizerFactory implements SharedResourceSynch
   private static final StringParameter<StringEnvironmentVariable> USER_ENV =
       StringParameter.typeEnvironmentVariable(StringEnvironmentVariable.class, "usernameEnv").label("User environment variable.")
           .documentation(Documentation.en("Name of the environment variable containing the db username.")
-              .de("Name der Umgebungsvariable, die den DB Nutzernamen enth?lt.").build())
+              .de("Name der Umgebungsvariable, die den DB Nutzernamen enthält.").build())
           .optional().build();
 
   private static final StringParameter<StringEnvironmentVariable> PASSWORD_ENV =
       StringParameter.typeEnvironmentVariable(StringEnvironmentVariable.class, "passwordEnv").label("Connectstring environment variable.")
           .documentation(Documentation.en("Name of the environment variable containing the db password.")
-              .de("Name der Umgebungsvariable, die das DB Passwort enth?lt.").build())
+              .de("Name der Umgebungsvariable, die das DB Passwort enthält.").build())
           .optional().build();
 
   private static final StringParameter<IntegerEnvironmentVariable> CONNECTIONS_ENV =
@@ -101,8 +107,8 @@ public class SQLSharedResourceSynchronizerFactory implements SharedResourceSynch
           .optional().build();
 
   private static final List<StringParameter<?>> importParameters =
-      StringParameter.asList(TABLENAME, URL, USER, PASSWORD, CONNECTIONS, CONCURRENT_MODIFICATION_RETRIES, CONNECTION_TIMEOUT, SOCKET_TIMEOUT, URL_ENV, USER_ENV,
-                             PASSWORD_ENV, CONNECTIONS_ENV);
+      StringParameter.asList(TABLENAME, URL, USER, PASSWORD, CONNECTIONS, CONCURRENT_MODIFICATION_RETRIES, CONNECTION_TIMEOUT,
+                             SOCKET_TIMEOUT, VALIDATION_IDLE_THRESHOLD, URL_ENV, USER_ENV, PASSWORD_ENV, CONNECTIONS_ENV);
 
 
   @Override
@@ -125,6 +131,7 @@ public class SQLSharedResourceSynchronizerFactory implements SharedResourceSynch
     int concurrentModificationRetries = CONCURRENT_MODIFICATION_RETRIES.getFromMap(param);
     Duration connectTimeout = CONNECTION_TIMEOUT.getFromMap(param);
     Duration socketTimeout = SOCKET_TIMEOUT.getFromMap(param);
+    Duration validationIdleThreshold = VALIDATION_IDLE_THRESHOLD.getFromMap(param);
 
     if (!errors.isEmpty()) {
       String msg = String.format("Could not create Synchronizer. %d errors: \n\t%s", errors.size(), 
@@ -133,7 +140,7 @@ public class SQLSharedResourceSynchronizerFactory implements SharedResourceSynch
     }
 
     return new SQLSharedResourceSynchronizer(tableName, url, username, password, numConnections, concurrentModificationRetries,
-                                             connectTimeout, socketTimeout);
+                                             connectTimeout, socketTimeout, validationIdleThreshold);
   }
 
 

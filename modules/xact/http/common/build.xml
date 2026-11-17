@@ -57,6 +57,7 @@
         <delete dir="${target.dir}" />
         <mkdir dir="${target.dir}" />
         <javac debug="on" includeantruntime="false" encoding="ISO-8859-1" fork="true" srcdir="${src.dir}" destdir="${target.dir}">
+            <compilerarg line="-proc:none" />
             <classpath>
                 <fileset dir="${lib.dir}">
                     <include name="**/*.jar" />
