@@ -73,6 +73,85 @@ public class VetoCacheSharedClusterTest extends TestCase {
     assertSharedHolders(second, 1L, 2L);
   }
 
+  public void testStepped_CompareLoserRecordsAuthorityBeforeFirstGrant() {
+    first.vc.getOrCreate("V", 100);
+    second.vc.getOrCreate("V", 100);
+
+    first.executeVetoCacheProcessor();
+
+    assertEquals(VetoCache.State.Local, first.vc.get("V").getState());
+    assertEquals(VetoCache.State.Remote, second.vc.get("V").getState());
+    assertEquals("Remote compare result must remember the peer authority", 1,
+                 second.vc.get("V").getAuthorityBinding());
+    assertNull("Compare must not fabricate a holder snapshot", second.vc.get("V").getVetoInformation());
+  }
+
+  public void testFailedCompareRequestReturnsToRetryableState() {
+    VetoCacheEntry entry = new VetoCacheEntry("RETRY", VetoCache.State.Comparing, 100);
+    assertNull(first.vc.putIfAbsent(entry));
+    VetoRequest request = new VetoRequest(91, 1);
+    request.compare(entry);
+
+    ((VCP_Clustered)first.vcp).handleResponse(request, VetoResponse.failed(91, "RMI unavailable"));
+
+    assertEquals(VetoCache.State.Compare, entry.getState());
+    assertEquals("RETRY", first.vc.getVetoToProcess());
+  }
+
+  public void testCompareQueuesFreeRemoteEntryForCleanup() {
+    VetoCacheEntry freed = new VetoCacheEntry("RETRY", VetoCache.State.Free);
+    assertNull(second.vc.putIfAbsent(freed));
+    VetoCacheEntry compareEntry = new VetoCacheEntry("RETRY", VetoCache.State.Compare);
+    VetoRequest request = new VetoRequest(92, 1);
+    request.compare(compareEntry);
+
+    VetoResponse response = ((VCP_Clustered)second.vcp).getLocal().processRemoteVetoRequest(request);
+
+    assertEquals(Response.IN_USE, response.getResponses().get(0).getResponse());
+    assertTrue(second.vc.hasVetosToProcess());
+    VetoRequest repeated = new VetoRequest(94, 1);
+    repeated.compare(compareEntry);
+    ((VCP_Clustered)second.vcp).getLocal().processRemoteVetoRequest(repeated);
+    assertEquals("[RETRY]", second.vc.showVetoQueue());
+    second.executeVetoCacheProcessor();
+    assertEquals(VetoCache.State.Remote, freed.getState());
+
+    VetoRequest retry = new VetoRequest(93, 1);
+    retry.compare(compareEntry);
+    response = ((VCP_Clustered)second.vcp).getLocal().processRemoteVetoRequest(retry);
+    assertEquals(Response.COMPARE, response.getResponses().get(0).getResponse());
+    assertEquals(VetoResponse.VetoResponseEntry.Compare.UNUSED, response.getResponses().get(0).getCompareResult());
+    assertNull(second.vc.get("RETRY"));
+  }
+
+  public void testStepped_RemoteOnlyReadersBootstrapAuthority() {
+    VetoCacheEntry initial = first.vc.getOrCreate("V", 100);
+    assertEquals(VetoCache.State.Compare, initial.getState());
+
+    first.executeVetoCacheProcessor();
+    second.executeVetoCacheProcessor();
+    assertEquals(VetoCache.State.Local, first.vc.get("V").getState());
+    assertEquals(VetoCache.State.Remote, second.vc.get("V").getState());
+    assertEquals(1, second.vc.get("V").getAuthorityBinding());
+    assertNull(second.vc.get("V").getVetoInformation());
+
+    TestOrder firstReader = reader(11);
+    TestOrder secondReader = reader(12);
+    assertEventuallyGranted(second, firstReader, true);
+    processBoth();
+    assertFalse("A second remote reader must wait for an authority grant",
+          tryAllocate(second, secondReader, true));
+        assertTrue("Second reader request must be queued: " + second.showVetoQueue(),
+           second.showVetoQueue().endsWith("-1"));
+    processBoth();
+    assertSharedHolders(first, 11L, 12L);
+    assertEventuallyGranted(second, secondReader, true);
+    processBoth();
+
+    assertSharedHolders(first, 11L, 12L);
+    assertSharedHolders(second, 11L, 12L);
+  }
+
   public void testStepped_PartialReleaseUpdatesBothReplicasAndPersistence() {
     seedSharedHolders(1L, 2L);
 
@@ -90,6 +169,20 @@ public class VetoCacheSharedClusterTest extends TestCase {
     assertEquals("{}", second.showVetoCache());
     assertEquals("{}", first.showVetoPersistence());
     assertEquals("{}", second.showVetoPersistence());
+  }
+
+  public void testSharedReleaseSuccessDoesNotRequeueFreedReplica() {
+    seedSharedHolders(1L, 2L);
+    VetoCacheEntry requesterEntry = second.vc.get("V");
+
+    ((VCP_Clustered)second.vcp).requestSharedRelease(requesterEntry, 2L);
+    assertTrue(requesterEntry.free());
+    second.executeVetoCacheProcessor();
+
+    assertEquals(VetoCache.State.Free, requesterEntry.getState());
+    assertFalse("Successful release acknowledgement must not requeue the freed entry",
+                second.vc.hasVetosToProcess());
+    assertSharedHolders(first, 1L);
   }
 
   public void testStepped_PendingWriterBlocksNewReadersOnBothNodes() {
@@ -239,6 +332,27 @@ public class VetoCacheSharedClusterTest extends TestCase {
     assertEquals(Arrays.asList(2L), current.getSharedOrderIds());
   }
 
+  public void testNewerAuthoritySnapshotRefreshesFreedReplica() {
+    VetoInformation oldInformation = sharedInformation(Arrays.asList(1L), 1, 1, 4L, 7L);
+    VetoCacheEntry entry = new VetoCacheEntry("V", VetoCache.State.Used);
+    entry.setVetoInformation(oldInformation);
+    assertTrue(entry.free());
+    assertNull(second.vc.putIfAbsent(entry));
+
+    VetoInformation updatedInformation = sharedInformation(Arrays.asList(1L, 2L), 1, 1, 4L, 8L);
+    VetoCacheEntry update = new VetoCacheEntry("V", VetoCache.State.Scheduled);
+    update.setVetoInformation(updatedInformation);
+    VetoRequest request = new VetoRequest(73, 1);
+    request.scheduled(update);
+
+    VetoResponse response = ((VCP_Clustered)second.vcp).getLocal().processRemoteVetoRequest(request);
+
+    assertEquals(Response.SUCCESS, response.getResponses().get(0).getResponse());
+    assertEquals(VetoCache.State.Scheduled, entry.getState());
+    assertEquals(Arrays.asList(1L, 2L), entry.getVetoInformation().getSharedOrderIds());
+    assertEquals(8L, entry.getVetoInformation().getAuthorityVersion());
+  }
+
   public void testDelayedSameEpochSnapshotCannotRestoreReleasedHolder() {
     VetoInformation current = sharedInformation(Arrays.asList(2L), 1, 2, 5L, 9L);
     VetoCacheEntry currentEntry = new VetoCacheEntry("V", VetoCache.State.Used);
@@ -256,6 +370,23 @@ public class VetoCacheSharedClusterTest extends TestCase {
     assertEquals(Response.STALE_AUTHORITY, response.getResponses().get(0).getResponse());
     assertEquals(9L, current.getAuthorityVersion());
     assertEquals(Arrays.asList(2L), current.getSharedOrderIds());
+  }
+
+  public void testScheduledSnapshotUsesLatestMutationInBatch() {
+    VetoCacheEntry veto = new VetoCacheEntry("V", VetoCache.State.Used);
+    veto.setVetoInformation(sharedInformation(Arrays.asList(1L, 2L, 3L), 1, 1, 0L, 0L));
+    VetoRequest request = new VetoRequest(73, 1);
+
+    request.scheduled(veto);
+    veto.freeOrderId(1L);
+    request.scheduled(veto);
+    veto.freeOrderId(2L);
+    request.scheduled(veto);
+
+    assertEquals("Only one whole-veto update should be sent per batch", 1, request.getEntries().size());
+    VetoInformation sent = request.getEntries().iterator().next().getVetoInformation();
+    assertEquals(Arrays.asList(3L), sent.getSharedOrderIds());
+    assertEquals(2L, sent.getAuthorityVersion());
   }
 
   public void testRejoiningNodeAdoptsCurrentAuthorityAndCannotReclaimIt() {
@@ -393,7 +524,8 @@ public class VetoCacheSharedClusterTest extends TestCase {
     assertNull("Shared grants must not coexist with an exclusive holder", information.getUsingOrderId());
     assertFalse("Shared grants must not coexist with an administrative grant", information.isAdministrative());
     assertNotNull("Shared holder list must be present", information.getSharedOrderIds());
-    assertEquals(new HashSet<Long>(Arrays.asList(expectedIds)), new HashSet<Long>(information.getSharedOrderIds()));
+    assertEquals("Shared holder set on node " + node.vc.getOwnBinding() + ": " + information,
+           new HashSet<Long>(Arrays.asList(expectedIds)), new HashSet<Long>(information.getSharedOrderIds()));
     assertEquals("Shared holders must not be duplicated", expectedIds.length, information.getSharedOrderIds().size());
   }
 }

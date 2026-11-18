@@ -112,6 +112,14 @@ public class VetoRequest implements Serializable {
 
   
   private VetoRequestEntry add(VetoCacheEntry veto, VetoRequestEntry vr) {
+    if (vr.getAction() == Action.Scheduled) {
+      for (VetoRequestEntry existing : entries) {
+        if (existing.getAction() == Action.Scheduled && existing.getName().equals(vr.getName())) {
+          existing.vetoInformation = vr.vetoInformation;
+          return existing;
+        }
+      }
+    }
     if( entries.add(vr) ) {
       veto.getHistory().remoteActionStart(vr.getAction(), id, binding);
     }

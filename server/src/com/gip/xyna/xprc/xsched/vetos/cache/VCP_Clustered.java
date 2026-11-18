@@ -155,7 +155,7 @@ public class VCP_Clustered extends VCP_Abstract {
     }
   }
   
-  private void handleResponse(VetoRequest currentRequest, VetoResponse response) {
+  void handleResponse(VetoRequest currentRequest, VetoResponse response) {
     boolean failed = false;
     if( response.isFailed() ) {
       //FIXME was nun? 
@@ -172,7 +172,10 @@ public class VCP_Clustered extends VCP_Abstract {
         VetoCacheEntry veto = vetoCache.get(vre.getName());
         if( veto != null ) {
           veto.getHistory().remoteActionEnd(ownBinding, "failed");
-          vetoCache.process(veto.getName()); //ob das klappt?
+          if (vre.getAction() == VetoRequestEntry.Action.Compare) {
+            veto.compareAndSetState(State.Comparing, State.Compare);
+          }
+          vetoCache.process(veto.getName());
         }
       }
     } else {
@@ -316,10 +319,10 @@ public class VCP_Clustered extends VCP_Abstract {
     }
     VetoInformation incoming = responseEntry.getVetoInformation();
     VetoInformation current = veto.getVetoInformation();
-    if (current == null || incoming.getAuthorityBinding() != current.getAuthorityBinding() ||
-      incoming.getAuthorityEpoch() != current.getAuthorityEpoch() ||
-      incoming.getAuthorityVersion() < current.getAuthorityVersion() ||
-      (incoming.getAuthorityVersion() == current.getAuthorityVersion() &&
+    if (incoming.getAuthorityBinding() != veto.getAuthorityBinding() ||
+      incoming.getAuthorityEpoch() != veto.getAuthorityEpoch() ||
+      incoming.getAuthorityVersion() < veto.getAuthorityVersion() ||
+      (current != null && incoming.getAuthorityVersion() == current.getAuthorityVersion() &&
        !incoming.isVetoIdContentEqual(current))) {
       return Result.Failed;
     }
@@ -330,6 +333,16 @@ public class VCP_Clustered extends VCP_Abstract {
     }
     if (veto.getState() == State.Scheduled || veto.getState() == State.Used) {
       return Result.Ok;
+    }
+    return Result.Failed;
+  }
+
+  private Result processSharedRelease(Response response) {
+    if (response == Response.SUCCESS) {
+      return Result.Ok;
+    }
+    if (response == Response.IN_USE) {
+      return Result.Reprocess;
     }
     return Result.Failed;
   }
@@ -441,6 +454,9 @@ public class VCP_Clustered extends VCP_Abstract {
     case Compare:
       result = processCompare( veto, response, responseEntry );
       break;
+    case ReleaseShared:
+      result = processSharedRelease(response);
+      break;
     case Free:
       result = processFree( veto, response, responseEntry );
       break;
@@ -448,7 +464,6 @@ public class VCP_Clustered extends VCP_Abstract {
       result = processScheduled( veto, response, responseEntry );
       break;
     case RequestShared:
-    case ReleaseShared:
     case RequestExclusive:
     case CancelExclusive:
       result = processSharedGrant(veto, response, responseEntry);
@@ -501,13 +516,15 @@ public class VCP_Clustered extends VCP_Abstract {
   @Override
   public void requestSharedAllocation(VetoCacheEntry veto, AllocationRequest request, long urgency) {
     VetoInformation current = veto.getVetoInformation();
-    if (current == null || current.isAdministrative() || current.getUsingOrderId() != null ||
-        current.getPendingExclusiveOrderId() != null || current.getAuthorityBinding() == ownBinding) {
+    int authorityBinding = veto.getAuthorityBinding();
+    if (authorityBinding < 0 || (current != null &&
+        (current.isAdministrative() || current.getUsingOrderId() != null ||
+         current.getPendingExclusiveOrderId() != null)) || authorityBinding == ownBinding) {
       return;
     }
     VetoInformation requested = VetoInformation.createShared(veto.getName(),
         Collections.singletonList(request.getOrderInformation().getOrderId()), System.currentTimeMillis(),
-      ownBinding, current.getAuthorityBinding(), current.getAuthorityEpoch(), current.getAuthorityVersion());
+        ownBinding, authorityBinding, veto.getAuthorityEpoch(), veto.getAuthorityVersion());
     remoteVetoRequests.sharedGrant(veto, requested);
     vetoCache.notifyProcessor();
   }
@@ -521,12 +538,13 @@ public class VCP_Clustered extends VCP_Abstract {
   @Override
   public void requestExclusiveAllocation(VetoCacheEntry veto, AllocationRequest request, long urgency) {
     VetoInformation current = veto.getVetoInformation();
-    if (current == null || current.isAdministrative() || current.getAuthorityBinding() == ownBinding) {
+    int authorityBinding = veto.getAuthorityBinding();
+    if (authorityBinding < 0 || (current != null && current.isAdministrative()) || authorityBinding == ownBinding) {
       return;
     }
     VetoInformation requested = new VetoInformation(veto.getName(), request.getOrderInformation(),
         Collections.emptyList(), null, null, System.currentTimeMillis(), ownBinding,
-        current.getAuthorityBinding(), current.getAuthorityEpoch(), current.getAuthorityVersion());
+        authorityBinding, veto.getAuthorityEpoch(), veto.getAuthorityVersion());
     remoteVetoRequests.exclusiveRequest(veto, requested);
     vetoCache.notifyProcessor();
   }

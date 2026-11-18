@@ -192,16 +192,16 @@ public class VetoCache {
     }
     VetoCacheEntry veto = req.getCacheEntry();
     VetoInformation current = veto.getVetoInformation();
-    if (req.getVetoType() == VetoType.SHARED && current != null &&
-        current.getAuthorityBinding() != ownBinding &&
-        !current.isUsedBy(req.getOrderInformation().getOrderId())) {
+    if (req.getVetoType() == VetoType.SHARED && veto.getAuthorityBinding() >= 0 &&
+      veto.getAuthorityBinding() != ownBinding &&
+      (current == null || !current.isUsedBy(req.getOrderInformation().getOrderId()))) {
       vetoCacheProcessor.requestSharedAllocation(veto, req, urgency);
       veto.updateWaiting(urgency, currentSchedulingRun);
-      req.setResult(new VetoAllocationResult(current));
+      req.setResult(new VetoAllocationResult(current == null ? new VetoInformation(veto.getName()) : current));
       return;
     }
     if (req.getVetoType() == VetoType.EXCLUSIVE && current != null &&
-        current.getAuthorityBinding() != ownBinding &&
+      veto.getAuthorityBinding() != ownBinding &&
         !Objects.equals(current.getUsingOrderId(), req.getOrderInformation().getOrderId())) {
       vetoCacheProcessor.requestExclusiveAllocation(veto, req, urgency);
       veto.updateWaiting(urgency, currentSchedulingRun);
@@ -437,7 +437,7 @@ public class VetoCache {
        } else if (information != null && information.getAuthorityBinding() == ownBinding) {
          veto.compareAndSetState(State.Used, State.Scheduled);
        }
-       vetosToProcess.add(veto.getName());
+      vetosToProcess.add(veto.getName());
        return true;
      }
    }
@@ -478,6 +478,15 @@ public class VetoCache {
 
   public void process(VetoCacheEntry veto) {
     vetosToProcess.add(veto.getName());
+  }
+
+  public void processIfNotQueued(VetoCacheEntry veto) {
+    String vetoName = veto.getName();
+    synchronized (vetosToProcess) {
+      if (!vetosToProcess.contains(vetoName)) {
+        vetosToProcess.add(vetoName);
+      }
+    }
   }
   
   public void process(String vetoName) {
@@ -565,7 +574,7 @@ public class VetoCache {
   }
 
   public void reprocessAll() {
-    vetosToProcess.addAll( vetoCache.keySet() );
+    vetosToProcess.addAll(vetoCache.keySet());
   }
 
   public List<List<String>> exportVetoCacheData() {

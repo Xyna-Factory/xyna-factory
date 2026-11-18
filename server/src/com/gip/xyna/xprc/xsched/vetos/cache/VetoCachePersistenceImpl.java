@@ -23,12 +23,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.utils.db.utils.RepeatedExceptionCheck;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xnwh.persistence.CentralComponentConnectionCache;
@@ -168,34 +170,110 @@ public class VetoCachePersistenceImpl implements VetoCachePersistence {
     
     protected int binding;
     private Set<Long> rootOrderIdsInBackup;
+    private ODSConnection orderBackupConnection;
     
     public ForEachValidVeto(int binding) {
       this.binding = binding;
     }
     
     public void executeAndCommit(ODSConnection con) throws PersistenceLayerException {
+      orderBackupConnection = con;
       OrderArchive oa = XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getOrderArchive();
       rootOrderIdsInBackup = new HashSet<>(oa.listRootOrderIdsFromOrderBackup(con));
       
       Collection<VetoInformationStorable> vetos = con.loadCollection(VetoInformationStorable.class);
       for( VetoInformationStorable veto : vetos ) {
-        VetoInformation vi = VetoInformationStorable.toVetoInformation.transform(veto);
+        VetoInformation original = VetoInformationStorable.toVetoInformation.transform(veto);
+        VetoInformation vi = pruneInvalidSharedHolders(original);
         boolean delete = execute(vi);
         if( delete ) {
           logger.warn("Deleted invalid veto "+veto.getVetoName() );
           con.deleteOneRow(veto);
+        } else if (vi != original) {
+          con.persistObject(VetoInformationStorable.fromVetoInformation.transform(vi));
         }
       }
       con.commit();
       executeAfterwards();
     }
 
-    protected abstract void executeAfterwards();
+    protected abstract void executeAfterwards() throws PersistenceLayerException;
 
-    protected abstract boolean execute(VetoInformation vi);
+    protected abstract boolean execute(VetoInformation vi) throws PersistenceLayerException;
 
-    protected boolean checkValid(VetoInformation vi) {
-      return vi.isAdministrative() || rootOrderIdsInBackup.contains( vi.getUsingRootOrderId() ); 
+    protected boolean checkValid(VetoInformation vi) throws PersistenceLayerException {
+      if (vi.isAdministrative()) {
+        return true;
+      }
+      if (vi.getUsingOrderId() != null && rootOrderIdsInBackup.contains(vi.getUsingRootOrderId())) {
+        return true;
+      }
+      if (vi.getPendingExclusiveOrderId() != null && isOrderValid(vi.getPendingExclusiveOrderId())) {
+        return true;
+      }
+      if (vi.getSharedOrderIds() != null) {
+        for (Long sharedOrderId : vi.getSharedOrderIds()) {
+          if (isOrderValid(sharedOrderId)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+
+    private VetoInformation pruneInvalidSharedHolders(VetoInformation vi) throws PersistenceLayerException {
+      List<Long> sharedOrderIds = vi.getSharedOrderIds();
+      List<Long> validSharedOrderIds = null;
+      if (sharedOrderIds != null) {
+        validSharedOrderIds = new ArrayList<>();
+        for (Long orderId : sharedOrderIds) {
+          if (isOrderValid(orderId)) {
+            validSharedOrderIds.add(orderId);
+          }
+        }
+      }
+      Long pendingOrderId = vi.getPendingExclusiveOrderId();
+      if (pendingOrderId != null && !isOrderValid(pendingOrderId)) {
+        pendingOrderId = null;
+      }
+      if (Objects.equals(sharedOrderIds, validSharedOrderIds) &&
+          Objects.equals(vi.getPendingExclusiveOrderId(), pendingOrderId)) {
+        return vi;
+      }
+      return new VetoInformation(vi.getName(), vi.getUsingOrder(), validSharedOrderIds, pendingOrderId,
+          vi.getDocumentation(), System.currentTimeMillis(), vi.getBinding(), vi.getAuthorityBinding(),
+          vi.getAuthorityEpoch(), vi.getAuthorityVersion() + 1);
+    }
+
+    private boolean isOrderValid(Long orderId) throws PersistenceLayerException {
+      if (orderId == null || rootOrderIdsInBackup.contains(orderId)) {
+        return orderId != null;
+      }
+      OrderArchive orderArchive = XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getOrderArchive();
+      try {
+        long rootOrderId = orderArchive.readRootOrderIdFromOrderBackup(orderBackupConnection, orderId);
+        return rootOrderIdsInBackup.contains(rootOrderId);
+      } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
+        return true;
+      }
+    }
+
+    protected void freeInvalidHolders(VetoCacheEntry veto, VetoInformation information)
+        throws PersistenceLayerException {
+      if (information.getUsingOrderId() != null && !rootOrderIdsInBackup.contains(information.getUsingRootOrderId())) {
+        vetoCache.free(veto, information.getUsingOrderId());
+      }
+      if (information.getSharedOrderIds() != null) {
+        for (Long orderId : new ArrayList<>(information.getSharedOrderIds())) {
+          if (!isOrderValid(orderId)) {
+            vetoCache.free(veto, orderId);
+          }
+        }
+      }
+      Long pendingOrderId = information.getPendingExclusiveOrderId();
+      if (pendingOrderId != null && !isOrderValid(pendingOrderId)) {
+        vetoCache.free(veto, pendingOrderId);
+      }
     }
   }
   
@@ -206,7 +284,7 @@ public class VetoCachePersistenceImpl implements VetoCachePersistence {
     }
 
     @Override
-    protected boolean execute(VetoInformation vi) {
+    protected boolean execute(VetoInformation vi) throws PersistenceLayerException {
       if( binding == -1 || vi.getBinding() == binding ) {
         if( checkValid(vi) ) {
           if( ! vetoCache.createUsedVeto(vi) ) {
@@ -235,7 +313,7 @@ public class VetoCachePersistenceImpl implements VetoCachePersistence {
     }
     
     @Override
-    protected boolean execute(VetoInformation vi) {
+    protected boolean execute(VetoInformation vi) throws PersistenceLayerException {
       VetoCacheEntry vce = vetoCache.get(vi.getName());
       if( vce == null ) {
         return true;
@@ -246,23 +324,17 @@ public class VetoCachePersistenceImpl implements VetoCachePersistence {
       if( vi.getBinding() == binding ) {
         return false; //eigene Vetos behalten
       }
-      if( checkValid(vi) ) {
-        return false; //valide Vetos behalten
-      } else {
-        vetoCache.free(vce, vi.getUsingOrderId() );
-        return false; //eigentlich true, aber Löschen wird von free erledigt
-      }
+      freeInvalidHolders(vce, vi);
+      return false;
     }
     
     @Override
-    protected void executeAfterwards() {
+    protected void executeAfterwards() throws PersistenceLayerException {
       //alle fremden Vetos löschen, die nicht mehr valide sind
       for( VetoInformation vi : vetoCache.listVetos() ) {
-        if( ! checkValid(vi) ) {
-          VetoCacheEntry vce = vetoCache.get(vi.getName());
-          if( vce != null ) {
-            vetoCache.free(vce, vi.getUsingOrderId() );
-          }
+        VetoCacheEntry vce = vetoCache.get(vi.getName());
+        if (vce != null && vi.getBinding() != binding && !vi.isAdministrative()) {
+          freeInvalidHolders(vce, vi);
         }
       }
     }

@@ -42,6 +42,9 @@ public class VetoCacheEntry {
   
   private volatile VetoInformation vetoInformation; //Thread(VCP, S, andere); volatile nur auf Verdacht
   private volatile int remoteFreeBinding = -1;
+  private volatile int remoteAuthorityBinding = -1;
+  private volatile long remoteAuthorityEpoch;
+  private volatile long remoteAuthorityVersion;
   private volatile long urgency;               //Thread(VCP, S, andere); volatile nur auf Verdacht
   private volatile WaitingOrder waitingOrder;  //Thread(VCP, S); volatile nur auf Verdacht
   private boolean keepUsable; //Thread(S). Veto wurde im Status "usable" angetroffen, aber nicht geschedult. 
@@ -79,8 +82,32 @@ public class VetoCacheEntry {
     }
     if( vetoInformation != null ) {
       remoteFreeBinding = -1;
+      remoteAuthorityBinding = vetoInformation.getAuthorityBinding();
+      remoteAuthorityEpoch = vetoInformation.getAuthorityEpoch();
+      remoteAuthorityVersion = vetoInformation.getAuthorityVersion();
     }
     this.vetoInformation = vetoInformation;
+  }
+
+  public void setRemoteAuthority(int authorityBinding, long authorityEpoch, long authorityVersion) {
+    remoteAuthorityBinding = authorityBinding;
+    remoteAuthorityEpoch = authorityEpoch;
+    remoteAuthorityVersion = authorityVersion;
+  }
+
+  public int getAuthorityBinding() {
+    VetoInformation information = vetoInformation;
+    return information == null ? remoteAuthorityBinding : information.getAuthorityBinding();
+  }
+
+  public long getAuthorityEpoch() {
+    VetoInformation information = vetoInformation;
+    return information == null ? remoteAuthorityEpoch : information.getAuthorityEpoch();
+  }
+
+  public long getAuthorityVersion() {
+    VetoInformation information = vetoInformation;
+    return information == null ? remoteAuthorityVersion : information.getAuthorityVersion();
   }
   
   public void addAdministrativeData(VetoInformation vetoInformation) {
@@ -296,7 +323,18 @@ public class VetoCacheEntry {
   public synchronized VetoInformation grantSharedHolder(VetoInformation request) {
     VetoInformation current = vetoInformation;
     State currentState = state.get();
-    if (current == null || (currentState != State.Used && currentState != State.Scheduled) ||
+    if (current == null) {
+      if ((currentState != State.Local && currentState != State.Usable) || request.getSharedOrderIds() == null ||
+          request.getSharedOrderIds().size() != 1 || request.getAuthorityEpoch() != 0L ||
+          request.getAuthorityVersion() != 0L) {
+        return null;
+      }
+      VetoInformation initial = VetoInformation.createShared(name, request.getSharedOrderIds(),
+          System.currentTimeMillis(), request.getBinding(), request.getAuthorityBinding(),
+          request.getAuthorityEpoch(), request.getAuthorityVersion() + 1);
+      return compareAndSetState(currentState, State.Scheduled) ? setAndReturn(initial) : null;
+    }
+    if ((currentState != State.Used && currentState != State.Scheduled) ||
         current.isAdministrative() || current.getUsingOrderId() != null ||
         current.getPendingExclusiveOrderId() != null ||
         current.getAuthorityBinding() != request.getAuthorityBinding() ||
@@ -324,10 +362,25 @@ public class VetoCacheEntry {
     return updated;
   }
 
+  private VetoInformation setAndReturn(VetoInformation information) {
+    setVetoInformation(information);
+    return information;
+  }
+
   public synchronized VetoInformation grantExclusiveRequest(VetoInformation request) {
     VetoInformation current = vetoInformation;
     State currentState = state.get();
-    if (current == null || (currentState != State.Used && currentState != State.Scheduled) ||
+    if (current == null) {
+      if ((currentState != State.Local && currentState != State.Usable) || request.getUsingOrderId() == null ||
+          request.getAuthorityEpoch() != 0L || request.getAuthorityVersion() != 0L) {
+        return null;
+      }
+      VetoInformation initial = new VetoInformation(name, request.getUsingOrder(), Collections.emptyList(), null,
+          null, System.currentTimeMillis(), request.getBinding(), request.getAuthorityBinding(),
+          request.getAuthorityEpoch(), request.getAuthorityVersion() + 1);
+      return compareAndSetState(currentState, State.Scheduled) ? setAndReturn(initial) : null;
+    }
+    if ((currentState != State.Used && currentState != State.Scheduled) ||
         current.isAdministrative() || current.getAuthorityBinding() != request.getAuthorityBinding() ||
         current.getAuthorityEpoch() != request.getAuthorityEpoch() ||
         current.getAuthorityVersion() != request.getAuthorityVersion()) {

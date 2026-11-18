@@ -75,7 +75,7 @@ public class VCP_Remote implements VCP_RemoteInterface {
     String vetoName = request.getName();
     VetoCacheEntry veto = vetoCache.get(vetoName);
     if( veto == null && request.getAction() == Action.Compare ) {
-      VetoResponseEntry response = processCompare(request);
+      VetoResponseEntry response = processCompare(request, binding);
       if( response != null) {
         return response; //Veto ist neu angelegt oder wird nicht gebraucht
       }
@@ -108,7 +108,7 @@ public class VCP_Remote implements VCP_RemoteInterface {
   private VetoResponseEntry processRemoteVetoRequest(VetoCacheEntry veto, VetoRequestEntry request, int senderBinding) {
     switch( request.getAction() ) {
     case Compare:
-      return processCompare(veto, request);
+      return processCompare(veto, request, senderBinding);
     case Scheduled:
       return processScheduled(veto, request, senderBinding);
     case RequestShared:
@@ -129,8 +129,9 @@ public class VCP_Remote implements VCP_RemoteInterface {
   private VetoResponseEntry processSharedGrant(VetoCacheEntry veto, VetoRequestEntry request, int senderBinding) {
     VetoInformation requested = request.getVetoInformation();
     VetoInformation current = veto.getVetoInformation();
-    if (requested == null || current == null || requested.getBinding() != senderBinding ||
-        current.getAuthorityBinding() != ownBinding) {
+    if (requested == null || requested.getBinding() != senderBinding ||
+      requested.getAuthorityBinding() != ownBinding ||
+      (current != null && current.getAuthorityBinding() != ownBinding)) {
       return VetoResponseEntry.staleAuthority(request.getName());
     }
     VetoInformation granted = veto.grantSharedHolder(requested);
@@ -160,8 +161,9 @@ public class VCP_Remote implements VCP_RemoteInterface {
   private VetoResponseEntry processExclusiveRequest(VetoCacheEntry veto, VetoRequestEntry request, int senderBinding) {
     VetoInformation requested = request.getVetoInformation();
     VetoInformation current = veto.getVetoInformation();
-    if (requested == null || current == null || requested.getBinding() != senderBinding ||
-        current.getAuthorityBinding() != ownBinding) {
+    if (requested == null || requested.getBinding() != senderBinding ||
+      requested.getAuthorityBinding() != ownBinding ||
+      (current != null && current.getAuthorityBinding() != ownBinding)) {
       return VetoResponseEntry.staleAuthority(request.getName());
     }
     VetoInformation granted = veto.grantExclusiveRequest(requested);
@@ -195,7 +197,7 @@ public class VCP_Remote implements VCP_RemoteInterface {
    * @param request
    * @return
    */
-  private VetoResponseEntry processCompare(VetoRequestEntry request) {
+  private VetoResponseEntry processCompare(VetoRequestEntry request, int senderBinding) {
     //lokal existiert kein Veto. Daher anlegen, falls der andere Knoten das Veto braucht.
     String vetoName = request.getName();
     VetoInformation vi = request.getVetoInformation();
@@ -210,7 +212,8 @@ public class VCP_Remote implements VCP_RemoteInterface {
       if( request.getUrgency() == Long.MIN_VALUE) {
         return VetoResponseEntry.compare(vetoName, Compare.UNUSED);
       }
-      vetoNew = new VetoCacheEntry(vetoName, State.Remote);
+          vetoNew = new VetoCacheEntry(vetoName, State.Remote);
+          vetoNew.setRemoteAuthority(senderBinding, 0L, 0L);
       result = Compare.REMOTE;
     }
     VetoCacheEntry veto = vetoCache.addVetoIfAbsent(vetoNew);
@@ -237,7 +240,7 @@ public class VCP_Remote implements VCP_RemoteInterface {
    * @param request
    * @return
    */
-  private VetoResponseEntry processCompare(VetoCacheEntry veto, VetoRequestEntry request) {
+  private VetoResponseEntry processCompare(VetoCacheEntry veto, VetoRequestEntry request, int senderBinding) {
     State currentState = veto.getState();
     if( currentState == State.Compare || currentState == State.Remote ) {
       Pair<Compare,State> result = compareUrgency(veto, request );
@@ -251,6 +254,7 @@ public class VCP_Remote implements VCP_RemoteInterface {
           notifyScheduler = true;
           break;
         case REMOTE:
+          veto.setRemoteAuthority(senderBinding, 0L, 0L);
           break;
         case UNUSED:
           vetoCache.remove(veto, State.None);
@@ -266,6 +270,9 @@ public class VCP_Remote implements VCP_RemoteInterface {
       return VetoResponseEntry.inUse(veto.getName(), veto.getState());
     } else if( currentState == State.Local ) {
       notifyScheduler = true;
+      return VetoResponseEntry.inUse(veto.getName(), veto.getState());
+    } else if (currentState == State.Free) {
+      vetoCache.processIfNotQueued(veto);
       return VetoResponseEntry.inUse(veto.getName(), veto.getState());
     } else {
       return VetoResponseEntry.inUse(veto.getName(), veto.getState());
@@ -325,6 +332,8 @@ public class VCP_Remote implements VCP_RemoteInterface {
       return VetoResponseEntry.staleAuthority(request.getName());
     }
     switch( veto.getState() ) {
+    case Free:
+      return setScheduled(State.Free, veto, request, false);
     case Remote:
       return setScheduled(State.Remote, veto, request, false);
     case Used:

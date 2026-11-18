@@ -84,11 +84,6 @@ public class VetoInformationStorable extends ClusteredStorable<VetoInformationSt
     return new VetoInformationStorable(vetoName, null, sharedOrderIds, null, null, created, binding);
   }
 
-  public static VetoInformationStorable createShared(String vetoName, List<Long> sharedOrderIds, Long created,
-                                                     int binding, int authorityBinding, long authorityEpoch) {
-    return new VetoInformationStorable(vetoName, null, sharedOrderIds, null, null, created, binding,
-                                       authorityBinding, authorityEpoch);
-  }
 
   public static VetoInformationStorable createShared(String vetoName, List<Long> sharedOrderIds, Long created,
                                                      int binding, int authorityBinding, long authorityEpoch,
@@ -97,16 +92,11 @@ public class VetoInformationStorable extends ClusteredStorable<VetoInformationSt
                                        authorityBinding, authorityEpoch, authorityVersion);
   }
 
+
   public static VetoInformationStorable createExclusive(String vetoName, OrderInformation orderInformation, Long created, int binding) {
     return new VetoInformationStorable(vetoName, orderInformation, null, null, null, created, binding);
   }
 
-  public static VetoInformationStorable createExclusive(String vetoName, OrderInformation orderInformation,
-                                                        Long created, int binding, int authorityBinding,
-                                                        long authorityEpoch) {
-    return new VetoInformationStorable(vetoName, orderInformation, null, null, null, created, binding,
-                                       authorityBinding, authorityEpoch);
-  }
 
   public static VetoInformationStorable createExclusive(String vetoName, OrderInformation orderInformation,
                                                         Long created, int binding, int authorityBinding,
@@ -119,12 +109,6 @@ public class VetoInformationStorable extends ClusteredStorable<VetoInformationSt
     return new VetoInformationStorable(vetoName, null, sharedOrderIds, pendingExclusiveOrderId, null, created, binding);
   }
 
-  public static VetoInformationStorable createPendingExclusive(String vetoName, List<Long> sharedOrderIds,
-                                                               Long pendingExclusiveOrderId, Long created,
-                                                               int binding, int authorityBinding, long authorityEpoch) {
-    return new VetoInformationStorable(vetoName, null, sharedOrderIds, pendingExclusiveOrderId, null, created,
-                                       binding, authorityBinding, authorityEpoch);
-  }
 
   public static VetoInformationStorable createPendingExclusive(String vetoName, List<Long> sharedOrderIds,
                                                                Long pendingExclusiveOrderId, Long created,
@@ -144,17 +128,11 @@ public class VetoInformationStorable extends ClusteredStorable<VetoInformationSt
   }
 
   public VetoInformationStorable(String vetoName, OrderInformation orderInformation, List<Long> sharedOrderIds, Long pendingExclusiveOrderId, String documentation, Long created, int binding) {
-    this(vetoName, orderInformation, sharedOrderIds, pendingExclusiveOrderId, documentation, created, binding, binding, 0L);
+    this(vetoName, orderInformation, sharedOrderIds, pendingExclusiveOrderId, documentation, created, binding, binding, 0L, 0L);
   }
 
-  public VetoInformationStorable(String vetoName, OrderInformation orderInformation, List<Long> sharedOrderIds,
-                                 Long pendingExclusiveOrderId, String documentation, Long created, int binding,
-                                 int authorityBinding, long authorityEpoch) {
-    this(vetoName, orderInformation, sharedOrderIds, pendingExclusiveOrderId, documentation, created, binding,
-       authorityBinding, authorityEpoch, 0L);
-    }
 
-    public VetoInformationStorable(String vetoName, OrderInformation orderInformation, List<Long> sharedOrderIds,
+  public VetoInformationStorable(String vetoName, OrderInformation orderInformation, List<Long> sharedOrderIds,
                    Long pendingExclusiveOrderId, String documentation, Long created, int binding,
                    int authorityBinding, long authorityEpoch, long authorityVersion) {
     super(binding);
