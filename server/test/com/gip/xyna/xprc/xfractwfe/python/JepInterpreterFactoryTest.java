@@ -299,6 +299,7 @@ public class JepInterpreterFactoryTest extends TestCase {
 
     public static class ContainerException extends BaseTestException {
 
+        private static final long serialVersionUID = 1L;
         private ContainerXO objectMember;
         private String stringMember;
 
@@ -332,6 +333,8 @@ public class JepInterpreterFactoryTest extends TestCase {
     }
     
     public static class BaseTestException extends XynaExceptionBase {
+        private static final long serialVersionUID = 1L;
+
 
         public BaseTestException() {
             super("");
