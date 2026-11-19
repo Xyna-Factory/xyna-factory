@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 import org.apache.log4j.Logger;
 
@@ -49,6 +50,8 @@ public class VCP_Clustered extends VCP_Abstract {
 
   private VCP_Remote local;
   private VCP_RemoteInterface remoteImpl;
+  // Protects both appending to the active batch and handing it off to the sender.
+  private final Object remoteVetoRequestsLock = new Object();
   private VetoRequest remoteVetoRequests;
   private int ownBinding;
   private long requestId;
@@ -78,7 +81,26 @@ public class VCP_Clustered extends VCP_Abstract {
 
   @Override
   protected boolean hasVetosToProcess() {
-    return vetoCache.hasVetosToProcess() || ! remoteVetoRequests.isEmpty();
+    synchronized (remoteVetoRequestsLock) {
+      return vetoCache.hasVetosToProcess() || !remoteVetoRequests.isEmpty();
+    }
+  }
+
+  private void appendRemoteRequest(Consumer<VetoRequest> append) {
+    synchronized (remoteVetoRequestsLock) {
+      append.accept(remoteVetoRequests);
+    }
+  }
+
+  private VetoRequest detachRemoteRequests() {
+    synchronized (remoteVetoRequestsLock) {
+      if (remoteVetoRequests.isEmpty()) {
+        return null;
+      }
+      VetoRequest currentRequest = remoteVetoRequests;
+      remoteVetoRequests = new VetoRequest(requestId++, ownBinding);
+      return currentRequest;
+    }
   }
   
   @Override
@@ -120,10 +142,8 @@ public class VCP_Clustered extends VCP_Abstract {
   
   @Override
   protected void endBatch() {
-    if( ! remoteVetoRequests.isEmpty() ) {
-      VetoRequest currentRequest = remoteVetoRequests;
-      this.remoteVetoRequests = new VetoRequest(requestId++, ownBinding);
-      
+    VetoRequest currentRequest = detachRemoteRequests();
+    if (currentRequest != null) {
       VetoResponse response = sendRemoteRequests(currentRequest);
       if( logger.isTraceEnabled()) {
         logger.trace("##  response = "+response); 
@@ -217,7 +237,7 @@ public class VCP_Clustered extends VCP_Abstract {
   @Override
   protected boolean processCompare(VetoCacheEntry veto) {
     if( veto.compareAndSetState(State.Compare, State.Comparing ) ) {
-      remoteVetoRequests.compare(veto);
+      appendRemoteRequest(batch -> batch.compare(veto));
       return false;
     } else {
       return processAgain(veto, "not compare"); //unerwartet, nochmal bearbeiten
@@ -288,10 +308,10 @@ public class VCP_Clustered extends VCP_Abstract {
 
   @Override
   protected boolean processScheduled(VetoCacheEntry veto) {
-    persist(veto, true);
     VetoInformation information = veto.getVetoInformation();
+    persistScheduled(veto, information);
     if( information != null && information.getAuthorityBinding() == ownBinding ) {
-      remoteVetoRequests.scheduled(veto);
+      appendRemoteRequest(batch -> batch.scheduled(veto, information));
     } else {
       //nichts mehr zu tun
     }
@@ -319,15 +339,17 @@ public class VCP_Clustered extends VCP_Abstract {
     }
     VetoInformation incoming = responseEntry.getVetoInformation();
     VetoInformation current = veto.getVetoInformation();
-    if (incoming.getAuthorityBinding() != veto.getAuthorityBinding() ||
-      incoming.getAuthorityEpoch() != veto.getAuthorityEpoch() ||
-      incoming.getAuthorityVersion() < veto.getAuthorityVersion() ||
-      (current != null && incoming.getAuthorityVersion() == current.getAuthorityVersion() &&
-       !incoming.isVetoIdContentEqual(current))) {
+    if (incoming.getAuthorityBinding() != veto.getAuthorityBinding() 
+        ||  incoming.getAuthorityEpoch() != veto.getAuthorityEpoch()
+        || incoming.getAuthorityVersion() < veto.getAuthorityVersion() 
+        || (current != null //catch changes to volatile vetoInformation
+            && incoming.getAuthorityVersion() == current.getAuthorityVersion() 
+            && !incoming.isVetoIdContentEqual(current))) {
       return Result.Failed;
     }
-    if (veto.setScheduled(State.Remote, incoming) || veto.setScheduled(State.Used, incoming) ||
-      veto.setScheduled(State.Scheduled, incoming)) {
+    if (veto.setScheduled(State.Remote, incoming) 
+        || veto.setScheduled(State.Used, incoming) 
+        || veto.setScheduled(State.Scheduled, incoming)) {
       vetoCache.process(veto);
       return Result.Ok;
     }
@@ -353,10 +375,10 @@ public class VCP_Clustered extends VCP_Abstract {
     persist(veto, false);
     if( veto.isAdministrative() ) {
       //in jedem Fall an anderen Knoten weitergeben, da removeadminveto evtl. auf anderem Knoten aufgerufen wird
-      remoteVetoRequests.freeAdmin(veto);
+      appendRemoteRequest(batch -> batch.freeAdmin(veto));
     } else {
       if( veto.getBinding() == ownBinding ) {
-        remoteVetoRequests.free(veto);
+        appendRemoteRequest(batch -> batch.free(veto));
       } 
       //nichts mehr zu tun
     }
@@ -413,7 +435,7 @@ public class VCP_Clustered extends VCP_Abstract {
     VetoResponseEntry responseEntry = requestResponse.getSecond();
     Result result = null;
     try {
-      
+
       result = processRemoteResponse( veto, requestEntry, responseEntry );
       switch( result ) {
       case Failed:
@@ -485,7 +507,11 @@ public class VCP_Clustered extends VCP_Abstract {
   @Override
   public String showBatch() {
     if( status == Status.Running ) {
-      return super.showBatch()+"-"+remoteVetoRequests.getEntries().size();
+      int pendingRequests;
+      synchronized (remoteVetoRequestsLock) {
+        pendingRequests = remoteVetoRequests.getEntries().size();
+      }
+      return super.showBatch()+"-"+pendingRequests;
     } else {
       return super.showBatch()+"-"+status;
     }
@@ -525,13 +551,13 @@ public class VCP_Clustered extends VCP_Abstract {
     VetoInformation requested = VetoInformation.createShared(veto.getName(),
         Collections.singletonList(request.getOrderInformation().getOrderId()), System.currentTimeMillis(),
         ownBinding, authorityBinding, veto.getAuthorityEpoch(), veto.getAuthorityVersion());
-    remoteVetoRequests.sharedGrant(veto, requested);
+    appendRemoteRequest(batch -> batch.sharedGrant(veto, requested));
     vetoCache.notifyProcessor();
   }
 
   @Override
   public void requestSharedRelease(VetoCacheEntry veto, long orderId) {
-    remoteVetoRequests.sharedRelease(veto, orderId);
+    appendRemoteRequest(batch -> batch.sharedRelease(veto, orderId));
     vetoCache.notifyProcessor();
   }
 
@@ -545,13 +571,13 @@ public class VCP_Clustered extends VCP_Abstract {
     VetoInformation requested = new VetoInformation(veto.getName(), request.getOrderInformation(),
         Collections.emptyList(), null, null, System.currentTimeMillis(), ownBinding,
         authorityBinding, veto.getAuthorityEpoch(), veto.getAuthorityVersion());
-    remoteVetoRequests.exclusiveRequest(veto, requested);
+    appendRemoteRequest(batch -> batch.exclusiveRequest(veto, requested));
     vetoCache.notifyProcessor();
   }
 
   @Override
   public void cancelExclusiveAllocation(VetoCacheEntry veto, long orderId) {
-    remoteVetoRequests.cancelExclusive(veto, orderId);
+    appendRemoteRequest(batch -> batch.cancelExclusive(veto, orderId));
     vetoCache.notifyProcessor();
   }
 

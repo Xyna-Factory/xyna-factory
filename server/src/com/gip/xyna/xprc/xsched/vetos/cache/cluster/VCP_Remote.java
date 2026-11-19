@@ -17,6 +17,8 @@
  */
 package com.gip.xyna.xprc.xsched.vetos.cache.cluster;
 
+import java.util.Objects;
+
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
@@ -129,9 +131,7 @@ public class VCP_Remote implements VCP_RemoteInterface {
   private VetoResponseEntry processSharedGrant(VetoCacheEntry veto, VetoRequestEntry request, int senderBinding) {
     VetoInformation requested = request.getVetoInformation();
     VetoInformation current = veto.getVetoInformation();
-    if (requested == null || requested.getBinding() != senderBinding ||
-      requested.getAuthorityBinding() != ownBinding ||
-      (current != null && current.getAuthorityBinding() != ownBinding)) {
+    if (!isValidAllocationRequest(requested, current, senderBinding)) {
       return VetoResponseEntry.staleAuthority(request.getName());
     }
     VetoInformation granted = veto.grantSharedHolder(requested);
@@ -146,9 +146,7 @@ public class VCP_Remote implements VCP_RemoteInterface {
 
   private VetoResponseEntry processSharedRelease(VetoCacheEntry veto, VetoRequestEntry request, int senderBinding) {
     VetoInformation current = veto.getVetoInformation();
-    if (current == null || current.getAuthorityBinding() != ownBinding ||
-        request.getAuthorityBinding() != current.getAuthorityBinding() ||
-        request.getAuthorityEpoch() != current.getAuthorityEpoch()) {
+    if (!isCurrentAuthorityRequest(request, current)) {
       return VetoResponseEntry.staleAuthority(request.getName());
     }
     if (!current.getSharedOrderIds().contains(request.getOrderId())) {
@@ -161,9 +159,7 @@ public class VCP_Remote implements VCP_RemoteInterface {
   private VetoResponseEntry processExclusiveRequest(VetoCacheEntry veto, VetoRequestEntry request, int senderBinding) {
     VetoInformation requested = request.getVetoInformation();
     VetoInformation current = veto.getVetoInformation();
-    if (requested == null || requested.getBinding() != senderBinding ||
-      requested.getAuthorityBinding() != ownBinding ||
-      (current != null && current.getAuthorityBinding() != ownBinding)) {
+    if (!isValidAllocationRequest(requested, current, senderBinding)) {
       return VetoResponseEntry.staleAuthority(request.getName());
     }
     VetoInformation granted = veto.grantExclusiveRequest(requested);
@@ -178,16 +174,26 @@ public class VCP_Remote implements VCP_RemoteInterface {
 
   private VetoResponseEntry processExclusiveCancellation(VetoCacheEntry veto, VetoRequestEntry request) {
     VetoInformation current = veto.getVetoInformation();
-    if (current == null || current.getAuthorityBinding() != ownBinding ||
-        request.getAuthorityBinding() != current.getAuthorityBinding() ||
-        request.getAuthorityEpoch() != current.getAuthorityEpoch()) {
+    if (!isCurrentAuthorityRequest(request, current)) {
       return VetoResponseEntry.staleAuthority(request.getName());
     }
-    if (!java.util.Objects.equals(current.getPendingExclusiveOrderId(), request.getOrderId())) {
+    if (!Objects.equals(current.getPendingExclusiveOrderId(), request.getOrderId())) {
       return VetoResponseEntry.success(request.getName(), current);
     }
     vetoCache.free(veto, request.getOrderId());
     return VetoResponseEntry.success(request.getName(), veto.getVetoInformation());
+  }
+
+  private boolean isValidAllocationRequest(VetoInformation requested, VetoInformation current, int senderBinding) {
+    return requested != null && requested.getBinding() == senderBinding &&
+        requested.getAuthorityBinding() == ownBinding &&
+        (current == null || current.getAuthorityBinding() == ownBinding);
+  }
+
+  private boolean isCurrentAuthorityRequest(VetoRequestEntry request, VetoInformation current) {
+    return current != null && current.getAuthorityBinding() == ownBinding &&
+        request.getAuthorityBinding() == current.getAuthorityBinding() &&
+        request.getAuthorityEpoch() == current.getAuthorityEpoch();
   }
 
   /**
@@ -212,8 +218,8 @@ public class VCP_Remote implements VCP_RemoteInterface {
       if( request.getUrgency() == Long.MIN_VALUE) {
         return VetoResponseEntry.compare(vetoName, Compare.UNUSED);
       }
-          vetoNew = new VetoCacheEntry(vetoName, State.Remote);
-          vetoNew.setRemoteAuthority(senderBinding, 0L, 0L);
+      vetoNew = new VetoCacheEntry(vetoName, State.Remote);
+      vetoNew.setRemoteAuthority(senderBinding, 0L, 0L);
       result = Compare.REMOTE;
     }
     VetoCacheEntry veto = vetoCache.addVetoIfAbsent(vetoNew);

@@ -21,6 +21,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import com.gip.xyna.xprc.xsched.VetoInformationStorable;
 import com.gip.xyna.xprc.xsched.vetos.VetoAllocationResult;
@@ -28,6 +34,7 @@ import com.gip.xyna.xprc.xsched.vetos.VetoInformation;
 import com.gip.xyna.xprc.xsched.vetos.cache.VetoCacheTestHelper.ClusteredVM;
 import com.gip.xyna.xprc.xsched.vetos.cache.VetoCacheTestHelper.TestOrder;
 import com.gip.xyna.xprc.xsched.vetos.cache.cluster.ReplicateVetoRequest;
+import com.gip.xyna.xprc.xsched.vetos.cache.cluster.VCP_RemoteInterface;
 import com.gip.xyna.xprc.xsched.vetos.cache.cluster.VetoRequest;
 import com.gip.xyna.xprc.xsched.vetos.cache.cluster.VetoResponse;
 import com.gip.xyna.xprc.xsched.vetos.cache.cluster.VetoResponse.VetoResponseEntry.Response;
@@ -96,6 +103,59 @@ public class VetoCacheSharedClusterTest extends TestCase {
 
     assertEquals(VetoCache.State.Compare, entry.getState());
     assertEquals("RETRY", first.vc.getVetoToProcess());
+  }
+
+  public void testConcurrentOutboundRequestsAreSentExactlyOnce() throws Exception {
+    VCP_Clustered processor = (VCP_Clustered)first.vcp;
+    VetoCacheEntry veto = new VetoCacheEntry("RELEASE", VetoCache.State.Remote);
+    int requestsPerProducer = 1000;
+    Set<Long> sent = new HashSet<>();
+    processor.setRemoteImpl(new VCP_RemoteInterface() {
+      @Override
+      public VetoResponse processRemoteVetoRequest(VetoRequest request) {
+        request.getEntries().forEach(entry ->
+            assertTrue("Duplicate request for order " + entry.getOrderId(), sent.add(entry.getOrderId())));
+        return new VetoResponse(request.getId());
+      }
+
+      @Override
+      public void replicate(ReplicateVetoRequest request) {
+      }
+    });
+
+    ExecutorService executor = Executors.newFixedThreadPool(3);
+    CountDownLatch start = new CountDownLatch(1);
+    try {
+      Future<?> firstProducer = executor.submit(() -> {
+        start.await();
+        for (long id = 0; id < requestsPerProducer; id++) {
+          processor.requestSharedRelease(veto, id);
+        }
+        return null;
+      });
+      Future<?> secondProducer = executor.submit(() -> {
+        start.await();
+        for (long id = requestsPerProducer; id < 2L * requestsPerProducer; id++) {
+          processor.cancelExclusiveAllocation(veto, id);
+        }
+        return null;
+      });
+      Future<?> sender = executor.submit(() -> {
+        start.await();
+        while ((!firstProducer.isDone() || !secondProducer.isDone()) && !Thread.currentThread().isInterrupted()) {
+          processor.endBatch();
+        }
+        processor.endBatch();
+        return null;
+      });
+      start.countDown();
+      firstProducer.get(10, TimeUnit.SECONDS);
+      secondProducer.get(10, TimeUnit.SECONDS);
+      sender.get(10, TimeUnit.SECONDS);
+      assertEquals(2 * requestsPerProducer, sent.size());
+    } finally {
+      executor.shutdownNow();
+    }
   }
 
   public void testCompareQueuesFreeRemoteEntryForCleanup() {
@@ -169,6 +229,44 @@ public class VetoCacheSharedClusterTest extends TestCase {
     assertEquals("{}", second.showVetoCache());
     assertEquals("{}", first.showVetoPersistence());
     assertEquals("{}", second.showVetoPersistence());
+  }
+
+  public void testReleaseDuringSendPublishesNewSnapshotInNextBatch() {
+    seedSharedHolders(1L, 2L);
+    TestOrder writer = new TestOrder(3, "writer").vetos("V").urgency(200);
+    assertFalse(tryAllocate(second, writer, true));
+    second.undoAllocation(writer);
+    processBoth();
+    assertEquals(Long.valueOf(3), first.vc.get("V").getVetoInformation().getPendingExclusiveOrderId());
+
+    VCP_Clustered authority = (VCP_Clustered)first.vcp;
+    VCP_Clustered replica = (VCP_Clustered)second.vcp;
+    assertTrue(first.freeVetosForced(1));
+    authority.setRemoteImpl(new VCP_RemoteInterface() {
+      @Override
+      public VetoResponse processRemoteVetoRequest(VetoRequest request) {
+        VetoResponse response = replica.getLocal().processRemoteVetoRequest(request);
+        assertSharedHolders(second, 2L);
+        assertTrue(first.freeVetosForced(2));
+        return response;
+      }
+
+      @Override
+      public void replicate(ReplicateVetoRequest request) {
+        replica.getLocal().replicate(request);
+      }
+    });
+
+    first.executeVetoCacheProcessor();
+    assertEquals(VetoCache.State.Scheduled, first.vc.get("V").getState());
+    assertSharedHolders(first);
+    assertSharedHolders(second, 2L);
+
+    first.setClustered(second);
+    first.executeVetoCacheProcessor();
+    assertEquals(VetoCache.State.Used, first.vc.get("V").getState());
+    assertSharedHolders(second);
+    assertEventuallyGranted(second, writer, true);
   }
 
   public void testSharedReleaseSuccessDoesNotRequeueFreedReplica() {

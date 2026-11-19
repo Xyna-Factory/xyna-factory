@@ -76,7 +76,7 @@ public class VetoCacheEntry {
   }
 
   //package private
-  void setVetoInformation(VetoInformation vetoInformation) {
+  synchronized void setVetoInformation(VetoInformation vetoInformation) {
     if( vetoInformation != null && vetoInformation.isAdministrative() ) {
       this.urgency = Long.MAX_VALUE;
     }
@@ -617,7 +617,11 @@ public class VetoCacheEntry {
     return prepareCompare(State.Usable, false);
   }
 
-  public boolean setScheduled(State expected, VetoInformation vetoInformation) {
+  synchronized boolean markUsedIfSnapshotUnchanged(VetoInformation snapshot) {
+    return vetoInformation == snapshot && compareAndSetState(State.Scheduled, State.Used);
+  }
+
+  public synchronized boolean setScheduled(State expected, VetoInformation vetoInformation) {
     //gerufen von VetoCacheProcessorThread
     if( compareAndSetState( expected, State.Scheduled ) ) {
       setVetoInformation(vetoInformation);
@@ -635,7 +639,7 @@ public class VetoCacheEntry {
     return vetoHistory;
   }
 
-  public boolean replace(State expected, VetoCacheEntry vetoNew) {
+  public synchronized boolean replace(State expected, VetoCacheEntry vetoNew) {
     if( compareAndSetState( expected, vetoNew.getState() ) ) {
       this.vetoInformation = vetoNew.vetoInformation;
       this.urgency = vetoNew.urgency;

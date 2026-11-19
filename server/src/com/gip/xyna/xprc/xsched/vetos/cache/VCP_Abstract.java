@@ -18,8 +18,11 @@
 package com.gip.xyna.xprc.xsched.vetos.cache;
 
 import java.util.ArrayList;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.gip.xyna.xprc.xsched.vetos.VetoInformation;
 import com.gip.xyna.xprc.xsched.vetos.cache.VetoCache.State;
 
 public abstract class VCP_Abstract extends VetoCacheProcessor {
@@ -51,12 +54,9 @@ public abstract class VCP_Abstract extends VetoCacheProcessor {
       
       //State-Umsetzen der Scheduled
       for( VetoCacheEntry veto : pv.getScheduled() ) {
-        if( veto.compareAndSetState(State.Scheduled, State.Used) ) {
-          //in DB eingetragen
-        } else {
-          //Status Free erwartet bei schneller OrderExecution
-          //andere Status unerwartet
-          vetoCache.process(veto); //nochmal bearbeiten
+        if (!veto.markUsedIfSnapshotUnchanged(pv.scheduledSnapshots.get(veto))) {
+          // A newer snapshot needs another batch, or the veto was freed in the meantime.
+          vetoCache.process(veto);
         }
       }
       
@@ -81,6 +81,10 @@ public abstract class VCP_Abstract extends VetoCacheProcessor {
    */
   protected void persist(VetoCacheEntry veto, boolean schedule) {
     persistVetos.add(veto, schedule);
+  }
+
+  protected void persistScheduled(VetoCacheEntry veto, VetoInformation snapshot) {
+    persistVetos.addScheduled(veto, snapshot);
   }
 
   @Override
@@ -112,6 +116,7 @@ public abstract class VCP_Abstract extends VetoCacheProcessor {
     private List<VetoCacheEntry> reprocess;
     private List<VetoCacheEntry> scheduled;
     private List<VetoCacheEntry> freed;
+    private final Map<VetoCacheEntry, VetoInformation> scheduledSnapshots = new IdentityHashMap<>();
 
     public PersistVetos() {
       scheduled = new ArrayList<>();
@@ -124,7 +129,7 @@ public abstract class VCP_Abstract extends VetoCacheProcessor {
 
     public void add(VetoCacheEntry veto, boolean schedule) {
       if( schedule ) {
-        scheduled.add(veto);
+        addScheduled(veto, veto.getVetoInformation());
       } else {
         freed.add(veto);
       }
@@ -146,6 +151,11 @@ public abstract class VCP_Abstract extends VetoCacheProcessor {
       //Bei der Persistierung muss dann beachtet werden, dass zuerst die Deletes und danach erst die Persists abgearbeitet werden, 
       //da sonst A fehlen würde. 
       //Die Reprocess-Einträge führen dann dazu, dass Vetos B und C mit dem nächsten Batch erneut gelöscht werden. 
+    }
+
+    public void addScheduled(VetoCacheEntry veto, VetoInformation snapshot) {
+      scheduled.add(veto);
+      scheduledSnapshots.put(veto, snapshot);
     }
 
     public void persist(VetoCachePersistence persistence) {

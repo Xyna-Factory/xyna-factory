@@ -47,11 +47,6 @@ public class VetoInformation implements Serializable {
   }
 
   public static VetoInformation createShared(String name, List<Long> sharedOrderIds, Long created, int binding,
-                                             int authorityBinding, long authorityEpoch) {
-    return createShared(name, sharedOrderIds, created, binding, authorityBinding, authorityEpoch, 0L);
-  }
-
-  public static VetoInformation createShared(String name, List<Long> sharedOrderIds, Long created, int binding,
                                              int authorityBinding, long authorityEpoch, long authorityVersion) {
     return new VetoInformation(name, null, sharedOrderIds, null, null, created, binding, authorityBinding,
                                authorityEpoch, authorityVersion);
@@ -66,13 +61,9 @@ public class VetoInformation implements Serializable {
   }
   
   public VetoInformation(AdministrativeVeto administrativeVeto, Long created, int binding) {
-    this(administrativeVeto, created, binding, binding, 0L);
+    this(administrativeVeto, created, binding, binding, 0L, 0L);
   }
 
-  public VetoInformation(AdministrativeVeto administrativeVeto, Long created, int binding, int authorityBinding,
-                         long authorityEpoch) {
-    this(administrativeVeto, created, binding, authorityBinding, authorityEpoch, 0L);
-  }
 
   public VetoInformation(AdministrativeVeto administrativeVeto, Long created, int binding, int authorityBinding,
                          long authorityEpoch, long authorityVersion) {

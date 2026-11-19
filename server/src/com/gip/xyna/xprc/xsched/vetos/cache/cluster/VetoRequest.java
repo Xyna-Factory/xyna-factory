@@ -81,8 +81,12 @@ public class VetoRequest implements Serializable {
   }
   
   public VetoRequestEntry scheduled(VetoCacheEntry veto) {
+    return scheduled(veto, veto.getVetoInformation());
+  }
+
+  public VetoRequestEntry scheduled(VetoCacheEntry veto, VetoInformation snapshot) {
     VetoRequestEntry vr = new VetoRequestEntry(veto, Action.Scheduled);
-    vr.vetoInformation = veto.getVetoInformation();
+    vr.vetoInformation = snapshot;
     return add(veto, vr);
   }
 
@@ -194,8 +198,8 @@ public class VetoRequest implements Serializable {
       int result = 1;
       result = prime * result + ((action == null) ? 0 : action.hashCode());
       result = prime * result + ((name == null) ? 0 : name.hashCode());
-        if (action == Action.RequestShared || action == Action.ReleaseShared || action == Action.RequestExclusive ||
-          action == Action.CancelExclusive) {
+      if (action == Action.RequestShared || action == Action.ReleaseShared || action == Action.RequestExclusive
+          || action == Action.CancelExclusive) {
         result = prime * result + Long.hashCode(orderId);
       }
       return result;
@@ -212,9 +216,8 @@ public class VetoRequest implements Serializable {
       VetoRequestEntry other = (VetoRequestEntry) obj;
       if (action != other.action)
         return false;
-         if ((action == Action.RequestShared || action == Action.ReleaseShared || action == Action.RequestExclusive ||
-           action == Action.CancelExclusive) &&
-          orderId != other.orderId)
+      if ((action == Action.RequestShared || action == Action.ReleaseShared || action == Action.RequestExclusive
+          || action == Action.CancelExclusive) && orderId != other.orderId)
         return false;
       if (name == null) {
         if (other.name != null)

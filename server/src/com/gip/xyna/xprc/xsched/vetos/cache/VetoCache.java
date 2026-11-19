@@ -192,17 +192,16 @@ public class VetoCache {
     }
     VetoCacheEntry veto = req.getCacheEntry();
     VetoInformation current = veto.getVetoInformation();
-    if (req.getVetoType() == VetoType.SHARED && veto.getAuthorityBinding() >= 0 &&
-      veto.getAuthorityBinding() != ownBinding &&
-      (current == null || !current.isUsedBy(req.getOrderInformation().getOrderId()))) {
+    if (req.getVetoType() == VetoType.SHARED && veto.getAuthorityBinding() >= 0 
+        && veto.getAuthorityBinding() != ownBinding
+        && (current == null || !current.isUsedBy(req.getOrderInformation().getOrderId()))) {
       vetoCacheProcessor.requestSharedAllocation(veto, req, urgency);
       veto.updateWaiting(urgency, currentSchedulingRun);
       req.setResult(new VetoAllocationResult(current == null ? new VetoInformation(veto.getName()) : current));
       return;
     }
-    if (req.getVetoType() == VetoType.EXCLUSIVE && current != null &&
-      veto.getAuthorityBinding() != ownBinding &&
-        !Objects.equals(current.getUsingOrderId(), req.getOrderInformation().getOrderId())) {
+    if (req.getVetoType() == VetoType.EXCLUSIVE && current != null && veto.getAuthorityBinding() != ownBinding
+        && !Objects.equals(current.getUsingOrderId(), req.getOrderInformation().getOrderId())) {
       vetoCacheProcessor.requestExclusiveAllocation(veto, req, urgency);
       veto.updateWaiting(urgency, currentSchedulingRun);
       req.setResult(new VetoAllocationResult(current));
