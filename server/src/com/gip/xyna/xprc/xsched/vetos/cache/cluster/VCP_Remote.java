@@ -41,7 +41,7 @@ public class VCP_Remote implements VCP_RemoteInterface {
   private static final Logger logger = CentralFactoryLogging.getLogger(VCP_Remote.class);
   private VetoCache vetoCache;
   private boolean notifyScheduler;
-  private long ownBinding;
+  private final int ownBinding;
   private VCP_Clustered vcp_Clustered;
   
   public VCP_Remote(VCP_Clustered vcp_Clustered, VetoCache vetoCache, int ownBinding) {
@@ -119,6 +119,8 @@ public class VCP_Remote implements VCP_RemoteInterface {
       return processSharedRelease(veto, request, senderBinding);
     case RequestExclusive:
       return processExclusiveRequest(veto, request, senderBinding);
+    case ReleaseExclusive:
+      return processExclusiveRelease(veto, request, senderBinding);
     case CancelExclusive:
       return processExclusiveCancellation(veto, request);
     case Free:
@@ -170,6 +172,25 @@ public class VCP_Remote implements VCP_RemoteInterface {
       vetoCache.process(veto);
     }
     return VetoResponseEntry.success(request.getName(), granted);
+  }
+
+  private VetoResponseEntry processExclusiveRelease(VetoCacheEntry veto, VetoRequestEntry request, int senderBinding) {
+    synchronized (veto) {
+      VetoInformation current = veto.getVetoInformation();
+      if (!isCurrentAuthorityRequest(request, current)) {
+        return VetoResponseEntry.staleAuthority(request.getName());
+      }
+      if (current.isAdministrative() || !Objects.equals(current.getUsingOrderId(), request.getOrderId())) {
+        return VetoResponseEntry.success(request.getName()); // The order no longer holds the veto.
+      }
+      if (current.getBinding() != senderBinding || current.getAuthorityVersion() != request.getAuthorityVersion()) {
+        return VetoResponseEntry.staleAuthority(request.getName());
+      }
+      if (!vetoCache.free(veto, request.getOrderId())) {
+        return VetoResponseEntry.failUnexpectedState(veto);
+      }
+      return VetoResponseEntry.success(request.getName());
+    }
   }
 
   private VetoResponseEntry processExclusiveCancellation(VetoCacheEntry veto, VetoRequestEntry request) {
@@ -257,6 +278,11 @@ public class VCP_Remote implements VCP_RemoteInterface {
           veto.addAdministrativeData(request.getVetoInformation() );
           break;
         case LOCAL:
+          if (result.getSecond() == State.Local) {
+            veto.setRemoteAuthority(ownBinding, 0L, 0L);
+            notifyScheduler = true;
+            return VetoResponseEntry.compareLocal(veto.getName(), ownBinding);
+          }
           notifyScheduler = true;
           break;
         case REMOTE:

@@ -176,6 +176,9 @@ public abstract class VetoCacheProcessor implements Algorithm {
   public void requestSharedRelease(VetoCacheEntry veto, long orderId) {
   }
 
+  public void requestExclusiveRelease(VetoCacheEntry veto, long orderId) {
+  }
+
   public void requestExclusiveAllocation(VetoCacheEntry veto, AllocationRequest request, long urgency) {
   }
 

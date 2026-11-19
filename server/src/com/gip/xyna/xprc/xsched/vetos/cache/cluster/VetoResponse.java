@@ -91,6 +91,7 @@ public class VetoResponse implements Serializable {
     private final Response response;
     private String state;
     private VetoInformation vetoInformation;
+    private Integer compareAuthorityBinding;
     
     private VetoResponseEntry(String name, Response response) {
       this.name = name;
@@ -160,6 +161,16 @@ public class VetoResponse implements Serializable {
 
     public static VetoResponseEntry compare(String name, Compare compare) {
       return new VetoResponseEntry(name, Response.COMPARE, compare.toString() );
+    }
+
+    public static VetoResponseEntry compareLocal(String name, int authorityBinding) {
+      VetoResponseEntry response = compare(name, Compare.LOCAL);
+      response.compareAuthorityBinding = authorityBinding;
+      return response;
+    }
+
+    public Integer getCompareAuthorityBinding() {
+      return compareAuthorityBinding;
     }
     
     public Compare getCompareResult() {

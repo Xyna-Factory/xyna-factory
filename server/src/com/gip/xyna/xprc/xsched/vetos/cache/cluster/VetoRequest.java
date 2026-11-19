@@ -108,6 +108,12 @@ public class VetoRequest implements Serializable {
     return add(veto, vr);
   }
 
+  public VetoRequestEntry exclusiveRelease(VetoCacheEntry veto, long orderId) {
+    VetoRequestEntry vr = new VetoRequestEntry(veto, Action.ReleaseExclusive, orderId);
+    vr.vetoInformation = veto.getVetoInformation();
+    return add(veto, vr);
+  }
+
   public VetoRequestEntry cancelExclusive(VetoCacheEntry veto, long orderId) {
     VetoRequestEntry vr = new VetoRequestEntry(veto, Action.CancelExclusive, orderId);
     vr.vetoInformation = veto.getVetoInformation();
@@ -136,7 +142,7 @@ public class VetoRequest implements Serializable {
     private static final long serialVersionUID = 1L;
    
     public enum Action {
-      Compare, Scheduled, Free, RequestShared, ReleaseShared, RequestExclusive, CancelExclusive;
+      Compare, Scheduled, Free, RequestShared, ReleaseShared, RequestExclusive, CancelExclusive, ReleaseExclusive;
     }
    
     private final String name;
@@ -199,7 +205,7 @@ public class VetoRequest implements Serializable {
       result = prime * result + ((action == null) ? 0 : action.hashCode());
       result = prime * result + ((name == null) ? 0 : name.hashCode());
       if (action == Action.RequestShared || action == Action.ReleaseShared || action == Action.RequestExclusive
-          || action == Action.CancelExclusive) {
+          || action == Action.CancelExclusive || action == Action.ReleaseExclusive) {
         result = prime * result + Long.hashCode(orderId);
       }
       return result;
@@ -217,7 +223,7 @@ public class VetoRequest implements Serializable {
       if (action != other.action)
         return false;
       if ((action == Action.RequestShared || action == Action.ReleaseShared || action == Action.RequestExclusive
-          || action == Action.CancelExclusive) && orderId != other.orderId)
+          || action == Action.CancelExclusive || action == Action.ReleaseExclusive) && orderId != other.orderId)
         return false;
       if (name == null) {
         if (other.name != null)

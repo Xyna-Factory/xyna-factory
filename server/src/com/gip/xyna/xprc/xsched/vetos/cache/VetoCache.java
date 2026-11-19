@@ -421,6 +421,10 @@ public class VetoCache {
        vetoCacheProcessor.requestSharedRelease(veto, orderId);
        return true;
      }
+     if (isRemoteExclusiveHolder(information, orderId)) {
+       vetoCacheProcessor.requestExclusiveRelease(veto, orderId);
+       return true;
+     }
      if (information != null && Objects.equals(information.getPendingExclusiveOrderId(), orderId) &&
          information.getAuthorityBinding() != ownBinding) {
        vetoCacheProcessor.cancelExclusiveAllocation(veto, orderId);
@@ -441,6 +445,11 @@ public class VetoCache {
      }
    }
    return false;
+  }
+
+  private boolean isRemoteExclusiveHolder(VetoInformation information, long orderId) {
+    return information != null && !information.isAdministrative() && information.getAuthorityBinding() != ownBinding &&
+        information.getBinding() == ownBinding && Objects.equals(information.getUsingOrderId(), orderId);
   }
 
   public boolean undoAllocation(VetoCacheEntry veto, OrderInformation orderInformation) {

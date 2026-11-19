@@ -485,11 +485,13 @@ public class VetoCacheEntry {
     }
   }
   
-  public boolean remoteFree() {
+  public synchronized boolean remoteFree() {
     //wird von remote-Thread gerufen, analog zu free() müssen mehrere States untersucht werden
-    remoteFreeBinding = getBinding();
+    VetoInformation information = vetoInformation;
     if( compareAndSetState(State.Scheduled, State.Free) || 
         compareAndSetState(State.Used, State.Free) ) {
+      // Admin vetoes can be removed by either node; the original owner still compares.
+      remoteFreeBinding = information != null && information.isAdministrative() ? information.getBinding() : -1;
       this.urgency = Long.MIN_VALUE;
       this.vetoInformation = null;
       return true;

@@ -231,6 +231,33 @@ public class VetoCacheSharedClusterTest extends TestCase {
     assertEquals("{}", second.showVetoPersistence());
   }
 
+  public void testAuthorityFreesVetoAfterLastRemoteHolderReleases() {
+    first.vc.getOrCreate("V", 100);
+    first.executeVetoCacheProcessor();
+    assertEventuallyGranted(second, reader(11), true);
+    processBoth();
+    VetoInformation granted = first.vc.get("V").getVetoInformation();
+    assertEquals(1, granted.getAuthorityBinding());
+    assertEquals(2, granted.getBinding());
+
+    assertTrue(second.freeVetosForced(11));
+    second.executeVetoCacheProcessor();
+    first.executeVetoCacheProcessor();
+    assertEquals(VetoCache.State.Free, second.vc.get("V").getState());
+    assertNull(second.vc.get("V").getVetoInformation());
+
+    second.executeVetoCacheProcessor();
+    assertEquals("Replica must wait for the authority's compare without echoing the release",
+                 VetoCache.State.Remote, second.vc.get("V").getState());
+    processBoth();
+
+    TestOrder writer = new TestOrder(12, "writer").vetos("V").urgency(200);
+    assertEventuallyGranted(second, writer, true);
+    processBoth();
+    assertEquals(Long.valueOf(12), first.vc.get("V").getVetoInformation().getUsingOrderId());
+    assertEquals(Long.valueOf(12), second.vc.get("V").getVetoInformation().getUsingOrderId());
+  }
+
   public void testReleaseDuringSendPublishesNewSnapshotInNextBatch() {
     seedSharedHolders(1L, 2L);
     TestOrder writer = new TestOrder(3, "writer").vetos("V").urgency(200);
@@ -314,6 +341,28 @@ public class VetoCacheSharedClusterTest extends TestCase {
       assertNull("Granted writer must no longer be pending", information.getPendingExclusiveOrderId());
       assertPersistenceMatchesCache(node);
     }
+
+    VetoInformation grant = second.vc.get("V").getVetoInformation();
+    VetoInformation staleGrant = new VetoInformation("V", grant.getUsingOrder(), Collections.emptyList(), null,
+        grant.getDocumentation(), grant.getCreated(), grant.getBinding(), grant.getAuthorityBinding(),
+        grant.getAuthorityEpoch(), grant.getAuthorityVersion() - 1);
+    VetoRequest staleRelease = new VetoRequest(99, second.vc.getOwnBinding());
+    staleRelease.exclusiveRelease(new VetoCacheEntry("V", VetoCache.State.Used, false, staleGrant), 3L);
+    VetoResponse response = ((VCP_Clustered)first.vcp).getLocal().processRemoteVetoRequest(staleRelease);
+    assertEquals(Response.STALE_AUTHORITY, response.getResponses().get(0).getResponse());
+    assertEquals(Long.valueOf(3), first.vc.get("V").getVetoInformation().getUsingOrderId());
+
+    assertTrue("The remote writer must be able to release its grant",
+               second.freeVetos(writer.getOrderInformation()));
+    processBoth();
+    assertFalse("Writer must be released by the authority: " + first.showVetoCache(),
+                first.vc.get("V") != null && first.vc.get("V").isUsedBy(3L));
+    assertFalse("Writer must be cleared on its execution node too",
+                second.vc.get("V") != null && second.vc.get("V").isUsedBy(3L));
+    assertEventuallyGranted(first, reader(6), true);
+    processBoth();
+    assertSharedHolders(first, 6L);
+    assertSharedHolders(second, 6L);
   }
 
   public void testStepped_CancelPendingWriterPreservesReadersAndClearsBarrier() {

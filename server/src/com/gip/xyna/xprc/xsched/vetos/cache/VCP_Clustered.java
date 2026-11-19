@@ -277,7 +277,13 @@ public class VCP_Clustered extends VCP_Abstract {
         }
         return Result.Reprocess;
       case Local:
+        veto.setRemoteAuthority(ownBinding, 0L, 0L);
+        return Result.Ok;
       case Remote:
+        Integer authorityBinding = responseEntry.getCompareAuthorityBinding();
+        if (authorityBinding != null) {
+          veto.setRemoteAuthority(authorityBinding, 0L, 0L);
+        }
         return Result.Ok;
       default:
         return Result.Failed;
@@ -359,7 +365,7 @@ public class VCP_Clustered extends VCP_Abstract {
     return Result.Failed;
   }
 
-  private Result processSharedRelease(Response response) {
+  private Result processRelease(Response response) {
     if (response == Response.SUCCESS) {
       return Result.Ok;
     }
@@ -373,29 +379,38 @@ public class VCP_Clustered extends VCP_Abstract {
   @Override
   protected boolean processFree(VetoCacheEntry veto) {
     persist(veto, false);
-    if( veto.isAdministrative() ) {
-      //in jedem Fall an anderen Knoten weitergeben, da removeadminveto evtl. auf anderem Knoten aufgerufen wird
-      appendRemoteRequest(batch -> batch.freeAdmin(veto));
-    } else {
-      if( veto.getBinding() == ownBinding ) {
+    synchronized (veto) {
+      VetoInformation information = veto.getVetoInformation();
+      if (information != null && information.isAdministrative()) {
+        //in jedem Fall an anderen Knoten weitergeben, da removeadminveto evtl. auf anderem Knoten aufgerufen wird
+        appendRemoteRequest(batch -> batch.freeAdmin(veto));
+      } else if (isLocalRelease(information)) {
         appendRemoteRequest(batch -> batch.free(veto));
-      } 
-      //nichts mehr zu tun
+      }
     }
     return false;
   }
-  
+
+  private boolean isLocalRelease(VetoInformation information) {
+    // An inbound Free clears the snapshot; the replica must not echo the release.
+    return information != null && information.getAuthorityBinding() == ownBinding;
+  }
+
   @Override
   protected void processFreeAfterPersist(VetoCacheEntry veto) {
-    int binding = veto.getBinding();
-    if( veto.prepareCompare(State.Free, binding != ownBinding ) ) {
-      veto.removeVetoInformation();
-      if( binding == ownBinding ) {
-        processCompare(veto);
+    boolean compareLocally;
+    synchronized (veto) {
+      VetoInformation information = veto.getVetoInformation();
+      // For an inbound administrative release, getBinding() retains the original owner.
+      compareLocally = information == null ? veto.getBinding() == ownBinding : isLocalRelease(information);
+      if (!veto.prepareCompare(State.Free, !compareLocally)) {
+        vetoCache.process(veto); //nochmal bearbeiten
+        return;
       }
-    } else {
-      //unerwartet
-      vetoCache.process(veto); //nochmal bearbeiten
+      veto.removeVetoInformation();
+    }
+    if (compareLocally) {
+      processCompare(veto);
     }
   }
 
@@ -477,7 +492,8 @@ public class VCP_Clustered extends VCP_Abstract {
       result = processCompare( veto, response, responseEntry );
       break;
     case ReleaseShared:
-      result = processSharedRelease(response);
+    case ReleaseExclusive:
+      result = processRelease(response);
       break;
     case Free:
       result = processFree( veto, response, responseEntry );
@@ -558,6 +574,12 @@ public class VCP_Clustered extends VCP_Abstract {
   @Override
   public void requestSharedRelease(VetoCacheEntry veto, long orderId) {
     appendRemoteRequest(batch -> batch.sharedRelease(veto, orderId));
+    vetoCache.notifyProcessor();
+  }
+
+  @Override
+  public void requestExclusiveRelease(VetoCacheEntry veto, long orderId) {
+    appendRemoteRequest(batch -> batch.exclusiveRelease(veto, orderId));
     vetoCache.notifyProcessor();
   }
 
