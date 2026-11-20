@@ -511,7 +511,7 @@ compose_server_persistencelayers() {
 
   #cluster
   mkdir -p $SCRIPT_DIR/../release/components/xnwh/xcs/XynaClusterPersistenceLayer
-  cp $SCRIPT_DIR/../components/xnwh/xcs/XynaClusterPersistenceLayer/lib/xyna/XynaMemoryPersistenceLayer-1.0.0.jar $SCRIPT_DIR/../release/components/xnwh/xcs/XynaClusterPersistenceLayer
+  cp $SCRIPT_DIR/../localbuild/server/persistencelayers/XynaLocalMemoryPersistenceLayer/XynaMemoryPersistenceLayer-1.0.0.jar $SCRIPT_DIR/../release/components/xnwh/xcs/XynaClusterPersistenceLayer
   cp $SCRIPT_DIR/../localbuild/components/xnwh/xcs/XynaClusterPersistenceLayer/XynaClusterPersistenceLayer.jar $SCRIPT_DIR/../release/components/xnwh/xcs/XynaClusterPersistenceLayer
 
   #xsor
