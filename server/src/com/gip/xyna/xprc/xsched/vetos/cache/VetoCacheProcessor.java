@@ -169,5 +169,20 @@ public abstract class VetoCacheProcessor implements Algorithm {
   }
 
   public abstract boolean allowSharedVetos();
+
+  public void requestSharedAllocation(VetoCacheEntry veto, AllocationRequest request, long urgency) {
+  }
+
+  public void requestSharedRelease(VetoCacheEntry veto, long orderId) {
+  }
+
+  public void requestExclusiveRelease(VetoCacheEntry veto, long orderId) {
+  }
+
+  public void requestExclusiveAllocation(VetoCacheEntry veto, AllocationRequest request, long urgency) {
+  }
+
+  public void cancelExclusiveAllocation(VetoCacheEntry veto, long orderId) {
+  }
   
 }

@@ -21,6 +21,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -190,6 +191,22 @@ public class VetoCache {
       return;
     }
     VetoCacheEntry veto = req.getCacheEntry();
+    VetoInformation current = veto.getVetoInformation();
+    if (req.getVetoType() == VetoType.SHARED && veto.getAuthorityBinding() >= 0 
+        && veto.getAuthorityBinding() != ownBinding
+        && (current == null || !current.isUsedBy(req.getOrderInformation().getOrderId()))) {
+      vetoCacheProcessor.requestSharedAllocation(veto, req, urgency);
+      veto.updateWaiting(urgency, currentSchedulingRun);
+      req.setResult(new VetoAllocationResult(current == null ? new VetoInformation(veto.getName()) : current));
+      return;
+    }
+    if (req.getVetoType() == VetoType.EXCLUSIVE && current != null && veto.getAuthorityBinding() != ownBinding
+        && !Objects.equals(current.getUsingOrderId(), req.getOrderInformation().getOrderId())) {
+      vetoCacheProcessor.requestExclusiveAllocation(veto, req, urgency);
+      veto.updateWaiting(urgency, currentSchedulingRun);
+      req.setResult(new VetoAllocationResult(current));
+      return;
+    }
     if (veto.checkAllocation(req, urgency) ) {
       return;
     } else {
@@ -231,8 +248,8 @@ public class VetoCache {
       return allocateLocked(veto, req, urgency, allocMode);
     }
   }
-  
-  
+
+
   private boolean allocateLocked(VetoCacheEntry veto, AllocationRequest req, long urgency, ListAllocationMode allocMode) {
     if (allocMode == ListAllocationMode.COMPLETE && req.getPendingType() != PendingType.PENDING) {
       //veto may have been freed or allocated since the preliminary check
@@ -263,7 +280,15 @@ public class VetoCache {
       logger.warn("Unexpected state in VetoCache.allocate()");
       return false;
     }
-    return veto.allocate(vi, urgency);
+    if (!veto.allocate(vi, urgency)) {
+      return false;
+    }
+    if (req.getPendingType() == PendingType.PENDING && vi.getAuthorityBinding() == ownBinding &&
+        veto.compareAndSetState(State.Scheduling, State.Scheduled)) {
+      process(veto);
+      notifyProcessor();
+    }
+    return true;
   }
   
   
@@ -274,8 +299,12 @@ public class VetoCache {
       if (current.getSharedOrderIds() != null) {
         sharedIds.addAll(current.getSharedOrderIds());
       }
+      if (sharedIds.contains(req.getOrderInformation().getOrderId())) {
+        return current;
+      }
       sharedIds.add(req.getOrderInformation().getOrderId());
-      return VetoInformation.createShared(veto.getName(), sharedIds, System.currentTimeMillis(), ownBinding);
+      return VetoInformation.createShared(veto.getName(), sharedIds, System.currentTimeMillis(), ownBinding,
+                  current.getAuthorityBinding(), current.getAuthorityEpoch(), current.getAuthorityVersion() + 1);
     }
     if (req.getPendingType() == PendingType.PENDING) {
       if (current.getPendingExclusiveOrderId() != null) {
@@ -288,18 +317,26 @@ public class VetoCache {
       }
       return new VetoInformation(current.getName(), current.getUsingOrder(), current.getSharedOrderIds(),
                                  req.getOrderInformation().getOrderId(), current.getDocumentation(),
-                                 System.currentTimeMillis(), ownBinding);
+                                 System.currentTimeMillis(), ownBinding, current.getAuthorityBinding(),
+                                 current.getAuthorityEpoch(), current.getAuthorityVersion() + 1);
     }
     if (current.getUsingOrderId() == null) {
-      return VetoInformation.createExclusive(req.getVetoName(), req.getOrderInformation(), System.currentTimeMillis(), ownBinding);
+      return new VetoInformation(req.getVetoName(), req.getOrderInformation(), Collections.emptyList(), null, null,
+                                 System.currentTimeMillis(), ownBinding, current.getAuthorityBinding(),
+                                 current.getAuthorityEpoch(), current.getAuthorityVersion() + 1);
     }
     if (Objects.equals(req.getOrderInformation().getOrderId(), current.getUsingOrderId())) {
       if (current.getBinding() == ownBinding) {
         return current;
       }
+      int authorityBinding = current.getSharedOrderIds() == null || current.getSharedOrderIds().isEmpty()
+          ? ownBinding : current.getAuthorityBinding();
+      long authorityEpoch = authorityBinding == current.getAuthorityBinding()
+          ? current.getAuthorityEpoch() : current.getAuthorityEpoch() + 1;
       return new VetoInformation(current.getName(), current.getUsingOrder(), current.getSharedOrderIds(),
                                  current.getPendingExclusiveOrderId(), current.getDocumentation(),
-                                 current.getCreated(), ownBinding);
+                                 current.getCreated(), ownBinding, authorityBinding, authorityEpoch,
+                                 current.getAuthorityVersion() + 1);
     }
     // unexpected state
     logger.warn("Unexpected state in VetoCache.updateVetoInfo()");
@@ -346,7 +383,8 @@ public class VetoCache {
   
   public String changeAdminVeto(VetoCacheEntry veto, AdministrativeVeto administrativeVeto) {
     VetoInformation oldVetoInfo = veto.getVetoInformation();
-    VetoInformation newVetoInfo = new VetoInformation(administrativeVeto, System.currentTimeMillis(), ownBinding);
+    VetoInformation newVetoInfo = new VetoInformation(administrativeVeto, System.currentTimeMillis(), ownBinding,
+        oldVetoInfo.getAuthorityBinding(), oldVetoInfo.getAuthorityEpoch(), oldVetoInfo.getAuthorityVersion() + 1);
     veto.setVetoInformation(newVetoInfo);
     if( veto.isAdministrative() ) {
       //Umsetzen des Status, damit Änderung vom VetoCacheProcessor bearbeitet wird
@@ -377,6 +415,21 @@ public class VetoCache {
      return false;
    }
    synchronized (veto) {
+     VetoInformation information = veto.getVetoInformation();
+     if (information != null && information.getSharedOrderIds() != null &&
+         information.getSharedOrderIds().contains(orderId) && information.getAuthorityBinding() != ownBinding) {
+       vetoCacheProcessor.requestSharedRelease(veto, orderId);
+       return true;
+     }
+     if (isRemoteExclusiveHolder(information, orderId)) {
+       vetoCacheProcessor.requestExclusiveRelease(veto, orderId);
+       return true;
+     }
+     if (information != null && Objects.equals(information.getPendingExclusiveOrderId(), orderId) &&
+         information.getAuthorityBinding() != ownBinding) {
+       vetoCacheProcessor.cancelExclusiveAllocation(veto, orderId);
+       return true;
+     }
      if( veto.isUsedBy(orderId) ) {
        RemovalResult result = veto.freeOrderId(orderId);
        if (result == RemovalResult.IGNORE) {
@@ -384,12 +437,30 @@ public class VetoCache {
        }
        if (result == RemovalResult.EMPTY) {
          veto.free();
+       } else if (information != null && information.getAuthorityBinding() == ownBinding) {
+         veto.compareAndSetState(State.Used, State.Scheduled);
        }
-       vetosToProcess.add(veto.getName());
+      vetosToProcess.add(veto.getName());
        return true;
      }
    }
    return false;
+  }
+
+  private boolean isRemoteExclusiveHolder(VetoInformation information, long orderId) {
+    return information != null && !information.isAdministrative() && information.getAuthorityBinding() != ownBinding &&
+        information.getBinding() == ownBinding && Objects.equals(information.getUsingOrderId(), orderId);
+  }
+
+  public boolean undoAllocation(VetoCacheEntry veto, OrderInformation orderInformation) {
+    VetoInformation information = veto == null ? null : veto.getVetoInformation();
+    if (information != null && information.getSharedOrderIds() != null &&
+        information.getSharedOrderIds().contains(orderInformation.getOrderId()) &&
+        information.getAuthorityBinding() != ownBinding) {
+      vetoCacheProcessor.requestSharedRelease(veto, orderInformation.getOrderId());
+      return true;
+    }
+    return veto == null || veto.undoAllocation(orderInformation);
   }
 
   public boolean hasVetosToProcess() {
@@ -415,6 +486,15 @@ public class VetoCache {
 
   public void process(VetoCacheEntry veto) {
     vetosToProcess.add(veto.getName());
+  }
+
+  public void processIfNotQueued(VetoCacheEntry veto) {
+    String vetoName = veto.getName();
+    synchronized (vetosToProcess) {
+      if (!vetosToProcess.contains(vetoName)) {
+        vetosToProcess.add(vetoName);
+      }
+    }
   }
   
   public void process(String vetoName) {
@@ -502,7 +582,7 @@ public class VetoCache {
   }
 
   public void reprocessAll() {
-    vetosToProcess.addAll( vetoCache.keySet() );
+    vetosToProcess.addAll(vetoCache.keySet());
   }
 
   public List<List<String>> exportVetoCacheData() {

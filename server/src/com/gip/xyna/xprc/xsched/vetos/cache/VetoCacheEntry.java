@@ -18,12 +18,10 @@
 package com.gip.xyna.xprc.xsched.vetos.cache;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import org.apache.log4j.Logger;
-
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.concurrent.AtomicEnum;
 import com.gip.xyna.xprc.xsched.scheduling.OrderInformation;
 import com.gip.xyna.xprc.xsched.vetos.VetoInformation;
@@ -37,7 +35,6 @@ public class VetoCacheEntry {
     IGNORE, EMPTY, STILL_USED
   }
   
-  private static final Logger logger = CentralFactoryLogging.getLogger(VetoCacheEntry.class);
   
   private final AtomicEnum<State> state;  
   private final String name;
@@ -45,6 +42,9 @@ public class VetoCacheEntry {
   
   private volatile VetoInformation vetoInformation; //Thread(VCP, S, andere); volatile nur auf Verdacht
   private volatile int remoteFreeBinding = -1;
+  private volatile int remoteAuthorityBinding = -1;
+  private volatile long remoteAuthorityEpoch;
+  private volatile long remoteAuthorityVersion;
   private volatile long urgency;               //Thread(VCP, S, andere); volatile nur auf Verdacht
   private volatile WaitingOrder waitingOrder;  //Thread(VCP, S); volatile nur auf Verdacht
   private boolean keepUsable; //Thread(S). Veto wurde im Status "usable" angetroffen, aber nicht geschedult. 
@@ -76,14 +76,38 @@ public class VetoCacheEntry {
   }
 
   //package private
-  void setVetoInformation(VetoInformation vetoInformation) {
+  synchronized void setVetoInformation(VetoInformation vetoInformation) {
     if( vetoInformation != null && vetoInformation.isAdministrative() ) {
       this.urgency = Long.MAX_VALUE;
     }
     if( vetoInformation != null ) {
       remoteFreeBinding = -1;
+      remoteAuthorityBinding = vetoInformation.getAuthorityBinding();
+      remoteAuthorityEpoch = vetoInformation.getAuthorityEpoch();
+      remoteAuthorityVersion = vetoInformation.getAuthorityVersion();
     }
     this.vetoInformation = vetoInformation;
+  }
+
+  public void setRemoteAuthority(int authorityBinding, long authorityEpoch, long authorityVersion) {
+    remoteAuthorityBinding = authorityBinding;
+    remoteAuthorityEpoch = authorityEpoch;
+    remoteAuthorityVersion = authorityVersion;
+  }
+
+  public int getAuthorityBinding() {
+    VetoInformation information = vetoInformation;
+    return information == null ? remoteAuthorityBinding : information.getAuthorityBinding();
+  }
+
+  public long getAuthorityEpoch() {
+    VetoInformation information = vetoInformation;
+    return information == null ? remoteAuthorityEpoch : information.getAuthorityEpoch();
+  }
+
+  public long getAuthorityVersion() {
+    VetoInformation information = vetoInformation;
+    return information == null ? remoteAuthorityVersion : information.getAuthorityVersion();
   }
   
   public void addAdministrativeData(VetoInformation vetoInformation) {
@@ -295,6 +319,109 @@ public class VetoCacheEntry {
     if (vi == null) { return false; }
     return vi.isUsedBy(orderId);
   }
+
+  public synchronized VetoInformation grantSharedHolder(VetoInformation request) {
+    VetoInformation current = vetoInformation;
+    State currentState = state.get();
+    if (current == null) {
+      if ((currentState != State.Local && currentState != State.Usable) || request.getSharedOrderIds() == null ||
+          request.getSharedOrderIds().size() != 1 || request.getAuthorityEpoch() != 0L ||
+          request.getAuthorityVersion() != 0L) {
+        return null;
+      }
+      VetoInformation initial = VetoInformation.createShared(name, request.getSharedOrderIds(),
+          System.currentTimeMillis(), request.getBinding(), request.getAuthorityBinding(),
+          request.getAuthorityEpoch(), request.getAuthorityVersion() + 1);
+      return compareAndSetState(currentState, State.Scheduled) ? setAndReturn(initial) : null;
+    }
+    if ((currentState != State.Used && currentState != State.Scheduled) ||
+        current.isAdministrative() || current.getUsingOrderId() != null ||
+        current.getPendingExclusiveOrderId() != null ||
+        current.getAuthorityBinding() != request.getAuthorityBinding() ||
+        current.getAuthorityEpoch() != request.getAuthorityEpoch() ||
+        current.getAuthorityVersion() != request.getAuthorityVersion() ||
+        request.getSharedOrderIds() == null || request.getSharedOrderIds().size() != 1) {
+      return null;
+    }
+    long orderId = request.getSharedOrderIds().get(0);
+    List<Long> sharedIds = new ArrayList<>();
+    if (current.getSharedOrderIds() != null) {
+      sharedIds.addAll(current.getSharedOrderIds());
+    }
+    if (sharedIds.contains(orderId)) {
+      return current;
+    }
+    sharedIds.add(orderId);
+    VetoInformation updated = VetoInformation.createShared(current.getName(), sharedIds, System.currentTimeMillis(),
+                                                          current.getBinding(), current.getAuthorityBinding(),
+                                                          current.getAuthorityEpoch(), current.getAuthorityVersion() + 1);
+    if (currentState == State.Used && !compareAndSetState(State.Used, State.Scheduled)) {
+      return null;
+    }
+    setVetoInformation(updated);
+    return updated;
+  }
+
+  private VetoInformation setAndReturn(VetoInformation information) {
+    setVetoInformation(information);
+    return information;
+  }
+
+  public synchronized VetoInformation grantExclusiveRequest(VetoInformation request) {
+    VetoInformation current = vetoInformation;
+    State currentState = state.get();
+    if (current == null) {
+      if ((currentState != State.Local && currentState != State.Usable) || request.getUsingOrderId() == null ||
+          request.getAuthorityEpoch() != 0L || request.getAuthorityVersion() != 0L) {
+        return null;
+      }
+      VetoInformation initial = new VetoInformation(name, request.getUsingOrder(), Collections.emptyList(), null,
+          null, System.currentTimeMillis(), request.getBinding(), request.getAuthorityBinding(),
+          request.getAuthorityEpoch(), request.getAuthorityVersion() + 1);
+      return compareAndSetState(currentState, State.Scheduled) ? setAndReturn(initial) : null;
+    }
+    if ((currentState != State.Used && currentState != State.Scheduled) ||
+        current.isAdministrative() || current.getAuthorityBinding() != request.getAuthorityBinding() ||
+        current.getAuthorityEpoch() != request.getAuthorityEpoch() ||
+        current.getAuthorityVersion() != request.getAuthorityVersion()) {
+      return null;
+    }
+    Long orderId = request.getUsingOrderId();
+    if (orderId == null) {
+      return null;
+    }
+    if (Objects.equals(current.getUsingOrderId(), orderId)) {
+      return current;
+    }
+    if (current.getUsingOrderId() != null) {
+      return null;
+    }
+    List<Long> sharedIds = current.getSharedOrderIds();
+    if (sharedIds != null && !sharedIds.isEmpty()) {
+      if (current.getPendingExclusiveOrderId() != null && !Objects.equals(current.getPendingExclusiveOrderId(), orderId)) {
+        return null;
+      }
+      VetoInformation updated = new VetoInformation(current.getName(), current.getUsingOrder(), sharedIds, orderId,
+          current.getDocumentation(), System.currentTimeMillis(), current.getBinding(), current.getAuthorityBinding(),
+          current.getAuthorityEpoch(), current.getAuthorityVersion() + 1);
+      if (currentState == State.Used && !compareAndSetState(State.Used, State.Scheduled)) {
+        return null;
+      }
+      setVetoInformation(updated);
+      return updated;
+    }
+    if (current.getPendingExclusiveOrderId() != null && !Objects.equals(current.getPendingExclusiveOrderId(), orderId)) {
+      return null;
+    }
+    VetoInformation updated = new VetoInformation(current.getName(), request.getUsingOrder(),
+        Collections.emptyList(), null, current.getDocumentation(), System.currentTimeMillis(),
+        request.getBinding(), current.getAuthorityBinding(), current.getAuthorityEpoch(), current.getAuthorityVersion() + 1);
+    if (currentState == State.Used && !compareAndSetState(State.Used, State.Scheduled)) {
+      return null;
+    }
+    setVetoInformation(updated);
+    return updated;
+  }
   
   
   public synchronized RemovalResult freeOrderId(long orderIdIn) {
@@ -327,7 +454,8 @@ public class VetoCacheEntry {
     }
     if (toChange) {
       VetoInformation viNew = new VetoInformation(vi.getName(), usingOrder, sharedIds, pending, vi.getDocumentation(),
-                                                System.currentTimeMillis(), vi.getBinding());
+                                                System.currentTimeMillis(), vi.getBinding(), vi.getAuthorityBinding(),
+                                                vi.getAuthorityEpoch(), vi.getAuthorityVersion() + 1);
       setVetoInformation(viNew);
       vi = viNew;
     }
@@ -357,11 +485,13 @@ public class VetoCacheEntry {
     }
   }
   
-  public boolean remoteFree() {
+  public synchronized boolean remoteFree() {
     //wird von remote-Thread gerufen, analog zu free() müssen mehrere States untersucht werden
-    remoteFreeBinding = getBinding();
+    VetoInformation information = vetoInformation;
     if( compareAndSetState(State.Scheduled, State.Free) || 
         compareAndSetState(State.Used, State.Free) ) {
+      // Admin vetoes can be removed by either node; the original owner still compares.
+      remoteFreeBinding = information != null && information.isAdministrative() ? information.getBinding() : -1;
       this.urgency = Long.MIN_VALUE;
       this.vetoInformation = null;
       return true;
@@ -489,7 +619,11 @@ public class VetoCacheEntry {
     return prepareCompare(State.Usable, false);
   }
 
-  public boolean setScheduled(State expected, VetoInformation vetoInformation) {
+  synchronized boolean markUsedIfSnapshotUnchanged(VetoInformation snapshot) {
+    return vetoInformation == snapshot && compareAndSetState(State.Scheduled, State.Used);
+  }
+
+  public synchronized boolean setScheduled(State expected, VetoInformation vetoInformation) {
     //gerufen von VetoCacheProcessorThread
     if( compareAndSetState( expected, State.Scheduled ) ) {
       setVetoInformation(vetoInformation);
@@ -507,7 +641,7 @@ public class VetoCacheEntry {
     return vetoHistory;
   }
 
-  public boolean replace(State expected, VetoCacheEntry vetoNew) {
+  public synchronized boolean replace(State expected, VetoCacheEntry vetoNew) {
     if( compareAndSetState( expected, vetoNew.getState() ) ) {
       this.vetoInformation = vetoNew.vetoInformation;
       this.urgency = vetoNew.urgency;
