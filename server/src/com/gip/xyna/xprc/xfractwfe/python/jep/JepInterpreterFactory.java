@@ -54,6 +54,7 @@ import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreterFactory;
 import com.gip.xyna.xprc.xfractwfe.python.PythonThreadManagement;
 import com.gip.xyna.xprc.xfractwfe.python.PythonThreadManagement.PythonThread;
 
+import jep.MainInterpreter;
 import jep.python.PyObject;
 
 
@@ -73,6 +74,8 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
   private static final Logger logger = CentralFactoryLogging.getLogger(JepInterpreterFactory.class);
 
   private static final Map<String, Class<?>> typeConversionMap = createTypeConversionMap();
+
+  private boolean pythonAvailable;
 
 
   private static Map<String, Class<?>> createTypeConversionMap() {
@@ -105,28 +108,23 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
 
   @Override
   public PythonInterpreter createInterperter(ClassLoader classLoader) {
+    if (!pythonAvailable) {
+      throw new IllegalStateException("Python code snippets are not available because JEP is not configured. "
+          + "Configure jep.module.path and restart the factory.");
+    }
     return new JepInterpreter(classLoader);
   }
 
   @Override
   public void init() {
-    try {
-      String jepModulePath = System.getProperty("jep.module.path");
-      if (jepModulePath != null && !jepModulePath.isBlank()) {
-        jep.MainInterpreter.setJepLibraryPath(jepModulePath);
-        if (logger.isDebugEnabled()) {
-          logger.debug("set jep library path to : " + jepModulePath);
-        }
-      } else {
-        if (logger.isDebugEnabled()) {
-          logger.debug("jep library path not set!");
-        }
-      }
-    } catch (Exception e) {
-      if (logger.isErrorEnabled()) {
-        logger.error("Error during jep init. ", e);
-      }
+    pythonAvailable = false;
+    String modulePath = System.getProperty("jep.module.path");
+    if (modulePath == null || modulePath.isBlank()) {
+      logger.info("Python code snippets are not available because jep.module.path is not configured.");
+      return;
     }
+    MainInterpreter.setJepLibraryPath(JepInterpreter.validateJepLibrary(modulePath).toString());
+    pythonAvailable = true;
   }
 
   @Override

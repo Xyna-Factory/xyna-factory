@@ -31,9 +31,6 @@
     <version>1.0.0</version>
     <packaging>pom</packaging>
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
         <bom.dir>.</bom.dir>
     </properties>
 
@@ -358,7 +355,7 @@
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpcore</artifactId>
-                <version>4.4.3</version>
+                <version>4.4.13</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
